@@ -516,9 +516,21 @@ oro del `ensamblado/README.md`: volver a ejecutar el script produce el capítulo
   los otros diez seguían perfectos. Recorrer **todos** los módulos con la consola instrumentada,
   no mirar dos y confiar.
 - **Los datos de Lohr traen `-99` como código de faltante.** En `agpop`, 19 condados lo tienen en
-  `acres92` y 15 en `acres87`. Promediarlos cambia la media de 308 582 a 306 677. La población de
-  referencia de este material es de **3 059** condados, y está dicho en el capítulo con su caja de
-  advertencia y su enlace al capítulo 8.
+  `acres92` y 23 en `acres87`. **Decisión de Javier (2026-07-27): se usa el marco completo de
+  Lohr, `N = 3 078`, sin excluir nada.** La media poblacional del material es por tanto
+  **306 677**, y no los 308 582 de los condados con dato válido: 1 905 acres, un 0,6 %, por
+  debajo. Todo lo demás sigue siendo exacto —es una población perfectamente válida que contiene 19
+  valores de `-99`—; lo único que no es, es la superficie sembrada media de verdad. El capítulo lo
+  declara en su caja de advertencia del módulo 5 y lo enlaza con el capítulo 8, que es donde se
+  trata la no respuesta de ítem.
+- **Las cifras a mano fallan aunque estés convencido.** Al pasar a los 3 078 escribí
+  `306676.9727` en un comentario `#>` y la salida real era `306676.9714`. Cuatro decimales
+  inventados en una cifra que había leído dos minutos antes. Es exactamente lo que
+  `verifica_bloques.py` existe para cazar.
+- **Los bloques de las soluciones también tienen que anunciar sus cifras.** En la primera entrega
+  los cuatro ejercicios traían código sin líneas `#>`, así que sus resultados no los verificaba
+  nadie: la prosa citaba números que ninguna herramienta contrastaba. Corregido — el recuento pasó
+  de 291 a 323 cifras verificadas.
 - **Olvidar el fpc ensancha el intervalo, no lo estrecha** (EE 19 892,7 en vez de 18 898,4, un 5,3 %
   más). Es lo contrario de lo que uno espera, y el texto del módulo 6 lo dice explícitamente para
   que no se confunda con el error de ignorar conglomerados, que sí produce intervalos estrechos y
@@ -536,7 +548,7 @@ oro del `ensamblado/README.md`: volver a ejecutar el script produce el capítulo
 
 | Comprobación | Resultado |
 |---|---|
-| Cifras `#>` contrastadas con la salida real (`verifica_bloques.py`) | **291 de 291**, 0 discrepancias |
+| Cifras `#>` contrastadas con la salida real (`verifica_bloques.py`) | **323 de 323**, 0 discrepancias |
 | Sesiones de R y de Python encadenadas | terminan con código 0 |
 | Regresión del propio verificador (fixture con cifra falsa) | sigue cazándola (6 de 7) |
 | Caps. 1, 3 y 4 tras los cambios | sin regresión |
@@ -545,7 +557,7 @@ oro del `ensamblado/README.md`: volver a ejecutar el script produce el capítulo
 | Consola del navegador, 11 módulos | 0 errores, 0 avisos |
 | KaTeX | 0 errores; 441 expresiones renderizadas |
 | Gráficos por módulo | `charts` = `canvas` en los 11; al salir del módulo quedan 0 |
-| Simuladores en todos sus valores y extremos | 9 de 9 responden; ningún `NaN`/`undefined`/`Infinity` |
+| Simuladores en todos sus valores y extremos | 9 de 9, **56 estados** probados, 0 fallos |
 | Autoevaluación | 11 preguntas, 4 tipos, flujo fallo → pista → reintento correcto |
 | Ejercicios guiados | 8 paneles abren; 4 soluciones con su bloque de R |
 | CSS frente a la plantilla | 130 clases, **0 faltantes**; llaves 330/330 |
@@ -557,8 +569,8 @@ oro del `ensamblado/README.md`: volver a ejecutar el script produce el capítulo
 - [ ] Revisar el cap. 2 completo: ¿el marco π funciona didácticamente para el nivel del curso?
 - [ ] ¿La densidad de simuladores es la correcta o sobra/falta interactividad?
 - [ ] ¿El glosario de notación resuelve la convivencia Lohr ↔ Gutiérrez?
-- [ ] ¿La población de referencia con `N = 3 059` (excluyendo los `-99`) convence, o se prefiere
-      seguir a Lohr y usar 3 078 en todo?
+- [x] ~~¿`N = 3 059` o los 3 078 de Lohr?~~ → **Los 3 078, decidido el 2026-07-27.** Aplicado a
+      todo el capítulo y al precálculo; la media poblacional del material es 306 677.
 - [ ] No se produce ningún capítulo más hasta esta revisión.
 
 ---

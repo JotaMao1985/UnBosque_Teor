@@ -88,14 +88,14 @@ print(f"IC95  = [{ybar - tq*ee:.1f}, {ybar + tq*ee:.1f}]")
 print("\n###BLOQUE-P5###\n")
 from scipy.stats import norm
 
-pob = agpop.loc[agpop["acres92"] >= 0, "acres92"].to_numpy()   # -99 es faltante
+pob = agpop["acres92"].to_numpy()      # marco completo de Lohr: los 3078
 z = norm.ppf(0.975)
 S, media_pob, N_pob = pob.std(ddof=1), pob.mean(), len(pob)
 e = 0.10 * media_pob
 n0 = z**2 * S**2 / e**2
 n_final = int(np.ceil(n0 / (1 + n0 / N_pob)))
 print(f"margen = {e:.2f}   n0 = {n0:.2f}   n = {n_final}")
-#> margen = 30858.24   n0 = 729.74   n = 590
+#> margen = 30667.70   n0 = 736.67   n = 595
 
 print("\n###BLOQUE-P6###\n")
 rng = np.random.default_rng(2026)
@@ -107,6 +107,6 @@ print(f"t_HT = {pob[dentro].sum() / pi0 / 1e6:.3f} millones   verdadero = {pob.s
 print(f"CV teorico de t_HT = {np.sqrt(v_ht) / pob.sum():.4f}")
 # El sorteo NO coincide con el de R: los generadores son distintos. Lo que si
 # coincide, porque no depende del sorteo, es el CV teorico: 0.1342 en los dos.
-#> n esperado = 153.0   n obtenido = 136
-#> t_HT = 747.179 millones   verdadero = 943.954
+#> n esperado = 153.9   n obtenido = 138
+#> t_HT = 850.013 millones   verdadero = 943.952
 #> CV teorico de t_HT = 0.1342

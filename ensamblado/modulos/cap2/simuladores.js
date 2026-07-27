@@ -301,7 +301,7 @@
     // M7 · Calculadora de tamaño de muestra
     // ---------------------------------------------------------------
     SIMULADORES['tamano-muestra'] = function (raiz) {
-      const params = { errorPct: 10, cv: 1.38, N: '3059', conf: '95' };
+      const params = { errorPct: 10, cv: 1.38, N: '3078', conf: '95' };
       const Z = { '90': 1.6448536, '95': 1.9599640, '99': 2.5758293 };
       const g = crearGraficoXY(raiz.querySelector('canvas'), [], {
         tituloX: 'Margen de error, en % de la media', tituloY: 'Tamaño de muestra n', xMin: 1, xMax: 30
@@ -355,7 +355,7 @@
       }, params, pintar);
       crearSelector(controles, {
         clave: 'N', etiqueta: 'Tamaño de la población', opciones: [
-          { valor: '3059', texto: 'N = 3 059 (agpop)' },
+          { valor: '3078', texto: 'N = 3 078 (agpop)' },
           { valor: '10000', texto: 'N = 10 000' },
           { valor: '100000', texto: 'N = 100 000' },
           { valor: '50000000', texto: 'N = 50 000 000' }]
@@ -615,7 +615,7 @@
           { texto: 'Las dos están centradas en la media poblacional; la de $n = 300$ es mucho más estrecha y más simétrica.', correcta: true,
             retro: 'Correcto. La insesgadez no depende de $n$ —las dos aciertan en promedio—; lo que mejora con $n$ es la precisión, y de paso la aproximación normal.' },
           { texto: 'La de $n = 300$ está mejor centrada: con $n = 10$ el estimador es sesgado.', correcta: false,
-            retro: '$\\bar{y}$ es insesgado para cualquier $n$. Lo que pasa con $n = 10$ es que la distribución es muy asimétrica (asimetría 1,80), y eso se confunde fácilmente con un sesgo.' },
+            retro: '$\\bar{y}$ es insesgado para cualquier $n$. Lo que pasa con $n = 10$ es que la distribución es muy asimétrica (asimetría 1,75), y eso se confunde fácilmente con un sesgo.' },
           { texto: 'La de $n = 10$ es más precisa porque su histograma es más alto.', correcta: false,
             retro: 'La altura solo depende del ancho de las clases del histograma. La precisión se lee en la <em>dispersión</em> horizontal, y ahí $n = 300$ gana con claridad.' },
           { texto: 'No se pueden comparar porque tienen tamaños de muestra distintos.', correcta: false,
@@ -667,7 +667,7 @@
       {
         tipo: 'opcion',
         modulo: 8,
-        pregunta: 'En el diseño Bernoulli con $\\pi = 0{,}02$ sobre <code>agpop</code>, el estimador de Hájek tiene un CV de 0,176 frente a 0,214 del de Horvitz–Thompson. ¿Por qué gana Hájek si es el estimador <em>sesgado</em>?',
+        pregunta: 'En el diseño Bernoulli con $\\pi = 0{,}02$ sobre <code>agpop</code>, el estimador de Hájek tiene un CV de 0,170 frente a 0,208 del de Horvitz–Thompson. ¿Por qué gana Hájek si es el estimador <em>sesgado</em>?',
         pista: 'Piensa en qué hace cada uno cuando el sorteo entrega menos unidades de las esperadas.',
         opciones: [
           { texto: 'Porque divide entre el tamaño de muestra realmente obtenido, y así absorbe buena parte de la variabilidad de $n_s$.', correcta: true,
@@ -691,8 +691,8 @@
           { texto: 'Si la lista está ordenada por una variable relacionada con $y$, suele ser más preciso que el MAS.', correcta: true },
           { texto: 'Es siempre más preciso que el MAS, porque recorre toda la lista.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. El sistemático es un diseño de dos caras: sobre <code>agpop</code> ordenado por <code>acres87</code> el DEFF es 0,093, y con un orden cíclico patológico sube a 219,9.',
-        retroFallo: 'Las tres primeras son ciertas; la cuarta no. Todo depende del orden del marco: el mismo diseño puede tener DEFF 0,093 o 219,9 sobre la misma población.'
+        retroAcierto: 'Las tres primeras. El sistemático es un diseño de dos caras: sobre <code>agpop</code> ordenado por <code>acres87</code> el DEFF es 0,073, y con un orden cíclico patológico sube a 218,9.',
+        retroFallo: 'Las tres primeras son ciertas; la cuarta no. Todo depende del orden del marco: el mismo diseño puede tener DEFF 0,073 o 218,9 sobre la misma población.'
       },
       {
         tipo: 'opcion',

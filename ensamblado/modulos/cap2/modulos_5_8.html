@@ -118,12 +118,14 @@
 
       <div class="warning">
         <p><strong>Los 19 condados con $-99$.</strong> En los archivos de Lohr, $-99$ es el código de <em>dato
-          faltante</em>. Promediarlo con los demás produce una media de 306 677 en vez de 308 582: un error pequeño
-          en apariencia, pero que consiste en haberse inventado 19 condados de superficie negativa. En este material
-          se excluyen, y por eso la población de referencia de las simulaciones tiene
-          <strong>$N = 3\,059$</strong>. No es un detalle de limpieza: es no respuesta de ítem, y el
-          <strong>capítulo 8</strong> se dedica a qué hacer con ella. Descartarla sin más, como aquí, es la opción
-          defendible solo porque son el 0,6 % de las unidades.</p>
+          faltante</em>: no significa una superficie negativa, significa que no se sabe. Este material trabaja con el
+          <strong>marco completo de Lohr, $N = 3\,078$</strong>, y los deja tal como vienen, que es la convención del
+          texto guía. Conviene saber exactamente lo que eso cuesta: la media poblacional que se usa aquí es
+          <strong>306 677</strong>, y la de los 3 059 condados con dato válido sería 308 582 —1 905 acres, un 0,6 %,
+          por debajo—. Todo lo que sigue (insesgadez, fpc, cobertura) es exacto para <em>esta</em> población, que
+          simplemente contiene 19 valores de $-99$; lo único que no es es la superficie sembrada media de verdad.
+          Decidir qué hacer con esos 19 no es limpieza de datos: es <strong>no respuesta de ítem</strong>, y a eso se
+          dedica el <strong>capítulo 8</strong>.</p>
       </div>
 
       <p>Con la población conocida se puede hacer algo que en un estudio real es imposible: <strong>repetir el
@@ -134,7 +136,7 @@
         <p class="simulador-intro">Diez mil muestras aleatorias simples de <code>agpop</code>, para cada tamaño. La
           línea vertical es la media poblacional verdadera. Tres cosas que mirar al mover $n$: el histograma se
           <strong>estrecha</strong> como $1/\sqrt{n}$; se vuelve <strong>simétrico</strong> aunque la población esté
-          muy sesgada (asimetría 1,80 con $n=10$ y 0,11 con $n=1000$); y la desviación empírica sigue de cerca a la
+          muy sesgada (asimetría 1,75 con $n=10$ y 0,08 con $n=1000$); y la desviación empírica sigue de cerca a la
           teórica $\sqrt{(1-n/N)S^2/n}$, que es la comprobación de que la fórmula describe lo que de verdad pasa.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:250px;">
@@ -242,9 +244,9 @@
         <h4><i class="fas fa-arrows-left-right-to-line" aria-hidden="true"></i> Cobertura empírica del IC del 95 %</h4>
         <p class="simulador-intro">Los cien primeros intervalos de las diez mil réplicas: en verde los que atrapan la
           media poblacional, en rojo los que no. Debajo, la cobertura real sobre las diez mil. Con $n = 10$ apenas
-          llega al 79 %, muy lejos del 95 % prometido: la población de condados es tan asimétrica (coeficiente de
-          variación 1,38) que el teorema de Hájek todavía no ha hecho efecto. Hace falta $n \geq 500$ para acercarse
-          al 94 %.</p>
+          llega al 80 %, muy lejos del 95 % prometido: la población de condados es tan asimétrica (coeficiente de
+          variación 1,38) que el teorema de Hájek todavía no ha hecho efecto. Ni con $n = 1\,000$ se alcanza el 95 %:
+          se queda en 94,2 %.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:260px;">
           <canvas aria-label="Los cien primeros intervalos de confianza y la media poblacional" role="img"></canvas>
@@ -338,11 +340,11 @@
       </div>
 
       <div class="note">
-        <p><strong>Precisión absoluta o relativa.</strong> Pedir «un error de 30 858 acres» no significa nada para
+        <p><strong>Precisión absoluta o relativa.</strong> Pedir «un error de 30 668 acres» no significa nada para
           quien lee. Pedir «un error del 10 % de la media» sí. En términos relativos la fórmula se escribe con el
           coeficiente de variación $CV = S/\bar{y}_U$, que en <code>agpop</code> vale 1,38:
-          $n_0 = (z \cdot CV / e_{\text{rel}})^2$. Con $e_{\text{rel}} = 0{,}10$ salen los mismos 729,74 de antes, y
-          tras el fpc, $n = 590$ condados.</p>
+          $n_0 = (z \cdot CV / e_{\text{rel}})^2$. Con $e_{\text{rel}} = 0{,}10$ salen los mismos 736,67 de antes, y
+          tras el fpc, $n = 595$ condados.</p>
       </div>
     </div>
   </template>
@@ -401,7 +403,7 @@
         </div>
       </div>
 
-      <p>El sorteo del bloque anterior pedía 152,95 condados en promedio y entregó 144. Esa variación es la fuente de
+      <p>El sorteo del bloque anterior pedía 153,9 condados en promedio y entregó 145. Esa variación es la fuente de
         problemas del diseño: cuando salen pocas unidades, $\hat{t}_\pi$ se queda corto, y cuando salen muchas se pasa
         —aunque en promedio acierte—. Hay una manera barata de arreglar buena parte de eso.</p>
 
@@ -419,9 +421,9 @@
       <div class="simulador" data-simulador="bernoulli">
         <h4><i class="fas fa-dice-two" aria-hidden="true"></i> Bernoulli: el tamaño de muestra también es aleatorio</h4>
         <p class="simulador-intro">Cinco mil réplicas del diseño Bernoulli sobre <code>agpop</code>. Arriba, la
-          distribución del <strong>tamaño de muestra</strong>: con $\pi = 0{,}02$ se pide una muestra de 61 condados y
-          se acaba teniendo entre 40 y 85. Abajo, los dos estimadores del total. Hájek gana en los cuatro valores de
-          $\pi$ —CV 0,1763 frente a 0,2142 con $\pi = 0{,}02$—, y la ventaja es mayor cuanto más pequeño es $\pi$, que
+          distribución del <strong>tamaño de muestra</strong>: con $\pi = 0{,}02$ se pide una muestra de 62 condados y
+          se acaba teniendo entre 37 y 86. Abajo, los dos estimadores del total. Hájek gana en los cuatro valores de
+          $\pi$ —CV 0,1704 frente a 0,2083 con $\pi = 0{,}02$—, y la ventaja es mayor cuanto más pequeño es $\pi$, que
           es justo cuando $n_s$ varía relativamente más.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Tamaño de muestra $n_s$ obtenido</p>

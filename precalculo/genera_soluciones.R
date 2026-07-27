@@ -75,7 +75,7 @@ dis <- svydesign(id = ~1, fpc = rep(N_marco, n_srs), data = agsrs)
 p_est <- svymean(~grande, dis)
 ic_p <- confint(p_est, df = degf(dis))
 p_hat <- as.numeric(coef(p_est))
-p_real <- mean(agpop$acres92[agpop$acres92 >= 0] > 200000)
+p_real <- mean(agpop$acres92 > 200000)   # marco completo de Lohr: los 3078
 
 z <- qnorm(0.975)
 e <- 0.03
@@ -86,7 +86,8 @@ n_conservador <- ceiling(n0_conservador / (1 + n0_conservador / N_marco))
 
 cat(sprintf("  p_hat = %.4f   EE = %.4f   IC 95%% = [%.4f, %.4f]\n",
             p_hat, SE(p_est), ic_p[1], ic_p[2]))
-cat(sprintf("  proporción real en la población (3059 válidos) = %.4f\n", p_real))
+cat(sprintf("  proporción real en el marco completo (%d condados) = %.4f\n",
+            nrow(agpop), p_real))
 cat(sprintf("  con p = p_hat:  n0 = %.2f -> n = %d\n", n0_phat, n_phat))
 cat(sprintf("  con p = 0.5:    n0 = %.2f -> n = %d   (%d condados más)\n",
             n0_conservador, n_conservador, n_conservador - n_phat))
@@ -97,8 +98,7 @@ cat(sprintf("  si en cambio p fuera 0.10:  n0 = %.2f -> n = %d\n",
 
 # ---------------------------------------------------------------------------
 linea("EJERCICIO 4 — Sistemático 1 en 6 sobre agpop")
-pobdf <- agpop[agpop$acres92 >= 0, ]
-pob <- pobdf$acres92
+pob <- agpop$acres92       # marco completo de Lohr: los 3078 condados
 k <- 6
 n_sis <- floor(length(pob) / k)
 
@@ -106,7 +106,7 @@ medias_arranque <- function(v, kk) sapply(seq_len(kk), function(r) mean(v[seq(r,
 v_sis <- function(v, kk) mean((medias_arranque(v, kk) - mean(v))^2)
 v_mas <- function(v, m) (1 - m / length(v)) * var(v) / m
 
-orden_aux <- order(replace(pobdf$acres87, pobdf$acres87 < 0, NA), na.last = TRUE)
+orden_aux <- order(agpop$acres87)
 for (etiqueta in c("orden original", "ordenado por acres87")) {
   v <- if (etiqueta == "orden original") pob else pob[orden_aux]
   vs <- v_sis(v, k); vm <- v_mas(v, n_sis)

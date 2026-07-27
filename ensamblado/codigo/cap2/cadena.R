@@ -142,13 +142,16 @@ c(condados = nrow(agpop), con_codigo_menos_99 = sum(agpop$acres92 < 0))
 #>            condados con_codigo_menos_99
 #>                3078                  19
 
-# -99 es el codigo de faltante de Lohr, no una superficie negativa. Promediarlo
-# con los demas seria inventarse 19 condados de superficie negativa.
-pobdf <- agpop[agpop$acres92 >= 0, ]
-pob <- pobdf$acres92
+# Se trabaja con el MARCO COMPLETO de Lohr: los 3078 condados, sin excluir nada.
+# Los 19 con -99 entran tal como vienen. Conviene saber lo que eso cuesta: la
+# media sale 306 677 en vez de los 308 582 de los condados con dato valido.
+pob <- agpop$acres92
 round(c(N = length(pob), media = mean(pob), S = sd(pob), CV = sd(pob) / mean(pob)), 4)
 #>           N       media           S          CV
-#>   3059.0000 308582.4122 425312.8461      1.3783
+#>   3078.0000 306676.9714 424686.6803      1.3848
+round(c(media_solo_validos = mean(pob[pob >= 0]), brecha = mean(pob[pob >= 0]) - mean(pob)), 2)
+#> media_solo_validos             brecha
+#>          308582.41            1905.44
 
 cat("\n###BLOQUE-R9###\n")
 agsrs <- read.csv("CSV data sets for SDA 3e/agsrs.csv")
@@ -190,7 +193,7 @@ n0 <- z^2 * S_pob^2 / e^2              # tamano sin corregir por poblacion finit
 n_final <- ceiling(n0 / (1 + n0 / N_pob))
 round(c(margen = e, n0 = n0, n = n_final), 2)
 #>   margen       n0        n
-#> 30858.24   729.74   590.00
+#> 30667.70   736.67   595.00
 
 cat("\n###BLOQUE-R13###\n")
 set.seed(2026)
@@ -200,9 +203,9 @@ round(c(n_esperado = N_pob * pi0, n_obtenido = sum(dentro),
         t_HT_millones = sum(pob[dentro]) / pi0 / 1e6,
         t_verdadero_millones = sum(pob) / 1e6), 3)
 #>           n_esperado           n_obtenido        t_HT_millones
-#>              152.950              144.000              988.847
+#>              153.900              145.000              893.672
 #> t_verdadero_millones
-#>              943.954
+#>              943.952
 
 cat("\n###BLOQUE-R14###\n")
 # Con Bernoulli las inclusiones son independientes: pi_kl = pi^2, los terminos
@@ -236,14 +239,14 @@ cat("\n###BLOQUE-R16###\n")
 comparar <- function(v, k, m) {
   c(V_sis = v_sis(v, k), V_MAS = v_mas(v, m), DEFF = v_sis(v, k) / v_mas(v, m))
 }
-# Ordenada por acres87, la auxiliar que correlaciona 0.996 con acres92.
-# Los 15 condados con acres87 = -99 son faltantes: van al final, no al principio.
-orden_aux <- order(replace(pobdf$acres87, pobdf$acres87 < 0, NA), na.last = TRUE)
+# Ordenada por acres87, la auxiliar que correlaciona 0.996 con acres92. Se toma
+# tal como viene, igual que acres92: un solo criterio en todo el capitulo.
+orden_aux <- order(agpop$acres87)
 signif(rbind(original = comparar(pob, 10, 300),
              ordenada = comparar(pob[orden_aux], 10, 300)), 4)
 #>              V_sis     V_MAS    DEFF
-#> original 165800000 543800000 0.30490
-#> ordenada  50760000 543800000 0.09333
+#> original 405700000 542600000 0.74780
+#> ordenada  39450000 542600000 0.07271
 
 cat("\n###BLOQUE-R17###\n")
 # Un train/test split 80/20 ES un diseno muestral: el conjunto de test es la
@@ -271,12 +274,22 @@ round(c(pi_2 = pi_des[2], pi_24 = p_des[fila_24], suma_pi = sum(pi_des),
         d_2 = 1 / pi_des[2], d_4 = 1 / pi_des[4],
         t_HT = y[2] / pi_des[2] + y[4] / pi_des[4],
         N_por_media = N * mean(y[c(2, 4)])), 4)
+#>        pi_2       pi_24     suma_pi         d_2         d_4        t_HT
+#>      0.3250      0.0750      2.0000      3.0769      2.5000    137.8846
+#> N_por_media
+#>    127.5000
 
 cat("\n###BLOQUE-S2###\n")
 tot_granjas <- svytotal(~farms92, dis)
 round(c(total = as.numeric(coef(tot_granjas)), ee = as.numeric(SE(tot_granjas))), 2)
+#>      total         ee
+#> 1843906.68   67908.31
 round(confint(tot_granjas, df = degf(dis)), 0)
+#>           2.5 %  97.5 %
+#> farms92 1710268 1977545
 c(total_real = sum(agpop$farms92))
+#> total_real
+#>    1925300
 
 cat("\n###BLOQUE-S3###\n")
 agsrs$grande <- as.integer(agsrs$acres92 > 200000)
@@ -286,9 +299,16 @@ dis2 <- svydesign(id = ~1, fpc = rep(N_marco, n_srs), data = agsrs)
 p_hat <- svymean(~grande, dis2)
 round(c(p = as.numeric(coef(p_hat)), ee = as.numeric(SE(p_hat))), 4)
 n0_p <- z^2 * as.numeric(coef(p_hat)) * (1 - as.numeric(coef(p_hat))) / 0.03^2
+#>      p     ee
+#> 0.4900 0.0275
 round(c(n0 = n0_p, n = ceiling(n0_p / (1 + n0_p / N_marco))), 2)
+#>      n0       n
+#> 1066.65  793.00
 
 cat("\n###BLOQUE-S4###\n")
 n6 <- floor(length(pob) / 6)
 signif(rbind(original = comparar(pob, 6, n6),
              ordenada = comparar(pob[orden_aux], 6, n6)), 4)
+#>              V_sis    V_MAS    DEFF
+#> original 117800000 2.93e+08 0.40220
+#> ordenada  25190000 2.93e+08 0.08599

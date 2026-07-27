@@ -103,8 +103,9 @@
         <p class="simulador-intro">El histograma es la distribución de la media bajo MAS ($n = 300$); los rombos son
           las <strong>diez</strong> medias posibles del sistemático, una por arranque. Cuanto más juntas estén, más
           preciso es el diseño. Con el archivo en su orden original (alfabético por estado, lo que agrupa condados
-          vecinos) el sistemático ya gana; ordenado por <code>acres87</code> gana mucho más; y con un orden en el que
-          el tamaño depende de la posición dentro del ciclo, se descalabra: DEFF <strong>219,9</strong>.</p>
+          vecinos) el sistemático ya gana, con DEFF 0,75; ordenado por <code>acres87</code> gana mucho más, 0,073; y con
+          un orden en el que el tamaño depende de la posición dentro del ciclo, se descalabra: DEFF
+          <strong>218,9</strong>.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:250px;">
           <canvas aria-label="Distribución de la media bajo MAS y las diez medias sistemáticas posibles" role="img"></canvas>
@@ -141,7 +142,7 @@
         <p><strong>Antes de usar un sistemático, mira la lista.</strong> No hay nada intrínsecamente bueno ni malo en
           este diseño: todo depende del orden del marco, que es información que se tiene <em>antes</em> de muestrear.
           Ordenar por una auxiliar correlacionada con $y$ convierte al sistemático en el mejor diseño disponible sin
-          coste alguno; dejar la lista con un ciclo oculto lo convierte en el peor. Y la diferencia entre 0,09 y 219,9
+          coste alguno; dejar la lista con un ciclo oculto lo convierte en el peor. Y la diferencia entre 0,073 y 218,9
           de DEFF no se ve en ninguna salida de <code>survey</code>.</p>
       </div>
     </div>

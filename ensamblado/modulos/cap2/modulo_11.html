@@ -132,7 +132,7 @@
             <p><strong>$\hat{p} = 0{,}4900$ con EE $= 0{,}0275$; hacen falta $n = 793$ condados, y con la cota
               conservadora salen los mismos 793.</strong></p>
             <pre><code class="language-r">⟦S3⟧</code></pre>
-            <p>La proporción real en la población es 0,4855, dentro del intervalo. Y como $\hat{p} = 0{,}49$ está
+            <p>La proporción real en el marco completo es 0,4825, dentro del intervalo. Y como $\hat{p} = 0{,}49$ está
               pegado a $0{,}5$, el producto $p(1-p)$ es casi idéntico en los dos casos —0,2499 frente a 0,25— y ser
               conservador <strong>no cuesta nada</strong>: 1 066,65 frente a 1 067,07 antes del fpc, el mismo 793
               después.</p>
@@ -144,7 +144,7 @@
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Aplica un muestreo
-            <strong>sistemático 1 en 6</strong> sobre los 3 059 condados con dato válido y calcula la varianza exacta
+            <strong>sistemático 1 en 6</strong> sobre los 3 078 condados del marco y calcula la varianza exacta
             de la media sistemática, la del MAS del mismo tamaño y el DEFF. Hazlo dos veces: con el archivo en su orden
             original y ordenado por <code>acres87</code>. ¿Por qué la varianza del sistemático se puede calcular
             <em>exactamente</em> aquí, si en el módulo 9 se dijo que no era estimable?</p>
@@ -162,8 +162,9 @@
               puede calcular sus medias alguien que solo dispone de <strong>una</strong> muestra.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap2-e4-sol" hidden>
-            <p><strong>DEFF = 0,508 con el orden original y 0,104 ordenado por <code>acres87</code>: el sistemático es
-              el doble de preciso que el MAS en el primer caso y diez veces más preciso en el segundo.</strong></p>
+            <p><strong>DEFF = 0,402 con el orden original y 0,086 ordenado por <code>acres87</code>: el sistemático es
+              dos veces y media más preciso que el MAS en el primer caso y casi doce veces más preciso en el
+              segundo.</strong></p>
             <pre><code class="language-r">⟦S4⟧</code></pre>
             <p>Con $k = 6$ solo existen <strong>seis</strong> muestras posibles, así que la varianza de diseño es un
               promedio de seis números y se calcula de una vez —siempre que se conozca la población entera, que aquí

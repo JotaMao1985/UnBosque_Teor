@@ -138,24 +138,38 @@ stopifnot(abs(dis_mas$varianzaHT - v_mas_cerrada) < 1e-8)
 # 2. La población del curso: agpop
 # =============================================================================
 cat("\n== Población agpop ==\n")
+# DECISIÓN DE JAVIER (2026-07-27): se trabaja con el MARCO COMPLETO de Lohr,
+# los 3078 condados, sin excluir nada. Los 19 condados con acres92 = -99 entran
+# tal como vienen en el archivo.
+#
+# Consecuencia aritmética, que el capítulo declara en vez de esconder: la media
+# poblacional del material es 306 677 y no 308 582, porque esos 19 códigos de
+# faltante cuentan como si fueran valores. Nada de lo demás se ve afectado: la
+# insesgadez, el fpc y la cobertura siguen siendo exactos para ESTA población,
+# que simplemente contiene 19 valores de -99.
 agpop <- lee_lohr("agpop")
-n_faltantes <- sum(agpop$acres92 < 0)
-pob <- agpop[agpop$acres92 >= 0, ]     # -99 es el código de faltante de Lohr
+pob <- agpop
 y_pob <- pob$acres92
 N <- length(y_pob)
 media_pob <- mean(y_pob)
 S2_pob <- var(y_pob)
 S_pob <- sd(y_pob)
 
-cat(sprintf("  condados en el marco: %d | con -99 (faltante): %d | población usable: %d\n",
-            nrow(agpop), n_faltantes, N))
+n_faltantes <- sum(agpop$acres92 < 0)
+media_validos <- mean(agpop$acres92[agpop$acres92 >= 0])
+
+cat(sprintf("  marco completo de Lohr: %d condados (de ellos %d con el código -99)\n",
+            N, n_faltantes))
 cat(sprintf("  media = %.2f | S = %.2f | CV = %.4f | total = %.0f\n",
             media_pob, S_pob, S_pob / media_pob, sum(y_pob)))
+cat(sprintf("  (la media de los %d con dato válido sería %.2f: %.0f acres más)\n",
+            N - n_faltantes, media_validos, media_validos - media_pob))
 
 cifras$agpop <- list(
   filas = nrow(agpop), faltantes = n_faltantes, N = N,
   media = media_pob, S2 = S2_pob, S = S_pob, cv = S_pob / media_pob,
-  total = sum(y_pob), min = min(y_pob), max = max(y_pob), mediana = median(y_pob)
+  total = sum(y_pob), min = min(y_pob), max = max(y_pob), mediana = median(y_pob),
+  mediaValidos = media_validos, brecha = media_validos - media_pob
 )
 
 # --- 2.1 Distribución de muestreo de la media bajo MAS ------------------------
@@ -329,9 +343,10 @@ medias_sistematicas <- function(y, k) {
 set.seed(SEMILLA + 4)
 R_COMP <- 10000
 y_orden_original <- y_pob                                   # como viene el archivo
-# Ordenado por la auxiliar acres87 (correlación 0,996 con acres92). Los 15
-# condados con acres87 = -99 son faltantes, no ceros: van al final.
-y_ordenado <- y_pob[order(replace(pob$acres87, pob$acres87 < 0, NA), na.last = TRUE)]
+# Ordenado por la auxiliar acres87, que correlaciona 0,996 con acres92. Se toma
+# tal como viene en el archivo, igual que acres92: un solo criterio en todo el
+# capítulo, que es la decisión de trabajar con el marco completo de Lohr.
+y_ordenado <- y_pob[order(pob$acres87)]
 
 # Orden patológico: se coloca la lista de modo que el TAMAÑO dependa de la
 # posición dentro del ciclo de longitud k. La ranura 1 de cada ciclo recibe los
