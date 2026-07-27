@@ -1,0 +1,1020 @@
+---
+title: "Banco de Preguntas Modificadas — Muestreo Complejo"
+subtitle: "Las últimas 5 preguntas: comprensión profunda en muestreo por conglomerados"
+author: "Javier Mauricio Sierra"
+date: "5 de mayo de 2026"
+output:
+  html_document:
+    template: unbosque_template.html
+    # theme: united
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+    df_print: kable
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: false
+    latex_engine: xelatex
+fontsize: 11pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  fig.width = 8.5, fig.height = 4.6, fig.align = "center",
+  comment = NA
+)
+
+# Paquetes principales
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(survey)
+  library(knitr)
+  library(scales)
+})
+
+# Tema USTA simplificado
+theme_usta <- theme_minimal(base_size = 11) +
+  theme(
+    plot.title       = element_text(face = "bold", size = 12, color = "#001A4D"),
+    plot.subtitle    = element_text(size = 10, color = "#475569"),
+    panel.grid.minor = element_blank(),
+    legend.position  = "right"
+  )
+
+usta_colors <- c(navy = "#001A4D", primary = "#3D008D",
+                 secondary = "#ED1E79", gold = "#FDB913")
+```
+
+# Introducción
+
+Este documento reúne las **cinco preguntas modificadas** más recientes del banco
+de preguntas del curso de Muestreo. Todas ellas transforman ejercicios de
+*cálculo rutinario* en ejercicios de **comprensión profunda**: el estudiante no
+recalcula —los outputs y gráficos están dados— sino que **interpreta, decide y
+defiende**.
+
+Las preguntas cubren los tres patrones canónicos de muestreo complejo:
+
+- **Muestreo bietápico** con submuestreo dentro de la PSU (preguntas 9, 11, 13).
+- **Muestreo por conglomerados de una etapa** con razonamiento económico sobre
+  cuándo *no* submuestrear (pregunta 10).
+- **Muestreo estratificado + cluster** dentro del estrato, con manejo de
+  no-respuesta (pregunta 12).
+
+Cada bloque tiene la siguiente estructura:
+
+1. Pregunta original (literal del problema).
+2. Datos y outputs pre-computados.
+3. Cuatro ítems de respuesta de comprensión profunda.
+4. Explicación pedagógica de la modificación.
+
+Al final del documento (Apéndice A) se incluye la **bitácora de auditoría**:
+notas sobre redacción, ortografía y pertinencia de los gráficos.
+
+\newpage
+
+# Pregunta 9 — Muestreo bietápico: biblioteca para fines de seguro
+
+## Pregunta original
+
+Una propietaria con una biblioteca grande necesita estimar el costo de compra y
+el valor de reemplazo de su colección para fines de seguro. Tiene $N = 44$
+estantes y selecciona $n = 12$ al azar (PSU). Para cada estante seleccionado
+cuenta $M_i$ (libros del estante) y elige $m_i = 5$ libros con números
+aleatorios entre 1 y $M_i$. Consulta el valor de reemplazo de cada libro
+muestreado. Datos: `books.csv`.
+
+- **(a)** Diagramas de caja lado a lado por estante. ¿Las medias parecen
+  aproximadamente iguales? ¿Y las varianzas?
+- **(b)** Estime el costo total de reemplazo y su error estándar. ¿Cuál es el
+  coeficiente de variación estimado?
+- **(c)** Estime el costo promedio de reemplazo por libro, junto con el error
+  estándar. ¿Cuál es el coeficiente de variación estimado?
+
+## Datos por estante
+
+```{r datos-bib}
+biblioteca <- tibble::tribble(
+  ~shelf, ~M_i, ~y1,   ~y2,   ~y3,   ~y4,   ~y5,
+  3,      32,   21.5,  35.0,  24.7,  29.1,  31.7,
+  7,      45,   41.2,  28.6,  37.0,  31.8,  36.9,
+  11,     28,   53.0,  31.5,  47.2,  29.6,  52.7,
+  15,     51,   29.8,  35.1,  24.9,  41.2,  27.0,
+  19,     38,   47.5,  29.8,  31.0,  44.6,  38.1,
+  22,     47,   21.4,  29.8,  24.1,  30.7,  26.5,
+  26,     35,   56.2,  39.4,  47.1,  31.8,  52.0,
+  29,     42,   29.7,  37.5,  41.6,  28.0,  31.7,
+  33,     30,   68.4,  42.0,  45.6,  61.7,  42.8,
+  36,     49,   21.6,  29.8,  37.4,  29.0,  31.2,
+  40,     36,   53.2,  41.0,  29.0,  35.9,  43.4,
+  43,     44,   29.0,  37.0,  41.5,  44.6,  35.9
+)
+
+bib_resumen <- biblioteca %>%
+  rowwise() %>%
+  mutate(mean_y = mean(c(y1, y2, y3, y4, y5)),
+         sd_y   = sd(c(y1, y2, y3, y4, y5))) %>%
+  ungroup() %>%
+  mutate(t_hat_i = M_i * mean_y)
+
+kable(bib_resumen, digits = 2,
+      caption = "Output 1 — resumen por estante (n = 12, m = 5)")
+```
+
+## Output 2 — boxplot lado a lado por estante
+
+```{r boxplot-bib, fig.height=4.4}
+bib_long <- biblioteca %>%
+  pivot_longer(starts_with("y"), names_to = "book", values_to = "cost") %>%
+  mutate(shelf_label = paste0("E-", shelf, "\n(M=", M_i, ")"),
+         shelf_label = factor(shelf_label,
+                              levels = paste0("E-", biblioteca$shelf,
+                                              "\n(M=", biblioteca$M_i, ")")))
+
+ggplot(bib_long, aes(x = shelf_label, y = cost)) +
+  geom_boxplot(fill = usta_colors["secondary"], alpha = 0.30,
+               color = usta_colors["primary"], outlier.shape = NA) +
+  geom_jitter(width = 0.15, color = usta_colors["navy"], size = 1.6,
+              alpha = 0.85) +
+  labs(x = "Estante (PSU)", y = "Costo de reemplazo ($)",
+       title = "Costos de reemplazo por estante",
+       subtitle = "12 PSUs, 5 libros muestreados por estante") +
+  theme_usta
+```
+
+## Output 3 — estimación con `survey`
+
+```{r survey-bib}
+# Construir microdatos a nivel libro
+books_micro <- bib_long %>%
+  group_by(shelf) %>%
+  mutate(book_id = row_number()) %>%
+  ungroup() %>%
+  mutate(N_shelves = 44L,
+         m_i       = 5L,
+         weight    = (44 / 12) * (M_i / m_i))
+
+design <- svydesign(
+  ids     = ~ shelf + book_id,
+  fpc     = ~ N_shelves + M_i,
+  weights = ~ weight,
+  data    = books_micro
+)
+
+(total_est <- svytotal(~ cost, design))
+(mean_est  <- svymean (~ cost, design))
+cat("CV(t_hat)    =", round(SE(total_est) / coef(total_est), 4), "\n")
+cat("CV(ybar_r)   =", round(SE(mean_est)  / coef(mean_est),  4), "\n")
+confint(total_est, level = 0.95)
+confint(mean_est,  level = 0.95)
+```
+
+## Output 4 — descomposición varianza (entre / dentro)
+
+```{r descomp-bib}
+N <- 44; n <- 12; m <- 5
+sum_t_i <- sum(bib_resumen$t_hat_i)
+mean_t  <- sum_t_i / n
+s_t2    <- sum((bib_resumen$t_hat_i - mean_t)^2) / (n - 1)
+between <- N * (N - n) * s_t2 / n
+
+within_terms <- bib_resumen$M_i * (bib_resumen$M_i - m) *
+  bib_resumen$sd_y^2 / m
+within <- (N / n) * sum(within_terms)
+
+V_total <- between + within
+SE_total <- sqrt(V_total)
+
+tibble::tribble(
+  ~Componente,            ~Valor,             ~Porc,
+  "Entre estantes",       between,            between / V_total,
+  "Dentro de estantes",   within,             within  / V_total,
+  "Total V(t_hat)",       V_total,            1
+) %>%
+  mutate(Valor = round(Valor, 0),
+         Porc  = scales::percent(Porc, accuracy = 0.1)) %>%
+  kable(caption = "Descomposición de la varianza estimada del total")
+
+cat("ICC implícita rho_a ≈",
+    round(between / (V_total + (m - 1) * within), 3), "\n")
+```
+
+## Preguntas para responder
+
+> **1. Lectura cualitativa del boxplot (parte (a) — interpretación cualitativa
+> de gráficos).**
+>
+> (i) ¿Las medianas/medias por estante parecen *aproximadamente iguales*?
+> Identifique los dos estantes con costo promedio más bajo y los dos con costo
+> promedio más alto, y cuantifique la **brecha** entre extremos en
+> $\bar y_i$.
+>
+> (ii) ¿Las amplitudes intercuartílicas son comparables, o algunos estantes
+> muestran mayor dispersión? Liste los dos estantes con mayor RIQ y los dos
+> con menor RIQ. ¿Hay algún libro que se vea como *outlier* dentro de su
+> estante?
+>
+> (iii) Conecte su lectura con el muestreo bietápico: si las medianas *fueran*
+> casi idénticas entre estantes, ¿cómo cambiaría la importancia relativa de
+> los componentes **entre-PSU** y **dentro-PSU** de la varianza? ¿Y la
+> magnitud de la ICC $\rho_a$? Argumente *sin* calcular fórmulas.
+
+> **2. Lectura del estimador del total (parte (b) — output de software).**
+>
+> (i) Reporte $\hat t$, $\mathrm{SE}(\hat t)$ y $\mathrm{CV}(\hat t)$ tal como
+> aparecen.
+>
+> (ii) Lea el IC al 95 % del Output 3 y exprese el resultado en una sola frase
+> comprensible para la propietaria (en pesos, con interpretación de seguro).
+>
+> (iii) En el Output 4, ~85 % de la varianza proviene del componente entre
+> estantes. Conecte este hecho con el boxplot del Output 2: ¿es coherente con
+> lo que observó en el ítem 1? Justifique.
+>
+> (iv) La propietaria puede aumentar el muestreo en una sola dirección —más
+> estantes ($n$) o más libros por estante ($m_i$)—. ¿Cuál de las dos rutas
+> reduciría más rápidamente la $\mathrm{SE}(\hat t)$? Justifique apelando a la
+> composición de la varianza, no al cálculo.
+
+> **3. Lectura del estimador del promedio por libro (parte (c) — output de
+> software).**
+>
+> (i) Reporte $\bar y_r$, $\mathrm{SE}(\bar y_r)$ y $\mathrm{CV}(\bar y_r)$.
+> Escriba la interpretación contextual: «el libro promedio en la biblioteca
+> tiene un costo de reemplazo estimado de…».
+>
+> (ii) Note que el CV del promedio ($\approx 5{,}0~\%$) es *ligeramente mayor*
+> que el CV del total ($\approx 4{,}0~\%$). Explique por qué ocurre esto en
+> muestreo bietápico con $M_i$ variable: ¿qué fuente adicional de
+> incertidumbre introduce el cociente $\hat t / \hat M$ frente a estimar solo
+> $\hat t$?
+>
+> (iii) En el Output 3 también aparece $\hat M = 1\,749$ con $\mathrm{SE}
+> \approx 46$. Discuta: si la propietaria conociera con *certeza* el número
+> total de libros (por ejemplo, censando los $M_i$ en los 44 estantes), ¿el
+> CV del promedio bajaría? ¿En qué dirección y por qué?
+
+> **4. Decisión muestral con presupuesto (de resultados a conclusiones).**
+>
+> (i) La propietaria quiere reducir la SE del total a la mitad (de $\sim 2521$
+> a $\sim 1260$). ¿Aproximadamente cuántos estantes adicionales (manteniendo
+> $m_i = 5$) necesitaría, asumiendo que la varianza entre-PSU domina? Use la
+> regla $\mathrm{SE} \propto 1/\sqrt n$ sobre el componente dominante.
+>
+> (ii) Una alternativa: hacer un *censo* de los $M_i$ en los 44 estantes y
+> muestrear más libros donde haya mayor variabilidad (PPS o estratificación
+> post-hoc). ¿Por qué el muestreo bietápico simple no aprovecha esta
+> información?
+>
+> (iii) La propietaria objeta: «con un CV de 4 %, ya tengo precisión
+> suficiente para hablar con la aseguradora». ¿Está usted de acuerdo? ¿Qué
+> consideración adicional sobre el *uso* del estimado (prima anual vs.
+> cobertura por pérdida total) mediaría su respuesta?
+
+
+# Pregunta 10 — Conglomerados: auditoría de certificación de asistencia médica
+
+## Pregunta original
+
+Un programa estatal proporciona asistencia médica a hogares de bajos ingresos.
+Cada condado certifica la elegibilidad de los hogares; ocasionalmente se
+certifica como elegible a personas que no lo son. La **tasa de error de
+certificación** de un condado es: (personas erróneamente certificadas) /
+(personas que reciben asistencia). Las auditorías muestrean *registros de
+hogar*; **cuesta lo mismo evaluar a una persona del hogar que evaluar a todas
+las personas del hogar**.
+
+- **(a)** Explique cómo usar muestreo por conglomerados para estimar la tasa
+  de error en un condado. ¿Una o dos etapas?
+- **(b)** Un condado certificó $N = 1\,572$ hogares. La tasa de error
+  histórica por hogar es $\approx 10\,\%$. ¿Cuántos hogares deben muestrearse
+  para que el margen de error de la tasa por persona sea menor que $0{,}03$?
+  ¿Qué supuestos hizo sobre el CCI ($\rho$)?
+
+## Output 1 — estructura de costos y decisión 1 etapa vs. 2 etapas
+
+```{r costo-aud}
+costo_estructura <- tibble::tribble(
+  ~Estrategia,                        ~`Costo por hogar`,    ~`Personas auditadas`,
+  "MAS de personas",                  "1 unidad / persona",  "n_personas",
+  "Bietápico (m = 5 personas/hogar)", "1 unidad / hogar",    "5 · n_hogares",
+  "Una etapa (todo el hogar)",        "1 unidad / hogar",    "M̄ · n_hogares"
+)
+kable(costo_estructura,
+      caption = "Estructura de costos: si auditar 1 persona ≈ auditar todas, una etapa domina")
+```
+
+> **Implicación económica:** si el costo es fijo por hogar, no hay incentivo a
+> submuestrear personas dentro del hogar. Cada hogar visitado entrega $M_i$
+> observaciones por el mismo costo.
+
+## Output 2 — calculadora de tamaño muestral
+
+```{r calc-aud}
+# Parámetros
+p <- 0.10; e <- 0.03; z <- qnorm(0.975); N_h <- 1572
+
+# Tamaño base SRS de personas
+n0 <- ceiling(z^2 * p * (1 - p) / e^2)
+cat("n0 (SRS de personas) =", n0, "\n")
+
+# Función auxiliar
+n_hogares_fpc <- function(M_bar, rho, n0 = 385, N = 1572) {
+  deff      <- 1 + (M_bar - 1) * rho
+  n_pers    <- ceiling(n0 * deff)
+  n_h       <- ceiling(n_pers / M_bar)
+  n_fpc     <- ceiling(n_h * N / (n_h + N - 1))
+  n_fpc
+}
+```
+
+## Output 3 — tabla de sensibilidad (con FPC, $N_h = 1\,572$)
+
+```{r tabla-aud}
+M_grid   <- c(2, 3, 4, 5)
+rho_grid <- c(0.0, 0.1, 0.3, 0.5, 0.7)
+
+tabla <- expand.grid(M_bar = M_grid, rho = rho_grid) %>%
+  rowwise() %>%
+  mutate(n_h = n_hogares_fpc(M_bar, rho)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = rho, values_from = n_h,
+              names_prefix = "rho=")
+
+kable(tabla,
+      caption = "Hogares requeridos según M̄ (filas) y ρ (columnas), con FPC")
+```
+
+## Output 4 — sensibilidad de $n$ a $\rho$ por $\bar M$
+
+```{r curvas-aud, fig.height=4.6}
+curvas <- expand.grid(
+  M_bar = c(2, 3, 4, 5),
+  rho   = seq(0, 0.7, by = 0.05)
+) %>%
+  rowwise() %>%
+  mutate(n_h = n_hogares_fpc(M_bar, rho)) %>%
+  ungroup() %>%
+  mutate(M_bar = factor(M_bar, levels = c(2, 3, 4, 5),
+                        labels = paste0("M̄ = ", c(2, 3, 4, 5))))
+
+ggplot(curvas, aes(x = rho, y = n_h, color = M_bar)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.4) +
+  scale_color_manual(values = unname(usta_colors)) +
+  labs(x = expression(rho ~ "(CCI)"),
+       y = "Hogares requeridos (con FPC)",
+       color = NULL,
+       title = "Sensibilidad del tamaño muestral a la CCI",
+       subtitle = "Cada curva: un tamaño promedio de hogar M̄") +
+  theme_usta
+```
+
+## Preguntas para responder
+
+> **1. Decisión 1 etapa vs. 2 etapas con argumento económico (parte (a)).**
+>
+> (i) Articule en una frase la regla operativa que se deriva de la estructura
+> de costos «$\text{costo}(1\text{ persona}) \approx
+> \text{costo}(\text{todo el hogar})$»: ¿qué muestreo es óptimo y por qué?
+>
+> (ii) Compare la *cantidad de información* que entregan, para el mismo
+> presupuesto $B$, un diseño de una etapa (todo el hogar) vs. uno de dos
+> etapas con $m = 5$ personas/hogar, asumiendo $\bar M = 3$. ¿Cuál entrega
+> más observaciones?
+>
+> (iii) Mencione una situación realista donde, a pesar del costo fijo por
+> hogar, sí convenga submuestrear (límites cognitivos del auditor, fatiga,
+> calidad del dato). ¿Cómo cambiaría su recomendación?
+
+> **2. Lectura de la tabla de sensibilidad y elección de $n$ (parte (b)).**
+>
+> (i) Identifique el caso SRS «de personas» ($\rho = 0$, DEFF = 1): ¿coincide
+> con $n_0 = 385$ *personas* en cualquiera de las celdas? Explique por qué la
+> columna $\rho = 0$ reporta menos de 385 *hogares*.
+>
+> (ii) ¿Cuántos hogares debe muestrear el condado bajo el supuesto «pizarra»
+> $\bar M = 3$, $\rho = 0{,}3$? Repórtelo y discuta si es operativamente
+> factible (sobre 1 572 hogares certificados).
+>
+> (iii) En el Output 4 observe la *pendiente* con la que crece $n$ a medida
+> que aumenta $\rho$. ¿La sensibilidad a $\rho$ es **mayor** para hogares
+> grandes ($\bar M = 5$) o pequeños ($\bar M = 2$)? Justifique apelando a la
+> fórmula $\mathrm{DEFF} = 1 + (\bar M - 1)\rho$.
+>
+> (iv) Las curvas de $\bar M = 2$ y $\bar M = 5$ *se cruzan* alrededor de
+> $\rho = 0{,}5$–$0{,}7$. Antes del cruce, hogares grandes requieren *menos*
+> hogares; después del cruce, *más*. Explique geométricamente este fenómeno.
+
+> **3. Defensa del supuesto sobre $\rho$ (de resultados a conclusiones).**
+>
+> (i) Argumente, con razonamiento sustantivo, por qué $\rho$ para «error de
+> certificación» entre personas del mismo hogar debería ser **positivo y no
+> trivial** (típicamente $0{,}3$–$0{,}7$).
+>
+> (ii) Si la auditoría documentara los *mismos datos* de elegibilidad para
+> todos los miembros del hogar (caso extremo: $\rho \to 1$), ¿cuál es la
+> información efectiva que aporta una persona adicional dentro del hogar?
+>
+> (iii) Recomiende un valor *conservador* de $\rho$ y reporte el
+> $n_{\text{hogares}}$ correspondiente leído del Output 3.
+
+> **4. Análisis ex-post y ajuste del diseño.**
+>
+> (i) Suponga que se ejecuta la auditoría con $n = 183$ hogares y, al estimar
+> $\hat\rho$ ex-post, resulta $\hat\rho \approx 0{,}55$. ¿Cuál habría sido el
+> $n$ requerido? ¿La SE realizada estará por *encima* o por *debajo* del
+> objetivo?
+>
+> (ii) Recomiende dos acciones correctivas: (a) aumentar la muestra en una
+> segunda ola, (b) reportar el IC empírico (más amplio). ¿Cuál prefiere si el
+> resultado se va a usar para imponer multas administrativas?
+>
+> (iii) Articule el principio: la *elección del $\rho$ supuesto* es una
+> decisión de gestión de riesgo, no un detalle técnico.
+
+
+# Pregunta 11 — Bietápico + diseño con presupuesto: tabaquismo en preparatorias
+
+## Pregunta original
+
+MAS de $n = 4$ preparatorias de $N = 29$ en una región. En cada escuela se
+cuenta el total de alumnas y se entrevista a una submuestra:
+
+```{r tabla-tab-orig}
+tabaquismo <- tibble::tribble(
+  ~Escuela, ~Total, ~M_i, ~m_i, ~Fumadoras,
+  1, 1471, 792, 25, 10,
+  2,  890, 447, 15,  3,
+  3, 1021, 511, 20,  6,
+  4, 1587, 800, 40, 27
+)
+kable(tabaquismo, caption = "Datos originales (Lohr, ejercicio del Cap. 5)")
+```
+
+- **(a)** Estime el porcentaje de alumnas fumadoras en la región e IC al 95 %.
+- **(b)** Estime el total de alumnas fumadoras en la región e IC al 95 %.
+- **(c)** Para una nueva región con $N = 35$ preparatorias, asumiendo CME y CMD
+  similares, calcule $R_a^2$ con esta muestra y diseñe una muestra por
+  conglomerados. Costo: 50 h/escuela + 0,5 h/entrevista. Presupuesto:
+  $\le 300$ h.
+
+## Output 1 — estimadores con `survey`
+
+```{r survey-tab}
+# Reconstruir microdatos a nivel alumna
+set.seed(2026)
+tab_micro <- tabaquismo %>%
+  rowwise() %>%
+  mutate(smoker = list(c(rep(1L, Fumadoras),
+                         rep(0L, m_i - Fumadoras)))) %>%
+  ungroup() %>%
+  select(Escuela, M_i, m_i, smoker) %>%
+  unnest(smoker) %>%
+  group_by(Escuela) %>%
+  mutate(student_id = row_number()) %>%
+  ungroup() %>%
+  mutate(N_schools = 29L,
+         weight    = (29 / 4) * (M_i / m_i))
+
+design_tab <- svydesign(
+  ids     = ~ Escuela + student_id,
+  fpc     = ~ N_schools + M_i,
+  weights = ~ weight,
+  data    = tab_micro
+)
+
+(prop_est  <- svymean (~ smoker, design_tab))
+(total_est <- svytotal(~ smoker, design_tab))
+confint(prop_est,  level = 0.95)
+confint(total_est, level = 0.95)
+```
+
+## Output 2 — descomposición ANOVA y $R_a^2$
+
+```{r anova-tab}
+# CME y CMD usando alumnas
+ybar_global <- with(tabaquismo, sum(Fumadoras) / sum(m_i))
+SCE <- with(tabaquismo, sum(m_i * (Fumadoras / m_i - ybar_global)^2))
+SCD <- with(tabaquismo, sum(m_i * (Fumadoras / m_i) *
+                              (1 - Fumadoras / m_i)))
+gl_E <- nrow(tabaquismo) - 1
+gl_D <- sum(tabaquismo$m_i) - nrow(tabaquismo)
+CME <- SCE / gl_E
+CMD <- SCD / gl_D
+CMT <- (SCE + SCD) / (gl_E + gl_D)
+R_a2 <- 1 - CMD / CMT
+
+tibble::tribble(
+  ~Cantidad,   ~Valor,
+  "SCE",       SCE,
+  "SCD",       SCD,
+  "SCT",       SCE + SCD,
+  "CME",       CME,
+  "CMD",       CMD,
+  "CMT",       CMT,
+  "R²_a",      R_a2
+) %>%
+  mutate(Valor = round(Valor, 4)) %>%
+  kable(caption = "Descomposición ANOVA y R²_a")
+```
+
+## Output 3 — frontera presupuestal y SE estimada
+
+```{r frontera-tab, fig.height=4.4}
+S2  <- ybar_global * (1 - ybar_global)   # ≈ 0.245 (varianza poblacional)
+rho <- 0.112                              # CCI estimada
+N   <- 35
+
+frontera <- tibble(
+  n = c(2, 3, 4, 5),
+  m = c(200, 100, 50, 20)
+) %>%
+  mutate(
+    DEFF  = 1 + (m - 1) * rho,
+    SE_p  = sqrt(S2 * DEFF / (n * m) * (1 - n / N))
+  )
+
+# Óptimo continuo
+m_opt <- sqrt(50 * (1 - rho) / (0.5 * rho))
+n_opt <- 300 / (50 + 0.5 * m_opt)
+SE_opt <- sqrt(S2 * (1 + (m_opt - 1) * rho) /
+                 (n_opt * m_opt) * (1 - n_opt / N))
+
+kable(frontera, digits = 3,
+      caption = "Combinaciones discretas que agotan B = 300 h")
+cat(sprintf("Óptimo continuo: m* = %.2f, n* = %.2f, SE ≈ %.3f\n",
+            m_opt, n_opt, SE_opt))
+
+ggplot(frontera, aes(x = n, y = SE_p)) +
+  geom_line(color = usta_colors["primary"], linewidth = 1) +
+  geom_point(color = usta_colors["secondary"], size = 4) +
+  geom_text(aes(label = paste0("m=", m)), vjust = -1, size = 3.6) +
+  annotate("point", x = n_opt, y = SE_opt,
+           shape = 8, size = 5, color = usta_colors["gold"]) +
+  annotate("text", x = n_opt, y = SE_opt - 0.005,
+           label = "óptimo continuo (n*=4.68, m*=28)",
+           size = 3.4, color = "#92400E") +
+  coord_cartesian(ylim = c(0.06, 0.13), xlim = c(1.5, 5.5)) +
+  labs(x = "n (escuelas muestreadas)", y = expression(hat(SE)(hat(p))),
+       title = "SE estimada sobre la frontera B = 300 h",
+       subtitle = "Cada punto: una asignación discreta factible") +
+  theme_usta
+```
+
+## Preguntas para responder
+
+> **1. Lectura de la proporción y su IC (parte (a)).**
+>
+> (i) Reporte $\hat p$, $\mathrm{SE}(\hat p)$ y el IC al 95 %.
+>
+> (ii) El IC es *extraordinariamente amplio* ($\sim 39$ puntos porcentuales).
+> Identifique cuál es la observación dominante en la varianza entre-PSU: ¿qué
+> $\bar y_i$ se desvía más del promedio (0,46)? ¿Qué pasaría con el IC si la
+> Escuela 4 hubiera reportado $\bar y_4 \approx 0{,}30$ en lugar de
+> $0{,}675$?
+>
+> (iii) Con solo $n = 4$ PSUs, los cuantiles de $t_{n-1}$ (3 gl) son
+> agresivos. ¿En qué dirección cambiaría el IC al usar $t_3$ en lugar de
+> $z_{0{,}975}$?
+
+> **2. Lectura del total y conexión con $\hat M$ (parte (b)).**
+>
+> (i) Reporte $\hat t$, $\mathrm{SE}(\hat t)$ y el IC al 95 %. Tradúzcalo a
+> una frase para un funcionario de salud pública.
+>
+> (ii) Note que $\hat M = 18\,488$ tiene $\mathrm{SE} \approx 1\,023$. ¿Es más
+> útil reportar el *total absoluto* o la *proporción* para una intervención
+> de salud pública?
+>
+> (iii) Las cotas del IC del total son $(2628, 13314)$. ¿Por qué ese rango es
+> *aritméticamente coherente* —pero no idéntico— al IC de la proporción
+> $(23{,}7~\%, 62{,}5~\%)$ multiplicado por $\hat M$? Verifique al
+> multiplicar.
+
+> **3. Cálculo e interpretación de $R_a^2$ (parte (c)).**
+>
+> (i) Reporte $R_a^2$. ¿Qué fracción de la varianza total se explica por
+> *diferencias entre escuelas*?
+>
+> (ii) CME ($= 1{,}155$) es ~5,2 veces CMD ($= 0{,}2227$). ¿Esto indica que
+> el diseño por conglomerados *perjudica* la precisión respecto a un MAS de
+> personas?
+>
+> (iii) Si la nueva región tiene un CCI *diferente* (digamos $R_a^2 \approx
+> 0{,}30$), ¿qué pasaría con el $m^*$ óptimo del Output 3? Calcule
+> *cualitativamente* la dirección.
+
+> **4. Decisión de diseño con presupuesto (de resultados a conclusiones).**
+>
+> (i) El óptimo continuo es $(n^*, m^*) = (4{,}68,\ 28{,}16)$. Las opciones
+> *discretas* que agotan el presupuesto son $(n=4, m=50)$ y $(n=5, m=20)$.
+> ¿Cuál recomienda? Lea las SE del Output 3 y justifique.
+>
+> (ii) Argumente por qué la opción $(n=2, m=200)$, aunque entrega 4× más
+> entrevistas, tiene SE $\sim 43~\%$ peor. Conecte con el principio: «en
+> cluster con $\rho$ alto, lo que reduce la varianza es muestrear más PSUs,
+> no más SSUs».
+>
+> (iii) Defienda una recomendación final ante la investigadora: $(n, m) =
+> (\square, \square)$, justificación en 2-3 líneas que combine SE y robustez
+> ante rechazo de una escuela.
+>
+> (iv) Una alternativa: aceptar excederse en 20 h (presupuesto = 320 h) para
+> usar $(n=5, m=28)$. ¿Qué SE aproximada se gana? ¿Es defendible la
+> sobre-ejecución del 7 % por una mejora marginal?
+
+
+# Pregunta 12 — Cluster estratificado: carga horaria docente (Maricopa, Gnap 1995)
+
+## Pregunta original
+
+Encuesta sobre la carga laboral docente en distritos públicos del condado de
+Maricopa. Estratificación por tamaño del distrito; el **estrato grande**
+($N = 245$ escuelas, distritos con $> 5\,000$ estudiantes) tuvo $n = 23$
+escuelas participantes. Se pidió a *todos* los maestros de las escuelas
+seleccionadas que respondieran, pero hubo no-respuesta. Datos: `teachers.csv` y
+`teachmi.csv` (contiene `popteach` $= M_i$).
+
+- **(a)** ¿Por qué cluster es mejor que MAS aquí (costo, facilidad,
+  confidencialidad)? Desventajas.
+- **(b)** Media y SD de `hrwork` por escuela. Graficar medias y SDs. ¿Más
+  variación dentro o entre? Manejo de $-9$.
+- **(c)** Scatter SD vs. media por escuela. ¿Hay relación?
+- **(d)** Estime la media de `hrwork` en el estrato grande con SE.
+
+## Datos resumidos por escuela
+
+```{r datos-mar}
+maricopa <- tibble::tribble(
+  ~school, ~M_i, ~m_i, ~ybar, ~sd_y,
+  1,  25, 22, 32.4, 5.8,
+  2,  18, 16, 35.7, 6.4,
+  3,  32, 28, 31.2, 4.9,
+  4,  41, 36, 33.8, 5.7,
+  5,  22, 20, 36.5, 7.2,
+  6,  19, 17, 30.4, 4.5,
+  7,  28, 24, 34.1, 6.0,
+  8,  35, 31, 32.8, 5.3,
+  9,  24, 21, 35.3, 6.7,
+  10, 30, 27, 33.5, 5.5,
+  11, 16, 14, 31.8, 5.0,
+  12, 38, 33, 34.6, 6.2,
+  13, 26, 23, 32.1, 4.8,
+  14, 33, 29, 35.9, 7.1,
+  15, 21, 19, 33.0, 5.6,
+  16, 29, 25, 31.5, 4.7,
+  17, 36, 31, 34.2, 6.0,
+  18, 23, 20, 33.7, 5.4,
+  19, 27, 24, 32.6, 5.1,
+  20, 31, 27, 34.8, 6.5,
+  21, 20, 18, 32.9, 5.2,
+  22, 34, 30, 33.4, 5.9,
+  23, 39, 34, 35.0, 6.8
+)
+
+cat("Total maestros (M_i):           ", sum(maricopa$M_i), "\n")
+cat("Total respondientes (m_i):      ", sum(maricopa$m_i), "\n")
+cat("Tasa de respuesta global:       ",
+    round(sum(maricopa$m_i) / sum(maricopa$M_i), 3), "\n")
+```
+
+## Output 1 — descomposición ANOVA y CCI implícita
+
+```{r anova-mar}
+ybar_glob <- with(maricopa, sum(m_i * ybar) / sum(m_i))
+SCE       <- with(maricopa, sum(m_i * (ybar - ybar_glob)^2))
+SCD       <- with(maricopa, sum((m_i - 1) * sd_y^2))
+n_PSU     <- nrow(maricopa)
+gl_E      <- n_PSU - 1
+gl_D      <- sum(maricopa$m_i) - n_PSU
+CME       <- SCE / gl_E
+CMD       <- SCD / gl_D
+CMT       <- (SCE + SCD) / (gl_E + gl_D)
+R_a2      <- 1 - CMD / CMT
+mbar      <- mean(maricopa$m_i)
+rho_a     <- (CME - CMD) / (CME + (mbar - 1) * CMD)
+DEFF      <- 1 + (mbar - 1) * rho_a
+n_eff     <- sum(maricopa$m_i) / DEFF
+
+cat(sprintf("CME = %.3f, CMD = %.3f, CMT = %.3f\n", CME, CMD, CMT))
+cat(sprintf("R²_a = %.4f, ρ_a = %.4f, DEFF = %.3f\n", R_a2, rho_a, DEFF))
+cat(sprintf("Tamaño efectivo n_eff = %.0f (de %d respondientes)\n",
+            n_eff, sum(maricopa$m_i)))
+```
+
+## Output 2 — medias por escuela ordenadas con barras de error
+
+```{r medias-mar, fig.height=4.4}
+mar_plot <- maricopa %>%
+  arrange(ybar) %>%
+  mutate(orden    = row_number(),
+         se_intra = sd_y / sqrt(m_i),
+         lo       = ybar - 1.96 * se_intra,
+         hi       = ybar + 1.96 * se_intra,
+         label    = paste0("E-", school))
+
+ggplot(mar_plot, aes(x = orden, y = ybar)) +
+  geom_hline(yintercept = ybar_glob, linetype = "dashed",
+             color = usta_colors["navy"], linewidth = 0.6) +
+  geom_errorbar(aes(ymin = lo, ymax = hi),
+                width = 0.25, color = usta_colors["primary"]) +
+  geom_point(size = 2.6, color = usta_colors["secondary"]) +
+  geom_text(aes(label = label), vjust = -1.3, size = 2.7,
+            color = "#475569") +
+  scale_x_continuous(breaks = mar_plot$orden,
+                     labels = mar_plot$label) +
+  labs(x = "Escuela (orden ascendente por media)",
+       y = "Media de hrwork (h/sem)",
+       title = "Medias por escuela con IC 95 % aproximado intra-escuela",
+       subtitle = sprintf("Línea: media global = %.2f h/sem", ybar_glob)) +
+  theme_usta +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+```
+
+## Output 3 — scatter SD vs. media por escuela
+
+```{r scatter-mar, fig.height=4.4}
+fit <- lm(sd_y ~ ybar, data = maricopa)
+slope <- coef(fit)[2]
+r_pearson <- cor(maricopa$ybar, maricopa$sd_y)
+
+ggplot(maricopa, aes(x = ybar, y = sd_y)) +
+  geom_smooth(method = "lm", se = FALSE,
+              color = usta_colors["secondary"], linetype = "dotted") +
+  geom_point(size = 3, color = usta_colors["primary"]) +
+  geom_text(aes(label = paste0("E-", school)),
+            vjust = -0.9, size = 2.6, color = "#475569") +
+  labs(x = "Media de hrwork por escuela (h/sem)",
+       y = "SD de hrwork por escuela (h/sem)",
+       title = "Relación SD vs. media por escuela",
+       subtitle = sprintf("Pendiente β = %.3f, correlación r = %.3f",
+                          slope, r_pearson)) +
+  theme_usta
+```
+
+## Output 4 — estimación de la media del estrato
+
+```{r est-mar}
+# Estimador de cociente
+N_stra <- 245; n_stra <- 23
+sum_t  <- sum(maricopa$M_i * maricopa$ybar)
+sum_M  <- sum(maricopa$M_i)
+ybar_r <- sum_t / sum_M
+
+# Componentes de varianza (formulación bietápica)
+s_r2 <- with(maricopa, sum((M_i * ybar - ybar_r * M_i)^2)) / (n_stra - 1)
+between <- N_stra * (N_stra - n_stra) * s_r2 / n_stra
+within  <- (N_stra / n_stra) *
+  with(maricopa, sum(M_i * (M_i - m_i) * sd_y^2 / m_i))
+M_hat   <- N_stra / n_stra * sum_M
+
+V_ybar <- (between + within) / M_hat^2
+SE_ybar <- sqrt(V_ybar)
+
+cat(sprintf("Estimador de la media estrato grande: ybar_r = %.2f h/sem\n",
+            ybar_r))
+cat(sprintf("SE(ybar_r) = %.3f h/sem\n", SE_ybar))
+cat(sprintf("IC 95 %%: (%.2f, %.2f)\n",
+            ybar_r - 1.96 * SE_ybar, ybar_r + 1.96 * SE_ybar))
+cat(sprintf("Comparación: SE bajo MAS sería sqrt(CMT/n_total) = %.3f\n",
+            sqrt(CMT / sum(maricopa$m_i))))
+```
+
+## Preguntas para responder
+
+> **1. Argumentar cluster vs. MAS (parte (a)).**
+>
+> (i) Articule en una frase para cada caso por qué *cluster* domina a MAS:
+> **(α)** costo de campo (245 escuelas dispersas vs. 23 visitas), **(β)**
+> obtención del marco muestral, **(γ)** confidencialidad.
+>
+> (ii) Liste *dos desventajas* concretas que el Output 1 cuantifica:
+> $\mathrm{DEFF} \approx 1{,}61$ y tamaño efectivo de 354 en lugar de 569.
+> «Equivale a haber hecho una MAS de $\square$ maestros».
+>
+> (iii) Mencione una *desventaja no estadística*: si una escuela rechaza
+> participar (no-respuesta a nivel UPM), ¿qué fracción del estrato
+> perderíamos?
+
+> **2. Lectura del Output 2 — variación entre vs. dentro (parte (b)).**
+>
+> (i) ¿Las medias por escuela están *concentradas* alrededor de 33,6 o muy
+> *dispersas*? Reporte el rango aproximado y compárelo con el ancho típico de
+> las barras de error.
+>
+> (ii) Conecte con el Output 1: $R_a^2 = 0{,}025$ y $\rho_a = 0{,}026$ —solo
+> el 2,5 % de la variación total es entre escuelas. ¿Es coherente con el
+> gráfico?
+>
+> (iii) Sobre el manejo de los $-9$: ¿es defendible eliminarlos? Discuta el
+> sesgo: ¿sería *razonable* que los maestros con mayor carga horaria sean
+> los que *no responden*?
+
+> **3. Lectura del Output 3 — relación SD vs. media (parte (c)).**
+>
+> (i) Describa la relación: ¿positiva, negativa o ausente? Reporte: «en
+> escuelas con cargas horarias *mayores*, la *variabilidad* entre maestros es
+> $\square$».
+>
+> (ii) Articule una hipótesis sustantiva del por qué.
+>
+> (iii) **Implicación estadística:** el supuesto de homocedasticidad falla.
+> ¿Qué método de SE es *robusto* a la heteroscedasticidad?
+
+> **4. Lectura del estimador final y reporte (parte (d)).**
+>
+> (i) Reporte $\hat{\bar y}_{hrwork}$, $\mathrm{SE}$ y el IC al 95 %.
+> Tradúzcalo a una frase para el sindicato de maestros.
+>
+> (ii) Conecte con el DEFF $\approx 1{,}61$: ¿la SE $= 0{,}32$ es *más
+> grande* que la que se obtendría con MAS? Cuantifique cuál sería la SE bajo
+> MAS y compárela con 0,32.
+>
+> (iii) **Decisión de reporte.** El sindicato pide afirmar «los maestros
+> trabajan más de 32 horas a la semana». Use el IC: ¿es defensable? ¿Y «más
+> de 33 horas»?
+>
+> (iv) **Estrato grande dentro del diseño completo.** Para reportar a nivel
+> de condado se requiere combinar con el estrato pequeño. ¿Qué información
+> necesita el lector antes de extrapolar?
+
+
+# Pregunta 13 — Bietápico: encuesta post-campaña de inmunización contra sarampión
+
+## Pregunta original
+
+Tras una campaña de inmunización contra sarampión, en $N = 46$ escuelas del
+área quedaron 9 962 niños no inmunizados. En la encuesta de seguimiento se
+seleccionaron $n = 10$ escuelas al azar; en cada escuela seleccionada se
+sub-muestrearon $M_i$ niños no inmunizados y se enviaron cuestionarios a sus
+padres. $m_i$ = padres respondientes (con `returnf = 9` tratado como *no
+respondido*). Datos en `measles.csv`.
+
+- **(a)** Estime el % de padres que devolvieron el formulario *por escuela*.
+- **(b)** Construya el peso muestral $w_{ij}$ usando $m_i$ como respondientes.
+- **(c)** Estime el % global con IC al 95 %.
+- **(d)** Compare con el análisis MAS-naive. Calcule
+  $\hat V_{\text{cluster}} / \hat V_{\text{MAS}}$. ¿Cuál es el efecto del
+  cluster?
+
+## Datos por escuela y construcción del peso
+
+```{r datos-sar}
+sarampion <- tibble::tribble(
+  ~school, ~M_i, ~m_i, ~returnf,
+  1,  156,  78,  52,
+  2,  247, 142, 102,
+  3,  178,  95,  71,
+  4,  320, 175, 142,
+  5,  198, 105,  71,
+  6,  145,  88,  70,
+  7,  285, 152, 111,
+  8,  213, 124,  87,
+  9,  168,  90,  68,
+  10, 250, 138,  98
+) %>%
+  mutate(p_hat_i = returnf / m_i,
+         w_ij    = (46 / 10) * (M_i / m_i))
+
+kable(sarampion, digits = 3,
+      caption = "Output 1 — tabla por escuela con $\\hat p_i$ y peso $w_{ij}$")
+
+cat(sprintf("Suma M_i = %d (sub-muestra), suma m_i = %d (respondientes)\n",
+            sum(sarampion$M_i), sum(sarampion$m_i)))
+cat(sprintf("Σ w_ij × m_i ≈ %.0f (debe aproximar la población 9 962)\n",
+            sum(sarampion$w_ij * sarampion$m_i)))
+```
+
+## Output 2 — proporciones por escuela con IC 95 %
+
+```{r prop-sar, fig.height=4.4}
+sar_plot <- sarampion %>%
+  mutate(se_i = sqrt(p_hat_i * (1 - p_hat_i) / m_i),
+         lo   = p_hat_i - 1.96 * se_i,
+         hi   = p_hat_i + 1.96 * se_i)
+
+p_global <- sum(sarampion$M_i * sarampion$p_hat_i) / sum(sarampion$M_i)
+
+ggplot(sar_plot, aes(x = school, y = p_hat_i)) +
+  geom_hline(yintercept = p_global, linetype = "dashed",
+             color = usta_colors["navy"], linewidth = 0.6) +
+  geom_errorbar(aes(ymin = lo, ymax = hi), width = 0.25,
+                color = usta_colors["primary"]) +
+  geom_point(size = 3, color = usta_colors["secondary"]) +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(x = "Escuela", y = "Proporción de devolución (returnf = 1)",
+       title = "Proporción de devolución por escuela",
+       subtitle = sprintf("Línea: media global ponderada = %.1f %%",
+                          100 * p_global)) +
+  theme_usta
+```
+
+## Output 3 — análisis cluster vs. MAS-naive
+
+```{r cluster-vs-srs}
+# Microdatos
+set.seed(2026)
+sar_micro <- sarampion %>%
+  rowwise() %>%
+  mutate(returnf01 = list(c(rep(1L, returnf),
+                            rep(0L, m_i - returnf)))) %>%
+  ungroup() %>%
+  select(school, M_i, m_i, w_ij, returnf01) %>%
+  unnest(returnf01) %>%
+  group_by(school) %>%
+  mutate(child_id = row_number()) %>%
+  ungroup() %>%
+  mutate(N_schools = 46L)
+
+# Diseño cluster
+design_cl <- svydesign(
+  ids     = ~ school + child_id,
+  fpc     = ~ N_schools + M_i,
+  weights = ~ w_ij,
+  data    = sar_micro
+)
+
+# Diseño MAS-naive
+design_srs <- svydesign(ids = ~ 1, data = sar_micro)
+
+m_cl  <- svymean(~ returnf01, design_cl)
+m_srs <- svymean(~ returnf01, design_srs)
+
+V_cl  <- vcov(m_cl)[1, 1]
+V_srs <- vcov(m_srs)[1, 1]
+DEFF  <- V_cl / V_srs
+n_eff <- nrow(sar_micro) / DEFF
+
+cat("--- CLUSTER ---\n");      print(m_cl);  print(confint(m_cl))
+cat("\n--- MAS-naive ---\n");  print(m_srs); print(confint(m_srs))
+cat(sprintf("\nDEFF = V_cl / V_srs = %.4f / %.4f = %.3f\n",
+            V_cl, V_srs, DEFF))
+cat(sprintf("SE_cl / SE_srs       = %.3f\n", sqrt(DEFF)))
+cat(sprintf("n_eff                = %d / %.3f = %.0f\n",
+            nrow(sar_micro), DEFF, n_eff))
+```
+
+## Preguntas para responder
+
+> **1. Lectura de la columna $\hat p_i$ por escuela (parte (a)).**
+>
+> (i) Identifique las dos escuelas con menor $\hat p_i$ y las dos con mayor
+> $\hat p_i$. Reporte el rango y compare con el ancho de las barras de error.
+>
+> (ii) ¿Las barras de error de las escuelas extremas *se solapan* con la
+> media global $\hat p = 0{,}734$? ¿Es plausible que las diferencias entre
+> escuelas sean azar muestral?
+>
+> (iii) **Sobre el código «9»:** ¿es defendible tratar `returnf = 9` (sin
+> respuesta) como *no devuelto*? Si los padres más comprometidos son los que
+> responden cualquier cosa, ¿la decisión *infla* o *desinfla* $\hat p$?
+
+> **2. Construcción del peso muestral (parte (b)).**
+>
+> (i) Recite la fórmula: $w_{ij} = (N/n)(M_i/m_i) = (46/10)(M_i/m_i)$.
+> Identifique la escuela con peso *más alto* y la de peso *más bajo* y
+> explique cuál factor es responsable.
+>
+> (ii) Verifique que $\sum w_{ij}$ reproduce aproximadamente $\hat M
+> = 9\,936$. ¿Por qué no es exactamente 9 962?
+>
+> (iii) Articule cuál sería el peso bajo MAS de niños individuales (sin
+> cluster) y cuál bajo cluster *de una etapa* (todos los $M_i$ responden).
+
+> **3. Estimación e IC global (parte (c)).**
+>
+> (i) Reporte $\hat p$, $\mathrm{SE}(\hat p)$ y el IC al 95 %. Tradúzcalo a
+> una frase para la autoridad sanitaria.
+>
+> (ii) La $\hat p$ ponderada (Output 3) es 0,7339 y la *no ponderada* (Output
+> 1) es 0,7346. ¿Por qué convergen, qué propiedad de los pesos lo explica?
+>
+> (iii) **Decisión política:** la autoridad considera «exitosa» una campaña
+> con devolución $\ge 70~\%$. ¿Se puede afirmar con 95 % de confianza? ¿Y
+> «exitosa» con umbral de 75 %?
+
+> **4. Comparación con MAS-naive y efecto del cluster (parte (d)).**
+>
+> (i) Reporte la razón $\hat V_{\text{cluster}} / \hat V_{\text{MAS-naive}}$
+> (es el DEFF). «La variabilidad del estimador cluster es $\square~\%$ mayor
+> que la MAS de igual $n_{\text{total}}$».
+>
+> (ii) **Importancia del DEFF:** $\approx 1{,}28$. Si las escuelas hubieran
+> tenido $\hat p_i$ mucho más dispersas (30 % a 95 %), ¿en qué dirección
+> cambiaría?
+>
+> (iii) **Riesgo del análisis MAS-naive:** ¿qué afirmación falsa
+> *defendible bajo MAS* podría volverse *indefendible bajo cluster*?
+>
+> (iv) **Implicación para diseños futuros:** con $n_{\text{eff}} = 925$ vs.
+> 1 187 respondientes, ¿en qué condiciones es defendible aceptar el DEFF
+> $\approx 1{,}28$ por la simplicidad operativa?
+
+

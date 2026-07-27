@@ -1,0 +1,1826 @@
+---
+title: "Estimación de Razón, Regresión y Conglomerados: Capítulos 4 y 5 de Lohr"
+subtitle: "Material de estudio autónomo en R"
+author: "Curso de Muestreo — Estadística"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  html_document:
+    template: unbosque_template.html
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 4
+    number_sections: true
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+    fig_caption: true
+---
+
+```{r configuracion, include=FALSE}
+# Opciones globales para todos los chunks
+knitr::opts_chunk$set(
+  echo       = TRUE,
+  message    = FALSE,
+  warning    = FALSE,
+  fig.align  = "center",
+  fig.width  = 8,
+  fig.height = 5,
+  comment    = "#>"
+)
+
+# Carga de paquetes requeridos
+library(plotly)   # gráficos interactivos
+library(dplyr)    # manipulación de datos
+library(survey)   # análisis de encuestas con diseño complejo
+library(ggplot2)  # gráficos base que luego se convierten con ggplotly()
+library(knitr)    # tablas con kable()
+library(lme4)     # modelos lineales mixtos para inferencia basada en modelo
+
+# ---------------------------------------------------------------------------
+# Estilo visual unificado para todos los gráficos del documento
+# ---------------------------------------------------------------------------
+# Paleta semántica: cada color tiene un rol fijo a lo largo del documento.
+paleta_muestreo <- c(
+  primario   = "#1D3557",  # azul oscuro: barras solitarias y líneas principales
+  secundario = "#457B9D",  # azul medio: alternativo / método base en comparaciones
+  acento     = "#E63946",  # rojo: líneas de referencia y valores destacados
+  apoyo      = "#A8DADC",  # celeste: histogramas y elementos de fondo
+  contraste  = "#E76F51"   # naranja: segundo grupo en comparaciones binarias
+)
+
+# Paleta categórica de cuatro colores (para grupos discretos)
+paleta_categorica <- c("#1D3557", "#E76F51", "#2A9D8F", "#E9C46A")
+
+# Función auxiliar que aplica un layout común a cualquier objeto plotly.
+estilo_muestreo <- function(p, titulo = NULL, eje_x = NULL, eje_y = NULL,
+                            mostrar_leyenda = TRUE) {
+  p %>% layout(
+    title  = if (!is.null(titulo))
+               list(text = titulo, x = 0.02, xanchor = "left",
+                    font = list(size = 16))
+             else NULL,
+    xaxis  = list(title = eje_x, gridcolor = "#E5E5E5",
+                  zerolinecolor = "#CCCCCC"),
+    yaxis  = list(title = eje_y, gridcolor = "#E5E5E5",
+                  zerolinecolor = "#CCCCCC"),
+    legend = list(orientation = "h", x = 0, y = -0.18,
+                  bgcolor = "rgba(255,255,255,0)"),
+    margin = list(l = 70, r = 30, t = 60, b = 80),
+    font   = list(family = "Lato, Helvetica, Arial, sans-serif", size = 12,
+                  color = "#222222"),
+    hoverlabel = list(font = list(family = "Lato, Helvetica, Arial, sans-serif"),
+                      bgcolor = "#FFFFFF"),
+    plot_bgcolor  = "#FFFFFF",
+    paper_bgcolor = "#FFFFFF",
+    showlegend    = mostrar_leyenda
+  )
+}
+
+# Tema ggplot consistente para los gráficos que se construyen con ggplot
+theme_muestreo <- function() {
+  theme_minimal(base_family = "sans") +
+    theme(
+      plot.title       = element_text(size = 14, hjust = 0,
+                                      margin = margin(b = 8)),
+      axis.title       = element_text(size = 11),
+      legend.title     = element_text(size = 10),
+      legend.position  = "bottom",
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(color = "#E5E5E5"),
+      plot.background  = element_rect(fill = "white", color = NA),
+      panel.background = element_rect(fill = "white", color = NA)
+    )
+}
+
+# Ruta a los datos oficiales de Lohr (Sampling 3e)
+ruta_datos <- "CSV data sets for SDA 3e"
+```
+
+# Introducción
+
+El presente material continúa el estudio del libro **Sampling: Design and Analysis** (3.ª edición) de **Sharon L. Lohr**, esta vez sobre dos temas centrales:
+
+- **Capítulo 4 — Estimación de razón y regresión.** Se aprovecha información auxiliar $x_i$, conocida en toda la población, para mejorar las estimaciones de un total o una media de $y$ obtenidas mediante muestreo aleatorio simple (MAS). Esta familia de estimadores reduce la varianza cuando $y$ y $x$ están fuertemente correlacionadas.
+- **Capítulo 5 — Muestreo por conglomerados con probabilidades iguales.** Se sustituye el muestreo de unidades últimas por el muestreo de grupos (conglomerados) que se eligen completos o por etapas. El precio que se paga es una pérdida de precisión, llamada **efecto de diseño**, cuya magnitud depende de la **correlación intraclase**.
+
+Se asume que la persona lectora ya domina los capítulos 2 (MAS) y 3 (estratificado) del mismo libro. La notación se preserva: el subíndice $U$ indica la población finita, las letras minúsculas con barra (p. ej. $\bar{y}$) denotan estimadores muestrales, y los símbolos con sombrero (p. ej. $\hat{B}$, $\hat{t}$) son estimadores aleatorios.
+
+## Notación general
+
+| Símbolo | Significado |
+|---|---|
+| $N$ | tamaño de la población (en cap. 5, número de conglomerados) |
+| $n$ | tamaño de la muestra (en cap. 5, número de psu seleccionadas) |
+| $\bar{y}_U,\ \bar{x}_U$ | medias poblacionales |
+| $\bar{y},\ \bar{x}$ | medias muestrales |
+| $t_y = \sum_{i \in U} y_i$ | total poblacional de $y$ |
+| $S_y^2 = \frac{1}{N-1}\sum_{i \in U}(y_i - \bar{y}_U)^2$ | varianza poblacional |
+| $s_y^2 = \frac{1}{n-1}\sum_{i \in S}(y_i - \bar{y})^2$ | varianza muestral |
+| $\rho_{xy}$ | correlación poblacional entre $x$ y $y$ |
+| $\mathrm{CV}(x) = S_x/\bar{x}_U$ | coeficiente de variación |
+| $B = t_y/t_x$ | razón poblacional |
+| $\hat{B} = \bar{y}/\bar{x}$ | estimador de la razón |
+| $\hat{t}_{yr},\ \hat{\bar{y}}_r$ | estimadores de razón del total y la media |
+| $S_e^2,\ s_e^2$ | varianza de los residuos $y_i - B x_i$ (poblacional y muestral) |
+| $\beta_0, \beta_1$ | intercepto y pendiente del modelo de regresión |
+| $\hat{B}_1,\ \hat{\bar{y}}_{\text{reg}}$ | pendiente estimada y estimador de regresión |
+| $r^2$ | coeficiente de determinación muestral |
+| $M_i$ | tamaño del conglomerado $i$ |
+| $K = \sum_{i \in U} M_i$ | tamaño total de la población en cap. 5 |
+| $\bar{M} = K/N$ | tamaño promedio del conglomerado |
+| $m_i$ | submuestra observada en el psu $i$ (cap. 5, dos etapas) |
+| $A_i,\ \sigma_A^2$ | efecto aleatorio del psu y su varianza (cap. 5, modelo) |
+| $\rho = \sigma_A^2/(\sigma_A^2 + \sigma^2)$ | ICC del modelo mixto |
+| $R_a$ | correlación intraclase ANOVA (versión Lohr) |
+| deff | efecto de diseño = $V_{\text{diseño}}/V_{\text{MAS}}$ |
+
+# Capítulo 4: Estimación de razón y regresión
+
+## Razón en muestreo aleatorio simple (4.1) {#sec-4-1}
+
+Cuando se dispone de una variable auxiliar $x_i$ tal que el total $t_x$ es conocido y la relación entre $y_i$ y $x_i$ pasa aproximadamente por el origen, la **estimación de razón** mejora las estimaciones de $t_y$ obtenidas vía MAS. La idea consiste en multiplicar el cociente muestral $\bar{y}/\bar{x}$ por la información poblacional $t_x$. Las tres subsecciones siguientes formalizan la construcción, analizan el sesgo asintótico y extienden el procedimiento a proporciones.
+
+### ¿Por qué usar estimación de razón? (4.1.1) {#sec-4-1-1}
+
+#### Desarrollo conceptual
+
+Sea $(y_i, x_i)$ el par observado en la unidad $i$ de una muestra aleatoria simple sin reposición de tamaño $n$ tomada de una población de tamaño $N$. Se define la **razón poblacional** como
+$$
+B \;=\; \frac{t_y}{t_x} \;=\; \frac{\bar{y}_U}{\bar{x}_U},
+$$
+y su estimador natural,
+$$
+\hat{B} \;=\; \frac{\bar{y}}{\bar{x}}.
+$$
+A partir de $\hat{B}$ se construyen el **estimador de razón del total** y el **estimador de razón de la media**:
+$$
+\hat{t}_{yr} \;=\; \hat{B}\, t_x,
+\qquad
+\hat{\bar{y}}_r \;=\; \hat{B}\, \bar{x}_U.
+$$
+El estudiante puede notar que estos estimadores requieren conocer $t_x$ (o equivalentemente $\bar{x}_U$). La intuición es la siguiente: si la muestra arroja un $\bar{x}$ menor que $\bar{x}_U$ y la relación entre $y$ y $x$ es aproximadamente lineal y por el origen, entonces $\bar{y}$ subestima a $\bar{y}_U$; multiplicar por el cociente $\bar{x}_U/\bar{x}$ corrige esa subestimación.
+
+Las varianzas aproximadas (asintóticas) de los tres estimadores se obtienen todas a partir de la misma cantidad poblacional
+$$
+S_e^2 \;=\; \frac{1}{N-1}\sum_{i \in U}\bigl(y_i - B x_i\bigr)^2,
+$$
+y son
+$$
+V(\hat{\bar{y}}_r) \;\approx\; \Bigl(1 - \tfrac{n}{N}\Bigr)\, \frac{S_e^2}{n},
+\quad
+V(\hat{t}_{yr}) \;=\; N^2\,V(\hat{\bar{y}}_r),
+\quad
+V(\hat{B}) \;=\; \frac{V(\hat{\bar{y}}_r)}{\bar{x}_U^2}.
+$$
+Las tres son la misma varianza expresada en distinta escala: el estimador del total se obtiene multiplicando $\hat{\bar{y}}_r$ por $N$ (de ahí $N^2$ en su varianza), y la razón es $\hat{\bar{y}}_r$ dividida por $\bar{x}_U$. En la práctica se estima reemplazando $S_e^2$ por $s_e^2 = (n-1)^{-1}\sum_{i \in S}(y_i - \hat{B} x_i)^2$.
+
+La condición para que $V(\hat{\bar{y}}_r) < V(\bar{y})$ es, aproximadamente,
+$$
+\rho_{xy} \;>\; \frac{1}{2}\,\frac{\mathrm{CV}(x)}{\mathrm{CV}(y)},
+$$
+donde $\rho_{xy}$ es la correlación poblacional entre $y$ y $x$ y $\mathrm{CV}(\cdot)$ el coeficiente de variación. La intuición es que la razón solo aporta cuando la correlación es lo suficientemente fuerte como para compensar la variabilidad que introduce dividir por $\bar{x}$ en lugar de promediar directamente. En la práctica esta condición se cumple cuando la nube cae cerca de una recta por el origen y $y$ no es mucho más estable que $x$.
+
+#### Aplicación en R
+
+Se utiliza el conjunto `agsrs` (MAS de $n = 300$ condados estadounidenses, $N = 3078$) y la población `agpop`. La variable de interés es `acres92` (acres dedicados a fincas en 1992) y la auxiliar es `acres87`, cuyo total nacional es conocido a partir del censo agropecuario.
+
+```{r 411-datos}
+# Carga de la población y la muestra MAS de Lohr
+agpop <- read.csv(file.path(ruta_datos, "agpop.csv"))
+agsrs <- read.csv(file.path(ruta_datos, "agsrs.csv"))
+
+# Se eliminan los condados con valor perdido (acres == 0 codifica ausencia
+# de actividad agrícola; se aplican el mismo filtro a población y muestra
+# para mantener la consistencia y evitar divisiones por cero más adelante).
+agpop  <- agpop %>% filter(acres87 > 0, acres92 > 0)
+agsrs  <- agsrs %>% filter(acres87 > 0, acres92 > 0)
+N      <- nrow(agpop)        # tamaño poblacional efectivo
+n      <- nrow(agsrs)        # tamaño de la muestra efectivo
+tx_pob <- sum(agpop$acres87) # total poblacional conocido de la auxiliar
+
+# Estimador de razón calculado a mano
+B_hat   <- mean(agsrs$acres92) / mean(agsrs$acres87)
+t_yr    <- B_hat * tx_pob
+ybar_r  <- B_hat * mean(agpop$acres87)
+
+# Errores estándar a partir del residuo s_e^2
+e_i      <- agsrs$acres92 - B_hat * agsrs$acres87
+s_e2     <- sum(e_i^2) / (n - 1)
+V_t_yr   <- N^2 * (1 - n / N) * s_e2 / n
+EE_t_yr  <- sqrt(V_t_yr)
+EE_ybarr <- sqrt((1 - n / N) * s_e2 / n)        # EE de la media
+EE_B     <- EE_ybarr / mean(agpop$acres87)       # EE de la razón
+
+# Comparación con MAS
+t_srs    <- N * mean(agsrs$acres92)
+ybar_srs <- mean(agsrs$acres92)
+EE_tsrs  <- N * sqrt((1 - n / N) * var(agsrs$acres92) / n)
+EE_ysrs  <-     sqrt((1 - n / N) * var(agsrs$acres92) / n)
+
+resumen <- data.frame(
+  Estimador = c("MAS (sin auxiliar)", "Razón con acres87"),
+  Total     = c(t_srs, t_yr),
+  EE_total  = c(EE_tsrs, EE_t_yr),
+  Media     = c(ybar_srs, ybar_r),
+  EE_media  = c(EE_ysrs, EE_ybarr)
+)
+kable(resumen, digits = 0,
+      caption = "Estimación del total y la media de acres en fincas (1992)")
+
+# Verificación numérica de la relación entre las tres varianzas
+# del estimador de razón: V(t̂) = N² V(ȳ_r), V(B̂) = V(ȳ_r) / x̄_U²
+cat("Razón estimada B̂:", round(B_hat, 5),
+    "\nEE(t̂_yr):       ", format(EE_t_yr,  big.mark = ","),
+    "\nEE(ȳ_r):        ", format(EE_ybarr, big.mark = ","),
+    "\nEE(B̂):          ", round(EE_B, 6),
+    "\nVerificación: EE(t̂_yr) / N =", round(EE_t_yr / N, 2),
+    "(debe coincidir con EE(ȳ_r))")
+```
+
+```{r 411-survey}
+# Comprobación con el paquete survey (fpc precomputado como columna)
+agsrs$N_pob <- N
+diseno_srs  <- svydesign(ids = ~1, fpc = ~N_pob, data = agsrs)
+razon       <- svyratio(~acres92, ~acres87, design = diseno_srs)
+predict(razon, total = tx_pob)
+```
+
+Las dos vías (cálculo manual y `svyratio`) producen el mismo punto y el mismo error estándar.
+
+#### Gráfico interactivo
+
+```{r 411-plot}
+# Diagrama de dispersión (acres92 vs acres87) con la recta de razón
+g_411 <- plot_ly(agsrs, x = ~acres87, y = ~acres92,
+                 type = "scatter", mode = "markers",
+                 marker = list(color = paleta_muestreo[["secundario"]],
+                               size = 7, opacity = 0.7),
+                 name  = "Condados muestreados",
+                 hovertemplate = paste0(
+                   "Acres 1987: %{x:,}<br>",
+                   "Acres 1992: %{y:,}<extra></extra>")) %>%
+  add_lines(x = c(0, max(agsrs$acres87)),
+            y = c(0, B_hat * max(agsrs$acres87)),
+            line = list(color = paleta_muestreo[["acento"]], width = 2.5,
+                        dash = "solid"),
+            name = paste0("Recta de razón (B̂ = ", round(B_hat, 3), ")"),
+            inherit = FALSE) %>%
+  estilo_muestreo(titulo = "Relación entre acres en 1992 y 1987",
+                  eje_x  = "Acres en fincas (1987)",
+                  eje_y  = "Acres en fincas (1992)")
+g_411
+```
+
+La nube de puntos cae claramente alrededor de una recta que pasa por el origen, lo cual justifica el uso del estimador de razón. Visualmente $\hat{B} \approx$ `r round(B_hat, 3)` indica que, en promedio, los acres de 1992 son cerca del `r round(B_hat * 100, 1)`% de los de 1987.
+
+#### Comentarios y cierre
+
+El error estándar bajo razón resulta sustancialmente menor que el de MAS (`r format(round(EE_t_yr / 1e6, 2), nsmall = 2)` millones contra `r format(round(EE_tsrs / 1e6, 2), nsmall = 2)` millones de acres). La eficiencia se debe a que `acres87` y `acres92` están altamente correlacionadas y a que la pendiente de la nube es próxima a una recta por el origen. Como ejercicio adicional, se invita a recalcular el estimador usando `farms87` (también disponible en `agpop`) como variable auxiliar y comparar el resultado.
+
+### Sesgo y ECM del estimador de razón (4.1.2) {#sec-4-1-2}
+
+#### Desarrollo conceptual
+
+A diferencia de $\bar{y}$ en MAS, el estimador $\hat{B}$ es **sesgado** porque es una función no lineal (cociente) de variables aleatorias. La intuición proviene de la desigualdad de Jensen: $\bar{y}/\bar{x}$ es una función convexa de $\bar{x}$ para $\bar{x} > 0$, así que ruido en el denominador desplaza el promedio del cociente. El sesgo aparece y solo desaparece cuando la población satisface exactamente el modelo $y_i = B x_i$ sin error.
+
+Mediante una expansión de Taylor de primer orden se obtiene
+$$
+E[\hat{B}] - B \;\approx\; \frac{1}{\bar{x}_U^2}\Bigl(B\, V(\bar{x}) - \mathrm{Cov}(\bar{x},\bar{y})\Bigr),
+$$
+de orden $1/n$, y la cota
+$$
+\frac{|\mathrm{Sesgo}(\hat{B})|}{\sqrt{V(\hat{B})}} \;\le\; \mathrm{CV}(\bar{x}).
+$$
+En consecuencia, cuando $n$ es grande el sesgo es pequeño respecto al error estándar y el **error cuadrático medio** $\mathrm{ECM}(\hat{B}) = V(\hat{B}) + \mathrm{Sesgo}^2(\hat{B})$ se aproxima a $V(\hat{B})$. En muestras pequeñas o cuando $\mathrm{CV}(x)$ es elevado, el sesgo no es despreciable.
+
+#### Aplicación en R
+
+Para verificar empíricamente la magnitud del sesgo se simula una población de $N = 5\,000$ unidades con $x \sim \text{Gamma}$ (positivo) y $y_i = B x_i + \varepsilon_i$ con $\varepsilon_i \sim N(0, \tau^2 x_i)$, lo cual respeta el supuesto modelo de razón. Se replica un MAS de tamaño $n$ un gran número de veces y se calcula el sesgo y la varianza de $\hat{B}$.
+
+```{r 412-sim}
+set.seed(412)
+
+# Población simulada
+N_pob <- 5000
+x_pob <- rgamma(N_pob, shape = 4, scale = 25)        # auxiliar positiva
+B_real <- 0.6
+y_pob <- B_real * x_pob + rnorm(N_pob, 0, sqrt(2.5 * x_pob))
+B_pob <- sum(y_pob) / sum(x_pob)
+
+# Función para una réplica de MAS
+una_replica <- function(n) {
+  idx <- sample.int(N_pob, n)
+  c(B_hat = mean(y_pob[idx]) / mean(x_pob[idx]))
+}
+
+# Repeticiones bajo distintos n
+ns   <- c(20, 50, 100, 300, 1000)
+R    <- 2000
+sim  <- lapply(ns, function(n) replicate(R, una_replica(n)))
+
+resumen_sim <- data.frame(
+  n              = ns,
+  Sesgo          = sapply(sim, function(x) mean(x) - B_pob),
+  EE_empirico    = sapply(sim, sd),
+  ECM            = sapply(sim, function(x) mean((x - B_pob)^2)),
+  Sesgo_relativo = sapply(sim, function(x) (mean(x) - B_pob) / sd(x))
+)
+kable(resumen_sim, digits = 5,
+      caption = "Sesgo, EE, ECM y sesgo relativo (Sesgo/EE) de B̂ por simulación")
+```
+
+#### Gráfico interactivo
+
+```{r 412-plot}
+# Histograma de B̂ para cada n, con línea vertical en el valor real
+sim_df <- do.call(rbind, lapply(seq_along(ns), function(k)
+  data.frame(n = factor(ns[k]), B_hat = sim[[k]])))
+
+g_412 <- plot_ly(sim_df, x = ~B_hat, color = ~n, type = "histogram",
+                 colors = colorRampPalette(paleta_categorica)(length(ns)),
+                 nbinsx = 50, opacity = 0.6) %>%
+  estilo_muestreo(titulo = "Distribución empírica de B̂ por tamaño de muestra",
+                  eje_x  = "B̂",
+                  eje_y  = "Frecuencia") %>%
+  layout(shapes = list(
+    list(type = "line",
+         x0 = B_pob, x1 = B_pob, xref = "x",
+         y0 = 0, y1 = 1, yref = "paper",
+         line = list(color = paleta_muestreo[["acento"]], width = 2,
+                     dash = "dash"))),
+    annotations = list(
+      list(x = B_pob, y = 1, xref = "x", yref = "paper",
+           text = paste0("B real = ", round(B_pob, 3)),
+           showarrow = FALSE, xanchor = "left", yanchor = "top",
+           font = list(color = paleta_muestreo[["acento"]]))))
+g_412
+```
+
+A medida que $n$ crece la distribución se concentra alrededor de $B$ y el sesgo se reduce visiblemente. Para $n = 20$ el histograma está ligeramente desplazado y tiene cola asimétrica; para $n \ge 300$ apenas se distingue del centro.
+
+#### Comentarios y cierre
+
+La tabla muestra que $|\mathrm{Sesgo}|/\mathrm{EE}$ siempre se mantiene por debajo de $\mathrm{CV}(\bar{x}) = \sqrt{(1-n/N)} \cdot \mathrm{CV}(x)/\sqrt{n}$, en concordancia con la cota teórica. El sesgo decrece como $1/n$, mientras que la desviación estándar lo hace como $1/\sqrt{n}$, por lo cual la importancia relativa del sesgo se desvanece con tamaños moderados. Se recomienda al estudiante experimentar con la `shape` de la `Gamma` para inducir un $\mathrm{CV}(x)$ alto y observar cómo se hace más visible el sesgo.
+
+### Razón con proporciones (4.1.3) {#sec-4-1-3}
+
+#### Desarrollo conceptual
+
+Si la variable de interés es indicadora ($y_i \in \{0,1\}$) y la razón se calcula respecto al **número de unidades elegibles** $x_i \in \{0,1\}$, entonces $B$ es una proporción condicional. Por ejemplo, si $y_i$ vale 1 cuando una persona vota por un partido y $x_i$ vale 1 cuando es elegible para votar, $B = t_y/t_x$ es la proporción de votantes entre los elegibles. El estimador
+$$
+\hat{p}_r \;=\; \frac{\sum_{i \in S} y_i}{\sum_{i \in S} x_i}
+$$
+es el estimador de razón aplicado a indicadoras, y su varianza estimada es
+$$
+\hat{V}(\hat{p}_r) \;=\; \Bigl(1 - \tfrac{n}{N}\Bigr)\,\frac{1}{n\,\bar{x}^2}\,\frac{1}{n-1}\sum_{i\in S}(y_i - \hat{p}_r x_i)^2.
+$$
+
+#### Aplicación en R
+
+Se considera el caso en el cual interesa estimar la **proporción de fincas grandes** (`largef92` ≥ 1) **entre las fincas existentes** en cada condado. Aquí $x_i = \texttt{farms92}$ y $y_i = \texttt{largef92}$.
+
+```{r 413-prop}
+# Estimador de razón aplicado a totales de fincas grandes vs total de fincas
+razon_p <- svyratio(~largef92, ~farms92, design = diseno_srs)
+razon_p
+confint(razon_p)
+```
+
+```{r 413-comparacion}
+# Comparación con la proporción "ingenua" (media sobre la muestra)
+prop_ingenua <- mean(agsrs$largef92 / agsrs$farms92)
+prop_razon   <- coef(razon_p)
+data.frame(
+  Estimador  = c("Media de cocientes individuales (ingenuo)",
+                 "Estimador de razón global (∑y / ∑x)"),
+  Proporcion = c(prop_ingenua, as.numeric(prop_razon))
+) %>% kable(digits = 5,
+            caption = "Dos formas de resumir una proporción condicional")
+```
+
+#### Gráfico interactivo
+
+```{r 413-plot}
+# Boxplot por región del cociente y_i / x_i, comparado con la línea de razón
+agsrs <- agsrs %>% mutate(prop_grandes = largef92 / pmax(farms92, 1))
+
+g_413 <- plot_ly(agsrs, x = ~region, y = ~prop_grandes,
+                 type = "box",
+                 marker = list(color = paleta_muestreo[["secundario"]]),
+                 line   = list(color = paleta_muestreo[["primario"]]),
+                 fillcolor = paleta_muestreo[["apoyo"]],
+                 name = "Proporción por condado") %>%
+  estilo_muestreo(titulo = "Proporción de fincas grandes por región",
+                  eje_x  = "Región censal",
+                  eje_y  = "Proporción de fincas grandes",
+                  mostrar_leyenda = FALSE) %>%
+  layout(shapes = list(
+    list(type = "line", x0 = 0, x1 = 1, xref = "paper",
+         y0 = as.numeric(prop_razon), y1 = as.numeric(prop_razon),
+         line = list(color = paleta_muestreo[["acento"]], dash = "dash",
+                     width = 2))),
+    annotations = list(
+      list(x = 1, y = as.numeric(prop_razon), xref = "paper", yref = "y",
+           text = paste0("Razón global = ", round(as.numeric(prop_razon), 4)),
+           showarrow = FALSE, xanchor = "right", yanchor = "bottom",
+           font = list(color = paleta_muestreo[["acento"]]))))
+g_413
+```
+
+El gráfico revela que el cociente regional varía considerablemente, con valores más altos en NC y W. La razón global (línea roja) es un promedio ponderado de los cocientes regionales por el tamaño de cada condado.
+
+#### Comentarios y cierre
+
+La razón global difiere del promedio simple de los cocientes individuales porque el primero pondera por `farms92`, dando más peso a los condados con más fincas. Conceptualmente esto recuerda la diferencia entre una **media ponderada** y una **media de cocientes**, y es precisamente la razón por la cual al estimar una proporción condicional (p. ej. tasa de éxito) se prefiere la formulación de razón.
+
+## Estimación de regresión en MAS (4.2) {#sec-4-2}
+
+### Desarrollo conceptual
+
+Cuando la nube $(x_i, y_i)$ se aproxima por una recta que **no** pasa por el origen, conviene utilizar el **estimador de regresión**:
+$$
+\hat{\bar{y}}_{\text{reg}} \;=\; \bar{y} + \hat{B}_1\,(\bar{x}_U - \bar{x}),
+\qquad
+\hat{B}_1 \;=\; \frac{\sum_{i \in S}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i \in S}(x_i - \bar{x})^2}.
+$$
+Su varianza aproximada es
+$$
+V(\hat{\bar{y}}_{\text{reg}}) \;\approx\; \Bigl(1 - \tfrac{n}{N}\Bigr)\,\frac{S_y^2(1 - \rho^2)}{n},
+$$
+donde $\rho$ es la correlación poblacional entre $x$ y $y$. La estimación se obtiene reemplazando $S_y^2(1-\rho^2)$ por $s_y^2(1 - r^2)$, equivalente al cuadrado medio del error de un ajuste por mínimos cuadrados ordinarios.
+
+El estimador de regresión es, por construcción, **insesgado bajo el modelo lineal** y **aproximadamente insesgado bajo el diseño**. Es preferible a la razón cuando la recta no pasa por el origen y al estimador de MAS cuando $\rho$ es grande.
+
+### Aplicación en R
+
+Se utiliza `cherry`: 31 árboles de cerezo con `volume` (volumen de madera, pie³), `diameter` (in) y `height` (ft). Se simula un MAS de tamaño $n=10$ extraído de los 31 árboles para ilustrar el procedimiento.
+
+```{r 42-cherry}
+cherry <- read.csv(file.path(ruta_datos, "cherry.csv"))
+N_c    <- nrow(cherry)
+n_c    <- 10
+set.seed(42)
+ind    <- sample.int(N_c, n_c)
+muestra_c <- cherry[ind, ]
+xbar_U <- mean(cherry$diameter)   # conocido en la población
+
+# Estimador de regresión
+ajuste   <- lm(volume ~ diameter, data = muestra_c)
+B1       <- coef(ajuste)[2]
+ybar_reg <- mean(muestra_c$volume) + B1 *
+            (xbar_U - mean(muestra_c$diameter))
+
+# Estimador de razón (para comparar)
+B_razon_c   <- mean(muestra_c$volume) / mean(muestra_c$diameter)
+ybar_razon  <- B_razon_c * xbar_U
+e_razon     <- muestra_c$volume - B_razon_c * muestra_c$diameter
+s_e2_razon  <- sum(e_razon^2) / (n_c - 1)
+
+# Varianzas estimadas
+s_y2  <- var(muestra_c$volume)
+r2    <- summary(ajuste)$r.squared
+V_srs   <- (1 - n_c / N_c) * s_y2 / n_c
+V_razon <- (1 - n_c / N_c) * s_e2_razon / n_c
+V_reg   <- (1 - n_c / N_c) * s_y2 * (1 - r2) / n_c
+
+data.frame(
+  Estimador = c("MAS", "Razón", "Regresión"),
+  Media     = c(mean(muestra_c$volume), ybar_razon, ybar_reg),
+  EE        = c(sqrt(V_srs), sqrt(V_razon), sqrt(V_reg))
+) %>% kable(digits = 3,
+            caption = "Comparación de estimadores en la muestra de cerezos")
+```
+
+### Gráfico interactivo
+
+```{r 42-plot}
+ajuste_pob <- lm(volume ~ diameter, data = cherry)
+
+g_42 <- plot_ly() %>%
+  add_markers(data = cherry, x = ~diameter, y = ~volume,
+              marker = list(color = paleta_muestreo[["apoyo"]], size = 6),
+              name = "Población") %>%
+  add_markers(data = muestra_c, x = ~diameter, y = ~volume,
+              marker = list(color = paleta_muestreo[["primario"]], size = 10,
+                            line = list(color = "white", width = 1)),
+              name = "Muestra (n=10)") %>%
+  add_lines(x = sort(cherry$diameter),
+            y = predict(ajuste_pob, newdata = data.frame(
+                  diameter = sort(cherry$diameter))),
+            line = list(color = paleta_muestreo[["acento"]], width = 2),
+            name = "Recta poblacional") %>%
+  add_lines(x = sort(muestra_c$diameter),
+            y = predict(ajuste, newdata = data.frame(
+                  diameter = sort(muestra_c$diameter))),
+            line = list(color = paleta_muestreo[["contraste"]], width = 2,
+                        dash = "dash"),
+            name = "Recta muestral") %>%
+  estilo_muestreo(titulo = "Volumen vs diámetro de cerezos",
+                  eje_x  = "Diámetro (pulgadas)",
+                  eje_y  = "Volumen (pies cúbicos)")
+g_42
+```
+
+### Comentarios y cierre
+
+La regresión reduce drásticamente la varianza respecto a MAS (factor $1 - r^2$). Se observa además que la recta poblacional **no** pasa por el origen: si se forzara así, la razón sería sub-óptima. Una extensión interesante es incorporar `height` como segunda variable auxiliar y comparar el estimador de regresión múltiple con el simple.
+
+## Estimación en dominios (4.3) {#sec-4-3}
+
+### Desarrollo conceptual
+
+Un **dominio** $D$ es un subconjunto de la población cuya pertenencia se conoce solo después del muestreo (a diferencia de un estrato). El total y la media en $D$ son
+$$
+t_{y,D} \;=\; \sum_{i \in U} y_i \mathbf{1}\{i \in D\},
+\qquad
+\bar{y}_{U,D} \;=\; \frac{t_{y,D}}{N_D}.
+$$
+Sus estimadores naturales son
+$$
+\hat{t}_{y,D} \;=\; N\,\bar{y}_D^*,
+\qquad
+\hat{\bar{y}}_D \;=\; \frac{\sum_{i \in S} y_i \mathbf{1}\{i \in D\}}{\sum_{i \in S} \mathbf{1}\{i \in D\}},
+$$
+donde $\bar{y}_D^* = (1/n)\sum_{i \in S} y_i \mathbf{1}\{i \in D\}$. La media en el dominio es **un estimador de razón** con $x_i = \mathbf{1}\{i \in D\}$, y su varianza se calcula con la fórmula de razón. Esto explica por qué `survey::svyby` reporta errores estándar mayores que un análisis estratificado equivalente: el tamaño $n_D$ es aleatorio.
+
+### Aplicación en R
+
+Se desea estimar la media de `acres92` por **región** sin haber estratificado el diseño.
+
+```{r 43-dominios}
+medias_d <- svyby(~acres92, ~region, design = diseno_srs, FUN = svymean)
+medias_d
+```
+
+```{r 43-manual}
+# Comparación con cálculo manual usando la fórmula de razón
+# (z_i = y_i * 1{i in D}, x_i = 1{i in D})
+calc_dominio <- function(d) {
+  z_i    <- ifelse(agsrs$region == d, agsrs$acres92, 0)
+  x_i    <- ifelse(agsrs$region == d, 1, 0)
+  n_d    <- sum(x_i)
+  mean_d <- sum(z_i) / n_d
+  xbar_D <- mean(x_i)
+  V_man  <- (1 - n / N) / (n * xbar_D^2) *
+            sum((z_i - mean_d * x_i)^2) / (n - 1)
+  c(n_dominio = n_d, media = mean_d, EE_manual = sqrt(V_man))
+}
+manual <- t(sapply(unique(agsrs$region), calc_dominio))
+manual
+```
+
+### Gráfico interactivo
+
+```{r 43-plot}
+medias_d_df <- data.frame(
+  region = medias_d$region,
+  media  = medias_d$acres92,
+  ee     = medias_d$se
+)
+medias_d_df$lo <- medias_d_df$media - 1.96 * medias_d_df$ee
+medias_d_df$hi <- medias_d_df$media + 1.96 * medias_d_df$ee
+
+g_43 <- plot_ly(medias_d_df, x = ~region, y = ~media,
+                type = "bar",
+                marker = list(color = paleta_muestreo[["secundario"]]),
+                error_y = list(type = "data", symmetric = FALSE,
+                               array     = ~(hi - media),
+                               arrayminus = ~(media - lo),
+                               color = paleta_muestreo[["acento"]]),
+                name = "Media estimada") %>%
+  estilo_muestreo(titulo = "Media de acres en 1992 por región (dominio)",
+                  eje_x  = "Región",
+                  eje_y  = "Media de acres",
+                  mostrar_leyenda = FALSE)
+g_43
+```
+
+### Comentarios y cierre
+
+Los errores estándar calculados a mano y los de `svyby` coinciden hasta varias cifras decimales, lo cual confirma que `survey` está aplicando internamente la fórmula de razón con linealización de Taylor. Si se hubiera estratificado el diseño por región (caso `agstrat` del cap. 3), los errores serían más pequeños porque $n_h$ deja de ser aleatorio. Esto subraya una ventaja conceptual: si la estimación por dominios es prioritaria, conviene **estratificar** por la variable que define el dominio.
+
+## Modelos para razón y regresión (4.4) {#sec-4-4}
+
+### Desarrollo conceptual
+
+Hasta ahora la inferencia se basó exclusivamente en el **diseño** (la aleatoriedad proviene de la selección). Una alternativa es asumir un modelo poblacional, por ejemplo el **modelo de razón**:
+$$
+y_i \;=\; \beta\, x_i + \varepsilon_i,
+\qquad
+E[\varepsilon_i \mid x_i] \;=\; 0,
+\qquad
+V[\varepsilon_i \mid x_i] \;=\; \sigma^2 x_i,
+$$
+o el **modelo de regresión**:
+$$
+y_i \;=\; \beta_0 + \beta_1 x_i + \varepsilon_i,
+\qquad
+V[\varepsilon_i] \;=\; \sigma^2.
+$$
+Bajo el modelo de razón, el estimador de mínimos cuadrados ponderados con pesos $1/x_i$ coincide con $\hat{B} = \bar{y}/\bar{x}$, lo cual conecta el enfoque basado en diseño con el enfoque basado en modelo.
+
+### Aplicación en R
+
+Se ajusta el modelo de razón a `agsrs` mediante mínimos cuadrados ponderados y se compara con el estimador de razón clásico.
+
+```{r 44-modelos}
+# Filtro defensivo: el modelo de razón usa pesos 1/x, así que cualquier
+# acres87 == 0 o NA generaría Inf/NaN. Se eliminan esas filas in situ
+# (el filtro global de 411-datos ya las elimina, pero se repite aquí
+# para aislar el chunk si se ejecuta independientemente).
+agsrs_pos <- agsrs %>% filter(!is.na(acres87), acres87 > 0,
+                              !is.na(acres92))
+stopifnot(all(agsrs_pos$acres87 > 0))
+
+# Modelo de razón: regresión sin intercepto y con pesos 1/x
+modelo_razon <- lm(acres92 ~ acres87 - 1, data = agsrs_pos,
+                   weights = 1 / acres87)
+# Modelo de regresión: con intercepto, pesos iguales
+modelo_reg   <- lm(acres92 ~ acres87, data = agsrs_pos)
+
+# B̂ por el método de razón
+B_razon <- mean(agsrs_pos$acres92) / mean(agsrs_pos$acres87)
+
+data.frame(
+  Enfoque       = c("Razón clásica (B̂ = ȳ/x̄)",
+                    "Modelo de razón (lm ponderado, sin intercepto)",
+                    "Modelo de regresión (lm con intercepto)"),
+  Coeficiente_x = c(B_razon,
+                    coef(modelo_razon)[1],
+                    coef(modelo_reg)[2])
+) %>% kable(digits = 5,
+            caption = "Equivalencia entre razón clásica y modelo ponderado")
+```
+
+Las dos primeras filas comparten **exactamente** el mismo coeficiente: el WLS sin intercepto con peso $1/x_i$ resuelve $\hat{\beta} = \sum w_i x_i y_i / \sum w_i x_i^2 = \sum y_i / \sum x_i = \hat{B}$. La tercera fila, en cambio, reporta la **pendiente** $\hat{B}_1$ del modelo de regresión con intercepto, que es conceptualmente distinta de $\hat{B}$: $\hat{B}_1$ minimiza la suma de cuadrados sin restringir el paso por el origen, mientras $\hat{B}$ es el cociente de medias. Numéricamente se parecen aquí porque la nube cae cerca del origen, pero un estudiante no debe confundirlas.
+
+### Gráfico interactivo
+
+```{r 44-plot}
+# Diagnóstico: residuos del modelo de razón vs x
+# Se usa agsrs_pos para que las longitudes coincidan con residuals(modelo_razon).
+resid_df <- data.frame(
+  x    = agsrs_pos$acres87,
+  res  = residuals(modelo_razon),
+  pres = residuals(modelo_razon) / sqrt(agsrs_pos$acres87)  # estandarizados
+)
+
+g_44 <- plot_ly(resid_df, x = ~x, y = ~pres,
+                type = "scatter", mode = "markers",
+                marker = list(color = paleta_muestreo[["secundario"]],
+                              size = 6, opacity = 0.7),
+                name = "Residuos / sqrt(x)") %>%
+  add_lines(x = c(min(resid_df$x), max(resid_df$x)),
+            y = c(0, 0),
+            line = list(color = paleta_muestreo[["acento"]], dash = "dash"),
+            name = "y = 0",
+            inherit = FALSE) %>%
+  estilo_muestreo(titulo = "Residuos estandarizados del modelo de razón",
+                  eje_x  = "Acres en 1987 (x)",
+                  eje_y  = "Residuos estandarizados")
+g_44
+```
+
+### Comentarios y cierre
+
+La línea horizontal en cero y la dispersión aproximadamente constante de los residuos estandarizados sugieren que el supuesto $V[\varepsilon \mid x] = \sigma^2 x$ es razonable en `agsrs`. El estudiante puede observar que el coeficiente del modelo ponderado coincide con $\hat{B}$, mientras que el del modelo de regresión simple difiere ligeramente porque incluye un intercepto. Bajo el enfoque basado en diseño, esto se traduce en preferir razón cuando la nube pasa por el origen y regresión cuando no.
+
+## Razón estratificada (4.5) {#sec-4-5}
+
+### Desarrollo conceptual
+
+Cuando hay estratos $h = 1, \dots, H$, existen **dos estimadores de razón** posibles:
+
+- **Razón separada:** se calcula $\hat{B}_h = \bar{y}_h/\bar{x}_h$ en cada estrato y se combina,
+$$
+\hat{t}_{yrs} \;=\; \sum_{h=1}^{H} \hat{B}_h\, t_{x,h}.
+$$
+- **Razón combinada:** se construyen los totales estimados de $y$ y $x$ y se calcula su cociente,
+$$
+\hat{t}_{yrc} \;=\; \frac{\hat{t}_{y,\text{str}}}{\hat{t}_{x,\text{str}}}\, t_x.
+$$
+
+La elección entre las dos versiones se rige por el **trade-off sesgo–varianza**:
+
+- La **razón separada** estima un cociente independiente en cada estrato, por lo que es **más eficiente** cuando los $\hat{B}_h$ varían apreciablemente entre estratos. Como contrapartida, su **sesgo es la suma de $H$ términos** de orden $1/n_h$, así que con estratos pequeños (pocos elementos) los sesgos se acumulan y pueden dominar al EE.
+- La **razón combinada** calcula un único cociente global, lo cual concentra todo el sesgo en un solo término de orden $1/n$. Es **más robusta** cuando los $n_h$ son chicos, aunque pierde algo de eficiencia si los $\hat{B}_h$ son muy heterogéneos.
+
+Una regla práctica: con muchos estratos pequeños, preferir la **combinada**; con pocos estratos grandes y $\hat{B}_h$ visiblemente distintos, preferir la **separada**.
+
+### Aplicación en R
+
+Se utiliza `agstrat` (estratos por región, $n_h$ proporcional con tamaños 21, 103, 135, 41).
+
+```{r 45-estratificado}
+agstrat <- read.csv(file.path(ruta_datos, "agstrat.csv"))
+agstrat <- agstrat %>% filter(acres87 > 0, acres92 > 0)
+Nh      <- agpop %>% count(region) %>%
+  mutate(Nh = n) %>% select(region, Nh)
+agstrat <- agstrat %>% left_join(Nh, by = "region")
+
+diseno_str <- svydesign(ids = ~1, strata = ~region, fpc = ~Nh,
+                        data  = agstrat)
+
+# Razón combinada (svyratio sobre el diseño estratificado)
+razon_comb <- svyratio(~acres92, ~acres87, design = diseno_str)
+total_comb <- predict(razon_comb, total = sum(agpop$acres87))
+total_comb
+```
+
+```{r 45-totales}
+# Razón separada calculada manualmente por estrato
+tx_h <- agpop %>% group_by(region) %>% summarise(tx = sum(acres87))
+B_h  <- agstrat %>% group_by(region) %>%
+        summarise(Bh = sum(acres92) / sum(acres87))
+B_h <- B_h %>% left_join(tx_h, by = "region")
+sep_total <- sum(B_h$Bh * B_h$tx)
+
+data.frame(
+  Estimador = c("Razón combinada", "Razón separada"),
+  Total     = c(as.numeric(total_comb$total), sep_total)
+) %>% kable(digits = 0,
+            caption = "Razón combinada vs separada para el total de acres92")
+```
+
+### Gráfico interactivo
+
+```{r 45-plot}
+B_h_grafico <- agstrat %>% group_by(region) %>%
+  summarise(Bh = sum(acres92)/sum(acres87),
+            n  = n())
+B_global_val <- sum(agstrat$acres92) / sum(agstrat$acres87)
+
+g_45 <- plot_ly(B_h_grafico, x = ~region, y = ~Bh,
+                type = "bar",
+                marker = list(color = paleta_muestreo[["secundario"]]),
+                name = "Razón por estrato (B̂h)") %>%
+  estilo_muestreo(titulo = "Razón separada vs combinada por región",
+                  eje_x  = "Región",
+                  eje_y  = "B̂",
+                  mostrar_leyenda = FALSE) %>%
+  layout(shapes = list(
+    list(type = "line", x0 = 0, x1 = 1, xref = "paper",
+         y0 = B_global_val, y1 = B_global_val,
+         line = list(color = paleta_muestreo[["acento"]], dash = "dash",
+                     width = 2))),
+    annotations = list(
+      list(x = 1, y = B_global_val, xref = "paper", yref = "y",
+           text = paste0("Razón combinada = ", round(B_global_val, 4)),
+           showarrow = FALSE, xanchor = "right", yanchor = "bottom",
+           font = list(color = paleta_muestreo[["acento"]]))))
+g_45
+```
+
+### Comentarios y cierre
+
+Las cuatro razones por estrato están muy próximas entre sí, lo cual indica que la **razón combinada** es prácticamente equivalente a la **separada** y, dado el menor sesgo de la primera, es preferible aquí. Si en cambio los $\hat{B}_h$ difirieran sustancialmente, la separada ganaría en eficiencia.
+
+Hasta este punto se ha trabajado íntegramente con el enfoque basado en diseño. La sección que sigue introduce una mirada complementaria —la inferencia basada en modelo— que reformula el problema de estimación como uno de predicción.
+
+## Teoría basada en modelo (4.6) {#sec-4-6}
+
+Hasta aquí la inferencia ha sido **basada en diseño**: la aleatoriedad proviene del mecanismo de selección de la muestra y los valores $y_i$ se tratan como constantes desconocidas. A continuación se introduce el enfoque alternativo **basado en modelo**, en el cual los valores $y_i$ se tratan como realizaciones de variables aleatorias gobernadas por un modelo poblacional, y el objetivo se reformula como **predecir** los valores no observados $y_i$, $i \notin S$, dado el conocimiento de $x_i$ para toda la población.
+
+Los dos enfoques son **complementarios**, no rivales. El basado en diseño es más robusto a errores de especificación; el basado en modelo es más eficiente cuando el modelo es plausible y permite predicción individual (no solo de totales o medias). Las prácticas modernas, como los **estimadores asistidos por modelo** y la **calibración**, los combinan: usan el modelo para construir el estimador y la teoría de diseño para reportar incertidumbre. Las tres subsecciones que siguen muestran cómo se construyen los predictores de razón, diferencia y regresión bajo este marco.
+
+### Modelo para la estimación de razón (4.6.1) {#sec-4-6-1}
+
+#### Desarrollo conceptual
+
+Bajo el modelo
+$$
+y_i \;=\; \beta\, x_i + \varepsilon_i,
+\qquad
+E[\varepsilon_i \mid x_i] \;=\; 0,
+\qquad
+V[\varepsilon_i \mid x_i] \;=\; \sigma^2 x_i,
+$$
+el predictor del total es
+$$
+\hat{t}_y \;=\; \sum_{i \in S} y_i + \sum_{i \notin S} \hat{\beta}\, x_i,
+\qquad
+\hat{\beta} \;=\; \frac{\sum_{i \in S} y_i}{\sum_{i \in S} x_i} \;=\; \hat{B}.
+$$
+**Supuesto crítico:** la predicción requiere conocer $x_i$ para **toda la población**, no solo el total $t_x$, ya que la sumatoria sobre $i \notin S$ debe evaluarse unidad por unidad. Esta exigencia es más estricta que la del enfoque basado en diseño, donde solo se necesita $t_x$.
+
+El estudiante puede notar que $\hat{t}_y$ coincide algebraicamente con $\hat{t}_{yr}$ del enfoque basado en diseño cuando $t_x$ es conocido. Sin embargo, las **varianzas** difieren: la varianza basada en modelo es
+$$
+V_M(\hat{t}_y - t_y) \;=\; \sigma^2 \Bigl( \tfrac{(\sum_{i \notin S} x_i)^2}{\sum_{i \in S} x_i} + \sum_{i \notin S} x_i \Bigr).
+$$
+El parámetro $\sigma^2$ se estima por
+$$
+\hat{\sigma}^2 \;=\; \frac{1}{n-1}\sum_{i \in S}\frac{(y_i - \hat{\beta}\, x_i)^2}{x_i},
+$$
+donde la división por $x_i$ es consecuencia directa del supuesto $V[\varepsilon_i \mid x_i] = \sigma^2 x_i$: bajo ese modelo, $\varepsilon_i^2/x_i$ tiene esperanza constante $\sigma^2$, así que su promedio muestral es un estimador insesgado.
+
+#### Aplicación en R
+
+```{r 461-modelo}
+set.seed(461)
+N_pob <- 1000
+x_pob <- rgamma(N_pob, 4, 0.05)
+beta  <- 2.4
+sig2  <- 6
+y_pob <- beta * x_pob + rnorm(N_pob, 0, sqrt(sig2 * x_pob))
+t_real <- sum(y_pob)
+
+n_pob  <- 100
+S      <- sample.int(N_pob, n_pob)
+y_S    <- y_pob[S]; x_S <- x_pob[S]
+y_NS   <- y_pob[-S]; x_NS <- x_pob[-S]
+
+beta_hat <- sum(y_S) / sum(x_S)
+t_pred   <- sum(y_S) + sum(beta_hat * x_NS)
+
+# Varianza basada en modelo (sigma^2 estimado de los residuos ponderados)
+sigma2_hat <- sum((y_S - beta_hat * x_S)^2 / x_S) / (n_pob - 1)
+V_M  <- sigma2_hat * (sum(x_NS)^2 / sum(x_S) + sum(x_NS))
+EE_M <- sqrt(V_M)
+
+# Varianza basada en diseño
+e_i <- y_S - beta_hat * x_S
+V_D <- N_pob^2 * (1 - n_pob / N_pob) * sum(e_i^2) / (n_pob - 1) / n_pob
+
+data.frame(
+  Enfoque = c("Modelo (predictivo)", "Diseño (basado en muestra)"),
+  EE = c(EE_M, sqrt(V_D))
+) %>% kable(digits = 1)
+```
+
+#### Gráfico interactivo
+
+```{r 461-plot}
+# Densidad de los residuos del modelo, sobre cuatro intervalos de x
+df_resid <- data.frame(
+  x   = x_S,
+  res = (y_S - beta_hat * x_S),
+  banda = cut(x_S, quantile(x_S, probs = seq(0, 1, .25)),
+              include.lowest = TRUE)
+)
+
+g_461 <- plot_ly(df_resid, x = ~banda, y = ~res, type = "box",
+                 color = ~banda, colors = paleta_categorica,
+                 name = ~banda) %>%
+  estilo_muestreo(titulo = "Residuos del modelo de razón por banda de x",
+                  eje_x  = "Cuartil de x",
+                  eje_y  = "Residuo (y - B̂x)",
+                  mostrar_leyenda = FALSE)
+g_461
+```
+
+#### Comentarios y cierre
+
+La amplitud de las cajas crece con $x$, lo cual confirma la heterocedasticidad asumida ($V[\varepsilon \mid x] \propto x$). Las dos varianzas (modelo y diseño) son del mismo orden de magnitud cuando el modelo está bien especificado; las diferencias se vuelven importantes solo bajo mala especificación, tema de la sección 4.6.3.
+
+### Estimador de diferencia (4.6.2) {#sec-4-6-2}
+
+#### Desarrollo conceptual
+
+Si $\beta$ se conoce **a priori** (por ejemplo, fijado en 1 cuando $y_i$ representa el valor actualizado de un valor previo $x_i$), el **estimador de diferencia** basado en diseño es
+$$
+\hat{t}_{\text{dif}} \;=\; \beta\, t_x \;+\; \frac{N}{n}\sum_{i \in S}\bigl(y_i - \beta\, x_i\bigr).
+$$
+Equivalentemente, $\hat{t}_{\text{dif}} = N\bar{y} + \beta\bigl(t_x - N\bar{x}\bigr)$: se parte de la estimación bruta de MAS y se corrige usando la diferencia entre el total auxiliar conocido y el estimado por la muestra. Cuando $\beta$ se desconoce y se reemplaza por $\hat{B}$ (el cociente muestral), el estimador de diferencia coincide con el de razón; cuando se sustituye por $\hat{B}_1$ (la pendiente), coincide con el estimador de regresión.
+
+El estimador de diferencia es **insesgado bajo el diseño** cualquiera que sea el valor fijado de $\beta$, pero su varianza se minimiza cuando $\beta$ es exactamente el coeficiente poblacional óptimo. En el caso particular $\beta = 1$, el estimador se interpreta como un ajuste por un censo previo: si $x_i$ es el valor de un censo anterior, $\hat{t}_{\text{dif}}$ usa el total censal completo y solo extrapola las **diferencias** $(y_i - x_i)$ a las unidades no observadas.
+
+#### Aplicación en R
+
+Se construye un estimador de diferencia con $\beta = 1$ comparando `acres92` y `acres87`.
+
+```{r 462-diferencia}
+beta_fijo <- 1
+t_dif  <- sum(agpop$acres87) + sum(agsrs$acres92 - beta_fijo * agsrs$acres87) *
+            (N / n)
+e_i    <- agsrs$acres92 - beta_fijo * agsrs$acres87
+V_dif  <- N^2 * (1 - n / N) * var(e_i) / n
+
+# Comparación con razón y MAS
+data.frame(
+  Estimador = c("MAS", "Razón", "Diferencia (β = 1)"),
+  Total     = c(t_srs, t_yr, t_dif),
+  EE        = c(EE_tsrs, EE_t_yr, sqrt(V_dif))
+) %>% kable(digits = 0)
+```
+
+#### Gráfico interactivo
+
+```{r 462-plot}
+# Sensibilidad de EE a beta fijo
+betas    <- seq(0.5, 1.5, length.out = 41)
+EE_betas <- sapply(betas, function(b) {
+  e_i <- agsrs$acres92 - b * agsrs$acres87
+  sqrt(N^2 * (1 - n / N) * var(e_i) / n)
+})
+
+g_462 <- plot_ly(x = betas, y = EE_betas / 1e6,
+                 type = "scatter", mode = "lines",
+                 line = list(color = paleta_muestreo[["primario"]], width = 3),
+                 name = "EE (millones de acres)") %>%
+  estilo_muestreo(titulo = "Sensibilidad del EE a la elección de β fijo",
+                  eje_x  = "β",
+                  eje_y  = "EE del total estimado (millones)",
+                  mostrar_leyenda = FALSE) %>%
+  layout(shapes = list(
+    list(type = "line", x0 = 1, x1 = 1, xref = "x",
+         y0 = 0, y1 = 1, yref = "paper",
+         line = list(color = paleta_muestreo[["acento"]], dash = "dash")),
+    list(type = "line", x0 = B_hat, x1 = B_hat, xref = "x",
+         y0 = 0, y1 = 1, yref = "paper",
+         line = list(color = paleta_muestreo[["contraste"]], dash = "dot"))),
+    annotations = list(
+      list(x = 1, y = 1, xref = "x", yref = "paper",
+           text = "β = 1 (diferencia)",
+           showarrow = FALSE, xanchor = "left", yanchor = "top",
+           font = list(color = paleta_muestreo[["acento"]])),
+      list(x = B_hat, y = 0.92, xref = "x", yref = "paper",
+           text = paste0("β = B̂ = ", round(B_hat, 3)),
+           showarrow = FALSE, xanchor = "right", yanchor = "top",
+           font = list(color = paleta_muestreo[["contraste"]]))))
+g_462
+```
+
+#### Comentarios y cierre
+
+El EE alcanza su mínimo cuando $\beta$ se aproxima al coeficiente óptimo (cercano a $\hat{B}$). Tomar $\beta = 1$ no es óptimo aquí, pero genera un estimador insesgado bajo diseño que aprovecha la información del censo. Una extensión útil es comparar con el estimador de regresión, que estima $\beta$ y, por construcción, alcanza el mínimo asintótico.
+
+### Modelo para la estimación de regresión (4.6.3) {#sec-4-6-3}
+
+#### Desarrollo conceptual
+
+Bajo el modelo
+$$
+y_i \;=\; \beta_0 + \beta_1 x_i + \varepsilon_i,
+\qquad
+\varepsilon_i \stackrel{\text{iid}}{\sim} (0, \sigma^2),
+$$
+el predictor del total se convierte en
+$$
+\hat{t}_y \;=\; \sum_{i \in S} y_i + \sum_{i \notin S} (\hat{\beta}_0 + \hat{\beta}_1 x_i).
+$$
+El procedimiento es óptimo (BLUP) bajo el modelo. Sin embargo, si el verdadero modelo es **no lineal** o presenta heterocedasticidad no contemplada, el predictor puede tener mayor varianza o incluso sesgo. El estudiante observará que la **mala especificación** del modelo penaliza más al enfoque basado en modelo que al basado en diseño, ya que este último es asintóticamente insesgado sin importar la forma funcional.
+
+#### Aplicación en R
+
+Se construye una población en la cual la verdadera relación es **cuadrática**, pero se ajusta un modelo lineal. Se compara la calidad de los predictores.
+
+```{r 463-mismodelo}
+set.seed(463)
+N_pob <- 2000
+x_pob <- runif(N_pob, 0, 10)
+y_pob <- 2 + 1.5 * x_pob + 0.4 * x_pob^2 + rnorm(N_pob, 0, 4)
+t_real <- sum(y_pob)
+
+# Predictor lineal (mal especificado) vs cuadrático (bien especificado)
+n_pob <- 200
+R_sim <- 1000
+errores_lin <- numeric(R_sim)
+errores_cua <- numeric(R_sim)
+
+for (r in seq_len(R_sim)) {
+  S       <- sample.int(N_pob, n_pob)
+  datos_S <- data.frame(y = y_pob[S], x = x_pob[S])
+  x_NS    <- x_pob[-S]
+
+  fit_l <- lm(y ~ x, data = datos_S)
+  t_l   <- sum(y_pob[S]) +
+           coef(fit_l)[1] * (N_pob - n_pob) +
+           coef(fit_l)[2] * sum(x_NS)
+
+  fit_c <- lm(y ~ x + I(x^2), data = datos_S)
+  t_c   <- sum(y_pob[S]) +
+           coef(fit_c)[1] * (N_pob - n_pob) +
+           coef(fit_c)[2] * sum(x_NS) +
+           coef(fit_c)[3] * sum(x_NS^2)
+
+  errores_lin[r] <- t_l - t_real
+  errores_cua[r] <- t_c - t_real
+}
+
+resumen <- data.frame(
+  Modelo  = c("Lineal (mal especificado)", "Cuadrático (bien especificado)"),
+  Sesgo   = c(mean(errores_lin), mean(errores_cua)),
+  EE_emp  = c(sd(errores_lin), sd(errores_cua)),
+  RECM    = c(sqrt(mean(errores_lin^2)), sqrt(mean(errores_cua^2)))
+)
+kable(resumen, digits = 1, caption = "Impacto de la mala especificación")
+```
+
+#### Gráfico interactivo
+
+```{r 463-plot}
+df_err <- data.frame(
+  Modelo = rep(c("Lineal", "Cuadratico"), each = R_sim),
+  Error  = c(errores_lin, errores_cua)
+)
+
+g_463 <- plot_ly(df_err, x = ~Error, color = ~Modelo, type = "histogram",
+                 colors = c(Lineal     = paleta_muestreo[["contraste"]],
+                            Cuadratico = paleta_muestreo[["secundario"]]),
+                 nbinsx = 50, opacity = 0.7) %>%
+  estilo_muestreo(titulo = "Error de predicción del total bajo distinta especificación",
+                  eje_x  = "t̂ - t",
+                  eje_y  = "Frecuencia") %>%
+  layout(shapes = list(
+    list(type = "line", x0 = 0, x1 = 0, xref = "x",
+         y0 = 0, y1 = 1, yref = "paper",
+         line = list(color = paleta_muestreo[["acento"]], dash = "dash"))))
+g_463
+```
+
+#### Comentarios y cierre
+
+El histograma muestra que el modelo lineal mal especificado **sigue centrado en cero**, pero su varianza es mayor que la del modelo correcto. La razón del centrado: como las muestras se extraen por MAS, los promedios muestrales $\bar{x}_S$ y $\overline{x^2}_S$ son estimadores insesgados de los respectivos promedios poblacionales, así que el ajuste lineal recoge en promedio el componente lineal correcto y deja como residuo la curvatura no modelada; sobre muchas réplicas esos residuos se promedian a cero. El precio que se paga es **mayor varianza**: el predictor lineal está más expuesto a la fluctuación muestral porque ignora información relevante.
+
+En poblaciones donde $x$ esté concentrada en un extremo, este equilibrio se rompe y la mala especificación además introduce **sesgo sistemático**, ya que las réplicas dejan de muestrear simétricamente la parte cuadrática. La lección práctica: el enfoque basado en modelo gana eficiencia cuando el modelo es correcto, pero exige diagnóstico cuidadoso —especialmente si la covariable está distribuida de forma asimétrica.
+
+# Capítulo 5: Muestreo por conglomerados con probabilidades iguales
+
+## Notación para conglomerados (5.1) {#sec-5-1}
+
+### Desarrollo conceptual
+
+La población se compone de $N$ **unidades primarias de muestreo (psu)** o conglomerados, cada uno con $M_i$ **unidades secundarias (ssu)**. El tamaño total de la población es
+$$
+K \;=\; \sum_{i \in U} M_i,
+\qquad
+\bar{M} \;=\; \frac{K}{N}.
+$$
+El total y la media de $y$ en la población se escriben
+$$
+t \;=\; \sum_{i \in U}\sum_{j=1}^{M_i} y_{ij} \;=\; \sum_{i \in U} t_i,
+\qquad
+\bar{y}_U \;=\; \frac{t}{K},
+$$
+donde $t_i = \sum_j y_{ij}$ es el total dentro del psu $i$ y $\bar{y}_{iU} = t_i/M_i$ su media. El **muestreo de una etapa** selecciona $n$ psu y observa todas las ssu dentro de cada uno; el **muestreo de dos etapas** selecciona luego $m_i$ ssu de cada psu seleccionado.
+
+La eficiencia del diseño se mide a través del **efecto de diseño**
+$$
+\mathrm{deff} \;=\; \frac{V_{\text{conglomerado}}(\hat{\bar{y}})}{V_{\text{MAS}}(\hat{\bar{y}})}
+\;\approx\; 1 + (\bar{M} - 1)\,R_a,
+$$
+donde $R_a$ es la **correlación intraclase** y $\bar{M}$ el tamaño promedio del conglomerado en la población. (En diseños de dos etapas o conglomerados desiguales se reemplaza $\bar{M}$ por el tamaño efectivo de la psu observada; bajo MAS de psu sin submuestreo y conglomerados de igual tamaño $M$, $\bar{M} = M$.) Cuando $R_a = 0$ los conglomerados no aportan estructura y deff $\approx 1$; cuando $R_a > 0$ el deff crece linealmente con el tamaño de los conglomerados.
+
+### Aplicación en R
+
+Para fijar la notación se construye una población artificial con $N=20$ psu de tamaño desigual y se calculan los componentes de varianza.
+
+```{r 51-poblacion}
+set.seed(51)
+N_psu  <- 20
+Mi     <- sample(5:25, N_psu, replace = TRUE)
+mu_i   <- rnorm(N_psu, 50, 8)             # media de cada psu
+y_pop  <- unlist(mapply(function(m, mu) rnorm(m, mu, 5), Mi, mu_i))
+psu_id <- rep(1:N_psu, Mi)
+K      <- length(y_pop)
+M_bar  <- K / N_psu
+
+# Cálculo de t_i, S_t^2 y SSW
+df_pob <- data.frame(psu = psu_id, y = y_pop)
+t_i    <- aggregate(y ~ psu, df_pob, sum)$y
+S_t2   <- var(t_i)
+SSW    <- sum((df_pob$y - rep(t_i / Mi, Mi))^2)
+SSB    <- sum(Mi * (t_i / Mi - mean(df_pob$y))^2)
+SSTO   <- SSB + SSW
+
+# Correlación intraclase ANOVA (Lohr)
+R_a    <- 1 - (K - N_psu) / (K - 1) * SSW / SSTO
+
+cat("Tamaño promedio M̄:",  round(M_bar, 2),
+    "\nVar entre psu S_t^2:", round(S_t2, 2),
+    "\nICC R_a:",             round(R_a, 4))
+```
+
+### Gráfico interactivo
+
+```{r 51-plot}
+df_plot <- df_pob %>%
+  mutate(psu = factor(psu)) %>%
+  group_by(psu) %>%
+  mutate(media_psu = mean(y))
+
+g_51 <- plot_ly(df_plot, y = ~y, color = ~psu,
+                type = "box",
+                colors = colorRampPalette(paleta_categorica)(N_psu),
+                showlegend = FALSE) %>%
+  estilo_muestreo(titulo = "Distribución de y dentro de cada conglomerado",
+                  eje_x  = "Conglomerado (psu)",
+                  eje_y  = "y",
+                  mostrar_leyenda = FALSE)
+g_51
+```
+
+### Comentarios y cierre
+
+La variabilidad **dentro** de cada caja es similar (los conglomerados son internamente homogéneos), mientras que las medianas se desplazan apreciablemente entre cajas. Esto se traduce en una ICC positiva (`R_a` ≈ `r round(R_a, 3)`), que penalizará la eficiencia del diseño por conglomerados respecto a un MAS de igual número de unidades.
+
+## Muestreo por conglomerados de una etapa (5.2) {#sec-5-2}
+
+A continuación se desarrollan los estimadores cuando se observa la totalidad de las ssu en cada psu seleccionado. Se distinguen los casos de tamaño igual ($M_i \equiv M$), donde la teoría es transparente, y de tamaño desigual, donde la mejor opción es un estimador de razón.
+
+### Conglomerados de igual tamaño: estimación (5.2.1) {#sec-5-2-1}
+
+#### Desarrollo conceptual
+
+Si todos los conglomerados tienen tamaño $M$ y se selecciona un MAS de $n$ psu, el estimador insesgado del total es
+$$
+\hat{t}_{\text{uno}} \;=\; \frac{N}{n}\sum_{i \in S} t_i,
+$$
+y el de la media,
+$$
+\hat{\bar{y}} \;=\; \frac{\hat{t}_{\text{uno}}}{NM} \;=\; \frac{1}{n}\sum_{i \in S}\bar{y}_{iU}.
+$$
+Las varianzas estimadas son
+$$
+\hat{V}(\hat{t}_{\text{uno}}) \;=\; N^2\Bigl(1-\tfrac{n}{N}\Bigr)\frac{s_t^2}{n},
+\qquad
+s_t^2 \;=\; \frac{1}{n-1}\sum_{i \in S}(t_i - \bar{t})^2.
+$$
+
+#### Aplicación en R
+
+Se utiliza `gpa`, donde la población es de 100 suites de cuatro estudiantes y la muestra observa 5 suites completas.
+
+```{r 521-gpa}
+gpa <- read.csv(file.path(ruta_datos, "gpa.csv"))
+N_g <- 100        # suites en la población según Lohr
+n_g <- length(unique(gpa$suite))
+M_g <- 4          # cuatro estudiantes por suite
+
+# Totales por suite
+t_i_gpa <- aggregate(gpa ~ suite, gpa, sum)$gpa
+t_hat   <- (N_g / n_g) * sum(t_i_gpa)
+ybar    <- t_hat / (N_g * M_g)
+V_t     <- N_g^2 * (1 - n_g / N_g) * var(t_i_gpa) / n_g
+EE_ybar <- sqrt(V_t) / (N_g * M_g)
+
+cat("ŷ:", round(ybar, 4), "\nEE(ŷ):", round(EE_ybar, 4))
+```
+
+```{r 521-survey}
+gpa$N_g <- N_g
+diseno_gpa <- svydesign(ids = ~suite, fpc = ~N_g, data = gpa)
+svymean(~gpa, design = diseno_gpa)
+```
+
+#### Gráfico interactivo
+
+```{r 521-plot}
+gpa_summ <- aggregate(gpa ~ suite, gpa, function(x)
+  c(media = mean(x), min = min(x), max = max(x)))
+gpa_summ <- do.call(data.frame, gpa_summ)
+
+g_521 <- plot_ly(gpa_summ, x = ~factor(suite),
+                 y = ~gpa.media,
+                 type = "scatter", mode = "markers",
+                 marker = list(color = paleta_muestreo[["primario"]], size = 12),
+                 error_y = list(type = "data", symmetric = FALSE,
+                                array     = ~(gpa.max - gpa.media),
+                                arrayminus = ~(gpa.media - gpa.min),
+                                color = paleta_muestreo[["secundario"]]),
+                 name = "Media ± rango") %>%
+  add_segments(x = 0.5, xend = n_g + 0.5,
+               y = ybar, yend = ybar,
+               line = list(color = paleta_muestreo[["acento"]], dash = "dash",
+                           width = 2),
+               inherit = FALSE,
+               name = "ŷ global") %>%
+  estilo_muestreo(titulo = "GPA por suite (conglomerados de tamaño igual)",
+                  eje_x  = "Suite",
+                  eje_y  = "GPA")
+g_521
+```
+
+#### Comentarios y cierre
+
+Cinco suites son suficientes para estimar la media poblacional con un error estándar bajo (≈ `r round(EE_ybar, 3)`), pero el lector debe recordar que el tamaño muestral efectivo es 20 estudiantes; si la ICC fuera baja, observar 20 estudiantes vía MAS produciría un EE similar.
+
+### Conglomerados de igual tamaño: teoría (5.2.2) {#sec-5-2-2}
+
+#### Desarrollo conceptual
+
+La descomposición ANOVA en una población de conglomerados de igual tamaño es
+$$
+\mathrm{SSTO} = \mathrm{SSB} + \mathrm{SSW},
+\qquad
+\mathrm{SSB} = M\sum_{i \in U}(\bar{y}_{iU} - \bar{y}_U)^2,
+\quad
+\mathrm{SSW} = \sum_{i \in U}\sum_{j=1}^{M}(y_{ij} - \bar{y}_{iU})^2.
+$$
+La **correlación intraclase ANOVA** (versión Lohr) es
+$$
+R_a \;=\; 1 - \frac{N(M-1)}{NM-1}\,\frac{\mathrm{SSW}}{\mathrm{SSTO}},
+$$
+y el efecto de diseño,
+$$
+\mathrm{deff} \;=\; 1 + (M-1)\,R_a.
+$$
+Cuando $R_a > 0$ los conglomerados son internamente homogéneos, lo cual reduce la información efectiva por ssu.
+
+#### Aplicación en R
+
+Se construye una **población controlada** con ICC objetivo $\rho \in \{0, 0.1, 0.3, 0.6\}$ y se verifica empíricamente la fórmula del deff.
+
+```{r 522-sim}
+set.seed(522)
+
+# Función paramétrica que genera una población de conglomerados
+# de igual tamaño M con ICC objetivo rho.
+simular_poblacion <- function(rho, N_psu = 200, M = 10) {
+  sigma_a <- sqrt(rho)
+  sigma_e <- sqrt(1 - rho)
+  a_i     <- rnorm(N_psu, 0, sigma_a)
+  y       <- as.vector(sapply(a_i, function(a)
+              a + rnorm(M, 0, sigma_e)))
+  data.frame(psu = rep(1:N_psu, each = M), y = y)
+}
+
+N_psu         <- 200
+M_psu         <- 10
+n_psu_muestra <- 20
+R_sim         <- 1000
+
+resultados <- lapply(c(0, 0.1, 0.3, 0.6), function(rho) {
+  pob <- simular_poblacion(rho, N_psu, M_psu)
+  ti  <- aggregate(y ~ psu, pob, sum)$y
+  K_p <- nrow(pob)
+
+  # ICC estimada empíricamente (Lohr)
+  SSW <- sum((pob$y - rep(ti / M_psu, each = M_psu))^2)
+  SSB <- sum(M_psu * (ti / M_psu - mean(pob$y))^2)
+  R_a <- 1 - N_psu * (M_psu - 1) / (N_psu * M_psu - 1) * SSW / (SSB + SSW)
+
+  # Varianza por simulación (cluster) y MAS de igual nº de ssu
+  V_clu <- replicate(R_sim, {
+    s <- sample.int(N_psu, n_psu_muestra)
+    mean(ti[s]) / M_psu
+  })
+  V_srs <- replicate(R_sim, {
+    s <- sample.int(K_p, n_psu_muestra * M_psu)
+    mean(pob$y[s])
+  })
+
+  data.frame(rho        = rho,
+             ICC_emp    = R_a,
+             deff_emp   = var(V_clu) / var(V_srs),
+             deff_teor  = 1 + (M_psu - 1) * R_a)
+})
+do.call(rbind, resultados) %>% kable(digits = 3)
+```
+
+#### Gráfico interactivo
+
+```{r 522-plot}
+df_522 <- do.call(rbind, resultados)
+
+g_522 <- plot_ly(df_522, x = ~rho, y = ~deff_emp,
+                 type = "scatter", mode = "lines+markers",
+                 line   = list(color = paleta_muestreo[["primario"]], width = 3),
+                 marker = list(color = paleta_muestreo[["primario"]], size = 9),
+                 name = "deff empírico") %>%
+  add_lines(x = ~rho, y = ~deff_teor,
+            line = list(color = paleta_muestreo[["acento"]], width = 2,
+                        dash = "dash"),
+            name = "deff teórico (1 + (M-1)Rₐ)") %>%
+  estilo_muestreo(titulo = "Efecto de diseño en función de la ICC",
+                  eje_x  = "ρ (ICC objetivo)",
+                  eje_y  = "deff")
+g_522
+```
+
+#### Comentarios y cierre
+
+La concordancia entre el deff empírico y el teórico es estrecha. Conviene notar que $\rho$ —el parámetro generador del modelo $y_{ij} = \mu + A_i + \varepsilon_{ij}$ con $\rho = \sigma_A^2/(\sigma_A^2 + \sigma^2)$— y $R_a$ —la ICC ANOVA estimada— son la **misma cantidad** asintóticamente: la correlación intraclase del modelo es lo que la fórmula de Lohr estima. Por eso ambas columnas de la tabla son cercanas. Para $\rho = 0$ el deff es ≈ 1 (los conglomerados no aportan estructura). Para $\rho = 0.6$ el deff supera 6, lo cual significa que se requieren seis veces más ssu vía conglomerados para alcanzar la precisión de un MAS.
+
+### Conglomerados de tamaños desiguales (5.2.3) {#sec-5-2-3}
+
+#### Desarrollo conceptual
+
+Cuando $M_i$ varía entre psu, la media poblacional se estima mediante un **estimador de razón**:
+$$
+\hat{\bar{y}}_r \;=\; \frac{\sum_{i \in S} t_i}{\sum_{i \in S} M_i},
+$$
+con la varianza dada por la fórmula de razón aplicada a $(t_i, M_i)$:
+$$
+\hat{V}(\hat{\bar{y}}_r) \;=\; \Bigl(1-\tfrac{n}{N}\Bigr)\,\frac{1}{n\bar{M}^2}\,\frac{1}{n-1}\sum_{i \in S}(t_i - \hat{\bar{y}}_r M_i)^2.
+$$
+El estimador del total puede construirse a partir de $\hat{\bar{y}}_r$ multiplicando por $K$ si este es conocido, o expandiendo directamente $\hat{t}_{\text{uno}} = (N/n)\sum t_i$ si no lo es.
+
+#### Aplicación en R
+
+Se utiliza `algebra` (clases de álgebra de tamaño desigual; cada estudiante reporta su `score`).
+
+```{r 523-algebra}
+algebra <- read.csv(file.path(ruta_datos, "algebra.csv"))
+N_clases <- 187    # tamaño poblacional según Lohr
+n_clases <- length(unique(algebra$class))
+
+# Totales y tamaños por clase
+res_clase <- algebra %>%
+  group_by(class) %>%
+  summarise(t_i = sum(score), M_i = first(Mi))
+
+# Estimador de razón
+ybar_r <- sum(res_clase$t_i) / sum(res_clase$M_i)
+
+# Varianza vía survey
+algebra$N_clases <- N_clases
+algebra$peso     <- N_clases / n_clases
+diseno_alg <- svydesign(ids = ~class, weights = ~peso,
+                        fpc  = ~N_clases, data = algebra)
+svymean(~score, design = diseno_alg)
+```
+
+#### Gráfico interactivo
+
+```{r 523-plot}
+g_523 <- plot_ly(res_clase, x = ~M_i, y = ~t_i,
+                 type = "scatter", mode = "markers",
+                 marker = list(color = paleta_muestreo[["secundario"]],
+                               size = 12, opacity = 0.85),
+                 name = "Clase (psu)") %>%
+  add_lines(x = c(0, max(res_clase$M_i)),
+            y = c(0, ybar_r * max(res_clase$M_i)),
+            line = list(color = paleta_muestreo[["acento"]], width = 2),
+            name = paste0("Razón ŷr = ", round(ybar_r, 2)),
+            inherit = FALSE) %>%
+  estilo_muestreo(titulo = "Total de la clase vs tamaño (clusters desiguales)",
+                  eje_x  = "Mi (estudiantes en la clase)",
+                  eje_y  = "ti (suma de scores)")
+g_523
+```
+
+#### Comentarios y cierre
+
+Los puntos se alinean razonablemente sobre la recta por el origen, que es exactamente el supuesto del estimador de razón aplicado a $(M_i, t_i)$. Si la relación fuera muy heterogénea (clases pequeñas con notas extremas), conviniera estratificar previamente por tamaño de clase.
+
+## Muestreo por conglomerados de dos etapas (5.3) {#sec-5-3}
+
+En el muestreo de dos etapas se observa solo una **submuestra** de las ssu en cada psu seleccionado. Esto reduce el coste pero introduce una segunda fuente de variabilidad.
+
+### Teoría: psu de tamaño igual (5.3.1) {#sec-5-3-1}
+
+#### Desarrollo conceptual
+
+Sea $M$ el tamaño común de los psu y $m$ el tamaño de la submuestra dentro de cada uno. El estimador del total y su varianza son
+$$
+\hat{t}_{\text{dos}} \;=\; \frac{N}{n}\sum_{i \in S} \frac{M}{m}\sum_{j \in S_i} y_{ij},
+$$
+$$
+V(\hat{t}_{\text{dos}}) \;=\; N^2\Bigl(1-\tfrac{n}{N}\Bigr)\frac{S_t^2}{n} \;+\; \frac{N}{n}\sum_{i \in U} M^2\Bigl(1-\tfrac{m}{M}\Bigr)\frac{S_i^2}{m},
+$$
+donde $S_i^2 = (M-1)^{-1}\sum_{j=1}^{M}(y_{ij} - \bar{y}_{iU})^2$ es la varianza interna del psu $i$. La varianza tiene una **componente entre** psu y una **componente dentro** de psu, que se estiman por separado.
+
+#### Aplicación en R
+
+Se simula una población con $N = 50$ psu de tamaño $M = 20$, ICC objetivo $\rho = 0.25$, se selecciona $n = 10$ psu y $m = 5$ ssu en cada una, y se compara el estimador con el verdadero total.
+
+```{r 531-sim}
+set.seed(531)
+N_p <- 50; M <- 20
+rho <- 0.25
+a_i <- rnorm(N_p, 0, sqrt(rho))
+y_pop <- unlist(lapply(a_i, function(a)
+  60 + a * 5 + rnorm(M, 0, sqrt(1 - rho) * 5)))
+df_pob <- data.frame(psu = rep(1:N_p, each = M), y = y_pop)
+t_real <- sum(df_pob$y)
+
+n_p <- 10; m <- 5
+psu_S <- sample.int(N_p, n_p)
+muestra <- df_pob %>%
+  filter(psu %in% psu_S) %>%
+  group_by(psu) %>%
+  slice_sample(n = m) %>% ungroup()
+
+# Estimación del total
+t_hat <- (N_p / n_p) * (M / m) *
+  sum(aggregate(y ~ psu, muestra, sum)$y)
+
+# Errores estándar usando survey (con pesos precomputados)
+muestra$N_p  <- N_p
+muestra$M    <- M
+muestra$peso <- (N_p / n_p) * (M / m)
+diseno_dos <- svydesign(ids = ~psu, fpc = ~N_p, data = muestra,
+                        weights = ~peso)
+total_svy <- svytotal(~y, design = diseno_dos)
+
+cat("Total real:", t_real,
+    "\nTotal estimado:", round(t_hat, 1),
+    "\nEE total:", round(SE(total_svy), 1))
+```
+
+#### Gráfico interactivo
+
+```{r 531-plot}
+muestra$psu <- factor(muestra$psu)
+
+g_531 <- plot_ly(muestra, y = ~y, color = ~psu,
+                 type = "box", colors = colorRampPalette(paleta_categorica)(n_p),
+                 showlegend = FALSE) %>%
+  estilo_muestreo(titulo = "Submuestra de y por psu (dos etapas)",
+                  eje_x  = "psu seleccionado",
+                  eje_y  = "y",
+                  mostrar_leyenda = FALSE)
+g_531
+```
+
+#### Comentarios y cierre
+
+Cada caja resume los $m=5$ valores observados en cada psu. La variabilidad **entre** cajas representa la componente entre psu de la varianza, mientras que la variabilidad **dentro** representa la segunda etapa. La separación visual entre cajas es sustancial, lo cual indica que la primera etapa contribuye más a la varianza total que la segunda.
+
+### PSU de tamaño desigual (5.3.2) {#sec-5-3-2}
+
+#### Desarrollo conceptual
+
+Cuando $M_i$ varía y se selecciona una submuestra $m_i$ en cada psu, el estimador del total es
+$$
+\hat{t}_{\text{dos}} \;=\; \frac{N}{n}\sum_{i \in S} \frac{M_i}{m_i}\sum_{j \in S_i} y_{ij},
+$$
+con peso $w_{ij} = (N/n)(M_i/m_i)$. La media estimada se obtiene como cociente $\hat{t}/\hat{K}$ con $\hat{K} = (N/n)\sum_i M_i$. La varianza total tiene la misma estructura entre/dentro pero los términos involucran $M_i^2(1 - m_i/M_i) S_i^2/m_i$.
+
+#### Aplicación en R
+
+Se utiliza `coots` (huevos en nidos de pollas de agua, $M_i$ varía entre 1 y 22).
+
+```{r 532-coots}
+coots <- read.csv(file.path(ruta_datos, "coots.csv"))
+N_n   <- 184      # nidos en la población según Lohr
+n_n   <- length(unique(coots$clutch))
+coots$N_n <- N_n
+
+# Cálculo manual del peso w_ij = (N/n)(M_i/m_i)
+m_i <- coots %>% group_by(clutch) %>%
+  summarise(M_i = first(csize), m_i = n())
+coots <- coots %>% left_join(m_i, by = "clutch") %>%
+  mutate(w = (N_n / n_n) * (M_i / m_i))
+
+# Total estimado del volumen de huevos
+t_hat <- sum(coots$w * coots$volume)
+
+# survey con dos etapas
+diseno_coots <- svydesign(ids = ~clutch, fpc = ~N_n,
+                          weights = ~w, data = coots)
+svytotal(~volume, design = diseno_coots)
+svymean(~volume, design = diseno_coots)
+```
+
+#### Gráfico interactivo
+
+```{r 532-plot}
+m_i_plot <- coots %>%
+  group_by(clutch) %>%
+  summarise(M_i = first(csize),
+            media = mean(volume),
+            n_obs = n())
+
+g_532 <- plot_ly(m_i_plot, x = ~M_i, y = ~media,
+                 type = "scatter", mode = "markers",
+                 marker = list(size = ~n_obs * 3 + 5,
+                               color = paleta_muestreo[["secundario"]],
+                               opacity = 0.7),
+                 name = "Nido (psu)") %>%
+  estilo_muestreo(titulo = "Volumen medio del huevo vs tamaño del nido",
+                  eje_x  = "Mi (huevos en el nido)",
+                  eje_y  = "Volumen medio")
+g_532
+```
+
+#### Comentarios y cierre
+
+No se aprecia una relación sistemática entre el tamaño del nido y el volumen medio del huevo, lo cual es buena noticia: el muestreo por conglomerados respeta la representatividad sin que sea necesario corregir por tamaño de la psu en este caso. La estructura del peso $w_{ij}$ asegura insesgamiento para cualquier patrón de $m_i$ y $M_i$.
+
+## Uso de pesos en muestras por conglomerados (5.4) {#sec-5-4}
+
+### Desarrollo conceptual
+
+El peso $w_i$ asociado a la unidad $i$ representa el número de unidades de la población que esa observación "representa". En una etapa simple,
+$$
+w_i = \frac{1}{\pi_i} \;=\; \frac{N}{n},
+$$
+donde $\pi_i$ es la probabilidad de inclusión del psu. En dos etapas, $w_{ij} = (N/n)(M_i/m_i)$. Un diseño se llama **autoponderado** cuando $w_{ij}$ es constante para todas las ssu, lo cual ocurre cuando $m_i = mM_i / \bar{M}$ (proporcional al tamaño del psu).
+
+Los estimadores de Horvitz–Thompson se escriben uniformemente como
+$$
+\hat{t}_{\text{HT}} = \sum_{(i,j) \in S} w_{ij}\, y_{ij},
+\qquad
+\hat{\bar{y}}_{\text{HT}} = \frac{\sum w_{ij} y_{ij}}{\sum w_{ij}}.
+$$
+
+### Aplicación en R
+
+Se contrastan los pesos en `gpa` (autoponderado) y `coots` (no autoponderado).
+
+```{r 54-pesos}
+gpa$w  <- N_g / n_g      # cluster de una etapa con M constante
+coots$w <- (N_n / n_n) * (coots$csize / coots$m_i)
+
+data.frame(
+  diseno = c("gpa (1 etapa, M constante)",
+             "coots (2 etapas, M_i variable)"),
+  w_min  = c(min(gpa$w),  min(coots$w)),
+  w_max  = c(max(gpa$w),  max(coots$w)),
+  autopond = c("Sí", "No")
+) %>% kable()
+```
+
+### Gráfico interactivo
+
+```{r 54-plot}
+df_w <- bind_rows(
+  data.frame(diseno = "gpa", w = gpa$w),
+  data.frame(diseno = "coots", w = coots$w)
+)
+
+g_54 <- plot_ly(df_w, x = ~w, color = ~diseno, type = "histogram",
+                colors = c(gpa   = paleta_muestreo[["secundario"]],
+                           coots = paleta_muestreo[["contraste"]]),
+                opacity = 0.75, nbinsx = 25) %>%
+  estilo_muestreo(titulo = "Distribución de los pesos por diseño",
+                  eje_x  = "Peso w",
+                  eje_y  = "Frecuencia")
+g_54
+```
+
+### Comentarios y cierre
+
+En `gpa` los pesos son constantes (autoponderado); en `coots` varían sustancialmente. Pesos heterogéneos elevan la varianza de los estimadores (efecto de pesos desiguales: $\mathrm{deff}_w = 1 + \mathrm{CV}(w)^2$). Esta es una motivación práctica para optar por diseños proporcionales al tamaño cuando es posible.
+
+## Muestreo sistemático (5.5) {#sec-5-5}
+
+### Desarrollo conceptual
+
+El **muestreo sistemático** consiste en seleccionar cada $k$-ésima unidad a partir de un arranque aleatorio $r \in \{1, \dots, k\}$, donde $k = N/n$. Es operativamente más simple que el MAS y, cuando el marco está ordenado por una variable correlacionada con $y$, genera muestras "estratificadas implícitas".
+
+El estimador es el de la media muestral $\bar{y}$, pero **no se dispone de un estimador insesgado de la varianza** sin replicación. Una aproximación común (válida si la población es ordenada al azar) es la fórmula del MAS,
+$$
+\hat{V}(\bar{y}) \;\approx\; \Bigl(1-\tfrac{n}{N}\Bigr)\frac{s_y^2}{n}.
+$$
+Si el marco posee periodicidad cuya longitud divide a $k$, esta aproximación puede subestimar gravemente la varianza.
+
+### Aplicación en R
+
+Se construye una población de $N = 500$ unidades cuya respuesta $y$ presenta una **tendencia lineal** sobre la posición del marco. Se compara la muestra sistemática con un MAS de igual tamaño y se evalúa empíricamente la varianza por simulación.
+
+```{r 55-sistematico}
+set.seed(55)
+N_d   <- 500
+n_d   <- 25
+k_d   <- N_d / n_d
+
+# Población con tendencia lineal y ruido (sin periodicidad)
+pos    <- 1:N_d
+y_pob  <- 50 + 0.05 * pos + rnorm(N_d, 0, 4)
+
+# Una muestra sistemática y una MAS para ilustrar
+r       <- sample.int(k_d, 1)
+indice  <- seq(r, by = k_d, length.out = n_d)
+sistem  <- y_pob[indice]
+mas     <- y_pob[sample.int(N_d, n_d)]
+
+# Varianzas empíricas por simulación
+R_sim     <- 2000
+medias_sis <- replicate(R_sim, {
+  r0 <- sample.int(k_d, 1)
+  mean(y_pob[seq(r0, by = k_d, length.out = n_d)])
+})
+medias_mas <- replicate(R_sim, mean(y_pob[sample.int(N_d, n_d)]))
+
+data.frame(
+  Diseno          = c("Sistemático", "MAS"),
+  Media_simulada  = c(mean(medias_sis), mean(medias_mas)),
+  EE_simulado     = c(sd(medias_sis), sd(medias_mas)),
+  EE_aproximado   = c(sqrt((1 - n_d/N_d) * var(sistem) / n_d),
+                      sqrt((1 - n_d/N_d) * var(mas) / n_d))
+) %>% kable(digits = 4,
+            caption = "Varianza empírica del sistemático vs MAS (n = 25)")
+```
+
+### Gráfico interactivo
+
+```{r 55-plot}
+df_55 <- data.frame(
+  id    = pos,
+  y     = y_pob,
+  sel   = ifelse(pos %in% indice, "Sistemático", "No sel.")
+)
+
+g_55 <- plot_ly(df_55, x = ~id, y = ~y, color = ~sel,
+                colors = c(`No sel.`   = paleta_muestreo[["apoyo"]],
+                           Sistemático = paleta_muestreo[["acento"]]),
+                type = "scatter", mode = "markers",
+                marker = list(size = 7)) %>%
+  estilo_muestreo(titulo = "Selección sistemática (k = 20) sobre marco con tendencia",
+                  eje_x  = "Posición en el marco",
+                  eje_y  = "y")
+g_55
+```
+
+### Comentarios y cierre
+
+La muestra sistemática cubre el rango completo del marco con espaciamiento regular, lo cual permite capturar la tendencia subyacente con menor varianza que un MAS de igual $n$ (en la tabla anterior, el EE simulado del sistemático es notablemente inferior al del MAS). La fórmula MAS aplicada al sistemático **subestima** ligeramente la varianza verdadera en presencia de tendencia, pero el sesgo de la aproximación es modesto cuando no hay periodicidad. En estudios reales con sospecha de periodicidad (p. ej., días de la semana en encuestas diarias) se recomienda usar **muestreo sistemático replicado**: tomar varias muestras sistemáticas independientes con arranques aleatorios distintos y usar la varianza entre réplicas para estimar el EE.
+
+Cerrando el tratamiento basado en diseño, la sección final del capítulo aborda el muestreo por conglomerados desde el enfoque basado en modelo, en paralelo a lo desarrollado en 4.6 para razón y regresión.
+
+## Inferencia basada en modelo para conglomerados (5.6) {#sec-5-6}
+
+El último bloque del capítulo presenta el enfoque basado en modelo para muestreo por conglomerados. Se asume que la variable de interés sigue un **modelo lineal mixto** con efecto aleatorio del psu, lo que permite modelar la correlación intraclase explícitamente y obtener predictores BLUP.
+
+### Modelo ANOVA para una etapa (5.6.1) {#sec-5-6-1}
+
+#### Desarrollo conceptual
+
+El modelo para muestreo de una etapa es
+$$
+y_{ij} \;=\; \mu + A_i + \varepsilon_{ij},
+\qquad
+A_i \sim N(0, \sigma_A^2),
+\quad
+\varepsilon_{ij} \sim N(0, \sigma^2),
+$$
+con $A_i$ y $\varepsilon_{ij}$ independientes. La correlación intraclase del modelo es
+$$
+\rho \;=\; \frac{\sigma_A^2}{\sigma_A^2 + \sigma^2},
+$$
+que se interpreta como la versión modelo de $R_a$. La varianza de la media estimada bajo modelo es
+$$
+V_M(\hat{\bar{y}}) \;=\; \frac{\sigma_A^2}{n} + \frac{\sigma^2}{nM},
+$$
+y se estima ajustando el modelo mixto (REML) y reemplazando los parámetros.
+
+#### Aplicación en R
+
+Se ajusta el modelo a la muestra simulada de la sección 5.2.2 (con $\rho = 0.3$) y se compara $\hat\rho$ con $R_a$.
+
+```{r 561-lmer}
+set.seed(561)
+N_psu_561 <- 200
+M_561     <- 10
+n_psu_m   <- 30
+
+pob_lmer  <- simular_poblacion(rho = 0.3, N_psu = N_psu_561, M = M_561)
+psu_S     <- sample.int(N_psu_561, n_psu_m)
+muestra_lmer <- pob_lmer %>% filter(psu %in% psu_S)
+
+# Modelo mixto
+mod <- lmer(y ~ 1 + (1 | psu), data = muestra_lmer)
+vc  <- as.data.frame(VarCorr(mod))
+sigma2_A <- vc$vcov[vc$grp == "psu"]
+sigma2_e <- vc$vcov[vc$grp == "Residual"]
+rho_hat  <- sigma2_A / (sigma2_A + sigma2_e)
+
+# ICC del diseño (R_a) en la muestra
+ti  <- aggregate(y ~ psu, muestra_lmer, sum)$y
+SSW <- sum((muestra_lmer$y - rep(ti / M_561, each = M_561))^2)
+SSB <- sum(M_561 * (ti / M_561 - mean(muestra_lmer$y))^2)
+R_a_muestra <- 1 - n_psu_m * (M_561 - 1) /
+                (n_psu_m * M_561 - 1) * SSW / (SSB + SSW)
+
+data.frame(
+  Cantidad = c("rho del modelo (lmer)", "Ra ANOVA (Lohr)"),
+  Valor    = c(rho_hat, R_a_muestra)
+) %>% kable(digits = 4)
+```
+
+#### Gráfico interactivo
+
+```{r 561-plot}
+ranef_df <- as.data.frame(ranef(mod)$psu)
+ranef_df$psu <- rownames(ranef_df)
+names(ranef_df)[1] <- "BLUP"
+ranef_df <- ranef_df %>%
+  arrange(BLUP) %>% mutate(orden = seq_len(n()))
+
+color_blup <- ifelse(ranef_df$BLUP > 0,
+                     paleta_muestreo[["secundario"]],
+                     paleta_muestreo[["contraste"]])
+
+g_561 <- plot_ly(ranef_df, x = ~orden, y = ~BLUP,
+                 type = "bar",
+                 marker = list(color = color_blup),
+                 name = "Efecto aleatorio") %>%
+  estilo_muestreo(titulo = "BLUP del efecto del psu (modelo ANOVA)",
+                  eje_x  = "psu (ordenado)",
+                  eje_y  = "A_i estimado",
+                  mostrar_leyenda = FALSE)
+g_561
+```
+
+#### Comentarios y cierre
+
+Las estimaciones $\hat\rho$ del modelo y $R_a$ del ANOVA basado en diseño son del mismo orden de magnitud (≈ 0.3), lo cual confirma la consistencia entre los dos enfoques. Los BLUP $\hat A_i$ identifican qué conglomerados están sistemáticamente por encima o debajo de la media, información que el enfoque basado en diseño no proporciona directamente.
+
+### Modelo para muestreo de dos etapas (5.6.2) {#sec-5-6-2}
+
+#### Desarrollo conceptual
+
+El modelo se extiende a dos etapas como
+$$
+y_{ij} \;=\; \mu + A_i + \varepsilon_{ij},
+\qquad
+A_i \sim N(0, \sigma_A^2),
+\quad
+\varepsilon_{ij} \sim N(0, \sigma^2),
+$$
+con la misma estructura, pero ahora la **muestra** observa solo $m_i$ ssu por psu. La varianza de la media bajo el modelo se descompone en
+$$
+V_M(\hat{\bar{y}}) \;=\; \frac{\sigma_A^2}{n} + \frac{\sigma^2}{n\bar{m}},
+$$
+y los parámetros se estiman por máxima verosimilitud restringida (REML) sobre las observaciones disponibles. El estimador de $\bar{y}_U$ ya no es un promedio simple; usa los pesos óptimos del modelo, lo que en general da varianzas menores que las estimadas por diseño cuando el modelo es correcto.
+
+#### Aplicación en R
+
+Se utiliza nuevamente la simulación de 5.3.1 (dos etapas, $n=10$ psu, $m=5$ ssu por psu).
+
+```{r 562-lmer}
+set.seed(562)
+N_p <- 50; M <- 20; rho <- 0.4
+a_i <- rnorm(N_p, 0, sqrt(rho))
+y_pop <- unlist(lapply(a_i, function(a)
+  60 + a * 5 + rnorm(M, 0, sqrt(1 - rho) * 5)))
+df_pob <- data.frame(psu = rep(1:N_p, each = M), y = y_pop)
+ybar_real <- mean(df_pob$y)
+
+n_p <- 10; m <- 5
+psu_S   <- sample.int(N_p, n_p)
+muestra <- df_pob %>% filter(psu %in% psu_S) %>%
+  group_by(psu) %>% slice_sample(n = m) %>% ungroup()
+
+# Comparación: enfoque de diseño vs modelo
+muestra$N_p  <- N_p
+muestra$M    <- M
+muestra$peso <- (N_p / n_p) * (M / m)
+diseno <- svydesign(ids = ~psu, fpc = ~N_p, data = muestra,
+                    weights = ~peso)
+mean_d <- svymean(~y, diseno)
+EE_d   <- SE(mean_d)
+
+mod_m  <- lmer(y ~ 1 + (1 | psu), data = muestra)
+mu_m   <- as.numeric(fixef(mod_m))
+EE_m   <- sqrt(as.matrix(vcov(mod_m))[1, 1])
+
+data.frame(
+  Enfoque   = c("Diseño (svymean)", "Modelo (lmer)"),
+  Estimador = c(as.numeric(coef(mean_d)), mu_m),
+  EE        = c(EE_d, EE_m)
+) %>% kable(digits = 3,
+            caption = "Comparación de la media estimada en dos etapas")
+```
+
+#### Gráfico interactivo
+
+```{r 562-plot}
+est_d <- as.numeric(coef(mean_d))
+df_comp <- data.frame(
+  Enfoque   = c("Diseño", "Modelo"),
+  Estimador = c(est_d, mu_m),
+  Lo        = c(est_d - 1.96 * EE_d, mu_m - 1.96 * EE_m),
+  Hi        = c(est_d + 1.96 * EE_d, mu_m + 1.96 * EE_m)
+)
+
+g_562 <- plot_ly(df_comp, x = ~Enfoque, y = ~Estimador,
+                 type = "scatter", mode = "markers",
+                 marker = list(color = paleta_categorica[c(1, 2)],
+                               size = 14),
+                 error_y = list(type = "data", symmetric = FALSE,
+                                array     = ~(Hi - Estimador),
+                                arrayminus = ~(Estimador - Lo),
+                                color = paleta_muestreo[["acento"]]),
+                 name = "IC 95%") %>%
+  add_segments(x = 0.5, xend = 2.5,
+               y = ybar_real, yend = ybar_real,
+               line = list(color = paleta_muestreo[["primario"]], dash = "dash"),
+               inherit = FALSE,
+               name = "Media real") %>%
+  estilo_muestreo(titulo = "Estimación de ȳ en dos etapas: diseño vs modelo",
+                  eje_x  = "Enfoque",
+                  eje_y  = "Media estimada")
+g_562
+```
+
+#### Comentarios y cierre
+
+Los dos enfoques cubren el valor real con sus IC al 95%. El modelo, cuando está correctamente especificado, produce un EE ligeramente menor que el de diseño porque emplea la estructura de varianzas $\sigma_A^2$ y $\sigma^2$. Sin embargo, el enfoque basado en modelo es **vulnerable a la mala especificación** (p. ej., si la ICC depende del psu, o si la distribución no es normal), mientras que el basado en diseño preserva la insesgadez asintóticamente bajo cualquier modelo. La elección práctica suele ser un híbrido: estimar parámetros por modelo y reportar varianzas por diseño (estimadores asistidos por modelo).
+
+# Cierre general
+
+El recorrido por los capítulos 4 y 5 deja un mensaje central: **toda información auxiliar tiene un precio y un beneficio**. La razón y la regresión aprovechan covariables continuas conocidas en la población para reducir varianza, al precio de un sesgo asintóticamente despreciable. El muestreo por conglomerados aprovecha la organización geográfica o administrativa de la población para reducir costos, al precio de un efecto de diseño que crece con la correlación intraclase.
+
+Los enfoques basado en diseño y basado en modelo son **complementarios**, no excluyentes. El primero garantiza insesgadez asintótica con supuestos mínimos; el segundo permite predicción individual y mayor eficiencia cuando el modelo es plausible. Las prácticas modernas (estimadores asistidos por modelo, calibración) explotan ambos.
+
+## Ejercicios sugeridos
+
+1. **Razón con otra auxiliar.** Recalcular el estimador de razón en `agsrs` usando `farms87` como variable auxiliar. ¿Cuál es la auxiliar más eficiente, `farms87` o `acres87`? Justifique en términos de $\rho_{xy}$ y $\mathrm{CV}$.
+2. **Regresión múltiple.** Extender el ejemplo `cherry` con `height` como segunda variable auxiliar; comparar el EE del estimador de regresión múltiple con el simple desarrollado en 4.2.
+3. **Trade-off ICC vs costos.** Para un presupuesto fijo de $C$ unidades observadas, derivar el tamaño óptimo del conglomerado $M^*$ que minimiza la varianza total bajo un costo $c_1$ por psu y $c_2$ por ssu. Aplicarlo numéricamente con la simulación de 5.2.2.
+4. **Diseño combinado.** Diseñar un muestreo por conglomerados **estratificado** donde dentro de cada estrato se utilice un estimador de razón ajustado por una covariable. Este es el tipo de diseño que aparece en encuestas reales como la Encuesta Nacional de Hogares.
+
+## Lecturas para profundizar
+
+- **Lohr (2021), cap. 7–9**: muestreo en dos fases, varianzas no estándar y bootstrap para encuestas complejas.
+- **Särndal, Swensson y Wretman (1992)**, *Model Assisted Survey Sampling*: marco unificado para estimadores asistidos por modelo y calibración.
+- **Vignette `survey`** del paquete homónimo (`vignette("survey")` en R), con ejemplos avanzados de `svycontrast`, `svyglm` y replicación de varianza.
+
+El siguiente capítulo (cap. 6 de Lohr) trata el **muestreo con probabilidades desiguales**, donde las unidades grandes se seleccionan con mayor probabilidad. Allí se introducen los estimadores de Horvitz–Thompson generales y el muestreo PPS, conceptos que extienden la lógica de pesos vista en 5.4 al caso en el que $\pi_i$ varía entre unidades.

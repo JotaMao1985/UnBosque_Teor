@@ -1,0 +1,1372 @@
+---
+title: "Muestreo Probabilístico: Capítulos 2 y 3 de Lohr"
+subtitle: "Material de estudio autónomo en R"
+author: "Curso de Muestreo — Estadística"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  html_document:
+    template: unbosque_template.html
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 4
+    number_sections: true
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+    fig_caption: true
+---
+
+```{r configuracion, include=FALSE}
+# Opciones globales para todos los chunks
+knitr::opts_chunk$set(
+  echo       = TRUE,
+  message    = FALSE,
+  warning    = FALSE,
+  fig.align  = "center",
+  fig.width  = 8,
+  fig.height = 5,
+  comment    = "#>"
+)
+
+# Carga de paquetes requeridos
+library(plotly)   # gráficos interactivos
+library(dplyr)    # manipulación de datos
+library(survey)   # análisis de encuestas con diseño complejo
+library(ggplot2)  # gráficos base que luego se convierten con ggplotly()
+library(knitr)    # tablas con kable()
+
+# ---------------------------------------------------------------------------
+# Estilo visual unificado para todos los gráficos del documento
+# ---------------------------------------------------------------------------
+# Paleta semántica: cada color tiene un rol fijo a lo largo del documento.
+paleta_muestreo <- c(
+  primario   = "#1D3557",  # azul oscuro: barras solitarias y líneas principales
+  secundario = "#457B9D",  # azul medio: alternativo / método base en comparaciones
+  acento     = "#E63946",  # rojo: líneas de referencia y valores destacados
+  apoyo      = "#A8DADC",  # celeste: histogramas y elementos de fondo
+  contraste  = "#E76F51"   # naranja: segundo grupo en comparaciones binarias
+)
+
+# Paleta categórica de cuatro colores (usada cuando hay 4 niveles, p. ej. región)
+paleta_categorica <- c("#1D3557", "#E76F51", "#2A9D8F", "#E9C46A")
+
+# Función auxiliar que aplica un layout común a cualquier objeto plotly.
+# Se invoca al final de cada gráfico mediante el operador pipe (%>%).
+estilo_muestreo <- function(p, titulo = NULL, eje_x = NULL, eje_y = NULL,
+                            mostrar_leyenda = TRUE) {
+  p %>% layout(
+    title  = if (!is.null(titulo))
+               list(text = titulo, x = 0.02, xanchor = "left",
+                    font = list(size = 16))
+             else NULL,
+    xaxis  = list(title = eje_x, gridcolor = "#E5E5E5",
+                  zerolinecolor = "#CCCCCC"),
+    yaxis  = list(title = eje_y, gridcolor = "#E5E5E5",
+                  zerolinecolor = "#CCCCCC"),
+    legend = list(orientation = "h", x = 0, y = -0.18,
+                  bgcolor = "rgba(255,255,255,0)"),
+    margin = list(l = 70, r = 30, t = 60, b = 80),
+    font   = list(family = "Lato, Helvetica, Arial, sans-serif", size = 12,
+                  color = "#222222"),
+    hoverlabel = list(font = list(family = "Lato, Helvetica, Arial, sans-serif"),
+                      bgcolor = "#FFFFFF"),
+    plot_bgcolor  = "#FFFFFF",
+    paper_bgcolor = "#FFFFFF",
+    showlegend    = mostrar_leyenda
+  )
+}
+
+# Tema ggplot consistente para los gráficos que se construyen con ggplot
+# y luego se pasan a ggplotly().
+theme_muestreo <- function() {
+  theme_minimal(base_family = "sans") +
+    theme(
+      plot.title       = element_text(size = 14, hjust = 0,
+                                      margin = margin(b = 8)),
+      axis.title       = element_text(size = 11),
+      legend.title     = element_text(size = 10),
+      legend.position  = "bottom",
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(color = "#E5E5E5"),
+      plot.background  = element_rect(fill = "white", color = NA),
+      panel.background = element_rect(fill = "white", color = NA)
+    )
+}
+```
+
+# Introducción
+
+El presente material de estudio cubre los capítulos 2 (*Simple Probability Samples*) y 3 (*Stratified Sampling*) del libro **Sampling: Design and Analysis** (3.ª edición) de **Sharon L. Lohr**. La notación, los ejemplos y los enfoques siguen de cerca esa obra; los conjuntos de datos utilizados (`agpop`, `agsrs`, `agstrat`) son los que la propia autora distribuye con el texto.
+
+Se asume que la persona lectora cuenta con:
+
+- conocimientos básicos de estadística descriptiva y de inferencia (media, varianza, error estándar, intervalo de confianza);
+- familiaridad con la sintaxis de **R** y el manejo de `data.frame` con `dplyr`;
+- una instalación de R que disponga de los paquetes `plotly`, `dplyr`, `survey`, `ggplot2` y `knitr`.
+
+El documento adopta un tono formal e impersonal, propio del autoaprendizaje. Cada sección presenta:
+
+1. una explicación conceptual breve;
+2. las fórmulas centrales en notación de Lohr;
+3. un ejemplo ejecutado en R con datos reales o simulados;
+4. visualizaciones interactivas en `plotly`;
+5. interpretación de los resultados.
+
+## Notación general
+
+| Símbolo | Significado |
+|--------|-------------|
+| $U = \{1,2,\ldots,N\}$ | Población finita objetivo |
+| $N$ | Tamaño poblacional |
+| $\mathcal{S} \subset U$ | Muestra seleccionada |
+| $n$ | Tamaño muestral |
+| $y_i$ | Valor de la variable de interés en la unidad $i$ |
+| $\bar{y}_U = \tfrac{1}{N}\sum_{i\in U} y_i$ | Media poblacional |
+| $t = \sum_{i\in U} y_i$ | Total poblacional |
+| $S^2 = \tfrac{1}{N-1}\sum_{i\in U}(y_i-\bar{y}_U)^2$ | Varianza poblacional |
+| $\bar{y} = \tfrac{1}{n}\sum_{i\in\mathcal{S}} y_i$ | Media muestral |
+| $s^2$ | Varianza muestral (con divisor $n-1$) |
+| $\pi_i = P(i\in\mathcal{S})$ | Probabilidad de inclusión de primer orden |
+| $w_i = 1/\pi_i$ | Peso de muestreo de la unidad $i$ |
+| $\text{fpc} = 1 - n/N$ | Factor de corrección por población finita |
+
+## Carga de los datos de Lohr
+
+Los archivos `.csv` del libro se encuentran en el subdirectorio `CSV data sets for SDA 3e`. La carga se realiza una única vez y los marcos de datos resultantes se utilizan a lo largo del documento.
+
+```{r carga-datos}
+# Directorio donde residen los archivos CSV distribuidos con Lohr
+data_dir <- "CSV data sets for SDA 3e"
+
+# Marco poblacional: 3078 condados de EE.UU. con datos del Censo Agrícola
+agpop   <- read.csv(file.path(data_dir, "agpop.csv"),   stringsAsFactors = FALSE)
+
+# Muestra aleatoria simple (MAS) de tamaño 300 extraída de agpop
+agsrs   <- read.csv(file.path(data_dir, "agsrs.csv"),   stringsAsFactors = FALSE)
+
+# Muestra estratificada (por región) de tamaño 300 extraída de agpop
+agstrat <- read.csv(file.path(data_dir, "agstrat.csv"), stringsAsFactors = FALSE)
+
+# Verificación de tamaños
+cat("Filas en agpop  :", nrow(agpop),   "\n")
+cat("Filas en agsrs  :", nrow(agsrs),   "\n")
+cat("Filas en agstrat:", nrow(agstrat), "\n")
+```
+
+La variable de interés en gran parte de los ejemplos es `acres92`, el número de acres dedicados a la agricultura en cada condado durante 1992.
+
+---
+
+# Capítulo 2 — Muestras Probabilísticas Simples
+
+## 2.1 Tipos de muestras probabilísticas
+
+Una **muestra probabilística** es aquella en la que cada unidad de la población tiene una probabilidad de inclusión $\pi_i$ conocida y estrictamente positiva. Esta propiedad permite construir estimadores insesgados y cuantificar su precisión. Los principales diseños probabilísticos son:
+
+| Diseño | Idea central | $\pi_i$ |
+|--------|--------------|---------|
+| Aleatorio simple sin reposición (MAS) | Todas las muestras de tamaño $n$ son equiprobables | $n/N$ (idéntico para todos) |
+| Sistemático | Se elige un arranque aleatorio y luego se toma una unidad cada $k = N/n$ | $1/k$ |
+| Estratificado | Se divide $U$ en $H$ estratos disjuntos y se muestrea independientemente en cada uno | $n_h/N_h$ dentro del estrato |
+| Por conglomerados | La unidad de muestreo es un grupo (conglomerado) y luego se observan sus elementos | depende de la etapa |
+| Probabilidad proporcional al tamaño (PPS) | $\pi_i$ proporcional a una variable auxiliar $x_i$ | $\propto x_i$ |
+
+A continuación se ilustra, sobre una población artificial de $N=100$ unidades dispuestas en una grilla, qué unidades resultarían seleccionadas bajo MAS y bajo muestreo sistemático con $k=10$.
+
+
+```{r}
+set.seed(2026)
+
+# Población artificial dispuesta en una grilla 10x10
+N_demo <- 100
+n_demo <- 10
+poblacion <- data.frame(
+  id = 1:N_demo,
+  x  = rep(1:10, each = 10),
+  y  = rep(1:10, times = 10)
+)
+#head(poblacion,15)
+idx_mas <- sort(sample(1:N_demo, n_demo, replace = FALSE))
+idx_mas
+
+k <- N_demo / n_demo
+arranque <- sample(1:k, 1)
+idx_sis <- seq(arranque, N_demo, by = k)
+idx_sis
+
+poblacion <- poblacion %>%
+  mutate(
+    diseno_MAS        = ifelse(id %in% idx_mas, "Seleccionada", "No seleccionada"),
+    diseno_Sistematico = ifelse(id %in% idx_sis, "Seleccionada", "No seleccionada")
+  )
+poblacion
+
+```
+
+
+```{r diseños-comparados}
+set.seed(2026)
+
+# Población artificial dispuesta en una grilla 10x10
+N_demo <- 100
+n_demo <- 10
+poblacion <- data.frame(
+  id = 1:N_demo,
+  x  = rep(1:10, each = 10),
+  y  = rep(1:10, times = 10)
+)
+
+# Muestreo aleatorio simple
+idx_mas <- sort(sample(1:N_demo, n_demo, replace = FALSE))
+
+# Muestreo sistemático con k = N/n = 10 y arranque aleatorio
+k <- N_demo / n_demo
+arranque <- sample(1:k, 1)
+idx_sis <- seq(arranque, N_demo, by = k)
+
+# Marcado del estado de cada unidad bajo cada diseño
+poblacion <- poblacion %>%
+  mutate(
+    diseno_MAS        = ifelse(id %in% idx_mas, "Seleccionada", "No seleccionada"),
+    diseno_Sistematico = ifelse(id %in% idx_sis, "Seleccionada", "No seleccionada")
+  )
+
+# Gráfico interactivo lado a lado
+g_mas <- plot_ly(
+  poblacion, x = ~x, y = ~y, color = ~diseno_MAS,
+  colors = c("Seleccionada"    = unname(paleta_muestreo["acento"]),
+             "No seleccionada" = unname(paleta_muestreo["apoyo"])),
+  type = "scatter", mode = "markers",
+  marker = list(size = 14, line = list(width = 1, color = "white")),
+  legendgroup = "g1"
+) %>% layout(annotations = list(
+  list(text = "Diseño MAS", x = 0.5, y = 1.05, xref = "paper", yref = "paper",
+       showarrow = FALSE, font = list(size = 13))
+))
+
+g_sis <- plot_ly(
+  poblacion, x = ~x, y = ~y, color = ~diseno_Sistematico,
+  colors = c("Seleccionada"    = unname(paleta_muestreo["primario"]),
+             "No seleccionada" = unname(paleta_muestreo["apoyo"])),
+  type = "scatter", mode = "markers",
+  marker = list(size = 14, line = list(width = 1, color = "white")),
+  legendgroup = "g2"
+) %>% layout(annotations = list(
+  list(text = "Diseño Sistemático (k = 10)", x = 0.5, y = 1.05,
+       xref = "paper", yref = "paper",
+       showarrow = FALSE, font = list(size = 13))
+))
+
+subplot(g_mas, g_sis, nrows = 1, margin = 0.05) %>%
+  estilo_muestreo(
+    titulo = "Comparación visual de dos diseños probabilísticos sobre N = 100",
+    eje_x  = NULL, eje_y = NULL
+  )
+```
+
+**Interpretación.** En el diseño MAS las unidades seleccionadas pueden agruparse en cualquier zona de la grilla, mientras que en el sistemático aparecen distribuidas de manera regular. Esa cobertura uniforme es atractiva, pero —como se verá en la sección 2.8— se vuelve peligrosa cuando la población presenta periodicidades cuya longitud es múltiplo de $k$.
+
+## 2.2 Marco para muestreo probabilístico
+
+Lohr distingue tres conjuntos:
+
+- la **población objetivo** sobre la que se desea inferir;
+- la **población muestreada**, que es a la que efectivamente se puede acceder;
+- el **marco de muestreo**, que es la lista operativa que enumera las unidades.
+
+A cada unidad $i$ del marco se le asocia una **probabilidad de inclusión** $\pi_i = P(i \in \mathcal{S})$, conocida por construcción del diseño. A partir de ella se define el **peso de muestreo**:
+
+$$
+w_i \;=\; \frac{1}{\pi_i}
+$$
+
+Intuitivamente, $w_i$ representa "cuántas unidades de la población representa la unidad $i$ que efectivamente fue observada". Una identidad central es que, en valor esperado, los pesos de las unidades muestreadas suman el tamaño poblacional:
+
+$$
+E\!\left[\sum_{i\in\mathcal{S}} w_i\right] \;=\; \sum_{i\in U} \pi_i\,w_i \;=\; \sum_{i\in U} 1 \;=\; N
+$$
+
+Esta propiedad subyace a todos los estimadores ponderados que se construirán en el resto del documento. El caso particular más simple, en el que **todas las $\pi_i$ son iguales** y por lo tanto todos los pesos también, es el muestreo aleatorio simple, que se aborda formalmente en la sección 2.3.
+
+A modo de ilustración del concepto general, se construye una población artificial de $N=20$ unidades, cada una con un "tamaño" auxiliar conocido, y se asignan probabilidades de inclusión **desiguales**, proporcionales a ese tamaño. El objetivo no es estudiar este diseño en detalle —eso se hará en capítulos posteriores—, sino visualizar cómo se distribuyen los pesos cuando las $\pi_i$ no son uniformes.
+
+```{r marco-pesos}
+set.seed(2026)
+N_ej <- 20
+poblacion_ej <- data.frame(
+  id     = 1:N_ej,
+  # Tamaño auxiliar conocido para cada unidad (por ejemplo, número de empleados)
+  tamano = round(runif(N_ej, 5, 100))
+)
+
+# Probabilidades de inclusión desiguales, proporcionales al tamaño, con n = 5.
+# Esto garantiza que sum(pi_i) = n.
+n_ej <- 5
+poblacion_ej$pi_i <- n_ej * poblacion_ej$tamano / sum(poblacion_ej$tamano)
+poblacion_ej$w_i  <- 1 / poblacion_ej$pi_i
+
+# Comprobación de la identidad sum(pi_i) = n
+cat("Suma de pi_i =", round(sum(poblacion_ej$pi_i), 4),
+    "(debe ser igual a n =", n_ej, ")\n")
+
+# Visualización interactiva de los pesos
+g_pesos <- ggplot(poblacion_ej, aes(x = factor(id), y = w_i, fill = tamano)) +
+  geom_col() +
+  scale_fill_viridis_c(name = "Tamaño\nauxiliar") +
+  labs(x = "Unidad i", y = expression(w[i] == 1/pi[i])) +
+  theme_muestreo()
+
+ggplotly(g_pesos) %>%
+  estilo_muestreo(
+    titulo = "Pesos de muestreo cuando las probabilidades de inclusión son desiguales",
+    eje_x  = "Unidad i",
+    eje_y  = "Peso w<sub>i</sub> = 1 / &pi;<sub>i</sub>"
+  )
+```
+
+**Interpretación.** Las unidades con mayor tamaño auxiliar tienen $\pi_i$ mayor y, por lo tanto, peso $w_i$ menor: cada una "representa" pocas unidades adicionales porque ya está sobre-representada en el diseño. Las unidades pequeñas, en cambio, son difíciles de seleccionar y, cuando aparecen en la muestra, reciben pesos grandes que compensan ese déficit de representación. La idea de **ponderar inversamente a la probabilidad de selección** es el principio general que articula toda la teoría posterior.
+
+## 2.3 Muestreo aleatorio simple
+
+En el **muestreo aleatorio simple sin reposición (MAS)** todas las $\binom{N}{n}$ posibles muestras de tamaño $n$ son igualmente probables. Con esto:
+
+$$
+\pi_i = \frac{n}{N}, \qquad
+w_i = \frac{N}{n}, \qquad
+\bar{y} = \frac{1}{n}\sum_{i\in\mathcal{S}} y_i, \qquad
+\hat{t} = N\bar{y}
+$$
+
+La **varianza** del estimador de la media bajo MAS es:
+
+$$
+V(\bar{y}) \;=\; \left(1 - \frac{n}{N}\right)\frac{S^2}{n}
+$$
+
+donde $S^2$ es la varianza poblacional. Su estimador insesgado se obtiene reemplazando $S^2$ por $s^2$:
+
+$$
+\hat{V}(\bar{y}) \;=\; \left(1 - \frac{n}{N}\right)\frac{s^2}{n}
+$$
+
+El factor $(1-n/N)$ se conoce como **corrección por población finita** (FPC) y reduce la varianza cuando la fracción muestral $n/N$ no es despreciable.
+
+```{r mas-acres92}
+# Tamaños del marco y de la muestra
+N <- nrow(agpop)    # 3078 condados
+n <- nrow(agsrs)    # 300 condados muestreados
+
+# Estimaciones puntuales
+ybar <- mean(agsrs$acres92)
+s2   <- var(agsrs$acres92)
+that <- N * ybar
+
+# Estimación de la varianza y del error estándar de la media
+fpc        <- 1 - n / N
+var_ybar   <- fpc * s2 / n
+se_ybar    <- sqrt(var_ybar)
+se_that    <- N * se_ybar
+
+# Tabla resumen
+resumen_mas <- data.frame(
+  Cantidad   = c("N", "n", "fpc = 1 - n/N", "ybar (acres92)",
+                 "s^2", "SE(ybar)", "Total estimado t-hat", "SE(t-hat)"),
+  Valor      = c(N, n, round(fpc, 4),
+                 round(ybar, 2), round(s2, 2),
+                 round(se_ybar, 2), round(that, 0), round(se_that, 0))
+)
+kable(resumen_mas, caption = "Estimación MAS para acres92 con la muestra agsrs")
+```
+
+Estas cifras coinciden con las reportadas por Lohr en su Ejemplo 2.7. La media estimada del número de acres por condado es aproximadamente $\bar{y}\approx 297\,897$ con error estándar $\text{SE}(\bar{y})\approx 18\,898$, lo que produce un total estimado de unos 916 millones de acres.
+
+```{r mas-histograma}
+# Histograma interactivo de la variable acres92 en la muestra
+plot_ly(
+  data = agsrs,
+  x = ~acres92,
+  type = "histogram",
+  nbinsx = 30,
+  marker = list(color = unname(paleta_muestreo["apoyo"]),
+                line   = list(color = "white", width = 0.5)),
+  name = "Frecuencia"
+) %>%
+  layout(
+    shapes = list(
+      list(type = "line",
+           x0 = ybar, x1 = ybar,
+           y0 = 0,    y1 = 1,
+           xref = "x", yref = "paper",
+           line = list(color = unname(paleta_muestreo["acento"]),
+                       width = 2, dash = "dash"))
+    ),
+    annotations = list(
+      list(x = ybar, y = 1, xref = "x", yref = "paper",
+           text = paste0("Media muestral = ", round(ybar)),
+           showarrow = TRUE, arrowhead = 2, ay = -25,
+           font = list(color = unname(paleta_muestreo["acento"])))
+    )
+  ) %>%
+  estilo_muestreo(
+    titulo = "Distribución muestral de acres92 (n = 300, MAS)",
+    eje_x  = "Acres dedicados a la agricultura (1992)",
+    eje_y  = "Frecuencia",
+    mostrar_leyenda = FALSE
+  )
+```
+
+**Interpretación.** La distribución muestral de `acres92` es marcadamente asimétrica a la derecha: la mayoría de los condados poseen pocos acres agrícolas, pero unos pocos —fundamentalmente del Oeste— concentran cantidades muy elevadas. Esta asimetría es relevante porque, si bien $\bar{y}$ sigue siendo insesgado para $\bar{y}_U$, su distribución muestral converge a la normal con cierta lentitud y el intervalo de confianza basado en el TCL puede requerir tamaños muestrales razonablemente grandes para ser fiable.
+
+## 2.4 Pesos de muestreo
+
+Habiendo definido los estimadores puntuales, conviene ahora examinar el **rol operativo de los pesos** $w_i$, que no se hizo explícito en la sección anterior porque, bajo MAS, son simplemente una constante. Esa simplicidad es engañosa: los pesos son la pieza que conecta la muestra con la población y la que permite generalizar todos los cálculos a diseños más complejos (estratificado, conglomerados, PPS).
+
+Bajo MAS todos los pesos son iguales:
+
+$$
+w_i \;=\; \frac{1}{\pi_i} \;=\; \frac{N}{n}
+$$
+
+y la suma de los pesos en la muestra reproduce **exactamente** el tamaño poblacional:
+
+$$
+\sum_{i\in\mathcal{S}} w_i \;=\; n \cdot \frac{N}{n} \;=\; N
+$$
+
+La interpretación didáctica es directa: si cada uno de los $n$ condados muestreados "representa" a $N/n$ condados de la población, entonces los $n$ condados juntos representan a los $N$ condados. Bajo MAS con `agsrs`, $w_i = 3078/300 = 10{,}26$, es decir, cada condado de la muestra representa a aproximadamente 10 condados de Estados Unidos.
+
+Más importante todavía: cualquier cantidad agregada de la población —total, media, proporción, percentil ponderado— puede estimarse como una **suma ponderada** sobre la muestra, usando $w_i$ como factor de expansión:
+
+$$
+\hat{t} \;=\; \sum_{i\in\mathcal{S}} w_i\,y_i, \qquad
+\bar{y} \;=\; \frac{\sum_{i\in\mathcal{S}} w_i\,y_i}{\sum_{i\in\mathcal{S}} w_i}
+$$
+
+Esta forma "de Horvitz–Thompson" coincide con $N\bar{y}$ y $\bar{y}$ en MAS, pero la formulación ponderada **se generaliza sin cambios** a diseños con $\pi_i$ desiguales. Es decir, escribir las fórmulas en términos de pesos no añade complejidad cuando se trabaja con MAS, pero deja el camino preparado para todo lo que viene después.
+
+```{r mas-pesos}
+# Pesos bajo MAS: constantes para todas las unidades
+agsrs$w_i <- N / n
+cat("Peso individual w_i =", round(N / n, 4), "\n\n")
+
+# Verificación de la identidad sum(w_i) = N
+suma_pesos <- sum(agsrs$w_i)
+cat("Suma de los pesos en la muestra:", suma_pesos, "\n")
+cat("Tamaño poblacional N           :", N, "\n")
+cat("Coinciden?                     :", isTRUE(all.equal(suma_pesos, N)), "\n\n")
+
+# Estimación del total como suma ponderada (forma de Horvitz-Thompson)
+total_ponderado <- sum(agsrs$w_i * agsrs$acres92)
+# Verificación cruzada: debería coincidir exactamente con N * mean(y)
+total_clasico   <- N * mean(agsrs$acres92)
+cat("Total estimado mediante pesos     :", round(total_ponderado, 0), "\n")
+cat("Total estimado como N * ybar      :", round(total_clasico,   0), "\n")
+cat("Diferencia                        :", round(total_ponderado - total_clasico, 6), "\n")
+
+# Estimación de la media como cociente de sumas ponderadas
+media_ponderada <- sum(agsrs$w_i * agsrs$acres92) / sum(agsrs$w_i)
+cat("\nMedia estimada (ponderada)        :", round(media_ponderada, 2), "\n")
+cat("Media estimada (clásica)          :", round(mean(agsrs$acres92), 2), "\n")
+```
+
+**Interpretación.** Los dos enfoques —el "clásico" $\hat t = N\bar y$ y el "ponderado" $\hat t = \sum w_i y_i$— producen exactamente el mismo número bajo MAS, como debe ser. La utilidad de la formulación ponderada se aprecia recién cuando los pesos son **desiguales**, lo que ocurre en el muestreo estratificado (capítulo 3) y en diseños con probabilidades proporcionales al tamaño.
+
+## 2.5 Intervalos de confianza
+
+Cuando $n$ es lo suficientemente grande, el Teorema Central del Límite garantiza que:
+
+$$
+\frac{\bar{y} - \bar{y}_U}{\sqrt{\hat{V}(\bar{y})}} \;\;\dot{\sim}\;\; N(0,1)
+$$
+
+de donde se obtiene el intervalo de confianza al $(1-\alpha)$:
+
+$$
+\bar{y} \;\pm\; z_{1-\alpha/2}\,\sqrt{\hat{V}(\bar{y})}
+$$
+
+```{r mas-ic}
+# Intervalo de confianza al 95% para la media de acres92
+nivel <- 0.95
+z     <- qnorm(1 - (1 - nivel) / 2)
+ic_inf <- ybar - z * se_ybar
+ic_sup <- ybar + z * se_ybar
+
+cat(sprintf("IC %g%%: [%.0f ; %.0f]\n",
+            100 * nivel, ic_inf, ic_sup))
+
+# Curva del semi-ancho del IC en función del nivel de confianza
+niveles <- seq(0.50, 0.999, by = 0.005)
+semi_anchos <- qnorm(1 - (1 - niveles) / 2) * se_ybar
+ic_data <- data.frame(nivel = niveles, semi_ancho = semi_anchos)
+
+plot_ly(ic_data, x = ~nivel, y = ~semi_ancho,
+        type = "scatter", mode = "lines",
+        line = list(color = unname(paleta_muestreo["primario"]), width = 3),
+        name = "Semi-ancho") %>%
+  layout(xaxis = list(tickformat = ".0%")) %>%
+  estilo_muestreo(
+    titulo = "Semi-ancho del IC para la media en función del nivel de confianza",
+    eje_x  = "Nivel de confianza",
+    eje_y  = "Semi-ancho del IC (acres)",
+    mostrar_leyenda = FALSE
+  )
+```
+
+**Interpretación.** Pasar del 95% al 99% de confianza encarece la precisión: el semi-ancho aumenta en aproximadamente un 32%. Es decir, exigir mayor cobertura en el largo plazo cuesta intervalos más anchos.
+
+## 2.6 Análisis con software para datos de encuestas
+
+El paquete `survey` de R, desarrollado por Thomas Lumley, automatiza el cálculo de estimadores y errores estándar para diseños complejos —incluidos MAS, estratificado, conglomerados y combinaciones de los anteriores— a partir de una **única declaración del diseño** mediante la función `svydesign()`. La idea de esta función es separar **una sola vez** el "qué se observó" (la columna $y$) del "cómo se observó" (los pesos, los estratos, los conglomerados, el FPC); a partir de allí, cualquier estimador (`svymean`, `svytotal`, `svyquantile`, `svyglm`, …) hereda automáticamente esa información.
+
+Los argumentos principales de `svydesign()` son:
+
+| Argumento | Significado | Valor en MAS |
+|-----------|-------------|--------------|
+| `id`      | Identificador de los conglomerados (PSU). `~1` indica que no hay conglomerados | `~1` |
+| `strata`  | Variable categórica que define los estratos. `NULL` indica diseño no estratificado | `NULL` |
+| `weights` | Vector de pesos de muestreo $w_i = 1/\pi_i$ | `~w_i` (= $N/n$) |
+| `fpc`     | Información para la corrección por población finita: tamaño del estrato (o de la población en MAS) | `~fpc_var` (columna constante igual a $N$) |
+| `data`    | Marco de datos con la muestra | `agsrs` |
+
+```{r survey-mas}
+# Para que survey calcule el factor (1 - n/N), se le indica el tamaño
+# poblacional N en una columna constante. Esta es la convención del paquete:
+# en lugar de pedir n/N directamente, se le pasa el tamaño del estrato/población.
+agsrs$fpc_var <- N
+
+diseno_mas <- svydesign(
+  id      = ~1,        # sin conglomerados
+  weights = ~w_i,      # pesos N/n calculados en la sección anterior
+  fpc     = ~fpc_var,  # tamaño poblacional (= N en MAS)
+  data    = agsrs
+)
+
+# Estimación de la media y del total
+media_survey <- svymean(~acres92, design = diseno_mas)
+total_survey <- svytotal(~acres92, design = diseno_mas)
+
+print(media_survey)
+print(total_survey)
+
+# Intervalos de confianza al 95% calculados automáticamente por survey
+confint(media_survey, level = 0.95)
+```
+
+Los resultados coinciden, hasta redondeo, con los obtenidos manualmente en la sección 2.3, lo cual valida ambas vías. La ventaja de `survey` no es lo que aporta en MAS —donde las fórmulas son sencillas— sino que **el mismo flujo de trabajo** sirve para diseños arbitrariamente complejos: basta con declarar correctamente `strata`, `id`, `weights` y `fpc`.
+
+## 2.7 Determinación del tamaño muestral
+
+Hasta aquí se ha analizado una muestra ya extraída. La pregunta inversa, decisiva en la planificación de una encuesta, es: **¿cuántas unidades hay que muestrear** para que el estimador alcance una precisión deseada?
+
+Para alcanzar un margen de error absoluto $e$ con confianza $1-\alpha$, ignorando inicialmente la corrección por población finita, se requiere:
+
+$$
+n_0 \;=\; \left(\frac{z_{1-\alpha/2}\,S}{e}\right)^2
+$$
+
+Si $n_0/N$ no es despreciable, se aplica la corrección:
+
+$$
+n \;=\; \frac{n_0}{1 + n_0/N}
+$$
+
+Para una **proporción** $p$ se sustituye $S^2$ por $p(1-p)$ y se utiliza la cota conservadora $p=0{,}5$ cuando se desconoce.
+
+```{r tamano-muestral}
+# Función para calcular n a partir del margen de error e
+calcular_n <- function(e, S, N, conf = 0.95) {
+  z   <- qnorm(1 - (1 - conf) / 2)
+  n0  <- (z * S / e)^2
+  n   <- n0 / (1 + n0 / N)
+  ceiling(n)
+}
+
+# Ejemplo: tamaño necesario para estimar acres92 con distintos márgenes
+S_estim <- sqrt(s2)   # estimación piloto de S a partir de agsrs
+errores <- seq(5000, 50000, by = 1000)
+tamanos <- sapply(errores, calcular_n, S = S_estim, N = N)
+
+df_n <- data.frame(margen_error = errores, n_requerido = tamanos)
+
+plot_ly(df_n, x = ~margen_error, y = ~n_requerido,
+        type = "scatter", mode = "lines+markers",
+        line   = list(color = unname(paleta_muestreo["primario"]), width = 3),
+        marker = list(color = unname(paleta_muestreo["acento"]),  size = 7),
+        name   = "n requerido") %>%
+  layout(hovermode = "x unified") %>%
+  estilo_muestreo(
+    titulo = "Tamaño muestral requerido para distintos márgenes de error (95%)",
+    eje_x  = "Margen de error e (acres)",
+    eje_y  = "n requerido",
+    mostrar_leyenda = FALSE
+  )
+```
+
+**Interpretación.** La relación es claramente decreciente y convexa: para reducir a la mitad el margen de error es necesario aproximadamente cuadruplicar el tamaño muestral. Por ejemplo, con $e=10\,000$ se necesitan unos `r calcular_n(10000, S_estim, N)` condados, mientras que para $e=20\,000$ bastan `r calcular_n(20000, S_estim, N)`.
+
+## 2.8 Muestreo sistemático
+
+En el **muestreo sistemático con paso $k$** se selecciona un arranque aleatorio $r\in\{1,\ldots,k\}$ y luego las unidades $r,\,r+k,\,r+2k,\,\ldots$. Si $N=nk$, cada unidad tiene $\pi_i = 1/k$.
+
+El estimador es el mismo que bajo MAS:
+
+$$
+\bar{y}_{\text{sis}} = \frac{1}{n}\sum_{i\in\mathcal{S}} y_i
+$$
+
+pero la **varianza** depende del orden del marco. Si la población está ordenada al azar, $\bar{y}_{\text{sis}}$ se comporta como una MAS. Si existe una **tendencia**, suele ser más preciso. Pero si existe una **periodicidad** cuyo período coincide con $k$, el estimador puede ser **mucho menos preciso** que MAS.
+
+A continuación se ilustran los tres escenarios mediante simulación.
+
+```{r sistematico-comparacion}
+set.seed(2026)
+
+N_pop <- 1000
+n_sis <- 100
+k     <- N_pop / n_sis     # paso = 10
+
+# Tres poblaciones ordenadas:
+# 1. Aleatoria (sin estructura)
+y_aleat   <- rnorm(N_pop, mean = 100, sd = 25)
+
+# 2. Con tendencia lineal creciente
+y_tend    <- 50 + 0.10 * (1:N_pop) + rnorm(N_pop, sd = 10)
+
+# 3. Periódica con período = k = 10
+y_period  <- 100 + 30 * sin(2 * pi * (1:N_pop) / k) + rnorm(N_pop, sd = 5)
+
+# Función para repetir muestras MAS y sistemáticas
+simular <- function(y, B = 2000) {
+  mas <- replicate(B, mean(sample(y, n_sis, replace = FALSE)))
+  sis <- replicate(B, {
+    r <- sample(1:k, 1)
+    mean(y[seq(r, N_pop, by = k)])
+  })
+  data.frame(estimacion = c(mas, sis),
+             metodo     = rep(c("MAS", "Sistemático"), each = B))
+}
+
+res_aleat  <- simular(y_aleat)   %>% mutate(escenario = "Aleatorio")
+res_tend   <- simular(y_tend)    %>% mutate(escenario = "Tendencia")
+res_period <- simular(y_period)  %>% mutate(escenario = "Periódico (período = k)")
+
+resultados <- bind_rows(res_aleat, res_tend, res_period)
+
+# Varianza muestral del estimador en cada combinación
+tabla_var <- resultados %>%
+  group_by(escenario, metodo) %>%
+  summarise(
+    media = mean(estimacion),
+    sd    = sd(estimacion),
+    .groups = "drop"
+  ) %>%
+  mutate(across(c(media, sd), ~ round(.x, 3)))
+kable(tabla_var, caption = "Media y desviación estándar de los estimadores en 2000 réplicas")
+
+# Densidad interactiva de los estimadores
+g_sis <- ggplot(resultados, aes(x = estimacion, fill = metodo, color = metodo)) +
+  geom_density(alpha = 0.4) +
+  facet_wrap(~ escenario, scales = "free", ncol = 1) +
+  scale_fill_manual(values  = c("MAS" = unname(paleta_muestreo["secundario"]),
+                                "Sistemático" = unname(paleta_muestreo["contraste"]))) +
+  scale_color_manual(values = c("MAS" = unname(paleta_muestreo["primario"]),
+                                "Sistemático" = unname(paleta_muestreo["contraste"]))) +
+  labs(x = "Media estimada", y = "Densidad",
+       fill = "Método", color = "Método") +
+  theme_muestreo()
+
+ggplotly(g_sis) %>%
+  estilo_muestreo(
+    titulo = "Distribución del estimador bajo MAS y sistemático en tres escenarios",
+    eje_x  = "Media estimada",
+    eje_y  = "Densidad"
+  )
+```
+
+**Interpretación.** Las cifras concretas de la tabla anterior cuantifican el comportamiento de cada escenario:
+
+- **Población aleatoria.** Las dos distribuciones son prácticamente indistinguibles: las desviaciones estándar de los estimadores MAS y sistemático difieren en menos del 5%. En ausencia de estructura en el orden del marco, el sistemático no aporta ni daña.
+- **Población con tendencia.** El sistemático es **más preciso** que MAS, con una desviación estándar sustancialmente menor. La razón es geométrica: al recorrer el marco con paso fijo, el sistemático "estratifica implícitamente" la población según la posición y captura la tendencia lineal sin sesgo de muestreo.
+- **Población periódica con período igual a $k$.** El sistemático **se desploma**: su desviación estándar es del orden de un 30 a 60 veces mayor que la del MAS (compárense las dos filas correspondientes en la tabla). Cada arranque aleatorio "atrapa" la curva sinusoidal siempre en la misma fase, de modo que las distintas muestras producen estimaciones extremadamente dispares. Este es el **riesgo clásico** del muestreo sistemático y la principal razón por la que conviene desordenar el marco antes de aplicarlo cuando se sospecha periodicidad.
+
+## 2.9 Teoría de aleatorización para MAS *(sección avanzada)*
+
+La **teoría basada en el diseño** (o teoría de aleatorización) considera fijos los valores $y_1,\ldots,y_N$ de la población y trata como aleatoria únicamente la variable indicadora de inclusión $Z_i = \mathbf{1}\{i\in\mathcal{S}\}$.
+
+Bajo MAS sin reposición:
+
+$$
+E[Z_i] = \frac{n}{N}, \qquad
+V[Z_i] = \frac{n}{N}\left(1-\frac{n}{N}\right), \qquad
+\text{Cov}(Z_i,Z_j) = -\frac{n(N-n)}{N^2(N-1)}\;\;(i\neq j)
+$$
+
+Escribiendo $\bar{y} = \tfrac{1}{n}\sum_{i=1}^{N} Z_i\,y_i$ se obtiene, tras un poco de álgebra:
+
+$$
+E[\bar{y}] = \bar{y}_U, \qquad
+V[\bar{y}] = \left(1-\frac{n}{N}\right)\frac{S^2}{n}
+$$
+
+El estimador es **insesgado** y la varianza coincide con la fórmula clásica de la sección 2.3. La aleatoriedad proviene **exclusivamente** del mecanismo de selección, no de un modelo sobre los $y_i$.
+
+A modo de validación empírica se reproduce este resultado mediante una simulación Monte Carlo: se extraen 5000 muestras MAS de tamaño $n=300$ desde el marco completo `agpop`.
+
+```{r aleatorizacion-mc}
+set.seed(2026)
+B   <- 5000
+y_U <- agpop$acres92                   # valores fijos de la población
+mu  <- mean(y_U)                       # media poblacional verdadera
+S2  <- var(y_U)                        # varianza poblacional (con divisor N-1)
+
+# Simulación de 5000 medias muestrales MAS de tamaño n
+ybars_mc <- replicate(B, mean(sample(y_U, n, replace = FALSE)))
+
+# Comparación entre teoría y simulación
+sim_media   <- mean(ybars_mc)
+sim_var     <- var(ybars_mc)
+teor_var    <- (1 - n / N) * S2 / n
+
+resumen_mc <- data.frame(
+  Cantidad        = c("Media poblacional ybar_U",
+                      "Promedio MC de ybar",
+                      "V(ybar) teórica",
+                      "Varianza MC de ybar"),
+  Valor           = c(round(mu, 2),
+                      round(sim_media, 2),
+                      round(teor_var, 2),
+                      round(sim_var, 2))
+)
+kable(resumen_mc, caption = "Validación empírica de la teoría de aleatorización")
+
+# Densidad MC con la curva normal teórica superpuesta
+malla <- seq(min(ybars_mc), max(ybars_mc), length.out = 400)
+densidad_teorica <- dnorm(malla, mean = mu, sd = sqrt(teor_var))
+
+plot_ly() %>%
+  add_histogram(x = ybars_mc, histnorm = "probability density",
+                name = "Distribución MC",
+                marker = list(color = unname(paleta_muestreo["apoyo"]),
+                              line  = list(color = "white", width = 0.5))) %>%
+  add_lines(x = malla, y = densidad_teorica,
+            name = "Normal teórica",
+            line = list(color = unname(paleta_muestreo["acento"]), width = 3)) %>%
+  layout(
+    shapes = list(
+      list(type = "line", x0 = mu, x1 = mu,
+           y0 = 0, y1 = max(densidad_teorica),
+           line = list(color = unname(paleta_muestreo["primario"]),
+                       width = 2, dash = "dash"))
+    )
+  ) %>%
+  estilo_muestreo(
+    titulo = "Distribución Monte Carlo de ybar bajo MAS vs. normal teórica",
+    eje_x  = "Media muestral estimada",
+    eje_y  = "Densidad"
+  )
+```
+
+**Interpretación.** La distribución empírica de las 5000 medias muestrales se centra en la media poblacional $\bar{y}_U$ y su dispersión coincide con la varianza teórica predicha por la teoría de aleatorización. La curva normal sobrepuesta encaja muy bien, lo que ilustra el TCL para muestras MAS de tamaño moderado, incluso cuando la variable original es asimétrica.
+
+## 2.10 Teoría basada en modelos para MAS *(sección avanzada)*
+
+La **teoría basada en modelos** invierte la perspectiva: trata los $y_i$ como **realizaciones de variables aleatorias** $Y_i$ provenientes de una superpoblación, y trata como fija la muestra $\mathcal{S}$. El modelo más simple supone:
+
+$$
+Y_1, \ldots, Y_N \;\overset{\text{iid}}{\sim}\; (\mu, \sigma^2)
+$$
+
+Bajo este modelo el mejor predictor lineal insesgado de $\bar{y}_U$ sigue siendo $\bar{y}$ y su varianza, condicional a la muestra, es:
+
+$$
+V_{\text{mod}}(\bar{y}) \;=\; \frac{\sigma^2}{n}
+$$
+
+Nótese que **no aparece la corrección por población finita**: bajo el modelo iid las unidades no observadas son intercambiables con las observadas, por lo que aumentar $n/N$ no reduce la varianza más allá del factor $1/n$.
+
+```{r modelo-vs-diseno}
+# Comparación numérica: SE bajo enfoque de diseño vs. enfoque de modelo
+sigma2_hat <- s2                           # estimación del modelo iid
+SE_mod     <- sqrt(sigma2_hat / n)
+SE_dis     <- sqrt((1 - n / N) * s2 / n)
+
+cat("SE bajo enfoque de modelo (sin FPC):", round(SE_mod, 2), "\n")
+cat("SE bajo enfoque de diseño  (con FPC):", round(SE_dis, 2), "\n")
+cat("Razón SE_mod / SE_dis = 1/sqrt(1 - n/N) =", round(SE_mod / SE_dis, 4), "\n")
+```
+
+**Interpretación.** La diferencia entre ambos enfoques se manifiesta en el factor $\sqrt{1-n/N}$. Cuando $n$ es pequeño respecto a $N$ (caso habitual en encuestas a gran escala), ambos SE son prácticamente iguales. Cuando $n$ se aproxima a $N$, el enfoque de diseño produce errores estándar menores. Lohr argumenta que el enfoque de diseño es preferible cuando el supuesto del modelo es difícil de defender, lo cual es lo común en encuestas a poblaciones humanas heterogéneas.
+
+## 2.11 ¿Cuándo usar muestreo aleatorio simple?
+
+| Situación | MAS es razonable | MAS es subóptimo |
+|-----------|------------------|------------------|
+| Existe un marco completo y barato de enumerar | ✓ | |
+| La población es relativamente homogénea | ✓ | |
+| Existen subgrupos importantes con varianzas distintas | | mejor estratificar |
+| El marco está agrupado geográficamente y el costo logístico es alto | | mejor por conglomerados |
+| Se dispone de una variable auxiliar muy correlacionada con $y$ | | mejor estratificado o PPS |
+| Se requieren estimaciones por dominios | | mejor estratificado |
+
+En resumen, MAS es un punto de referencia (*benchmark*) frente al cual se evalúan los demás diseños. Su simplicidad lo hace ideal para encuestas pequeñas y para introducir la teoría, pero rara vez es la elección óptima en encuestas a gran escala.
+
+---
+
+# Capítulo 3 — Muestreo Estratificado
+
+## 3.1 ¿Qué es el muestreo estratificado?
+
+En el **muestreo estratificado** se divide la población $U$ en $H$ subpoblaciones disjuntas y exhaustivas $U_1,\ldots,U_H$, llamadas **estratos**. Dentro de cada estrato se selecciona una muestra **independiente** de tamaño $n_h$ por algún diseño probabilístico (típicamente MAS).
+
+Las razones para estratificar son:
+
+1. **Reducir la varianza** del estimador global cuando los estratos son internamente homogéneos pero distintos entre sí.
+2. **Garantizar tamaños muestrales** mínimos en subpoblaciones de interés (dominios).
+3. **Facilitar la administración** de la encuesta (estratos geográficos).
+4. **Combinar diseños diferentes** en estratos diferentes.
+
+El conjunto `agstrat` proviene de estratificar `agpop` por la variable `region` (NC, NE, S, W) y aplicar MAS dentro de cada región.
+
+```{r estratos-boxplot}
+# Conteos por estrato en la población y en la muestra
+N_h <- agpop %>% count(region, name = "Nh")
+n_h <- agstrat %>% count(region, name = "nh")
+
+tabla_estratos <- left_join(N_h, n_h, by = "region") %>%
+  mutate(prop_pob = round(Nh / sum(Nh), 4),
+         prop_mue = round(nh / sum(nh), 4),
+         peso     = round(Nh / nh, 3))
+kable(tabla_estratos,
+      caption = "Tamaños poblacional y muestral por estrato (región)")
+
+# Boxplot interactivo de acres92 por región
+# La paleta_categorica asigna un color fijo a cada región y se reusa en
+# los demás gráficos por estrato del documento.
+g_box <- ggplot(agstrat, aes(x = region, y = acres92, fill = region)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.6) +
+  scale_fill_manual(values = setNames(paleta_categorica,
+                                      c("NC", "NE", "S", "W"))) +
+  labs(x = "Región (estrato)", y = "Acres dedicados a agricultura (1992)",
+       fill = "Región") +
+  theme_muestreo()
+
+ggplotly(g_box) %>%
+  estilo_muestreo(
+    titulo = "Distribución de acres92 por estrato",
+    eje_x  = "Región (estrato)",
+    eje_y  = "Acres dedicados a agricultura (1992)"
+  )
+```
+
+**Interpretación.** Los estratos son notoriamente heterogéneos entre sí: el Oeste (`W`) presenta mediana mucho más alta y mayor dispersión que el Noreste (`NE`). Esta diferencia es precisamente el tipo de estructura que la estratificación aprovecha para reducir la varianza del estimador global.
+
+### Por qué la estratificación reduce la varianza
+
+La justificación formal proviene de la **descomposición clásica de la varianza poblacional**. Si la población se divide en $H$ estratos con tamaños $N_h$ y medias $\bar{y}_{Uh}$, se cumple la identidad:
+
+$$
+\underbrace{\sum_{i\in U}(y_i - \bar{y}_U)^2}_{\text{variabilidad total}}
+\;=\;
+\underbrace{\sum_{h=1}^{H}\sum_{i\in U_h}(y_{hi}-\bar{y}_{Uh})^2}_{\text{variabilidad intra-estratos}}
+\;+\;
+\underbrace{\sum_{h=1}^{H} N_h\,(\bar{y}_{Uh}-\bar{y}_U)^2}_{\text{variabilidad entre estratos}}
+$$
+
+Dividiendo por $N$ y denotando $W_h = N_h/N$, esta identidad se escribe en forma normalizada:
+
+$$
+S^2 \;\approx\; \underbrace{\sum_{h=1}^{H} W_h\,S_h^2}_{\text{intra}} \;+\; \underbrace{\sum_{h=1}^{H} W_h\,(\bar{y}_{Uh}-\bar{y}_U)^2}_{\text{entre}}
+$$
+
+Bajo MAS, la varianza del estimador depende de $S^2$ —que incluye **ambas** componentes—. Bajo muestreo estratificado con asignación proporcional, la varianza depende únicamente de $\sum_h W_h S_h^2$ —es decir, de **la componente intra**—. La diferencia entre ambas, que es la **componente entre estratos**, es exactamente la "ganancia" de la estratificación. De aquí se desprende un principio rector: **conviene estratificar por variables que separen bien las medias** $\bar{y}_{Uh}$, porque eso maximiza la componente entre y, por lo tanto, la ganancia.
+
+```{r descomposicion-varianza}
+# Descomposición numérica de la varianza poblacional de acres92
+ybar_U <- mean(agpop$acres92)
+
+descomp <- agpop %>%
+  group_by(region) %>%
+  summarise(
+    Nh       = n(),
+    ybar_Uh  = mean(acres92),
+    SS_intra = sum((acres92 - ybar_Uh)^2),
+    .groups  = "drop"
+  ) %>%
+  mutate(
+    Wh       = Nh / sum(Nh),
+    SS_entre = Nh * (ybar_Uh - ybar_U)^2
+  )
+
+SS_total  <- sum((agpop$acres92 - ybar_U)^2)
+SS_intra  <- sum(descomp$SS_intra)
+SS_entre  <- sum(descomp$SS_entre)
+
+cat("Suma de cuadrados total            :", format(SS_total,  big.mark = ","), "\n")
+cat("Suma de cuadrados intra-estratos   :", format(SS_intra,  big.mark = ","), "\n")
+cat("Suma de cuadrados entre estratos   :", format(SS_entre,  big.mark = ","), "\n")
+cat("Verificación (intra + entre = total):", isTRUE(all.equal(SS_intra + SS_entre, SS_total)), "\n\n")
+cat("Proporción de la varianza explicada por los estratos: ",
+    round(100 * SS_entre / SS_total, 2), "%\n", sep = "")
+```
+
+Esta proporción cuantifica, en términos de la población completa, qué fracción de la variabilidad total de `acres92` queda "absorbida" al condicionar por región. Es, esencialmente, el $R^2$ de un ANOVA de una vía con `region` como factor.
+
+## 3.2 Teoría del muestreo estratificado
+
+Sean $N_h$ y $n_h$ los tamaños poblacional y muestral del estrato $h$, con $N=\sum_h N_h$ y $n=\sum_h n_h$. Sea $\bar{y}_h$ la media muestral en el estrato $h$ y $s_h^2$ su varianza muestral. Entonces el **estimador estratificado de la media** es:
+
+$$
+\bar{y}_{\text{str}} \;=\; \sum_{h=1}^{H} \frac{N_h}{N}\,\bar{y}_h
+$$
+
+Es **insesgado** para $\bar{y}_U$. Su varianza, asumiendo MAS dentro de cada estrato, es:
+
+$$
+V(\bar{y}_{\text{str}}) \;=\; \sum_{h=1}^{H} \left(\frac{N_h}{N}\right)^2 \left(1-\frac{n_h}{N_h}\right) \frac{S_h^2}{n_h}
+$$
+
+cuyo estimador insesgado se obtiene reemplazando $S_h^2$ por $s_h^2$:
+
+$$
+\hat{V}(\bar{y}_{\text{str}}) \;=\; \sum_{h=1}^{H} \left(\frac{N_h}{N}\right)^2 \left(1-\frac{n_h}{N_h}\right) \frac{s_h^2}{n_h}
+$$
+
+El **total estimado** es $\hat{t}_{\text{str}} = N\,\bar{y}_{\text{str}} = \sum_h N_h\,\bar{y}_h$, con varianza $V(\hat{t}_{\text{str}}) = N^2\,V(\bar{y}_{\text{str}})$.
+
+```{r estratificado-calculo}
+# Resumen por estrato
+res_estr <- agstrat %>%
+  group_by(region) %>%
+  summarise(
+    nh   = n(),
+    ybar_h = mean(acres92),
+    s2_h   = var(acres92),
+    .groups = "drop"
+  ) %>%
+  left_join(N_h, by = "region") %>%
+  mutate(Wh = Nh / sum(Nh))
+
+kable(res_estr %>%
+        mutate(across(c(ybar_h, s2_h, Wh), ~ round(.x, 4))),
+      caption = "Estadísticos por estrato")
+
+# Estimador estratificado de la media y su varianza
+N_total <- sum(res_estr$Nh)
+ybar_str <- sum(res_estr$Wh * res_estr$ybar_h)
+var_str  <- sum(res_estr$Wh^2 *
+                (1 - res_estr$nh / res_estr$Nh) *
+                res_estr$s2_h / res_estr$nh)
+se_str   <- sqrt(var_str)
+
+# Total estimado
+that_str <- N_total * ybar_str
+se_that_str <- N_total * se_str
+
+cat("Estimación estratificada de la media: ", round(ybar_str, 2), "\n")
+cat("Error estándar de la media          : ", round(se_str, 2), "\n")
+cat("Estimación estratificada del total  : ", round(that_str, 0), "\n")
+cat("Error estándar del total            : ", round(se_that_str, 0), "\n")
+```
+
+Se obtiene $\bar{y}_{\text{str}}\approx 295\,561$ con un error estándar de aproximadamente $16\,380$ acres, **menor** que el del MAS (sección 2.3, donde $\text{SE}(\bar{y})\approx 18\,898$). Esta reducción se produce gracias a que los estratos resultan internamente más homogéneos que la población global, tal como anticipaba la descomposición de varianza presentada en 3.1. Para cuantificar la mejora, se calcula la **eficiencia relativa**:
+
+```{r eficiencia-relativa}
+ER <- var_ybar / var_str   # eficiencia relativa del estratificado vs. MAS
+cat("Eficiencia relativa V(MAS) / V(estratificado) =", round(ER, 3), "\n")
+```
+
+Una eficiencia relativa mayor que 1 indica que el muestreo estratificado es más preciso que MAS para el mismo tamaño muestral total.
+
+## 3.3 Pesos de muestreo en muestreo estratificado aleatorio
+
+En el muestreo estratificado aleatorio simple, las probabilidades de inclusión y los pesos son específicos del estrato:
+
+$$
+\pi_{hi} = \frac{n_h}{N_h}, \qquad
+w_{hi} = \frac{N_h}{n_h}
+$$
+
+Una propiedad clave es que la suma de pesos en cada estrato muestral reproduce el tamaño poblacional del estrato:
+
+$$
+\sum_{i\in\mathcal{S}_h} w_{hi} \;=\; n_h\cdot\frac{N_h}{n_h} \;=\; N_h
+$$
+
+```{r estr-pesos}
+# Cálculo de pesos a partir de los tamaños
+agstrat <- agstrat %>%
+  group_by(region) %>%
+  mutate(nh = n()) %>%
+  ungroup() %>%
+  left_join(N_h, by = "region") %>%
+  mutate(w_hi = Nh / nh)
+
+# Verificación: suma de pesos por estrato debe igualar a N_h
+verif <- agstrat %>%
+  group_by(region) %>%
+  summarise(suma_pesos = sum(w_hi), Nh = first(Nh), .groups = "drop") %>%
+  mutate(coincide = abs(suma_pesos - Nh) < 1e-6)
+kable(verif, caption = "Verificación: suma de pesos por estrato vs. N_h")
+
+# Comparación con la columna strwt provista por Lohr en el archivo agstrat.csv.
+# La columna strwt es exactamente N_h / n_h, calculada por la autora; debe
+# coincidir hasta redondeo con el peso w_hi recién construido.
+cor_strwt <- cor(agstrat$w_hi, agstrat$strwt)
+dif_max   <- max(abs(agstrat$w_hi - agstrat$strwt))
+cat("Correlación entre w_hi calculado y strwt provisto:", round(cor_strwt, 6), "\n")
+cat("Máxima diferencia absoluta entre w_hi y strwt    :", round(dif_max,   6), "\n")
+```
+
+La correlación perfecta y la diferencia despreciable confirman que la fórmula $w_{hi}=N_h/n_h$ reproduce exactamente la columna `strwt` que Lohr distribuye con el conjunto de datos. Esto valida tanto el cálculo manual como la interpretación operativa del peso bajo muestreo estratificado aleatorio.
+
+El paquete `survey` incorpora directamente estos pesos al definir el diseño. La diferencia con respecto al diseño MAS es la inclusión del argumento `strata`, que indica la variable de estratificación, y el cambio en `fpc`, que ahora es el tamaño del **estrato** $N_h$ —no del marco completo $N$—:
+
+```{r survey-estratificado}
+# Definición del diseño estratificado con FPC por estrato
+diseno_str <- svydesign(
+  id      = ~1,
+  strata  = ~region,
+  weights = ~w_hi,
+  fpc     = ~Nh,
+  data    = agstrat
+)
+
+svymean(~acres92, design = diseno_str)
+svytotal(~acres92, design = diseno_str)
+confint(svymean(~acres92, design = diseno_str), level = 0.95)
+```
+
+Las cifras coinciden con las calculadas manualmente, confirmando la correcta declaración del diseño.
+
+## 3.4 Asignación de observaciones a los estratos
+
+Decidido el tamaño total $n$ y los $H$ estratos, queda elegir cómo distribuir $n$ entre ellos. Existen varias alternativas estándar.
+
+### 3.4.1 Asignación proporcional
+
+Se asigna $n_h$ proporcional al tamaño poblacional:
+
+$$
+n_h^{\text{prop}} \;=\; n\,\frac{N_h}{N}
+$$
+
+Bajo asignación proporcional, los pesos $w_{hi}=N_h/n_h$ son **iguales para todos los estratos** (igual a $N/n$), por lo que el diseño se denomina **autoponderado**. En este caso:
+
+$$
+V(\bar{y}_{\text{prop}}) \;=\; \left(1-\frac{n}{N}\right)\frac{1}{n}\sum_{h=1}^{H} \frac{N_h}{N}\,S_h^2
+$$
+
+### 3.4.2 Asignación óptima (Neyman)
+
+Cuando el costo por unidad es el mismo en todos los estratos, la **asignación óptima de Neyman** minimiza $V(\bar{y}_{\text{str}})$:
+
+$$
+n_h^{\text{Ney}} \;=\; n\,\frac{N_h\,S_h}{\sum_{\ell=1}^{H} N_\ell\,S_\ell}
+$$
+
+Esto asigna más muestra a estratos que son **grandes** y/o que presentan **alta variabilidad interna**.
+
+```{r asignacion-comparacion}
+# Estimación de S_h con la información de la muestra agstrat
+S_h <- sqrt(res_estr$s2_h)
+
+n_objetivo <- 300
+
+# Asignación proporcional
+n_prop <- n_objetivo * res_estr$Nh / N_total
+
+# Asignación de Neyman (igual costo)
+n_ney  <- n_objetivo * (res_estr$Nh * S_h) / sum(res_estr$Nh * S_h)
+
+asign <- res_estr %>%
+  mutate(
+    n_prop = round(n_prop, 1),
+    n_ney  = round(n_ney,  1),
+    n_real = nh
+  ) %>%
+  select(region, Nh, n_real, n_prop, n_ney)
+kable(asign,
+      caption = "Comparación de asignaciones para n = 300")
+
+# Gráfico de barras agrupadas (reformateo manual para evitar tidyr)
+asign_long <- data.frame(
+  region = rep(asign$region, times = 3),
+  tipo   = rep(c("Realizada (agstrat)",
+                 "Proporcional",
+                 "Óptima (Neyman)"),
+               each = nrow(asign)),
+  n_h    = c(asign$n_real, asign$n_prop, asign$n_ney)
+)
+
+# Tres asignaciones a comparar: tres primeros colores de la paleta categórica
+g_asig <- ggplot(asign_long, aes(x = region, y = n_h, fill = tipo)) +
+  geom_col(position = position_dodge(width = 0.8)) +
+  scale_fill_manual(values = paleta_categorica[1:3]) +
+  labs(x = "Estrato (región)", y = expression(n[h]),
+       fill = "Asignación") +
+  theme_muestreo()
+
+ggplotly(g_asig) %>%
+  estilo_muestreo(
+    titulo = "Asignaciones por estrato bajo distintos criterios",
+    eje_x  = "Estrato (región)",
+    eje_y  = "Tamaño muestral n<sub>h</sub>"
+  )
+```
+
+**Interpretación.** La asignación de Neyman concentra una proporción mayor de la muestra en el Oeste (`W`), pues su variabilidad interna es la más alta a pesar de no ser el estrato más numeroso. La proporcional, en cambio, sólo mira el tamaño $N_h$.
+
+### 3.4.3 Asignación para precisión por estrato
+
+Cuando el objetivo es alcanzar una precisión **dentro de cada estrato** (típico en encuestas con dominios), se determina $n_h$ para cumplir un margen de error $e_h$ específico:
+
+$$
+n_h \;=\; \frac{n_{0,h}}{1 + n_{0,h}/N_h}, \qquad
+n_{0,h} = \left(\frac{z_{1-\alpha/2}\,S_h}{e_h}\right)^2
+$$
+
+y luego $n=\sum_h n_h$.
+
+```{r asignacion-precision}
+# Margen de error objetivo por estrato (mismo para todos en este ejemplo)
+e_h <- 25000   # acres
+z   <- qnorm(0.975)
+
+n0_h <- (z * S_h / e_h)^2
+n_precision <- ceiling(n0_h / (1 + n0_h / res_estr$Nh))
+
+tabla_prec <- data.frame(
+  region = res_estr$region,
+  Nh     = res_estr$Nh,
+  S_h    = round(S_h, 1),
+  n_h    = n_precision
+)
+kable(tabla_prec,
+      caption = sprintf("Asignación para alcanzar e_h = %s acres en cada estrato (95%%)",
+                        format(e_h, big.mark = ",")))
+cat("Tamaño total resultante: n =", sum(n_precision), "\n")
+```
+
+### 3.4.4 ¿Cuál asignación utilizar?
+
+| Criterio | Recomendación |
+|----------|---------------|
+| Diseño simple, autoponderado, sin información sobre $S_h$ | Proporcional |
+| Se conocen (o estiman) los $S_h$ y se busca máxima eficiencia para la media global | Neyman |
+| Costo por entrevista varía entre estratos | Óptima con costo: $n_h \propto N_h S_h / \sqrt{c_h}$ |
+| Se requiere precisión por dominio | Asignación para precisión por estrato |
+
+Las asignaciones proporcional y de Neyman coinciden cuando todos los $S_h$ son iguales. La ganancia de Neyman frente a proporcional es:
+
+$$
+V_{\text{prop}} - V_{\text{Ney}} \;=\; \frac{1}{n}\sum_h \frac{N_h}{N}\,(S_h - \bar{S})^2
+$$
+
+donde $\bar{S} = \sum_h (N_h/N)\,S_h$. Es decir, la ganancia es proporcional a la **dispersión entre los $S_h$**.
+
+```{r ganancia-neyman}
+# Varianzas teóricas bajo cada asignación, asumiendo n total = 300
+n_total_obj <- 300
+
+# Asignación proporcional: n_h = n * N_h / N
+nh_prop <- n_total_obj * res_estr$Nh / N_total
+V_prop  <- sum((res_estr$Nh / N_total)^2 *
+               (1 - nh_prop / res_estr$Nh) *
+               res_estr$s2_h / nh_prop)
+
+# Asignación de Neyman
+nh_ney  <- n_total_obj * res_estr$Nh * S_h / sum(res_estr$Nh * S_h)
+V_ney   <- sum((res_estr$Nh / N_total)^2 *
+               (1 - nh_ney / res_estr$Nh) *
+               res_estr$s2_h / nh_ney)
+
+cat("V(ybar_str) bajo asignación proporcional:", round(V_prop, 2), "\n")
+cat("V(ybar_str) bajo asignación de Neyman   :", round(V_ney, 2), "\n")
+cat("Ganancia relativa de Neyman             :", round((V_prop - V_ney) / V_prop * 100, 2), "%\n")
+```
+
+### 3.4.5 Determinación del tamaño total
+
+Una vez elegida la regla de asignación, el tamaño total $n$ se determina para alcanzar una varianza objetivo $V_0$ del estimador. Bajo asignación proporcional:
+
+$$
+n \;=\; \frac{N\,\sum_h W_h\,S_h^2}{N\,V_0 + \sum_h W_h\,S_h^2}, \qquad W_h = N_h/N
+$$
+
+Bajo asignación de Neyman:
+
+$$
+n \;=\; \frac{\left(\sum_h W_h\,S_h\right)^2}{V_0 + \tfrac{1}{N}\sum_h W_h\,S_h^2}
+$$
+
+```{r tamano-total}
+W_h    <- res_estr$Nh / N_total
+sumWS2 <- sum(W_h * S_h^2)
+sumWS  <- sum(W_h * S_h)
+
+# Varianza objetivo: por ejemplo, alcanzar SE(ybar_str) = 15 000 acres,
+# es decir V0 = 15000^2 = 2.25e8
+SE_objetivo <- 15000
+V0 <- SE_objetivo^2
+
+n_prop_req <- (N_total * sumWS2) / (N_total * V0 + sumWS2)
+n_ney_req  <- (sumWS)^2 / (V0 + sumWS2 / N_total)
+
+resumen_n <- data.frame(
+  Asignación = c("Proporcional", "Neyman"),
+  n_requerido = c(ceiling(n_prop_req), ceiling(n_ney_req))
+)
+kable(resumen_n,
+      caption = sprintf("Tamaño total requerido para alcanzar SE(ybar_str) = %s acres",
+                        format(SE_objetivo, big.mark = ",")))
+```
+
+**Interpretación.** Para alcanzar un error estándar objetivo de $15\,000$ acres en el estimador de la media, la asignación proporcional requiere aproximadamente `r ceiling(n_prop_req)` condados, mientras que la asignación de Neyman se conforma con `r ceiling(n_ney_req)`. La diferencia, de cerca de `r ceiling(n_prop_req) - ceiling(n_ney_req)` unidades, corresponde a un ahorro del `r round(100 * (1 - n_ney_req / n_prop_req), 1)`% en costo de campo para la misma precisión final. La magnitud del ahorro depende exclusivamente de la heterogeneidad entre los $S_h$: si todos los estratos tuvieran la misma desviación estándar interna, ambas asignaciones coincidirían.
+
+## 3.5 Definición de los estratos
+
+La elección de la variable de estratificación es una decisión **previa** a la selección, basada en información auxiliar disponible en el marco. Los principios prácticos son:
+
+1. Los estratos deben ser **homogéneos internamente** respecto a la variable de interés $y$.
+2. La variable de estratificación debe estar **correlacionada con $y$**.
+3. El número de estratos $H$ debe ser **moderado** (por ejemplo, entre 4 y 10 en encuestas a hogares).
+4. Cada estrato debe tener tamaño muestral suficiente ($n_h \geq 2$) para estimar $S_h^2$.
+
+A continuación se ilustra mediante simulación cómo cambia la varianza del estimador estratificado al elegir bien o mal la variable de estratificación.
+
+```{r definicion-estratos}
+set.seed(2026)
+
+# Función auxiliar: dado un vector de etiquetas de estrato y la variable
+# de interés, simula B muestras estratificadas con asignación proporcional
+# y devuelve el vector de estimaciones de la media global.
+simular_estratificado <- function(etiqueta_estrato, y, n_total = 300, B = 300) {
+  # Tamaños poblacionales por estrato
+  Nh <- as.numeric(table(etiqueta_estrato))
+  nombres_h <- names(table(etiqueta_estrato))
+  N <- sum(Nh)
+  # Asignación proporcional con un mínimo de 2 por estrato
+  nh <- pmax(2, round(n_total * Nh / N))
+
+  # Índices de las unidades pertenecientes a cada estrato
+  indices_por_estrato <- split(seq_along(y), etiqueta_estrato)
+
+  # Réplicas Monte Carlo
+  replicate(B, {
+    ybar_h <- numeric(length(nombres_h))
+    for (h in seq_along(nombres_h)) {
+      idx_h <- indices_por_estrato[[nombres_h[h]]]
+      muestra_h <- sample(idx_h, size = nh[h], replace = FALSE)
+      ybar_h[h] <- mean(y[muestra_h])
+    }
+    sum((Nh / N) * ybar_h)
+  })
+}
+
+# Estratificación "buena": por región (correlacionada con acres92)
+est_buena <- simular_estratificado(
+  etiqueta_estrato = agpop$region,
+  y                = agpop$acres92,
+  n_total = 300, B = 300
+)
+
+# Estratificación "mala": por la primera letra del nombre del condado,
+# agrupada en 4 conjuntos para tener el mismo número de estratos.
+letra <- substr(agpop$county, 1, 1)
+grupo_letra <- cut(match(letra, LETTERS),
+                   breaks = 4,
+                   labels = c("G1", "G2", "G3", "G4"),
+                   include.lowest = TRUE)
+
+est_mala <- simular_estratificado(
+  etiqueta_estrato = grupo_letra,
+  y                = agpop$acres92,
+  n_total = 300, B = 300
+)
+
+df_sim <- data.frame(
+  estimacion = c(est_buena, est_mala),
+  tipo       = rep(c("Estratificación por región (buena)",
+                     "Estratificación por letra inicial (mala)"),
+                   each = 300)
+)
+
+cat("Desviación estándar (buena estratificación):", round(sd(est_buena), 2), "\n")
+cat("Desviación estándar (mala estratificación) :", round(sd(est_mala),  2), "\n")
+
+# Misma dualidad cromática que el gráfico de MAS vs. sistemático:
+# azul = referencia "buena", naranja = alternativa "mala".
+g_estr <- ggplot(df_sim, aes(x = estimacion, fill = tipo, color = tipo)) +
+  geom_density(alpha = 0.4) +
+  scale_fill_manual(values  = c(unname(paleta_muestreo["secundario"]),
+                                unname(paleta_muestreo["contraste"]))) +
+  scale_color_manual(values = c(unname(paleta_muestreo["primario"]),
+                                unname(paleta_muestreo["contraste"]))) +
+  labs(x = "Media estimada de acres92", y = "Densidad",
+       fill = "Estratificación", color = "Estratificación") +
+  theme_muestreo()
+
+ggplotly(g_estr) %>%
+  estilo_muestreo(
+    titulo = "Distribución del estimador estratificado bajo dos definiciones de estratos",
+    eje_x  = "Media estimada de acres92",
+    eje_y  = "Densidad"
+  )
+```
+
+**Interpretación.** La estratificación por región produce una distribución del estimador notoriamente más concentrada que la estratificación por letra inicial. La razón es que la región está correlacionada con `acres92` (los condados del Oeste tienden a ser mucho más extensos), mientras que la letra inicial del nombre es esencialmente independiente de la variable. Una estratificación irrelevante no perjudica gravemente la insesgadez, pero desperdicia la oportunidad de reducir la varianza.
+
+## 3.6 Teoría basada en modelos para muestreo estratificado *(sección avanzada)*
+
+El enfoque basado en modelos para muestreo estratificado postula un modelo de **medias por estrato**:
+
+$$
+Y_{hi} \;\overset{\text{ind}}{\sim}\; (\mu_h, \sigma_h^2), \qquad i=1,\ldots,N_h, \;\; h=1,\ldots,H
+$$
+
+Bajo este modelo, el **mejor predictor lineal insesgado** (BLUP) de la media poblacional $\bar{y}_U = \sum_h W_h\,\mu_h$ es:
+
+$$
+\hat{\bar{y}}_U^{\text{BLUP}} \;=\; \sum_{h=1}^{H} W_h\,\bar{y}_h
+$$
+
+que **coincide exactamente** con el estimador estratificado de la sección 3.2. La varianza condicional bajo el modelo es:
+
+$$
+V_{\text{mod}}(\hat{\bar{y}}_U) \;=\; \sum_{h=1}^{H} W_h^2\,\frac{\sigma_h^2}{n_h}\,\left(1-\frac{n_h}{N_h}\right)
+$$
+
+que también coincide con la fórmula de diseño cuando $\sigma_h^2 = S_h^2$. Esta **convergencia entre los dos enfoques** es una de las razones por las cuales el muestreo estratificado se considera robusto: tanto un estadístico que confía en el diseño como uno que confía en un modelo razonable llegan al mismo estimador y al mismo error estándar.
+
+Cuando se sospecha que las medias por estrato no son constantes —por ejemplo, por la presencia de una covariable continua dentro del estrato— se puede **post-estratificar** o emplear modelos de regresión asistida, temas que escapan al alcance de este capítulo introductorio.
+
+---
+
+# Cierre
+
+A lo largo de este documento se han presentado los fundamentos del muestreo aleatorio simple y del muestreo estratificado, siguiendo la notación y los ejemplos del libro de **Sharon L. Lohr**. La estructura del material refleja la lógica del libro: primero se establecen los conceptos básicos sobre un diseño elemental (MAS), y luego se introducen ganancias de eficiencia mediante estratificación.
+
+Las ideas centrales son:
+
+1. **Toda inferencia probabilística se apoya en $\pi_i$ y $w_i$**, conocidos por diseño.
+2. **El estimador y su error estándar deben construirse coherentemente con el diseño** utilizado en la selección.
+3. **La corrección por población finita** (FPC) es relevante cuando $n/N$ no es despreciable.
+4. **La estratificación reduce la varianza** cuando los estratos son internamente más homogéneos que la población global, sin sacrificar insesgadez.
+5. **Las teorías de aleatorización y de modelos** son complementarias: convergen en MAS y en el estratificado, pero divergen cuando se introducen modelos auxiliares más complejos.
+
+## Información de la sesión
+
+```{r session-info, echo=FALSE}
+sessionInfo()
+```
+
+## Referencias
+
+- Lohr, S. L. (2022). *Sampling: Design and Analysis* (3rd ed.). Chapman & Hall / CRC.
+- Cochran, W. G. (1977). *Sampling Techniques* (3rd ed.). Wiley.
+- Särndal, C.-E., Swensson, B., & Wretman, J. (1992). *Model Assisted Survey Sampling*. Springer.
+- Lumley, T. (2010). *Complex Surveys: A Guide to Analysis Using R*. Wiley.

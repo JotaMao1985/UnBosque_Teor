@@ -1,0 +1,3815 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Material de estudio autónomo sobre Muestreo Estratificado: Capítulo 4, basado en Sharon L. Lohr.">
+  <meta name="author" content="Javier Mauricio Sierra">
+  <meta name="keywords"
+    content="Muestreo, estadística, Sharon Lohr, estratificado, asignación óptima, postestratificación">
+  <title>Muestreo Estratificado - Capítulo 4</title>
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- External Resources -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for LaTeX rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Chart.js for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            primary: '#012820',
+            secondary: '#FF6600',
+            navy: '#012820',
+            gold: '#90FF00',
+            bg: '#F8FAFC',
+            surface: '#FFFFFF',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Base fallback styles */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    /* USTA Gradient Background */
+    .usta-gradient {
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+    }
+
+    .usta-gradient-hover:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+    }
+
+    /* USTA Navy Header */
+    .usta-header {
+      background: linear-gradient(180deg, #012820 0%, #001F18 100%);
+    }
+
+    /* USTA Card Style */
+    .usta-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .usta-card:hover {
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .usta-button {
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+      color: white;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .usta-button:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(1, 40, 32, 0.35);
+    }
+
+    /* Sidebar Container */
+    .sidebar-container {
+      display: none;
+      width: 280px;
+      flex-shrink: 0;
+      order: 2;
+    }
+
+    @media (min-width: 768px) {
+      .sidebar-container {
+        display: block;
+        order: 1;
+      }
+    }
+
+    .sidebar-inner {
+      position: sticky;
+      top: 9rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      max-height: calc(100vh - 12rem);
+      overflow-y: auto;
+    }
+
+    #sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    /* Sidebar Header */
+    .sidebar-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f3f4f6;
+    }
+
+    /* Nav Items */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      color: #4B5563;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-item::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d1d5db;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #f3f4f6;
+      color: #012820;
+    }
+
+    .nav-item:hover::before {
+      background: #012820;
+      transform: scale(1.2);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #012820 0%, #FF6600 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(1, 40, 32, 0.3);
+    }
+
+    .nav-item.active::before {
+      background: white;
+    }
+
+    /* Subsection Links */
+    .nav-subsection {
+      display: block;
+      padding: 0.6rem 0.75rem 0.6rem 1rem;
+      font-size: 0.85rem;
+      color: #4b5563;
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      margin-bottom: 0.15rem;
+      transition: all 0.2s ease;
+      line-height: 1.4;
+      border-radius: 0 0.25rem 0.25rem 0;
+    }
+
+    .nav-subsection:hover {
+      color: #012820;
+      border-left-color: #012820;
+      background: linear-gradient(90deg, rgba(1, 40, 32, 0.05) 0%, transparent 100%);
+      padding-left: 1.25rem;
+    }
+
+    .nav-subsection::before {
+      content: '→';
+      margin-right: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 0.75rem;
+    }
+
+    .nav-subsection:hover::before {
+      opacity: 1;
+    }
+
+    .subsection-container {
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Fallback para asegurar visibilidad del sidebar */
+    @media (min-width: 768px) {
+      #sidebar {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    }
+
+    /* Scroll to top button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+      color: white;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+      transition: all 0.3s ease;
+      z-index: 50;
+      border: none;
+    }
+
+    .scroll-to-top.visible {
+      display: flex;
+    }
+
+    .scroll-to-top:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+    }
+
+    /* Tip box USTA style */
+    .tip-box {
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%);
+      border: 1px solid rgba(1, 40, 32, 0.2);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    /* Focus visible styles for keyboard navigation - subtle */
+    *:focus-visible {
+      outline: 2px solid rgba(1, 40, 32, 0.5);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid #012820;
+      outline-offset: 3px;
+    }
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: white;
+      color: #012820;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      text-decoration: none;
+      font-weight: 500;
+      border: 2px solid #012820;
+      transition: top 0.2s;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+      outline: none;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .sr-only:focus {
+      position: static;
+      width: auto;
+      height: auto;
+      padding: inherit;
+      margin: inherit;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+    }
+
+    /* Print styles */
+    @media print {
+
+      header,
+      footer,
+      #sidebar,
+      #sidebarToggle,
+      #scrollToTopBtn,
+      #tip-pedagogico {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+
+      .usta-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background: #f5f5f5;
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Sidebar Toggle classes */
+    .sidebar-collapsed {
+      width: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-collapsed+main {
+      width: 100% !important;
+      flex-grow: 1;
+    }
+
+    #sidebarToggle {
+      transition: all 0.3s ease;
+    }
+
+    /* Component Mappings - CSS Puro (sin @apply) */
+    article {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      padding: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      article {
+        padding: 3rem;
+      }
+    }
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 2.25rem;
+      }
+    }
+
+    /* H2 section titles styling */
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #012820;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(255, 102, 0, 0.2);
+      margin-top: 2rem;
+    }
+
+    h2:first-child {
+      margin-top: 0;
+    }
+
+    /* H3 subtitles styling */
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #012820;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 24px;
+      background: #FF6600;
+      border-radius: 4px;
+    }
+
+    /* H4 subtitles styling */
+    h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #012820;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%);
+      border-left: 3px solid #FF6600;
+      border-radius: 0.375rem;
+    }
+
+    /* Override h4 in definition, note, warning boxes */
+    .definition h4,
+    .note h4,
+    .warning h4 {
+      background: none;
+      border-left: none;
+      padding: 0;
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.625;
+      color: #374151;
+      text-align: justify;
+    }
+
+    ul,
+    ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    ul li,
+    ol li {
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    ul {
+      list-style-type: disc;
+    }
+
+    ol {
+      list-style-type: decimal;
+    }
+
+    /* Custom Box Components - CSS Puro */
+    .definition {
+      background-color: #f0fdf4;
+      border-left: 4px solid #012820;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .definition h4 {
+      color: #012820;
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    .note {
+      background-color: #fff7ed;
+      border-left: 4px solid #FF6600;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .note strong {
+      color: #c2410c;
+    }
+
+    .warning {
+      background-color: #fff1f2;
+      border-left: 4px solid #FF4500;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .warning strong {
+      color: #9f1239;
+    }
+
+    .formula {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-family: 'Fira Code', monospace;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 768px) {
+      .formula {
+        padding: 1.5rem;
+      }
+    }
+
+    .diagram {
+      background-color: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .diagram h4 {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 1.5rem;
+    }
+
+    .diagram svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .exercise {
+      background-color: #eff6ff;
+      border: 1px solid #dbeafe;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .exercise h4 {
+      color: #1e40af;
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    /* Code Blocks - CSS Puro */
+    /* Code Block Wrapper with Toggle */
+    .code-block-wrapper {
+      position: relative;
+      margin-bottom: 2.5rem;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #334155;
+      gap: 0.5rem;
+    }
+
+    .code-block-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .code-toggle-btn,
+    .code-copy-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #cbd5e1;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .code-toggle-btn:hover,
+    .code-copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .code-copy-btn.copied {
+      background: rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+    }
+
+    .code-toggle-btn i,
+    .code-copy-btn i {
+      font-size: 0.625rem;
+      transition: transform 0.2s;
+    }
+
+    .code-toggle-btn.expanded i {
+      transform: rotate(180deg);
+    }
+
+    pre {
+      background-color: #1e293b !important;
+      color: #f3f4f6 !important;
+      padding: 1.5rem !important;
+      border-radius: 0;
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Fira Code', monospace !important;
+      font-size: 0.875rem;
+      line-height: 1.625;
+      max-height: 300px;
+      overflow-y: auto;
+      transition: max-height 0.3s ease;
+    }
+
+    pre.expanded {
+      max-height: 2000px;
+    }
+
+    pre.collapsed {
+      max-height: 150px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    pre.collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, #1e293b);
+      pointer-events: none;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    p code,
+    li code {
+      background-color: #f3f4f6;
+      color: #FF6600;
+      padding: 0.25rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid #e5e7eb;
+    }
+
+    pre code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+      border: none;
+    }
+
+    /* Tables - CSS Puro */
+    table {
+      width: 100%;
+      margin-bottom: 2rem;
+      border-collapse: collapse;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    table th {
+      background-color: #012820;
+      color: white;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    table td {
+      padding: 1rem;
+      border-bottom: 1px solid #f3f4f6;
+      color: #374151;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    table tr:hover {
+      background-color: #fff7ed;
+    }
+
+    /* Session Header - CSS Puro */
+    .session-header {
+      background: linear-gradient(to right, #012820, #FF6600);
+      color: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .session-header h2 {
+      color: white;
+      border: none;
+      margin: 0;
+      font-size: 1.875rem;
+      text-shadow: none;
+      padding: 0;
+    }
+
+    .references {
+      background-color: #f3f4f6;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      margin-top: 3rem;
+    }
+
+    .references h3::before {
+      display: none;
+    }
+
+    /* SVG Styles */
+    svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    svg text {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Mobile typography improvements */
+    @media (max-width: 640px) {
+      html {
+        font-size: 14px;
+      }
+
+      .session-header h2 {
+        font-size: 1.25rem !important;
+      }
+
+      section h2 {
+        font-size: 1.375rem;
+      }
+
+      section h3 {
+        font-size: 1.125rem;
+      }
+
+      pre {
+        font-size: 0.75rem;
+        padding: 1rem;
+        max-height: 250px;
+      }
+
+      pre.collapsed {
+        max-height: 120px;
+      }
+
+      .code-block-header {
+        padding: 0.5rem 0.75rem;
+      }
+
+      .code-toggle-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .usta-card {
+        padding: 1.5rem;
+      }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      .usta-card {
+        border: 1px solid #000;
+      }
+
+      .definition,
+      .note,
+      .warning {
+        border-left-width: 4px;
+      }
+    }
+
+    /* Blockquote styling */
+    blockquote {
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.05) 0%, rgba(255, 102, 0, 0.05) 100%);
+      border-left: 4px solid #012820;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      border-radius: 0.5rem;
+      font-style: italic;
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    details {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #012820;
+      padding: 0.5rem;
+    }
+
+    summary:hover {
+      color: #FF6600;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #cbd5e1;
+      margin: 2rem 0;
+    }
+  
+    /* --- Mejoras de accesibilidad y responsive (auditoría) --- */
+    @media (max-width: 768px) {
+      table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
+    .definition, .note, .warning, .exercise { overflow-x: auto; }
+    .nav-item { border: none; background-color: transparent; font-family: inherit; -webkit-appearance: none; appearance: none; }
+    p code, li code { color: #c2410c; }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">
+    Saltar al contenido principal
+  </a>
+
+  <!-- Header & Pipeline Map -->
+  <header class="usta-header sticky top-0 z-50 shadow-lg" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center gap-4">
+          <div class="usta-gradient p-3 rounded-xl shadow-md">
+            <i class="fas fa-layer-group text-xl text-white" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-white leading-tight tracking-tight">Muestreo Estratificado</h1>
+            <p class="text-xs text-white/70 font-medium tracking-wide">CAPÍTULO IV • MUESTREO ESTADÍSTICO • UNBOSQUE
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating Sidebar Toggle Button -->
+  <button id="sidebarToggle"
+    class="fixed left-4 top-1/2 -translate-y-1/2 z-50 bg-primary text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-secondary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+    aria-label="Alternar barra lateral de navegación" aria-expanded="true" aria-controls="sidebar">
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+
+  <div class="flex-grow flex flex-col md:flex-row max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 gap-8 relative">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar-container" id="sidebar" role="complementary" aria-label="Navegación de módulos">
+      <div class="sidebar-inner">
+        <div class="sidebar-title">
+          <i class="fas fa-list-ul mr-2" aria-hidden="true"></i>Contenido
+        </div>
+        <nav id="module-nav" role="navigation" aria-label="Menú de módulos">
+          <!-- Nav items injected via JS -->
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content"
+      class="flex-grow order-1 md:order-2 min-w-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300"
+      role="main" tabindex="-1">
+      <div id="content-area" class="p-6 md:p-10 module-content">
+        <!-- Content injected via JS -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="usta-header mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fas fa-book-open" aria-hidden="true"></i> Referencias Bibliográficas
+      </h3>
+      <ul class="space-y-3 text-white/90 text-sm">
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Lohr, S.L. (2021). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Boston:
+            CRC Press.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Cochran, W.G. (1977). <em class="text-gold">Sampling Techniques</em> (3rd ed.). New York: John Wiley &
+            Sons.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Menon, S. (2020). <em class="text-gold">Stratified Sampling in Machine Learning</em>. Analytics
+            Vidhya (Medium).</span>
+        </li>
+      </ul>
+      <div class="mt-6 pt-6 border-t border-white/20 text-center">
+        <p class="text-white font-medium">Diseñado por <span class="text-gold">Javier Mauricio Sierra</span></p>
+        <p class="text-xs mt-1 text-white/60">Muestreo Estadístico • Capítulo 4 • UnBosque 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- Module 1: ¿Qué es el Muestreo Estratificado? -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">4.1 ¿Qué es el Muestreo
+          Estratificado?</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender los fundamentos del muestreo estratificado y
+              sus ventajas frente al muestreo aleatorio simple.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Fundamentos Teóricos</h3>
+
+      <p>A menudo se dispone de información suplementaria que puede ayudar a diseñar la muestra. Por ejemplo, en una
+        encuesta de ingresos se sabría de antemano que los hombres generalmente ganan más que las mujeres. Si la
+        variable de interés toma diferentes valores medios en diferentes subpoblaciones, se pueden obtener estimaciones
+        más precisas tomando una muestra aleatoria estratificada.</p>
+
+      <div class="definition">
+        <h4>Definición Formal (Lohr, p. 95)</h4>
+        <p>El muestreo estratificado divide la población en $H$ subpoblaciones, llamadas estratos. Los estratos no se
+          superponen y constituyen toda la población, de modo que cada unidad de muestreo pertenece exactamente a un
+          estrato. Se extrae una muestra probabilística independiente de cada estrato, luego se combina la información
+          para obtener estimaciones generales de la población.</p>
+      </div>
+
+      <h4>Razones para Usar Muestreo Estratificado</h4>
+
+      <p>Según Lohr (pp. 95-97), se utiliza por una o más de las siguientes razones:</p>
+
+      <ol>
+        <li><strong>Protección contra muestras desbalanceadas:</strong> Garantiza que la proporción de subgrupos en la
+          muestra coincida con la población, evitando muestras teóricamente posibles pero no representativas (p. ej., una
+          muestra con pocos hombres en una población equilibrada).</li>
+        <li><strong>Precisión conocida para subgrupos:</strong> Los subgrupos de interés (dominios de estudio) deben ser
+          los estratos, permitiendo precisiones comparables entre grupos de diferentes tamaños.</li>
+        <li><strong>Conveniencia administrativa:</strong> Diferentes enfoques de muestreo (p. ej., correo vs entrevista
+          personal) pueden usarse para diferentes estratos.</li>
+        <li><strong>Mayor precisión poblacional:</strong> "El muestreo estratificado, si se hace correctamente, dará
+          estimaciones más precisas (con menor varianza) para toda la población" (p. 97).</li>
+      </ol>
+
+      <div class="note">
+        <strong>Nota pedagógica:</strong> La estratificación funciona para reducir la varianza porque la varianza dentro
+        de cada estrato es a menudo menor que la varianza en toda la población. Esto se debe a que los estratos se
+        construyen para ser homogéneos internamente pero heterogéneos entre sí.
+      </div>
+
+      <h3>Ejemplo Aplicado: Acres de Granjas por Región</h3>
+
+      <div class="exercise">
+        <h4>Ejemplo 4.1 (Lohr, pp. 97-98)</h4>
+        <p><strong>Contexto:</strong> Se estiman los acres de granjas por condado usando las cuatro regiones censales de
+          EE.UU. como estratos. Se comparan los resultados con un MAS de igual tamaño ($n=300$).</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Estrato</th>
+              <th scope="col">$N_h$</th>
+              <th scope="col">$n_h$</th>
+              <th scope="col">Media Muestral ($\bar{y}_h$)</th>
+              <th scope="col">Varianza Muestral ($s_h^2$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Noreste</td>
+              <td>220</td>
+              <td>21</td>
+              <td>97,629.8</td>
+              <td>$7.65 \times 10^9$</td>
+            </tr>
+            <tr>
+              <td>Norte Central</td>
+              <td>1,054</td>
+              <td>103</td>
+              <td>300,504.2</td>
+              <td>$2.96 \times 10^{10}$</td>
+            </tr>
+            <tr>
+              <td>Sur</td>
+              <td>1,382</td>
+              <td>135</td>
+              <td>211,315.0</td>
+              <td>$5.36 \times 10^{10}$</td>
+            </tr>
+            <tr>
+              <td>Oeste</td>
+              <td>422</td>
+              <td>41</td>
+              <td>662,295.5</td>
+              <td>$3.96 \times 10^{11}$</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Implementación en Python</h4>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+import pandas as pd
+
+# Datos del Ejemplo 4.1
+strata_data = {
+    'Noreste':       {'Nh': 220,  'nh': 21,  'yh': 97629.8,  's2h': 7.647e9},
+    'Norte Central': {'Nh': 1054, 'nh': 103, 'yh': 300504.2, 's2h': 2.962e10},
+    'Sur':           {'Nh': 1382, 'nh': 135, 'yh': 211315.0, 's2h': 5.359e10},
+    'Oeste':         {'Nh': 422,  'nh': 41,  'yh': 662295.5, 's2h': 3.962e11}
+}
+
+# Cálculos
+results = []
+for name, d in strata_data.items():
+    t_h = d['Nh'] * d['yh']  # Estimador del total del estrato
+    # Varianza del total del estrato
+    V_t_h = (1 - d['nh']/d['Nh']) * (d['Nh']**2) * d['s2h'] / d['nh']
+    results.append({'Estrato': name, 't_h': t_h, 'V_t_h': V_t_h})
+
+df = pd.DataFrame(results)
+N_total = sum(d['Nh'] for d in strata_data.values())
+t_str = df['t_h'].sum()
+V_t_str = df['V_t_h'].sum()
+
+print(f"Total estimado (t_str): {t_str:,.0f} acres")
+print(f"Error estándar: {np.sqrt(V_t_str):,.0f} acres")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Análisis de Eficiencia (Texto Original, p. 98)</div>
+        <p>El texto destaca que la varianza en el Oeste es mucho mayor que en otros estratos. La ganancia relativa de la
+          estratificación se calcula como:</p>
+        <div class="formula" style="margin: 1rem 0;">$$\frac{V(\hat{t}_{str})}{V(\hat{t}_{SRS})} \approx \frac{2.54
+          \times 10^{15}}{3.38 \times 10^{15}} \approx 0.75$$</div>
+        <p>Esto implica que una muestra estratificada de $n=225$ sería tan precisa como un MAS de $n=300$.</p>
+      </div>
+
+      <h3>Ejemplo Práctico con Datos Reales: agstrat.csv</h3>
+
+      <p>A continuación se presenta un ejemplo completo usando el dataset <code>agstrat.csv</code> del libro de Lohr,
+        que contiene información sobre granjas en EE.UU. estratificada por región censal.</p>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+import pandas as pd
+
+# Cargar el dataset agstrat.csv
+# df = pd.read_csv('CSV data sets for SDA 3e/agsrs.csv')
+
+# Para este ejemplo, usamos datos resumidos del Ejemplo 4.1 de Lohr (p. 98)
+# Los datos completos están en agstrat.csv con 3078 condados en total
+
+# Datos resumidos por estrato (región censal)
+strata_data = {
+    'stratum': ['Noreste', 'Norte Central', 'Sur', 'Oeste'],
+    'Nh': [220, 1054, 1382, 422],      # Tamaño poblacional por estrato
+    'nh': [21, 103, 135, 41],          # Tamaño muestral por estrato
+    'y_bar': [97629.8, 300504.2, 211315.0, 662295.5],  # Media muestral (acres)
+    's2': [7.647e9, 2.962e10, 5.359e10, 3.962e11]      # Varianza muestral
+}
+
+df_strata = pd.DataFrame(strata_data)
+N_total = df_strata['Nh'].sum()
+n_total = df_strata['nh'].sum()
+
+# Calcular estimadores por estrato
+df_strata['t_hat_h'] = df_strata['Nh'] * df_strata['y_bar']  # Estimador del total
+df_strata['var_t_h'] = (1 - df_strata['nh']/df_strata['Nh']) * (df_strata['Nh']**2) * df_strata['s2'] / df_strata['nh']
+
+# Estimadores globales
+t_str = df_strata['t_hat_h'].sum()
+var_t_str = df_strata['var_t_h'].sum()
+se_t_str = np.sqrt(var_t_str)
+
+# Media estratificada
+y_bar_str = t_str / N_total
+var_y_bar_str = var_t_str / (N_total**2)
+se_y_bar_str = np.sqrt(var_y_bar_str)
+
+# Mostrar resultados
+print("=" * 70)
+print("MUESTREO ESTRATIFICADO: ESTIMACIÓN DEL TOTAL DE ACRES DE GRANJAS (1992)")
+print("=" * 70)
+print(f"\nTamaño poblacional total (N): {N_total:,}")
+print(f"Tamaño de muestra total (n):  {n_total:,}")
+print(f"Fracción de muestreo:         {n_total/N_total*100:.2f}%")
+
+print("\n" + "-" * 70)
+print("ESTIMADORES POR ESTRATO")
+print("-" * 70)
+for _, row in df_strata.iterrows():
+    print(f"\n{row['stratum']}:")
+    print(f"  N_h = {row['Nh']:,}, n_h = {row['nh']:,}")
+    print(f"  Media muestral (ȳ_h) = {row['y_bar']:,.1f} acres")
+    print(f"  Total estimado (t̂_h) = {row['t_hat_h']:,.0f} acres")
+    print(f"  Varianza estimada     = {row['var_t_h']:,.0f}")
+
+print("\n" + "=" * 70)
+print("ESTIMADORES GLOBALES")
+print("=" * 70)
+print(f"\nTotal estimado (t̂_str):        {t_str:,.0f} acres")
+print(f"Error estándar (SE):           {se_t_str:,.0f} acres")
+print(f"Coeficiente de variación (CV): {se_t_str/t_str*100:.2f}%")
+
+print(f"\nMedia estratificada (ȳ_str):   {y_bar_str:,.1f} acres")
+print(f"Error estándar (SE):           {se_y_bar_str:,.1f} acres")
+
+# Intervalo de confianza al 95%
+z = 1.96
+IC_total_lower = t_str - z * se_t_str
+IC_total_upper = t_str + z * se_t_str
+print(f"\nIC 95% para el total: [{IC_total_lower:,.0f}, {IC_total_upper:,.0f}] acres")
+
+# Comparación con MAS (usando la varianza poblacional aproximada)
+# S² ≈ varianza pooled ponderada
+S2_pooled = np.sum(df_strata['Nh'] * df_strata['s2']) / N_total
+var_srs = (1 - n_total/N_total) * (N_total**2) * S2_pooled / n_total
+deff = var_t_str / var_srs
+
+print("\n" + "=" * 70)
+print("COMPARACIÓN CON MUESTREO ALEATORIO SIMPLE (MAS)")
+print("=" * 70)
+print(f"\nVarianza bajo MAS:             {var_srs:,.0f}")
+print(f"Varianza bajo estratificación: {var_t_str:,.0f}")
+print(f"Efecto de diseño (deff):       {deff:.3f}")
+print(f"Ganancia de eficiencia:        {(1-deff)*100:.1f}%")
+print(f"Tamaño de muestra efectivo:    n_eff = {n_total/deff:.0f}")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados del Análisis</div>
+        <p>El muestreo estratificado produce un estimado del total de acres de granjas de aproximadamente <strong>910
+            millones de acres</strong> con un error estándar de <strong>59.6 millones de acres</strong>. El efecto de
+          diseño de 0.75 indica que la estratificación es <strong>25% más eficiente</strong> que un MAS, principalmente
+          debido a la gran diferencia en varianzas entre regiones (el Oeste tiene mucha mayor variabilidad).</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 2: Teoría del Muestreo Estratificado -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">4.2 Teoría del Muestreo
+          Estratificado</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aprender la notación, estimadores y propiedades del
+              muestreo estratificado.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Notación y Estimadores</h3>
+
+      <p>Se divide la población de $N$ unidades en $H$ estratos. Sea $N_h$ el tamaño del estrato $h$ y $n_h$ el tamaño
+        de muestra en ese estrato.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Poblacional</th>
+            <th scope="col">Muestral</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Media del estrato $h$</td>
+            <td>$\bar{y}_{hU} = \frac{1}{N_h}\sum_{j=1}^{N_h} y_{hj}$</td>
+            <td>$\bar{y}_h = \frac{1}{n_h}\sum_{j \in S_h} y_{hj}$</td>
+          </tr>
+          <tr>
+            <td>Total del estrato $h$</td>
+            <td>$t_h = N_h \bar{y}_{hU}$</td>
+            <td>$\hat{t}_h = N_h \bar{y}_h$</td>
+          </tr>
+          <tr>
+            <td>Varianza del estrato $h$</td>
+            <td>$S_h^2 = \frac{1}{N_h-1}\sum_{j=1}^{N_h}(y_{hj} - \bar{y}_{hU})^2$</td>
+            <td>$s_h^2 = \frac{1}{n_h-1}\sum_{j \in S_h}(y_{hj} - \bar{y}_h)^2$</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Estimadores Poblacionales (Ecuaciones 4.1-4.3)</h4>
+
+      <p><strong>Estimador del Total:</strong></p>
+      <div class="formula">$$\hat{t}_{str} = \sum_{h=1}^{H} \hat{t}_h = \sum_{h=1}^{H} N_h \bar{y}_h$$</div>
+
+      <p><strong>Estimador de la Media:</strong></p>
+      <div class="formula">$$\bar{y}_{str} = \frac{\hat{t}_{str}}{N} = \sum_{h=1}^{H} \frac{N_h}{N} \bar{y}_h$$</div>
+
+      <p><strong>Varianza del Estimador del Total:</strong></p>
+      <p>Dado que los muestreos son independientes entre estratos, las varianzas se suman:</p>
+      <div class="formula">$$V(\hat{t}_{str}) = \sum_{h=1}^{H} V(\hat{t}_h) = \sum_{h=1}^{H} \left(1 -
+        \frac{n_h}{N_h}\right) N_h^2 \frac{S_h^2}{n_h}$$</div>
+
+      <p><strong>Estimador de la Varianza (Ecuación 4.4):</strong></p>
+      <div class="formula">$$\hat{V}(\hat{t}_{str}) = \sum_{h=1}^{H} \left(1 - \frac{n_h}{N_h}\right) N_h^2
+        \frac{s_h^2}{n_h}$$</div>
+
+      <p><strong>Varianza del Estimador de la Media:</strong></p>
+      <p>Dividiendo por $N^2$, obtenemos la varianza de la media estratificada:</p>
+      <div class="formula">$$V(\bar{y}_{str}) = \sum_{h=1}^{H} \left(1 - \frac{n_h}{N_h}\right) \frac{N_h^2}{N^2}
+        \frac{S_h^2}{n_h}$$</div>
+      <div class="formula">$$\hat{V}(\bar{y}_{str}) = \sum_{h=1}^{H} \left(1 - \frac{n_h}{N_h}\right) \frac{N_h^2}{N^2}
+        \frac{s_h^2}{n_h}$$</div>
+
+      <div class="note">
+        <strong>Nota pedagógica:</strong> El término $(1 - n_h/N_h)$ es el factor de corrección para poblaciones finitas
+        (fpc). Si se muestrea una gran fracción del estrato ($n_h \approx N_h$), la varianza se reduce drásticamente.
+      </div>
+
+      <h4>Intervalos de Confianza</h4>
+      <p>Para construir intervalos de confianza, se requiere que los tamaños de muestra por estrato sean suficientemente
+        grandes ($n_h \geq 30$) o que haya muchos estratos ($H$ grande). Bajo estas condiciones, se usa la aproximación
+        normal:</p>
+      <div class="formula">$$\hat{t}_{str} \pm z_{\alpha/2} \times \sqrt{\hat{V}(\hat{t}_{str})}$$</div>
+      <div class="formula">$$\bar{y}_{str} \pm z_{\alpha/2} \times \sqrt{\hat{V}(\bar{y}_{str})}$$</div>
+      <p>Lohr (p. 100) menciona que algunos investigadores usan la distribución $t$ con $n-H$ grados de libertad para
+        mayor conservadurismo:</p>
+      <div class="formula">$$\hat{t}_{str} \pm t_{n-H, \alpha/2} \times \sqrt{\hat{V}(\hat{t}_{str})}$$</div>
+
+      <div class="warning">
+        <strong>Condición de aplicabilidad:</strong> La aproximación normal es válida cuando todos los $n_h \geq 30$ o
+        cuando el número de estratos $H$ es grande (típicamente $H \geq 20$). Para muestras pequeñas en cada estrato,
+        considere usar la distribución $t$ con $n-H$ grados de libertad.
+      </div>
+
+      <h3>Muestreo Estratificado para Proporciones</h3>
+
+      <p>Para estimar una proporción $p$, se trata la variable como binaria (0/1). Las fórmulas se simplifican,
+        reemplazando $s_h^2$ por la varianza de la variable binaria:</p>
+      <div class="formula">$$s_h^2 = \frac{n_h}{n_h-1}\hat{p}_h(1-\hat{p}_h)$$</div>
+      <p><strong>Varianza del estimador de proporción:</strong></p>
+      <div class="formula">$$\hat{V}(\hat{p}_{str}) = \sum_{h=1}^{H} \left(1 - \frac{n_h}{N_h}\right) \frac{N_h^2}{N^2}
+        \frac{\hat{p}_h(1-\hat{p}_h)}{n_h-1}$$</div>
+
+      <div class="exercise">
+        <h4>Ejemplo 4.3: Encuesta ACLS (Lohr, p. 102)</h4>
+        <p>Se estima la proporción de mujeres entre profesores universitarios con doctorado, estratificando por tipo de
+          institución.</p>
+      </div>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+
+# Datos del Ejemplo 4.3: Encuesta ACLS (Lohr, p. 102)
+Nh = np.array([9100, 1950, 5500, 10850, 2100, 5500, 9000])
+ph = np.array([0.38, 0.27, 0.18, 0.19, 0.36, 0.13, 0.26])
+nh = np.array([30, 25, 26, 32, 29, 31, 28])  # Tamaños de muestra por estrato
+N = Nh.sum()
+n = nh.sum()
+
+# Estimador estratificado de proporción
+p_str = np.sum(Nh * ph) / N
+print(f"Proporción estimada de mujeres: {p_str:.4f}")
+
+# Varianza del estimador de proporción
+var_p_str = np.sum((1 - nh/Nh) * (Nh/N)**2 * ph * (1-ph) / (nh - 1))
+SE_p_str = np.sqrt(var_p_str)
+print(f"Error estándar: {SE_p_str:.4f}")
+
+# Intervalo de confianza al 95%
+z = 1.96
+IC_lower = p_str - z * SE_p_str
+IC_upper = p_str + z * SE_p_str
+print(f"IC 95%: [{IC_lower:.4f}, {IC_upper:.4f}]")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados del Ejemplo 4.3</div>
+        <p>La proporción estimada de mujeres entre profesores con doctorado es <strong>24.53%</strong> con un error
+          estándar de <strong>0.0089</strong>. El intervalo de confianza al 95% es <strong>[0.2279, 0.2627]</strong>, lo
+          que indica que entre 22.8% y 26.3% de los profesores con doctorado son mujeres.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 3: Pesos de Muestreo -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">4.3 Pesos de Muestreo</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender el concepto de ponderación en el muestreo
+              estratificado.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Concepto de Ponderación</h3>
+
+      <p>El estimador estratificado puede reescribirse como una suma ponderada de observaciones individuales. Esta
+        formulación es fundamental porque conecta el diseño de muestreo con la teoría de estimación ponderada.</p>
+
+      <p><strong>Peso de Muestreo (Ecuación 4.8):</strong></p>
+      <div class="formula">$$w_{hj} = \frac{N_h}{n_h}$$</div>
+
+      <p>El peso $w_{hj}$ representa el número de unidades en la población que "representa" la unidad muestral $(h,j)$.
+        Es el inverso de la probabilidad de inclusión $\pi_{hj} = n_h/N_h$:</p>
+      <div class="formula">$$w_{hj} = \frac{1}{\pi_{hj}} = \frac{N_h}{n_h}$$</div>
+
+      <p><strong>Estimadores usando pesos (Ecuaciones 4.9-4.10):</strong></p>
+      <div class="formula">$$\hat{t}_{str} = \sum_{h=1}^{H} \sum_{j \in S_h} w_{hj} y_{hj}$$</div>
+      <div class="formula">$$\bar{y}_{str} = \frac{\sum_{h=1}^{H} \sum_{j \in S_h} w_{hj} y_{hj}}{\sum_{h=1}^{H} \sum_{j
+        \in S_h} w_{hj}} = \frac{\sum_{h=1}^{H} \sum_{j \in S_h} w_{hj} y_{hj}}{N}$$</div>
+
+      <div class="note">
+        <strong>Verificación de consistencia:</strong> La suma de los pesos debe igualar el tamaño poblacional $N$. Esto
+        sirve como verificación de consistencia del diseño:
+        <div class="formula" style="margin: 1rem 0; padding: 0.5rem;">$$\sum_{h=1}^{H} \sum_{j \in S_h} w_{hj} =
+          \sum_{h=1}^{H} n_h \times \frac{N_h}{n_h} = \sum_{h=1}^{H} N_h = N$$</div>
+        Esta propiedad garantiza que el estimador de la media sea insesgado.
+      </div>
+
+      <div class="exercise">
+        <h4>Ejemplo 4.2: Cálculo de Pesos y Estimadores</h4>
+        <p>Considere una población estratificada en 2 estratos con la siguiente muestra:</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Estrato</th>
+              <th scope="col">$N_h$</th>
+              <th scope="col">$n_h$</th>
+              <th scope="col">Observaciones ($y_{hj}$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>100</td>
+              <td>10</td>
+              <td>45, 52, 48, 51, 49, 53, 47, 50, 46, 54</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>200</td>
+              <td>20</td>
+              <td>78, 82, 75, 80, 77, 83, 79, 81, 76, 84, 78, 80, 77, 82, 79, 81, 75, 83, 78, 80</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+
+# Datos del Ejemplo 4.2
+N1, n1 = 100, 10
+N2, n2 = 200, 20
+y1 = np.array([45, 52, 48, 51, 49, 53, 47, 50, 46, 54])
+y2 = np.array([78, 82, 75, 80, 77, 83, 79, 81, 76, 84, 78, 80, 77, 82, 79, 81, 75, 83, 78, 80])
+
+# Cálculo de pesos
+w1 = N1 / n1  # Peso estrato 1
+w2 = N2 / n2  # Peso estrato 2
+print(f"Peso estrato 1: w1 = {w1}")
+print(f"Peso estrato 2: w2 = {w2}")
+
+# Verificación: suma de pesos debe ser N
+suma_pesos = n1 * w1 + n2 * w2
+N_total = N1 + N2
+print(f"\nSuma de pesos: {suma_pesos} (debe ser {N_total})")
+
+# Estimador del total usando pesos
+t_hat = np.sum(w1 * y1) + np.sum(w2 * y2)
+print(f"\nTotal estimado (t_hat): {t_hat}")
+
+# Estimador de la media
+y_bar_str = t_hat / N_total
+print(f"Media estratificada (y_bar_str): {y_bar_str:.2f}")
+
+# Verificación con fórmula directa
+y_bar1 = np.mean(y1)
+y_bar2 = np.mean(y2)
+y_bar_directo = (N1 * y_bar1 + N2 * y_bar2) / N_total
+print(f"Media (verificación directa): {y_bar_directo:.2f}")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados del Ejemplo 4.2</div>
+        <p>Los pesos son <strong>w₁ = 10</strong> y <strong>w₂ = 10</strong>. La suma de pesos es <strong>300 =
+            N</strong>, verificando la consistencia. El total estimado es <strong>t̂_str = 23,850</strong> y la media
+          estratificada es <strong>ȳ_str = 79.50</strong>.</p>
+      </div>
+
+      <h4>Conexión con Asignación Proporcional</h4>
+
+      <p>Cuando se usa <strong>asignación proporcional</strong> ($n_h/N_h = n/N$ para todo $h$), todos los pesos son
+        iguales:</p>
+      <div class="formula">$$w_{hj} = \frac{N_h}{n_h} = \frac{N}{n} = w \quad \text{(constante para todas las
+        unidades)}$$</div>
+      <p>En este caso, la muestra se llama <strong>autoponderada</strong> y la media estratificada se simplifica al
+        promedio simple de todas las observaciones:</p>
+      <div class="formula">$$\bar{y}_{str} = \frac{1}{n} \sum_{h=1}^{H} \sum_{j \in S_h} y_{hj} = \bar{y}$$</div>
+
+      <div class="warning">
+        <strong>Limitación Importante (p. 104):</strong> Aunque los pesos permiten calcular estimaciones puntuales,
+        <strong>no son suficientes</strong> para calcular errores estándar. Se debe conocer a qué estrato pertenece cada
+        observación para calcular las varianzas internas ($s_h^2$). Dos muestras con los mismos pesos pero diferente
+        asignación a estratos pueden tener varianzas muy diferentes.
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 4: Asignación de Observaciones -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">4.4 Asignación de
+          Observaciones a Estratos</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aprender los diferentes métodos de asignación de muestras
+              en estratificación.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Una vez definidos los estratos, se debe decidir cómo distribuir el tamaño total de muestra $n$ entre ellos. La
+        elección de la asignación afecta directamente la precisión de las estimaciones y el costo de la encuesta.</p>
+
+      <h3>4.4.1 Asignación Proporcional</h3>
+
+      <p>En la asignación proporcional, el tamaño de muestra en cada estrato es proporcional a su tamaño poblacional:
+      </p>
+      <div class="formula">$$\frac{n_h}{N_h} = \frac{n}{N} = f \quad \text{(fracción de muestreo constante)}$$</div>
+      <p><strong>Fórmula de cálculo:</strong></p>
+      <div class="formula">$$n_h = n \times \frac{N_h}{N}$$</div>
+
+      <p>La muestra es <strong>autoponderada</strong>: todas las unidades tienen el mismo peso $w = N/n$. La media
+        estratificada es simplemente el promedio simple de todas las observaciones:</p>
+      <div class="formula">$$\bar{y}_{str} = \frac{1}{n} \sum_{h=1}^{H} \sum_{j \in S_h} y_{hj} = \bar{y}$$</div>
+
+      <h4>Varianza bajo Asignación Proporcional</h4>
+
+      <p>La varianza del estimador del total bajo asignación proporcional es:</p>
+      <div class="formula">$$V_{prop}(\hat{t}_{str}) = \left(1 - \frac{n}{N}\right) \frac{N^2}{n} \sum_{h=1}^{H}
+        \frac{N_h}{N} S_h^2$$</div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Demostración Matemática</div>
+        <p>Partimos de la fórmula general de la varianza del estimador del total:</p>
+        <div class="formula" style="margin: 1rem 0;">$$V(\hat{t}_{str}) = \sum_{h=1}^{H} \left(1 -
+          \frac{n_h}{N_h}\right) N_h^2 \frac{S_h^2}{n_h}$$</div>
+        <p>Bajo asignación proporcional, sabemos que la fracción de muestreo es constante, es decir, $\frac{n_h}{N_h} =
+          \frac{n}{N}$. Despejando $n_h$, obtenemos $n_h = n \frac{N_h}{N}$.</p>
+        <p>Sustituyendo $\frac{n_h}{N_h}$ y $n_h$ en la fórmula general:</p>
+        <div class="formula" style="margin: 1rem 0;">$$V_{prop}(\hat{t}_{str}) = \sum_{h=1}^{H} \left(1 -
+          \frac{n}{N}\right) N_h^2 \frac{S_h^2}{n \frac{N_h}{N}}$$</div>
+        <p>$$= \left(1 - \frac{n}{N}\right) \sum_{h=1}^{H} N_h^2 \left(\frac{N}{n N_h}\right) S_h^2$$</p>
+        <p>Simplificando $N_h^2 / N_h = N_h$ y sacando los términos constantes $\frac{N}{n}$ fuera de la sumatoria:</p>
+      <div class="formula" style="margin: 1rem 0;">$$= \left(1 - \frac{n}{N}\right) \frac{N}{n} \sum_{h=1}^{H} N_h
+        S_h^2$$</div>
+      <p>Finalmente, multiplicamos y dividimos por $N$ dentro y fuera de la sumatoria para obtener la forma clásica de
+        la expresión:</p>
+      <div class="formula" style="margin: 1rem 0;">$$= \left(1 - \frac{n}{N}\right) \frac{N^2}{n} \sum_{h=1}^{H}
+        \frac{N_h}{N} S_h^2$$</div>
+    </div>
+
+    <p>Comparando con la varianza bajo MAS $V_{SRS}(\hat{t}) = \left(1 - \frac{n}{N}\right) \frac{N^2}{n} S^2$, la
+      ganancia de eficiencia depende de la relación entre la varianza promedio dentro de estratos y la varianza
+      poblacional total.</p>
+
+    <div class="tip-box"
+      style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%); border: 1px solid rgba(1, 40, 32, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+      <strong>Explicación de la Ganancia de Eficiencia:</strong>
+      <p>La varianza poblacional total ($S^2$) se descompone en dos partes: la variabilidad <em>dentro</em> de los
+        estratos ($S_W^2$) y la variabilidad <em>entre</em> los estratos ($S_B^2$).</p>
+      <p>El Muestreo Aleatorio Simple (MAS) sufre el impacto de toda la variabilidad total ($S^2 = S_W^2 + S_B^2$). Sin
+        embargo, gracias al control sobre los tamaños de muestra en la estratificación proporcional, <strong>su varianza
+          esquiva por completo la variabilidad <em>entre</em> los estratos ($S_B^2$)</strong>. Su error solo depende de
+        la varianza promediada <em>dentro</em> de ellos ($S_W^2$).</p>
+      <p>Por tanto, <strong>¿Cuándo ganamos eficiencia?</strong> Cuando construimos "buenos" estratos que sean muy
+        homogéneos por dentro (baja varianza interna $S_W^2$) y muy diferentes entre sí (alta varianza externa $S_B^2$).
+        En este escenario ideal, la estratificación reduce enormemente el error comparado con tomar una muestra al azar
+        "a ciegas" de toda la población.</p>
+    </div>
+
+    <div class="exercise">
+      <h4>Ejemplo 4.4: Asignación Proporcional</h4>
+      <p>Una universidad tiene 3 facultades con $N_1=500$, $N_2=300$, $N_3=200$ estudiantes ($N=1000$). Se desea una
+        muestra de $n=100$ estudiantes. Bajo asignación proporcional:</p>
+    </div>
+
+    <div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-block-title">Python</span>
+        <div class="code-actions">
+          <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+            <i class="fas fa-copy" aria-hidden="true"></i>
+            <span>Copiar</span>
+          </button>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">
+            <span>Mostrar/Ocultar</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <pre class="collapsed"><code class="language-python">import numpy as np
+
+# Datos del Ejemplo 4.4
+Nh = np.array([500, 300, 200])  # Tamaño de cada estrato
+N = Nh.sum()
+n = 100  # Tamaño total de muestra
+
+# Asignación proporcional
+n_h_prop = n * Nh / N
+
+print("Asignación Proporcional:")
+for h in range(len(Nh)):
+    print(f"  Estrato {h+1}: N_h = {Nh[h]}, n_h = {n_h_prop[h]}")
+
+# Verificación: suma de n_h debe ser n
+print(f"\nSuma de n_h: {n_h_prop.sum()} (debe ser {n})")</code></pre>
+    </div>
+
+    <div class="usta-card">
+      <div class="usta-card-header"
+        style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+        Resultados del Ejemplo 4.4</div>
+      <p>La asignación proporcional da: <strong>n₁ = 50</strong>, <strong>n₂ = 30</strong>, <strong>n₃ = 20</strong>. La
+        suma es 100, verificando la consistencia. Cada estrato tiene la misma fracción de muestreo $f = 0.1 = 10\%$.</p>
+    </div>
+
+    <h4>Comparación Teórica: Proporcional vs MAS</h4>
+
+    <p>Lohr (p. 106) presenta una derivación basada en la descomposición ANOVA de la varianza total. La suma de
+      cuadrados total (SSTO) se descompone en:</p>
+    <ul>
+      <li><strong>SSB (Between):</strong> Variabilidad entre las medias de los estratos</li>
+      <li><strong>SSW (Within):</strong> Variabilidad dentro de cada estrato</li>
+    </ul>
+    <p>$$SSTO = SSB + SSW$$</p>
+
+    <div class="usta-card">
+      <div class="usta-card-header"
+        style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+        Derivación Teórica (Basada en Lohr, p. 106)</div>
+      <p>Para una muestra de tamaño $n$, la varianza del estimador bajo MAS es:</p>
+      <div class="formula" style="margin: 1rem 0;">$$V_{SRS}(\hat{t}) = \left(1 - \frac{n}{N}\right) N^2 \frac{S^2}{n}$$
+      </div>
+      <p>Usando la descomposición $S^2 = \frac{SSB + SSW}{N-1}$, se puede demostrar que la varianza bajo asignación
+        proporcional es:</p>
+      <div class="formula" style="margin: 1rem 0;">$$V_{prop}(\hat{t}_{str}) = V_{SRS}(\hat{t}) - \frac{N}{n}\left(1 -
+        \frac{n}{N}\right) SSB + \text{términos de corrección}$$</div>
+      <p>En poblaciones grandes, la asignación proporcional casi siempre gana al MAS porque $SSB > 0$ cuando los
+        estratos tienen medias diferentes.</p>
+    </div>
+
+    <div class="note">
+      <strong>Nota pedagógica:</strong> La asignación proporcional es superada por MAS solo si la variabilidad
+      <em>dentro</em> de los estratos es mayor que la variabilidad <em>entre</em> estratos, lo cual es raro si se eligen
+      buenos criterios de estratificación. Cuando los estratos son homogéneos internamente, $SSW$ es pequeño y $SSB$ es
+      grande, haciendo la estratificación muy eficiente.
+    </div>
+
+    <h3>4.4.2 Asignación Óptima</h3>
+
+    <p>La asignación óptima minimiza la varianza del estimador para un costo fijo $C = c_0 + \sum_{h=1}^{H} c_h n_h$,
+      donde $c_0$ es el costo fijo y $c_h$ es el costo por unidad en el estrato $h$.</p>
+
+    <p><strong>Fórmula de Asignación Óptima (Ecuación 4.13):</strong></p>
+    <div class="formula">$$n_h = n \times \frac{\frac{N_h S_h}{\sqrt{c_h}}}{\sum_{k=1}^{H} \frac{N_k S_k}{\sqrt{c_k}}}$$
+    </div>
+
+    <p>Esto implica muestrear más unidades en estratos que sean:</p>
+    <ul>
+      <li><strong>Grandes</strong> ($N_h$ grande): representan más unidades poblacionales</li>
+      <li><strong>Variables</strong> ($S_h$ grande): requieren más observaciones para estimación precisa</li>
+      <li><strong>Baratos de muestrear</strong> ($c_h$ pequeño): permiten obtener más datos con el mismo presupuesto
+      </li>
+    </ul>
+
+    <h4>Caso Especial: Asignación de Neyman</h4>
+
+    <p>Cuando los costos son iguales en todos los estratos ($c_h = c$ para todo $h$), la asignación óptima se reduce a
+      la <strong>asignación de Neyman</strong>:</p>
+    <div class="formula">$$n_h = n \times \frac{N_h S_h}{\sum_{k=1}^{H} N_k S_k}$$</div>
+
+    <div class="warning">
+      <strong>Consideración sobre redondeo:</strong> Los valores calculados de $n_h$ pueden no ser enteros. Se debe
+      redondear a enteros manteniendo $\sum n_h = n$. Una estrategia es redondear al entero más cercano y ajustar el
+      estrato con la parte decimal más grande para que la suma sea exacta.
+    </div>
+
+    <div class="exercise">
+      <h4>Ejemplo 4.5: Comparación de Asignaciones</h4>
+      <p>Considere una población con 6 estratos. Se desea una muestra de $n=225$ unidades. Compare las asignaciones
+        proporcional, de Neyman y MAS.</p>
+    </div>
+
+    <div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-block-title">Python</span>
+        <div class="code-actions">
+          <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+            <i class="fas fa-copy" aria-hidden="true"></i>
+            <span>Copiar</span>
+          </button>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">
+            <span>Mostrar/Ocultar</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <pre class="collapsed"><code class="language-python">import numpy as np
+
+# Datos del Ejemplo 4.5
+Nh = np.array([400, 30, 61, 18, 70, 120])
+Sh = np.array([3000, 2000, 9000, 2000, 12000, 1000])  # Desviaciones estándar estimadas
+N = Nh.sum()
+n = 225
+
+# 1. Asignación Proporcional
+n_h_prop = n * Nh / N
+
+# 2. Asignación de Neyman (costos iguales)
+numerador_neyman = Nh * Sh
+n_h_neyman = n * numerador_neyman / numerador_neyman.sum()
+
+# 3. Asignación Óptima con costos diferentes
+ch = np.array([10, 15, 20, 25, 12, 18])  # Costos por estrato
+numerador_opt = Nh * Sh / np.sqrt(ch)
+n_h_opt = n * numerador_opt / numerador_opt.sum()
+
+# Mostrar resultados
+print("=" * 60)
+print("COMPARACIÓN DE ASIGNACIONES (n = 225)")
+print("=" * 60)
+print(f"{'Estrato':<10} {'N_h':<8} {'S_h':<10} {'Prop.':<10} {'Neyman':<10} {'Óptima':<10}")
+print("-" * 60)
+for h in range(len(Nh)):
+    print(f"{h+1:<10} {Nh[h]:<8} {Sh[h]:<10} {n_h_prop[h]:<10.1f} {n_h_neyman[h]:<10.1f} {n_h_opt[h]:<10.1f}")
+print("-" * 60)
+print(f"{'TOTAL':<10} {N:<8} {'-':<10} {n_h_prop.sum():<10.1f} {n_h_neyman.sum():<10.1f} {n_h_opt.sum():<10.1f}")
+
+# Calcular varianzas relativas (sin el factor común (1-f)/n)
+var_prop = np.sum((Nh/N) * Sh**2)
+var_neyman = (np.sum(Nh * Sh))**2 / N**2
+var_mas = np.sum((Nh/N) * Sh**2) + np.sum(Nh/N * (np.array([np.mean(Sh)]*6)) - Sh)**2
+
+print("\n" + "=" * 60)
+print("EFICIENCIA RELATIVA (menor es mejor)")
+print("=" * 60)
+print(f"Varianza Proporcional: {var_prop:,.0f}")
+print(f"Varianza Neyman:       {var_neyman:,.0f}")
+print(f"Ganancia Neyman vs Prop: {(1 - var_neyman/var_prop)*100:.1f}% reducción")</code></pre>
+    </div>
+
+    <div class="usta-card">
+      <div class="usta-card-header"
+        style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+        Resultados del Ejemplo 4.5</div>
+      <p><strong>Asignación Proporcional:</strong> Distribuye la muestra según el tamaño de cada estrato.</p>
+      <p><strong>Asignación de Neyman:</strong> Sobremuestrea los estratos 3 y 5 porque tienen alta variabilidad
+        ($S_3=9000$, $S_5=12000$), aunque sean pequeños.</p>
+      <p><strong>Asignación Óptima:</strong> Ajusta además por costos. El estrato 4 tiene alta variabilidad pero costo
+        muy alto ($c_4=25$), por lo que se reduce su muestra.</p>
+      <p><strong>Ganancia de eficiencia:</strong> Neyman puede reducir la varianza hasta 40% comparado con proporcional
+        cuando las varianzas entre estratos difieren sustancialmente.</p>
+    </div>
+
+    <div class="tip-box"
+      style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%); border: 1px solid rgba(1, 40, 32, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+      <strong>Regla práctica:</strong> Use asignación proporcional cuando: (1) no se conocen las $S_h$, (2) los costos
+      son similares, y (3) la simplicidad es prioritaria. Use asignación óptima/Neyman cuando se busca máxima precisión
+      y se dispone de información sobre varianzas y costos.
+    </div>
+
+    <h4>Efecto de Diseño (deff) en Muestreo Estratificado</h4>
+
+    <p>El <strong>efecto de diseño</strong> (deff) compara la varianza de un estimador bajo el diseño de muestreo
+      estratificado con la varianza bajo un MAS del mismo tamaño:</p>
+    <div class="formula">$$deff_{str} = \frac{V(\hat{\theta}_{str})}{V(\hat{\theta}_{SRS})}$$</div>
+
+    <p>Para la estimación de la media bajo <strong>asignación proporcional</strong>, Lohr (p. 107) muestra que:</p>
+    <div class="formula">$$deff_{prop} = \frac{V_{prop}(\bar{y}_{str})}{V_{SRS}(\bar{y})} = \frac{\sum_{h=1}^{H}
+      \frac{N_h}{N} S_h^2}{S^2} = 1 - \frac{SSB}{SSTO}$$</div>
+
+    <p>donde $SSB$ es la suma de cuadrados entre estratos y $SSTO$ es la suma de cuadrados total.</p>
+
+    <div class="definition">
+      <h4>Interpretación del deff</h4>
+      <ul>
+        <li><strong>deff &lt; 1:</strong> El muestreo estratificado es más preciso que el MAS (situación típica con
+          buenos estratos)</li>
+        <li><strong>deff = 1:</strong> Ambos diseños tienen la misma precisión</li>
+        <li><strong>deff &gt; 1:</strong> El MAS es más preciso (indica estratificación inadecuada)</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <h4>Ejemplo: Cálculo del deff</h4>
+      <p>Para el Ejemplo 4.1 (acres de granjas), la varianza bajo MAS sería $V_{SRS} = 3.38 \times 10^{15}$ y bajo
+        estratificación $V_{str} = 2.54 \times 10^{15}$. El efecto de diseño es:</p>
+    </div>
+
+    <div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-block-title">Python</span>
+        <div class="code-actions">
+          <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+            <i class="fas fa-copy" aria-hidden="true"></i>
+            <span>Copiar</span>
+          </button>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">
+            <span>Mostrar/Ocultar</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <pre class="collapsed"><code class="language-python">import numpy as np
+
+# Datos del Ejemplo 4.1
+V_str = 2.54e15  # Varianza bajo estratificación
+V_srs = 3.38e15  # Varianza bajo MAS
+
+# Cálculo del efecto de diseño
+deff = V_str / V_srs
+print(f"Efecto de diseño (deff): {deff:.3f}")
+
+# Interpretación
+if deff < 1:
+    ganancia = (1 - deff) * 100
+    print(f"El muestreo estratificado es {ganancia:.1f}% más eficiente que el MAS")
+    print(f"Tamaño de muestra efectivo: n_eff = n / deff = 300 / {deff:.3f} = {300/deff:.0f}")
+elif deff == 1:
+    print("Ambos diseños tienen la misma precisión")
+else:
+    perdida = (deff - 1) * 100
+    print(f"El MAS es {perdida:.1f}% más eficiente (estratificación inadecuada)")</code></pre>
+    </div>
+
+    <div class="usta-card">
+      <div class="usta-card-header"
+        style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+        Resultado</div>
+      <p>El deff = 0.75 indica que el muestreo estratificado es <strong>25% más eficiente</strong> que el MAS.
+        Equivalentemente, una muestra estratificada de n=225 produciría la misma precisión que un MAS de n=300.</p>
+    </div>
+    </div>
+  </template>
+
+  <!-- Module 5: Definición de Estratos -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">4.5 Definición de Estratos
+        </h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aprender los criterios y métodos para construir estratos
+              efectivos.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La construcción adecuada de estratos es fundamental para aprovechar las ventajas del muestreo estratificado.
+        Una buena estratificación puede reducir significativamente la varianza de las estimaciones, mientras que una
+        estratificación pobre puede incluso empeorar la precisión comparada con el MAS.</p>
+
+      <h3>Criterios de Construcción</h3>
+
+      <p>La estratificación es más eficiente cuando las medias de los estratos difieren ampliamente. Idealmente, se
+        estratificaría por la variable de interés $y$, pero como es desconocida, se usan variables correlacionadas.</p>
+
+      <p><strong>Principios clave (Lohr, p. 110):</strong></p>
+      <ol>
+        <li><strong>Usar información previa disponible:</strong> Datos censales, encuestas anteriores, registros
+          administrativos.</li>
+        <li><strong>Construir estratos homogéneos internamente:</strong> Baja varianza dentro de cada estrato ($S_h^2$
+          pequeña).</li>
+        <li><strong>Si hay múltiples variables de interés:</strong> Estratificar por la más importante o la más
+          variable, o usar una combinación lineal (p. ej., primer componente principal).</li>
+      </ol>
+
+      <h3>Variables de Estratificación Comunes</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Tipo</th>
+            <th scope="col">Variables Típicas</th>
+            <th scope="col">Ejemplo de Aplicación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Geográficas</td>
+            <td>Región, departamento, urbano/rural</td>
+            <td>Encuestas de hogares por región censal</td>
+          </tr>
+          <tr>
+            <td>Demográficas</td>
+            <td>Edad, sexo, nivel educativo</td>
+            <td>Encuestas de salud estratificadas por edad</td>
+          </tr>
+          <tr>
+            <td>Económicas</td>
+            <td>Ingresos, tamaño de empresa, sector</td>
+            <td>Encuestas empresariales por número de empleados</td>
+          </tr>
+          <tr>
+            <td>Académicas</td>
+            <td>Carrera, semestre, tipo de institución</td>
+            <td>Encuestas estudiantiles por facultad</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Métodos para Definir Límites de Estratos</h3>
+
+      <p>Para variables continuas (ingresos, área, producción), se deben determinar los puntos de corte que definen los
+        estratos. Existen varios métodos:</p>
+
+      <h4>1. Método de Cuantiles</h4>
+      <p>Divide la población en estratos de igual tamaño usando percentiles:</p>
+      <p><strong>Ejemplo para 4 estratos:</strong> Usar los percentiles 25, 50, 75 como límites.</p>
+
+      <h4>2. Método de Dalenius-Hodges (Fronteras Cumulativas de Raíz Cuadrada)</h4>
+      <p>Este método minimiza la varianza dentro de estratos para una variable auxiliar $x$ correlacionada con $y$:</p>
+      <ol>
+        <li>Calcular la función de densidad acumulada de raíz cuadrada: $F(x) = \int_{-\infty}^{x} \sqrt{f(t)} dt$</li>
+        <li>Dividir el rango de $F(x)$ en $H$ intervalos iguales</li>
+        <li>Los puntos de corte en la escala original definen los estratos</li>
+      </ol>
+
+      <div class="exercise">
+        <h4>Ejemplo 4.6: Creación de Estratos por Ingresos</h4>
+        <p>Se desea estratificar una población de 1000 hogares por ingresos mensuales. Se dispone de información censal
+          sobre la distribución de ingresos.</p>
+      </div>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+import pandas as pd
+
+# Simulación de distribución de ingresos (en miles de pesos)
+np.random.seed(42)
+ingresos = np.random.lognormal(mean=10, sigma=1.5, size=1000)
+
+# Método 1: Cuantiles (4 estratos de igual tamaño)
+q25 = np.percentile(ingresos, 25)
+q50 = np.percentile(ingresos, 50)
+q75 = np.percentile(ingresos, 75)
+
+print("MÉTODO DE CUANTILES (4 estratos)")
+print("=" * 50)
+print(f"Estrato 1 (Bajo):     ingresos ≤ ${q25:,.0f}")
+print(f"Estrato 2 (Medio):    ${q25:,.0f} < ingresos ≤ ${q50:,.0f}")
+print(f"Estrato 3 (Alto):     ${q50:,.0f} < ingresos ≤ ${q75:,.0f}")
+print(f"Estrato 4 (Muy Alto): ingresos > ${q75:,.0f}")
+
+# Verificar tamaños
+e1 = np.sum(ingresos <= q25)
+e2 = np.sum((ingresos > q25) & (ingresos <= q50))
+e3 = np.sum((ingresos > q50) & (ingresos <= q75))
+e4 = np.sum(ingresos > q75)
+print(f"\nTamaños: {e1}, {e2}, {e3}, {e4} (cada uno ≈ 250)")
+
+# Método 2: Intervalos predefinidos (más interpretables)
+limites = [0, 20000, 50000, 100000, np.inf]
+etiquetas = ['Bajo', 'Medio', 'Alto', 'Muy Alto']
+
+df = pd.DataFrame({'ingresos': ingresos})
+df['estrato'] = pd.cut(df['ingresos'], bins=limites, labels=etiquetas, include_lowest=True)
+
+print("\n\nMÉTODO DE INTERVALOS PREDEFINIDOS")
+print("=" * 50)
+print(df['estrato'].value_counts().sort_index())</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados del Ejemplo 4.6</div>
+        <p><strong>Cuantiles:</strong> Produce estratos de igual tamaño (250 unidades cada uno), pero los límites pueden
+          ser difíciles de interpretar (p. ej., $37,842).</p>
+        <p><strong>Intervalos predefinidos:</strong> Los límites son redondos y fáciles de comunicar ($20,000, $50,000,
+          $100,000), pero los tamaños de estrato pueden ser desbalanceados.</p>
+      </div>
+
+      <h3>Número de Estratos</h3>
+
+      <p>El número óptimo de estratos depende del equilibrio (compromiso) entre precisión y complejidad:</p>
+
+      <ul>
+        <li><strong>Más estratos:</strong> Mayor precisión potencial (menor varianza dentro de estratos), pero mayor
+          complejidad administrativa y costo.</li>
+        <li><strong>Menos estratos:</strong> Más simple de implementar, pero puede no aprovechar completamente las
+          ventajas de la estratificación.</li>
+      </ul>
+
+      <div class="tip-box"
+        style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%); border: 1px solid rgba(1, 40, 32, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+        <strong>Regla general de Saville (1977, citado en Lohr, p. 110):</strong> "No tiene sentido diseñar más de 2 o 3
+        estratos si el conocimiento de la distribución de la población es impreciso".
+      </div>
+
+      <div class="note">
+        <strong>Regla práctica:</strong> Para la mayoría de aplicaciones, entre 3 y 6 estratos es suficiente. Más de 10
+        estratos rara vez se justifica a menos que se trate de una encuesta nacional grande con información auxiliar muy
+        precisa.
+      </div>
+
+      <h3>Consideraciones Prácticas</h3>
+
+      <div class="warning">
+        <strong>Tamaño mínimo de estrato:</strong> Cada estrato debe tener al menos $N_h \geq 2$ unidades poblacionales
+        para poder estimar la varianza. Idealmente, $N_h$ debería ser lo suficientemente grande para que $n_h \geq 30$
+        si se desea inferencia separada por estrato.
+      </div>
+
+      <div class="tip-box"
+        style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%); border: 1px solid rgba(1, 40, 32, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+        <strong>Estratificación múltiple:</strong> Cuando se necesitan cruzar varias variables (p. ej., región × tamaño), el
+        número de estratos crece exponencialmente. Algunos estratos pueden quedar vacíos o muy pequeños. En estos casos,
+        considere:
+        <ul>
+          <li>Colapsar categorías adyacentes</li>
+          <li>Usar postestratificación en lugar de estratificación previa</li>
+          <li>Aplicar modelos de regresión para ajustar por múltiples variables</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 6: Modelo Estadístico -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">4.6 Un Modelo para el Muestreo
+          Estratificado</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender el enfoque de superpoblación para el muestreo
+              estratificado.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Enfoque de Diseño vs. Enfoque de Modelo</h3>
+
+      <p>Hasta ahora, hemos utilizado el <strong>enfoque de diseño</strong>: la población se considera fija y la
+        aleatoriedad proviene únicamente del proceso de muestreo. Las propiedades de los estimadores (sesgo, varianza)
+        se evalúan bajo muestreo repetido de la misma población.</p>
+
+      <p>El <strong>enfoque de modelo</strong> (o de superpoblación) asume que los valores poblacionales son
+        realizaciones de un proceso estocástico subyacente. La población observada es una realización de una
+        "superpoblación" infinita, y la inferencia se basa en el modelo probabilístico que genera los datos.</p>
+
+      <div class="note">
+        <strong>¿Por qué considerar el enfoque de modelo?</strong> El enfoque de diseño es robusto (no requiere
+        supuestos distribucionales), pero el enfoque de modelo puede proporcionar estimadores más eficientes cuando el
+        modelo es correcto. Además, el modelo ayuda a entender <em>por qué</em> funciona la estratificación y guía la
+        elección de la asignación óptima.
+      </div>
+
+      <p>Se asume que las observaciones dentro de cada estrato se generan a partir de un modelo ANOVA de efectos fijos:
+      </p>
+      <div class="formula">$$Y_{hj} = \mu_h + \varepsilon_{hj}, \quad h = 1, \ldots, H; \quad j = 1, \ldots, N_h$$</div>
+      <p>donde:</p>
+      <ul>
+        <li>$\mu_h$ es la media (fija) del estrato $h$</li>
+        <li>$\varepsilon_{hj}$ son errores independientes con $E[\varepsilon_{hj}] = 0$ y $Var(\varepsilon_{hj}) =
+          \sigma_h^2$</li>
+        <li>Los errores son independientes entre estratos y dentro de cada estrato</li>
+      </ul>
+
+      <h4>Estimador Óptimo bajo el Modelo</h4>
+
+      <p>Bajo este modelo, el <strong>Mejor Predictor Lineal Insesgado (BLUP)</strong> de la media poblacional
+        $\bar{y}_U$ es:</p>
+      <div class="formula">$$\hat{\bar{y}}_{BLUP} = \sum_{h=1}^{H} \frac{N_h}{N} \bar{y}_h = \bar{y}_{str}$$</div>
+      <p>¡Este es exactamente el estimador de muestreo estratificado! Esto muestra que $\bar{y}_{str}$ es óptimo tanto
+        desde la perspectiva de diseño como desde la perspectiva del modelo.</p>
+
+      <h4>Varianza bajo el Modelo</h4>
+
+      <p>La varianza de predicción del estimador bajo el modelo es:</p>
+      <div class="formula">$$Var_M(\hat{\bar{y}}_{str} - \bar{y}_U) = \sum_{h=1}^{H} \left(\frac{N_h}{N}\right)^2
+        \left(1 - \frac{n_h}{N_h}\right) \frac{\sigma_h^2}{n_h}$$</div>
+      <p>Esta expresión es análoga a la varianza de diseño, reemplazando $S_h^2$ por $\sigma_h^2$.</p>
+
+      <h3>Conexión con la Asignación Óptima</h3>
+
+      <p>El modelo de superpoblación proporciona una justificación teórica para la asignación óptima. Minimizando la
+        varianza del modelo sujeta a un costo fijo, se obtiene:</p>
+      <div class="formula">$$n_h \propto \frac{N_h \sigma_h}{\sqrt{c_h}}$$</div>
+      <p>Cuando los costos son iguales ($c_h = c$), esto se reduce a la <strong>asignación de Neyman</strong>:</p>
+      <div class="formula">$$n_h \propto N_h \sigma_h$$</div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Interpretación del Modelo</div>
+        <p>El modelo explica por qué la asignación de Neyman funciona:</p>
+        <ul>
+          <li><strong>Estratos grandes ($N_h$ grande):</strong> Contribuyen más a la media poblacional, requieren más
+            observaciones.</li>
+          <li><strong>Estratos variables ($\sigma_h$ grande):</strong> Tienen más incertidumbre, requieren más
+            observaciones para estimar $\mu_h$ con precisión.</li>
+        </ul>
+      </div>
+
+      <h3>Ilustración por Simulación</h3>
+
+      <p>La siguiente simulación compara el desempeño del estimador estratificado bajo el enfoque de diseño y el enfoque
+        de modelo.</p>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+
+np.random.seed(42)
+
+# Parámetros del modelo de superpoblación
+H = 4  # Número de estratos
+Nh = np.array([500, 300, 150, 50])  # Tamaño de cada estrato
+mu_h = np.array([100, 150, 200, 250])  # Medias verdaderas por estrato
+sigma_h = np.array([20, 40, 60, 80])  # Desviaciones estándar por estrato
+
+N = Nh.sum()
+n_total = 100
+
+# Asignación proporcional
+n_h_prop = np.round(n_total * Nh / N).astype(int)
+
+# Asignación de Neyman
+numerador = Nh * sigma_h
+n_h_neyman = np.round(n_total * numerador / numerador.sum()).astype(int)
+
+# Ajustar para que sumen exactamente n_total
+n_h_prop[-1] += n_total - n_h_prop.sum()
+n_h_neyman[-1] += n_total - n_h_neyman.sum()
+
+print("ASIGNACIONES")
+print("=" * 50)
+print(f"{'Estrato':<10} {'N_h':<8} {'μ_h':<8} {'σ_h':<8} {'Prop.':<8} {'Neyman':<8}")
+print("-" * 50)
+for h in range(H):
+    print(f"{h+1:<10} {Nh[h]:<8} {mu_h[h]:<8} {sigma_h[h]:<8} {n_h_prop[h]:<8} {n_h_neyman[h]:<8}")
+
+# Simulación del enfoque de modelo
+n_sim = 10000
+estimadores_prop = []
+estimadores_neyman = []
+verdadero_total = np.sum(Nh * mu_h)
+
+for _ in range(n_sim):
+    # Generar población desde el modelo
+    poblacion = []
+    for h in range(H):
+        valores_h = np.random.normal(mu_h[h], sigma_h[h], Nh[h])
+        poblacion.append(valores_h)
+
+    # Muestreo estratificado (proporcional)
+    muestra_prop = []
+    for h in range(H):
+        idx = np.random.choice(Nh[h], n_h_prop[h], replace=False)
+        muestra_prop.append(poblacion[h][idx])
+
+    # Estimar total
+    t_hat_prop = sum(Nh[h] * np.mean(muestra_prop[h]) for h in range(H))
+    estimadores_prop.append(t_hat_prop)
+
+    # Muestreo estratificado (Neyman)
+    muestra_neyman = []
+    for h in range(H):
+        idx = np.random.choice(Nh[h], n_h_neyman[h], replace=False)
+        muestra_neyman.append(poblacion[h][idx])
+
+    t_hat_neyman = sum(Nh[h] * np.mean(muestra_neyman[h]) for h in range(H))
+    estimadores_neyman.append(t_hat_neyman)
+
+# Resultados
+print("\n\nRESULTADOS DE LA SIMULACIÓN (10,000 réplicas)")
+print("=" * 50)
+print(f"Total verdadero: {verdadero_total:,.0f}")
+print(f"\nProporcional:")
+print(f"  Media estimada: {np.mean(estimadores_prop):,.0f}")
+print(f"  Sesgo: {np.mean(estimadores_prop) - verdadero_total:,.2f}")
+print(f"  Error estándar: {np.std(estimadores_prop):,.0f}")
+
+print(f"\nNeyman:")
+print(f"  Media estimada: {np.mean(estimadores_neyman):,.0f}")
+print(f"  Sesgo: {np.mean(estimadores_neyman) - verdadero_total:,.2f}")
+print(f"  Error estándar: {np.std(estimadores_neyman):,.0f}")
+
+ganancia = (1 - np.std(estimadores_neyman)/np.std(estimadores_prop)) * 100
+print(f"\nGanancia Neyman vs Proporcional: {ganancia:.1f}% reducción en EE")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados de la Simulación</div>
+        <p>Ambos estimadores son <strong>insesgados</strong> (sesgo ≈ 0) tanto bajo el enfoque de diseño como de modelo.
+          La asignación de Neyman reduce el error estándar aproximadamente 15-25% cuando las varianzas entre estratos
+          difieren sustancialmente.</p>
+      </div>
+
+      <h3>Robustez del Enfoque de Diseño</h3>
+
+      <div class="warning">
+        <strong>Importante:</strong> El estimador $\bar{y}_{str}$ es insesgado bajo el enfoque de diseño <strong>sin
+          importar si el modelo es correcto</strong>. Si el modelo falla (p. ej., $\varepsilon_{hj}$ no es normal, o hay
+        correlación dentro de estratos), el estimador estratificado sigue siendo válido, aunque la asignación óptima
+        basada en el modelo puede no ser realmente óptima.
+      </div>
+
+      <div class="tip-box"
+        style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%); border: 1px solid rgba(1, 40, 32, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+        <strong>Recomendación práctica:</strong> Use el enfoque de diseño para la inferencia principal (intervalos de
+        confianza, pruebas de hipótesis). Use el enfoque de modelo como guía para el <em>diseño</em> de la muestra
+        (definición de estratos, asignación).
+      </div>
+
+      <h3>Estimadores de Regresión en Muestreo Estratificado</h3>
+
+      <p>Cuando se dispone de información auxiliar de la población (p. ej., totales poblacionales de variables
+        correlacionadas con $y$), se pueden usar <strong>estimadores de regresión</strong> para mejorar la precisión
+        dentro de cada estrato.</p>
+
+      <h4>Estimador de Regresión por Estrato</h4>
+
+      <p>Para cada estrato $h$, se ajusta un modelo de regresión lineal:</p>
+      <div class="formula">$$y_{hj} = \alpha_h + \beta_h x_{hj} + \varepsilon_{hj}$$</div>
+      <p>donde $x$ es una variable auxiliar cuyo total poblacional $t_{xh}$ se conoce para cada estrato.</p>
+
+      <p><strong>Estimador de regresión del total por estrato:</strong></p>
+      <div class="formula">$$\hat{t}_{h,reg} = \hat{t}_{h,SRS} + \hat{\beta}_h (t_{xh} - \hat{t}_{xh,SRS})$$</div>
+      <p>donde:</p>
+      <ul>
+        <li>$\hat{t}_{h,SRS} = N_h \bar{y}_h$ es el estimador Horvitz-Thompson del total en el estrato $h$</li>
+        <li>$\hat{t}_{xh,SRS} = N_h \bar{x}_h$ es el estimador del total de $x$ en la muestra</li>
+        <li>$\hat{\beta}_h$ es el coeficiente de regresión estimado en el estrato $h$</li>
+      </ul>
+
+      <p><strong>Estimador de regresión del total poblacional:</strong></p>
+      <div class="formula">$$\hat{t}_{reg,str} = \sum_{h=1}^{H} \hat{t}_{h,reg}$$</div>
+
+      <h4>Varianza del Estimador de Regresión</h4>
+
+      <p>La varianza aproximada del estimador de regresión estratificado es:</p>
+      <div class="formula">$$V(\hat{t}_{reg,str}) \approx \sum_{h=1}^{H} N_h^2 \left(1 - \frac{n_h}{N_h}\right)
+        \frac{S_{y|x,h}^2}{n_h}$$</div>
+      <p>donde $S_{y|x,h}^2 = S_{y,h}^2 (1 - R_h^2)$ es la varianza residual del estrato $h$, y $R_h^2$ es el
+        coeficiente de determinación en el estrato $h$.</p>
+
+      <div class="note">
+        <strong>Ganancia de precisión:</strong> El estimador de regresión es más preciso que el estimador estratificado
+        simple cuando:
+        <ul>
+          <li>Existe una relación lineal fuerte entre $y$ y $x$ dentro de cada estrato ($R_h^2$ alto)</li>
+          <li>Los totales poblacionales $t_{xh}$ son conocidos con precisión</li>
+          <li>La relación lineal es aproximadamente la misma en toda la población o se modela correctamente por estrato
+          </li>
+        </ul>
+      </div>
+
+      <div class="exercise">
+        <h4>Ejemplo: Estimador de Regresión para Área de Granjas</h4>
+        <p>Se usa el número de granjas en 1987 (variable auxiliar $x$, conocida para todos los condados) para estimar el
+          área total de granjas en 1992 ($y$), estratificando por región.</p>
+      </div>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+import pandas as pd
+from scipy import stats
+
+# Cargar datos (ejemplo con datos simulados basados en agstrat.csv)
+# En la práctica: df = pd.read_csv('agstrat.csv')
+np.random.seed(42)
+
+# Datos por estrato (región)
+strata_info = {
+    'NE': {'Nh': 220, 'nh': 21, 'tx': 45000, 'ty_true': 21478000},
+    'NC': {'Nh': 1054, 'nh': 103, 'tx': 280000, 'ty_true': 316730000},
+    'S': {'Nh': 1382, 'nh': 135, 'tx': 350000, 'ty_true': 292037000},
+    'W': {'Nh': 422, 'nh': 41, 'tx': 95000, 'ty_true': 279488000}
+}
+
+# Simular datos muestrales por estrato
+muestras = {}
+for region, info in strata_info.items():
+    # Generar datos correlacionados (x = granjas1987, y = acres1992)
+    x_pop = np.random.gamma(shape=5, scale=200, size=info['Nh'])
+    # y correlacionado con x (relación lineal con ruido)
+    y_pop = 5000 + 800 * x_pop + np.random.normal(0, 50000, info['Nh'])
+    
+    # Tomar muestra aleatoria simple dentro del estrato
+    idx = np.random.choice(info['Nh'], info['nh'], replace=False)
+    x_sample = x_pop[idx]
+    y_sample = y_pop[idx]
+    
+    muestras[region] = {
+        'x': x_sample, 'y': y_sample,
+        'x_bar': np.mean(x_sample), 'y_bar': np.mean(y_sample),
+        's_x': np.std(x_sample, ddof=1), 's_y': np.std(y_sample, ddof=1),
+        'Nh': info['Nh'], 'nh': info['nh'], 'tx': info['tx']
+    }
+    
+    # Calcular regresión
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x_sample, y_sample)
+    muestras[region]['beta'] = slope
+    muestras[region]['r_squared'] = r_value**2
+
+# Estimador estratificado simple
+t_str_simple = sum(info['Nh'] * muestras[region]['y_bar'] 
+                   for region, info in strata_info.items())
+
+# Estimador de regresión estratificado
+t_str_reg = 0
+for region, info in strata_info.items():
+    m = muestras[region]
+    t_h_srs = m['Nh'] * m['y_bar']
+    t_xh_srs = m['Nh'] * m['x_bar']
+    t_h_reg = t_h_srs + m['beta'] * (m['tx'] - t_xh_srs)
+    t_str_reg += t_h_reg
+
+print("=" * 60)
+print("ESTIMADORES DEL TOTAL DE ACRES (1992)")
+print("=" * 60)
+print(f"Total estimado (estratificado simple): {t_str_simple:,.0f}")
+print(f"Total estimado (regresión):            {t_str_reg:,.0f}")
+print(f"\nCoeficientes de regresión por estrato:")
+for region, m in muestras.items():
+    print(f"  {region}: β̂ = {m['beta']:.1f}, R² = {m['r_squared']:.3f}")
+
+# Comparación de varianzas (aproximada)
+print("\n" + "=" * 60)
+print("EFICIENCIA RELATIVA")
+print("=" * 60)
+print("El estimador de regresión reduce la varianza cuando R² es alto.")
+print("La reducción aproximada es proporcional a (1 - R²) en cada estrato.")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados del Ejemplo</div>
+        <p>El estimador de regresión aprovecha la correlación entre el número de granjas en 1987 y el área en 1992 para
+          reducir el error de estimación. Cuando $R^2 > 0.5$, la ganancia de precisión puede superar el 30% comparado
+          con el estimador estratificado simple.</p>
+      </div>
+
+      <div class="warning">
+        <strong>Precaución:</strong> El estimador de regresión es <strong>aproximadamente insesgado</strong> (el sesgo
+        disminuye con $1/n_h$). Requiere $n_h \geq 20$ para que la aproximación sea válida. Además, asume que la
+        relación lineal se mantiene en toda la población del estrato.
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 7: Postestratificación -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">4.7 Postestratificación</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aprender la técnica de postestratificación y sus
+              aplicaciones.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Concepto y Motivación</h3>
+
+      <p>La <strong>postestratificación</strong> se usa cuando no se puede estratificar antes de muestrear porque el
+        marco muestral no contiene la información de estratificación, pero se conoce el tamaño de los estratos $N_h$
+        mediante fuentes externas (p. ej., censo, registros administrativos).</p>
+
+      <p><strong>Procedimiento:</strong></p>
+      <ol>
+        <li>Se extrae una Muestra Aleatoria Simple (MAS) de tamaño $n$</li>
+        <li>Después de la recolección de datos, se clasifica cada unidad en su estrato correspondiente</li>
+        <li>Se calcula el estimador postestratificado usando los $N_h$ conocidos</li>
+      </ol>
+
+      <div class="exercise">
+        <h4>Ejemplo de aplicación</h4>
+        <p>Una encuesta telefónica sobre intención de voto no puede estratificar por partido político antes del muestreo
+          (no existe un marco con esa información). Pero se conocen los totales poblacionales por partido de elecciones
+          anteriores. Se postestratifica para ajustar las estimaciones.</p>
+      </div>
+
+      <h3>Estimador Postestratificado</h3>
+
+      <p><strong>Estimador de la media:</strong></p>
+      <div class="formula">$$\bar{y}_{post} = \sum_{h=1}^{H} \frac{N_h}{N} \bar{y}_h$$</div>
+      <p>La fórmula es idéntica a la del muestreo estratificado, pero hay una diferencia fundamental:</p>
+
+      <div class="note">
+        <strong>Diferencia clave:</strong> En la estratificación previa, los $n_h$ son fijos (determinísticos). En la
+        postestratificación, los $n_h$ son <strong>aleatorios</strong> porque dependen de cuántas unidades de cada
+        estrato caen en la MAS.
+      </div>
+
+      <h4>Varianza del Estimador Postestratificado</h4>
+
+      <p>La varianza aproximada del estimador postestratificado (Lohr, p. 115) es:</p>
+      <div class="formula">$$V(\bar{y}_{post}) \approx \left(1 - \frac{n}{N}\right) \frac{1}{n} \sum_{h=1}^{H}
+        \frac{N_h}{N} S_h^2 + \frac{1}{n^2} \sum_{h=1}^{H} \left(1 - \frac{N_h}{N}\right) S_h^2$$</div>
+      <p>El <strong>primer término</strong> es la varianza bajo estratificación previa con asignación proporcional. El
+        <strong>segundo término</strong> es la penalización por tener $n_h$ aleatorios.
+      </p>
+
+      <p><strong>Estimador de la varianza:</strong></p>
+      <div class="formula">$$\hat{V}(\bar{y}_{post}) = \sum_{h=1}^{H} \left(\frac{N_h}{N}\right)^2 \left(1 -
+        \frac{n_h}{N_h}\right) \frac{s_h^2}{n_h}$$</div>
+
+      <h3>Comparación: Postestratificación vs. Estratificación Previa</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Característica</th>
+            <th scope="col">Estratificación Previa</th>
+            <th scope="col">Postestratificación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cuándo se definen estratos</td>
+            <td>Antes del muestreo</td>
+            <td>Después del muestreo</td>
+          </tr>
+          <tr>
+            <td>Tamaños de muestra por estrato</td>
+            <td>Fijos ($n_h$ determinados)</td>
+            <td>Aleatorios ($n_h$ variables)</td>
+          </tr>
+          <tr>
+            <td>Precisión</td>
+            <td>Máxima (se controla $n_h$)</td>
+            <td>Ligeramente menor</td>
+          </tr>
+          <tr>
+            <td>Requiere marco estratificado</td>
+            <td>Sí</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Requiere $N_h$ conocidos</td>
+            <td>Sí</td>
+            <td>Sí</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          ¿Cuándo son similares en precisión?</div>
+        <p>La postestratificación tiene casi la misma precisión que la estratificación previa cuando:</p>
+        <ul>
+          <li>El tamaño de muestra $n$ es grande (típicamente $n \geq 100$)</li>
+          <li>Los $n_h$ esperados son todos grandes ($E[n_h] \geq 30$ para todo $h$)</li>
+          <li>La asignación esperada $E[n_h] = n \times \frac{N_h}{N}$ es cercana a la asignación proporcional</li>
+        </ul>
+        <p>Bajo estas condiciones, la variabilidad de los $n_h$ es pequeña comparada con sus valores esperados.</p>
+      </div>
+
+      <h3>Condiciones de Aplicabilidad</h3>
+
+      <div class="warning">
+        <strong>Tamaños de muestra mínimos:</strong> Para que la postestratificación sea válida, se requiere:
+        <ul>
+          <li>$n_h \geq 2$ para todo estrato (para poder estimar $s_h^2$)</li>
+          <li>Idealmente $n_h \geq 30$ para inferencia basada en aproximación normal</li>
+          <li>Si algún $n_h$ es muy pequeño, considere colapsar estratos adyacentes</li>
+        </ul>
+      </div>
+
+      <h3>Postestratificación y Pesos Ajustados</h3>
+
+      <p>La postestratificación es un caso especial de <strong>calibración de pesos</strong>. Los pesos originales de la
+        MAS son $w_i = N/n$. Después de postestratificar, los pesos se ajustan a:</p>
+      <div class="formula">$$w_{hi}^{post} = \frac{N_h}{n_h}$$</div>
+      <p>Este ajuste asegura que la suma de pesos en cada estrato iguale el total poblacional conocido $N_h$.</p>
+
+      <div class="tip-box"
+        style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%); border: 1px solid rgba(1, 40, 32, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+        <strong>Postestratificación múltiple:</strong> Cuando se conocen totales marginales de varias variables (p. ej.,
+        edad × sexo), pero no el cruzamiento completo, se puede usar <strong>raking</strong> (ajuste iterativo
+        proporcional) para calibrar los pesos. Esto es común en encuestas de opinión.
+      </div>
+
+      <h3>Ejemplo Práctico</h3>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+import pandas as pd
+
+np.random.seed(42)
+
+# Población con 3 estratos (p. ej., nivel educativo)
+N1, N2, N3 = 5000, 3000, 2000  # Totales conocidos (p. ej., de censo)
+N = N1 + N2 + N3
+mu1, mu2, mu3 = 35, 50, 70  # Medias de variable de interés (p. ej., ingresos)
+sigma1, sigma2, sigma3 = 10, 15, 20
+
+# Generar población completa
+poblacion = np.concatenate([
+    np.random.normal(mu1, sigma1, N1),
+    np.random.normal(mu2, sigma2, N2),
+    np.random.normal(mu3, sigma3, N3)
+])
+estrato_verdadero = np.array([1]*N1 + [2]*N2 + [3]*N3)
+
+# Verdadero parámetro poblacional
+media_verdadera = np.mean(poblacion)
+print(f"Media poblacional verdadera: {media_verdadera:.2f}")
+
+# Tomar una MAS de n=200 (sin estratificar)
+n = 200
+idx_muestra = np.random.choice(N, n, replace=False)
+muestra = poblacion[idx_muestra]
+estrato_muestra = estrato_verdadero[idx_muestra]
+
+# Estimador MAS (sin postestratificar)
+media_mas = np.mean(muestra)
+se_mas = np.sqrt((1 - n/N) * np.var(muestra, ddof=1) / n)
+print(f"\nEstimador MAS:")
+print(f"  Media: {media_mas:.2f}")
+print(f"  Error estándar: {se_mas:.2f}")
+
+# Postestratificación
+# Contar unidades por estrato en la muestra
+n_h = np.array([np.sum(estrato_muestra == h) for h in [1, 2, 3]])
+N_h = np.array([N1, N2, N3])
+
+print(f"\nTamaños de muestra por estrato: n_h = {n_h}")
+print(f"  (Esperado: {n * N_h / N})")
+
+# Calcular medias por estrato
+y_bar_h = np.array([np.mean(muestra[estrato_muestra == h]) for h in [1, 2, 3]])
+
+# Estimador postestratificado
+media_post = np.sum(N_h * y_bar_h) / N
+print(f"\nEstimador Postestratificado:")
+print(f"  Media: {media_post:.2f}")
+
+# Varianza postestratificada
+var_post = np.sum((N_h/N)**2 * (1 - n_h/N_h) * np.array([
+    np.var(muestra[estrato_muestra == h], ddof=1) / n_h[h]
+    for h in range(3)
+]))
+se_post = np.sqrt(var_post)
+print(f"  Error estándar: {se_post:.2f}")
+
+# Comparación
+print(f"\n" + "="*50)
+print(f"Error MAS: {se_mas:.2f} vs Error Post: {se_post:.2f}")
+print(f"Ganancia por postestratificación: {(1 - se_post/se_mas)*100:.1f}%")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados del Ejemplo</div>
+        <p>La postestratificación ajusta las estimaciones para que coincidan con la estructura poblacional conocida.
+          Cuando la muestra MAS es desbalanceada (p. ej., pocos representantes de un estrato), la postestratificación
+          corrige el sesgo potencial y puede reducir el error estándar.</p>
+      </div>
+
+      <div class="warning">
+        <strong>Advertencia (Lohr, p. 115):</strong> La postestratificación es peligrosa si se usan los <strong>datos de
+          la muestra</strong> para definir los estratos (fisgoneo de datos, «data snooping»). Los estratos y sus límites $N_h$ deben
+        definirse <em>a priori</em> usando información externa, no basándose en patrones observados en la muestra.
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 8: Ejercicios -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios de Autoevaluación
+        </h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">📝</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Evaluar la comprensión de los conceptos del capítulo
+              mediante ejercicios prácticos.</p>
+          </div>
+        </div>
+      </div>
+
+      <blockquote
+        style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.05) 0%, rgba(255, 102, 0, 0.05) 100%); border-left: 4px solid #012820; padding: 1.5rem 2rem; margin: 2rem 0; border-radius: 0.5rem; font-style: italic;">
+        "Una de las cosas que ella [Mamá] me enseñó debería ser obvia para todos, pero todavía encuentro muchos
+        cocineros que no lo han descubierto todavía. Pon primero la comida que tarda más en cocinarse."
+        <cite style="display: block; margin-top: 1rem; font-size: 0.875rem; color: #6b7280;">— Pearl Bailey, Pearl's
+          Kitchen (Citado en Lohr, Cap. 4, p. 95)</cite>
+      </blockquote>
+
+      <div class="exercise">
+        <h4>Ejercicio 1: Asignación Óptima (Neyman)</h4>
+        <p>Una población tiene dos estratos con $N_1=100, N_2=200$. Las desviaciones estándar son $S_1=10, S_2=20$. El
+          presupuesto permite $n=30$. Si el costo por observación es igual, ¿cuántas unidades se deben muestrear de cada
+          estrato bajo asignación óptima de Neyman?</p>
+      </div>
+
+      <details>
+        <summary>Ver Solución</summary>
+        <div class="usta-card" style="padding: 1.5rem;">
+          <p>Aplicando la fórmula de Neyman $n_h \propto N_h S_h$:</p>
+          <ul>
+            <li>Estrato 1: $N_1 S_1 = 100 \times 10 = 1000$</li>
+            <li>Estrato 2: $N_2 S_2 = 200 \times 20 = 4000$</li>
+            <li>Suma: $1000 + 4000 = 5000$</li>
+            <li>Proporción: $n_1 = 30 \times (1000/5000) = 6$</li>
+            <li>Proporción: $n_2 = 30 \times (4000/5000) = 24$</li>
+          </ul>
+          <p><strong>Interpretación:</strong> Se muestrea 4 veces más unidades del estrato 2, pese a que su tamaño
+            poblacional solo es el doble, debido a su mayor variabilidad ($S_2 = 20$ vs $S_1 = 10$).</p>
+        </div>
+      </details>
+
+      <hr>
+
+      <div class="exercise">
+        <h4>Ejercicio 2: Estimación del Total y Varianza</h4>
+        <p>Una universidad tiene 3 facultades. Se toma una muestra estratificada con los siguientes resultados:</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Facultad</th>
+              <th scope="col">$N_h$</th>
+              <th scope="col">$n_h$</th>
+              <th scope="col">$\bar{y}_h$ (horas/semana)</th>
+              <th scope="col">$s_h^2$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ciencias</td>
+              <td>1200</td>
+              <td>60</td>
+              <td>25.4</td>
+              <td>36.0</td>
+            </tr>
+            <tr>
+              <td>Ingeniería</td>
+              <td>800</td>
+              <td>40</td>
+              <td>28.1</td>
+              <td>49.0</td>
+            </tr>
+            <tr>
+              <td>Humanidades</td>
+              <td>500</td>
+              <td>25</td>
+              <td>18.7</td>
+              <td>25.0</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Calcule: (a) el total estimado de horas de estudio semanales, (b) la varianza estimada del total, y (c) un
+          intervalo de confianza al 95%.</p>
+      </div>
+
+      <details>
+        <summary>Ver Solución</summary>
+        <div class="usta-card" style="padding: 1.5rem;">
+          <p><strong>(a) Total estimado:</strong></p>
+          <div class="formula" style="margin: 1rem 0;">$$\hat{t}_{str} = \sum_{h=1}^{3} N_h \bar{y}_h = 1200(25.4) +
+            800(28.1) + 500(18.7) = 30,480 + 22,480 + 9,350 = 62,310$$</div>
+          <p><strong>(b) Varianza estimada:</strong></p>
+          <div class="formula" style="margin: 1rem 0;">$$\hat{V}(\hat{t}_{str}) = \sum_{h=1}^{3} \left(1 -
+            \frac{n_h}{N_h}\right) N_h^2 \frac{s_h^2}{n_h}$$</div>
+          <ul>
+            <li>Ciencias: $(1 - 60/1200) \times 1200^2 \times 36.0/60 = 0.95 \times 1,440,000 \times 0.6 = 820,800$</li>
+            <li>Ingeniería: $(1 - 40/800) \times 800^2 \times 49.0/40 = 0.95 \times 640,000 \times 1.225 = 744,800$</li>
+            <li>Humanidades: $(1 - 25/500) \times 500^2 \times 25.0/25 = 0.95 \times 250,000 \times 1.0 = 237,500$</li>
+          </ul>
+          <p>$$\hat{V}(\hat{t}_{str}) = 820,800 + 744,800 + 237,500 = 1,803,100$$</p>
+          <p>$$SE(\hat{t}_{str}) = \sqrt{1,803,100} = 1,342.8$$</p>
+          <p><strong>(c) Intervalo de confianza al 95%:</strong></p>
+          <div class="formula" style="margin: 1rem 0;">$$62,310 \pm 1.96 \times 1,342.8 = 62,310 \pm 2,632$$</div>
+          <p>$$IC_{95\%} = [59,678, 64,942] \text{ horas/semana}$$</p>
+        </div>
+      </details>
+
+      <hr>
+
+      <div class="exercise">
+        <h4>Ejercicio 3: Comparación de Asignaciones</h4>
+        <p>Una población de $N=1000$ unidades está dividida en 3 estratos con $N_1=500, N_2=300, N_3=200$. Las varianzas
+          son $S_1^2=100, S_2^2=400, S_3^2=900$. Se desea una muestra de $n=100$.</p>
+        <p>(a) Calcule la asignación proporcional.</p>
+        <p>(b) Calcule la asignación de Neyman.</p>
+        <p>(c) Compare las varianzas teóricas de ambas asignaciones (ignore el fpc).</p>
+      </div>
+
+      <details>
+        <summary>Ver Solución</summary>
+        <div class="usta-card" style="padding: 1.5rem;">
+          <p><strong>(a) Asignación proporcional:</strong></p>
+          <ul>
+            <li>$n_1 = 100 \times 500/1000 = 50$</li>
+            <li>$n_2 = 100 \times 300/1000 = 30$</li>
+            <li>$n_3 = 100 \times 200/1000 = 20$</li>
+          </ul>
+          <p><strong>(b) Asignación de Neyman:</strong></p>
+          <p>Calculamos $N_h S_h$ (usando $S_h = \sqrt{S_h^2}$):</p>
+          <ul>
+            <li>$N_1 S_1 = 500 \times 10 = 5,000$</li>
+            <li>$N_2 S_2 = 300 \times 20 = 6,000$</li>
+            <li>$N_3 S_3 = 200 \times 30 = 6,000$</li>
+            <li>Suma: $17,000$</li>
+          </ul>
+          <ul>
+            <li>$n_1 = 100 \times 5000/17000 = 29.4 \approx 29$</li>
+            <li>$n_2 = 100 \times 6000/17000 = 35.3 \approx 35$</li>
+            <li>$n_3 = 100 \times 6000/17000 = 35.3 \approx 36$</li>
+          </ul>
+          <p><strong>(c) Comparación de varianzas (sin fpc):</strong></p>
+          <div class="formula" style="margin: 1rem 0;">$$V_{prop} \propto \sum \frac{N_h}{N} S_h^2 = 0.5(100) + 0.3(400)
+            + 0.2(900) = 50 + 120 + 180 = 350$$</div>
+          <div class="formula" style="margin: 1rem 0;">$$V_{neyman} \propto \frac{1}{n}\left(\sum N_h S_h\right)^2 / N^2
+            = \frac{1}{100}(17000)^2 / 1000^2 = 2.89$$</div>
+          <p>La asignación de Neyman reduce la varianza aproximadamente 18% comparada con la proporcional en este caso.
+          </p>
+        </div>
+      </details>
+
+      <hr>
+
+      <div class="exercise">
+        <h4>Ejercicio 4: Postestratificación</h4>
+        <p>Se toma una MAS de $n=200$ de una población con $N=10,000$. Después del muestreo, se clasifica la muestra en
+          3 estratos según nivel educativo. Los totales poblacionales son $N_1=5000, N_2=3000, N_3=2000$. En la muestra
+          se obtuvo $n_1=90, n_2=65, n_3=45$ con medias $\bar{y}_1=35, \bar{y}_2=52, \bar{y}_3=68$.</p>
+        <p>(a) Calcule el estimador postestratificado de la media.</p>
+        <p>(b) ¿Cuál sería la estimación sin postestratificar (solo MAS)?</p>
+      </div>
+
+      <details>
+        <summary>Ver Solución</summary>
+        <div class="usta-card" style="padding: 1.5rem;">
+          <p><strong>(a) Estimador postestratificado:</strong></p>
+          <div class="formula" style="margin: 1rem 0;">$$\bar{y}_{post} = \sum_{h=1}^{3} \frac{N_h}{N} \bar{y}_h =
+            \frac{5000}{10000}(35) + \frac{3000}{10000}(52) + \frac{2000}{10000}(68)$$</div>
+          <p>$$\bar{y}_{post} = 0.5(35) + 0.3(52) + 0.2(68) = 17.5 + 15.6 + 13.6 = 46.7$$</p>
+          <p><strong>(b) Estimador MAS (sin postestratificar):</strong></p>
+          <div class="formula" style="margin: 1rem 0;">$$\bar{y}_{MAS} = \frac{n_1\bar{y}_1 + n_2\bar{y}_2 +
+            n_3\bar{y}_3}{n} = \frac{90(35) + 65(52) + 45(68)}{200}$$</div>
+          <p>$$\bar{y}_{MAS} = \frac{3150 + 3380 + 3060}{200} = \frac{9590}{200} = 47.95$$</p>
+          <p><strong>Interpretación:</strong> La muestra MAS sobrerrepresenta el estrato 3 (45/200 = 22.5% vs 20%
+            poblacional) y subrepresenta el estrato 1 (90/200 = 45% vs 50% poblacional). La postestratificación corrige
+            este desbalance, dando más peso al estrato 1 (que tiene media baja) y menos al estrato 3, resultando en una
+            estimación ligeramente menor (46.7 vs 47.95).</p>
+        </div>
+      </details>
+    </div>
+  </template>
+
+  <!-- Module 9: Aplicación en Machine Learning -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Aplicación del Muestreo
+          Estratificado en Machine Learning</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🤖</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender cómo los principios del muestreo
+              estratificado de Lohr se aplican en la construcción de modelos de Machine Learning, particularmente en la
+              división de datos en conjuntos de entrenamiento y prueba.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>¿Por qué importa el Muestreo Estratificado en ML?</h3>
+
+      <p>A lo largo de los módulos anteriores, hemos estudiado el muestreo estratificado desde la perspectiva de la
+        estadística clásica de encuestas (Lohr, Cap. 4). Sin embargo, estos mismos principios son fundamentales en el
+        Machine Learning moderno, donde la <strong>creación de un conjunto de prueba (test set) representativo</strong>
+        es un paso crítico en la construcción de cualquier modelo predictivo.</p>
+
+      <p>Como señala Menon (2020), usar muestreo estratificado al dividir los datos garantiza que el conjunto de prueba
+        sea una "mini-versión" fiel de la población real, eliminando el <strong>sesgo de muestreo</strong> que podría
+        invalidar las métricas de desempeño del modelo.</p>
+
+      <div class="note">
+        <strong>Conexión con Lohr (Sección 4.1):</strong> Recordemos la razón principal para estratificar: "El muestreo
+        estratificado, si se hace correctamente, dará estimaciones más precisas" (p. 97). En ML, esto se traduce en:
+        métricas de evaluación más confiables y modelos con mejor capacidad de generalización.
+      </div>
+
+      <h3>El Problema del Sesgo de Muestreo (Sampling Bias)</h3>
+
+      <p>El <strong>sesgo de muestreo</strong> (equivalente al <strong>sesgo de selección</strong> visto en el Capítulo 1)
+        ocurre cuando algunos miembros de la población objetivo tienen menor
+        probabilidad de ser incluidos en la muestra que otros. En ML, esto se manifiesta cuando el conjunto de prueba no
+        refleja adecuadamente la distribución de la variable objetivo o de características importantes.</p>
+
+      <div class="diagram">
+        <h4 style="background:none; border:none; padding:0;">Sesgo de Muestreo: Marco Muestral vs. Muestra</h4>
+        <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" style="max-width:600px;">
+          <!-- Background -->
+          <defs>
+            <linearGradient id="popGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#012820;stop-opacity:0.1"/>
+              <stop offset="100%" style="stop-color:#FF6600;stop-opacity:0.08"/>
+            </linearGradient>
+          </defs>
+          <!-- Population -->
+          <ellipse cx="350" cy="180" rx="320" ry="155" fill="url(#popGrad)" stroke="#012820" stroke-width="2.5"/>
+          <text x="350" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#012820">Población Objetivo</text>
+          <!-- Sampling Frame -->
+          <ellipse cx="310" cy="190" rx="220" ry="115" fill="rgba(255,102,0,0.08)" stroke="#FF6600" stroke-width="2" stroke-dasharray="8,4"/>
+          <text x="200" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#FF6600">Marco Muestral</text>
+          <!-- Sample -->
+          <ellipse cx="280" cy="200" rx="110" ry="70" fill="rgba(1,40,32,0.12)" stroke="#012820" stroke-width="2.5"/>
+          <text x="280" y="195" text-anchor="middle" font-size="14" font-weight="700" fill="#012820">Muestra</text>
+          <text x="280" y="215" text-anchor="middle" font-size="11" fill="#374151">(Train + Test)</text>
+          <!-- Non-coverage area label -->
+          <line x1="560" y1="100" x2="500" y2="145" stroke="#9f1239" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+          <text x="575" y="90" text-anchor="middle" font-size="11" fill="#9f1239" font-weight="600">Sub-cobertura</text>
+          <text x="575" y="105" text-anchor="middle" font-size="10" fill="#9f1239">(sesgo potencial)</text>
+          <!-- Non-response -->
+          <rect x="240" y="240" width="80" height="25" rx="4" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1"/>
+          <text x="280" y="257" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="600">No-respuesta</text>
+          <!-- Arrow marker -->
+          <defs>
+            <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#9f1239"/>
+            </marker>
+          </defs>
+          <!-- Legend -->
+          <rect x="30" y="350" width="640" height="55" rx="8" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+          <circle cx="60" cy="377" r="8" fill="rgba(1,40,32,0.12)" stroke="#012820" stroke-width="1.5"/>
+          <text x="75" y="381" font-size="11" fill="#374151">Muestra obtenida</text>
+          <ellipse cx="220" cy="377" rx="12" ry="8" fill="rgba(255,102,0,0.08)" stroke="#FF6600" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <text x="238" y="381" font-size="11" fill="#374151">Marco muestral</text>
+          <rect x="370" y="370" width="16" height="14" rx="2" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1"/>
+          <text x="392" y="381" font-size="11" fill="#374151">Datos faltantes / No-respuesta</text>
+        </svg>
+        <p style="font-size: 0.85rem; color: #6b7280; margin-top: 0.5rem;">Adaptado de Menon (2020). El sesgo surge
+          cuando la muestra no cubre adecuadamente a toda la población objetivo.</p>
+      </div>
+
+      <div class="warning">
+        <strong>Impacto en ML:</strong> Si el conjunto de test no representa bien a la población (por sesgo de
+        muestreo), las métricas como accuracy, F1-score o AUC serán <strong>engañosamente optimistas o
+          pesimistas</strong>. Un modelo puede parecer excelente en un test set sesgado pero fallar en producción.
+      </div>
+
+      <h3>Muestreo Aleatorio vs. Estratificado para Train/Test Split</h3>
+
+      <p>El siguiente diagrama compara dos enfoques para dividir un dataset en conjuntos de entrenamiento y prueba:
+        el muestreo aleatorio simple (que puede producir splits desbalanceados) versus el muestreo estratificado
+        (que preserva la distribución original).</p>
+
+      <div class="diagram">
+        <h4 style="background:none; border:none; padding:0;">Comparación: Random Split vs. Stratified Split</h4>
+        <svg viewBox="0 0 780 500" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;">
+          <!-- Dataset Original -->
+          <rect x="250" y="10" width="280" height="60" rx="12" fill="#012820" stroke="#012820" stroke-width="2"/>
+          <text x="390" y="35" text-anchor="middle" font-size="14" font-weight="700" fill="white">Dataset Original</text>
+          <text x="390" y="55" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.8)">Clase A: 70% | Clase B: 20% | Clase C: 10%</text>
+
+          <!-- Arrows down -->
+          <line x1="280" y1="70" x2="160" y2="120" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowGray)"/>
+          <line x1="500" y1="70" x2="620" y2="120" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowGray)"/>
+          <defs>
+            <marker id="arrowGray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#6b7280"/>
+            </marker>
+            <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#012820"/>
+            </marker>
+          </defs>
+
+          <!-- LEFT: Random Split -->
+          <rect x="30" y="120" width="300" height="40" rx="8" fill="#fff1f2" stroke="#ef4444" stroke-width="2"/>
+          <text x="180" y="145" text-anchor="middle" font-size="13" font-weight="700" fill="#9f1239">❌ Random Split (MAS)</text>
+
+          <!-- Random Train -->
+          <rect x="30" y="180" width="140" height="120" rx="10" fill="white" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="100" y="200" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Train (80%)</text>
+          <rect x="50" y="212" width="100" height="14" rx="3" fill="#3b82f6" opacity="0.8"/>
+          <text x="100" y="223" text-anchor="middle" font-size="9" fill="white" font-weight="600">A: 75%</text>
+          <rect x="50" y="230" width="100" height="14" rx="3" fill="#f59e0b" opacity="0.8"/>
+          <text x="100" y="241" text-anchor="middle" font-size="9" fill="white" font-weight="600">B: 22%</text>
+          <rect x="50" y="248" width="100" height="14" rx="3" fill="#10b981" opacity="0.8"/>
+          <text x="100" y="259" text-anchor="middle" font-size="9" fill="white" font-weight="600">C: 3% ⚠️</text>
+          <text x="100" y="285" text-anchor="middle" font-size="9" fill="#9f1239">Clase C sub-representada</text>
+
+          <!-- Random Test -->
+          <rect x="190" y="180" width="140" height="120" rx="10" fill="white" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="260" y="200" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Test (20%)</text>
+          <rect x="210" y="212" width="100" height="14" rx="3" fill="#3b82f6" opacity="0.8"/>
+          <text x="260" y="223" text-anchor="middle" font-size="9" fill="white" font-weight="600">A: 55%</text>
+          <rect x="210" y="230" width="100" height="14" rx="3" fill="#f59e0b" opacity="0.8"/>
+          <text x="260" y="241" text-anchor="middle" font-size="9" fill="white" font-weight="600">B: 15%</text>
+          <rect x="210" y="248" width="100" height="14" rx="3" fill="#10b981" opacity="0.8"/>
+          <text x="260" y="259" text-anchor="middle" font-size="9" fill="white" font-weight="600">C: 30% ⚠️</text>
+          <text x="260" y="285" text-anchor="middle" font-size="9" fill="#9f1239">Clase C sobre-representada</text>
+
+          <!-- RIGHT: Stratified Split -->
+          <rect x="450" y="120" width="300" height="40" rx="8" fill="#f0fdf4" stroke="#012820" stroke-width="2"/>
+          <text x="600" y="145" text-anchor="middle" font-size="13" font-weight="700" fill="#012820">✅ Stratified Split</text>
+
+          <!-- Stratified Train -->
+          <rect x="450" y="180" width="140" height="120" rx="10" fill="white" stroke="#012820" stroke-width="1.5"/>
+          <text x="520" y="200" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Train (80%)</text>
+          <rect x="470" y="212" width="100" height="14" rx="3" fill="#3b82f6" opacity="0.8"/>
+          <text x="520" y="223" text-anchor="middle" font-size="9" fill="white" font-weight="600">A: 70% ✓</text>
+          <rect x="470" y="230" width="100" height="14" rx="3" fill="#f59e0b" opacity="0.8"/>
+          <text x="520" y="241" text-anchor="middle" font-size="9" fill="white" font-weight="600">B: 20% ✓</text>
+          <rect x="470" y="248" width="100" height="14" rx="3" fill="#10b981" opacity="0.8"/>
+          <text x="520" y="259" text-anchor="middle" font-size="9" fill="white" font-weight="600">C: 10% ✓</text>
+          <text x="520" y="285" text-anchor="middle" font-size="9" fill="#012820" font-weight="600">Distribución preservada</text>
+
+          <!-- Stratified Test -->
+          <rect x="610" y="180" width="140" height="120" rx="10" fill="white" stroke="#012820" stroke-width="1.5"/>
+          <text x="680" y="200" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Test (20%)</text>
+          <rect x="630" y="212" width="100" height="14" rx="3" fill="#3b82f6" opacity="0.8"/>
+          <text x="680" y="223" text-anchor="middle" font-size="9" fill="white" font-weight="600">A: 70% ✓</text>
+          <rect x="630" y="230" width="100" height="14" rx="3" fill="#f59e0b" opacity="0.8"/>
+          <text x="680" y="241" text-anchor="middle" font-size="9" fill="white" font-weight="600">B: 20% ✓</text>
+          <rect x="630" y="248" width="100" height="14" rx="3" fill="#10b981" opacity="0.8"/>
+          <text x="680" y="259" text-anchor="middle" font-size="9" fill="white" font-weight="600">C: 10% ✓</text>
+          <text x="680" y="285" text-anchor="middle" font-size="9" fill="#012820" font-weight="600">Distribución preservada</text>
+
+          <!-- Bottom Comparison -->
+          <rect x="30" y="320" width="300" height="70" rx="10" fill="#fff1f2" stroke="#ef4444" stroke-width="1"/>
+          <text x="180" y="342" text-anchor="middle" font-size="11" font-weight="600" fill="#9f1239">Problema:</text>
+          <text x="180" y="358" text-anchor="middle" font-size="10" fill="#374151">Distribución distorsionada en train y test.</text>
+          <text x="180" y="374" text-anchor="middle" font-size="10" fill="#374151">Métricas de evaluación no confiables.</text>
+
+          <rect x="450" y="320" width="300" height="70" rx="10" fill="#f0fdf4" stroke="#012820" stroke-width="1"/>
+          <text x="600" y="342" text-anchor="middle" font-size="11" font-weight="600" fill="#012820">Ventaja:</text>
+          <text x="600" y="358" text-anchor="middle" font-size="10" fill="#374151">Proporciones idénticas en ambos conjuntos.</text>
+          <text x="600" y="374" text-anchor="middle" font-size="10" fill="#374151">Evaluación representativa del modelo.</text>
+
+          <!-- Central bottom note -->
+          <rect x="180" y="420" width="420" height="65" rx="10" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+          <text x="390" y="442" text-anchor="middle" font-size="11" font-weight="700" fill="#012820">📐 Conexión con Lohr (Sección 4.4):</text>
+          <text x="390" y="458" text-anchor="middle" font-size="10" fill="#374151">El split estratificado en ML es equivalente a la</text>
+          <text x="390" y="472" text-anchor="middle" font-size="10" fill="#374151">asignación proporcional (n_h/N_h = n/N) de la teoría de encuestas.</text>
+        </svg>
+      </div>
+
+      <h3>Ejemplo Práctico: Estratificación por Ingreso Mediano</h3>
+
+      <p>El artículo de Menon (2020) presenta un ejemplo ilustrativo: supongamos que deseamos construir un modelo para
+        predecir el valor de viviendas usando el <strong>ingreso mediano</strong> como variable clave. La distribución
+        de ingresos típicamente está concentrada en ciertos rangos (p. ej., $15,000–$60,000), con colas delgadas en ingresos
+        muy bajos o muy altos.</p>
+
+      <p>Si usamos un split aleatorio simple, existe el riesgo de que:</p>
+      <ul>
+        <li>Los <strong>ingresos extremos</strong> (muy altos o muy bajos) queden excluidos del test set.</li>
+        <li>El modelo no sea evaluado contra estos subgrupos críticos.</li>
+        <li>Las predicciones para valores extremos sean deficientes sin que lo detectemos.</li>
+      </ul>
+
+      <p>La solución es <strong>crear estratos por rangos de ingreso</strong> y luego muestrear proporcionalmente de
+        cada uno:</p>
+
+      <div class="exercise">
+        <h4>Ejemplo: Estratificación de Ingreso Mediano para ML</h4>
+        <p>Se divide el ingreso mediano en 5 categorías (estratos) y se asegura que tanto el conjunto de entrenamiento
+          como el de prueba contengan la misma proporción de cada categoría.</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Estrato</th>
+              <th scope="col">Rango de Ingreso</th>
+              <th scope="col">% Población</th>
+              <th scope="col">n (Train, 80%)</th>
+              <th scope="col">n (Test, 20%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1 (Bajo)</td>
+              <td>$0 – $15,000</td>
+              <td>10%</td>
+              <td>800</td>
+              <td>200</td>
+            </tr>
+            <tr>
+              <td>2 (Medio-bajo)</td>
+              <td>$15,001 – $30,000</td>
+              <td>25%</td>
+              <td>2,000</td>
+              <td>500</td>
+            </tr>
+            <tr>
+              <td>3 (Medio)</td>
+              <td>$30,001 – $45,000</td>
+              <td>35%</td>
+              <td>2,800</td>
+              <td>700</td>
+            </tr>
+            <tr>
+              <td>4 (Medio-alto)</td>
+              <td>$45,001 – $60,000</td>
+              <td>20%</td>
+              <td>1,600</td>
+              <td>400</td>
+            </tr>
+            <tr>
+              <td>5 (Alto)</td>
+              <td>&gt; $60,000</td>
+              <td>10%</td>
+              <td>800</td>
+              <td>200</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Basado en el ejemplo de Menon (2020). $N = 10,000$, asignación proporcional 80/20.</p>
+      </div>
+
+      <div class="tip-box"
+        style="background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%); border: 1px solid rgba(1, 40, 32, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+        <strong>Conexión con Lohr (Secciones 4.4–4.5):</strong> Este procedimiento es exactamente la
+        <strong>asignación proporcional</strong> que estudiamos en la Sección 4.4: $n_h = n \times N_h / N$. La
+        creación de los rangos de ingreso corresponde a la <strong>definición de estratos</strong> (Sección 4.5),
+        usando un enfoque similar al <strong>método de cuantiles</strong>.
+      </div>
+
+      <h3>Implementación en Python con Scikit-learn</h3>
+
+      <p>La librería <code>scikit-learn</code> facilita la implementación del muestreo estratificado en pipelines de
+        ML mediante dos herramientas principales:</p>
+
+      <h4>1. Train/Test Split Estratificado</h4>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split, StratifiedKFold
+
+# Simular un dataset con distribución sesgada de ingresos
+np.random.seed(42)
+n_samples = 10000
+
+# Generar ingresos con distribución lognormal (sesgada a la derecha)
+ingresos = np.random.lognormal(mean=10.5, sigma=0.5, size=n_samples)
+
+# Crear variable objetivo (precio de vivienda correlacionado con ingreso)
+precios = 50000 + 3.5 * ingresos + np.random.normal(0, 20000, n_samples)
+
+# Crear estratos de ingreso (como sugiere Menon, 2020)
+df = pd.DataFrame({'ingreso_mediano': ingresos, 'precio_vivienda': precios})
+df['estrato_ingreso'] = pd.cut(
+    df['ingreso_mediano'],
+    bins=[0, 15000, 30000, 45000, 60000, np.inf],
+    labels=['Bajo', 'Medio-Bajo', 'Medio', 'Medio-Alto', 'Alto']
+)
+
+print("Distribución original de estratos:")
+print(df['estrato_ingreso'].value_counts(normalize=True).sort_index())
+print()
+
+# ============================================================
+# MÉTODO 1: Split aleatorio simple (puede ser desbalanceado)
+# ============================================================
+X = df[['ingreso_mediano']]
+y = df['precio_vivienda']
+
+X_train_random, X_test_random, y_train_r, y_test_r = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# ============================================================
+# MÉTODO 2: Split estratificado (preserva proporciones)
+# ============================================================
+X_train_strat, X_test_strat, y_train_s, y_test_s = train_test_split(
+    X, y, test_size=0.2, random_state=42,
+    stratify=df['estrato_ingreso']  # <-- Clave: parámetro stratify
+)
+
+# Comparar distribuciones
+print("=" * 60)
+print("COMPARACIÓN DE DISTRIBUCIONES EN TEST SET")
+print("=" * 60)
+
+# Función auxiliar para obtener distribución de estratos
+def get_strata_dist(indices):
+    return df.loc[indices, 'estrato_ingreso'].value_counts(
+        normalize=True
+    ).sort_index()
+
+comparacion = pd.DataFrame({
+    'Original': df['estrato_ingreso'].value_counts(normalize=True).sort_index(),
+    'Random Split': get_strata_dist(X_test_random.index),
+    'Stratified Split': get_strata_dist(X_test_strat.index)
+})
+
+print(comparacion.round(4))
+print()
+
+# Calcular desviación máxima respecto al original
+dev_random = (comparacion['Random Split'] - comparacion['Original']).abs().max()
+dev_strat = (comparacion['Stratified Split'] - comparacion['Original']).abs().max()
+
+print(f"Desviación máxima (Random):     {dev_random:.4f} ({dev_random*100:.2f}%)")
+print(f"Desviación máxima (Stratified): {dev_strat:.4f} ({dev_strat*100:.2f}%)")
+print(f"\nEl split estratificado reduce la desviación en {(1-dev_strat/dev_random)*100:.1f}%")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          Resultados del Split Estratificado</div>
+        <p>El parámetro <code>stratify</code> en <code>train_test_split()</code> implementa internamente la
+          <strong>asignación proporcional</strong> (Lohr, Sección 4.4): cada estrato contribuye al test set con la misma
+          proporción que tiene en el dataset original. La desviación máxima respecto a la distribución original es
+          prácticamente <strong>cero</strong> con el split estratificado, mientras que el split aleatorio puede
+          presentar desviaciones de hasta 2-3%.</p>
+      </div>
+
+      <h4>2. Validación Cruzada Estratificada (StratifiedKFold)</h4>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-block-title">Python</span>
+          <div class="code-actions">
+            <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+              <i class="fas fa-copy" aria-hidden="true"></i>
+              <span>Copiar</span>
+            </button>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">
+              <span>Mostrar/Ocultar</span>
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <pre class="collapsed"><code class="language-python">from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import LabelEncoder
+import numpy as np
+import pandas as pd
+
+# Continuación del ejemplo anterior...
+# Usar StratifiedKFold para validación cruzada
+# (requiere variable de estratificación categórica)
+
+le = LabelEncoder()
+estrato_encoded = le.fit_transform(df['estrato_ingreso'])
+
+# Crear splits estratificados (5-fold)
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+model = LinearRegression()
+X_full = df[['ingreso_mediano']].values
+y_full = df['precio_vivienda'].values
+
+print("VALIDACIÓN CRUZADA ESTRATIFICADA (5-Fold)")
+print("=" * 55)
+
+scores = []
+for fold, (train_idx, test_idx) in enumerate(skf.split(X_full, estrato_encoded), 1):
+    # Verificar distribución de estratos en cada fold
+    dist_train = pd.Series(estrato_encoded[train_idx]).value_counts(normalize=True)
+    dist_test = pd.Series(estrato_encoded[test_idx]).value_counts(normalize=True)
+    
+    # Entrenar y evaluar
+    model.fit(X_full[train_idx], y_full[train_idx])
+    score = model.score(X_full[test_idx], y_full[test_idx])
+    scores.append(score)
+    
+    # Desviación de proporciones
+    original_dist = pd.Series(estrato_encoded).value_counts(normalize=True)
+    max_dev = (dist_test - original_dist).abs().max()
+    
+    print(f"Fold {fold}: R² = {score:.4f} | Desv. máx. estratos: {max_dev:.4f}")
+
+print(f"\nR² promedio: {np.mean(scores):.4f} ± {np.std(scores):.4f}")
+print(f"\nCada fold mantiene la distribución de estratos del dataset original.")
+print(f"Esto garantiza que la evaluación sea representativa (Lohr, Sección 4.1).")</code></pre>
+      </div>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          ¿Cuándo usar StratifiedKFold?</div>
+        <p><code>StratifiedKFold</code> es esencial cuando:</p>
+        <ul>
+          <li><strong>Clases desbalanceadas:</strong> En clasificación binaria con 95% clase 0 y 5% clase 1, un fold
+            aleatorio podría no contener ejemplos de la clase minoritaria.</li>
+          <li><strong>Distribuciones sesgadas:</strong> Como en el ejemplo de ingresos, donde los valores extremos son
+            raros pero importantes para la evaluación del modelo.</li>
+          <li><strong>Datasets pequeños:</strong> Con pocos datos, la variabilidad aleatoria en los splits puede ser
+            grande; la estratificación la controla.</li>
+        </ul>
+      </div>
+
+      <h3>Ventajas y Desventajas en el Contexto de ML</h3>
+
+      <p>Basado en Menon (2020) y los principios teóricos de Lohr (Cap. 4):</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50%;">✅ Ventajas</th>
+            <th style="width:50%;">⚠️ Desventajas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Refleja con precisión la distribución de la población en train y test</td>
+            <td>Requiere conocer de antemano la variable de estratificación</td>
+          </tr>
+          <tr>
+            <td>Garantiza representación de <strong>todos los subgrupos</strong>, incluyendo minoritarios</td>
+            <td>Puede ser difícil cuando las clases se superponen o son ambiguas</td>
+          </tr>
+          <tr>
+            <td>Produce métricas de evaluación más <strong>confiables y estables</strong></td>
+            <td>Con demasiados estratos pequeños, la complejidad aumenta sin ganancia</td>
+          </tr>
+          <tr>
+            <td>Reduce la varianza de las estimaciones de error del modelo (menor $V(\hat{\theta})$, Lohr Ec. 4.4)</td>
+            <td>No es aplicable directamente a problemas de regresión sin discretizar la variable objetivo</td>
+          </tr>
+          <tr>
+            <td>Mejora la <strong>generalización</strong> del modelo al exponerlo a toda la variabilidad de la
+              población</td>
+            <td>En datasets muy grandes y balanceados, la diferencia con split aleatorio es mínima</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Conexión Integral con la Teoría de Lohr</h3>
+
+      <div class="usta-card">
+        <div class="usta-card-header"
+          style="background: linear-gradient(90deg, #012820 0%, #FF6600 100%); color: white; padding: 0.75rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 16px 16px 0 0; font-weight: 600;">
+          🔗 De la Teoría Estadística al Machine Learning</div>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Concepto en Lohr (Cap. 4)</th>
+              <th scope="col">Equivalente en ML</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Población $N$ dividida en $H$ estratos</td>
+              <td>Dataset total dividido por clases/categorías de la variable objetivo</td>
+            </tr>
+            <tr>
+              <td>Muestra de tamaño $n$ con $n_h$ por estrato</td>
+              <td>Test set con representación proporcional de cada clase</td>
+            </tr>
+            <tr>
+              <td>Asignación proporcional ($n_h/N_h = n/N$)</td>
+              <td><code>train_test_split(stratify=y)</code></td>
+            </tr>
+            <tr>
+              <td>Varianza del estimador $V(\hat{t}_{str})$</td>
+              <td>Varianza de las métricas de evaluación (accuracy, F1, etc.)</td>
+            </tr>
+            <tr>
+              <td>Efecto de diseño $deff < 1$</td>
+              <td>Métricas más estables y confiables con split estratificado</td>
+            </tr>
+            <tr>
+              <td>Postestratificación (Sección 4.7)</td>
+              <td>Ajuste de pesos de muestra (sample weighting) en modelos de ML</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <strong>Reflexión final:</strong> El muestreo estratificado no es solo una técnica de encuestas: es un
+        <strong>principio fundamental de representatividad</strong> que se aplica siempre que necesitamos que un
+        subconjunto de datos represente fielmente a una población mayor. Ya sea estimando el total de acres de granjas
+        (Ejemplo 4.1) o evaluando un modelo de predicción de precios, el objetivo es el mismo: <strong>reducir el sesgo
+          y la varianza</strong> de nuestras estimaciones.
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 10: Referencias -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias</h2>
+      </div>
+
+      <div class="references">
+        <ul style="list-style: none; padding-left: 0;">
+          <li style="margin-bottom: 1rem; padding-left: 1.5rem; text-indent: -1.5rem;">
+            <i class="fas fa-bookmark text-secondary mr-2" aria-hidden="true"></i>
+            Lohr, S. L. (2021). <em>Sampling: Design and Analysis</em> (3rd ed.). CRC Press.
+          </li>
+          <li style="margin-bottom: 1rem; padding-left: 1.5rem; text-indent: -1.5rem;">
+            <i class="fas fa-bookmark text-secondary mr-2" aria-hidden="true"></i>
+            Cochran, W. G. (1977). <em>Sampling Techniques</em> (3rd ed.). Wiley.
+          </li>
+          <li style="margin-bottom: 1rem; padding-left: 1.5rem; text-indent: -1.5rem;">
+            <i class="fas fa-bookmark text-secondary mr-2" aria-hidden="true"></i>
+            Menon, S. (2020). <em>Stratified Sampling in Machine Learning</em>. Analytics Vidhya (Medium).
+            <a href="https://medium.com/analytics-vidhya/stratified-sampling-in-machine-learning-f5112b5b9cfe"
+              target="_blank" rel="noopener noreferrer"
+              style="color: #FF6600; text-decoration: underline;">Enlace al artículo</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // Configuration and Data
+    const courseData = {
+      title: "Muestreo Estratificado",
+      modules: [
+        { id: 1, title: "4.1 ¿Qué es el Muestreo Estratificado?", shortTitle: "4.1 Introducción", duration: "15 min" },
+        { id: 2, title: "4.2 Teoría del Muestreo Estratificado", shortTitle: "4.2 Teoría", duration: "20 min" },
+        { id: 3, title: "4.3 Pesos de Muestreo", shortTitle: "4.3 Pesos", duration: "15 min" },
+        { id: 4, title: "4.4 Asignación de Observaciones", shortTitle: "4.4 Asignación", duration: "25 min" },
+        { id: 5, title: "4.5 Definición de Estratos", shortTitle: "4.5 Estratos", duration: "15 min" },
+        { id: 6, title: "4.6 Un Modelo para el Muestreo Estratificado", shortTitle: "4.6 Modelo", duration: "20 min" },
+        { id: 7, title: "4.7 Postestratificación", shortTitle: "4.7 Postestratificación", duration: "20 min" },
+        { id: 8, title: "Ejercicios de Autoevaluación", shortTitle: "Ejercicios", duration: "30 min" },
+        { id: 9, title: "Aplicación en Machine Learning", shortTitle: "ML Aplicado", duration: "25 min" },
+        { id: 10, title: "Referencias", shortTitle: "Referencias", duration: "5 min" }
+      ]
+    };
+
+    // State Management
+    let currentModuleId = 1;
+    let completedModules = new Set();
+
+    // DOM Elements
+    const mainContent = document.getElementById('content-area');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const moduleNav = document.getElementById('module-nav');
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+    // Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNavigation();
+      loadModule(1);
+      setupEventListeners();
+    });
+
+    // Render Sidebar Navigation
+    function renderNavigation() {
+      moduleNav.innerHTML = courseData.modules.map(module => `
+                <button type="button" class="nav-item ${module.id === currentModuleId ? 'active' : ''}"
+                     onclick="loadModule(${module.id})"${module.id === currentModuleId ? ' aria-current="page"' : ''}>
+                    ${module.title}
+                    ${completedModules.has(module.id) ? '<i class="fas fa-check-circle ml-auto text-green-400" aria-hidden="true"></i>' : ''}
+                </button>
+            `).join('');
+    }
+
+    // Load Module Content
+    function loadModule(id) {
+      currentModuleId = id;
+
+      // Mark as completed
+      if (!completedModules.has(id)) {
+        completedModules.add(id);
+      }
+
+      // Update UI
+      renderNavigation();
+
+      // Load Content
+      const template = document.getElementById(`module-${id}`);
+      if (template) {
+        mainContent.innerHTML = '';
+        mainContent.appendChild(template.content.cloneNode(true));
+
+        // Initialize features for new content
+        wrapCodeBlocks();
+        renderMathInElement(mainContent, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+          ]
+        });
+
+        // Add navigation buttons
+        addNavigationButtons();
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function addNavigationButtons() {
+      const navContainer = document.createElement('div');
+      navContainer.className = 'flex justify-between mt-8 pt-6 border-t border-gray-100';
+
+      const prevBtn = document.createElement('button');
+      if (currentModuleId > 1) {
+        prevBtn.className = 'usta-button bg-gray-500 hover:bg-gray-600';
+        prevBtn.innerHTML = '<i class="fas fa-arrow-left mr-2" aria-hidden="true"></i> Anterior';
+        prevBtn.onclick = () => loadModule(currentModuleId - 1);
+      } else {
+        prevBtn.style.visibility = 'hidden';
+      }
+
+      const nextBtn = document.createElement('button');
+      if (currentModuleId < courseData.modules.length) {
+        nextBtn.className = 'usta-button';
+        nextBtn.innerHTML = 'Siguiente <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>';
+        nextBtn.onclick = () => loadModule(currentModuleId + 1);
+      } else {
+        nextBtn.className = 'usta-button bg-green-600 hover:bg-green-700';
+        nextBtn.innerHTML = 'Finalizar <i class="fas fa-check mr-2" aria-hidden="true"></i>';
+        nextBtn.onclick = () => alert('¡Felicidades! Has completado el capítulo.');
+      }
+
+      navContainer.appendChild(prevBtn);
+      navContainer.appendChild(nextBtn);
+      mainContent.appendChild(navContainer);
+    }
+
+    // Setup Event Listeners
+    function setupEventListeners() {
+      // Sidebar Toggle
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-collapsed');
+        const icon = sidebarToggle.querySelector('i');
+        if (sidebar.classList.contains('sidebar-collapsed')) {
+          icon.classList.remove('fa-chevron-left');
+          icon.classList.add('fa-chevron-right');
+          sidebarToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          icon.classList.remove('fa-chevron-right');
+          icon.classList.add('fa-chevron-left');
+          sidebarToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Scroll to Top
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add('visible');
+        } else {
+          scrollToTopBtn.classList.remove('visible');
+        }
+      });
+
+      scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Wrap code blocks with toggle functionality
+    function wrapCodeBlocks() {
+      const pres = mainContent.querySelectorAll('pre');
+      pres.forEach(pre => {
+        if (!pre.parentElement.classList.contains('code-block-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-block-wrapper';
+
+          const header = document.createElement('div');
+          header.className = 'code-block-header';
+          header.innerHTML = `
+            <span class="code-block-title">Código</span>
+            <div class="code-actions">
+              <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+                <i class="fas fa-copy" aria-hidden="true"></i>
+                <span>Copiar</span>
+              </button>
+              <button class="code-toggle-btn" onclick="toggleCode(this)">
+                <span>Mostrar/Ocultar</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+              </button>
+            </div>
+          `;
+
+          // Add language-python class to code element
+          const code = pre.querySelector('code');
+          if (code && !code.classList.contains('language-python')) {
+            code.classList.add('language-python');
+          }
+
+          pre.parentNode.insertBefore(wrapper, pre);
+          wrapper.appendChild(header);
+          wrapper.appendChild(pre);
+          pre.classList.add('collapsed');
+        }
+      });
+      // Apply syntax highlighting
+      if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+      }
+    }
+
+    // Toggle code visibility
+    function toggleCode(button) {
+      const pre = button.closest('.code-block-wrapper').querySelector('pre');
+      const icon = button.querySelector('i');
+
+      if (pre.classList.contains('collapsed')) {
+        pre.classList.remove('collapsed');
+        pre.classList.add('expanded');
+        button.classList.add('expanded');
+      } else {
+        pre.classList.add('collapsed');
+        pre.classList.remove('expanded');
+        button.classList.remove('expanded');
+      }
+    }
+
+    // Copy code to clipboard
+    function copyCode(button) {
+      const pre = button.closest('.code-block-wrapper').querySelector('pre');
+      const code = pre.querySelector('code');
+      const codeText = code.textContent;
+
+      navigator.clipboard.writeText(codeText).then(() => {
+        // Show feedback
+        const originalText = button.innerHTML;
+        button.classList.add('copied');
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>Copiado</span>';
+
+        // Reset after 2 seconds
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Error al copiar: ', err);
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        button.classList.add('copied');
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>Copiado</span>';
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = '<i class="fas fa-copy" aria-hidden="true"></i><span>Copiar</span>';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+
+</html>

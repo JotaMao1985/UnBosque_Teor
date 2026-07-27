@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Material de estudio autónomo sobre Muestreo Aleatorio Simple: Capítulo 2, basado en Sharon L. Lohr.">
+  <meta name="author" content="Javier Mauricio Sierra">
+  <meta name="keywords" content="Muestreo, estadística, Sharon Lohr, MAS, intervalo de confianza, diseño muestral">
+  <title>Muestreo Aleatorio Simple - Capítulo 2</title>
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- External Resources -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for LaTeX rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Chart.js for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            primary: '#012820',
+            secondary: '#FF6600',
+            navy: '#012820',
+            gold: '#90FF00',
+            bg: '#F8FAFC',
+            surface: '#FFFFFF',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Base fallback styles */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    /* USTA Gradient Background */
+    .usta-gradient {
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+    }
+
+    .usta-gradient-hover:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+    }
+
+    /* USTA Navy Header */
+    .usta-header {
+      background: linear-gradient(180deg, #012820 0%, #001F18 100%);
+    }
+
+    /* USTA Card Style */
+    .usta-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .usta-card:hover {
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .usta-button {
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+      color: white;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .usta-button:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(1, 40, 32, 0.35);
+    }
+
+    /* Sidebar Container */
+    .sidebar-container {
+      display: none;
+      width: 280px;
+      flex-shrink: 0;
+      order: 2;
+    }
+
+    @media (min-width: 768px) {
+      .sidebar-container {
+        display: block;
+        order: 1;
+      }
+    }
+
+    .sidebar-inner {
+      position: sticky;
+      top: 9rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      max-height: calc(100vh - 12rem);
+      overflow-y: auto;
+    }
+
+    #sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    /* Sidebar Header */
+    .sidebar-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f3f4f6;
+    }
+
+    /* Nav Items */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      color: #4B5563;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-item::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d1d5db;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #f3f4f6;
+      color: #012820;
+    }
+
+    .nav-item:hover::before {
+      background: #012820;
+      transform: scale(1.2);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #012820 0%, #FF6600 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(1, 40, 32, 0.3);
+    }
+
+    .nav-item.active::before {
+      background: white;
+    }
+
+    /* Subsection Links */
+    .nav-subsection {
+      display: block;
+      padding: 0.6rem 0.75rem 0.6rem 1rem;
+      font-size: 0.85rem;
+      color: #4b5563;
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      margin-bottom: 0.15rem;
+      transition: all 0.2s ease;
+      line-height: 1.4;
+      border-radius: 0 0.25rem 0.25rem 0;
+    }
+
+    .nav-subsection:hover {
+      color: #012820;
+      border-left-color: #012820;
+      background: linear-gradient(90deg, rgba(1, 40, 32, 0.05) 0%, transparent 100%);
+      padding-left: 1.25rem;
+    }
+
+    .nav-subsection::before {
+      content: '→';
+      margin-right: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 0.75rem;
+    }
+
+    .nav-subsection:hover::before {
+      opacity: 1;
+    }
+
+    .subsection-container {
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Fallback para asegurar visibilidad del sidebar */
+    @media (min-width: 768px) {
+      #sidebar {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    }
+
+    /* Scroll to top button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+      color: white;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+      transition: all 0.3s ease;
+      z-index: 50;
+      border: none;
+    }
+
+    .scroll-to-top.visible {
+      display: flex;
+    }
+
+    .scroll-to-top:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+    }
+
+    /* Tip box USTA style */
+    .tip-box {
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%);
+      border: 1px solid rgba(1, 40, 32, 0.2);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    /* Focus visible styles for keyboard navigation - subtle */
+    *:focus-visible {
+      outline: 2px solid rgba(1, 40, 32, 0.5);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid #012820;
+      outline-offset: 3px;
+    }
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: white;
+      color: #012820;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      text-decoration: none;
+      font-weight: 500;
+      border: 2px solid #012820;
+      transition: top 0.2s;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+      outline: none;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .sr-only:focus {
+      position: static;
+      width: auto;
+      height: auto;
+      padding: inherit;
+      margin: inherit;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+    }
+
+    /* Print styles */
+    @media print {
+
+      header,
+      footer,
+      #sidebar,
+      #sidebarToggle,
+      #scrollToTopBtn,
+      #tip-pedagogico {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+
+      .usta-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background: #f5f5f5;
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Sidebar Toggle classes */
+    .sidebar-collapsed {
+      width: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-collapsed+main {
+      width: 100% !important;
+      flex-grow: 1;
+    }
+
+    #sidebarToggle {
+      transition: all 0.3s ease;
+    }
+
+    /* Component Mappings - CSS Puro (sin @apply) */
+    article {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      padding: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      article {
+        padding: 3rem;
+      }
+    }
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 2.25rem;
+      }
+    }
+
+    /* H2 section titles styling */
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #012820;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(255, 102, 0, 0.2);
+      margin-top: 2rem;
+    }
+
+    h2:first-child {
+      margin-top: 0;
+    }
+
+    /* H3 subtitles styling */
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #012820;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 24px;
+      background: #FF6600;
+      border-radius: 4px;
+    }
+
+    /* H4 subtitles styling */
+    h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #012820;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%);
+      border-left: 3px solid #FF6600;
+      border-radius: 0.375rem;
+    }
+
+    /* Override h4 in definition, note, warning boxes */
+    .definition h4,
+    .note h4,
+    .warning h4 {
+      background: none;
+      border-left: none;
+      padding: 0;
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.625;
+      color: #374151;
+      text-align: justify;
+    }
+
+    ul,
+    ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    ul li,
+    ol li {
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    ul {
+      list-style-type: disc;
+    }
+
+    ol {
+      list-style-type: decimal;
+    }
+
+    /* Custom Box Components - CSS Puro */
+    .definition {
+      background-color: #f0fdf4;
+      border-left: 4px solid #012820;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .definition h4 {
+      color: #012820;
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    .note {
+      background-color: #fff7ed;
+      border-left: 4px solid #FF6600;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .note strong {
+      color: #c2410c;
+    }
+
+    .warning {
+      background-color: #fff1f2;
+      border-left: 4px solid #FF4500;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .warning strong {
+      color: #9f1239;
+    }
+
+    .formula {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-family: 'Fira Code', monospace;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 768px) {
+      .formula {
+        padding: 1.5rem;
+      }
+    }
+
+    .diagram {
+      background-color: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .diagram h4 {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 1.5rem;
+    }
+
+    .diagram svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .exercise {
+      background-color: #eff6ff;
+      border: 1px solid #dbeafe;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .exercise h4 {
+      color: #1e40af;
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    /* Code Blocks - CSS Puro */
+    /* Code Block Wrapper with Toggle */
+    .code-block-wrapper {
+      position: relative;
+      margin-bottom: 2.5rem;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #334155;
+      gap: 0.5rem;
+    }
+
+    .code-block-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .code-toggle-btn,
+    .code-copy-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #cbd5e1;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .code-toggle-btn:hover,
+    .code-copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .code-copy-btn.copied {
+      background: rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+    }
+
+    .code-toggle-btn i,
+    .code-copy-btn i {
+      font-size: 0.625rem;
+      transition: transform 0.2s;
+    }
+
+    .code-toggle-btn.expanded i {
+      transform: rotate(180deg);
+    }
+
+    pre {
+      background-color: #1e293b !important;
+      color: #f3f4f6 !important;
+      padding: 1.5rem !important;
+      border-radius: 0;
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Fira Code', monospace !important;
+      font-size: 0.875rem;
+      line-height: 1.625;
+      max-height: 300px;
+      overflow-y: auto;
+      transition: max-height 0.3s ease;
+    }
+
+    pre.expanded {
+      max-height: 2000px;
+    }
+
+    pre.collapsed {
+      max-height: 150px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    pre.collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, #1e293b);
+      pointer-events: none;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    p code,
+    li code {
+      background-color: #f3f4f6;
+      color: #FF6600;
+      padding: 0.25rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid #e5e7eb;
+    }
+
+    pre code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+      border: none;
+    }
+
+    /* Tables - CSS Puro */
+    table {
+      width: 100%;
+      margin-bottom: 2rem;
+      border-collapse: collapse;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    table th {
+      background-color: #012820;
+      color: white;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    table td {
+      padding: 1rem;
+      border-bottom: 1px solid #f3f4f6;
+      color: #374151;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    table tr:hover {
+      background-color: #fff7ed;
+    }
+
+    /* Session Header - CSS Puro */
+    .session-header {
+      background: linear-gradient(to right, #012820, #FF6600);
+      color: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .session-header h2 {
+      color: white;
+      border: none;
+      margin: 0;
+      font-size: 1.875rem;
+      text-shadow: none;
+      padding: 0;
+    }
+
+    .references {
+      background-color: #f3f4f6;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      margin-top: 3rem;
+    }
+
+    .references h3::before {
+      display: none;
+    }
+
+    /* SVG Styles */
+    svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    svg text {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Mobile typography improvements */
+    @media (max-width: 640px) {
+      html {
+        font-size: 14px;
+      }
+
+      .session-header h2 {
+        font-size: 1.25rem !important;
+      }
+
+      section h2 {
+        font-size: 1.375rem;
+      }
+
+      section h3 {
+        font-size: 1.125rem;
+      }
+
+      pre {
+        font-size: 0.75rem;
+        padding: 1rem;
+        max-height: 250px;
+      }
+
+      pre.collapsed {
+        max-height: 120px;
+      }
+
+      .code-block-header {
+        padding: 0.5rem 0.75rem;
+      }
+
+      .code-toggle-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .usta-card {
+        padding: 1.5rem;
+      }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      .usta-card {
+        border: 1px solid #000;
+      }
+
+      .definition,
+      .note,
+      .warning {
+        border-left-width: 4px;
+      }
+    }
+
+    /* Blockquote styling */
+    blockquote {
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.05) 0%, rgba(255, 102, 0, 0.05) 100%);
+      border-left: 4px solid #012820;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      border-radius: 0.5rem;
+      font-style: italic;
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    details {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #012820;
+      padding: 0.5rem;
+    }
+
+    summary:hover {
+      color: #FF6600;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #cbd5e1;
+      margin: 2rem 0;
+    }
+  
+    /* --- Mejoras de accesibilidad y responsive (auditoría) --- */
+    @media (max-width: 768px) {
+      table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
+    .definition, .note, .warning, .exercise { overflow-x: auto; }
+    .nav-item { border: none; background-color: transparent; font-family: inherit; -webkit-appearance: none; appearance: none; }
+    p code, li code { color: #c2410c; }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">
+    Saltar al contenido principal
+  </a>
+
+  <!-- Header & Pipeline Map -->
+  <header class="usta-header sticky top-0 z-50 shadow-lg" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center gap-4">
+          <div class="usta-gradient p-3 rounded-xl shadow-md">
+            <i class="fas fa-chart-pie text-xl text-white" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-white leading-tight tracking-tight">Muestreo Aleatorio Simple</h1>
+            <p class="text-xs text-white/70 font-medium tracking-wide">CAPÍTULO II • MUESTREO ESTADÍSTICO • UNBOSQUE
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating Sidebar Toggle Button -->
+  <button id="sidebarToggle"
+    class="fixed left-4 top-1/2 -translate-y-1/2 z-50 bg-primary text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-secondary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+    aria-label="Alternar barra lateral de navegación" aria-expanded="true" aria-controls="sidebar">
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+
+  <div class="flex-grow flex flex-col md:flex-row max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 gap-8 relative">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar-container" id="sidebar" role="complementary" aria-label="Navegación de módulos">
+      <div class="sidebar-inner">
+        <div class="sidebar-title">
+          <i class="fas fa-list-ul mr-2" aria-hidden="true"></i>Contenido
+        </div>
+        <nav id="module-nav" role="navigation" aria-label="Menú de módulos">
+          <!-- Nav items injected via JS -->
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content"
+      class="flex-grow order-1 md:order-2 min-w-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300"
+      role="main" tabindex="-1">
+      <div id="content-area" class="p-6 md:p-10 module-content">
+        <!-- Content injected via JS -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="usta-header mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fas fa-book-open" aria-hidden="true"></i> Referencias Bibliográficas
+      </h3>
+      <ul class="space-y-3 text-white/90 text-sm">
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Lohr, S.L. (2010). <em class="text-gold">Sampling: Design and Analysis</em> (2nd ed.). Boston:
+            Brooks/Cole.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Cochran, W.G. (1977). <em class="text-gold">Sampling Techniques</em> (3rd ed.). New York: John Wiley &
+            Sons.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Kish, L. (1965). <em class="text-gold">Survey Sampling</em>. New York: John Wiley & Sons.</span>
+        </li>
+      </ul>
+      <div class="mt-6 pt-6 border-t border-white/20 text-center">
+        <p class="text-white font-medium">Diseñado por <span class="text-gold">Javier Mauricio Sierra</span></p>
+        <p class="text-xs mt-1 text-white/60">Muestreo Estadístico • Capítulo 2 • UnBosque 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- Module 1: Introducción -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">2.1 Tipos de Muestras
+          Probabilísticas</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender los diferentes tipos de diseños de muestreo
+              probabilístico y sus características principales.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        El muestreo probabilístico es aquel donde cada unidad de la población tiene una probabilidad conocida y no
+        nula de ser seleccionada. Se distinguen tres tipos principales:
+      </p>
+
+      <div class="definition">
+        <h4>Definiciones Fundamentales</h4>
+        <ul style="margin-bottom: 0;">
+          <li>
+            <strong>Muestreo Aleatorio Simple (MAS):</strong> Es el diseño más básico donde cada subconjunto posible de
+            tamaño \(n\) tiene la misma probabilidad de ser seleccionado.
+          </li>
+          <li>
+            <strong>Muestreo Estratificado:</strong> La población se divide en subgrupos homogéneos (estratos) y se
+            toma una muestra aleatoria independiente de cada estrato.
+          </li>
+          <li>
+            <strong>Muestreo por Conglomerados:</strong> La unidad de muestreo es un grupo (conglomerado) de elementos
+            poblacionales. Se selecciona una muestra de conglomerados y se observan todos o algunos elementos dentro de
+            ellos.
+          </li>
+        </ul>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Tipo de Diseño</th>
+            <th scope="col">Unidad de Muestreo</th>
+            <th scope="col">Ventaja Principal</th>
+            <th scope="col">Desventaja Principal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Aleatorio Simple</td>
+            <td>Elemento individual</td>
+            <td>Simplicidad teórica y de análisis</td>
+            <td>Requiere marco muestral completo; puede ser costoso si la población está geográficamente dispersa</td>
+          </tr>
+          <tr>
+            <td>Estratificado</td>
+            <td>Elemento individual dentro de estrato</td>
+            <td>Mayor precisión si estratos son homogéneos</td>
+            <td>Requiere información auxiliar para estratificar</td>
+          </tr>
+          <tr>
+            <td>Conglomerados</td>
+            <td>Grupo de elementos</td>
+            <td>Menor costo operativo; no requiere lista de elementos</td>
+            <td>Menor precisión debido a correlación intraclase</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </template>
+
+  <!-- Module 2: Marco para el Muestreo -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">2.2 Marco para el Muestreo
+          Probabilístico</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Definir formalmente la notación y conceptos básicos del
+              muestreo probabilístico.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Para formalizar el proceso de muestreo, definimos la población objetivo y el conjunto de unidades:</p>
+
+      <div class="formula">
+        <p>Sea \(U = \{1, 2, ..., N \}\) el conjunto de índices de la población finita de tamaño \(N\).</p>
+        <p>Una muestra \(S\) es un subconjunto de \(U\) (\(S \subset U\)) seleccionado según un diseño de muestreo.</p>
+      </div>
+
+      <p>
+        La probabilidad de que una unidad específica \(i\) sea incluida en la muestra se denomina
+        <strong>probabilidad de inclusión</strong> de primer orden, denotada por \(\pi_{i}\):
+      </p>
+
+      \[\pi_{i} = P(i \in S) = \sum_{S \ni i} P(S)\]
+
+      <p>Donde \(P(S)\) es la probabilidad de seleccionar la muestra \(S\).</p>
+    </div>
+  </template>
+
+  <!-- Module 3: MAS -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">2.3 Muestreo Aleatorio Simple
+          (MAS)</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender en profundidad el Muestreo Aleatorio Simple,
+              sus propiedades, estimadores y aplicaciones prácticas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        El Muestreo Aleatorio Simple constituye el diseño fundamental de la inferencia estadística sobre poblaciones
+        finitas. Su importancia radica tanto en su simplicidad conceptual como en su rol como punto de referencia para
+        evaluar la eficiencia de diseños más complejos.
+      </p>
+
+      <div class="definition">
+        <h4>Notación Fundamental:</h4>
+        <ul style="margin-bottom: 0;">
+          <li>\(N\): Tamaño de la población finita</li>
+          <li>\(n\): Tamaño de la muestra (\(1 \leq n \leq N\))</li>
+          <li>\(y_i\): Valor de la característica de interés para la unidad \(i\) (\(i = 1, 2, ..., N\))</li>
+          <li>\(\bar{y}_U\): Media poblacional (parámetro objetivo)</li>
+          <li>\(\bar{y}\): Media muestral (estimador de \(\bar{y}_U\))</li>
+          <li>\(t\): Total poblacional = \(\sum_{i=1}^N y_i\)</li>
+          <li>\(\hat{t}\): Estimador del total = \(N\bar{y}\)</li>
+          <li>\(S^{2}\): Varianza poblacional (parámetro)</li>
+          <li>\(s^{2}\): Varianza muestral (estimador de \(S^2\))</li>
+          <li>\(\text{fpc}\): Factor de corrección de población finita = \(1 - n/N\)</li>
+          <li>\(f = n/N\): Fracción de muestreo</li>
+        </ul>
+      </div>
+
+      <h3>2.3.1 Definición Formal del MAS</h3>
+
+      <div class="definition">
+        <h4>Definición 2.1: MAS Sin Reemplazo (SRS)</h4>
+        <p>
+          Un muestreo probabilístico de tamaño \(n\) de una población de tamaño \(N\) es un <strong>Muestreo Aleatorio
+            Simple sin reemplazo</strong> si cada uno de los \(\binom{N}{n}\) subconjuntos posibles de \(n\) unidades
+          tiene la misma probabilidad de ser seleccionado como muestra.
+        </p>
+        <p>Formalmente, para cualquier muestra \(S \subset U\) con \(|S| = n\):</p>
+        \[P(S) = \frac{1}{\binom{N}{n}} = \frac{n!(N-n)!}{N!}\]
+      </div>
+
+      <div class="definition">
+        <h4>Definición 2.2: MAS Con Reemplazo (SRSWR)</h4>
+        <p>
+          Un muestreo de tamaño \(n\) es con reemplazo si en cada extracción, todas las \(N\) unidades tienen la misma
+          probabilidad \(1/N\) de ser seleccionadas, independientemente de las extracciones anteriores. Una misma unidad
+          puede aparecer múltiples veces en la muestra.
+        </p>
+        <p>El número total de muestras ordenadas posibles es \(N^n\).</p>
+      </div>
+
+      <h3>2.3.2 Probabilidades de Inclusión</h3>
+
+      <p>
+        Una propiedad fundamental del MAS es que cada unidad de la población tiene la misma probabilidad de ser incluida
+        en la muestra.
+      </p>
+
+      <div class="note">
+        <h4>Proposición 2.1: Probabilidad de Inclusión en MAS</h4>
+        <p>En un MAS sin reemplazo, la probabilidad de que la unidad \(i\) sea incluida en la muestra es:</p>
+        \[\pi_i = P(i \in S) = \frac{n}{N}\]
+        <p>para toda unidad \(i = 1, 2, ..., N\).</p>
+      </div>
+
+      <h3>2.3.3 Parámetros Poblacionales</h3>
+
+      <div class="formula">
+        <h4>Media y Total Poblacional</h4>
+        <p>La media poblacional \(\bar{y}_U\) es el promedio aritmético de todos los valores en la población:</p>
+        \[\bar{y}_U = \frac{1}{N}\sum_{i=1}^{N} y_i\]
+        <p>El total poblacional \(t\) es la suma de todos los valores:</p>
+        \[t = \sum_{i=1}^{N} y_i = N\bar{y}_U\]
+      </div>
+
+      <div class="formula">
+        <h4>Varianza y Desviación Estándar Poblacional</h4>
+        <p>La varianza poblacional \(S^2\) mide la dispersión de los valores alrededor de la media:</p>
+        \[S^2 = \frac{1}{N-1}\sum_{i=1}^{N}(y_i - \bar{y}_U)^2\]
+        <p>La desviación estándar es: \(S = \sqrt{S^2}\)</p>
+      </div>
+
+      <h3>2.3.4 Estimadores Bajo MAS</h3>
+
+      <div class="formula">
+        <h4>Estimador de la Media</h4>
+        <p>La media muestral \(\bar{y}\) es el estimador natural e insesgado de \(\bar{y}_U\):</p>
+        \[\bar{y} = \frac{1}{n}\sum_{i \in S} y_i\]
+        <p>Este estimador es insesgado, consistente y eficiente.</p>
+      </div>
+
+      <div class="formula">
+        <h4>Estimador del Total</h4>
+        <p>El total poblacional se estima multiplicando la media muestral por \(N\):</p>
+        \[\hat{t} = N\bar{y} = \frac{N}{n}\sum_{i \in S} y_i\]
+      </div>
+
+      <h3>2.3.5 Varianza de los Estimadores</h3>
+
+      <div class="formula">
+        <h4>Varianza de la Media Muestral</h4>
+        <p>La varianza teórica del estimador \(\bar{y}\) bajo MAS sin reemplazo es:</p>
+        \[V(\bar{y}) = \frac{S^2}{n}\left(1 - \frac{n}{N}\right)\]
+        <p>El término \(\left(1 - \frac{n}{N}\right)\) es el <strong>factor de corrección de población finita
+            (fpc)</strong>.</p>
+      </div>
+
+      <div class="warning">
+        <h4>Interpretación del fpc:</h4>
+        <ul style="margin-bottom: 0;">
+          <li>Si \(n = N\) (censo): fpc = 0, por lo que \(V(\bar{y}) = 0\) (sin error de muestreo)</li>
+          <li>Si \(n/N < 0.05\): fpc \(\geq 0.95\), el efecto es despreciable (&lt; 5% de reducción)</li>
+          <li>Si \(n/N = 0.5\): fpc = 0.5, la varianza se reduce a la mitad</li>
+        </ul>
+      </div>
+
+      <h3>2.3.6 Estimación de Varianza</h3>
+
+      <div class="formula">
+        <h4>Varianza Muestral</h4>
+        <p>Como \(S^{2}\) es desconocido, se estima mediante la varianza muestral \(s^2\):</p>
+        \[s^{2} = \frac{1}{n - 1} \sum_{i \in S} ( y_{i} - \bar{y} )^{2}\]
+        <p>El divisor \(n-1\) garantiza que \(s^2\) sea un estimador insesgado de \(S^2\).</p>
+      </div>
+
+      <div class="formula">
+        <h4>Error Estándar de la Media</h4>
+        <p>El error estándar estimado de \(\bar{y}\) es:</p>
+        \[\text{SE}(\bar{y}) = \sqrt{\left(1-\frac{n}{N}\right)\frac{s^2}{n}}\]
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 4: Intervalos de Confianza -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">2.4 Intervalos de Confianza
+        </h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aprender a construir e interpretar intervalos de confianza
+              para medias y totales poblacionales.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        En una encuesta por muestreo, no es suficiente reportar únicamente la estimación puntual. Es fundamental
+        proporcionar una medida de la precisión o incertidumbre asociada a dicha estimación.
+      </p>
+
+      <div class="definition">
+        <h4>Definición 2.3: Intervalo de Confianza</h4>
+        <p>
+          Un <strong>intervalo de confianza del \(100(1-\alpha)\%\)</strong> para un parámetro poblacional \(\theta\) es
+          un procedimiento que genera un intervalo aleatorio \([\hat{\theta}_L, \hat{\theta}_U]\) tal que:
+        </p>
+        \[P(\theta \in [\hat{\theta}_L, \hat{\theta}_U]) \geq 1 - \alpha\]
+      </div>
+
+      <div class="formula">
+        <h4>Intervalo de Confianza para la Media</h4>
+        <p>Para muestras grandes, el intervalo de confianza del \(100(1-\alpha)\%\) es:</p>
+        \[\text{IC}_{1-\alpha} = \bar{y} \pm z_{\alpha/2} \cdot \text{SE}(\bar{y})\]
+        <p>donde \(z_{\alpha/2}\) es el valor crítico de la distribución normal estándar.</p>
+      </div>
+
+      <div class="warning">
+        <h4>Nota Importante:</h4>
+        <p>
+          El intervalo de confianza es aleatorio (varía de muestra a muestra), mientras que el parámetro poblacional es
+          fijo. Una vez calculado un intervalo particular, o contiene el parámetro o no lo contiene.
+        </p>
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 5: Tamaño de Muestra -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">2.5 Estimación del Tamaño de
+          Muestra</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aprender a calcular el tamaño de muestra necesario para
+              alcanzar una precisión deseada.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        La determinación del tamaño de muestra es crucial en el diseño de encuestas. Un tamaño insuficiente produce
+        estimaciones imprecisas, mientras que un tamaño excesivo desperdicia recursos.
+      </p>
+
+      <div class="formula">
+        <h4>Tamaño de Muestra para Estimar la Media</h4>
+        <p>Para un margen de error \(e\) y nivel de confianza \(1-\alpha\):</p>
+        \[n_0 = \frac{z_{\alpha/2}^2 \cdot S^2}{e^2}\]
+        <p>Con corrección por población finita:</p>
+        \[n = \frac{n_0}{1 + \frac{n_0}{N}}\]
+      </div>
+
+      <div class="formula">
+        <h4>Tamaño de Muestra para Proporciones</h4>
+        <p>Para estimar una proporción \(p\) con margen de error \(e\):</p>
+        \[n_0 = \frac{z_{\alpha/2}^2 \cdot p(1-p)}{e^2}\]
+        <p>Usualmente se toma \(p = 0.5\) para máxima varianza cuando no hay información previa.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 6: Muestreo Sistemático -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">2.6 Muestreo Sistemático</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender el muestreo sistemático como alternativa
+              práctica al MAS.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        El muestreo sistemático es un método práctico donde se selecciona un elemento inicial aleatorio y luego se elige
+        cada k-ésimo elemento de la lista.
+      </p>
+
+      <div class="definition">
+        <h4>Procedimiento del Muestreo Sistemático</h4>
+        <ol style="margin-bottom: 0;">
+          <li>Ordenar el marco muestral de \(N\) unidades</li>
+          <li>Calcular el intervalo de muestreo: \(k = N/n\)</li>
+          <li>Seleccionar aleatoriamente un número \(r\) entre 1 y \(k\)</li>
+          <li>Seleccionar las unidades en las posiciones \(r, r+k, r+2k, ..., r+(n-1)k\)</li>
+        </ol>
+      </div>
+
+      <div class="warning">
+        <h4>Precaución:</h4>
+        <p>
+          El muestreo sistemático puede producir sesgos si la lista tiene un patrón periódico que coincide con el
+          intervalo de muestreo \(k\).
+        </p>
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 7: Teoría de Aleatorización -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">2.7 Teoría de Aleatorización
+        </h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprender los fundamentos teóricos de la inferencia por
+              aleatorización.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        La teoría de aleatorización proporciona la base para la inferencia estadística en poblaciones finitas, sin
+        necesidad de asumir distribuciones poblacionales específicas.
+      </p>
+
+      <div class="note">
+        <h4>Teorema del Límite Central de Hájek (1960)</h4>
+        <p>
+          Para un MAS sin reemplazo, si \(n\), \(N\), y \(N-n\) son suficientemente grandes, entonces:
+        </p>
+        \[Z = \frac{\bar{y} - \bar{y}_U}{\sqrt{V(\bar{y})}} \sim N(0, 1)\]
+      </div>
+    </div>
+  </template>
+
+  <!-- Module 8: Ejercicios Resueltos -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios Resueltos</h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aplicar los conceptos aprendidos a la resolución de
+              problemas prácticos.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4>Ejercicio 1: Población Pequeña</h4>
+        <p>
+          Considere una población \(U = \{1, 2, 4, 4, 7, 7, 7, 8\}\) con \(N=8\). Calcule los parámetros poblacionales y
+          la varianza teórica de la media muestral para \(n=4\).
+        </p>
+        <div class="mt-4 p-4 bg-white rounded border">
+          <strong>Solución:</strong>
+          <ul class="list-disc ml-5 mt-2">
+            <li>Media poblacional: \(\bar{y}_U = 40/8 = 5.0\)</li>
+            <li>Varianza poblacional: \(S^2 = 44/7 = 6.2857\)</li>
+            <li>Varianza de la media: \(V(\bar{y}) = \frac{6.2857}{4}(1 - 4/8) = 0.7857\)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4>Ejercicio 2: Tamaño de Muestra</h4>
+        <p>
+          Calcule el tamaño de muestra necesario para estimar una proporción con margen de error 0.05 y 95% de
+          confianza, asumiendo \(N = 1000\).
+        </p>
+        <div class="mt-4 p-4 bg-white rounded border">
+          <strong>Solución:</strong>
+          <ul class="list-disc ml-5 mt-2">
+            <li>\(n_0 = \frac{1.96^2 \cdot 0.25}{0.05^2} = 384.16\)</li>
+            <li>\(n = \frac{384.16}{1 + 384.16/1000} = 278\)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // Configuration and Data
+    const courseData = {
+      title: "Muestreo Aleatorio Simple",
+      modules: [
+        { id: 1, title: "Tipos de Muestras Probabilísticas", shortTitle: "Tipos", duration: "10 min" },
+        { id: 2, title: "Marco para el Muestreo Probabilístico", shortTitle: "Marco", duration: "10 min" },
+        { id: 3, title: "Muestreo Aleatorio Simple (MAS)", shortTitle: "MAS", duration: "25 min" },
+        { id: 4, title: "Intervalos de Confianza", shortTitle: "Intervalos", duration: "15 min" },
+        { id: 5, title: "Estimación del Tamaño de Muestra", shortTitle: "Tamaño", duration: "15 min" },
+        { id: 6, title: "Muestreo Sistemático", shortTitle: "Sistemático", duration: "10 min" },
+        { id: 7, title: "Teoría de Aleatorización", shortTitle: "Teoría", duration: "15 min" },
+        { id: 8, title: "Ejercicios Resueltos", shortTitle: "Ejercicios", duration: "20 min" }
+      ]
+    };
+
+    // State Management
+    let currentModuleId = 1;
+    let completedModules = new Set();
+
+    // DOM Elements
+    const mainContent = document.getElementById('content-area');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const moduleNav = document.getElementById('module-nav');
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+    // Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNavigation();
+      loadModule(1);
+      setupEventListeners();
+    });
+
+    // Render Sidebar Navigation
+    function renderNavigation() {
+      moduleNav.innerHTML = courseData.modules.map(module => `
+                <button type="button" class="nav-item ${module.id === currentModuleId ? 'active' : ''}"
+                     onclick="loadModule(${module.id})"${module.id === currentModuleId ? ' aria-current="page"' : ''}>
+                    ${module.title}
+                    ${completedModules.has(module.id) ? '<i class="fas fa-check-circle ml-auto text-green-400" aria-hidden="true"></i>' : ''}
+                </button>
+            `).join('');
+    }
+
+    // Load Module Content
+    function loadModule(id) {
+      currentModuleId = id;
+
+      // Mark as completed
+      if (!completedModules.has(id)) {
+        completedModules.add(id);
+      }
+
+      // Update UI
+      renderNavigation();
+
+      // Load Content
+      const template = document.getElementById(`module-${id}`);
+      if (template) {
+        mainContent.innerHTML = '';
+        mainContent.appendChild(template.content.cloneNode(true));
+
+        // Initialize features for new content
+        wrapCodeBlocks();
+        renderMathInElement(mainContent, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+          ]
+        });
+
+        // Add navigation buttons
+        addNavigationButtons();
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function addNavigationButtons() {
+      const navContainer = document.createElement('div');
+      navContainer.className = 'flex justify-between mt-8 pt-6 border-t border-gray-100';
+
+      const prevBtn = document.createElement('button');
+      if (currentModuleId > 1) {
+        prevBtn.className = 'usta-button bg-gray-500 hover:bg-gray-600';
+        prevBtn.innerHTML = '<i class="fas fa-arrow-left mr-2" aria-hidden="true"></i> Anterior';
+        prevBtn.onclick = () => loadModule(currentModuleId - 1);
+      } else {
+        prevBtn.style.visibility = 'hidden';
+      }
+
+      const nextBtn = document.createElement('button');
+      if (currentModuleId < courseData.modules.length) {
+        nextBtn.className = 'usta-button';
+        nextBtn.innerHTML = 'Siguiente <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>';
+        nextBtn.onclick = () => loadModule(currentModuleId + 1);
+      } else {
+        nextBtn.className = 'usta-button bg-green-600 hover:bg-green-700';
+        nextBtn.innerHTML = 'Finalizar <i class="fas fa-check mr-2" aria-hidden="true"></i>';
+        nextBtn.onclick = () => alert('¡Felicidades! Has completado el capítulo.');
+      }
+
+      navContainer.appendChild(prevBtn);
+      navContainer.appendChild(nextBtn);
+      mainContent.appendChild(navContainer);
+    }
+
+    // Setup Event Listeners
+    function setupEventListeners() {
+      // Sidebar Toggle
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-collapsed');
+        const icon = sidebarToggle.querySelector('i');
+        if (sidebar.classList.contains('sidebar-collapsed')) {
+          icon.classList.remove('fa-chevron-left');
+          icon.classList.add('fa-chevron-right');
+          sidebarToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          icon.classList.remove('fa-chevron-right');
+          icon.classList.add('fa-chevron-left');
+          sidebarToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Scroll to Top
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add('visible');
+        } else {
+          scrollToTopBtn.classList.remove('visible');
+        }
+      });
+
+      scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Wrap code blocks with toggle functionality
+    function wrapCodeBlocks() {
+      const pres = mainContent.querySelectorAll('pre');
+      pres.forEach(pre => {
+        if (!pre.parentElement.classList.contains('code-block-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-block-wrapper';
+
+          const header = document.createElement('div');
+          header.className = 'code-block-header';
+          header.innerHTML = `
+            <span class="code-block-title">Código</span>
+            <div class="code-actions">
+              <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+                <i class="fas fa-copy" aria-hidden="true"></i>
+                <span>Copiar</span>
+              </button>
+              <button class="code-toggle-btn" onclick="toggleCode(this)">
+                <span>Mostrar/Ocultar</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+              </button>
+            </div>
+          `;
+
+          // Add language-python class to code element
+          const code = pre.querySelector('code');
+          if (code && !code.classList.contains('language-python')) {
+            code.classList.add('language-python');
+          }
+
+          pre.parentNode.insertBefore(wrapper, pre);
+          wrapper.appendChild(header);
+          wrapper.appendChild(pre);
+          pre.classList.add('collapsed');
+        }
+      });
+      // Apply syntax highlighting
+      if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+      }
+    }
+
+    // Toggle code visibility
+    function toggleCode(button) {
+      const pre = button.closest('.code-block-wrapper').querySelector('pre');
+      const icon = button.querySelector('i');
+
+      if (pre.classList.contains('collapsed')) {
+        pre.classList.remove('collapsed');
+        pre.classList.add('expanded');
+        button.classList.add('expanded');
+      } else {
+        pre.classList.add('collapsed');
+        pre.classList.remove('expanded');
+        button.classList.remove('expanded');
+      }
+    }
+
+    // Copy code to clipboard
+    function copyCode(button) {
+      const pre = button.closest('.code-block-wrapper').querySelector('pre');
+      const code = pre.querySelector('code');
+      const codeText = code.textContent;
+
+      navigator.clipboard.writeText(codeText).then(() => {
+        // Show feedback
+        const originalText = button.innerHTML;
+        button.classList.add('copied');
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>Copiado</span>';
+
+        // Reset after 2 seconds
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Error al copiar: ', err);
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        button.classList.add('copied');
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>Copiado</span>';
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = '<i class="fas fa-copy" aria-hidden="true"></i><span>Copiar</span>';
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+
+</html>

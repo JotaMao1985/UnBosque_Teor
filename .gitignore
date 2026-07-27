@@ -1,2 +1,38 @@
+# Lista blanca: se ignora todo lo de la raíz y se reactiva solo lo que forma parte
+# del proyecto. La carpeta Muestreo/ tiene 62 MB de material de trabajo (libros,
+# knits de 13 MB, cachés) que no debe acabar en un repositorio público.
+/*
+
+!/.gitignore
+!/PLAN_Material_Muestreo.md
+!/Htmls_Muestreo/
+!/precalculo/
+!/ensamblado/
+!/CSV data sets for SDA 3e/
+!/*.Rmd
+
+# Dentro de lo reactivado, esto nunca se versiona.
+
+# Material con derechos de autor: los libros de texto NO se versionan ni se
+# publican. Este repositorio va a GitHub Pages (público); subir un libro
+# escaneado sería redistribución no autorizada, además de inflar el historial.
+*.pdf
+*.epub
+
+# macOS
 .DS_Store
-.claude/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*_cache/
+*_files/
+
+# Cachés de Python (los scripts de ensamblado importan módulos locales)
+__pycache__/
+*.pyc
+
+# Temporales de ofimática
+~$*
+*.tmp

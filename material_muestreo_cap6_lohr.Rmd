@@ -1,0 +1,1760 @@
+---
+title: "Muestreo con Probabilidades Desiguales: Capítulo 6 de Lohr"
+subtitle: "Material de estudio autónomo en R"
+author: "Curso de Muestreo — Estadística"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  html_document:
+    template: unbosque_template.html
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 4
+    number_sections: true
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+    fig_caption: true
+---
+
+```{r configuracion, include=FALSE}
+# Opciones globales para todos los chunks
+knitr::opts_chunk$set(
+  echo       = TRUE,
+  message    = FALSE,
+  warning    = FALSE,
+  fig.align  = "center",
+  fig.width  = 8,
+  fig.height = 5,
+  comment    = "#>",
+  cache      = FALSE      # se activa explícitamente en chunks con simulación pesada
+)
+
+# Carga de paquetes requeridos
+library(plotly)    # gráficos interactivos
+library(dplyr)     # manipulación de datos
+library(survey)    # análisis de encuestas con diseño complejo
+library(sampling)  # selección de muestras y métodos PPS
+library(ggplot2)   # gráficos base
+library(knitr)     # tablas con kable()
+
+# ---------------------------------------------------------------------------
+# Estilo visual unificado para todos los gráficos del documento
+# ---------------------------------------------------------------------------
+# Paleta semántica: cada color tiene un rol fijo a lo largo del documento.
+paleta_muestreo <- c(
+  primario   = "#1D3557",  # azul oscuro: barras solitarias y líneas principales
+  secundario = "#457B9D",  # azul medio: alternativo / método base en comparaciones
+  acento     = "#E63946",  # rojo: líneas de referencia y valores destacados
+  apoyo      = "#A8DADC",  # celeste: histogramas y elementos de fondo
+  contraste  = "#E76F51"   # naranja: segundo grupo en comparaciones binarias
+)
+
+# Paleta categórica de cuatro colores (para grupos discretos)
+paleta_categorica <- c("#1D3557", "#E76F51", "#2A9D8F", "#E9C46A")
+
+# Función auxiliar que aplica un layout común a cualquier objeto plotly.
+estilo_muestreo <- function(p, titulo = NULL, eje_x = NULL, eje_y = NULL,
+                            mostrar_leyenda = TRUE) {
+  p %>% layout(
+    title  = if (!is.null(titulo))
+               list(text = titulo, x = 0.02, xanchor = "left",
+                    font = list(size = 16))
+             else NULL,
+    xaxis  = list(title = eje_x, gridcolor = "#E5E5E5",
+                  zerolinecolor = "#CCCCCC"),
+    yaxis  = list(title = eje_y, gridcolor = "#E5E5E5",
+                  zerolinecolor = "#CCCCCC"),
+    legend = list(orientation = "h", x = 0, y = -0.18,
+                  bgcolor = "rgba(255,255,255,0)"),
+    margin = list(l = 70, r = 30, t = 60, b = 80),
+    font   = list(family = "Lato, Helvetica, Arial, sans-serif", size = 12,
+                  color = "#222222"),
+    hoverlabel = list(font = list(family = "Lato, Helvetica, Arial, sans-serif"),
+                      bgcolor = "#FFFFFF"),
+    plot_bgcolor  = "#FFFFFF",
+    paper_bgcolor = "#FFFFFF",
+    showlegend    = mostrar_leyenda
+  )
+}
+
+# Ruta a los datos oficiales de Lohr (Sampling 3e)
+ruta_datos <- "CSV data sets for SDA 3e"
+```
+
+# Introducción
+
+En los capítulos anteriores se desarrollaron diseños muestrales en los que cada
+unidad de la población tenía la misma probabilidad de ser seleccionada
+(muestreo aleatorio simple, estratificado y por conglomerados con probabilidades
+iguales). En la práctica, sin embargo, las unidades de la población pueden
+diferir notablemente en tamaño o importancia: las ciudades tienen distinta
+población, las parcelas distinta superficie y los hospitales distinto número de
+camas. Cuando estas diferencias están asociadas a la variable de interés,
+seleccionar todas las unidades con igual probabilidad es ineficiente.
+
+El **muestreo con probabilidades desiguales** asigna a cada unidad una
+probabilidad de selección o de inclusión que depende de una *medida de tamaño*
+auxiliar conocida $M_i$. La intuición central es la siguiente: si $t_i$
+(el total de la variable de interés en la unidad $i$) está positivamente
+correlacionado con $M_i$, entonces seleccionar las unidades grandes con mayor
+probabilidad reduce la varianza del estimador, **siempre que el estimador
+compense correctamente esa probabilidad mediante un peso adecuado**.
+
+```{r tabla-comparativa, echo=FALSE}
+tabla_comp <- data.frame(
+  Característica      = c("Probabilidad de inclusión",
+                          "Estimador del total",
+                          "Peso muestral",
+                          "Información auxiliar"),
+  `MAS / Estratificado` = c("$\\pi_i = n/N$",
+                            "$\\hat{t} = N\\bar{y}$",
+                            "$w_i = N/n$",
+                            "Opcional"),
+  `Probabilidades desiguales` = c("$\\pi_i \\propto M_i$",
+                                  "$\\hat{t} = \\sum w_i y_i$",
+                                  "$w_i = 1/\\pi_i$",
+                                  "Imprescindible"),
+  check.names = FALSE
+)
+kable(tabla_comp, caption = "Comparación esquemática entre diseños con probabilidades iguales y desiguales.")
+```
+
+Este capítulo es la culminación natural del Capítulo 5: cuando los
+conglomerados tienen tamaño muy distinto, seleccionarlos con MAS produce
+estimadores con varianza alta porque algunas réplicas concentran toda la
+muestra en conglomerados pequeños y otras en grandes. Asignar a cada
+conglomerado una probabilidad proporcional a su tamaño elimina esa fuente de
+variabilidad y, en el caso ideal $\psi_i \propto t_i$, produce un estimador con
+varianza nula.
+
+Se abordarán dos grandes familias de diseños:
+
+1. **Con reemplazo (WR)**: cada extracción es independiente y la unidad puede
+   seleccionarse más de una vez. La teoría es sencilla y el estimador
+   resultante (Hansen-Hurwitz) tiene una expresión compacta para la varianza.
+2. **Sin reemplazo (WOR)**: cada unidad aparece a lo sumo una vez en la
+   muestra. La teoría requiere las probabilidades de inclusión $\pi_i$ y
+   $\pi_{ij}$ y conduce al estimador de Horvitz-Thompson.
+
+## Glosario de notación
+
+A continuación se resume la notación que se utilizará en todo el capítulo,
+fiel al texto de Lohr.
+
+| Símbolo | Significado |
+|---------|-------------|
+| $N$ | Número de unidades primarias de muestreo (psus) en la población |
+| $n$ | Tamaño de la muestra de psus |
+| $M_i$ | Medida de tamaño de la psu $i$ (variable auxiliar conocida) |
+| $K = \sum_{i=1}^N M_i$ | Tamaño poblacional total |
+| $t_i$ | Total de la variable $y$ en la psu $i$ |
+| $t = \sum_{i=1}^N t_i$ | Total poblacional de $y$ |
+| $\bar y_U = t/K$ | Media poblacional |
+| $\psi_i$ | Probabilidad de seleccionar la psu $i$ en una extracción (diseño WR) |
+| $\pi_i$ | Probabilidad de inclusión de la psu $i$ en la muestra (diseño WOR) |
+| $\pi_{ij}$ | Probabilidad de inclusión conjunta de las psus $i$ y $j$ |
+| $w_i$ | Peso muestral asociado a la psu $i$ |
+| $Z_i$ | Número de veces que la psu $i$ aparece en la muestra WR |
+| $Q_i$ | Indicador de inclusión de la psu $i$ (vale $1$ si $i \in \mathcal{S}$, $0$ en otro caso) |
+
+# Sampling One Primary Sampling Unit
+
+Considérese el caso pedagógico más simple: la población contiene $N$ psus y
+se desea seleccionar **una sola** psu, la cual aporta toda la información para
+estimar el total poblacional $t = \sum_{i=1}^N t_i$. Si la psu $i$ se elige con
+probabilidad $\psi_i$ tal que $\sum_{i=1}^N \psi_i = 1$, el estimador
+
+$$
+\hat{t} \;=\; \frac{t_i}{\psi_i}
+\qquad \text{si la psu seleccionada es la } i\text{-ésima}
+$$
+
+es **insesgado** para $t$. La demostración es directa:
+
+$$
+E[\hat t] \;=\; \sum_{i=1}^N \psi_i \cdot \frac{t_i}{\psi_i}
+\;=\; \sum_{i=1}^N t_i \;=\; t.
+$$
+
+La varianza se obtiene tomando la dispersión cuadrática de los posibles
+valores del estimador:
+
+$$
+V(\hat t) \;=\; \sum_{i=1}^N \psi_i \left(\frac{t_i}{\psi_i} - t \right)^2.
+$$
+
+Dos observaciones son fundamentales:
+
+- Si las probabilidades de selección se eligen *exactamente proporcionales* al
+  total $t_i$, es decir $\psi_i = t_i/t$, entonces $t_i/\psi_i = t$ para
+  todas las unidades y la varianza del estimador es **cero**. Por supuesto, en
+  la práctica $t_i$ no se conoce de antemano (de ahí la necesidad del muestreo),
+  pero esto sugiere usar como probabilidades de selección una variable auxiliar
+  $M_i$ correlacionada con $t_i$ y definir $\psi_i = M_i/K$.
+- Si todas las psus tienen la misma probabilidad ($\psi_i = 1/N$ para todo $i$),
+  el estimador se reduce a $N t_i$ y la varianza coincide con $N^2 V_p[t_i]$,
+  donde $V_p$ es la varianza poblacional de los totales por psu.
+
+## Ejemplo en R: una sola psu, simulación de Monte Carlo
+
+Para fijar ideas se simula una pequeña población de $N=5$ ciudades con
+poblaciones muy desiguales y un gasto público $t_i$ aproximadamente
+proporcional al tamaño. Se compara el estimador bajo $\psi_i \propto M_i$
+contra el estimador con probabilidades iguales.
+
+```{r ej-6-1, cache=TRUE}
+# Población artificial de N = 5 ciudades.
+# M_i: poblacion (en miles); t_i: gasto publico (en millones).
+ciudades <- data.frame(
+  id = 1:5,
+  M  = c(  20, 50, 120, 250, 800),       # tamaños (proxy auxiliar)
+  t  = c(  85, 240, 540, 1180, 3650)     # totales reales (correlacionados con M)
+)
+
+# Total poblacional verdadero:
+T_pob <- sum(ciudades$t)
+
+# Probabilidades de seleccion: (a) iguales y (b) proporcionales al tamaño.
+psi_iguales <- rep(1/nrow(ciudades), nrow(ciudades))
+psi_pps     <- ciudades$M / sum(ciudades$M)
+
+# Simulacion Monte Carlo: B replicas, en cada una se selecciona 1 psu.
+set.seed(2026)
+B <- 50000
+sim_iguales <- replicate(B, {
+  i <- sample(ciudades$id, size = 1, prob = psi_iguales)
+  ciudades$t[i] / psi_iguales[i]
+})
+sim_pps <- replicate(B, {
+  i <- sample(ciudades$id, size = 1, prob = psi_pps)
+  ciudades$t[i] / psi_pps[i]
+})
+
+# Verificacion empirica de la insesgadez:
+resultados <- data.frame(
+  Diseño        = c("Probabilidades iguales", "PPS (psi_i prop M_i)"),
+  Media_MC      = c(mean(sim_iguales), mean(sim_pps)),
+  SE_MC         = c(sd(sim_iguales),   sd(sim_pps)),
+  Total_real    = T_pob
+)
+kable(resultados, digits = 2,
+      caption = "Estimador con una sola psu: comparación de varianzas.")
+```
+
+```{r ej-6-1-grafico, cache=TRUE}
+# Visualizacion: distribucion del estimador en cada diseño.
+df_plot <- data.frame(
+  estim = c(sim_iguales, sim_pps),
+  metodo = factor(rep(c("Probabilidades iguales", "PPS proporcional a M"),
+                      each = B))
+)
+
+p <- plot_ly(df_plot, x = ~estim, color = ~metodo,
+             colors = c(unname(paleta_muestreo["secundario"]),
+                        unname(paleta_muestreo["acento"])),
+             type = "histogram", nbinsx = 60, alpha = 0.65) %>%
+     add_segments(x = T_pob, xend = T_pob, y = 0, yend = 8000,
+                  line = list(color = unname(paleta_muestreo["primario"]),
+                              dash = "dash"), inherit = FALSE,
+                  name = "Total real")
+
+estilo_muestreo(p,
+  titulo = "Distribución del estimador con una sola psu",
+  eje_x  = "Estimador del total t",
+  eje_y  = "Frecuencia")
+```
+
+La distribución bajo PPS (rojo) está mucho más concentrada en torno al valor
+verdadero que la distribución bajo probabilidades iguales (azul). El factor
+clave es la fuerte correlación entre $M_i$ y $t_i$: cuanto mayor es esa
+correlación, más cerca está $\psi_i$ del óptimo $\psi_i^\star = t_i/t$.
+
+::: {.alert .alert-info}
+**Ideas clave §6.1**
+
+- El estimador $\hat t = t_i/\psi_i$ es insesgado siempre que $\sum \psi_i = 1$.
+- La varianza es nula cuando $\psi_i \propto t_i$. Dado que $t_i$ no se conoce,
+  se elige una variable auxiliar $M_i$ correlacionada con $t_i$.
+- Probabilidades de selección desiguales sólo son ventajosas si están bien
+  alineadas con la variable de interés; una elección arbitraria puede aumentar
+  la varianza respecto al diseño equiprobable.
+:::
+
+# One-Stage Sampling with Replacement
+
+El caso de una sola psu se generaliza tomando $n$ extracciones independientes,
+**con reemplazo**, donde en cada extracción la psu $i$ tiene probabilidad
+$\psi_i$. Si $Z_i$ denota el número de veces que la psu $i$ aparece en la
+muestra resultante, el vector $(Z_1, \ldots, Z_N)$ sigue una distribución
+multinomial con parámetros $(n; \psi_1, \ldots, \psi_N)$.
+
+## Selecting Primary Sampling Units
+
+Dos métodos prácticos para realizar selecciones con probabilidades $\psi_i$
+desiguales son los siguientes.
+
+### Método acumulativo
+
+Sea $T_i = \sum_{k=1}^i M_k$ la suma acumulada de las medidas de tamaño y
+$T_N = K = \sum M_i$. El procedimiento es:
+
+1. Generar un número aleatorio $r \sim \text{Uniforme}(0, K)$.
+2. Seleccionar la psu $i$ tal que $T_{i-1} < r \le T_i$ (con $T_0 = 0$).
+
+La probabilidad de seleccionar $i$ es $(T_i - T_{i-1})/K = M_i/K$, exactamente
+$\psi_i$ deseado.
+
+### Método de rechazo de Lahiri
+
+Útil cuando los $M_i$ se actualizan en línea o $N$ es muy grande:
+
+1. Sea $M^\star$ una cota tal que $M^\star \ge \max_i M_i$.
+2. Generar $i$ uniformemente entre $1$ y $N$.
+3. Generar $u \sim \text{Uniforme}(0, M^\star)$.
+4. Si $u \le M_i$, aceptar $i$; en caso contrario, repetir.
+
+La eficiencia del método depende del cociente $\bar M / M^\star$.
+
+```{r metodos-seleccion}
+# --- Método acumulativo: implementación desde cero ----------------------
+seleccion_acumulativa <- function(M, n) {
+  K  <- sum(M)
+  Tc <- cumsum(M)             # sumas acumuladas T_1, T_2, ..., T_N
+  r  <- runif(n, 0, K)        # n numeros aleatorios uniformes en (0, K)
+  # Para cada r se busca el primer T_i >= r usando findInterval():
+  sapply(r, function(rr) findInterval(rr, Tc) + 1L)
+}
+
+# --- Método de Lahiri: rechazo ------------------------------------------
+seleccion_lahiri <- function(M, n) {
+  N        <- length(M)
+  M_max    <- max(M)
+  elegidas <- integer(0)
+  while (length(elegidas) < n) {
+    i <- sample.int(N, 1)
+    u <- runif(1, 0, M_max)
+    if (u <= M[i]) elegidas <- c(elegidas, i)
+  }
+  elegidas
+}
+
+# --- Verificacion empirica de las probabilidades de seleccion -----------
+set.seed(2026)
+M_demo  <- ciudades$M
+B       <- 100000
+sel_ac  <- replicate(B, seleccion_acumulativa(M_demo, n = 1))
+sel_lh  <- replicate(B, seleccion_lahiri(M_demo, n = 1))
+
+frec_ac <- prop.table(table(factor(sel_ac, levels = 1:5)))
+frec_lh <- prop.table(table(factor(sel_lh, levels = 1:5)))
+
+verif <- data.frame(
+  ciudad      = 1:5,
+  psi_teorica = M_demo / sum(M_demo),
+  freq_acum   = as.numeric(frec_ac),
+  freq_lahiri = as.numeric(frec_lh)
+)
+kable(verif, digits = 4,
+      caption = "Frecuencias empíricas de selección bajo dos métodos PPS-WR.")
+```
+
+Las frecuencias empíricas convergen a las probabilidades teóricas $\psi_i$
+en ambos métodos, lo cual confirma que están correctamente implementados.
+
+## Theory of Estimation
+
+Dada una muestra con reemplazo $\mathcal{R} = \{i_1, \ldots, i_n\}$ donde cada
+$i_k$ se obtiene de manera independiente con probabilidad $\psi_{i_k}$, el
+**estimador de Hansen-Hurwitz** del total poblacional es
+
+$$
+\hat t_\psi \;=\; \frac{1}{n} \sum_{k=1}^n \frac{t_{i_k}}{\psi_{i_k}}.
+$$
+
+### Insesgadez
+
+Cada extracción contribuye con la variable aleatoria $T^\star = t_I/\psi_I$,
+donde $I$ es una psu seleccionada aleatoriamente con probabilidades $\psi$.
+Como se vio en §6.1, $E[T^\star] = t$. Por linealidad de la esperanza,
+
+$$
+E[\hat t_\psi] \;=\; \frac{1}{n}\sum_{k=1}^n E[T^\star] \;=\; t.
+$$
+
+### Varianza
+
+Como las $n$ extracciones son **independientes**, la varianza de la media de
+las $T^\star_k$ es $V(T^\star)/n$:
+
+$$
+V(\hat t_\psi) \;=\; \frac{1}{n} \sum_{i=1}^N \psi_i
+                 \left(\frac{t_i}{\psi_i} - t\right)^2.
+$$
+
+### Estimador de la varianza
+
+Un estimador insesgado de la varianza muestral usa la dispersión empírica de
+las cantidades $t_{i_k}/\psi_{i_k}$ alrededor de su media muestral:
+
+$$
+\hat V(\hat t_\psi) \;=\; \frac{1}{n(n-1)}
+                 \sum_{k=1}^n
+                 \left(\frac{t_{i_k}}{\psi_{i_k}} - \hat t_\psi \right)^2.
+$$
+
+Nótese que **la fórmula es idéntica a la de la varianza muestral del promedio
+de $n$ observaciones independientes**. Esa simplicidad es la mayor ventaja del
+muestreo con reemplazo: no es necesario calcular probabilidades conjuntas.
+
+## Designing the Selection Probabilities
+
+La elección óptima $\psi_i^\star = t_i/t$ no es factible (requeriría conocer
+$t_i$). En la práctica se usa una **medida de tamaño** $M_i$ y se define
+
+$$
+\psi_i \;=\; \frac{M_i}{K}, \qquad K = \sum_{j=1}^N M_j.
+$$
+
+Cuando $t_i \approx \alpha M_i$ para algún $\alpha > 0$ (proporcionalidad),
+$t_i/\psi_i = \alpha K$ es prácticamente constante y la varianza se reduce
+drásticamente. Esto es una conexión directa con la *estimación por razón* del
+Capítulo 4: PPS es óptimo bajo el mismo modelo lineal sin intercepto que
+favorece al estimador de razón.
+
+## Weights in Unequal-Probability Sampling with Replacement
+
+El peso muestral en muestreo con reemplazo se define como
+
+$$
+w_i \;=\; \frac{1}{n\,\psi_i},
+$$
+
+de modo que el estimador de Hansen-Hurwitz se reescribe como una suma
+ponderada,
+
+$$
+\hat t_\psi \;=\; \sum_{k=1}^n w_{i_k} t_{i_k}.
+$$
+
+El valor esperado de la suma de pesos es siempre $N$, independientemente de
+los $\psi_i$ elegidos:
+
+$$
+E\!\left[\sum_{k=1}^n w_{i_k}\right]
+\;=\; n\cdot E\!\left[\frac{1}{n\psi_I}\right]
+\;=\; \sum_{i=1}^N \psi_i \cdot \frac{1}{\psi_i}
+\;=\; N.
+$$
+
+Sin embargo, a diferencia del MAS, esa suma no es **constante muestra a
+muestra**: bajo $\psi$ desiguales, la varianza de $\sum_k w_{i_k}$ puede ser
+alta y la realización en una muestra particular puede alejarse notablemente
+de $N$. La interpretación correcta del peso es: $w_i$ representa la cuota de
+la población que la unidad $i$ "carga" en una extracción.
+
+### Ejemplo en R: estimación con paquete `survey`
+
+Se simulan dos etapas conceptuales: una población mediana ($N=15$ municipios),
+una muestra WR de $n=5$ municipios, y se compara el cálculo manual con la
+salida de `survey::svydesign()`.
+
+```{r hh-survey, cache=TRUE}
+# Poblacion artificial: N = 15 municipios con tamanios M_i muy desiguales
+set.seed(42)
+N         <- 15
+municipios <- data.frame(
+  id = 1:N,
+  M  = round(rlnorm(N, meanlog = 7, sdlog = 1)),  # poblacion ~ lognormal
+  e  = rnorm(N, mean = 0, sd = 8)                 # ruido
+)
+# t_i parcialmente correlacionado con M_i:
+municipios$t <- round(0.20 * municipios$M + 5 * municipios$e + 50)
+T_real <- sum(municipios$t)
+psi_pob <- municipios$M / sum(municipios$M)
+
+# --- Muestra con reemplazo de tamanio n = 5 -----------------------------
+n <- 5
+set.seed(20260101)
+indices <- sample(1:N, size = n, replace = TRUE, prob = psi_pob)
+muestra <- data.frame(
+  draw  = 1:n,
+  psu   = indices,
+  t     = municipios$t[indices],
+  psi   = psi_pob[indices]
+)
+muestra$peso <- 1 / (n * muestra$psi)
+
+# --- Calculo manual del estimador y su error estandar -------------------
+muestra$expand_t  <- muestra$t / muestra$psi      # t_i / psi_i
+t_hat_psi <- sum(muestra$expand_t) / n
+SE_hat    <- sqrt( sum( (muestra$expand_t - t_hat_psi)^2 ) / (n * (n - 1)) )
+
+# --- Mismo calculo via survey -------------------------------------------
+diseno_wr <- svydesign(ids = ~1, weights = ~peso, data = muestra)
+estim_svy <- svytotal(~t, diseno_wr)
+
+resumen <- data.frame(
+  Total_real          = T_real,
+  HH_manual           = round(t_hat_psi, 1),
+  SE_manual           = round(SE_hat, 1),
+  HH_survey           = round(coef(estim_svy), 1),
+  SE_survey           = round(SE(estim_svy), 1)
+)
+kable(resumen, caption = "Estimador de Hansen-Hurwitz: cálculo manual vs. paquete survey.")
+```
+
+Las dos vías producen exactamente el mismo punto y SE, lo cual confirma que el
+diseño WR puede declararse en `survey` simplemente especificando los pesos
+$w_i = 1/(n\psi_i)$ y un único conglomerado por extracción (`ids = ~1`).
+
+::: {.alert .alert-info}
+**Ideas clave §6.2**
+
+- El estimador de Hansen-Hurwitz $\hat t_\psi$ es insesgado y su varianza
+  tiene una forma simple gracias a la independencia de las extracciones.
+- La elección $\psi_i = M_i/K$ es una **regla práctica** que aproxima el óptimo
+  $\psi_i \propto t_i$.
+- Los pesos $w_i = 1/(n\psi_i)$ permiten escribir el estimador como suma
+  ponderada y son los que `survey` espera en el argumento `weights`.
+:::
+
+# Two-Stage Sampling with Replacement
+
+El diseño anterior asumía que la psu seleccionada se observaba *completa*, es
+decir, $t_i$ se conocía sin error. En la práctica, una vez seleccionada una
+psu (por ejemplo un municipio), se realiza un **submuestreo** dentro de ella
+(por ejemplo, una muestra de hogares). Sea $\hat t_i$ un estimador insesgado
+del total $t_i$ obtenido a partir del submuestreo.
+
+El estimador de Hansen-Hurwitz para dos etapas sustituye $t_i$ por $\hat t_i$:
+
+$$
+\hat t_\psi \;=\; \frac{1}{n}\sum_{k=1}^n \frac{\hat t_{i_k}}{\psi_{i_k}}.
+$$
+
+Bajo las hipótesis usuales de independencia entre primera y segunda etapa, el
+estimador es insesgado:
+
+$$
+E[\hat t_\psi]
+\;=\; E_1\!\left[ \frac{1}{n}\sum_k \frac{E_2[\hat t_{i_k}\mid i_k]}{\psi_{i_k}}\right]
+\;=\; E_1\!\left[ \frac{1}{n}\sum_k \frac{t_{i_k}}{\psi_{i_k}}\right]
+\;=\; t.
+$$
+
+La varianza se descompone en un componente **entre psus** (debido a la
+selección de psus) y otro **dentro de psus** (debido al submuestreo):
+
+$$
+V(\hat t_\psi) \;=\;
+\underbrace{\frac{1}{n}\sum_{i=1}^N \psi_i\!\left(\frac{t_i}{\psi_i}-t\right)^2}_{\text{entre psus}}
+\;+\;
+\underbrace{\frac{1}{n}\sum_{i=1}^N \frac{V_2(\hat t_i)}{\psi_i}}_{\text{dentro de psus}},
+$$
+
+donde $V_2(\hat t_i)$ es la varianza del estimador del total dentro de la psu
+$i$. Una propiedad **muy útil** del muestreo WR es que el estimador insesgado
+de la varianza preserva la misma forma simple del caso una etapa:
+
+$$
+\hat V(\hat t_\psi) \;=\; \frac{1}{n(n-1)}
+                 \sum_{k=1}^n
+                 \left(\frac{\hat t_{i_k}}{\psi_{i_k}} - \hat t_\psi \right)^2.
+$$
+
+Es decir: las $n$ cantidades $\hat t_{i_k}/\psi_{i_k}$ se tratan como
+observaciones i.i.d. y se calcula la varianza muestral del promedio. Esta es la
+razón por la cual el muestreo PPS-WR continúa siendo popular pese a la
+existencia de diseños WOR más eficientes: la inferencia no requiere
+probabilidades conjuntas $\pi_{ij}$, las cuales pueden ser difíciles de
+calcular.
+
+### Caso especial: $\psi_i = M_i/K$ y MAS dentro
+
+Cuando se elige $\psi_i \propto M_i$ y dentro de cada psu se selecciona un MAS
+de $m_i$ ssus, $\hat t_i = M_i \bar y_{i\mathcal S}$. El estimador resulta
+
+$$
+\hat t_\psi \;=\; \frac{1}{n}\sum_{k=1}^n \frac{M_{i_k}\bar y_{i_k}}{M_{i_k}/K}
+\;=\; \frac{K}{n}\sum_{k=1}^n \bar y_{i_k}.
+$$
+
+Esta es una expresión particularmente elegante: el total se estima como $K$
+veces el promedio de los promedios muestrales por psu. El diseño es
+**autoponderado** y la inferencia no requiere conocer los $M_i$ individuales
+de las psus seleccionadas (más allá del promedio dentro de cada una).
+
+## Ejemplo en R: dos etapas con simulación
+
+Se simula una población jerárquica con $N=20$ psus de tamaño desigual; en
+cada psu se selecciona $m_i = 4$ ssus por MAS. Se compara el cálculo manual
+del SE con la salida del paquete `survey`.
+
+```{r dos-etapas-wr, cache=TRUE}
+# --- Construccion de una poblacion jerarquica ---------------------------
+set.seed(2026)
+N_psu <- 20
+psus <- data.frame(
+  id = 1:N_psu,
+  M  = sample(20:200, N_psu, replace = TRUE)   # tamaños desiguales
+)
+
+# Para cada psu se generan M_i ssus con valores y_ij (con efecto de psu)
+poblacion <- do.call(rbind, lapply(1:N_psu, function(i) {
+  data.frame(
+    psu_id = i,
+    y      = rnorm(psus$M[i], mean = 50 + 0.5 * psus$M[i], sd = 10)
+  )
+}))
+
+# Totales reales
+psus$t  <- tapply(poblacion$y, poblacion$psu_id, sum)
+T_real  <- sum(psus$t)
+
+# --- Selecion de psus con reemplazo y submuestreo por MAS ---------------
+n <- 5; m <- 4
+psi <- psus$M / sum(psus$M)
+
+set.seed(20260415)
+seleccionadas <- sample(1:N_psu, size = n, replace = TRUE, prob = psi)
+
+# Para cada psu seleccionada, MAS de m ssus y estimacion de t_i:
+muestra2 <- do.call(rbind, lapply(seq_along(seleccionadas), function(k) {
+  i        <- seleccionadas[k]
+  ssus_pob <- poblacion[poblacion$psu_id == i, ]
+  idx      <- sample.int(nrow(ssus_pob), size = m)
+  ssus_mu  <- ssus_pob[idx, ]
+  ssus_mu$draw     <- k                                  # extraccion en la 1a etapa
+  ssus_mu$psu      <- i
+  ssus_mu$M_i      <- psus$M[i]
+  ssus_mu$psi_i    <- psi[i]
+  ssus_mu$peso_psu <- 1 / (n * psi[i])                   # peso de la psu en HH
+  ssus_mu$peso_ssu <- ssus_mu$M_i / m                    # peso interno (MAS)
+  ssus_mu$peso     <- ssus_mu$peso_psu * ssus_mu$peso_ssu
+  ssus_mu
+}))
+
+# --- Estimador HH de dos etapas (manual) -------------------------------
+ti_hat <- sapply(1:n, function(k) {
+  m_k <- muestra2[muestra2$draw == k, ]
+  m_k$M_i[1] * mean(m_k$y)
+})
+psi_k <- sapply(1:n, function(k) muestra2$psi_i[muestra2$draw == k][1])
+
+t_hat_psi <- mean(ti_hat / psi_k)
+SE_hat    <- sqrt( sum( (ti_hat / psi_k - t_hat_psi)^2 ) / (n * (n - 1)) )
+
+# --- Mismo calculo via survey -------------------------------------------
+diseno_2et <- svydesign(ids = ~draw, weights = ~peso, data = muestra2)
+est_svy    <- svytotal(~y, diseno_2et)
+
+tabla_2e <- data.frame(
+  Total_real    = round(T_real, 1),
+  HH_manual     = round(t_hat_psi, 1),
+  SE_manual     = round(SE_hat, 1),
+  HH_survey     = round(coef(est_svy), 1),
+  SE_survey     = round(SE(est_svy), 1)
+)
+kable(tabla_2e, caption = "Hansen-Hurwitz en dos etapas: cálculo manual y paquete survey.")
+```
+
+Tanto el cálculo manual como `survey` producen idéntico estimador y SE: la
+clave es que en `survey` se declara el identificador de extracción
+(`ids = ~draw`) como conglomerado, de modo que el paquete construya las
+$n$ cantidades $\hat t_{i_k}/\psi_{i_k}$ y aplique la fórmula de varianza
+muestral.
+
+::: {.alert .alert-info}
+**Ideas clave §6.3**
+
+- En dos etapas, el estimador de Hansen-Hurwitz mantiene exactamente la misma
+  fórmula de varianza muestral del caso una etapa: $\hat V$ depende sólo de
+  los $\hat t_{i_k}/\psi_{i_k}$ observados.
+- El componente "dentro de psus" suele ser dominado por el componente "entre
+  psus" cuando hay alta heterogeneidad poblacional.
+- Cuando $\psi_i = M_i/K$ y la submuestra interna es MAS, el diseño es
+  autoponderado: $\hat t_\psi = (K/n)\sum_k \bar y_{i_k}$.
+:::
+
+# Unequal-Probability Sampling without Replacement
+
+En el muestreo sin reemplazo, cada psu aparece a lo sumo una vez en la
+muestra. La cantidad fundamental ya no es $\psi_i$ sino la **probabilidad de
+inclusión**
+
+$$
+\pi_i \;=\; P(i \in \mathcal S),
+$$
+
+junto con las **probabilidades de inclusión conjunta**
+
+$$
+\pi_{ij} \;=\; P(i \in \mathcal S \;\text{y}\; j \in \mathcal S),
+\qquad i \ne j.
+$$
+
+Convencionalmente $\pi_{ii} = \pi_i$. Para diseños de tamaño fijo $n$ se
+cumple $\sum_i \pi_i = n$ y $\sum_{j \ne i} \pi_{ij} = (n-1)\pi_i$.
+
+## The Horvitz–Thompson Estimator for One-Stage Sampling
+
+Sea $Q_i = \mathbf 1\{i \in \mathcal S\}$. El estimador de Horvitz-Thompson del
+total es
+
+$$
+\hat t_{HT} \;=\; \sum_{i \in \mathcal S} \frac{t_i}{\pi_i}
+\;=\; \sum_{i=1}^N \frac{t_i}{\pi_i} Q_i.
+$$
+
+### Insesgadez
+
+Como $E[Q_i] = \pi_i$,
+
+$$
+E[\hat t_{HT}] \;=\; \sum_{i=1}^N \frac{t_i}{\pi_i} \pi_i \;=\; t.
+$$
+
+### Varianza
+
+Empleando $\text{Cov}(Q_i, Q_j) = \pi_{ij} - \pi_i\pi_j$ (con
+$\text{Cov}(Q_i, Q_i) = \pi_i(1-\pi_i)$),
+
+$$
+V(\hat t_{HT}) \;=\; \sum_{i=1}^N \sum_{j=1}^N
+                 (\pi_{ij} - \pi_i\pi_j)\,
+                 \frac{t_i}{\pi_i}\frac{t_j}{\pi_j}.
+$$
+
+### Estimador de la varianza (Horvitz-Thompson)
+
+$$
+\hat V_{HT}(\hat t_{HT}) \;=\;
+\sum_{i \in \mathcal S}\sum_{j \in \mathcal S}
+\frac{\pi_{ij} - \pi_i \pi_j}{\pi_{ij}}\,
+\frac{t_i}{\pi_i}\frac{t_j}{\pi_j}.
+$$
+
+### Forma de Sen-Yates-Grundy
+
+Para diseños de **tamaño fijo** se obtiene una expresión equivalente,
+
+$$
+V_{SYG}(\hat t_{HT}) \;=\;
+\frac{1}{2}\sum_{i=1}^N \sum_{j \ne i} (\pi_i\pi_j - \pi_{ij})
+\left(\frac{t_i}{\pi_i} - \frac{t_j}{\pi_j}\right)^2,
+$$
+
+con estimador
+
+$$
+\hat V_{SYG}(\hat t_{HT}) \;=\;
+\frac{1}{2}\sum_{i \in \mathcal S}\sum_{j \in \mathcal S, j \ne i}
+\frac{\pi_i\pi_j - \pi_{ij}}{\pi_{ij}}
+\left(\frac{t_i}{\pi_i} - \frac{t_j}{\pi_j}\right)^2.
+$$
+
+La forma SYG tiene dos ventajas: (i) bajo la condición $\pi_{ij} \le \pi_i\pi_j$
+(válida por ejemplo en los diseños de Brewer y Sampford), $\hat V_{SYG} \ge 0$
+siempre; (ii) es más estable numéricamente cuando algunos $t_i/\pi_i$ son
+grandes pero similares entre sí.
+
+### Ejemplo: enumeración completa con $N = 4$, $n = 2$
+
+Para construir intuición se considera una población diminuta donde se pueden
+listar todas las muestras posibles y verificar las fórmulas exactamente.
+
+```{r ht-enumeracion}
+# Poblacion: N = 4 unidades con totales conocidos.
+pob_mini <- data.frame(
+  i = 1:4,
+  M = c(10, 20, 30, 40),
+  t = c(15, 22, 33, 60)
+)
+N <- nrow(pob_mini); n <- 2
+T_real <- sum(pob_mini$t)
+
+# Hay C(4,2) = 6 muestras posibles de tamaño 2.
+muestras_pos <- t(combn(N, 2))
+
+# Se define un diseño WOR de tamaño fijo n = 2 mediante la asignacion
+# explicita de probabilidades a cada muestra posible. Cualquier asignacion
+# con suma 1 y marginales coherentes define un diseño valido.
+prob_muestra <- c(
+  # (1,2)  (1,3)  (1,4)  (2,3)  (2,4)  (3,4)
+   0.05,   0.05,  0.30,  0.05,  0.40,  0.15
+)
+stopifnot(abs(sum(prob_muestra) - 1) < 1e-10)
+
+# A partir del diseño se obtienen las probabilidades de inclusion marginales
+# pi_i = sum_{S: i in S} p_S
+pob_mini$pi <- sapply(1:N, function(ii) {
+  sum(prob_muestra[ apply(muestras_pos, 1, function(s) ii %in% s) ])
+})
+stopifnot(abs(sum(pob_mini$pi) - n) < 1e-10)        # tamaño fijo n = 2
+
+# pi_ij a partir de las muestras posibles
+pi_ij <- matrix(0, N, N)
+for (k in seq_len(nrow(muestras_pos))) {
+  S <- muestras_pos[k, ]
+  pi_ij[S[1], S[2]] <- pi_ij[S[1], S[2]] + prob_muestra[k]
+  pi_ij[S[2], S[1]] <- pi_ij[S[1], S[2]]
+}
+diag(pi_ij) <- pob_mini$pi
+
+# --- Calculo exacto de V(t_HT) por enumeracion --------------------------
+t_HT_por_muestra <- apply(muestras_pos, 1, function(S) {
+  sum(pob_mini$t[S] / pob_mini$pi[S])
+})
+
+E_THT  <- sum(prob_muestra * t_HT_por_muestra)         # debe igualar T_real
+V_THT  <- sum(prob_muestra * (t_HT_por_muestra - T_real)^2)
+
+# --- Calculo via formula de doble suma ----------------------------------
+V_form <- 0
+for (i in 1:N) for (j in 1:N) {
+  V_form <- V_form + (pi_ij[i, j] - pob_mini$pi[i] * pob_mini$pi[j]) *
+                     (pob_mini$t[i] / pob_mini$pi[i]) *
+                     (pob_mini$t[j] / pob_mini$pi[j])
+}
+
+resumen_ht <- data.frame(
+  Total_real      = T_real,
+  E_THT_enum      = round(E_THT, 4),
+  V_THT_enum      = round(V_THT, 4),
+  V_THT_formula   = round(V_form, 4)
+)
+kable(resumen_ht, caption = "Verificación numérica del estimador HT por enumeración exhaustiva.")
+```
+
+La esperanza enumerada del estimador HT coincide con $t$ (insesgadez) y la
+varianza enumerada coincide hasta el último decimal con la fórmula de doble
+suma, lo cual confirma la teoría.
+
+## Selecting the psus
+
+Implementar un diseño WOR-PPS con $\pi_i$ exactos es más complejo que en el
+caso WR. Tres métodos clásicos resuelven el problema con distintos
+compromisos:
+
+### Muestreo sistemático con probabilidad proporcional al tamaño
+
+1. Calcular las acumuladas $T_i = \sum_{k=1}^i M_k$ y $K = T_N$.
+2. Sea $a = K/n$ el "salto" sistemático.
+3. Generar $u \sim \text{Uniforme}(0, a)$ y considerar los puntos
+   $u, u+a, u+2a, \ldots, u+(n-1)a$.
+4. Seleccionar la psu $i$ tal que $T_{i-1} < u + ka \le T_i$ para cada $k$.
+
+Las probabilidades marginales son exactas ($\pi_i = nM_i/K$ si todas las
+$M_i \le K/n$), pero las **conjuntas no se pueden calcular analíticamente** en
+general — esto suele ser el principal inconveniente.
+
+### Método de Brewer
+
+Se elige cada unidad secuencialmente con probabilidades condicionales
+ajustadas, garantizando $\pi_i = nM_i/K$ y permitiendo el cálculo de
+$\pi_{ij}$. Es el método por defecto en `sampling::UPbrewer()`.
+
+### Método de Sampford
+
+Generaliza Brewer a $n$ arbitrario y produce $\pi_{ij}$ explícitos
+(`sampling::UPsampford()`). Tiende a ser computacionalmente más caro pero
+ofrece propiedades estadísticas excelentes.
+
+```{r seleccion-wor, cache=TRUE}
+# --- Verificacion empirica: que pi_i empirico converge al teorico -------
+set.seed(2026)
+N <- 15
+M_pob <- sample(50:500, N, replace = TRUE)
+n     <- 5
+pi_t  <- inclusionprobabilities(M_pob, n)         # pi_i teoricos
+
+B <- 5000
+sel_brewer <- replicate(B, UPbrewer(pi_t))
+sel_sampf  <- replicate(B, UPsampford(pi_t))
+sel_syst   <- replicate(B, UPsystematic(pi_t))
+
+pi_brewer <- rowMeans(sel_brewer)
+pi_sampf  <- rowMeans(sel_sampf)
+pi_syst   <- rowMeans(sel_syst)
+
+tabla_pi <- data.frame(
+  unidad     = 1:N,
+  pi_teorico = round(pi_t, 4),
+  emp_brewer = round(pi_brewer, 4),
+  emp_sampf  = round(pi_sampf,  4),
+  emp_syst   = round(pi_syst,   4)
+)
+kable(tabla_pi,
+      caption = "Probabilidades de inclusión empíricas (5000 réplicas) bajo tres métodos PPS-WOR.")
+```
+
+Las frecuencias empíricas coinciden con las $\pi_i$ teóricas en los tres
+métodos, dentro del error de Monte Carlo. La función
+`sampling::inclusionprobabilities()` es muy útil porque ajusta automáticamente
+los $M_i$ que excederían 1 si se calculara ingenuamente $nM_i/K$.
+
+## The Horvitz–Thompson Estimator for Two-Stage Sampling
+
+En dos etapas, sean $\pi_i$ las probabilidades de inclusión de la primera
+etapa y $\pi_{j|i}$ las probabilidades condicionales de seleccionar la ssu $j$
+dada la psu $i$. El peso de la ssu $j$ dentro de la psu $i$ es
+
+$$
+w_{ij} \;=\; \frac{1}{\pi_i \cdot \pi_{j|i}}.
+$$
+
+El estimador de Horvitz-Thompson del total es
+
+$$
+\hat t_{HT} \;=\; \sum_{i \in \mathcal S} \frac{\hat t_i}{\pi_i}
+\;=\; \sum_{i \in \mathcal S} \sum_{j \in \mathcal S_i} w_{ij} y_{ij},
+$$
+
+donde $\hat t_i$ es el estimador insesgado del total $t_i$ basado en la
+submuestra $\mathcal S_i$. Cuando dentro de cada psu se hace MAS de tamaño
+$m_i$ a partir de $M_i$ ssus, $\pi_{j|i} = m_i/M_i$ y $w_{ij} = M_i/(\pi_i m_i)$.
+
+La fórmula de la varianza tiene dos componentes (uno entre psus, otro
+dentro), análoga a §6.3, pero con $\pi_i$ en vez de $\psi_i$. Su estimación
+exacta requiere las $\pi_{ij}$, lo cual hace que en la práctica se prefiera
+con frecuencia la **aproximación con reemplazo**: se calcula la varianza como
+si el muestreo de psus fuera WR. Esa aproximación es conservadora cuando la
+fracción de muestreo de primera etapa $n/N$ es pequeña. El paquete `survey`
+permite ambas opciones. Un caso concreto de este diseño en dos etapas se
+ilustra en el Ejemplo 2 de §6.5 con el dataset `classpps.csv`.
+
+## Weights in Unequal-Probability Samples
+
+En todo diseño WOR, el peso muestral de la unidad $i$ se define como
+
+$$
+w_i \;=\; \frac{1}{\pi_i}.
+$$
+
+Sus propiedades clave son:
+
+- $E\!\left[\sum_{i \in \mathcal S} w_i\right] = N$ (los pesos sumados estiman
+  el tamaño poblacional en número de psus).
+- $E\!\left[\sum_{i \in \mathcal S} w_i M_i\right] = K$ (el tamaño poblacional
+  total).
+- $\hat t_{HT} = \sum_{i \in \mathcal S} w_i t_i$.
+
+La interpretación de $w_i$ es: **número de unidades poblacionales que la
+unidad muestral $i$ representa**. En la siguiente tabla se compara con los
+pesos de los diseños vistos en capítulos anteriores.
+
+```{r tabla-pesos, echo=FALSE}
+df_pesos <- data.frame(
+  Diseño                        = c("MAS de tamaño $n$",
+                                    "Estratificado, estrato $h$",
+                                    "Conglomerados de igual probabilidad",
+                                    "PPS con reemplazo (Hansen-Hurwitz)",
+                                    "PPS sin reemplazo (Horvitz-Thompson)"),
+  `Peso $w_i$`                  = c("$N/n$",
+                                    "$N_h/n_h$",
+                                    "$N \\cdot M_i / (n m_i)$",
+                                    "$1/(n\\,\\psi_i)$",
+                                    "$1/\\pi_i$"),
+  `Suma esperada de los pesos`  = c("$N$",
+                                    "$N$",
+                                    "$N\\bar M$",
+                                    "$N$ sólo si $\\psi_i = 1/N$",
+                                    "$N$"),
+  check.names = FALSE
+)
+kable(df_pesos,
+      caption = "Pesos muestrales en distintos diseños cubiertos en el curso.")
+```
+
+::: {.alert .alert-info}
+**Ideas clave §6.4**
+
+- En diseños WOR, $\pi_i$ y $\pi_{ij}$ son las cantidades fundamentales.
+- El estimador HT $\hat t_{HT} = \sum_{i \in \mathcal S} t_i/\pi_i$ es
+  insesgado para $t$ siempre que $\pi_i > 0$ para todo $i$.
+- La forma SYG de la varianza es no-negativa para diseños donde
+  $\pi_{ij} \le \pi_i\pi_j$ (Brewer, Sampford).
+- En la práctica, los métodos de Brewer y Sampford producen muestras WOR-PPS
+  con $\pi_{ij}$ calculables; el sistemático sólo asegura las marginales.
+:::
+
+# Examples of Unequal-Probability Samples
+
+En esta sección se aplican las técnicas anteriores a tres conjuntos de datos
+oficiales de Lohr (3a edición), todos cargados desde `CSV data sets for SDA 3e/`.
+
+## Ejemplo 1: estados de EE.UU. (`statepps.csv`)
+
+El marco contiene los $N=51$ estados (más D.C.) con su población en 2019. Se
+tomará una muestra de $n=10$ estados con probabilidad proporcional a la
+población y se estimará el **número total de condados** del país.
+
+```{r ejemplo-statepps, cache=TRUE}
+state_frame <- read.csv(file.path(ruta_datos, "statepps.csv"),
+                        stringsAsFactors = FALSE)
+head(state_frame, 4)
+
+# Validacion: total real conocido por enumeracion
+N      <- nrow(state_frame)
+T_real <- sum(state_frame$counties)
+
+# --- Diseño PPS-WOR sistemático con n = 10 ------------------------------
+n   <- 10
+pis <- inclusionprobabilities(state_frame$pop2019, n)
+
+set.seed(2026)
+sel <- UPsystematic(pis)                          # vector indicador
+muestra_states <- state_frame[sel == 1, ]
+muestra_states$pi   <- pis[sel == 1]
+muestra_states$peso <- 1 / muestra_states$pi
+
+# --- Estimacion HT del total de condados --------------------------------
+t_HT <- sum(muestra_states$counties / muestra_states$pi)
+
+# Como el sistematico no permite calcular pi_ij analiticamente, se usa la
+# aproximacion conservadora con reemplazo (forma equivalente a Hansen-Hurwitz):
+muestra_states$peso_wr <- 1 / (n * (state_frame$pop2019[sel == 1] /
+                                    sum(state_frame$pop2019)))
+diseno_state <- svydesign(ids = ~1, weights = ~peso_wr, data = muestra_states)
+estim <- svytotal(~counties, diseno_state)
+
+ic <- confint(estim, level = 0.95)
+
+resumen_state <- data.frame(
+  total_real = T_real,
+  HT_total   = round(t_HT, 1),
+  SE_aprox   = round(SE(estim), 1),
+  IC_inf95   = round(ic[1], 1),
+  IC_sup95   = round(ic[2], 1)
+)
+kable(resumen_state,
+      caption = "Estimación HT del total de condados en EE.UU. usando PPS-WOR sistemático.")
+```
+
+Nótese un detalle importante: California tiene $n M_i / K \approx 1.20 > 1$, por
+lo que su probabilidad de inclusión nominal excedería 1. La función
+`inclusionprobabilities()` la ajusta automáticamente a $\pi = 1$, lo cual
+significa que California se convierte en una **unidad autoincluida** (en
+inglés *self-representing unit*): aparece con certeza en toda muestra y aporta
+peso $w_i = 1$. La cuota restante $n - 1 = 9$ se redistribuye entre los demás
+50 estados proporcionalmente a su población. Las unidades autoincluidas son
+habituales en marcos con grandes asimetrías de tamaño (megaciudades en
+encuestas urbanas, países como China o India en estudios internacionales).
+
+```{r ejemplo-statepps-grafico}
+df_states <- data.frame(
+  estado     = state_frame$state,
+  pob        = state_frame$pop2019 / 1e6,
+  condados   = state_frame$counties,
+  selec      = factor(ifelse(sel == 1, "Seleccionado", "No seleccionado"),
+                      levels = c("Seleccionado", "No seleccionado"))
+)
+
+p <- plot_ly(df_states,
+             x = ~pob, y = ~condados, color = ~selec,
+             colors = c(unname(paleta_muestreo["acento"]),
+                        unname(paleta_muestreo["apoyo"])),
+             text = ~estado, type = "scatter", mode = "markers",
+             marker = list(size = 9))
+estilo_muestreo(p,
+  titulo = "Población vs. condados: estados seleccionados PPS",
+  eje_x  = "Población 2019 (millones)",
+  eje_y  = "Número de condados")
+```
+
+El estimador HT produce una estimación cercana al valor real (el total de
+condados es conocido aquí porque la población se enumera completa, lo cual
+permite evaluar la calidad del diseño). Como se puede observar en el gráfico,
+el muestreo sistemático PPS distribuye las inclusiones a lo largo de todo el
+rango poblacional.
+
+## Ejemplo 2: clases de estadística (`classpps.csv`)
+
+El archivo contiene una muestra **ya seleccionada** mediante PPS de $n=5$
+clases (probabilidades proporcionales al tamaño `class_size`) con $m=4$
+estudiantes por clase. La variable de interés son las horas semanales de
+estudio. La muestra fue tomada de un marco de $N=15$ clases.
+
+```{r ejemplo-classpps}
+classes <- read.csv(file.path(ruta_datos, "classpps.csv"),
+                    stringsAsFactors = FALSE)
+head(classes)
+table(classes$class)         # 4 ssus por psu
+
+# El peso final esta provisto: w_ij = 1/(pi_i * pi_{j|i}). La suma de
+# los pesos estima el numero total de estudiantes en el marco.
+N_clases <- 15                 # numero de clases en el marco original
+n        <- 5                  # numero de psus seleccionadas
+m        <- 4                  # numero de ssus por psu (MAS dentro)
+
+# --- Estimacion del total y la media de horas con survey ----------------
+diseno_class <- svydesign(ids = ~class, weights = ~finalweight, data = classes)
+total_h  <- svytotal(~hours, diseno_class)
+media_h  <- svymean(~hours,  diseno_class)
+
+ic_total <- confint(total_h, level = 0.95)
+ic_media <- confint(media_h, level = 0.95)
+
+resumen_class <- data.frame(
+  Cantidad   = c("Total horas estudio", "Media horas/estudiante"),
+  Estimacion = c(round(coef(total_h), 1), round(coef(media_h), 2)),
+  SE         = c(round(SE(total_h), 1),   round(SE(media_h), 3)),
+  IC_inf     = c(round(ic_total[1], 1),   round(ic_media[1], 2)),
+  IC_sup     = c(round(ic_total[2], 1),   round(ic_media[2], 2))
+)
+kable(resumen_class,
+      caption = "Estimación HT en classpps.csv (Lohr): total y promedio de horas de estudio.")
+```
+
+Obsérvese que `survey` calcula automáticamente el SE a partir de los $n=5$
+totales estimados por psu, $\hat t_i = M_i \bar y_{i\mathcal S}$, y aplica la
+fórmula del componente entre psus. Al haberse seleccionado las clases con
+$\psi_i \propto M_i$ y haberse hecho MAS dentro, el diseño es autoponderado
+(el peso final `finalweight` es el mismo para todas las observaciones).
+
+```{r ejemplo-classpps-grafico}
+df_class <- aggregate(hours ~ class + class_size, data = classes, FUN = mean)
+df_class$total_clase <- df_class$class_size * df_class$hours
+
+p <- plot_ly(df_class,
+             x = ~class_size, y = ~total_clase,
+             text = ~paste("Clase", class),
+             type = "scatter", mode = "markers+text",
+             textposition = "top center",
+             marker = list(color = unname(paleta_muestreo["primario"]),
+                           size = 12))
+estilo_muestreo(p,
+  titulo = "Total de horas estimado por clase",
+  eje_x  = "Tamaño de la clase (M_i)",
+  eje_y  = "Total estimado de horas por clase",
+  mostrar_leyenda = FALSE)
+```
+
+## Ejemplo 3: condados (`agpps.csv`) y la varianza SYG
+
+El conjunto `agpps.csv` corresponde al ejemplo 6.10 de Lohr: una muestra de
+$n=15$ condados de un marco de $N=3{,}078$, seleccionados con PPS-WOR
+basándose en el número de granjas en 1987 como medida de tamaño. El archivo
+contiene **todas las probabilidades de inclusión conjuntas** (`JtProb_1` a
+`JtProb_15`), lo cual permite calcular la varianza HT y la SYG **exactamente**.
+
+```{r ejemplo-agpps}
+ag <- read.csv(file.path(ruta_datos, "agpps.csv"), stringsAsFactors = FALSE)
+n <- nrow(ag)
+
+# Variable de interes: total de acres en 1992
+y <- ag$acres92
+
+# Probabilidades de inclusion marginales y conjuntas
+pi_i  <- ag$SelectionProb
+JtCols <- grep("^JtProb", names(ag), value = TRUE)
+PiMat  <- as.matrix(ag[, JtCols])         # n x n; diagonal son 0 (convencion del archivo)
+diag(PiMat) <- pi_i                       # se pone pi_i en la diagonal
+
+# --- Estimador puntual --------------------------------------------------
+t_HT <- sum(y / pi_i)
+
+# --- Varianza HT (doble suma) -------------------------------------------
+V_HT <- 0
+for (i in 1:n) for (j in 1:n) {
+  V_HT <- V_HT + (PiMat[i, j] - pi_i[i] * pi_i[j]) / PiMat[i, j] *
+                 (y[i] / pi_i[i]) * (y[j] / pi_i[j])
+}
+
+# --- Varianza SYG (suma sobre el triangulo superior i < j) -------------
+# La formula original tiene (1/2) * sum_{i != j}, que cubre cada par dos
+# veces. Sumando solo sobre i < j (cada par una vez), el factor 1/2 ya
+# queda absorbido y se obtiene exactamente el mismo numero.
+V_SYG <- 0
+for (i in 1:(n-1)) for (j in (i+1):n) {
+  num   <- pi_i[i] * pi_i[j] - PiMat[i, j]
+  diff2 <- (y[i] / pi_i[i] - y[j] / pi_i[j])^2
+  V_SYG <- V_SYG + (num / PiMat[i, j]) * diff2
+}
+
+resumen_ag <- data.frame(
+  Estimador        = c("Total estimado", "SE (HT)", "SE (SYG)",
+                       "IC 95% inferior", "IC 95% superior"),
+  Valor            = c(format(t_HT, big.mark = ",", scientific = FALSE),
+                       format(round(sqrt(V_HT)),  big.mark = ","),
+                       format(round(sqrt(V_SYG)), big.mark = ","),
+                       format(round(t_HT - 1.96 * sqrt(V_SYG)),
+                              big.mark = ","),
+                       format(round(t_HT + 1.96 * sqrt(V_SYG)),
+                              big.mark = ","))
+)
+kable(resumen_ag,
+      caption = "Estimación HT del total de acres en EE.UU. (1992) usando agpps.csv.")
+```
+
+Aunque ambos estimadores son insesgados para la misma varianza poblacional
+$V(\hat t_{HT})$, en este ejemplo producen valores numéricos muy distintos
+(SYG es del orden de varias veces menor que HT). La explicación es la
+siguiente: cuando las cantidades $t_i/\pi_i$ están bien alineadas (i.e., el
+diseño PPS está bien calibrado), las diferencias $t_i/\pi_i - t_j/\pi_j$ son
+pequeñas y la varianza SYG las eleva al cuadrado, lo que la hace muy estable.
+En cambio, los términos diagonales $(1-\pi_i)t_i^2/\pi_i^2$ del estimador HT
+no aprovechan esa cancelación y producen un valor numérico mucho mayor.
+Por esta razón, **en diseños PPS-WOR de tamaño fijo se recomienda reportar la
+varianza SYG**, que típicamente coincide con la salida de software estándar
+(`survey::svyrecvar()` con `pps="brewer"`, por ejemplo).
+
+Lohr discute en detalle por qué el estimador HT es notablemente más
+eficiente que un MAS de igual $n$ en este ejemplo: el muestreo PPS aprovecha
+la enorme heterogeneidad entre condados.
+
+## ¿Cuándo PPS gana, cuándo no? Cuantificación sobre `statepps`
+
+Como el marco `statepps` contiene la población completa de los 51 estados,
+es posible cuantificar **exactamente** el comportamiento del muestreo PPS
+frente al MAS de igual tamaño mediante simulación de Monte Carlo. Se
+estudian dos variables de interés con estructuras de correlación muy
+distintas con el tamaño $M_i = $ `pop2019`:
+
+- $y^{(a)}_i = $ **número de condados** (`counties`): correlación moderada
+  con la población (`r round(cor(read.csv(file.path(ruta_datos,"statepps.csv"))$counties, read.csv(file.path(ruta_datos,"statepps.csv"))$pop2019), 2)`).
+- $y^{(b)}_i = $ **ingreso fiscal simulado**, definido como
+  $y^{(b)}_i = 0.05\, M_i + \varepsilon_i$ con
+  $\varepsilon_i \sim N(0, (0.005\,\bar M)^2)$: por construcción,
+  prácticamente proporcional a $M_i$.
+
+```{r mas-vs-pps, cache=TRUE}
+sf <- read.csv(file.path(ruta_datos, "statepps.csv"))
+N  <- nrow(sf); n <- 10
+
+# Variable (a): condados — correlacion moderada con M_i
+y_a    <- sf$counties
+
+# Variable (b): ingreso simulado — proporcional a M_i (correlacion ~ 1)
+set.seed(2026)
+y_b    <- 0.05 * sf$pop2019 + rnorm(N, mean = 0, sd = 0.005 * mean(sf$pop2019))
+
+T_a <- sum(y_a); T_b <- sum(y_b)
+
+pi_pps <- inclusionprobabilities(sf$pop2019, n)
+
+# --- Simulacion MC: B muestras independientes con cada diseño y variable ---
+set.seed(2026)
+B <- 3000
+
+mc_design <- function(y, T_real) {
+  sim_pps <- replicate(B, {
+    s <- UPsystematic(pi_pps)
+    sum(y[s == 1] / pi_pps[s == 1])
+  })
+  sim_mas <- replicate(B, N * mean(y[sample.int(N, n)]))
+  data.frame(
+    SE_MAS  = sd(sim_mas),
+    SE_PPS  = sd(sim_pps),
+    RECM_MAS = sqrt(mean((sim_mas - T_real)^2)),
+    RECM_PPS = sqrt(mean((sim_pps - T_real)^2))
+  )
+}
+
+res_a <- mc_design(y_a, T_a)
+res_b <- mc_design(y_b, T_b)
+
+tabla_eff <- data.frame(
+  Variable      = c("(a) Condados (corr. moderada)",
+                    "(b) Ingreso simulado (corr. ~ 1)"),
+  SE_MAS        = round(c(res_a$SE_MAS, res_b$SE_MAS), 1),
+  SE_PPS        = round(c(res_a$SE_PPS, res_b$SE_PPS), 1),
+  RECM_MAS      = round(c(res_a$RECM_MAS, res_b$RECM_MAS), 1),
+  RECM_PPS      = round(c(res_a$RECM_PPS, res_b$RECM_PPS), 1),
+  Eficiencia    = round(c(res_a$RECM_MAS / res_a$RECM_PPS,
+                          res_b$RECM_MAS / res_b$RECM_PPS), 2)
+)
+kable(tabla_eff,
+      caption = "MC (3000 réplicas): MAS vs. PPS-WOR para dos variables con distinta correlación con el tamaño $M_i$.")
+```
+
+La columna *Eficiencia* es el cociente $\text{RECM}_{\text{MAS}} /
+\text{RECM}_{\text{PPS}}$; valores mayores que 1 indican ventaja de PPS.
+
+Los resultados son contundentes:
+
+- En la variable (a), `counties`, la eficiencia ronda 1 (en algunas
+  simulaciones incluso ligeramente menor): **PPS no aporta ventaja**, porque
+  la cantidad de condados no escala con la población. California, con
+  39.5 millones de habitantes, sólo tiene 58 condados; Texas, con menos de
+  la mitad de población, tiene 254. La medida de tamaño elegida es
+  irrelevante para la variable de interés.
+- En la variable (b), construida deliberadamente proporcional a $M_i$, la
+  eficiencia es muy superior a 1: **PPS reduce drásticamente el RECM**,
+  exactamente como predice la teoría ($t_i/\pi_i$ casi constante implica
+  varianza de HT casi nula).
+
+::: {.alert .alert-warning}
+**Lección práctica.** La elección de la medida de tamaño $M_i$ es la decisión
+crítica del muestreo PPS. Una elección mal alineada con la variable de
+interés puede dejar a PPS *peor* que MAS. La regla operativa: usar PPS
+únicamente cuando exista evidencia (estudio piloto, registros previos) de
+que $\text{Cov}(t_i, M_i) > 0$.
+:::
+
+::: {.alert .alert-info}
+**Ideas clave §6.5**
+
+- Cuando se dispone de la matriz $\pi_{ij}$ (`agpps.csv`), la varianza HT y
+  la SYG se calculan exactamente y suelen coincidir hasta cifras
+  significativas.
+- El paquete `survey` automatiza el cálculo cuando los pesos están provistos
+  (`classpps.csv`), pero la aproximación WR (Hansen-Hurwitz) es la más
+  común en la práctica.
+- PPS es especialmente eficiente cuando la población presenta gran
+  heterogeneidad de tamaños y la variable de interés está correlacionada con
+  la medida de tamaño.
+:::
+
+# Randomization Theory Results and Proofs* {.section-avanzada}
+
+::: {.alert .alert-warning}
+**Tópico avanzado.** Esta sección recopila demostraciones formales de los
+principales resultados de inferencia bajo aleatorización. Su lectura no es
+estrictamente necesaria para aplicar los métodos, pero sí para comprender
+*por qué* funcionan.
+:::
+
+### Demostración: insesgadez de Hansen-Hurwitz (WR)
+
+Sea $T^\star_k = t_{i_k}/\psi_{i_k}$ con $i_k$ extraído de $\{1,\ldots,N\}$ con
+probabilidades $\psi$. Cada $T^\star_k$ tiene esperanza
+
+$$
+E[T^\star_k] \;=\; \sum_{i=1}^N \psi_i \cdot \frac{t_i}{\psi_i} \;=\; t.
+$$
+
+Por linealidad, $E[\hat t_\psi] = E[\frac{1}{n}\sum_k T^\star_k] = t$.
+$\square$
+
+### Demostración: varianza de Hansen-Hurwitz
+
+Como las $T^\star_k$ son i.i.d.,
+
+$$
+V(\hat t_\psi) \;=\; \frac{V(T^\star)}{n}
+\;=\; \frac{1}{n}\sum_{i=1}^N \psi_i\!\left(\frac{t_i}{\psi_i}-t\right)^2.
+$$
+
+$\square$
+
+### Demostración: insesgadez de Horvitz-Thompson (WOR)
+
+Definiendo $Q_i = \mathbf 1\{i \in \mathcal S\}$,
+
+$$
+E[\hat t_{HT}] \;=\; \sum_{i=1}^N \frac{t_i}{\pi_i} E[Q_i]
+\;=\; \sum_{i=1}^N \frac{t_i}{\pi_i} \pi_i \;=\; t.
+$$
+
+$\square$
+
+### Demostración: varianza de Horvitz-Thompson
+
+$$
+V(\hat t_{HT})
+\;=\; V\!\left(\sum_{i=1}^N \frac{t_i}{\pi_i} Q_i\right)
+\;=\; \sum_{i,j} \frac{t_i t_j}{\pi_i \pi_j}\, \text{Cov}(Q_i, Q_j),
+$$
+
+con $\text{Cov}(Q_i, Q_j) = \pi_{ij} - \pi_i\pi_j$ (donde $\pi_{ii} = \pi_i$
+implica $\text{Cov}(Q_i, Q_i) = \pi_i(1 - \pi_i)$).
+$\square$
+
+### Forma de Sen-Yates-Grundy (esbozo)
+
+Para diseños de tamaño fijo $n$, $\sum_{i=1}^N Q_i = n$ es determinista, por lo
+que $\text{Var}\!\left(\sum_i Q_i\right) = 0$. Expandiendo,
+
+$$
+0 \;=\; \sum_{i=1}^N \sum_{j=1}^N \text{Cov}(Q_i, Q_j)
+\;=\; \sum_{i=1}^N \sum_{j=1}^N (\pi_{ij} - \pi_i\pi_j),
+$$
+
+y, fijando $i$, también $\sum_{j=1}^N (\pi_{ij} - \pi_i\pi_j) = 0$. Sustituyendo
+esta identidad en la fórmula de doble suma de $V(\hat t_{HT})$ y reagrupando
+los términos cruzados, se obtiene
+
+$$
+V_{SYG}(\hat t_{HT}) \;=\; \frac{1}{2}\sum_{i \ne j}(\pi_i\pi_j - \pi_{ij})
+\left(\frac{t_i}{\pi_i} - \frac{t_j}{\pi_j}\right)^2.
+$$
+
+La derivación completa, paso a paso, se desarrolla en el apéndice A de
+Lohr (3a ed.).
+
+# Model-Based Inference with Unequal-Probability Samples* {.section-avanzada}
+
+::: {.alert .alert-warning}
+**Tópico avanzado.** Se presenta brevemente la perspectiva basada en modelos,
+complementaria a la inferencia por aleatorización.
+:::
+
+Mientras que la inferencia clásica del Capítulo 2 al 6 trata las observaciones
+$y_i$ como **fijas** y la aleatoriedad proviene únicamente del muestreo, el
+enfoque **basado en modelos** asume que los $y_i$ son realizaciones de una
+*superpoblación* estocástica. Bajo el modelo lineal sin intercepto
+
+$$
+Y_i \;=\; \beta x_i + \varepsilon_i, \qquad
+\text{Var}(\varepsilon_i) = \sigma^2 g(x_i),
+$$
+
+con $x_i = M_i$, los estimadores óptimos varían según la forma de $g$:
+
+| Forma de $g(x_i)$ | Estimador óptimo |
+|-------------------|------------------|
+| $g(x_i) = 1$ (homocedástico) | Regresión |
+| $g(x_i) = x_i$ (varianza proporcional al tamaño) | **Razón** (≈ HT con $\pi_i \propto x_i$) |
+| $g(x_i) = x_i^2$ | Media de razones: $\hat t = K \cdot \tfrac{1}{n}\sum_{i \in \mathcal S} y_i / x_i$ |
+
+Brewer (1979) demostró que el estimador HT con $\pi_i \propto x_i$ es óptimo
+*basado en modelo* exactamente cuando $g(x_i) = x_i$. Esto implica que
+PPS-WOR no es una técnica "ad hoc" sino que coincide con la mejor estimación
+posible bajo un modelo natural de heterocedasticidad.
+
+La principal ventaja del enfoque por aleatorización es su **robustez**: si el
+modelo se especifica mal, el estimador HT sigue siendo insesgado en el sentido
+del diseño, mientras que un estimador puramente basado en modelo puede sesgar
+sistemáticamente. La práctica moderna (Särndal et al. 1992) integra ambos
+enfoques bajo el paradigma "modelo-asistido": construir el estimador con la
+intuición del modelo, pero evaluar sus propiedades por aleatorización.
+
+# Resumen comparativo de fórmulas
+
+```{r resumen-formulas, echo=FALSE}
+res <- data.frame(
+  Diseño      = c("PPS-WR (Hansen-Hurwitz)",
+                  "PPS-WOR (Horvitz-Thompson)",
+                  "PPS-WR dos etapas",
+                  "PPS-WOR dos etapas"),
+  Estimador   = c("$\\hat t_\\psi = \\frac{1}{n}\\sum t_{i}/\\psi_{i}$",
+                  "$\\hat t_{HT} = \\sum_{i\\in\\mathcal S} t_i/\\pi_i$",
+                  "$\\hat t_\\psi = \\frac{1}{n}\\sum \\hat t_{i}/\\psi_{i}$",
+                  "$\\hat t_{HT} = \\sum_{i\\in\\mathcal S} \\hat t_i/\\pi_i$"),
+  `Peso $w_i$` = c("$1/(n\\psi_i)$",
+                  "$1/\\pi_i$",
+                  "$1/(n\\psi_i \\pi_{j|i})$",
+                  "$1/(\\pi_i\\pi_{j|i})$"),
+  `Varianza estimada` = c("$\\frac{1}{n(n-1)}\\sum (t_i/\\psi_i - \\hat t_\\psi)^2$",
+                          "doble suma con $\\pi_{ij}$ o forma SYG",
+                          "$\\frac{1}{n(n-1)}\\sum (\\hat t_i/\\psi_i - \\hat t_\\psi)^2$",
+                          "doble suma con $\\pi_{ij}$ + comp. interno"),
+  check.names = FALSE
+)
+kable(res, caption = "Resumen de los estimadores y varianzas del Capítulo 6.")
+```
+
+# Ejercicios de autoevaluación
+
+A continuación se proponen seis ejercicios. Las soluciones detalladas se
+encuentran a continuación de cada enunciado dentro de un bloque colapsable
+(haga clic en *Ver solución*).
+
+## Ejercicio 1 — Cálculo manual del estimador de Hansen-Hurwitz
+
+Una población contiene $N = 5$ psus con los siguientes totales y
+probabilidades de selección:
+
+| psu | $t_i$ | $\psi_i$ |
+|-----|-------|----------|
+| 1   |  20   | 0.10     |
+| 2   |  60   | 0.20     |
+| 3   | 120   | 0.30     |
+| 4   | 200   | 0.25     |
+| 5   | 300   | 0.15     |
+
+Se selecciona una muestra con reemplazo de tamaño $n = 3$, y resulta que las
+psus seleccionadas son 3, 5 y 3 (la 3 dos veces).
+
+(a) Calcule $\hat t_\psi$.
+(b) Calcule el estimador de varianza $\hat V(\hat t_\psi)$ y construya un IC
+    al 95% (use $z_{0.975} = 1.96$).
+
+<details>
+<summary>**Ver solución**</summary>
+
+(a) Las cantidades expandidas son:
+
+- psu 3: $t_3/\psi_3 = 120/0.30 = 400$
+- psu 5: $t_5/\psi_5 = 300/0.15 = 2000$
+- psu 3 (segunda vez): $400$
+
+$$
+\hat t_\psi = \frac{1}{3}(400 + 2000 + 400) = \frac{2800}{3} \approx 933.33.
+$$
+
+(b) Desviaciones cuadráticas respecto a $\hat t_\psi = 933.33$:
+
+- $(400 - 933.33)^2 = 284{,}444.4$
+- $(2000 - 933.33)^2 = 1{,}137{,}777.8$
+- $(400 - 933.33)^2 = 284{,}444.4$
+
+Suma $= 1{,}706{,}666.7$, y por tanto
+
+$$
+\hat V(\hat t_\psi) = \frac{1{,}706{,}666.7}{3 \cdot 2} = 284{,}444.4,
+\qquad SE = \sqrt{284{,}444.4} \approx 533.3.
+$$
+
+IC 95%: $933.33 \pm 1.96 \cdot 533.33 = (-111.9,\; 1978.7)$.
+
+```{r solucion-ej1}
+ti  <- c(120, 300, 120)
+psi <- c(0.30, 0.15, 0.30)
+n   <- 3
+expand <- ti / psi
+t_hat  <- mean(expand)
+V_hat  <- sum((expand - t_hat)^2) / (n * (n - 1))
+c(t_hat = t_hat, SE = sqrt(V_hat),
+  IC_inf = t_hat - 1.96 * sqrt(V_hat),
+  IC_sup = t_hat + 1.96 * sqrt(V_hat))
+```
+
+</details>
+
+## Ejercicio 2 — Selección por método acumulativo
+
+Sea una población con $N = 5$ psus y medidas de tamaño
+$M = (40, 60, 80, 70, 50)$. Se desea seleccionar $n = 2$ psus con
+probabilidades $\psi_i = M_i / K$ usando el método acumulativo y los siguientes
+números aleatorios uniformes en $(0, K)$: $r_1 = 95$, $r_2 = 235$.
+
+¿Cuáles psus se seleccionan?
+
+<details>
+<summary>**Ver solución**</summary>
+
+Acumuladas: $T_1=40$, $T_2=100$, $T_3=180$, $T_4=250$, $T_5=300=K$.
+
+- $r_1 = 95$: como $T_1 = 40 < 95 \le 100 = T_2$, se selecciona la psu 2.
+- $r_2 = 235$: como $T_3 = 180 < 235 \le 250 = T_4$, se selecciona la psu 4.
+
+Muestra seleccionada: $\{2, 4\}$.
+
+```{r solucion-ej2}
+M  <- c(40, 60, 80, 70, 50)
+Tc <- cumsum(M)
+sapply(c(95, 235), function(r) findInterval(r, Tc) + 1L)
+```
+
+</details>
+
+## Ejercicio 3 — Probabilidades de inclusión y conjuntas
+
+En una población de $N = 4$ psus se realiza un muestreo de tamaño $n = 2$
+mediante un diseño explícito en el cual las $\binom{4}{2} = 6$ muestras
+posibles tienen las siguientes probabilidades:
+
+| Muestra | $\{1,2\}$ | $\{1,3\}$ | $\{1,4\}$ | $\{2,3\}$ | $\{2,4\}$ | $\{3,4\}$ |
+|---------|-----------|-----------|-----------|-----------|-----------|-----------|
+| $p_S$   |   0.05    |   0.10    |   0.20    |   0.05    |   0.40    |   0.20    |
+
+(a) Calcule $\pi_i$ para $i = 1, 2, 3, 4$.
+(b) Calcule $\pi_{ij}$ para $i < j$.
+(c) Verifique que $\sum_i \pi_i = n$.
+
+<details>
+<summary>**Ver solución**</summary>
+
+Las $\pi_i$ se obtienen sumando las probabilidades de las muestras que
+contienen a $i$:
+
+- $\pi_1 = 0.05 + 0.10 + 0.20 = 0.35$
+- $\pi_2 = 0.05 + 0.05 + 0.40 = 0.50$
+- $\pi_3 = 0.10 + 0.05 + 0.20 = 0.35$
+- $\pi_4 = 0.20 + 0.40 + 0.20 = 0.80$
+
+Suma: $0.35 + 0.50 + 0.35 + 0.80 = 2.00 = n$. ✓
+
+Las $\pi_{ij}$ son, por construcción del diseño, las probabilidades de cada
+muestra: $\pi_{12}=0.05$, $\pi_{13}=0.10$, $\pi_{14}=0.20$, $\pi_{23}=0.05$,
+$\pi_{24}=0.40$, $\pi_{34}=0.20$.
+
+```{r solucion-ej3}
+muestras <- t(combn(4, 2))
+pS       <- c(0.05, 0.10, 0.20, 0.05, 0.40, 0.20)
+pi_i     <- sapply(1:4, function(i) sum(pS[apply(muestras, 1,
+                                                  function(s) i %in% s)]))
+pi_i
+sum(pi_i)
+```
+
+</details>
+
+## Ejercicio 4 — Estimación HT y eficiencia frente a MAS
+
+Considérese un marco de $N = 100$ psus donde la unidad $i$ tiene total
+$t_i = 5 + 2 M_i + \varepsilon_i$, con $M_i$ entre 1 y 50 y
+$\varepsilon_i \sim N(0, 5^2)$. Se desea comparar la varianza del estimador
+HT bajo PPS-WOR con $\pi_i \propto M_i$ contra un MAS clásico, ambos con
+$n = 10$. ¿Cuál diseño se espera más eficiente y por qué?
+
+<details>
+<summary>**Ver solución**</summary>
+
+Como $t_i$ está fuertemente correlacionado con $M_i$ (el coeficiente es 2 y el
+ruido es pequeño), la elección $\pi_i \propto M_i$ aproxima muy bien el óptimo
+$\pi_i \propto t_i$. Bajo PPS, las cantidades $t_i/\pi_i$ son casi constantes,
+con varianza próxima a cero. Bajo MAS, en cambio, la varianza es proporcional
+a $S_t^2$, que es grande porque $t_i$ varía con $M_i$.
+
+Se espera que la varianza HT sea mucho menor. La simulación siguiente lo
+confirma:
+
+```{r solucion-ej4, cache=TRUE}
+set.seed(2026)
+N  <- 100
+M  <- runif(N, 1, 50)
+t_i <- 5 + 2 * M + rnorm(N, 0, 5)
+T_real <- sum(t_i)
+
+n <- 10
+pi_pps <- inclusionprobabilities(M, n)
+pi_mas <- rep(n / N, N)
+
+B <- 5000
+sim_pps <- replicate(B, {
+  s <- UPbrewer(pi_pps)
+  sum(t_i[s == 1] / pi_pps[s == 1])
+})
+sim_mas <- replicate(B, {
+  idx <- sample.int(N, n)
+  N * mean(t_i[idx])
+})
+
+c(SE_PPS = round(sd(sim_pps), 1),
+  SE_MAS = round(sd(sim_mas), 1),
+  Eficiencia_PPS_vs_MAS = round((sd(sim_mas) / sd(sim_pps))^2, 2))
+```
+
+El cociente de eficiencias indica cuántas veces más grande tendría que ser
+$n$ en MAS para obtener el mismo SE que PPS.
+
+</details>
+
+## Ejercicio 5 — Pesos en muestreo en dos etapas
+
+Una muestra PPS-WOR seleccionó $n = 4$ psus con $\pi_i = 0.05,\ 0.08,\ 0.12,\ 0.20$
+y dentro de cada psu se realizó un MAS con tamaños $m_i = 5,\ 5,\ 8,\ 10$ a
+partir de tamaños poblacionales $M_i = 50,\ 80,\ 120,\ 200$.
+
+(a) Calcule los pesos $w_{ij}$ para una ssu de cada psu.
+(b) Calcule la suma total de pesos
+    $\sum_{i \in \mathcal S} \sum_{j \in \mathcal S_i} w_{ij}$. ¿Qué cantidad
+    poblacional estima esa suma?
+
+<details>
+<summary>**Ver solución**</summary>
+
+(a) $w_{ij} = M_i / (\pi_i\,m_i)$:
+
+- psu 1: $w = 50/(0.05 \cdot 5) = 200$
+- psu 2: $w = 80/(0.08 \cdot 5) = 200$
+- psu 3: $w = 120/(0.12 \cdot 8) = 125$
+- psu 4: $w = 200/(0.20 \cdot 10) = 100$
+
+(b) Suma de pesos sobre las $\sum m_i = 28$ observaciones:
+
+$$
+5(200) + 5(200) + 8(125) + 10(100) = 1000 + 1000 + 1000 + 1000 = 4000.
+$$
+
+Esta suma estima $K = \sum_{i=1}^N M_i$, el **tamaño total del marco
+poblacional** (el número total de unidades de segunda etapa en *toda* la
+población, no sólo en las psus seleccionadas). Recuérdese que en HT-WOR
+$E\!\left[\sum_{i \in \mathcal S}\sum_{j \in \mathcal S_i} w_{ij}\right] = K$.
+El valor 4000 es por tanto una estimación aleatoria de ese parámetro
+poblacional fijo desconocido.
+
+```{r solucion-ej5}
+pi_i <- c(0.05, 0.08, 0.12, 0.20)
+M_i  <- c(50, 80, 120, 200)
+m_i  <- c(5, 5, 8, 10)
+w_ij <- M_i / (pi_i * m_i)
+suma_pesos <- sum(m_i * w_ij)
+data.frame(psu = 1:4, w_ij = w_ij, contribucion = m_i * w_ij,
+           suma_total = suma_pesos)
+```
+
+</details>
+
+## Ejercicio 6 — Interpretación crítica
+
+Un investigador analiza una encuesta de hospitales seleccionados con PPS según
+el número de camas. Reporta que la suma de los pesos muestrales $w_i = 1/\pi_i$
+sobre los hospitales seleccionados es 850, pero el número real de hospitales
+en el marco es $N = 1{,}200$. ¿Es un problema?
+
+<details>
+<summary>**Ver solución**</summary>
+
+En PPS-WOR, $E\!\left[\sum_{i \in \mathcal S} w_i\right] = N$. La discrepancia
+entre 850 y 1200 puede deberse a:
+
+1. **Variabilidad muestral**: una sola muestra da una suma con error.
+2. **Mala calibración**: si los $\pi_i$ se construyeron con un marco
+   incorrecto (por ejemplo, número de camas desactualizado), las inclusión
+   marginales no satisfacen $\sum \pi_i = n$ y la suma esperada de pesos no
+   es $N$.
+3. **No respuesta**: los pesos no se ajustaron por unidades no respondientes.
+
+La práctica recomendada es ajustar (calibrar) los pesos para que sumen $N$
+exactamente — esto se conoce como *postestratificación de pesos* o
+*calibración* (ver `survey::calibrate()`). Hacerlo reduce la varianza de los
+estimadores y corrige sesgos por no respuesta.
+
+</details>
+
+# Conexión con capítulos posteriores
+
+El Capítulo 6 cierra el ciclo de diseños fundamentales. En el Capítulo 7
+de Lohr (3a ed.) se aborda el **análisis** de encuestas con diseño complejo:
+estimación de razones, dominios y modelos de regresión bajo diseños PPS y
+estratificados, todos ellos apoyándose en los pesos $w_i$ definidos en este
+capítulo.
+
+# Referencias
+
+- **Lohr, S. L.** (2019). *Sampling: Design and Analysis* (3rd ed.). Boca Raton:
+  Chapman & Hall/CRC. Capítulo 6.
+- Brewer, K. R. W. (1979). A class of robust sampling designs for large-scale
+  surveys. *J. Amer. Statist. Assoc.*, 74, 911-915.
+- Särndal, C.-E., Swensson, B., Wretman, J. (1992).
+  *Model Assisted Survey Sampling*. New York: Springer.
+
+```{css, echo=FALSE}
+/* Marcado visual de tópicos avanzados */
+h1.section-avanzada,
+h1[id$="*"] {
+  border-left: 4px solid #E76F51;
+  padding-left: 12px;
+}
+.alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 16px 0;
+}
+.alert-info {
+  background-color: #E8F4F8;
+  border-left: 4px solid #1D3557;
+}
+.alert-warning {
+  background-color: #FFF4E6;
+  border-left: 4px solid #E76F51;
+}
+details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #1D3557;
+}
+details {
+  background: #F7F9FB;
+  padding: 8px 14px;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+```
