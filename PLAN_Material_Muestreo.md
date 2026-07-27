@@ -561,5 +561,9 @@ encabezado de cada capítulo (`~n S`) es el objetivo, y suele incluir alguno má
       `JotaMao1985/Muestreo-Un_Bosque_JMS`. Es un ajuste en la web de GitHub; hasta hacerlo, el
       sitio publicado no refleja la nueva estructura.
 - [ ] Decidir si los 82 CSV de Lohr siguen versionados en el repositorio público. Están incluidos
-      porque sin ellos los precálculos no son reproducibles; para excluirlos basta quitar la línea
-      `!/CSV data sets for SDA 3e/` del `.gitignore`.
+      porque sin ellos los precálculos no son reproducibles, y **pesan 13 MB** —el grueso son
+      `vius.csv` (7,8 MB), `ipums.csv` (1,9 MB) y `nhanes.csv` (1,0 MB)—. Git lo soporta sin
+      problema (el `.git` comprimido queda en ~4 MB) y solo `vius.csv` no lo usa ningún capítulo
+      del plan. Para excluir la carpeta entera basta quitar la línea
+      `!/CSV data sets for SDA 3e/` del `.gitignore`; para excluir solo el pesado, añadir
+      `CSV data sets for SDA 3e/vius.csv`.
