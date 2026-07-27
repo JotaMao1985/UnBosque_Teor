@@ -11,8 +11,8 @@ independiente con navegación por módulos, fórmulas KaTeX, tablas y gráficos 
 
 | # | Capítulo | Temas | Módulos |
 |---|----------|-------|:---:|
-| 1 | [Introducción al Muestreo](capitulo-1-introduccion.html) | Sesgo de selección y medición, diseño de cuestionarios, tipos de error | 9 |
-| 2 | [Muestreo Aleatorio Simple](capitulo-2-muestreo-aleatorio-simple.html) | MAS, intervalos de confianza, tamaño de muestra, muestreo sistemático | 8 |
+| 1 | [Introducción al Muestreo](capitulo-1-encuestas-sesgos.html) | Sesgo de selección y medición, diseño de cuestionarios, tipos de error | 9 |
+| 2 | [Muestreo Aleatorio Simple](capitulo-2-diseno-mas-sistematico.html) | MAS, intervalos de confianza, tamaño de muestra, muestreo sistemático | 8 |
 | 3 | [Estimación de Razón y Regresión](capitulo-3-razon-y-regresion.html) | Variables auxiliares, razón, regresión, diferencia, dominios | 10 |
 | 4 | [Muestreo Estratificado](capitulo-4-muestreo-estratificado.html) | Estratos, pesos, asignación, postestratificación, ciencia de datos | 10 |
 
