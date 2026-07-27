@@ -1,0 +1,4542 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Plantilla base para los capítulos del material de Muestreo Estadístico (Universidad El Bosque): cajas, código R/Python en pestañas, simuladores con Chart.js, autoevaluación y ejercicios guiados.">
+  <meta name="author" content="Javier Mauricio Sierra">
+  <meta name="keywords" content="muestreo estadístico, muestreo probabilístico, Horvitz-Thompson, probabilidades de inclusión, estratificado, conglomerados, PPT, survey, R, Python, UnBosque">
+  <title>Plantilla de capítulo — Muestreo Estadístico</title>
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- External Resources -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for LaTeX rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Chart.js for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Prism.js for syntax highlighting (R + Python) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-r.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            primary: '#012820',
+            secondary: '#FF6600',
+            navy: '#012820',
+            gold: '#FFC24B',
+            bg: '#F8FAFC',
+            surface: '#FFFFFF',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Base fallback styles */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    /* USTA Gradient Background */
+    .usta-gradient {
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+    }
+
+    .usta-gradient-hover:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+    }
+
+    /* USTA Navy Header */
+    .usta-header {
+      background: linear-gradient(180deg, #012820 0%, #001F18 100%);
+    }
+
+    /* USTA Card Style */
+    .usta-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .usta-card:hover {
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .usta-button {
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+      color: white;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .usta-button:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(1, 40, 32, 0.35);
+    }
+
+    /* Sidebar Container */
+    .sidebar-container {
+      display: none;
+      width: 280px;
+      flex-shrink: 0;
+      order: 2;
+    }
+
+    @media (min-width: 768px) {
+      .sidebar-container {
+        display: block;
+        order: 1;
+      }
+    }
+
+    .sidebar-inner {
+      position: sticky;
+      top: 9rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      max-height: calc(100vh - 12rem);
+      overflow-y: auto;
+    }
+
+    #sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    /* Sidebar Header */
+    .sidebar-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f3f4f6;
+    }
+
+    /* Nav Items */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      color: #4B5563;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-item::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d1d5db;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #f3f4f6;
+      color: #012820;
+    }
+
+    .nav-item:hover::before {
+      background: #012820;
+      transform: scale(1.2);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #012820 0%, #FF6600 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(1, 40, 32, 0.3);
+    }
+
+    .nav-item.active::before {
+      background: white;
+    }
+
+    /* Fallback para asegurar visibilidad del sidebar */
+    @media (min-width: 768px) {
+      #sidebar {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    }
+
+    /* Scroll to top button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+      color: white;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+      transition: all 0.3s ease;
+      z-index: 50;
+      border: none;
+    }
+
+    .scroll-to-top.visible {
+      display: flex;
+    }
+
+    .scroll-to-top:hover {
+      background: linear-gradient(140deg, #02382D 0%, #FF7F24 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+    }
+
+    /* Tip box USTA style */
+    .tip-box {
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%);
+      border: 1px solid rgba(1, 40, 32, 0.2);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    /* Focus visible styles for keyboard navigation - subtle */
+    *:focus-visible {
+      outline: 2px solid rgba(1, 40, 32, 0.5);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid #012820;
+      outline-offset: 3px;
+    }
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: white;
+      color: #012820;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      text-decoration: none;
+      font-weight: 500;
+      border: 2px solid #012820;
+      transition: top 0.2s;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+      outline: none;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Print styles */
+    @media print {
+
+      header,
+      footer,
+      #sidebar,
+      #sidebarToggle,
+      #scrollToTopBtn {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+
+      .usta-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background: #f5f5f5;
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Sidebar Toggle classes */
+    .sidebar-collapsed {
+      width: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-collapsed+main {
+      width: 100% !important;
+      flex-grow: 1;
+    }
+
+    #sidebarToggle {
+      transition: all 0.3s ease;
+    }
+
+    /* H2 section titles styling */
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #012820;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(255, 102, 0, 0.2);
+      margin-top: 2rem;
+    }
+
+    h2:first-child {
+      margin-top: 0;
+    }
+
+    /* H3 subtitles styling */
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #012820;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 24px;
+      background: #FF6600;
+      border-radius: 4px;
+    }
+
+    /* H4 subtitles styling */
+    h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #012820;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.08) 0%, rgba(255, 102, 0, 0.08) 100%);
+      border-left: 3px solid #FF6600;
+      border-radius: 0.375rem;
+    }
+
+    /* Override h4 in definition, note, warning boxes */
+    .definition h4,
+    .note h4,
+    .warning h4,
+    .simulador h4 {
+      background: none;
+      border-left: none;
+      padding: 0;
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.625;
+      color: #374151;
+      text-align: justify;
+    }
+
+    ul,
+    ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    ul li,
+    ol li {
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    ul {
+      list-style-type: disc;
+    }
+
+    ol {
+      list-style-type: decimal;
+    }
+
+    /* Custom Box Components - CSS Puro */
+    .definition {
+      background-color: #f0fdf4;
+      border-left: 4px solid #012820;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .definition h4 {
+      color: #012820;
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    .note {
+      background-color: #fff7ed;
+      border-left: 4px solid #FF6600;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .note strong {
+      color: #c2410c;
+    }
+
+    .warning {
+      background-color: #fff1f2;
+      border-left: 4px solid #FF4500;
+      padding: 1.5rem;
+      border-top-right-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .warning strong {
+      color: #9f1239;
+    }
+
+    .formula {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-family: 'Fira Code', monospace;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 768px) {
+      .formula {
+        padding: 1.5rem;
+      }
+    }
+
+    .diagram {
+      background-color: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .diagram h4 {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 1.5rem;
+    }
+
+    .diagram svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .exercise {
+      background-color: #eff6ff;
+      border: 1px solid #dbeafe;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .exercise h4 {
+      color: #1e40af;
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    /* Code Blocks - CSS Puro */
+    .code-block-wrapper {
+      position: relative;
+      margin-bottom: 2.5rem;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #334155;
+      gap: 0.5rem;
+    }
+
+    .code-block-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .code-toggle-btn,
+    .code-copy-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #cbd5e1;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .code-toggle-btn:hover,
+    .code-copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .code-copy-btn.copied {
+      background: rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+    }
+
+    .code-toggle-btn i,
+    .code-copy-btn i {
+      font-size: 0.625rem;
+      transition: transform 0.2s;
+    }
+
+    .code-toggle-btn.expanded i {
+      transform: rotate(180deg);
+    }
+
+    pre {
+      background-color: #1e293b !important;
+      color: #f3f4f6 !important;
+      padding: 1.5rem !important;
+      border-radius: 0;
+      overflow-x: auto;
+      margin: 0;
+      font-family: 'Fira Code', monospace !important;
+      font-size: 0.875rem;
+      line-height: 1.625;
+      max-height: 300px;
+      overflow-y: auto;
+      transition: max-height 0.3s ease;
+    }
+
+    pre.expanded {
+      max-height: 2000px;
+    }
+
+    pre.collapsed {
+      max-height: 150px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    pre.collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, #1e293b);
+      pointer-events: none;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    p code,
+    li code {
+      background-color: #f3f4f6;
+      color: #c2410c;
+      padding: 0.25rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid #e5e7eb;
+    }
+
+    pre code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+      border: none;
+    }
+
+    /* Pestañas de código R / Python */
+    .code-tabs {
+      margin-bottom: 2.5rem;
+    }
+
+    .code-tabs .code-block-wrapper {
+      margin-bottom: 0;
+      border-top-left-radius: 0;
+    }
+
+    .code-tabs-nav {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .code-tab-btn {
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 0.5rem 1.25rem;
+      border-radius: 0.5rem 0.5rem 0 0;
+      background: #e2e8f0;
+      color: #64748b;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .code-tab-btn:hover {
+      background: #cbd5e1;
+      color: #012820;
+    }
+
+    .code-tab-btn.active {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+    }
+
+    .code-tab-panel[hidden] {
+      display: none;
+    }
+
+    /* Simulador interactivo */
+    .simulador {
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.04) 0%, rgba(255, 102, 0, 0.04) 100%);
+      border: 1px solid rgba(1, 40, 32, 0.15);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .simulador h4 {
+      color: #012820;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .simulador-controles {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    @media (min-width: 768px) {
+      .simulador-controles {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .control-slider {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .control-slider label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #374151;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .control-slider output {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: white;
+      background: #012820;
+      border-radius: 0.375rem;
+      padding: 0.1rem 0.5rem;
+      min-width: 3.25rem;
+      text-align: center;
+    }
+
+    .control-slider input[type="range"] {
+      width: 100%;
+      accent-color: #FF6600;
+      cursor: pointer;
+    }
+
+    .grafico-wrapper {
+      position: relative;
+      height: 320px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    @media (max-width: 640px) {
+      .grafico-wrapper {
+        height: 260px;
+      }
+    }
+
+    /* Tables - CSS Puro */
+    table {
+      width: 100%;
+      margin-bottom: 2rem;
+      border-collapse: collapse;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    table th {
+      background-color: #012820;
+      color: white;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    table td {
+      padding: 1rem;
+      border-bottom: 1px solid #f3f4f6;
+      color: #374151;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    table tr:hover {
+      background-color: #fff7ed;
+    }
+
+    /* Session Header - CSS Puro */
+    .session-header {
+      background: linear-gradient(to right, #012820, #FF6600);
+      color: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .session-header h2 {
+      color: white;
+      border: none;
+      margin: 0;
+      font-size: 1.875rem;
+      text-shadow: none;
+      padding: 0;
+    }
+
+    .references {
+      background-color: #f3f4f6;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      margin-top: 3rem;
+    }
+
+    .references h3::before {
+      display: none;
+    }
+
+    /* SVG Styles */
+    svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    svg text {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Mobile typography improvements */
+    @media (max-width: 640px) {
+      html {
+        font-size: 14px;
+      }
+
+      .session-header h2 {
+        font-size: 1.25rem !important;
+      }
+
+      section h2 {
+        font-size: 1.375rem;
+      }
+
+      section h3 {
+        font-size: 1.125rem;
+      }
+
+      pre {
+        font-size: 0.75rem;
+        padding: 1rem;
+        max-height: 250px;
+      }
+
+      pre.collapsed {
+        max-height: 120px;
+      }
+
+      .code-block-header {
+        padding: 0.5rem 0.75rem;
+      }
+
+      .code-toggle-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .usta-card {
+        padding: 1.5rem;
+      }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      .usta-card {
+        border: 1px solid #000;
+      }
+
+      .definition,
+      .note,
+      .warning {
+        border-left-width: 4px;
+      }
+    }
+
+    /* Blockquote styling */
+    blockquote {
+      background: linear-gradient(135deg, rgba(1, 40, 32, 0.05) 0%, rgba(255, 102, 0, 0.05) 100%);
+      border-left: 4px solid #012820;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      border-radius: 0.5rem;
+      font-style: italic;
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    details {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #012820;
+      padding: 0.5rem;
+    }
+
+    summary:hover {
+      color: #FF6600;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #cbd5e1;
+      margin: 2rem 0;
+    }
+
+    /* --- Mejoras de accesibilidad y responsive (auditoría) --- */
+    @media (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
+    .definition,
+    .note,
+    .warning,
+    .exercise {
+      overflow-x: auto;
+    }
+
+    .nav-item {
+      border: none;
+      background-color: transparent;
+      font-family: inherit;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    /* Pie de página: las referencias van sobre fondo verde oscuro, pero la
+       regla global `ul li { color:#374151 }` (pensada para listas dentro de
+       las tarjetas claras del contenido) las volvía ilegibles. Se restablece
+       el texto claro en el pie con mayor especificidad, sin !important. */
+    footer ul li {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    /* ------------------------------------------------------------------
+       Controles de simulador añadidos en el Capítulo 2: menú desplegable
+       (elegir serie) e interruptores (aplicar transformaciones). Heredan
+       el aire de .control-slider para que la fila de controles sea
+       visualmente homogénea.
+       ------------------------------------------------------------------ */
+    .control-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .control-selector label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .control-selector select {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #012820;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.25);
+      border-radius: 0.375rem;
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .control-selector select:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 1px;
+    }
+
+    .control-interruptores {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .control-interruptor {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #374151;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.25);
+      border-radius: 50px;
+      padding: 0.35rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .control-interruptor:hover {
+      border-color: #FF6600;
+    }
+
+    .control-interruptor input {
+      accent-color: #FF6600;
+      cursor: pointer;
+    }
+
+    .control-interruptor.activo {
+      background: #012820;
+      color: white;
+      border-color: #012820;
+    }
+
+    /* Lectura numérica que acompaña a un simulador (n, banda, estadísticos) */
+    .simulador-lectura {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.5rem;
+      margin-top: 0.85rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8125rem;
+      color: #1e293b;
+    }
+
+    .simulador-lectura b {
+      color: #012820;
+    }
+
+    /* ------------------------------------------------------------------
+       Autoevaluación: preguntas de opción múltiple con retroalimentación
+       por opción. Componente nuevo del Capítulo 2, reutilizable en todos
+       los capítulos.
+       ------------------------------------------------------------------ */
+    .quiz {
+      background-color: #fffbeb;
+      border: 1px solid #fde68a;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .quiz h4 {
+      color: #92400e;
+      margin-top: 0;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* El titulo del quiz y su parrafo introductorio quedaban pegados (hueco de
+       0 px): el h4 no tiene margen inferior y Tailwind pone los <p> a cero.
+       Mismo fallo que la auditoria de T4d encontro en los simuladores, aqui en
+       el componente de autoevaluacion. */
+    .quiz > h4 + p {
+      margin-top: 0.6rem;
+    }
+
+    .quiz-pregunta {
+      background: white;
+      border: 1px solid #fde68a;
+      border-radius: 0.5rem;
+      padding: 1rem 1.15rem;
+      margin-top: 1rem;
+    }
+
+    .quiz-enunciado {
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0 0 0.75rem 0;
+    }
+
+    .quiz-enunciado .quiz-numero {
+      color: #b45309;
+      margin-right: 0.4rem;
+    }
+
+    .quiz-opciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .quiz-opcion {
+      font-family: inherit;
+      font-size: 0.9rem;
+      text-align: left;
+      color: #374151;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      width: 100%;
+    }
+
+    .quiz-opcion:hover:not(:disabled) {
+      border-color: #FF6600;
+      background: #fff7ed;
+    }
+
+    .quiz-opcion:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 2px;
+    }
+
+    .quiz-opcion .quiz-letra {
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      color: #64748b;
+      flex-shrink: 0;
+    }
+
+    .quiz-opcion.correcta {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+      color: #065f46;
+    }
+
+    .quiz-opcion.correcta .quiz-letra {
+      color: #059669;
+    }
+
+    .quiz-opcion.incorrecta {
+      background: #fef2f2;
+      border-color: #fca5a5;
+      color: #991b1b;
+    }
+
+    .quiz-opcion.incorrecta .quiz-letra {
+      color: #dc2626;
+    }
+
+    .quiz-opcion:disabled {
+      cursor: default;
+    }
+
+    .quiz-retro {
+      margin-top: 0.75rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      background: #f1f5f9;
+      border-left: 3px solid #94a3b8;
+      color: #334155;
+    }
+
+    .quiz-retro.bien {
+      background: #ecfdf5;
+      border-left-color: #059669;
+      color: #065f46;
+    }
+
+    .quiz-retro.mal {
+      background: #fef2f2;
+      border-left-color: #dc2626;
+      color: #991b1b;
+    }
+
+    .quiz-retro[hidden] {
+      display: none;
+    }
+
+    .quiz-marcador {
+      margin-top: 1.15rem;
+      font-weight: 600;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .quiz-reiniciar {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #92400e;
+      background: transparent;
+      border: 1px solid #fbbf24;
+      border-radius: 50px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-reiniciar:hover {
+      background: #fbbf24;
+      color: #012820;
+    }
+
+    /* Barra de progreso de la autoevaluación */
+    .quiz-progreso {
+      height: 6px;
+      background: #fde68a;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 0.85rem 0 0.25rem 0;
+    }
+
+    .quiz-progreso-barra {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #b45309 0%, #FF6600 100%);
+      border-radius: 3px;
+      transition: width 0.35s ease;
+    }
+
+    /* Etiqueta del tipo de pregunta */
+    .quiz-tipo {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #92400e;
+      background: #fef3c7;
+      border-radius: 50px;
+      padding: 0.1rem 0.6rem;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* Pista: aparece tras el primer fallo, antes de revelar la respuesta */
+    .quiz-pista {
+      margin-top: 0.75rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      background: #fffbeb;
+      border-left: 3px solid #f59e0b;
+      color: #78350f;
+    }
+
+    .quiz-pista[hidden] {
+      display: none;
+    }
+
+    /* Opción marcada por el estudiante en selección múltiple, aún sin corregir */
+    .quiz-opcion.marcada {
+      background: #fff7ed;
+      border-color: #FF6600;
+      font-weight: 600;
+    }
+
+    .quiz-opcion .quiz-casilla {
+      flex-shrink: 0;
+      width: 1rem;
+      height: 1rem;
+      margin-top: 0.15rem;
+      border: 2px solid #94a3b8;
+      border-radius: 0.25rem;
+      display: inline-block;
+      position: relative;
+    }
+
+    .quiz-opcion.marcada .quiz-casilla {
+      border-color: #FF6600;
+      background: #FF6600;
+    }
+
+    .quiz-opcion.marcada .quiz-casilla::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 0;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    /* Falta por marcar: se señala al corregir una selección múltiple */
+    .quiz-opcion.faltaba {
+      border-color: #6ee7b7;
+      border-style: dashed;
+      background: #f0fdf4;
+    }
+
+    /* Respuesta numérica */
+    .quiz-numerica {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .quiz-numerica input {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      color: #012820;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.25);
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.7rem;
+      width: 11rem;
+    }
+
+    .quiz-numerica input:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 1px;
+    }
+
+    .quiz-numerica input:disabled {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .quiz-numerica .quiz-unidad {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8125rem;
+      color: #475569;
+    }
+
+    .quiz-comprobar {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: white;
+      background: #012820;
+      border: none;
+      border-radius: 50px;
+      padding: 0.5rem 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .quiz-comprobar:hover:not(:disabled) {
+      background: #FF6600;
+    }
+
+    .quiz-comprobar:disabled {
+      background: #94a3b8;
+      cursor: default;
+    }
+
+    /* Gráfico dentro de una pregunta */
+    .quiz-grafico {
+      position: relative;
+      height: 210px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    /* Resumen final */
+    .quiz-resumen {
+      margin-top: 1.15rem;
+      padding: 1rem 1.15rem;
+      border-radius: 0.5rem;
+      background: white;
+      border: 1px solid #fde68a;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    .quiz-resumen[hidden] {
+      display: none;
+    }
+
+    .quiz-resumen h5 {
+      margin: 0 0 0.5rem 0;
+      color: #92400e;
+      font-weight: 700;
+    }
+
+    .quiz-resumen ul {
+      margin: 0.5rem 0 0 0;
+      padding-left: 1.1rem;
+    }
+
+    .quiz-resumen ul li {
+      color: #334155;
+    }
+
+    /* ------------------------------------------------------------------
+       Ejercicios guiados: pista y solución comentada desplegables.
+       ------------------------------------------------------------------ */
+    .ejercicio-guiado {
+      background: white;
+      border: 1px solid #dbeafe;
+      border-radius: 0.5rem;
+      padding: 1rem 1.15rem;
+      margin-top: 1rem;
+    }
+
+    .ejercicio-guiado > p:first-child {
+      margin-top: 0;
+    }
+
+    .ejercicio-enunciado {
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    .ejercicio-enunciado .ejercicio-numero {
+      font-weight: 700;
+      color: #1e40af;
+      margin-right: 0.4rem;
+    }
+
+    .ejercicio-acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .ejercicio-boton {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #1e40af;
+      background: transparent;
+      border: 1px solid #93c5fd;
+      border-radius: 50px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .ejercicio-boton:hover {
+      background: #dbeafe;
+    }
+
+    .ejercicio-boton[aria-expanded="true"] {
+      background: #1e40af;
+      color: white;
+      border-color: #1e40af;
+    }
+
+    .ejercicio-boton .fa-chevron-down {
+      transition: transform 0.2s ease;
+      font-size: 0.7rem;
+    }
+
+    .ejercicio-boton[aria-expanded="true"] .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    .ejercicio-panel {
+      margin-top: 0.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .ejercicio-panel[hidden] {
+      display: none;
+    }
+
+    .ejercicio-panel.pista {
+      background: #fffbeb;
+      border-left: 3px solid #f59e0b;
+      color: #78350f;
+    }
+
+    .ejercicio-panel.solucion {
+      background: #f8fafc;
+      border-left: 3px solid #1e40af;
+      color: #1e293b;
+    }
+
+    .ejercicio-panel.solucion .code-block-wrapper {
+      margin-bottom: 1rem;
+    }
+
+    .ejercicio-panel table {
+      font-size: 0.8125rem;
+      margin: 0.75rem 0;
+    }
+    /* ------------------------------------------------------------------
+       Aire alrededor de los gráficos.
+       Auditoría del 2026-07-26: el título del simulador quedaba pegado a su
+       párrafo (0 px) y las etiquetas que encabezan cada panel quedaban a 4 px
+       del lienzo, con lo que el bloque se leía amontonado. Los márgenes iban
+       en atributos `style` repartidos por el HTML; aquí se centralizan en dos
+       clases con un ritmo vertical propio.
+       ------------------------------------------------------------------ */
+    .simulador h4 {
+      margin-bottom: 0.7rem;
+    }
+
+    /* Párrafo que presenta el simulador, justo debajo del título */
+    .simulador-intro {
+      margin: 0 0 1rem 0;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      text-align: left;
+      color: #475569;
+    }
+
+    /* Etiqueta que encabeza un panel concreto dentro de un simulador */
+    .grafico-etiqueta {
+      margin: 1.25rem 0 0.5rem 0;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1.5;
+      text-align: left;
+      color: #012820;
+    }
+
+    /* El espacio lo pone siempre el elemento de arriba: así no se acumulan
+       márgenes ni quedan huecos dobles entre paneles consecutivos. */
+    .simulador-intro + .grafico-wrapper,
+    .simulador-controles + .grafico-wrapper,
+    .grafico-etiqueta + .grafico-wrapper {
+      margin-top: 0;
+    }
+
+    .grafico-wrapper + .grafico-wrapper {
+      margin-top: 0.9rem;
+    }
+
+    /* La lectura numérica se separa del lienzo con una línea fina, para que
+       se lea como una banda de resultados y no como un pie pegado al gráfico. */
+    .simulador-lectura {
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(1, 40, 32, 0.12);
+      line-height: 1.55;
+    }
+
+    /* La lectura numérica se diseñó para ir al final del simulador, así que no
+       lleva margen inferior. Cuando va ANTES de un gráfico (Módulos 9 y 11 del
+       Capítulo 5) el hueco medido era de 0 px. */
+    .simulador-lectura + .grafico-etiqueta,
+    .simulador-lectura + .grafico-wrapper {
+      margin-top: 0.85rem;
+    }
+
+    /* Enunciado de una pregunta con gráfico: mismo criterio de separación */
+    .quiz-pregunta .quiz-enunciado + .quiz-grafico {
+      margin-top: 0.9rem;
+    }
+
+    /* ------------------------------------------------------------------
+       Derivación plegable (añadida en el Capítulo 3, 2026-07-26).
+
+       Guarda el desarrollo algebraico completo de un resultado sin que el
+       texto principal cargue con él: quien acepta la fórmula sigue leyendo,
+       quien quiere el porqué lo abre. Mismo patrón accesible que los
+       ejercicios guiados (aria-expanded + aria-controls), pero en la familia
+       de color primaria —es teoría, no un ejercicio— para que se distinga de
+       las cajas azules de ejercicio y de las ámbar de pista.
+       ------------------------------------------------------------------ */
+    .derivacion {
+      margin: 1rem 0;
+    }
+
+    .derivacion-boton {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #012820;
+      background: transparent;
+      border: 1px solid rgba(1, 40, 32, 0.3);
+      border-radius: 50px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .derivacion-boton:hover {
+      background: rgba(1, 40, 32, 0.06);
+    }
+
+    .derivacion-boton[aria-expanded="true"] {
+      background: #012820;
+      color: white;
+      border-color: #012820;
+    }
+
+    .derivacion-boton .fa-chevron-down {
+      transition: transform 0.2s ease;
+      font-size: 0.7rem;
+    }
+
+    .derivacion-boton[aria-expanded="true"] .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    .derivacion-panel {
+      margin-top: 0.75rem;
+      padding: 1rem 1.15rem;
+      background: #f8fafc;
+      border-left: 3px solid #012820;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      color: #1e293b;
+    }
+
+    .derivacion-panel[hidden] {
+      display: none;
+    }
+
+    /* Los pasos van numerados: en una derivación el orden es la explicación. */
+    .derivacion-pasos {
+      list-style: none;
+      counter-reset: paso;
+      margin: 0;
+      padding: 0;
+    }
+
+    .derivacion-pasos > li {
+      counter-increment: paso;
+      position: relative;
+      padding-left: 2.1rem;
+      margin: 0 0 1.1rem 0;
+      color: #1e293b;
+    }
+
+    .derivacion-pasos > li:last-child {
+      margin-bottom: 0;
+    }
+
+    .derivacion-pasos > li::before {
+      content: counter(paso);
+      position: absolute;
+      left: 0;
+      top: 0.05rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #012820;
+      color: white;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .derivacion-pasos > li > p:first-child {
+      margin-top: 0;
+    }
+
+    .derivacion-pasos > li > p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Cierre de la derivación: el resultado al que se quería llegar. */
+    .derivacion-resultado {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(1, 40, 32, 0.15);
+      font-weight: 500;
+    }
+
+    /* ------------------------------------------------------------------
+       Componente .ciclo — diagrama de etapas recorrible
+       ------------------------------------------------------------------
+       Para procedimientos que se recorren y en los que se VUELVE ATRÁS
+       (Box-Jenkins, un pipeline de preprocesamiento, un flujo de
+       descomposición). Una imagen fija enseña el orden; esto enseña
+       además qué hace cada etapa, con qué función, y qué hallazgo te
+       devuelve a la anterior — que es donde está el aprendizaje.
+
+       Semántica de pestañas (role="tablist"/"tab"/"tabpanel") en vez de
+       la de acordeón de .derivacion: las etapas son alternativas de una
+       misma cosa, no bloques independientes, y así el teclado recorre el
+       ciclo con las flechas. La familia de color es la naranja de acento,
+       para no confundirlo con las cajas verdes de derivación.
+       ------------------------------------------------------------------ */
+    .ciclo {
+      margin: 1.25rem 0;
+    }
+
+    .ciclo-etapas {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0.4rem;
+      list-style: none;
+      margin: 0 0 0.6rem 0;
+      padding: 0;
+    }
+
+    .ciclo-etapa {
+      display: flex;
+      align-items: stretch;
+    }
+
+    /* La flecha vive en el separador, no en el botón: así el orden se lee
+       aunque las etapas salten de línea. */
+    .ciclo-etapa:not(:last-child)::after {
+      content: "\2192";
+      align-self: center;
+      margin: 0 0.15rem;
+      color: rgba(1, 40, 32, 0.35);
+      font-weight: 700;
+    }
+
+    .ciclo-boton {
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+      background: #ffffff;
+      border: 1px solid rgba(1, 40, 32, 0.2);
+      border-radius: 0.6rem;
+      padding: 0.55rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      min-width: 8.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .ciclo-boton:hover {
+      border-color: #012820;
+      background: rgba(1, 40, 32, 0.04);
+    }
+
+    .ciclo-boton[aria-selected="true"] {
+      background: #012820;
+      border-color: #012820;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(1, 40, 32, 0.25);
+    }
+
+    .ciclo-numero {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #FF6600;
+      font-weight: 600;
+    }
+
+    .ciclo-boton[aria-selected="true"] .ciclo-numero {
+      color: #FFC24B;
+    }
+
+    .ciclo-titulo {
+      font-weight: 600;
+      font-size: 0.9rem;
+      line-height: 1.25;
+    }
+
+    .ciclo-resumen {
+      font-size: 0.74rem;
+      color: #64748b;
+      line-height: 1.3;
+    }
+
+    .ciclo-boton[aria-selected="true"] .ciclo-resumen {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    /* La vuelta atrás es lo que distingue un ciclo de una lista de pasos. */
+    .ciclo-retorno {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.76rem;
+      color: #64748b;
+      font-style: italic;
+      margin: 0 0 0.7rem 0;
+    }
+
+    .ciclo-retorno::before {
+      content: "\21BA";
+      font-style: normal;
+      font-size: 1rem;
+      color: #FF6600;
+    }
+
+    .ciclo-panel {
+      padding: 1rem 1.15rem;
+      background: #f8fafc;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      color: #1e293b;
+    }
+
+    .ciclo-panel[hidden] {
+      display: none;
+    }
+
+    .ciclo-campo {
+      margin: 0 0 0.7rem 0;
+    }
+
+    .ciclo-campo:last-child {
+      margin-bottom: 0;
+    }
+
+    .ciclo-etiqueta {
+      display: block;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #012820;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .ciclo-vuelta {
+      margin-top: 0.85rem;
+      padding-top: 0.7rem;
+      border-top: 1px solid rgba(255, 102, 0, 0.25);
+    }
+
+    .ciclo-vuelta .ciclo-etiqueta {
+      color: #FF6600;
+    }
+
+    .ciclo-panel code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      background: rgba(1, 40, 32, 0.07);
+      padding: 0.1rem 0.3rem;
+      border-radius: 0.25rem;
+    }
+
+    /* En móvil el ciclo se lee en vertical y las flechas giran con él. */
+    @media (max-width: 640px) {
+      .ciclo-etapas {
+        flex-direction: column;
+      }
+
+      .ciclo-etapa {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .ciclo-boton {
+        width: 100%;
+      }
+
+      .ciclo-etapa:not(:last-child)::after {
+        content: "\2193";
+        align-self: center;
+        margin: 0.15rem 0;
+      }
+    }
+
+    /* ------------------------------------------------------------------
+       Componente .mapa-estacional — mapa de calor mes x año
+       ------------------------------------------------------------------
+       Un gráfico de línea enseña el nivel; un correlograma, la estructura.
+       Ninguno de los dos deja VER la estacionalidad como lo que es: un
+       patrón que se repite por columnas. Aquí cada fila es un año y cada
+       columna un mes, así que un mes sistemáticamente alto pinta una banda
+       vertical y la diferencia estacional la borra ante los ojos.
+
+       Sin dependencias: rejilla CSS y colores calculados en JS. El valor va
+       escrito dentro de la celda y repetido en su nombre accesible, así que
+       el color nunca es el único canal de información.
+       ------------------------------------------------------------------ */
+    .mapa-estacional {
+      margin: 1.1rem 0;
+    }
+
+    .mapa-estacional-titulo {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #012820;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+    }
+
+    /* En pantallas estrechas la rejilla se desplaza dentro de su caja en vez
+       de desbordar la página. */
+    .mapa-estacional-marco {
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+
+    .mapa-estacional-rejilla {
+      display: grid;
+      grid-template-columns: 3.1rem repeat(12, minmax(2.4rem, 1fr));
+      gap: 2px;
+      min-width: 34rem;
+    }
+
+    .mapa-estacional-cabecera,
+    .mapa-estacional-anio {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.66rem;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.15rem 0;
+    }
+
+    .mapa-estacional-anio {
+      justify-content: flex-end;
+      padding-right: 0.4rem;
+      color: #012820;
+      font-weight: 600;
+    }
+
+    .mapa-estacional-celda {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.65rem;
+      border-radius: 0.2rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.63rem;
+      line-height: 1;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .mapa-estacional-celda:hover {
+      transform: scale(1.12);
+      box-shadow: 0 2px 8px rgba(1, 40, 32, 0.28);
+      z-index: 2;
+    }
+
+    /* Los huecos que deja la diferenciación son parte del mensaje: se marcan
+       con trama, no con un blanco que se confunda con un valor bajo. */
+    .mapa-estacional-vacia {
+      background: repeating-linear-gradient(45deg,
+        #f1f5f9, #f1f5f9 3px, #e2e8f0 3px, #e2e8f0 6px);
+      color: transparent;
+    }
+
+    .mapa-estacional-leyenda {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.55rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.64rem;
+      color: #64748b;
+      flex-wrap: wrap;
+    }
+
+    .mapa-estacional-barra {
+      flex: 1 1 8rem;
+      height: 0.55rem;
+      min-width: 6rem;
+      border-radius: 0.3rem;
+      border: 1px solid rgba(1, 40, 32, 0.15);
+    }
+
+    .mapa-estacional-nota {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      color: #64748b;
+      margin: 0.5rem 0 0 0;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 640px) {
+      .mapa-estacional-rejilla {
+        grid-template-columns: 2.6rem repeat(12, minmax(2rem, 1fr));
+      }
+
+      .mapa-estacional-celda {
+        font-size: 0.55rem;
+        min-height: 1.4rem;
+      }
+    }
+
+    /* ------------------------------------------------------------------
+       Componente .tabla-ranking — tabla comparativa ordenable
+       ------------------------------------------------------------------
+       Una tabla estática obliga a decir con palabras que el orden depende
+       de la columna por la que se mire. Aquí se pulsa la cabecera y el
+       orden cambia ante los ojos: el puesto de cada fila se renumera, la
+       fila ganadora se ilumina y el mejor valor de la columna activa se
+       marca. Es el argumento del capítulo convertido en componente.
+
+       Sin dependencias: una <table> de verdad, con cabeceras que son
+       botones. El estado va en `aria-sort` sobre el <th>, y cada
+       reordenación se anuncia en una región `role="status"`, así que el
+       componente funciona igual leído con un lector de pantalla.
+       ------------------------------------------------------------------ */
+    .tabla-ranking {
+      margin: 1.1rem 0;
+    }
+
+    .tabla-ranking-titulo {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #012820;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+    }
+
+    /* En pantallas estrechas la tabla se desplaza dentro de su caja en vez
+       de desbordar la página. */
+    .tabla-ranking-marco {
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+      border-radius: 0.4rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .tabla-ranking table {
+      width: 100%;
+      min-width: 34rem;
+      border-collapse: collapse;
+      margin: 0;
+      font-size: 0.8rem;
+    }
+
+    .tabla-ranking caption {
+      caption-side: top;
+      text-align: left;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.4;
+      padding: 0 0 0.5rem 0;
+    }
+
+    .tabla-ranking th,
+    .tabla-ranking td {
+      padding: 0.4rem 0.55rem;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .tabla-ranking th:first-child,
+    .tabla-ranking td:first-child,
+    .tabla-ranking th:nth-child(2),
+    .tabla-ranking td:nth-child(2) {
+      text-align: left;
+    }
+
+    .tabla-ranking thead th {
+      background: #012820;
+      color: #ffffff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.72rem;
+      padding: 0;
+      position: sticky;
+      top: 0;
+    }
+
+    /* La cabecera entera es el botón: así el objetivo táctil es la celda y
+       no un texto de dos palabras dentro de ella. */
+    .tabla-ranking-boton {
+      width: 100%;
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      padding: 0.5rem 0.55rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.3rem;
+      text-align: right;
+    }
+
+    .tabla-ranking th:nth-child(2) .tabla-ranking-boton {
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .tabla-ranking-boton:hover,
+    .tabla-ranking-boton:focus-visible {
+      background: rgba(255, 102, 0, 0.22);
+      outline: none;
+    }
+
+    .tabla-ranking-boton:focus-visible {
+      box-shadow: inset 0 0 0 2px #FF6600;
+    }
+
+    /* La flecha marca la columna activa; las inactivas llevan un signo
+       tenue que anuncia que se puede pulsar. */
+    .tabla-ranking-flecha {
+      font-size: 0.62rem;
+      opacity: 0.35;
+    }
+
+    .tabla-ranking th[aria-sort="ascending"] .tabla-ranking-flecha,
+    .tabla-ranking th[aria-sort="descending"] .tabla-ranking-flecha {
+      opacity: 1;
+      color: #FFC24B;
+    }
+
+    .tabla-ranking tbody tr {
+      background: #ffffff;
+      transition: background 0.15s ease;
+    }
+
+    .tabla-ranking tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    /* El primer puesto de la ordenación vigente. */
+    .tabla-ranking tbody tr.ganadora {
+      background: rgba(1, 40, 32, 0.09);
+      font-weight: 600;
+    }
+
+    /* Fila señalada por quien escribe el capítulo ("el método del que
+       veníamos hablando"), independiente de qué columna ordene. */
+    .tabla-ranking tbody tr.destacada td:first-child {
+      box-shadow: inset 3px 0 0 #FF6600;
+    }
+
+    .tabla-ranking-puesto {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: #64748b;
+      width: 2.2rem;
+    }
+
+    .tabla-ranking tbody tr.ganadora .tabla-ranking-puesto {
+      color: #012820;
+    }
+
+    .tabla-ranking td.numero {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+    }
+
+    /* El mejor valor de la columna por la que se está ordenando. */
+    .tabla-ranking td.mejor {
+      color: #0f766e;
+      font-weight: 700;
+    }
+
+    .tabla-ranking td.columna-activa {
+      background: rgba(255, 102, 0, 0.08);
+    }
+
+    .tabla-ranking-referencia {
+      font-size: 0.66rem;
+      color: #64748b;
+      font-family: 'Fira Code', monospace;
+      margin-left: 0.35rem;
+    }
+
+    .tabla-ranking-pie {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      color: #64748b;
+      margin: 0.5rem 0 0 0;
+      line-height: 1.4;
+    }
+
+    .tabla-ranking-estado {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.74rem;
+      color: #012820;
+      margin: 0.6rem 0 0 0;
+      min-height: 1.1em;
+    }
+
+    @media (max-width: 640px) {
+      .tabla-ranking table {
+        font-size: 0.72rem;
+      }
+
+      .tabla-ranking th,
+      .tabla-ranking td {
+        padding: 0.32rem 0.4rem;
+      }
+
+      .tabla-ranking-boton {
+        padding: 0.42rem 0.4rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">
+    Saltar al contenido principal
+  </a>
+
+  <!-- Header -->
+  <header class="usta-header sticky top-0 z-50 shadow-lg" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center gap-4">
+          <div class="usta-gradient p-3 rounded-xl shadow-md">
+            <i class="fas fa-layer-group text-xl text-white" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-white leading-tight tracking-tight" style="margin:0;">Muestreo Estadístico
+            </h1>
+            <p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">PLANTILLA BASE •
+              4 MÓDULOS DE DEMOSTRACIÓN • UNBOSQUE</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating Sidebar Toggle Button -->
+  <button id="sidebarToggle"
+    class="fixed left-4 top-1/2 -translate-y-1/2 z-50 bg-primary text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-secondary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+    aria-label="Alternar barra lateral de navegación" aria-expanded="true" aria-controls="sidebar">
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+
+  <div class="flex-grow flex flex-col md:flex-row max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 gap-8 relative">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar-container" id="sidebar" role="complementary" aria-label="Navegación de módulos">
+      <div class="sidebar-inner">
+        <div class="sidebar-title">
+          <i class="fas fa-list-ul mr-2" aria-hidden="true"></i>Contenido
+        </div>
+        <nav id="module-nav" role="navigation" aria-label="Menú de módulos">
+          <!-- Nav items injected via JS -->
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content"
+      class="flex-grow order-1 md:order-2 min-w-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300"
+      role="main" tabindex="-1">
+      <div id="content-area" class="p-6 md:p-10 module-content">
+        <!-- Content injected via JS -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="usta-header mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fas fa-book-open" aria-hidden="true"></i> Referencias Bibliográficas
+      </h3>
+      <ul class="space-y-3 text-white/90 text-sm">
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Lohr, S.L. (2021). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Gutiérrez, H.A. <em class="text-gold">Estrategias de Muestreo: diseño de encuestas y estimación de parámetros</em>. Acceso abierto: <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" class="underline text-gold" target="_blank" rel="noopener">psirusteam.github.io/EstrategiasDeMuestreo</a>.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Särndal, C.E., Swensson, B., &amp; Wretman, J. (1992). <em class="text-gold">Model Assisted Survey Sampling</em>. Springer.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Cochran, W.G. (1977). <em class="text-gold">Sampling Techniques</em> (3rd ed.). John Wiley &amp; Sons.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Lumley, T. <em class="text-gold">survey: Analysis of Complex Survey Samples</em> (paquete de R). <a href="https://cran.r-project.org/package=survey" class="underline text-gold" target="_blank" rel="noopener">cran.r-project.org/package=survey</a>.</span>
+        </li>
+      </ul>
+      <div class="mt-6 pt-6 border-t border-white/20 text-center">
+        <p class="text-white font-medium" style="text-align:center;">Diseñado por <span class="text-gold">Javier
+            Mauricio Sierra</span></p>
+        <p class="text-xs mt-1 text-white/60" style="text-align:center;">Plantilla de capítulo • UnBosque 2026
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · Cajas y tipografía                                 -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Cajas y tipografía <span
+            class="text-gray-400 font-normal text-2xl">/ Boxes &amp; type</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver de un vistazo todos los bloques de contenido
+              disponibles. Copia el que necesites y sustituye el texto.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ciclo" data-ciclo="demo">
+        <ol class="ciclo-etapas" role="tablist" aria-label="Etapas del ciclo">
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="true" aria-controls="ciclo-demo-planear" tabindex="0">
+              <span class="ciclo-numero">Etapa 1</span>
+              <span class="ciclo-titulo">Planear</span>
+              <span class="ciclo-resumen">¿Qué se quiere responder?</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-demo-hacer" tabindex="-1">
+              <span class="ciclo-numero">Etapa 2</span>
+              <span class="ciclo-titulo">Hacer</span>
+              <span class="ciclo-resumen">Ejecutar y medir</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-demo-comprobar" tabindex="-1">
+              <span class="ciclo-numero">Etapa 3</span>
+              <span class="ciclo-titulo">Comprobar</span>
+              <span class="ciclo-resumen">¿Se sostiene?</span>
+            </button>
+          </li>
+        </ol>
+        <p class="ciclo-retorno">El ciclo se recorre con clic o con las flechas del teclado, y vuelve al principio cuantas veces haga falta.</p>
+        <div class="ciclo-panel" id="ciclo-demo-planear" role="tabpanel">
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Se describe la etapa en una o dos frases. Este componente es para procedimientos que se <strong>recorren</strong> y en los que se vuelve atrás; si los pasos nunca se repiten, usa la caja <code>.diagram</code> con una lista y ya está.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p>Aquí van las funciones concretas: <code>funcion()</code> en R, <code>metodo()</code> en Python.</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>La etapa 1 es el principio: no se vuelve a ella desde ningún sitio salvo desde el diagnóstico final.</p>
+          </div>
+        </div>
+        <div class="ciclo-panel" id="ciclo-demo-hacer" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Las fórmulas de KaTeX funcionan dentro del panel, incluidas las de bloque: $\hat{y}_{t} = \phi y_{t-1}$.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p><code>otra_funcion(x, opcion = TRUE)</code></p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Si el resultado no converge, se vuelve a la etapa 1 con otra especificación.</p>
+          </div>
+        </div>
+        <div class="ciclo-panel" id="ciclo-demo-comprobar" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>La última etapa es la que cierra el ciclo: su resultado decide si se termina o si se vuelve al principio.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p><code>diagnostico(ajuste)</code></p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Si la comprobación falla, el ciclo entero empieza otra vez. Esa flecha de vuelta es lo que una lista numerada no sabe dibujar.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este es un párrafo normal. El cuerpo del texto va justificado y con interlineado 1.625. Los términos técnicos
+        se marcan en <strong>negrita</strong> la primera vez, y su equivalente en inglés va en <em>cursiva entre
+        paréntesis</em> (<em>technical term</em>).</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Definición: cómo se usa esta caja</h4>
+        <p style="margin-bottom:0;">Verde. Para definiciones formales y enunciados que el estudiante debe poder citar.
+          Admite fórmulas en línea como $\rho_k = \gamma_k / \gamma_0$ y en bloque:</p>
+        $$\bar{y} = \frac{1}{T}\sum_{t=1}^{T} y_t$$
+      </div>
+
+      <div class="note">
+        <p><strong>Nota.</strong> Naranja. Para matices, conexiones con otros capítulos y observaciones que enriquecen
+          sin ser imprescindibles.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>Advertencia.</strong> Roja. Para errores frecuentes y trampas. Si un resultado puede malinterpretarse,
+          va aquí, y conviene que diga <em>por qué</em> falla, no solo que falla.</p>
+      </div>
+
+      <div class="formula">
+        <p>Azul claro. Para fórmulas centrales que se consultan de un vistazo:</p>
+        $$\nabla y_t = y_t - y_{t-1} = (1 - B)\, y_t$$
+      </div>
+
+      <p>Cuando un resultado tiene un desarrollo algebraico que no todos los lectores necesitan, va en una
+        <strong>derivación plegable</strong>: quien acepta la fórmula sigue leyendo sin tropezar con media página de
+        álgebra, y quien quiere el porqué lo abre.</p>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-demo">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver el desarrollo paso a paso</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-demo" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Cada paso va en un <code>&lt;li&gt;</code> y se numera solo. Empieza por lo que ya se sabe:</p>
+              $$\gamma_k = \operatorname{Cov}(y_t,\, y_{t-k})$$
+            </li>
+            <li>
+              <p>El texto de cada paso dice <strong>qué se hace y por qué</strong>, no solo qué queda. Aquí se divide
+                entre $\gamma_0$, que es la varianza del proceso:</p>
+              $$\rho_k = \frac{\gamma_k}{\gamma_0}$$
+            </li>
+            <li>
+              <p>Y se cierra con la propiedad que se quería justificar: $\rho_k$ no tiene unidades y $|\rho_k| \le 1$
+                por la desigualdad de Cauchy–Schwarz.</p>
+            </li>
+          </ol>
+          <p class="derivacion-resultado">La banda inferior recoge el resultado al que se quería llegar, para que
+            quien abra la caja y la recorra de un vistazo se lleve la conclusión.</p>
+        </div>
+      </div>
+
+      <table>
+        <caption class="sr-only">Ejemplo de tabla</caption>
+        <thead>
+          <tr>
+            <th scope="col">Concepto</th>
+            <th scope="col">Símbolo</th>
+            <th scope="col">En R</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Media muestral</td><td>$\bar{y}$</td><td><code>mean()</code></td></tr>
+          <tr><td>Varianza muestral</td><td>$s^2$</td><td><code>var()</code></td></tr>
+        </tbody>
+      </table>
+
+      <div class="diagram">
+        <ol>
+          <li>La caja <code>.diagram</code> sirve para secuencias de pasos y esquemas.</li>
+          <li>Admite listas ordenadas, SVG en línea y texto centrado.</li>
+        </ol>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · Código en dos lenguajes                            -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Código en dos lenguajes <span
+            class="text-gray-400 font-normal text-2xl">/ Code tabs</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Mostrar el mismo cálculo en el lenguaje principal del
+              curso y en su equivalente, con pestañas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Un bloque suelto se escribe con <code>&lt;pre&gt;&lt;code class="language-r"&gt;</code>. El envoltorio con los
+        botones de copiar y ocultar se añade solo. <strong>Recuerda escapar</strong> <code>&amp;lt;</code> para el
+        operador de asignación de R.</p>
+
+      <pre><code class="language-r"># Un bloque suelto, sin pestañas
+x &lt;- rnorm(100)
+mean(x)</code></pre>
+
+      <p>Cuando hay equivalente en otro lenguaje, van en pestañas:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Ejemplo de pestañas">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">set.seed(2026)
+x &lt;- rnorm(200)
+c(media = mean(x), desv = sd(x))</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">import numpy as np
+
+rng = np.random.default_rng(2026)
+x = rng.standard_normal(200)
+print(x.mean(), x.std(ddof=1))</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Regla del curso:</strong> todo bloque de código se <em>ejecuta</em> antes de publicarlo, y si un
+          comentario anuncia una salida (<code># 0.1386</code>), esa cifra sale de la ejecución real, nunca de memoria.
+          Y comprueba que el bloque sea autónomo: si usa un objeto que nunca se define, al estudiante le falla.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · Simuladores                                        -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Simuladores <span
+            class="text-gray-400 font-normal text-2xl">/ Interactive widgets</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Los tres tipos de control disponibles —deslizador, menú
+              e interruptor— y las dos fábricas de gráficos, línea y barras.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="demo-deslizadores">
+        <h4><i class="fas fa-sliders-h" aria-hidden="true"></i> Deslizadores y gráfico de línea</h4>
+        <p class="simulador-intro">Dos deslizadores construidos con <code>crearControles</code> sobre un
+          <code>crearGraficoLinea</code>. El ruido viene de <code>generarRuidoNormal</code> con semilla fija, así que
+          la serie es la misma en cada carga y el deslizador aísla el efecto del parámetro.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:220px;">
+          <canvas aria-label="Serie simulada con tendencia y ruido ajustables" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="simulador" data-simulador="demo-inclusion">
+        <h4><i class="fas fa-percent" aria-hidden="true"></i> Menú desplegable y gráfico de barras</h4>
+        <p class="simulador-intro">Un <code>crearSelector</code> elige el diseño y <code>crearGraficoBarras</code>
+          dibuja las probabilidades de inclusión $\pi_k$ y los pesos $d_k = 1/\pi_k$ que se derivan de ellas. Con MAS
+          todas las unidades tienen el mismo $\pi_k$; con $\pi$PT, $\pi_k \propto x_k$ y los pesos dejan de ser
+          iguales. En los dos casos $\sum_U \pi_k = n$, que es la comprobación que nunca sobra.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Probabilidades de inclusión \(\pi_k\)</p>
+        <div class="grafico-wrapper" style="height:200px;">
+          <canvas aria-label="Probabilidades de inclusión de cada unidad bajo el diseño elegido" role="img"></canvas>
+        </div>
+        <p class="grafico-etiqueta">Pesos \(d_k = 1/\pi_k\)</p>
+        <div class="grafico-wrapper" style="height:200px;">
+          <canvas aria-label="Pesos muestrales de cada unidad bajo el diseño elegido" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="mapa-estacional" data-mapa="demo-mapa">
+        <p class="mapa-estacional-titulo">Mapa estacional (demostración)</p>
+        <div class="mapa-estacional-marco">
+          <div class="mapa-estacional-rejilla" role="table" aria-label="Mapa estacional (demostración)"></div>
+        </div>
+        <div class="mapa-estacional-leyenda"></div>
+        <p class="mapa-estacional-nota"></p>
+      </div>
+
+      <div class="tabla-ranking" data-ranking="demo">
+        <p class="tabla-ranking-titulo">Tabla comparativa ordenable (demostración)</p>
+        <div class="tabla-ranking-marco" aria-label="Tabla comparativa ordenable (demostración)"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="simulador" data-simulador="demo-interruptores">
+        <h4><i class="fas fa-toggle-on" aria-hidden="true"></i> Interruptores</h4>
+        <p class="simulador-intro"><code>crearInterruptores</code> para activar transformaciones acumulables. La lectura
+          numérica de abajo se actualiza con <code>actualizarLectura</code>.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:220px;">
+          <canvas aria-label="Serie con las transformaciones activadas" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Contrato:</strong> registra <code>SIMULADORES['id'] = function (raiz) { …; return [charts]; }</code>
+          y devuelve <strong>siempre</strong> los <code>Chart</code> creados: es lo que permite destruirlos al cambiar
+          de módulo. El cómputo pesado (ajustes ARIMA, rejillas, remuestreos) <strong>no</strong> va aquí: se
+          precalcula en R y se incrusta como JSON.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Autoevaluación y ejercicios                        -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
+          <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Los cuatro tipos de pregunta y el ejercicio con pista y
+              solución desplegables.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Cada capítulo cierra con una autoevaluación y una tanda de ejercicios guiados. Prueba las cuatro preguntas de
+        abajo: falla una a propósito para ver la <strong>pista</strong> y el segundo intento.</p>
+
+      <div class="quiz" data-quiz="demo">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación</h4>
+        <p class="text-sm" style="margin-bottom:0;">Una pregunta de cada tipo. Cada opción lleva su propia
+          retroalimentación, también las incorrectas.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios propuestos</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Intenta cada uno <strong>antes</strong> de abrir nada. La pista
+          dice por dónde entrar sin dar la respuesta; la solución trae el código y las cifras reales.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Enunciado del ejercicio. Debe pedir algo
+            concreto y comprobable, no "explora la serie".</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="demo-e1-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="demo-e1-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="demo-e1-pista" hidden>
+            <p style="margin:0;">La pista orienta sin resolver: señala el concepto que hay que aplicar, o advierte de la
+              trampa en la que se suele caer. Si la pista ya contiene la respuesta, no es una pista.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="demo-e1-sol" hidden>
+            <p><strong>Respuesta breve primero</strong>, y después el desarrollo.</p>
+            <pre><code class="language-r"># El codigo de la solucion se muestra ya desplegado.
+# Las cifras de los comentarios salen de precalculo/genera_soluciones.R,
+# que resuelve el ejercicio de verdad. Nunca se escriben de memoria.
+set.seed(2026)
+round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
+            <p style="margin-bottom:0;">Cierra explicando <em>por qué</em> la respuesta es esa y qué pasaría si el
+              estudiante hubiera tomado el camino equivocado.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Autor, <em>Título del texto guía</em> (ed.), <strong>capítulos o secciones exactas</strong> — qué aporta.
+            Marca el recurso de acceso abierto con su enlace.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // ================================================================
+    // Configuración del capítulo
+    //
+    // PLANTILLA BASE. Punto de partida para un capítulo de un curso
+    // NUEVO. Para un capítulo más de un curso ya empezado, copia su
+    // último capítulo, que lleva los datos y el contexto ya montados.
+    //
+    // Al añadir un componente nuevo a un capítulo, añádelo también aquí
+    // en la misma sesión: esta plantilla ya se quedó atrás una vez.
+    // ================================================================
+    const courseData = {
+      title: "Muestreo Estadístico",
+      modules: [
+        { id: 1, title: "Cajas y tipografía", shortTitle: "Cajas", duration: "5 min" },
+        { id: 2, title: "Código en dos lenguajes", shortTitle: "Código", duration: "5 min" },
+        { id: 3, title: "Simuladores", shortTitle: "Simuladores", duration: "8 min" },
+        { id: 4, title: "Autoevaluación y ejercicios", shortTitle: "Autoevaluación", duration: "8 min" }
+      ]
+    };
+
+    // Los datos del capítulo se incrustan aquí, generados por
+    // precalculo/genera_*.R:  const DATOS_CAPn = { ... };
+    // Los simuladores de demostración de abajo no usan datos externos.
+
+    // ================================================================
+    // Estado y elementos del DOM
+    // ================================================================
+    let currentModuleId = 1;
+    let completedModules = new Set();
+
+    const mainContent = document.getElementById('content-area');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const moduleNav = document.getElementById('module-nav');
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNavigation();
+      loadModule(1);
+      setupEventListeners();
+    });
+
+    // ================================================================
+    // Navegación de módulos
+    // ================================================================
+    function renderNavigation() {
+      moduleNav.innerHTML = courseData.modules.map(module => `
+                <button type="button" class="nav-item ${module.id === currentModuleId ? 'active' : ''}"
+                     onclick="loadModule(${module.id})"${module.id === currentModuleId ? ' aria-current="page"' : ''}>
+                    ${module.title}
+                    ${completedModules.has(module.id) ? '<i class="fas fa-check-circle ml-auto text-green-400" aria-hidden="true"></i>' : ''}
+                </button>
+            `).join('');
+    }
+
+    function loadModule(id) {
+      currentModuleId = id;
+
+      if (!completedModules.has(id)) {
+        completedModules.add(id);
+      }
+
+      renderNavigation();
+
+      const template = document.getElementById(`module-${id}`);
+      if (template) {
+        destruirSimuladores();
+        mainContent.innerHTML = '';
+        mainContent.appendChild(template.content.cloneNode(true));
+
+        wrapCodeBlocks();
+        initCodeTabs();
+        iniciarSimuladores();
+        iniciarAutoevaluaciones();
+        iniciarEjerciciosGuiados();
+        iniciarDerivaciones();
+        iniciarCiclos();
+        iniciarTablasRanking();
+        iniciarMapasEstacionales();
+        renderMathInElement(mainContent, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+          ]
+        });
+
+        addNavigationButtons();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function addNavigationButtons() {
+      const navContainer = document.createElement('div');
+      navContainer.className = 'flex justify-between mt-8 pt-6 border-t border-gray-100';
+
+      const prevBtn = document.createElement('button');
+      if (currentModuleId > 1) {
+        prevBtn.className = 'usta-button bg-gray-500 hover:bg-gray-600';
+        prevBtn.innerHTML = '<i class="fas fa-arrow-left mr-2" aria-hidden="true"></i> Anterior';
+        prevBtn.onclick = () => loadModule(currentModuleId - 1);
+      } else {
+        prevBtn.style.visibility = 'hidden';
+      }
+
+      const nextBtn = document.createElement('button');
+      if (currentModuleId < courseData.modules.length) {
+        nextBtn.className = 'usta-button';
+        nextBtn.innerHTML = 'Siguiente <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>';
+        nextBtn.onclick = () => loadModule(currentModuleId + 1);
+      } else {
+        nextBtn.className = 'usta-button bg-green-600 hover:bg-green-700';
+        nextBtn.innerHTML = 'Finalizar <i class="fas fa-check mr-2" aria-hidden="true"></i>';
+        nextBtn.onclick = () => alert('¡Felicidades! Has completado el capítulo.');
+      }
+
+      navContainer.appendChild(prevBtn);
+      navContainer.appendChild(nextBtn);
+      mainContent.appendChild(navContainer);
+    }
+
+    function setupEventListeners() {
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-collapsed');
+        const icon = sidebarToggle.querySelector('i');
+        if (sidebar.classList.contains('sidebar-collapsed')) {
+          icon.classList.remove('fa-chevron-left');
+          icon.classList.add('fa-chevron-right');
+          sidebarToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          icon.classList.remove('fa-chevron-right');
+          icon.classList.add('fa-chevron-left');
+          sidebarToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add('visible');
+        } else {
+          scrollToTopBtn.classList.remove('visible');
+        }
+      });
+
+      scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // ================================================================
+    // Bloques de código: envoltorio con copiar / expandir
+    // ================================================================
+    const NOMBRES_LENGUAJE = { 'language-r': 'R', 'language-python': 'Python' };
+
+    function wrapCodeBlocks() {
+      const pres = mainContent.querySelectorAll('pre');
+      pres.forEach(pre => {
+        if (!pre.parentElement.classList.contains('code-block-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-block-wrapper';
+
+          // El curso es en R: si el bloque no declara lenguaje, se asume R
+          const code = pre.querySelector('code');
+          let claseLenguaje = 'language-r';
+          if (code) {
+            const declarada = Array.from(code.classList).find(c => c.startsWith('language-'));
+            if (declarada) {
+              claseLenguaje = declarada;
+            } else {
+              code.classList.add(claseLenguaje);
+            }
+          }
+          const titulo = NOMBRES_LENGUAJE[claseLenguaje] || 'Código';
+
+          const header = document.createElement('div');
+          header.className = 'code-block-header';
+          header.innerHTML = `
+            <span class="code-block-title">${titulo}</span>
+            <div class="code-actions">
+              <button class="code-copy-btn" onclick="copyCode(this)" title="Copiar código">
+                <i class="fas fa-copy" aria-hidden="true"></i>
+                <span>Copiar</span>
+              </button>
+              <button class="code-toggle-btn" onclick="toggleCode(this)">
+                <span>Mostrar/Ocultar</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+              </button>
+            </div>
+          `;
+
+          pre.parentNode.insertBefore(wrapper, pre);
+          wrapper.appendChild(header);
+          wrapper.appendChild(pre);
+          pre.classList.add('collapsed');
+        }
+      });
+      if (typeof Prism !== 'undefined') {
+        Prism.highlightAllUnder(mainContent);
+      }
+    }
+
+    function toggleCode(button) {
+      const pre = button.closest('.code-block-wrapper').querySelector('pre');
+
+      if (pre.classList.contains('collapsed')) {
+        pre.classList.remove('collapsed');
+        pre.classList.add('expanded');
+        button.classList.add('expanded');
+      } else {
+        pre.classList.add('collapsed');
+        pre.classList.remove('expanded');
+        button.classList.remove('expanded');
+      }
+    }
+
+    function copyCode(button) {
+      const pre = button.closest('.code-block-wrapper').querySelector('pre');
+      const code = pre.querySelector('code');
+      const codeText = code.textContent;
+
+      navigator.clipboard.writeText(codeText).then(() => {
+        const originalText = button.innerHTML;
+        button.classList.add('copied');
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>Copiado</span>';
+
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Error al copiar: ', err);
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        button.classList.add('copied');
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>Copiado</span>';
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = '<i class="fas fa-copy" aria-hidden="true"></i><span>Copiar</span>';
+        }, 2000);
+      });
+    }
+
+    // ================================================================
+    // Pestañas de código R / Python
+    // ================================================================
+    function initCodeTabs() {
+      mainContent.querySelectorAll('.code-tabs').forEach(tabs => {
+        const botones = tabs.querySelectorAll('.code-tab-btn');
+        const paneles = tabs.querySelectorAll('.code-tab-panel');
+        botones.forEach(boton => {
+          boton.addEventListener('click', () => {
+            const lang = boton.dataset.lang;
+            botones.forEach(b => {
+              const activo = b === boton;
+              b.classList.toggle('active', activo);
+              b.setAttribute('aria-selected', activo ? 'true' : 'false');
+            });
+            paneles.forEach(p => {
+              p.hidden = p.dataset.lang !== lang;
+            });
+          });
+        });
+      });
+    }
+
+    // ================================================================
+    // Fábrica de simuladores
+    //
+    // Uso: SIMULADORES['mi-id'] = function (raiz) { ...; return [chart]; }
+    // El contenedor lleva data-simulador="mi-id", un .simulador-controles
+    // vacío y un <canvas>. La función devuelve los Chart creados para
+    // destruirlos al cambiar de módulo.
+    // ================================================================
+    const SIMULADORES = {};
+    let graficosActivos = [];
+
+    function iniciarSimuladores() {
+      mainContent.querySelectorAll('[data-simulador]').forEach(raiz => {
+        const init = SIMULADORES[raiz.dataset.simulador];
+        if (init) {
+          const graficos = init(raiz) || [];
+          graficosActivos.push(...graficos);
+        } else {
+          console.warn(`Simulador no registrado: ${raiz.dataset.simulador}`);
+        }
+      });
+    }
+
+    function destruirSimuladores() {
+      graficosActivos.forEach(g => g.destroy());
+      graficosActivos = [];
+    }
+
+    // Crea deslizadores dentro de un contenedor y devuelve los <input>.
+    // defs: [{clave, etiqueta, min, max, paso, decimales}]
+    // params: objeto mutable con el valor actual de cada clave.
+    // alCambiar: callback invocado en cada movimiento.
+    function crearControles(contenedor, defs, params, alCambiar) {
+      const inputs = {};
+      defs.forEach(def => {
+        const decimales = def.decimales !== undefined ? def.decimales
+          : (String(def.paso).includes('.') ? String(def.paso).split('.')[1].length : 0);
+        const idControl = `ctl-${def.clave}-${Math.floor(Math.random() * 1e9)}`;
+
+        const div = document.createElement('div');
+        div.className = 'control-slider';
+
+        const label = document.createElement('label');
+        label.setAttribute('for', idControl);
+        label.append(def.etiqueta);
+
+        const output = document.createElement('output');
+        output.textContent = Number(params[def.clave]).toFixed(decimales);
+        label.appendChild(output);
+
+        const input = document.createElement('input');
+        input.type = 'range';
+        input.id = idControl;
+        input.min = def.min;
+        input.max = def.max;
+        input.step = def.paso;
+        input.value = params[def.clave];
+
+        input.addEventListener('input', () => {
+          params[def.clave] = parseFloat(input.value);
+          output.textContent = params[def.clave].toFixed(decimales);
+          alCambiar();
+        });
+
+        div.appendChild(label);
+        div.appendChild(input);
+        contenedor.appendChild(div);
+        inputs[def.clave] = input;
+      });
+      return inputs;
+    }
+
+    // Paleta y defaults de la casa para gráficos de líneas.
+    const COLORES_GRAFICO = {
+      primario: '#012820',
+      secundario: '#FF6600',
+      terciario: '#0e7490',
+      gris: '#94a3b8'
+    };
+
+    function crearGraficoLinea(canvas, etiquetas, datasets, opciones = {}) {
+      return new Chart(canvas, {
+        type: 'line',
+        data: { labels: etiquetas, datasets: datasets },
+        options: Object.assign({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              labels: { font: { family: 'Montserrat', size: 12 }, boxWidth: 24 }
+            },
+            tooltip: {
+              backgroundColor: '#012820',
+              titleFont: { family: 'Montserrat' },
+              bodyFont: { family: 'Fira Code' }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: { family: 'Montserrat', size: 11 },
+                maxTicksLimit: 12,
+                maxRotation: 0
+              },
+              grid: { display: false }
+            },
+            y: {
+              ticks: { font: { family: 'Fira Code', size: 11 } },
+              grid: { color: 'rgba(148, 163, 184, 0.2)' }
+            }
+          }
+        }, opciones)
+      });
+    }
+
+    // Generador congruencial mulberry32 + Box-Muller: ruido N(0,1)
+    // reproducible (misma semilla => mismo ruido en cada carga).
+    function generarRuidoNormal(n, semilla) {
+      let estado = semilla >>> 0;
+      function uniforme() {
+        estado |= 0;
+        estado = (estado + 0x6D2B79F5) | 0;
+        let t = Math.imul(estado ^ (estado >>> 15), 1 | estado);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      }
+      const ruido = [];
+      for (let i = 0; i < n; i++) {
+        const u1 = Math.max(uniforme(), 1e-12);
+        const u2 = uniforme();
+        ruido.push(Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2));
+      }
+      return ruido;
+    }
+
+    // ACF muestral hasta maxLag (rezago 0 excluido).
+    function calcularACF(x, maxLag) {
+      const n = x.length;
+      const media = x.reduce((a, b) => a + b, 0) / n;
+      const centrada = x.map(v => v - media);
+      const gamma0 = centrada.reduce((a, b) => a + b * b, 0) / n;
+      const acf = [];
+      for (let k = 1; k <= maxLag; k++) {
+        let s = 0;
+        for (let t = 0; t < n - k; t++) {
+          s += centrada[t] * centrada[t + k];
+        }
+        acf.push((s / n) / gamma0);
+      }
+      return acf;
+    }
+    // ================================================================
+    // Ayudantes añadidos en el Capítulo 2
+    // ================================================================
+
+    // Menú desplegable para elegir una serie dentro de un simulador.
+    // def: {clave, etiqueta, opciones:[{valor, texto}]}
+    function crearSelector(contenedor, def, params, alCambiar) {
+      const idControl = `sel-${def.clave}-${Math.floor(Math.random() * 1e9)}`;
+      const div = document.createElement('div');
+      div.className = 'control-selector';
+
+      const label = document.createElement('label');
+      label.setAttribute('for', idControl);
+      label.textContent = def.etiqueta;
+
+      const select = document.createElement('select');
+      select.id = idControl;
+      def.opciones.forEach(op => {
+        const o = document.createElement('option');
+        o.value = op.valor;
+        o.textContent = op.texto;
+        if (op.valor === params[def.clave]) o.selected = true;
+        select.appendChild(o);
+      });
+      select.addEventListener('change', () => {
+        params[def.clave] = select.value;
+        alCambiar();
+      });
+
+      div.appendChild(label);
+      div.appendChild(select);
+      contenedor.appendChild(div);
+      return select;
+    }
+
+    // Interruptores (casillas) para activar transformaciones.
+    // defs: [{clave, etiqueta}]
+    function crearInterruptores(contenedor, defs, params, alCambiar) {
+      const fila = document.createElement('div');
+      fila.className = 'control-interruptores';
+      defs.forEach(def => {
+        const etiqueta = document.createElement('label');
+        etiqueta.className = 'control-interruptor' + (params[def.clave] ? ' activo' : '');
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = !!params[def.clave];
+        input.addEventListener('change', () => {
+          params[def.clave] = input.checked;
+          etiqueta.classList.toggle('activo', input.checked);
+          alCambiar();
+        });
+
+        etiqueta.appendChild(input);
+        etiqueta.append(def.etiqueta);
+        fila.appendChild(etiqueta);
+      });
+      contenedor.appendChild(fila);
+    }
+
+    // Gráfico de barras para correlogramas. `opciones.lineas` dibuja rectas de
+    // referencia horizontales (la banda ±1.96/√T, el nivel nominal de una
+    // prueba, etc.) como conjuntos de datos de línea sobre las barras.
+    function crearGraficoBarras(canvas, etiquetas, valores, opciones = {}) {
+      const n = etiquetas.length;
+      const datasets = [{
+        type: 'bar',
+        label: opciones.etiqueta || 'ACF',
+        data: valores,
+        backgroundColor: opciones.color || COLORES_GRAFICO.primario,
+        borderWidth: 0,
+        barPercentage: 0.4,
+        categoryPercentage: 0.9,
+        order: 2
+      }];
+      // Barras adicionales sobre el mismo eje (p. ej. la ACF muestral junto a
+      // la teórica). Van antes que las rectas de referencia para que el orden
+      // de los datasets sea estable: 0 = principal, 1..k = extra, luego líneas.
+      (opciones.barrasExtra || []).forEach(extra => {
+        datasets.push({
+          type: 'bar',
+          label: extra.etiqueta || '',
+          data: extra.valores,
+          backgroundColor: extra.color || COLORES_GRAFICO.secundario,
+          borderWidth: 0,
+          barPercentage: 0.4,
+          categoryPercentage: 0.9,
+          order: 2
+        });
+      });
+      (opciones.lineas || []).forEach(linea => {
+        datasets.push({
+          type: 'line',
+          label: linea.etiqueta || '',
+          data: Array(n).fill(linea.valor),
+          borderColor: linea.color || COLORES_GRAFICO.secundario,
+          borderDash: [5, 4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          order: 1
+        });
+      });
+
+      return new Chart(canvas, {
+        type: 'bar',
+        data: { labels: etiquetas, datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              // Las rectas de referencia sin etiqueta no ensucian la leyenda
+              labels: {
+                font: { family: 'Montserrat', size: 12 },
+                boxWidth: 24,
+                filter: item => item.text !== ''
+              }
+            },
+            tooltip: {
+              backgroundColor: '#012820',
+              titleFont: { family: 'Montserrat' },
+              bodyFont: { family: 'Fira Code' },
+              filter: item => item.dataset.label !== ''
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: !!opciones.tituloX,
+                text: opciones.tituloX,
+                font: { family: 'Montserrat', size: 11 }
+              },
+              ticks: { font: { family: 'Fira Code', size: 10 }, maxRotation: 0 },
+              grid: { display: false }
+            },
+            y: {
+              suggestedMin: opciones.min !== undefined ? opciones.min : -1,
+              suggestedMax: opciones.max !== undefined ? opciones.max : 1,
+              ticks: { font: { family: 'Fira Code', size: 11 } },
+              grid: { color: 'rgba(148, 163, 184, 0.2)' }
+            }
+          }
+        }
+      });
+    }
+
+    // PACF por la recursión de Durbin-Levinson sobre la ACF muestral. Es la
+    // misma definición que usa stats::pacf de R: verificado contra la salida
+    // del precálculo (diferencia máxima 6.2e-5, que es el redondeo del JSON).
+    function calcularPACF(acf, maxLag) {
+      const K = Math.min(maxLag, acf.length);
+      if (K < 1) return [];
+      const phi = Array.from({ length: K + 1 }, () => new Array(K + 1).fill(0));
+      const pacf = [];
+      phi[1][1] = acf[0];
+      pacf.push(acf[0]);
+      for (let k = 2; k <= K; k++) {
+        let num = acf[k - 1], den = 1;
+        for (let j = 1; j <= k - 1; j++) {
+          num -= phi[k - 1][j] * acf[k - 1 - j];
+          den -= phi[k - 1][j] * acf[j - 1];
+        }
+        phi[k][k] = num / den;
+        pacf.push(phi[k][k]);
+        for (let j = 1; j <= k - 1; j++) {
+          phi[k][j] = phi[k - 1][j] - phi[k][k] * phi[k - 1][k - j];
+        }
+      }
+      return pacf;
+    }
+
+    // Diferencia regular aplicada `veces` veces
+    function diferenciar(y, veces) {
+      let z = y.slice();
+      for (let i = 0; i < veces; i++) {
+        const w = [];
+        for (let t = 1; t < z.length; t++) w.push(z[t] - z[t - 1]);
+        z = w;
+      }
+      return z;
+    }
+
+    // Diferencia estacional de orden m
+    function diferenciaEstacional(y, m) {
+      const w = [];
+      for (let t = m; t < y.length; t++) w.push(y[t] - y[t - m]);
+      return w;
+    }
+
+    function varianzaMuestral(y) {
+      const n = y.length;
+      if (n < 2) return NaN;
+      const media = y.reduce((a, b) => a + b, 0) / n;
+      return y.reduce((a, b) => a + (b - media) * (b - media), 0) / (n - 1);
+    }
+
+    // Transformación de Box-Cox
+    function boxCox(y, lambda) {
+      if (Math.abs(lambda) < 1e-8) return y.map(v => Math.log(v));
+      return y.map(v => (Math.pow(v, lambda) - 1) / lambda);
+    }
+
+    // Coeficiente de variación de Guerrero (1993): mide cuán homogénea queda
+    // la dispersión entre bloques de m observaciones. El lambda que lo
+    // minimiza es el que devuelve forecast::BoxCox.lambda(method="guerrero").
+    // Detalle que importa y que replicamos: cuando n no es múltiplo de m se
+    // descartan las observaciones INICIALES sobrantes, no las finales.
+    // Verificado contra R en el capítulo 2 de Series de Tiempo: coincide
+    // hasta 1e-14 en las dos series con las que se contrastó.
+    function cvGuerrero(y, lambda, m) {
+      const bloques = Math.floor(y.length / m);
+      if (bloques < 2) return NaN;
+      const z = y.slice(y.length - bloques * m);
+      const razones = [];
+      for (let i = 0; i < bloques; i++) {
+        const b = z.slice(i * m, (i + 1) * m);
+        const mu = b.reduce((a, v) => a + v, 0) / m;
+        const sd = Math.sqrt(b.reduce((a, v) => a + (v - mu) * (v - mu), 0) / (m - 1));
+        razones.push(sd / Math.pow(mu, 1 - lambda));
+      }
+      const media = razones.reduce((a, v) => a + v, 0) / bloques;
+      const sd = Math.sqrt(razones.reduce((a, v) => a + (v - media) * (v - media), 0) / (bloques - 1));
+      return sd / media;
+    }
+
+    // Etiquetas 1..K para el eje de un correlograma
+    function etiquetasRezago(k) {
+      return Array.from({ length: k }, (_, i) => String(i + 1));
+    }
+
+    // --- Ayudantes propios de MUESTREO -------------------------------
+    // Lo de arriba (`calcularACF`, `diferenciar`, `boxCox`, `matrizMesAnio`)
+    // viene de Series de Tiempo y solo lo usan los simuladores y el quiz de
+    // demostración: al empezar un capítulo real se borra junto con ellos.
+    // Probabilidades de inclusión de un MAS sin reemplazo: pi_k = n/N para todas.
+    function probInclusionSI(N, n) {
+      return Array(N).fill(n / N);
+    }
+
+    // Probabilidades de inclusión proporcionales al tamaño (diseño piPT):
+    // pi_k = n * x_k / sum(x), truncadas en 1.
+    //
+    // El truncamiento no es un detalle cosmético: cuando una unidad es tan
+    // grande que le tocaría pi_k > 1, hay que incluirla con certeza y repartir
+    // la muestra restante entre las demás. Se repite hasta que ninguna se pasa.
+    function probInclusionPPT(x, n) {
+      let pi = x.slice();
+      let restante = n;
+      const ciertas = new Set();
+      for (let iter = 0; iter < x.length; iter++) {
+        const libres = x.map((_, k) => k).filter(k => !ciertas.has(k));
+        const total = libres.reduce((a, k) => a + x[k], 0);
+        let nuevas = false;
+        libres.forEach(k => {
+          pi[k] = restante * x[k] / total;
+          if (pi[k] > 1) { pi[k] = 1; ciertas.add(k); nuevas = true; }
+        });
+        if (!nuevas) break;
+        restante = n - ciertas.size;
+      }
+      ciertas.forEach(k => { pi[k] = 1; });
+      return pi;
+    }
+
+    // Estimador de Horvitz-Thompson del total a partir de los valores
+    // observados y sus probabilidades de inclusión.
+    function totalHT(y, pi) {
+      return y.reduce((acc, yk, k) => acc + yk / pi[k], 0);
+    }
+
+    // Efecto de diseño: cuántas veces mayor es la varianza del diseño que la
+    // de un MAS del mismo tamaño. DEFF > 1 significa que el diseño cuesta
+    // precisión (lo normal en conglomerados).
+    function deff(varDiseno, varSI) {
+      return varDiseno / varSI;
+    }
+
+    // Coeficiente de correlación intraclase a partir del DEFF de un diseño por
+    // conglomerados de tamaño m: DEFF = 1 + (m - 1) * rho.
+    function iccDesdeDeff(deffValor, m) {
+      return m > 1 ? (deffValor - 1) / (m - 1) : NaN;
+    }
+
+
+    // Escribe una lectura numérica bajo un simulador
+    function actualizarLectura(elemento, campos) {
+      elemento.innerHTML = campos
+        .map(c => `<span><b>${c.etiqueta}</b> ${c.valor}</span>`)
+        .join('');
+    }
+
+    // ================================================================
+    // Autoevaluación (v2)
+    //
+    // AUTOEVALUACIONES['id'] = [pregunta, ...] sobre un contenedor
+    // data-quiz="id". Cada pregunta declara su `tipo`:
+    //
+    //   'opcion'   (por defecto) una sola respuesta correcta
+    //   'multiple' varias correctas; se corrige al pulsar "Comprobar"
+    //   'numerica' campo de entrada; se acepta |respuesta - dada| <= tolerancia
+    //   'grafico'  como 'opcion', pero dibuja un Chart.js sobre el enunciado
+    //
+    // Campos comunes: {pregunta, pista, modulo}. `pista` se muestra tras el
+    // PRIMER fallo y se deja reintentar; al segundo fallo se revela la
+    // respuesta. `modulo` alimenta el resumen final de "qué repasar".
+    // ================================================================
+    const AUTOEVALUACIONES = {};
+    const LETRAS = ['a', 'b', 'c', 'd', 'e'];
+    const NOMBRE_TIPO = {
+      opcion: 'Opción múltiple',
+      multiple: 'Varias respuestas',
+      numerica: 'Respuesta numérica',
+      grafico: 'Lectura de gráfico'
+    };
+
+    function iniciarAutoevaluaciones() {
+      mainContent.querySelectorAll('[data-quiz]').forEach(raiz => {
+        const preguntas = AUTOEVALUACIONES[raiz.dataset.quiz];
+        if (!preguntas) {
+          console.warn(`Autoevaluación no registrada: ${raiz.dataset.quiz}`);
+          return;
+        }
+        renderAutoevaluacion(raiz, preguntas);
+      });
+    }
+
+    // Los gráficos de las preguntas viven en `graficosActivos` como los de los
+    // simuladores, para que se destruyan al cambiar de módulo. Además se
+    // guardan por quiz para poder limpiarlos al reiniciar sin tocar los demás.
+    function registrarGraficoQuiz(raiz, chart) {
+      (raiz._graficos = raiz._graficos || []).push(chart);
+      graficosActivos.push(chart);
+    }
+
+    function limpiarGraficosQuiz(raiz) {
+      (raiz._graficos || []).forEach(g => {
+        const i = graficosActivos.indexOf(g);
+        if (i >= 0) graficosActivos.splice(i, 1);
+        g.destroy();
+      });
+      raiz._graficos = [];
+    }
+
+    function katexEn(elemento) {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(elemento, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false }
+          ]
+        });
+      }
+    }
+
+    function renderAutoevaluacion(raiz, preguntas) {
+      limpiarGraficosQuiz(raiz);
+
+      const contenedor = raiz.querySelector('.quiz-preguntas');
+      const marcador = raiz.querySelector('.quiz-conteo');
+      const barra = raiz.querySelector('.quiz-progreso-barra');
+      const resumen = raiz.querySelector('.quiz-resumen');
+
+      const estado = preguntas.map(() => ({ resuelta: false, intentos: 0, acierto: false }));
+
+      function actualizarMarcador() {
+        const resueltas = estado.filter(e => e.resuelta).length;
+        const alPrimero = estado.filter(e => e.acierto && e.intentos === 1).length;
+        const alSegundo = estado.filter(e => e.acierto && e.intentos > 1).length;
+        marcador.textContent =
+          `Respondidas ${resueltas} de ${preguntas.length} · ` +
+          `${alPrimero} al primer intento, ${alSegundo} al segundo`;
+        if (barra) barra.style.width = `${(resueltas / preguntas.length) * 100}%`;
+
+        if (resueltas === preguntas.length && resumen) {
+          const fallidas = preguntas.filter((_, i) => !estado[i].acierto);
+          const repasar = [...new Set(
+            preguntas.filter((_, i) => estado[i].intentos > 1 || !estado[i].acierto)
+              .map(p => p.modulo).filter(Boolean)
+          )].sort((a, b) => a - b);
+          resumen.innerHTML =
+            `<h5>Resultado: ${alPrimero + alSegundo} de ${preguntas.length}` +
+            `${fallidas.length ? '' : ' · impecable'}</h5>` +
+            (repasar.length
+              ? `<p style="margin:0;">Te costaron preguntas de estos módulos, así que vale la pena volver a ellos:</p>
+                 <ul>${repasar.map(m => `<li>Módulo ${m}: <strong>${(courseData.modules[m - 1] || {}).title || ''}</strong></li>`).join('')}</ul>`
+              : `<p style="margin:0;">Acertaste todo al primer intento. Puedes pasar al siguiente capítulo.</p>`);
+          resumen.hidden = false;
+          katexEn(resumen);
+        }
+      }
+
+      function cerrar(i, bloque, acierto, textoRetro) {
+        estado[i].resuelta = true;
+        estado[i].acierto = acierto;
+        const retro = bloque.querySelector('.quiz-retro');
+        retro.className = `quiz-retro ${acierto ? 'bien' : 'mal'}`;
+        const encabezado = acierto
+          ? (estado[i].intentos === 1 ? '<strong>Correcto.</strong> ' : '<strong>Correcto, en el segundo intento.</strong> ')
+          : '<strong>No es esa.</strong> ';
+        // Defensivo: las preguntas de seleccion multiple no declaran
+        // `retroAcierto`, y sin esta guarda el estudiante veia la palabra
+        // "undefined" detras de "Correcto". (Bug encontrado auditando el cap. 6.)
+        retro.innerHTML = encabezado + (textoRetro || '');
+        retro.hidden = false;
+        katexEn(retro);
+        actualizarMarcador();
+      }
+
+      function mostrarPista(i, bloque) {
+        const pista = bloque.querySelector('.quiz-pista');
+        if (pista && preguntas[i].pista) {
+          pista.innerHTML = `<strong>Casi. Una pista:</strong> ${preguntas[i].pista}`;
+          pista.hidden = false;
+          katexEn(pista);
+        }
+      }
+
+      contenedor.innerHTML = '';
+      if (resumen) { resumen.hidden = true; resumen.innerHTML = ''; }
+
+      preguntas.forEach((p, i) => {
+        const tipo = p.tipo || 'opcion';
+        const bloque = document.createElement('div');
+        bloque.className = 'quiz-pregunta';
+
+        const enunciado = document.createElement('p');
+        enunciado.className = 'quiz-enunciado';
+        enunciado.innerHTML = `<span class="quiz-numero">${i + 1}.</span>${p.pregunta}` +
+          `<span class="quiz-tipo">${NOMBRE_TIPO[tipo]}</span>`;
+        bloque.appendChild(enunciado);
+
+        // Gráfico del enunciado, si lo hay
+        if (tipo === 'grafico' && typeof p.dibujar === 'function') {
+          const caja = document.createElement('div');
+          caja.className = 'quiz-grafico';
+          if (p.alto) caja.style.height = `${p.alto}px`;
+          const canvas = document.createElement('canvas');
+          canvas.setAttribute('role', 'img');
+          canvas.setAttribute('aria-label', p.descripcionGrafico || 'Gráfico de la pregunta');
+          caja.appendChild(canvas);
+          bloque.appendChild(caja);
+          const chart = p.dibujar(canvas);
+          if (chart) registrarGraficoQuiz(raiz, chart);
+        }
+
+        const pista = document.createElement('div');
+        pista.className = 'quiz-pista';
+        pista.hidden = true;
+
+        const retro = document.createElement('div');
+        retro.className = 'quiz-retro';
+        retro.setAttribute('role', 'status');
+        retro.hidden = true;
+
+        if (tipo === 'numerica') {
+          // ---- Respuesta numérica -----------------------------------
+          const fila = document.createElement('div');
+          fila.className = 'quiz-numerica';
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.inputMode = 'decimal';
+          input.placeholder = 'Tu respuesta';
+          input.setAttribute('aria-label', `Respuesta de la pregunta ${i + 1}`);
+          const unidad = document.createElement('span');
+          unidad.className = 'quiz-unidad';
+          unidad.textContent = p.unidad || '';
+          const boton = document.createElement('button');
+          boton.type = 'button';
+          boton.className = 'quiz-comprobar';
+          boton.textContent = 'Comprobar';
+
+          function comprobarNumerica() {
+            if (estado[i].resuelta) return;
+            // Se acepta coma o punto como separador decimal
+            const dada = parseFloat(String(input.value).trim().replace(',', '.'));
+            if (!isFinite(dada)) {
+              pista.innerHTML = '<strong>Escribe un número</strong> antes de comprobar.';
+              pista.hidden = false;
+              return;
+            }
+            estado[i].intentos++;
+            const acierto = Math.abs(dada - p.respuesta) <= p.tolerancia;
+            if (acierto) {
+              input.disabled = true; boton.disabled = true;
+              cerrar(i, bloque, true, p.retroAcierto);
+            } else if (estado[i].intentos === 1) {
+              mostrarPista(i, bloque);
+            } else {
+              input.disabled = true; boton.disabled = true;
+              cerrar(i, bloque, false,
+                `La respuesta es <strong>${p.respuesta}${p.unidad ? ' ' + p.unidad : ''}</strong>. ${p.retroFallo}`);
+            }
+          }
+          boton.addEventListener('click', comprobarNumerica);
+          input.addEventListener('keydown', e => { if (e.key === 'Enter') comprobarNumerica(); });
+
+          fila.appendChild(input);
+          if (p.unidad) fila.appendChild(unidad);
+          fila.appendChild(boton);
+          bloque.appendChild(fila);
+
+        } else if (tipo === 'multiple') {
+          // ---- Varias respuestas correctas --------------------------
+          const lista = document.createElement('div');
+          lista.className = 'quiz-opciones';
+          lista.setAttribute('role', 'group');
+          lista.setAttribute('aria-label', `Opciones de la pregunta ${i + 1}`);
+          const marcadas = new Set();
+
+          const botones = p.opciones.map((op, j) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'quiz-opcion';
+            b.setAttribute('aria-pressed', 'false');
+            b.innerHTML = `<span class="quiz-casilla" aria-hidden="true"></span><span>${op.texto}</span>`;
+            b.addEventListener('click', () => {
+              if (estado[i].resuelta) return;
+              const activa = marcadas.has(j);
+              if (activa) marcadas.delete(j); else marcadas.add(j);
+              b.classList.toggle('marcada', !activa);
+              b.setAttribute('aria-pressed', String(!activa));
+            });
+            lista.appendChild(b);
+            return b;
+          });
+
+          const boton = document.createElement('button');
+          boton.type = 'button';
+          boton.className = 'quiz-comprobar';
+          boton.style.marginTop = '0.6rem';
+          boton.textContent = 'Comprobar';
+          boton.addEventListener('click', () => {
+            if (estado[i].resuelta) return;
+            if (marcadas.size === 0) {
+              pista.innerHTML = '<strong>Marca al menos una opción</strong> antes de comprobar.';
+              pista.hidden = false;
+              return;
+            }
+            estado[i].intentos++;
+            const correctas = new Set(p.opciones.map((o, j) => o.correcta ? j : -1).filter(j => j >= 0));
+            const exacto = marcadas.size === correctas.size &&
+              [...marcadas].every(j => correctas.has(j));
+            if (exacto) {
+              // Se quita 'marcada' antes de pintar el estado final: las dos clases
+              // empatan en especificidad y si no, ganaría la de "marcada".
+              botones.forEach((b, j) => {
+                b.disabled = true;
+                b.classList.remove('marcada');
+                if (correctas.has(j)) b.classList.add('correcta');
+              });
+              boton.disabled = true;
+              // Respaldo para las preguntas de seleccion multiple, que no
+              // declaran `retroAcierto`: se junta la retroalimentacion de las
+              // opciones correctas, que ya estaba escrita y no se mostraba.
+              cerrar(i, bloque, true, p.retroAcierto || p.opciones
+                .filter(o => o.correcta).map(o => o.retro).filter(Boolean).join(' '));
+            } else if (estado[i].intentos === 1) {
+              const bien = [...marcadas].filter(j => correctas.has(j)).length;
+              pista.innerHTML = `<strong>Casi.</strong> De las ${marcadas.size} que marcaste, ` +
+                `${bien} ${bien === 1 ? 'está' : 'están'} en la respuesta, y te ` +
+                `${correctas.size - bien === 1 ? 'falta' : 'faltan'} ${correctas.size - bien}. ` +
+                (p.pista || '');
+              pista.hidden = false;
+              katexEn(pista);
+            } else {
+              botones.forEach((b, j) => {
+                b.disabled = true;
+                b.classList.remove('marcada');
+                if (correctas.has(j)) b.classList.add(marcadas.has(j) ? 'correcta' : 'faltaba');
+                else if (marcadas.has(j)) b.classList.add('incorrecta');
+              });
+              boton.disabled = true;
+              cerrar(i, bloque, false, p.retroFallo);
+            }
+          });
+
+          bloque.appendChild(lista);
+          bloque.appendChild(boton);
+
+        } else {
+          // ---- Una sola respuesta ('opcion' y 'grafico') ------------
+          const lista = document.createElement('div');
+          lista.className = 'quiz-opciones';
+          lista.setAttribute('role', 'group');
+          lista.setAttribute('aria-label', `Opciones de la pregunta ${i + 1}`);
+
+          const botones = p.opciones.map((op, j) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'quiz-opcion';
+            b.innerHTML = `<span class="quiz-letra">${LETRAS[j]})</span><span>${op.texto}</span>`;
+            b.addEventListener('click', () => {
+              if (estado[i].resuelta) return;
+              estado[i].intentos++;
+              if (op.correcta) {
+                botones.forEach((x, k) => { x.disabled = true; if (p.opciones[k].correcta) x.classList.add('correcta'); });
+                cerrar(i, bloque, true, op.retro);
+              } else if (estado[i].intentos === 1) {
+                // Primer fallo: se descarta esa opción, se da la pista y se reintenta
+                b.disabled = true;
+                b.classList.add('incorrecta');
+                mostrarPista(i, bloque);
+              } else {
+                botones.forEach((x, k) => { x.disabled = true; if (p.opciones[k].correcta) x.classList.add('correcta'); });
+                b.classList.add('incorrecta');
+                cerrar(i, bloque, false, op.retro);
+              }
+            });
+            lista.appendChild(b);
+            return b;
+          });
+          bloque.appendChild(lista);
+        }
+
+        bloque.appendChild(pista);
+        bloque.appendChild(retro);
+        contenedor.appendChild(bloque);
+      });
+
+      katexEn(contenedor);
+      actualizarMarcador();
+
+      const reiniciar = raiz.querySelector('.quiz-reiniciar');
+      if (reiniciar) reiniciar.onclick = () => renderAutoevaluacion(raiz, preguntas);
+    }
+
+    // ================================================================
+    // Ejercicios guiados: desplegables de pista y solución
+    // ================================================================
+    function iniciarEjerciciosGuiados() {
+      // wrapCodeBlocks() colapsa todos los <pre> del módulo. Dentro de una
+      // solución eso obligaría a un segundo clic para ver el código que el
+      // estudiante acaba de pedir, así que ahí se dejan desplegados.
+      mainContent.querySelectorAll('.ejercicio-panel pre.collapsed').forEach(pre => {
+        pre.classList.remove('collapsed');
+        pre.classList.add('expanded');
+        const boton = pre.closest('.code-block-wrapper')?.querySelector('.code-toggle-btn');
+        if (boton) boton.classList.add('expanded');
+      });
+
+      mainContent.querySelectorAll('.ejercicio-boton').forEach(boton => {
+        const panel = document.getElementById(boton.getAttribute('aria-controls'));
+        if (!panel) return;
+        boton.addEventListener('click', () => {
+          const abierto = boton.getAttribute('aria-expanded') === 'true';
+          boton.setAttribute('aria-expanded', String(!abierto));
+          panel.hidden = abierto;
+          if (!abierto) {
+            if (typeof Prism !== 'undefined') Prism.highlightAllUnder(panel);
+            katexEn(panel);
+          }
+        });
+      });
+    }
+
+    // ================================================================
+    // Derivaciones plegables
+    //
+    // Uso: un <div class="derivacion"> con un .derivacion-boton
+    // (aria-controls apuntando al id del .derivacion-panel, que arranca
+    // con el atributo hidden). El desarrollo va en un <ol class="derivacion-pasos">.
+    //
+    // loadModule() ya pasa KaTeX por TODO el módulo, incluidos los paneles
+    // ocultos, así que las fórmulas están renderizadas antes del primer clic;
+    // katexEn(panel) aquí es la red de seguridad para contenido inyectado
+    // después (una derivación dentro de una solución, por ejemplo).
+    // ================================================================
+    // ================================================================
+    // Componente .ciclo — diagrama de etapas recorrible
+    // ================================================================
+    // Cada `<div class="ciclo">` lleva una lista `role="tablist"` de
+    // botones `.ciclo-boton` con aria-controls apuntando a su panel. Se
+    // muestra una etapa a la vez; las flechas del teclado recorren el
+    // ciclo (y dan la vuelta al llegar al final, que es justo lo que hace
+    // el procedimiento que representa).
+    function iniciarCiclos() {
+      mainContent.querySelectorAll('.ciclo').forEach(raiz => {
+        const botones = Array.from(raiz.querySelectorAll('.ciclo-boton'));
+        const paneles = botones.map(b => document.getElementById(b.getAttribute('aria-controls')));
+        if (!botones.length || paneles.some(p => !p)) return;
+
+        function seleccionar(i, moverFoco) {
+          botones.forEach((boton, j) => {
+            const activo = j === i;
+            boton.setAttribute('aria-selected', String(activo));
+            boton.tabIndex = activo ? 0 : -1;
+            paneles[j].hidden = !activo;
+          });
+          katexEn(paneles[i]);
+          if (moverFoco) botones[i].focus();
+        }
+
+        botones.forEach((boton, i) => {
+          boton.addEventListener('click', () => seleccionar(i, false));
+          boton.addEventListener('keydown', evento => {
+            const paso = (evento.key === 'ArrowRight' || evento.key === 'ArrowDown') ? 1
+              : (evento.key === 'ArrowLeft' || evento.key === 'ArrowUp') ? -1 : 0;
+            if (paso === 0) return;
+            evento.preventDefault();
+            seleccionar((i + paso + botones.length) % botones.length, true);
+          });
+        });
+
+        const inicial = botones.findIndex(b => b.getAttribute('aria-selected') === 'true');
+        seleccionar(inicial >= 0 ? inicial : 0, false);
+      });
+    }
+
+    // ================================================================
+    // Componente .mapa-estacional — mapa de calor mes x año
+    // ================================================================
+    // Registro `MAPAS_ESTACIONALES['id']` sobre un contenedor
+    // `<div class="mapa-estacional" data-mapa="id">`, igual que SIMULADORES
+    // y AUTOEVALUACIONES. El valor de cada registro es un objeto
+    //   { anios, filas, minimo, maximo, escala, decimales, unidad, nota }
+    // o una FUNCIÓN que devuelve uno, para los mapas que dependen de un
+    // control. Un simulador puede repintar el suyo llamando directamente a
+    // pintarMapaEstacional(raiz, datos).
+    const MAPAS_ESTACIONALES = {};
+
+    const MESES_CORTOS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                          'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+    // Interpolación lineal entre dos colores dados como [r, g, b].
+    function mezclarColor(a, b, t) {
+      const c = t < 0 ? 0 : t > 1 ? 1 : t;
+      return 'rgb(' + [0, 1, 2].map(i => Math.round(a[i] + (b[i] - a[i]) * c)).join(',') + ')';
+    }
+
+    // Secuencial: verde de la paleta, de muy claro a muy oscuro. Para niveles.
+    const VERDE_CLARO = [238, 245, 242];
+    const VERDE_OSCURO = [1, 40, 32];
+    // Divergente: naranja (negativo) - gris muy claro (cero) - verde (positivo).
+    // Para series ya diferenciadas, donde el cero es el valor con significado.
+    const NARANJA = [255, 102, 0];
+    const NEUTRO = [248, 250, 252];
+
+    function colorMapa(valor, datos) {
+      if (valor === null || valor === undefined || !isFinite(valor)) return null;
+      if (datos.escala === 'divergente') {
+        const tope = Math.max(Math.abs(datos.minimo), Math.abs(datos.maximo)) || 1;
+        const t = Math.abs(valor) / tope;
+        return valor < 0 ? mezclarColor(NEUTRO, NARANJA, t) : mezclarColor(NEUTRO, VERDE_OSCURO, t);
+      }
+      const rango = (datos.maximo - datos.minimo) || 1;
+      return mezclarColor(VERDE_CLARO, VERDE_OSCURO, (valor - datos.minimo) / rango);
+    }
+
+    // Sobre fondo oscuro el número tiene que ir en blanco o no se lee. El
+    // umbral se decide con la luminancia relativa, no a ojo.
+    function textoSobre(color) {
+      const m = /rgb\((\d+),(\d+),(\d+)\)/.exec(color);
+      if (!m) return '#1e293b';
+      const [r, g, b] = [1, 2, 3].map(i => Number(m[i]) / 255)
+        .map(v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+      return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.42 ? '#1e293b' : '#ffffff';
+    }
+
+    function pintarMapaEstacional(raiz, datos) {
+      const rejilla = raiz.querySelector('.mapa-estacional-rejilla');
+      const leyenda = raiz.querySelector('.mapa-estacional-leyenda');
+      if (!rejilla || !datos) return;
+
+      const dec = datos.decimales === undefined ? 0 : datos.decimales;
+      const unidad = datos.unidad || '';
+      // Con muchos años la cifra no cabe: se deja solo el color, y el valor
+      // sigue disponible en el nombre accesible y en el tooltip.
+      const conNumero = datos.filas.length <= 20;
+
+      const partes = ['<div class="mapa-estacional-cabecera" aria-hidden="true"></div>'];
+      MESES_CORTOS.forEach(mes => {
+        partes.push('<div class="mapa-estacional-cabecera" role="columnheader">' + mes + '</div>');
+      });
+
+      datos.filas.forEach((fila, i) => {
+        partes.push('<div class="mapa-estacional-anio" role="rowheader">' + datos.anios[i] + '</div>');
+        fila.forEach((valor, j) => {
+          const vacia = valor === null || valor === undefined || !isFinite(valor);
+          const etiqueta = MESES_CORTOS[j] + ' ' + datos.anios[i];
+          if (vacia) {
+            partes.push('<div class="mapa-estacional-celda mapa-estacional-vacia" role="cell"'
+              + ' aria-label="' + etiqueta + ': sin dato" title="' + etiqueta + ': sin dato">·</div>');
+            return;
+          }
+          const color = colorMapa(valor, datos);
+          const texto = valor.toFixed(dec);
+          const titulo = etiqueta + ': ' + texto + (unidad ? ' ' + unidad : '');
+          partes.push('<div class="mapa-estacional-celda" role="cell" style="background:' + color
+            + ';color:' + textoSobre(color) + '" aria-label="' + titulo + '" title="' + titulo + '">'
+            + (conNumero ? texto : '') + '</div>');
+        });
+      });
+
+      rejilla.innerHTML = partes.join('');
+
+      if (leyenda) {
+        const izq = datos.escala === 'divergente'
+          ? 'rgb(255,102,0)' : 'rgb(238,245,242)';
+        const der = 'rgb(1,40,32)';
+        const centro = datos.escala === 'divergente'
+          ? ', rgb(248,250,252) 50%' : '';
+        const tope = Math.max(Math.abs(datos.minimo), Math.abs(datos.maximo));
+        const extremos = datos.escala === 'divergente'
+          ? [(-tope).toFixed(dec), tope.toFixed(dec)]
+          : [datos.minimo.toFixed(dec), datos.maximo.toFixed(dec)];
+        leyenda.innerHTML = '<span>' + extremos[0] + '</span>'
+          + '<span class="mapa-estacional-barra" aria-hidden="true" style="background:linear-gradient(90deg,'
+          + izq + centro + ',' + der + ')"></span>'
+          + '<span>' + extremos[1] + (unidad ? ' ' + unidad : '') + '</span>';
+      }
+
+      const nota = raiz.querySelector('.mapa-estacional-nota');
+      if (nota && datos.nota !== undefined) nota.innerHTML = datos.nota;
+    }
+
+    // Construye la matriz año x mes que espera pintarMapaEstacional a partir de
+    // una serie y del mes en que empieza. Vive aquí, y no en el JavaScript de
+    // un capítulo, para que todas las instancias del proyecto la compartan.
+    function matrizMesAnio(valores, anioInicio, mesInicio) {
+      const filas = [], anios = [];
+      let a = anioInicio, m = mesInicio;
+      let fila = new Array(12).fill(null);
+      anios.push(a);
+      for (let i = 0; i < valores.length; i++) {
+        fila[m - 1] = valores[i];
+        m += 1;
+        if (m > 12 && i < valores.length - 1) {
+          filas.push(fila); fila = new Array(12).fill(null);
+          m = 1; a += 1; anios.push(a);
+        }
+      }
+      filas.push(fila);
+      const planos = valores.filter(v => v !== null && v !== undefined && isFinite(v));
+      return {
+        anios: anios, filas: filas,
+        minimo: Math.min.apply(null, planos), maximo: Math.max.apply(null, planos)
+      };
+    }
+
+    function iniciarMapasEstacionales() {
+      mainContent.querySelectorAll('.mapa-estacional[data-mapa]').forEach(raiz => {
+        const registro = MAPAS_ESTACIONALES[raiz.dataset.mapa];
+        if (!registro) return;
+        pintarMapaEstacional(raiz, typeof registro === 'function' ? registro() : registro);
+      });
+    }
+
+    // Demostración del componente .mapa-estacional. Como el resto de la
+    // plantilla, no incrusta datos: genera la serie con semilla fija.
+    MAPAS_ESTACIONALES['demo-mapa'] = function () {
+      const ruido = generarRuidoNormal(96, 20260727);
+      const estacional = [-8, -10, 2, 0, 1, 9, 18, 17, 5, -6, -17, -9];
+      const valores = [];
+      for (let t = 0; t < 96; t++) {
+        valores.push(100 + 0.45 * t + estacional[t % 12] + 3 * ruido[t]);
+      }
+      return Object.assign(matrizMesAnio(valores, 2018, 1), {
+        escala: 'secuencial',
+        decimales: 1,
+        unidad: '',
+        nota: 'Serie simulada con tendencia y estacionalidad aditiva (semilla fija). ' +
+          'Las columnas de julio y agosto forman una banda vertical clara: eso es la ' +
+          'estacionalidad. Para una serie ya diferenciada se pasa <code>escala: ' +
+          '\'divergente\'</code> y la paleta se centra en cero.'
+      });
+    };
+
+
+    // ================================================================
+    // Componente .tabla-ranking — tabla comparativa ordenable
+    //
+    // TABLAS_RANKING['id'] = {
+    //   columnas: [
+    //     { clave: 'metodo',  titulo: 'Método',  tipo: 'texto' },
+    //     { clave: 'rmse',    titulo: 'RMSE',    decimales: 2, mejor: 'menor' },
+    //     { clave: 'cob95',   titulo: 'Cob. 95%', decimales: 1,
+    //       mejor: 'cerca', objetivo: 95, sufijo: ' %' }
+    //   ],
+    //   filas: [ { metodo: 'SARIMA', rmse: 18.92, cob95: 98.4 }, ... ],
+    //   inicial: 'rmse',            // columna por la que se ordena al abrir
+    //   destacada: 'SARIMA',        // valor de la 1ª columna que va marcado
+    //   pie: 'texto bajo la tabla'
+    // }
+    //
+    // El registro admite una FUNCIÓN además de un objeto, igual que
+    // MAPAS_ESTACIONALES, para que una tabla pueda leer datos definidos más
+    // abajo en el archivo o depender de un control.
+    //
+    // `mejor` decide qué celda se marca y en qué sentido ordena:
+    //   'menor'  — gana el más pequeño (RMSE, MAE, segundos)
+    //   'mayor'  — gana el más grande
+    //   'cerca'  — gana el más cercano a `objetivo` (la cobertura nominal:
+    //              quedarse corto y pasarse son igual de malos, y ninguna
+    //              ordenación por menor o mayor sabe expresar eso)
+    // ================================================================
+    const TABLAS_RANKING = {};
+
+    function distanciaRanking(columna, valor) {
+      if (valor === null || valor === undefined || !Number.isFinite(Number(valor))) {
+        return Number.POSITIVE_INFINITY;
+      }
+      const v = Number(valor);
+      if (columna.mejor === 'mayor') return -v;
+      if (columna.mejor === 'cerca') return Math.abs(v - Number(columna.objetivo));
+      return v;
+    }
+
+    function pintarTablaRanking(raiz, spec) {
+      const marco = raiz.querySelector('.tabla-ranking-marco');
+      const pie = raiz.querySelector('.tabla-ranking-pie');
+      const estado = raiz.querySelector('.tabla-ranking-estado');
+      if (!marco) return;
+
+      const columnas = spec.columnas || [];
+      const ordenables = columnas.filter(c => c.tipo !== 'texto');
+      if (!columnas.length || !ordenables.length) return;
+      let claveOrden = spec.inicial || ordenables[0].clave;
+
+      function columnaDe(clave) {
+        return columnas.find(c => c.clave === clave) || ordenables[0];
+      }
+
+      function formatea(columna, valor) {
+        if (columna.tipo === 'texto') return valor === undefined ? '' : String(valor);
+        if (valor === null || valor === undefined || !Number.isFinite(Number(valor))) return '—';
+        const d = columna.decimales === undefined ? 2 : columna.decimales;
+        return Number(valor).toLocaleString('es-CO', {
+          minimumFractionDigits: d, maximumFractionDigits: d
+        }) + (columna.sufijo || '');
+      }
+
+      function dibuja() {
+        const columna = columnaDe(claveOrden);
+        const filas = spec.filas.slice().sort(
+          (a, b) => distanciaRanking(columna, a[claveOrden]) -
+                    distanciaRanking(columna, b[claveOrden]));
+        const mejorValor = Math.min.apply(null,
+          spec.filas.map(f => distanciaRanking(columna, f[claveOrden])));
+
+        const tabla = document.createElement('table');
+
+        if (spec.descripcion) {
+          const caption = document.createElement('caption');
+          caption.innerHTML = spec.descripcion;
+          tabla.appendChild(caption);
+        }
+
+        const thead = document.createElement('thead');
+        const trh = document.createElement('tr');
+        const thPuesto = document.createElement('th');
+        thPuesto.scope = 'col';
+        thPuesto.className = 'tabla-ranking-puesto';
+        thPuesto.textContent = '#';
+        trh.appendChild(thPuesto);
+
+        columnas.forEach(c => {
+          const th = document.createElement('th');
+          th.scope = 'col';
+          if (c.tipo === 'texto') {
+            th.innerHTML = `<span class="tabla-ranking-boton">${c.titulo}</span>`;
+            th.setAttribute('aria-sort', 'none');
+          } else {
+            const activa = c.clave === claveOrden;
+            // Toda columna ordenable ordena de "mejor" a "peor", así que el
+            // sentido depende de `mejor` y no del signo del número.
+            th.setAttribute('aria-sort', activa
+              ? (c.mejor === 'mayor' ? 'descending' : 'ascending')
+              : 'none');
+            const boton = document.createElement('button');
+            boton.type = 'button';
+            boton.className = 'tabla-ranking-boton';
+            boton.innerHTML = `${c.titulo}<span class="tabla-ranking-flecha" ` +
+              `aria-hidden="true">${activa ? '▲' : '⇅'}</span>`;
+            boton.setAttribute('aria-label',
+              `Ordenar por ${c.tituloLargo || c.titulo}` +
+              (c.mejor === 'cerca' ? `, mejor cuanto más cerca de ${c.objetivo}`
+                : c.mejor === 'mayor' ? ', mejor cuanto mayor' : ', mejor cuanto menor'));
+            boton.addEventListener('click', () => {
+              claveOrden = c.clave;
+              dibuja();
+              const nuevo = marco.querySelector(
+                `th[data-clave="${c.clave}"] .tabla-ranking-boton`);
+              if (nuevo) nuevo.focus();
+              if (estado) {
+                const primera = spec.filas.slice().sort(
+                  (a, b) => distanciaRanking(c, a[c.clave]) -
+                            distanciaRanking(c, b[c.clave]))[0];
+                estado.textContent = `Ordenado por ${c.tituloLargo || c.titulo}: ` +
+                  `primero ${primera[columnas[0].clave]} ` +
+                  `(${formatea(c, primera[c.clave])}).`;
+              }
+            });
+            th.appendChild(boton);
+          }
+          th.setAttribute('data-clave', c.clave);
+          trh.appendChild(th);
+        });
+        thead.appendChild(trh);
+        tabla.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        filas.forEach((fila, i) => {
+          const tr = document.createElement('tr');
+          if (i === 0) tr.className = 'ganadora';
+          if (spec.destacada && fila[columnas[0].clave] === spec.destacada) {
+            tr.className = (tr.className + ' destacada').trim();
+          }
+          const tdPuesto = document.createElement('td');
+          tdPuesto.className = 'tabla-ranking-puesto';
+          tdPuesto.textContent = String(i + 1);
+          tr.appendChild(tdPuesto);
+
+          columnas.forEach((c, j) => {
+            const celda = document.createElement(j === 0 ? 'th' : 'td');
+            if (j === 0) celda.scope = 'row';
+            celda.innerHTML = formatea(c, fila[c.clave]);
+            if (c.tipo !== 'texto') celda.classList.add('numero');
+            if (c.clave === claveOrden) {
+              celda.classList.add('columna-activa');
+              if (distanciaRanking(c, fila[c.clave]) === mejorValor) {
+                celda.classList.add('mejor');
+              }
+            }
+            tr.appendChild(celda);
+          });
+          tbody.appendChild(tr);
+        });
+        tabla.appendChild(tbody);
+
+        marco.innerHTML = '';
+        marco.appendChild(tabla);
+      }
+
+      dibuja();
+      if (pie && spec.pie) pie.innerHTML = spec.pie;
+    }
+
+    function iniciarTablasRanking() {
+      mainContent.querySelectorAll('.tabla-ranking[data-ranking]').forEach(raiz => {
+        const registro = TABLAS_RANKING[raiz.dataset.ranking];
+        if (!registro) return;
+        pintarTablaRanking(raiz, typeof registro === 'function' ? registro() : registro);
+      });
+    }
+
+    function iniciarDerivaciones() {
+      mainContent.querySelectorAll('.derivacion-boton').forEach(boton => {
+        const panel = document.getElementById(boton.getAttribute('aria-controls'));
+        if (!panel) return;
+        boton.addEventListener('click', () => {
+          const abierto = boton.getAttribute('aria-expanded') === 'true';
+          boton.setAttribute('aria-expanded', String(!abierto));
+          panel.hidden = abierto;
+          const texto = boton.querySelector('.derivacion-texto');
+          if (texto) texto.textContent = abierto ? 'Ver el desarrollo paso a paso' : 'Ocultar el desarrollo';
+          if (!abierto) katexEn(panel);
+        });
+      });
+    }
+    // ================================================================
+    // Ayudantes genéricos que suelen hacer falta en cualquier capítulo
+    // ================================================================
+
+    // Semiancho de la banda de un correlograma bajo H0 de ruido blanco
+    function banda(n) { return 1.96 / Math.sqrt(n); }
+
+    // Las dos rectas de referencia de un correlograma, listas para
+    // `crearGraficoBarras`. La segunda va sin etiqueta para no duplicarla
+    // en la leyenda.
+    function lineasBanda(n) {
+      const b = banda(n);
+      return [{ valor: b, etiqueta: 'Banda ±1.96/√T' }, { valor: -b, etiqueta: '' }];
+    }
+
+    // ================================================================
+    // Simuladores de demostración
+    //
+    // Bórralos al empezar un capítulo real: están solo para que se vea
+    // cómo se combinan los controles y las dos fábricas de gráficos.
+    // ================================================================
+
+    // --- Deslizadores sobre un gráfico de línea ----------------------
+    SIMULADORES['demo-deslizadores'] = function (raiz) {
+      const n = 120;
+      const params = { pendiente: 0.4, ruido: 3 };
+      const ruidoBase = generarRuidoNormal(n, 20260726);
+      const etiquetas = Array.from({ length: n }, (_, i) => String(i + 1));
+
+      function serie() {
+        return ruidoBase.map((e, t) => params.pendiente * t + params.ruido * e);
+      }
+
+      const g = crearGraficoLinea(raiz.querySelector('canvas'), etiquetas, [{
+        label: 'Serie simulada',
+        data: serie(),
+        borderColor: COLORES_GRAFICO.primario,
+        backgroundColor: COLORES_GRAFICO.primario,
+        borderWidth: 1.8,
+        pointRadius: 0
+      }]);
+
+      function pintar() {
+        const y = serie();
+        g.data.datasets[0].data = y;
+        g.update('none');
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'T =', valor: n },
+          { etiqueta: 'último valor =', valor: y[n - 1].toFixed(2) },
+          { etiqueta: 'varianza =', valor: varianzaMuestral(y).toFixed(2) }
+        ]);
+      }
+
+      crearControles(raiz.querySelector('.simulador-controles'), [
+        { clave: 'pendiente', etiqueta: 'Pendiente de la tendencia', min: 0, max: 2, paso: 0.1 },
+        { clave: 'ruido', etiqueta: 'Desviación del ruido', min: 0, max: 10, paso: 0.5 }
+      ], params, pintar);
+
+      pintar();
+      return [g];
+    };
+
+    // --- Menú desplegable sobre correlogramas de barras ---------------
+    SIMULADORES['demo-inclusion'] = function (raiz) {
+      // Doce unidades de tamaños muy distintos: es justo el caso en que el
+      // diseño con probabilidades desiguales tiene algo que aportar.
+      const N = 12, n = 4;
+      const x = [2, 3, 3, 5, 6, 8, 9, 12, 15, 18, 24, 40];
+      const etiquetas = x.map((_, k) => 'U' + (k + 1));
+      const params = { diseno: 'mas' };
+      const c = raiz.querySelectorAll('canvas');
+
+      const piDe = diseno => diseno === 'mas'
+        ? probInclusionSI(N, n)
+        : probInclusionPPT(x, n);
+
+      const gPi = crearGraficoBarras(c[0], etiquetas, piDe(params.diseno),
+        { etiqueta: 'π_k', lineas: [{ valor: n / N, etiqueta: 'n/N' }], tituloX: 'Unidad' });
+      const gPeso = crearGraficoBarras(c[1], etiquetas, piDe(params.diseno).map(p => 1 / p),
+        { etiqueta: 'd_k = 1/π_k', color: COLORES_GRAFICO.terciario, tituloX: 'Unidad' });
+
+      function pintar() {
+        const pi = piDe(params.diseno);
+        gPi.data.datasets[0].data = pi;
+        gPeso.data.datasets[0].data = pi.map(p => 1 / p);
+        gPi.update('none');
+        gPeso.update('none');
+        const suma = pi.reduce((a, b) => a + b, 0);
+        const razon = Math.max(...pi) / Math.min(...pi);
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'N =', valor: N },
+          { etiqueta: 'n =', valor: n },
+          { etiqueta: 'Σ π_k =', valor: suma.toFixed(4) },
+          { etiqueta: 'π_max / π_min =', valor: razon.toFixed(2) }
+        ]);
+      }
+
+      crearSelector(raiz.querySelector('.simulador-controles'), {
+        clave: 'diseno', etiqueta: 'Diseño', opciones: [
+          { valor: 'mas', texto: 'MAS sin reemplazo' },
+          { valor: 'ppt', texto: 'πPT (proporcional al tamaño)' }
+        ]
+      }, params, pintar);
+
+      pintar();
+      return [gPi, gPeso];
+    };
+
+    // --- Interruptores que acumulan transformaciones ------------------
+    SIMULADORES['demo-interruptores'] = function (raiz) {
+      const n = 120;
+      const ruidoBase = generarRuidoNormal(n, 20260726);
+      // Serie estrictamente positiva y con crecimiento, para que el
+      // logaritmo tenga sentido
+      const base = ruidoBase.map((e, t) => 100 * Math.exp(0.015 * t) * (1 + 0.06 * e));
+      const params = { log: false, diferenciar: false };
+
+      const g = crearGraficoLinea(raiz.querySelector('canvas'), [], [{
+        label: 'Serie',
+        data: [],
+        borderColor: COLORES_GRAFICO.primario,
+        backgroundColor: COLORES_GRAFICO.primario,
+        borderWidth: 1.8,
+        pointRadius: 0
+      }]);
+
+      function pintar() {
+        let y = base.slice();
+        let nombre = 'Serie original';
+        if (params.log) { y = y.map(v => Math.log(v)); nombre = 'log(y)'; }
+        if (params.diferenciar) { y = diferenciar(y, 1); nombre = '∇ ' + nombre; }
+        g.data.labels = y.map((_, i) => String(i + 1));
+        g.data.datasets[0].data = y;
+        g.data.datasets[0].label = nombre;
+        g.update('none');
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'n =', valor: y.length },
+          { etiqueta: 'media =', valor: (y.reduce((a, v) => a + v, 0) / y.length).toFixed(4) },
+          { etiqueta: 'varianza =', valor: varianzaMuestral(y).toPrecision(4) }
+        ]);
+      }
+
+      crearInterruptores(raiz.querySelector('.simulador-controles'), [
+        { clave: 'log', etiqueta: 'Logaritmo' },
+        { clave: 'diferenciar', etiqueta: 'Primera diferencia ∇' }
+      ], params, pintar);
+
+      pintar();
+      return [g];
+    };
+
+    // ================================================================
+    // Autoevaluación de demostración: una pregunta de cada tipo
+    //
+    // Sustitúyela por las preguntas del capítulo. Campos comunes:
+    // {tipo, modulo, pregunta, pista}. `modulo` alimenta el resumen
+    // final de "qué repasar".
+    // ================================================================
+    // Demostración del componente .tabla-ranking. Datos fijos: la plantilla no
+    // incrusta ningún precálculo, igual que sus simuladores generan sus series.
+    TABLAS_RANKING['demo'] = function () {
+      return {
+        descripcion: 'Cuatro métodos ficticios. Pulsa la cabecera de cualquier columna: ' +
+          'la tabla se reordena, se renumeran los puestos y se marca el mejor valor. ' +
+          'La columna de cobertura no ordena por «menor» sino por <em>cercanía</em> al ' +
+          '95 %, que es lo que de verdad se quiere de un intervalo.',
+        columnas: [
+          { clave: 'metodo', titulo: 'Método', tipo: 'texto' },
+          { clave: 'rmse', titulo: 'RMSE', decimales: 2, mejor: 'menor' },
+          { clave: 'mase', titulo: 'MASE', decimales: 3, mejor: 'menor' },
+          { clave: 'cob', titulo: 'Cob. 95 %', tituloLargo: 'cobertura del 95 %', decimales: 1, sufijo: ' %', mejor: 'cerca', objetivo: 95 },
+          { clave: 'seg', titulo: 'Segundos', decimales: 2, mejor: 'menor' }
+        ],
+        filas: [
+          { metodo: 'Referencia simple', rmse: 42.55, mase: 1.681, cob: 93.4, seg: 0.02 },
+          { metodo: 'Modelo A', rmse: 18.92, mase: 0.621, cob: 98.4, seg: 0.44 },
+          { metodo: 'Modelo B', rmse: 20.63, mase: 0.678, cob: 92.1, seg: 118.61 },
+          { metodo: 'Modelo C', rmse: 23.17, mase: 0.759, cob: 94.3, seg: 13.09 }
+        ],
+        inicial: 'rmse',
+        destacada: 'Modelo A',
+        pie: 'El Modelo A gana por RMSE y por MASE, y sin embargo es el peor calibrado; ' +
+          'el Modelo B es el mejor calibrado y el más lento. El orden depende de la pregunta.'
+      };
+    };
+
+    AUTOEVALUACIONES['demo'] = [
+      {
+        tipo: 'opcion',
+        modulo: 1,
+        pregunta: 'Una sola respuesta correcta. ¿Qué caja se usa para un error frecuente?',
+        pista: 'Piensa en el color que usarías para avisar de un peligro.',
+        opciones: [
+          { texto: 'La caja <code>.warning</code> (roja).', correcta: true,
+            retro: 'Las cajas rojas se reservan para trampas y errores frecuentes, y deben explicar <em>por qué</em> se falla, no solo que se falla.' },
+          { texto: 'La caja <code>.definition</code> (verde).', correcta: false,
+            retro: 'La verde es para definiciones formales, lo que el estudiante debe poder citar.' },
+          { texto: 'La caja <code>.note</code> (naranja).', correcta: false,
+            retro: 'La naranja es para matices y conexiones que enriquecen sin ser imprescindibles.' },
+          { texto: 'La caja <code>.formula</code> (azul).', correcta: false,
+            retro: 'La azul destaca fórmulas centrales que se consultan de un vistazo.' }
+        ]
+      },
+      {
+        tipo: 'numerica',
+        modulo: 3,
+        pregunta: 'Respuesta numérica con tolerancia. Si $T = 100$, ¿cuánto vale $1.96/\\sqrt{T}$? Da tres decimales.',
+        pista: '$\\sqrt{100} = 10$.',
+        respuesta: 0.196,
+        tolerancia: 0.0006,
+        retroAcierto: '$1.96/10 = 0.196$. Acepta coma o punto como separador decimal, y la tolerancia se declara en la propia pregunta.',
+        retroFallo: 'Es $1.96/\\sqrt{100} = 0.196$. Un error habitual es dividir entre $T$ en vez de entre $\\sqrt{T}$.'
+      },
+      {
+        tipo: 'grafico',
+        modulo: 3,
+        alto: 200,
+        descripcionGrafico: 'Correlograma de una serie de ruido blanco, con todas las barras dentro de la banda',
+        pregunta: 'Lectura de gráfico: la pregunta dibuja su propio Chart.js. ¿Qué muestra este correlograma?',
+        pista: 'Fíjate en si alguna barra se sale de la banda punteada.',
+        dibujar: canvas => {
+          const y = generarRuidoNormal(200, 20260726);
+          return crearGraficoBarras(canvas, etiquetasRezago(24), calcularACF(y, 24),
+            { etiqueta: 'ACF', lineas: lineasBanda(200), tituloX: 'Rezago k' });
+        },
+        opciones: [
+          { texto: 'Ruido blanco: no queda estructura lineal.', correcta: true,
+            retro: 'Todas las barras caen dentro de la banda. Con 24 rezagos, que una o dos se asomen sería normal por azar.' },
+          { texto: 'Una serie con tendencia sin quitar.', correcta: false,
+            retro: 'Eso daría un decaimiento lento y casi lineal desde $r_1 \\approx 1$.' },
+          { texto: 'Una serie con estacionalidad de periodo 12.', correcta: false,
+            retro: 'La estacionalidad deja picos en los rezagos 12 y 24, y aquí no los hay.' },
+          { texto: 'Una serie sobrediferenciada.', correcta: false,
+            retro: 'La sobrediferenciación deja $r_1$ cerca de $-0.5$, muy por fuera de la banda.' }
+        ]
+      },
+      {
+        tipo: 'multiple',
+        modulo: 3,
+        pregunta: 'Varias respuestas correctas. Marca <strong>todo</strong> lo que un simulador debe hacer.',
+        pista: 'Son dos. Piensa en qué pasa al cambiar de módulo y de dónde deben salir los cálculos pesados.',
+        opciones: [
+          { texto: 'Devolver los <code>Chart</code> creados, para poder destruirlos.', correcta: true },
+          { texto: 'Dejar el cómputo pesado en R y traerlo precalculado como JSON.', correcta: true },
+          { texto: 'Ajustar modelos ARIMA en el navegador.', correcta: false },
+          { texto: 'Descargar los datos con <code>fetch</code> al abrir el capítulo.', correcta: false }
+        ],
+        retroAcierto: 'Las dos. Si no devuelves los gráficos se acumulan al navegar entre módulos, y el cómputo pesado en el navegador congela la página.',
+        retroFallo: 'Las correctas son las dos primeras. Ajustar un ARIMA en el navegador no es viable, y <code>fetch</code> rompe la regla del archivo autocontenido: los datos van incrustados.'
+      }
+    ];
+
+  </script>
+
+</body>
+
+</html>

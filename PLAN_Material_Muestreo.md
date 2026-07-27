@@ -101,8 +101,13 @@ Muestreo/                              ← RAÍZ DEL REPO GIT (rama main)
 ├── PLAN_Material_Muestreo.md          ← este documento (memoria entre sesiones)
 ├── CSV data sets for SDA 3e/          ← 82 datasets oficiales de Lohr
 ├── *.Rmd                              ← código R previo reutilizable (5 archivos)
+├── plantilla/                         ← plantilla de capítulo (NO se publica)
+│   └── plantilla-capitulo-muestreo.html
 ├── precalculo/                        ← scripts R + salidas JSON (NO se publica)
-│   └── README.md
+│   ├── README.md · _comun.R
+│   ├── verifica_paquetes.R            ← prueba de humo del entorno
+│   ├── verifica_bloques.py            ← contrasta cada cifra `#>` con la salida real
+│   └── pruebas/fixture_verificador.html
 ├── ensamblado/                        ← ensamblado y retropropagación (NO se publica)
 │   └── README.md
 └── Htmls_Muestreo/                    ← SITIO PUBLICADO (esto y solo esto va a gh-pages)
@@ -116,8 +121,7 @@ Muestreo/                              ← RAÍZ DEL REPO GIT (rama main)
     ├── capitulo-5-conglomerados.html             (NUEVO)
     ├── capitulo-6-probabilidades-desiguales.html (NUEVO)
     ├── capitulo-7-encuestas-complejas.html       (NUEVO)
-    ├── capitulo-8-no-respuesta-ponderacion.html  (NUEVO)
-    └── plantilla/plantilla-capitulo-muestreo.html
+    └── capitulo-8-no-respuesta-ponderacion.html  (NUEVO)
 ```
 
 **Nombres de archivo — decisión tomada el 2026-07-27: SÍ se renombran.** Los capítulos 1 y 2
@@ -376,49 +380,81 @@ los caps. 1–4.
 
 ## Lista de tareas
 
-### Fase 0 — Fundación
+### Fase 0 — Fundación — ✅ COMPLETADA (2026-07-27)
 
-- [ ] **T0.1 — Plantilla de Muestreo.** Copiar `Series de tiempo/plantilla/plantilla-capitulo.html`
-      a `Htmls_Muestreo/plantilla/plantilla-capitulo-muestreo.html`; ajustar título, subtítulo,
-      footer, `keywords` y Open Graph al curso de Muestreo.
-      *Criterios:* abre sin errores de consola; KaTeX renderiza; los componentes de demostración
-      (quiz, ejercicio guiado, simulador de ejemplo) funcionan.
-      *Verificación:* abrir en navegador con `innerWidth > 1024`; consola limpia.
-      *Depende de:* ninguna. *Alcance:* S (1 archivo).
+- [x] **T0.1 — Plantilla de Muestreo.** → `plantilla/plantilla-capitulo-muestreo.html` (155 867 B),
+      fuera del sitio publicado, como en Series. Ajustados título, `description`, `keywords`,
+      icono e `h1` de cabecera, `courseData.title` y las **5 referencias del pie** (Lohr,
+      Gutiérrez, Särndal, Cochran, paquete `survey`). El simulador de demostración pasó de
+      correlograma a **probabilidades de inclusión** (MAS ↔ πPT), y se añadieron los ayudantes
+      propios del curso: `probInclusionSI`, `probInclusionPPT` (con truncamiento iterativo en 1),
+      `totalHT`, `deff`, `iccDesdeDeff`.
+      *Verificado en navegador con `innerWidth = 1440`:* 4 módulos, 3 simuladores, 4 preguntas de
+      autoevaluación, 1 ejercicio guiado; KaTeX con 0 errores; pestañas R/Python conmutan; los
+      gráficos se destruyen al cambiar de módulo (0 `canvas` tras salir); consola limpia salvo el
+      aviso habitual del CDN de Tailwind. El simulador se probó en sus dos ramas: con πPT,
+      Σπ_k = 4 exactamente, ningún π_k > 1 (la unidad de tamaño 40 se vuelve de inclusión forzosa)
+      y π_max/π_min = 17,5.
 
-- [ ] **T0.2 — Infraestructura de precálculo.** Crear `Htmls_Muestreo/precalculo/` con `README.md`,
+- [x] **T0.2 — Infraestructura de precálculo.** Crear `Htmls_Muestreo/precalculo/` con `README.md`,
       `_comun.R` (locale UTF-8, rutas a los CSV de Lohr, paleta, helpers de JSON) y el
       `Makefile`/script que invoque **el Rscript del framework 4.4**.
       *Criterios:* `_comun.R` fija `Sys.setlocale("LC_CTYPE", "en_US.UTF-8")`; un `agpop` cargado
       se resume correctamente; el JSON emitido tiene tildes bien.
-      *Verificación:* ejecutar y validar el JSON con `python3 -m json.tool`.
-      *Depende de:* ninguna. *Alcance:* S.
+      *Hecho:* `precalculo/README.md`, `_comun.R` (locale UTF-8, rutas, semilla 2026, paleta,
+      `lee_lohr`, `escribe_json` con relectura, `fmt` y **`ht()`**) y `salidas/`.
+      *Verificado:* `ht()` contrastado contra `survey::svytotal` y contra la fórmula cerrada del
+      MAS sobre `agpop` con n = 300 — las tres vías dan el mismo total (837 582 559,02) y la misma
+      varianza, con diferencia relativa 2,8 × 10⁻¹⁴.
 
-- [ ] **T0.3 — Instalar `TeachingSampling`** en R 4.4 y comprobar `data(BigLucy)`, `S.SI`, `E.SI`,
-      `S.STPPS`, `E.2SI`.
-      *Criterios:* las cinco funciones existen y `BigLucy` carga con sus dimensiones documentadas.
-      *Verificación:* script de humo en `precalculo/verifica_paquetes.R`.
-      *Depende de:* ninguna. *Alcance:* XS.
+- [x] **T0.3 — Instalar `TeachingSampling`** → 4.1.1 instalado en R 4.4.1.
+      *Verificado* con `precalculo/verifica_paquetes.R`: `survey` 4.5, `sampling` 2.11,
+      `TeachingSampling` 4.1.1, `jsonlite` 2.0.0; las ocho funciones que usa el material
+      (`S.SI`, `E.SI`, `S.BE`, `E.BE`, `S.STPPS`, `E.STPPS`, `E.2SI`, `S.WR`); **`BigLucy` con
+      85 296 filas × 11 columnas**; 82 CSV de Lohr y `agpop` con 3 078 condados; y `jsonlite`
+      escribiendo tildes correctamente.
 
-- [ ] **T0.4 — Verificador de bloques.** Adaptar `verifica_bloques_cap6.py` a este curso: extrae los
+- [x] **T0.4 — Verificador de bloques.** Adaptar `verifica_bloques_cap6.py` a este curso: extrae los
       bloques `language-r` y `language-python` de un capítulo, los ejecuta **encadenados** (R 4.4)
       y contrasta cada cifra anunciada en los comentarios `#>` contra la salida real.
-      *Criterios:* detecta una discrepancia inyectada a propósito.
-      *Verificación:* prueba negativa con una cifra alterada a mano.
-      *Depende de:* T0.2. *Alcance:* S.
+      *Hecho:* `precalculo/verifica_bloques.py`, con `--todos` y prueba de regresión en
+      `precalculo/pruebas/fixture_verificador.html`.
+      *Verificado:* la prueba negativa caza la cifra falsa (anunciaba 99999.99, la salida real es
+      306677) y el encadenamiento funciona (un bloque usa el `pop` que definió otro).
+      *Fallo encontrado y corregido durante la propia verificación:* la expresión regular heredada
+      de Series exigía `<pre><code ...>` exacto y los capítulos usan `<pre class="collapsed">`, así
+      que el verificador informaba «nada que verificar» sobre los 13 bloques del capítulo 4 — el
+      fallo silencioso que la herramienta existe para evitar. Ahora la expresión admite atributos
+      y, además, **aborta ruidosamente** si el archivo menciona bloques que no consigue extraer.
+      Con eso, los 13 bloques de Python del capítulo 4 se ejecutan encadenados sin error.
 
-- [ ] **T0.5 — Arreglos técnicos en los 4 capítulos existentes:** fijar `chart.js@4.4.1`, añadir
-      `prism-r.min.js`, unificar el bloque `<style>` con el de la plantilla.
-      *Criterios:* los 4 capítulos cargan las mismas versiones de CDN que la plantilla; el conjunto
-      de selectores CSS coincide con el de la plantilla salvo lo que un capítulo no use.
-      *Verificación:* comparar conjuntos de selectores entre archivos.
-      *Depende de:* T0.1. *Alcance:* S (4 archivos, cambios mecánicos).
+- [x] **T0.5 — Arreglos técnicos en los 4 capítulos existentes.** `chart.js` pasó de sin fijar a
+      `@4.4.1`, se añadió `prism-r.min.js` y se incorporaron **173 bloques CSS** de la plantilla a
+      cada capítulo. Las reglas se **añadieron, no se sustituyeron**: solo entraron las que no
+      tocan ninguna de las 35 clases que el capítulo ya definía, de modo que el aspecto actual no
+      cambia y los componentes nuevos (quiz, ejercicio guiado, ciclo, tabla-ranking, simuladores,
+      derivaciones) tendrán estilo en cuanto se inserten.
+      *Verificado:* los 4 capítulos pasan de 35 a **127 clases, 0 faltantes** frente a la
+      plantilla; llaves CSS balanceadas (319/319); en el navegador a 1440 px el capítulo 4
+      conserva su maquetación (cabecera 1430, barra lateral 280, contenido 904), sin desbordamiento
+      horizontal, KaTeX sin errores, `Chart.version` 4.4.1 y Prism con R y Python cargados; consola
+      sin errores.
 
-### Checkpoint 0 — Fundación
-- [ ] La plantilla abre limpia y sus componentes funcionan.
-- [ ] `TeachingSampling` instalado y `BigLucy` disponible.
-- [ ] El verificador de bloques detecta una cifra falsa inyectada.
-- [ ] Los 4 capítulos actuales cargan las mismas versiones de CDN.
+### Checkpoint 0 — Fundación — ✅ SUPERADO (2026-07-27)
+- [x] La plantilla abre limpia y sus componentes funcionan.
+- [x] `TeachingSampling` instalado y `BigLucy` disponible.
+- [x] El verificador de bloques detecta una cifra falsa inyectada.
+- [x] Los 4 capítulos actuales cargan las mismas versiones de CDN.
+
+**Anotaciones de la fase, para no repetir el tropiezo:**
+- La lista blanca del `.gitignore` se estaba tragando `plantilla/` en silencio. Al añadir una
+  carpeta nueva al proyecto hay que añadir también su `!/carpeta/`, y comprobarlo con
+  `git check-ignore -v ruta`.
+- El contexto de JavaScript del navegador vuelve a reportar `innerWidth = 0` tras cambiar de
+  pestaña: **medir solo después de `resize_window` y de comprobar que `innerWidth > 1024`**, o
+  toda la geometría sale falsa.
+- Los `if ... else` de R sin llaves y con el `else` en una línea nueva son un error de sintaxis a
+  nivel superior. Pasó en `verifica_paquetes.R`.
 
 ---
 

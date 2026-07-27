@@ -6,6 +6,7 @@
 !/.gitignore
 !/PLAN_Material_Muestreo.md
 !/Htmls_Muestreo/
+!/plantilla/
 !/precalculo/
 !/ensamblado/
 !/CSV data sets for SDA 3e/
@@ -32,6 +33,9 @@
 # Cachés de Python (los scripts de ensamblado importan módulos locales)
 __pycache__/
 *.pyc
+
+# Guiones temporales que escribe precalculo/verifica_bloques.py
+precalculo/.tmp_verifica/
 
 # Temporales de ofimática
 ~$*

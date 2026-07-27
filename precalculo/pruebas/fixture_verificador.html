@@ -1,0 +1,13 @@
+<html><body>
+<pre><code class="language-r">pop &lt;- read.csv(&quot;CSV data sets for SDA 3e/agpop.csv&quot;)
+nrow(pop)
+#&gt; [1] 3078</code></pre>
+<pre><code class="language-r">round(mean(pop$acres92), 2)
+#&gt; [1] 99999.99</code></pre>
+<pre><code class="language-r">length(unique(pop$state))
+#&gt; [1] 50</code></pre>
+<pre><code class="language-python">import pandas as pd
+pop = pd.read_csv(&quot;CSV data sets for SDA 3e/agpop.csv&quot;)
+print(len(pop))
+#&gt; 3078</code></pre>
+</body></html>
