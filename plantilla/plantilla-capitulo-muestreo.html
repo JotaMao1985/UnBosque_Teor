@@ -2295,6 +2295,113 @@
         padding: 0.42rem 0.4rem;
       }
     }
+
+    /* ================================================================
+       Glosario de notación (componente nuevo del capítulo 2)
+
+       El curso convive con dos fuentes que escriben lo mismo de maneras
+       distintas: Lohr (orden y ejemplos) y Gutiérrez (aparato formal).
+       Esta tabla plegable es el puente, y aparece en todos los capítulos
+       a partir del 2.
+       ================================================================ */
+    .glosario-notacion {
+      margin: 1.5rem 0;
+    }
+
+    .glosario-boton {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #7c2d12;
+      background: rgba(255, 102, 0, 0.07);
+      border: 1px solid rgba(255, 102, 0, 0.4);
+      border-radius: 50px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .glosario-boton:hover {
+      background: rgba(255, 102, 0, 0.15);
+    }
+
+    .glosario-boton[aria-expanded="true"] {
+      background: #FF6600;
+      color: white;
+      border-color: #FF6600;
+    }
+
+    .glosario-boton .fa-chevron-down {
+      transition: transform 0.2s ease;
+      font-size: 0.7rem;
+    }
+
+    .glosario-boton[aria-expanded="true"] .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    .glosario-panel {
+      margin-top: 0.75rem;
+      padding: 0.9rem 1.1rem;
+      background: #fffbf7;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+    }
+
+    .glosario-panel[hidden] {
+      display: none;
+    }
+
+    .glosario-marco {
+      overflow-x: auto;
+    }
+
+    .glosario-panel table {
+      width: 100%;
+      margin: 0;
+      font-size: 0.82rem;
+    }
+
+    .glosario-panel th,
+    .glosario-panel td {
+      padding: 0.38rem 0.6rem;
+      vertical-align: middle;
+    }
+
+    .glosario-panel tbody td:first-child {
+      text-align: left;
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    .glosario-panel tbody td:not(:first-child) {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .glosario-panel code {
+      font-size: 0.76rem;
+    }
+
+    .glosario-nota {
+      margin: 0.7rem 0 0;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    @media (max-width: 640px) {
+      .glosario-panel table {
+        font-size: 0.72rem;
+      }
+
+      .glosario-panel th,
+      .glosario-panel td {
+        padding: 0.28rem 0.35rem;
+      }
+    }
   </style>
 </head>
 
@@ -2546,6 +2653,13 @@
         </div>
       </div>
 
+
+      <p>Cuando un curso convive con dos fuentes que usan notaciones distintas, la tabla de traducción
+        va en un <strong>glosario de notación</strong> plegable. Se declara en JavaScript
+        (<code>GLOSARIOS['id']</code>) y se repite igual en todos los capítulos, que es lo que hace
+        que el estudiante no tenga que reaprenderla.</p>
+
+      <div class="glosario-notacion" data-glosario="demo"></div>
       <table>
         <caption class="sr-only">Ejemplo de tabla</caption>
         <thead>
@@ -2874,6 +2988,7 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
         iniciarDerivaciones();
         iniciarCiclos();
         iniciarTablasRanking();
+        iniciarGlosarios();
         iniciarMapasEstacionales();
         renderMathInElement(mainContent, {
           delimiters: [
@@ -3454,6 +3569,78 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
       return Array.from({ length: k }, (_, i) => String(i + 1));
     }
 
+
+    // --- Gráficos con eje x numérico (nacieron en el capítulo 2) ------
+    // Los correlogramas y las barras usan un eje de categorías; para un
+    // histograma con una recta vertical en un valor concreto, o para una
+    // curva en la que el eje x es una cantidad, hace falta un eje lineal.
+    function crearGraficoXY(canvas, datasets, opciones = {}) {
+      return new Chart(canvas, {
+        data: { datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          interaction: { mode: 'nearest', intersect: false },
+          plugins: {
+            legend: {
+              labels: {
+                font: { family: 'Montserrat', size: 12 }, boxWidth: 24,
+                filter: item => item.text !== ''
+              }
+            },
+            tooltip: {
+              backgroundColor: '#012820',
+              titleFont: { family: 'Montserrat' },
+              bodyFont: { family: 'Fira Code' },
+              filter: item => item.dataset.label !== ''
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              min: opciones.xMin, max: opciones.xMax,
+              title: {
+                display: !!opciones.tituloX, text: opciones.tituloX,
+                font: { family: 'Montserrat', size: 11 }
+              },
+              ticks: { font: { family: 'Fira Code', size: 10 }, maxRotation: 0, maxTicksLimit: 10 },
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: !!opciones.tituloY, text: opciones.tituloY,
+                font: { family: 'Montserrat', size: 11 }
+              },
+              ticks: { font: { family: 'Fira Code', size: 11 } },
+              grid: { color: 'rgba(148, 163, 184, 0.2)' }
+            }
+          }
+        }
+      });
+    }
+
+    // Un histograma precalculado en R ({centros, conteo}), como área escalonada
+    function serieHistograma(hist, etiqueta, color, escala = 1) {
+      return {
+        type: 'line', label: etiqueta, stepped: 'middle', fill: true,
+        data: hist.centros.map((c, i) => ({ x: c * escala, y: hist.conteo[i] })),
+        borderColor: color, backgroundColor: color + '2e',
+        borderWidth: 1.4, pointRadius: 0
+      };
+    }
+
+    // Recta vertical de referencia (media poblacional, valor verdadero…)
+    function serieVertical(x, alto, etiqueta, color) {
+      return {
+        type: 'line', label: etiqueta,
+        data: [{ x: x, y: 0 }, { x: x, y: alto }],
+        borderColor: color, borderDash: [6, 4], borderWidth: 2,
+        pointRadius: 0, fill: false
+      };
+    }
+
     // --- Ayudantes propios de MUESTREO -------------------------------
     // Lo de arriba (`calcularACF`, `diferenciar`, `boxCox`, `matrizMesAnio`)
     // viene de Series de Tiempo y solo lo usan los simuladores y el quiz de
@@ -3513,6 +3700,70 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
       elemento.innerHTML = campos
         .map(c => `<span><b>${c.etiqueta}</b> ${c.valor}</span>`)
         .join('');
+    }
+
+    // ================================================================
+    // Glosario de notación (v1, capítulo 2)
+    //
+    // GLOSARIOS['id'] = {titulo, nota, filas: [{concepto, aqui, lohr,
+    // gutierrez, r}]} sobre un contenedor con data-glosario="id".
+    //
+    // Los campos de notación se escriben en LaTeX SIN delimitadores: se
+    // envuelven en $...$ al pintar y KaTeX los resuelve en la misma
+    // pasada que el resto del módulo. Un guion largo se deja tal cual.
+    // ================================================================
+    const GLOSARIOS = {};
+
+    function iniciarGlosarios() {
+      mainContent.querySelectorAll('[data-glosario]').forEach(raiz => {
+        const g = GLOSARIOS[raiz.dataset.glosario];
+        if (!g) {
+          console.warn(`Glosario no registrado: ${raiz.dataset.glosario}`);
+          return;
+        }
+        const id = `glosario-${raiz.dataset.glosario}`;
+        const mate = txt => (txt && txt !== '—') ? `$${txt}$` : (txt || '');
+        raiz.innerHTML = `
+          <button type="button" class="glosario-boton" aria-expanded="false" aria-controls="${id}">
+            <i class="fas fa-language" aria-hidden="true"></i>
+            <span class="glosario-texto">${g.titulo}</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="glosario-panel" id="${id}" hidden>
+            <div class="glosario-marco">
+              <table>
+                <caption class="sr-only">${g.titulo}</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Concepto</th>
+                    <th scope="col">Este material</th>
+                    <th scope="col">Lohr</th>
+                    <th scope="col">Gutiérrez</th>
+                    <th scope="col">En R</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${g.filas.map(f => `<tr>
+                    <td>${f.concepto}</td>
+                    <td>${mate(f.aqui)}</td>
+                    <td>${mate(f.lohr)}</td>
+                    <td>${mate(f.gutierrez)}</td>
+                    <td><code>${f.r}</code></td>
+                  </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+            ${g.nota ? `<p class="glosario-nota">${g.nota}</p>` : ''}
+          </div>`;
+
+        const boton = raiz.querySelector('.glosario-boton');
+        const panel = raiz.querySelector('.glosario-panel');
+        boton.addEventListener('click', () => {
+          const abierto = boton.getAttribute('aria-expanded') === 'true';
+          boton.setAttribute('aria-expanded', abierto ? 'false' : 'true');
+          panel.hidden = abierto;
+        });
+      });
     }
 
     // ================================================================
@@ -4467,6 +4718,20 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
         pie: 'El Modelo A gana por RMSE y por MASE, y sin embargo es el peor calibrado; ' +
           'el Modelo B es el mejor calibrado y el más lento. El orden depende de la pregunta.'
       };
+    };
+
+
+    // Demostración del componente .glosario-notacion. En un capítulo real las
+    // filas son las de ese capítulo, y la tabla se repite en todos.
+    GLOSARIOS['demo'] = {
+      titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
+      nota: 'Los campos de notación se escriben en LaTeX sin delimitadores: el componente los ' +
+        'envuelve en $…$ y KaTeX los resuelve con el resto del módulo.',
+      filas: [
+        { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k', lohr: '\\pi_i', gutierrez: '\\pi_k', r: 'probs = ~pi' },
+        { concepto: 'Peso de diseño', aqui: 'd_k = 1/\\pi_k', lohr: 'w_i', gutierrez: 'd_k', r: 'weights = ~w' },
+        { concepto: 'Estimador de Horvitz–Thompson', aqui: '\\hat{t}_\\pi', lohr: '\\hat{t}_{HT}', gutierrez: '\\hat{t}_{y,\\pi}', r: 'svytotal()' }
+      ]
     };
 
     AUTOEVALUACIONES['demo'] = [

@@ -1,0 +1,107 @@
+
+    /* ================================================================
+       Glosario de notación (componente nuevo del capítulo 2)
+
+       El curso convive con dos fuentes que escriben lo mismo de maneras
+       distintas: Lohr (orden y ejemplos) y Gutiérrez (aparato formal).
+       Esta tabla plegable es el puente, y aparece en todos los capítulos
+       a partir del 2.
+       ================================================================ */
+    .glosario-notacion {
+      margin: 1.5rem 0;
+    }
+
+    .glosario-boton {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #7c2d12;
+      background: rgba(255, 102, 0, 0.07);
+      border: 1px solid rgba(255, 102, 0, 0.4);
+      border-radius: 50px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .glosario-boton:hover {
+      background: rgba(255, 102, 0, 0.15);
+    }
+
+    .glosario-boton[aria-expanded="true"] {
+      background: #FF6600;
+      color: white;
+      border-color: #FF6600;
+    }
+
+    .glosario-boton .fa-chevron-down {
+      transition: transform 0.2s ease;
+      font-size: 0.7rem;
+    }
+
+    .glosario-boton[aria-expanded="true"] .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    .glosario-panel {
+      margin-top: 0.75rem;
+      padding: 0.9rem 1.1rem;
+      background: #fffbf7;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+    }
+
+    .glosario-panel[hidden] {
+      display: none;
+    }
+
+    .glosario-marco {
+      overflow-x: auto;
+    }
+
+    .glosario-panel table {
+      width: 100%;
+      margin: 0;
+      font-size: 0.82rem;
+    }
+
+    .glosario-panel th,
+    .glosario-panel td {
+      padding: 0.38rem 0.6rem;
+      vertical-align: middle;
+    }
+
+    .glosario-panel tbody td:first-child {
+      text-align: left;
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    .glosario-panel tbody td:not(:first-child) {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .glosario-panel code {
+      font-size: 0.76rem;
+    }
+
+    .glosario-nota {
+      margin: 0.7rem 0 0;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    @media (max-width: 640px) {
+      .glosario-panel table {
+        font-size: 0.72rem;
+      }
+
+      .glosario-panel th,
+      .glosario-panel td {
+        padding: 0.28rem 0.35rem;
+      }
+    }

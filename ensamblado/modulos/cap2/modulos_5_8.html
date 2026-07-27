@@ -1,0 +1,462 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · MAS como caso particular                           -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El MAS como caso particular
+          <span class="text-gray-400 font-normal text-2xl">/ Simple random sampling</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Deducir todas las fórmulas del muestreo aleatorio simple
+              —media, varianza, fpc— desde el marco general, en vez de aprenderlas de memoria.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-shuffle mr-2" aria-hidden="true"></i>Definición 2.7: MAS sin reemplazo</h4>
+        <p>El <strong>muestreo aleatorio simple sin reemplazo</strong> (<em>simple random sampling without
+          replacement</em>, MAS o SI) de tamaño $n$ es el diseño que reparte la probabilidad por igual entre todos los
+          subconjuntos de tamaño $n$:</p>
+        $$p(s) = \begin{cases} \dfrac{1}{\binom{N}{n}} & \text{si } |s| = n \\[6pt] 0 & \text{en otro caso}\end{cases}$$
+      </div>
+
+      <p>Es un diseño como cualquier otro: una fila de la tabla del módulo 1. Lo que lo hace especial es que sus
+        $\pi_k$ y $\pi_{kl}$ tienen forma cerrada, y con ellas todo lo demás se deduce.</p>
+
+      <div class="formula">
+        $$\pi_k = \frac{n}{N} \quad \text{para toda } k, \qquad
+          \pi_{kl} = \frac{n(n-1)}{N(N-1)} \quad \text{para todo } k \neq l$$
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-mas-pi">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver de dónde salen $\pi_k$ y $\pi_{kl}$ en el MAS</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-mas-pi" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>$\pi_k$ es la suma de $p(s)$ sobre las muestras que contienen a $k$. Todas valen lo mismo, así que
+                basta con contarlas: fijado $k$, quedan $n-1$ puestos que llenar con las $N-1$ unidades restantes.</p>
+              $$\#\{s : k \in s\} = \binom{N-1}{n-1}$$
+            </li>
+            <li>
+              <p>Se multiplica por la probabilidad común y se simplifican los factoriales:</p>
+              $$\pi_k = \frac{\binom{N-1}{n-1}}{\binom{N}{n}}
+                = \frac{\frac{(N-1)!}{(n-1)!\,(N-n)!}}{\frac{N!}{n!\,(N-n)!}} = \frac{n}{N}$$
+            </li>
+            <li>
+              <p>Igual con dos unidades fijas: quedan $n-2$ puestos entre $N-2$ candidatas.</p>
+              $$\pi_{kl} = \frac{\binom{N-2}{n-2}}{\binom{N}{n}} = \frac{n(n-1)}{N(N-1)}$$
+            </li>
+            <li>
+              <p>Comprobación con la población de cinco condados y $n = 2$: $\pi_k = 2/5 = 0{,}4$ y
+                $\pi_{kl} = 2 \cdot 1/(5 \cdot 4) = 0{,}1$. Es exactamente lo que devolvió el código del módulo 2.</p>
+            </li>
+          </ol>
+          <p class="derivacion-resultado">Nótese que $\pi_{kl} &lt; \pi_k \pi_l$: en el MAS sin reemplazo,
+            $\Delta_{kl} = \pi_{kl} - \pi_k\pi_l = -\frac{n(N-n)}{N^2(N-1)} &lt; 0$. Que sea negativo no es un detalle:
+            es lo que produce el factor de corrección por población finita.</p>
+        </div>
+      </div>
+
+      <h3>2.5.1 El estimador HT se convierte en la media muestral</h3>
+
+      <p>Con $\pi_k = n/N$ para todas las unidades, los pesos son todos iguales a $d_k = N/n$ y el estimador de
+        Horvitz–Thompson colapsa en algo conocido:</p>
+
+      <div class="formula">
+        $$\hat{t}_\pi = \sum_{k \in s} \frac{y_k}{n/N} = \frac{N}{n}\sum_{k \in s} y_k = N \bar{y}, \qquad
+          \hat{\bar{y}}_U = \frac{\hat{t}_\pi}{N} = \bar{y}$$
+        <p style="margin-bottom:0;">La media muestral de toda la vida <strong>es</strong> el estimador HT bajo MAS. Por
+          eso funciona: no porque «promediar sea natural», sino porque en este diseño concreto todas las unidades pesan
+          lo mismo.</p>
+      </div>
+
+      <p>Sustituyendo las $\pi_{kl}$ del MAS en la fórmula general de la varianza se llega —tras bastante álgebra que
+        aquí no aporta— a la expresión que ya conocías:</p>
+
+      <div class="formula">
+        <h4>Varianza de la media muestral bajo MAS</h4>
+        $$V(\bar{y}) = \left(1 - \frac{n}{N}\right)\frac{S^2}{n}, \qquad
+          S^2 = \frac{1}{N-1}\sum_{k \in U}(y_k - \bar{y}_U)^2$$
+        <p>El factor $\left(1 - \frac{n}{N}\right)$ es la <strong>corrección por población finita</strong>
+          (<em>finite population correction</em>, fpc). Estimador insesgado de la varianza:</p>
+        $$\hat{V}(\bar{y}) = \left(1 - \frac{n}{N}\right)\frac{s^2}{n}, \qquad
+          s^2 = \frac{1}{n-1}\sum_{k \in s}(y_k - \bar{y})^2$$
+      </div>
+
+      <div class="note">
+        <p><strong>Cómo leer el fpc.</strong> Si $n = N$ se hace un censo, el fpc vale 0 y la varianza es cero: no hay
+          error de muestreo porque no hay muestreo. Si $n/N &lt; 0{,}05$ el fpc pasa de $0{,}95$ y su efecto sobre el
+          error estándar es menor del 3 %, así que suele ignorarse. Y una consecuencia que sorprende: lo que manda en
+          la precisión es $n$, no $n/N$. Una muestra de 1 000 personas es igual de precisa en una ciudad de 100 000 que
+          en un país de 50 millones.</p>
+      </div>
+
+      <h3>2.5.2 La población del curso: <code>agpop</code></h3>
+
+      <p>Los 3 078 condados agrícolas de Estados Unidos del censo de 1992 acompañan todo el material. Antes de usarlos
+        hay que mirarlos: el archivo trae un código que no es un valor.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La población agpop">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Los 19 condados con $-99$.</strong> En los archivos de Lohr, $-99$ es el código de <em>dato
+          faltante</em>. Promediarlo con los demás produce una media de 306 677 en vez de 308 582: un error pequeño
+          en apariencia, pero que consiste en haberse inventado 19 condados de superficie negativa. En este material
+          se excluyen, y por eso la población de referencia de las simulaciones tiene
+          <strong>$N = 3\,059$</strong>. No es un detalle de limpieza: es no respuesta de ítem, y el
+          <strong>capítulo 8</strong> se dedica a qué hacer con ella. Descartarla sin más, como aquí, es la opción
+          defendible solo porque son el 0,6 % de las unidades.</p>
+      </div>
+
+      <p>Con la población conocida se puede hacer algo que en un estudio real es imposible: <strong>repetir el
+        muestreo</strong> diez mil veces y mirar cómo se comporta el estimador.</p>
+
+      <div class="simulador" data-simulador="distribucion-muestreo">
+        <h4><i class="fas fa-chart-column" aria-hidden="true"></i> Distribución de muestreo de $\bar{y}$</h4>
+        <p class="simulador-intro">Diez mil muestras aleatorias simples de <code>agpop</code>, para cada tamaño. La
+          línea vertical es la media poblacional verdadera. Tres cosas que mirar al mover $n$: el histograma se
+          <strong>estrecha</strong> como $1/\sqrt{n}$; se vuelve <strong>simétrico</strong> aunque la población esté
+          muy sesgada (asimetría 1,80 con $n=10$ y 0,11 con $n=1000$); y la desviación empírica sigue de cerca a la
+          teórica $\sqrt{(1-n/N)S^2/n}$, que es la comprobación de que la fórmula describe lo que de verdad pasa.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Histograma de las medias muestrales para el tamaño elegido" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <h3>2.5.3 Una muestra real: <code>agsrs</code></h3>
+
+      <p><code>agsrs</code> es la muestra aleatoria simple de 300 condados que Lohr usa en el texto guía. Es el momento
+        de conocer <code>survey</code>, el paquete de R con el que se analizan encuestas de verdad: se le declara el
+        diseño una vez y él aplica los pesos y el fpc en todo lo que venga después.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Análisis de agsrs">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué se hace la cuenta a mano si <code>survey</code> ya la da.</strong> Porque las dos vías tienen
+          que coincidir, y coinciden hasta el último decimal: 18 898,4344 por los dos caminos. Cuando en el capítulo 5
+          aparezcan los conglomerados y las dos vías <em>no</em> coincidan, se sabrá que la discrepancia es información,
+          no ruido. Este es el patrón que se repite en todo el material: <code>survey</code> como herramienta, la
+          fórmula como control.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · Intervalos de confianza y fpc                      -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Intervalos de confianza
+          <span class="text-gray-400 font-normal text-2xl">/ Confidence intervals</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Construir el intervalo, y —más importante— medir si de
+              verdad cubre el 95 % de las veces. La respuesta, en poblaciones sesgadas, es que no siempre.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Una estimación sin medida de incertidumbre no es un resultado, es una anécdota. El intervalo de confianza se
+        apoya en un teorema del límite central que no es el habitual: aquí no hay variables independientes e
+        idénticamente distribuidas, sino un sorteo sin reemplazo dentro de una población finita.</p>
+
+      <div class="note">
+        <h4><i class="fas fa-infinity mr-2" aria-hidden="true"></i>Teorema del límite central de Hájek (1960)</h4>
+        <p style="margin-bottom:0;">Bajo MAS sin reemplazo, si $n$, $N-n$ y $N$ crecen y la población no está dominada
+          por unas pocas unidades enormes, entonces</p>
+        $$\frac{\bar{y} - \bar{y}_U}{\sqrt{V(\bar{y})}} \;\xrightarrow{\;d\;}\; N(0, 1)$$
+      </div>
+
+      <div class="formula">
+        <h4>Intervalo de confianza del $100(1-\alpha)\%$ para la media</h4>
+        $$\bar{y} \pm t_{n-1,\,1-\alpha/2}\sqrt{\left(1 - \frac{n}{N}\right)\frac{s^2}{n}}$$
+        <p style="margin-bottom:0;">Con $n$ grande, $t$ y $z$ son prácticamente iguales; <code>survey</code> usa $t$ con
+          los grados de libertad del diseño, que en un MAS son $n - 1$.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Intervalo de confianza para agsrs">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R11⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <h4><i class="fas fa-triangle-exclamation mr-2" aria-hidden="true"></i>Olvidar el fpc no estrecha el intervalo:
+          lo <em>ensancha</em></h4>
+        <p style="margin-bottom:0;">Es al revés de lo que casi todo el mundo espera. El fpc <strong>multiplica</strong>
+          la varianza por $1 - n/N &lt; 1$, así que quitarlo hace el error estándar más grande: 19 892,7 en vez de
+          18 898,4, un 5,3 % más. El intervalo queda más ancho de lo debido y el análisis resulta
+          <strong>conservador</strong>, no optimista. El error de publicar intervalos demasiado estrechos existe, pero
+          viene de otro sitio —ignorar los conglomerados y la estratificación—, y es el tema del capítulo 7. Conviene
+          no confundir los dos.</p>
+      </div>
+
+      <h3>2.6.1 ¿De verdad cubre el 95 %?</h3>
+
+      <p>«Intervalo de confianza del 95 %» es una promesa comprobable: si se repite el muestreo muchas veces, el 95 %
+        de los intervalos debería contener la media verdadera. Con la población entera a mano se puede verificar en
+        vez de creer.</p>
+
+      <div class="simulador" data-simulador="cobertura-ic">
+        <h4><i class="fas fa-arrows-left-right-to-line" aria-hidden="true"></i> Cobertura empírica del IC del 95 %</h4>
+        <p class="simulador-intro">Los cien primeros intervalos de las diez mil réplicas: en verde los que atrapan la
+          media poblacional, en rojo los que no. Debajo, la cobertura real sobre las diez mil. Con $n = 10$ apenas
+          llega al 79 %, muy lejos del 95 % prometido: la población de condados es tan asimétrica (coeficiente de
+          variación 1,38) que el teorema de Hájek todavía no ha hecho efecto. Hace falta $n \geq 500$ para acercarse
+          al 94 %.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Los cien primeros intervalos de confianza y la media poblacional" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Lo que esto significa en la práctica.</strong> Con una población muy sesgada —ingresos, gasto,
+          superficie, facturación: casi todo lo que se mide en pesos o en hectáreas— un intervalo del 95 % calculado
+          con $n$ pequeño cubre bastante menos del 95 %. No es que la fórmula esté mal: la varianza está bien estimada.
+          Lo que falla es la <strong>aproximación normal</strong>. Las salidas son transformar la variable, usar
+          métodos de replicación (capítulo 7) o, sencillamente, no reportar intervalos con $n = 10$ sobre variables de
+          cola larga.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · Tamaño de muestra                                  -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Determinación del tamaño de
+          muestra <span class="text-gray-400 font-normal text-2xl">/ Sample size</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Responder «¿cuántos hay que encuestar?» con una cuenta,
+              y saber qué se está suponiendo al hacerla.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Es la pregunta que llega antes que ninguna otra y la que peor se responde. La cuenta se hace al revés: se fija
+        la precisión que se quiere, se despeja $n$.</p>
+
+      <div class="formula">
+        <h4>Tamaño para estimar una media con margen de error $e$</h4>
+        <p>Se quiere que el semiancho del intervalo sea $e$, es decir
+          $z_{\alpha/2}\sqrt{(1-n/N)S^2/n} = e$. Despejando en dos pasos:</p>
+        $$n_0 = \frac{z_{\alpha/2}^2\, S^2}{e^2} \qquad\text{y luego}\qquad n = \frac{n_0}{1 + n_0/N}$$
+        <p style="margin-bottom:0;">$n_0$ es el tamaño que haría falta con población infinita; el segundo paso aplica
+          la corrección por población finita.</p>
+      </div>
+
+      <div class="formula">
+        <h4>Para una proporción</h4>
+        <p>Con $y_k \in \{0,1\}$ se tiene $S^2 = \frac{N}{N-1}p(1-p) \approx p(1-p)$, de modo que</p>
+        $$n_0 = \frac{z_{\alpha/2}^2\, p(1-p)}{e^2}$$
+        <p style="margin-bottom:0;">Sin información previa se toma $p = 0{,}5$, que maximiza $p(1-p)$ y da el caso más
+          exigente. Con $e = 0{,}03$ y 95 % sale el célebre $n_0 = 1\,067$ de las encuestas de opinión.</p>
+      </div>
+
+      <div class="simulador" data-simulador="tamano-muestra">
+        <h4><i class="fas fa-calculator" aria-hidden="true"></i> Calculadora de tamaño de muestra</h4>
+        <p class="simulador-intro">La curva de $n$ frente al margen de error, con el punto elegido marcado. Mueve el
+          margen y verás la relación que más cuesta aceptar en la práctica: la precisión mejora como $1/\sqrt{n}$, así
+          que <strong>partir el error por dos cuesta cuadruplicar la muestra</strong>. El deslizador de $N$ muestra
+          cuándo importa el fpc: con $N$ grande, $n$ deja de depender de $N$.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Tamaño de muestra necesario en función del margen de error" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Cálculo del tamaño de muestra">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R12⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P5⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La trampa circular.</strong> La fórmula necesita $S^2$, que es un parámetro de la población: si se
+          conociera, no habría que muestrear. En la práctica se saca de una encuesta anterior, de una muestra piloto o
+          de una cota superior razonable. Y conviene reportar de dónde salió: un tamaño de muestra calculado con un
+          $S^2$ inventado es un número con apariencia de rigor y nada detrás.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Precisión absoluta o relativa.</strong> Pedir «un error de 30 858 acres» no significa nada para
+          quien lee. Pedir «un error del 10 % de la media» sí. En términos relativos la fórmula se escribe con el
+          coeficiente de variación $CV = S/\bar{y}_U$, que en <code>agpop</code> vale 1,38:
+          $n_0 = (z \cdot CV / e_{\text{rel}})^2$. Con $e_{\text{rel}} = 0{,}10$ salen los mismos 729,74 de antes, y
+          tras el fpc, $n = 590$ condados.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · Bernoulli y muestreo con reemplazo                 -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Diseño Bernoulli y muestreo
+          con reemplazo <span class="text-gray-400 font-normal text-2xl">/ Random sample size</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver qué se rompe cuando el tamaño de muestra deja de
+              estar fijado de antemano, y por qué aun así estos diseños se usan.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-coins mr-2" aria-hidden="true"></i>Definición 2.8: diseño Bernoulli</h4>
+        <p>Se recorre la lista y de cada unidad se decide, <strong>por separado y con la misma probabilidad
+          $\pi$</strong>, si entra o no. Las decisiones son independientes entre unidades.</p>
+        $$\pi_k = \pi \ \ \forall k, \qquad \pi_{kl} = \pi^2 \ \ (k \neq l), \qquad
+          \Delta_{kl} = \pi_{kl} - \pi_k\pi_l = 0$$
+        <p style="margin-bottom:0;">El tamaño de la muestra es <strong>aleatorio</strong>:
+          $n_s \sim \text{Binomial}(N, \pi)$, con $E(n_s) = N\pi$ y $DE(n_s) = \sqrt{N\pi(1-\pi)}$.</p>
+      </div>
+
+      <p>Que $\Delta_{kl} = 0$ tiene una consecuencia agradable: en la fórmula general de la varianza se anulan todos
+        los términos cruzados y queda solo la diagonal.</p>
+
+      <div class="formula">
+        $$V(\hat{t}_\pi) = \sum_{k \in U} y_k^2\, \frac{1 - \pi}{\pi}$$
+        <p style="margin-bottom:0;">Forma cerrada exacta, sin simular nada. Sobre <code>agpop</code> con
+          $\pi = 0{,}05$ da un coeficiente de variación de <strong>0,1342</strong>.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Diseño Bernoulli sobre agpop">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R13⟧</code></pre>
+          <pre><code class="language-r">⟦R14⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P6⟧</code></pre>
+        </div>
+      </div>
+
+      <p>El sorteo del bloque anterior pedía 152,95 condados en promedio y entregó 144. Esa variación es la fuente de
+        problemas del diseño: cuando salen pocas unidades, $\hat{t}_\pi$ se queda corto, y cuando salen muchas se pasa
+        —aunque en promedio acierte—. Hay una manera barata de arreglar buena parte de eso.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-divide mr-2" aria-hidden="true"></i>Definición 2.9: estimador de Hájek</h4>
+        <p>En lugar de dividir por $\pi$, se divide por la suma de los pesos efectivamente observados:</p>
+        $$\hat{t}_{\text{Hájek}} = N\,\frac{\sum_{k \in s} y_k / \pi_k}{\sum_{k \in s} 1/\pi_k}
+          = N \cdot \frac{\hat{t}_\pi}{\hat{N}}$$
+        <p style="margin-bottom:0;">Es un cociente de dos estimadores, así que <strong>no es exactamente insesgado</strong>,
+          pero su varianza suele ser bastante menor. Es el primer ejemplo del curso de un cambio que se acepta a
+          propósito: un poco de sesgo a cambio de mucha varianza. En el <strong>capítulo 3</strong>, el estimador de
+          razón es la versión general de esta misma idea.</p>
+      </div>
+
+      <div class="simulador" data-simulador="bernoulli">
+        <h4><i class="fas fa-dice-two" aria-hidden="true"></i> Bernoulli: el tamaño de muestra también es aleatorio</h4>
+        <p class="simulador-intro">Cinco mil réplicas del diseño Bernoulli sobre <code>agpop</code>. Arriba, la
+          distribución del <strong>tamaño de muestra</strong>: con $\pi = 0{,}02$ se pide una muestra de 61 condados y
+          se acaba teniendo entre 40 y 85. Abajo, los dos estimadores del total. Hájek gana en los cuatro valores de
+          $\pi$ —CV 0,1763 frente a 0,2142 con $\pi = 0{,}02$—, y la ventaja es mayor cuanto más pequeño es $\pi$, que
+          es justo cuando $n_s$ varía relativamente más.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Tamaño de muestra $n_s$ obtenido</p>
+        <div class="grafico-wrapper" style="height:180px;">
+          <canvas aria-label="Distribución del tamaño de muestra bajo el diseño Bernoulli" role="img"></canvas>
+        </div>
+        <p class="grafico-etiqueta">Estimadores del total (millones de acres)</p>
+        <div class="grafico-wrapper" style="height:200px;">
+          <canvas aria-label="Distribución de los estimadores de Horvitz-Thompson y de Hájek" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <h3>2.8.1 Muestreo aleatorio simple con reemplazo</h3>
+
+      <p>La otra manera de que el diseño se aparte del MAS clásico es permitir repeticiones: en cada una de las $n$
+        extracciones, todas las unidades tienen probabilidad $1/N$, con independencia de lo ya extraído. Una misma
+        unidad puede salir varias veces.</p>
+
+      <div class="formula">
+        $$\pi_k = 1 - \left(1 - \frac{1}{N}\right)^{n} \qquad\text{y}\qquad
+          V_{\text{con reemplazo}}(\bar{y}) = \frac{\sigma^2}{n}, \quad
+          \sigma^2 = \frac{1}{N}\sum_{k \in U}(y_k - \bar{y}_U)^2$$
+        <p style="margin-bottom:0;">Sin fpc: repetir extracciones desperdicia información, y por eso el muestreo con
+          reemplazo es siempre algo menos preciso que el MAS del mismo $n$. La diferencia es despreciable si $n/N$ es
+          pequeño, que es el caso habitual.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué se estudia entonces.</strong> Por dos razones que llegan más adelante. En el
+          <strong>capítulo 6</strong>, el muestreo con probabilidades desiguales <em>con</em> reemplazo tiene un
+          estimador —Hansen–Hurwitz— cuya varianza es fácil de estimar, mientras que la versión sin reemplazo obliga a
+          calcular $\pi_{kl}$ y ahí empiezan los problemas. Y en el <strong>capítulo 7</strong>, el bootstrap remuestrea
+          con reemplazo; entender qué le pasa a $\pi_k$ cuando se permite repetir es lo que hace comprensible el
+          bootstrap para encuestas.</p>
+      </div>
+    </div>
+  </template>

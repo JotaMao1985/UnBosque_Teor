@@ -1,0 +1,202 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 11 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-11">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 11</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
+          guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprobar que el marco $\pi$ quedó en pie: diez
+              preguntas sobre los diez módulos y cuatro ejercicios con datos reales.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al final,
+        el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos antes de abrir
+        la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap2">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 2</h4>
+        <p class="text-sm" style="margin-bottom:0;">Diez preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro se resuelven con los datos oficiales de Lohr que
+          ya están cargados en los bloques anteriores. Las cifras de las soluciones salen de
+          <code>precalculo/genera_soluciones.R</code>, que resuelve el ejercicio de verdad.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Sobre la población de cinco condados
+            con el <strong>diseño C</strong> ($p(s) \propto x_k + x_l$): calcula $\pi_2$ y $\pi_{24}$, comprueba que
+            las $\pi_k$ suman $n$, y da el valor del estimador de Horvitz–Thompson si la muestra observada resulta ser
+            $\{2, 4\}$. Compara ese valor con el que daría el estimador de expansión $N\bar{y}$ y explica de dónde
+            viene la diferencia.</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e1-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e1-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap2-e1-pista" hidden>
+            <p style="margin:0;">Con $n = 2$, cada par de unidades <em>es</em> una muestra, así que $\pi_{kl}$ se lee
+              directamente de la tabla de $p(s)$ sin sumar nada. Para $\pi_2$ sí hay que sumar: son las cuatro muestras
+              que contienen a la unidad 2.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap2-e1-sol" hidden>
+            <p><strong>$\pi_2 = 0{,}325$, $\pi_{24} = 0{,}075$, $\hat{t}_\pi = 137{,}88$ frente a $N\bar{y} = 127{,}50$.</strong></p>
+            <pre><code class="language-r">⟦S1⟧</code></pre>
+            <p>$\pi_2$ suma las cuatro muestras que contienen a la unidad 2: $(2+3+3+5)/40 = 13/40 = 0{,}325$.
+              $\pi_{24}$ es directamente $p(\{2,4\}) = (1+2)/40 = 3/40 = 0{,}075$.</p>
+            <p style="margin-bottom:0;">Los dos estimadores difieren porque los pesos son distintos. El HT usa
+              $d_2 = 1/0{,}325 = 3{,}08$ y $d_4 = 1/0{,}4 = 2{,}5$: la unidad 2, que sale menos a menudo, pesa más
+              cuando sale. El estimador de expansión les da a las dos el mismo peso $N/n = 2{,}5$, lo que
+              <strong>infrarrepresenta</strong> sistemáticamente a las unidades pequeñas —que son las que el diseño C
+              selecciona con menos probabilidad— y por eso su esperanza es 165,75 en vez de 150. En esta muestra
+              concreta los dos se quedan cortos; lo que distingue al HT no es acertar aquí, sino acertar en promedio.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Con la muestra <code>agsrs</code>,
+            estima el <strong>total de granjas</strong> (<code>farms92</code>) en los 3 078 condados. Da el error
+            estándar por las dos vías (<code>survey</code> y la fórmula del MAS) y el intervalo del 95 %. El total real
+            se puede calcular con <code>agpop</code>: ¿cae dentro del intervalo?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e2-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e2-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap2-e2-pista" hidden>
+            <p style="margin:0;">El objeto <code>dis</code> del módulo 5 ya lleva declarado el diseño, con su
+              <code>fpc</code>; sirve para cualquier variable de <code>agsrs</code>. Para la vía manual recuerda que el
+              error estándar del <em>total</em> es $N$ veces el de la media. Y antes de nada, comprueba si
+              <code>farms92</code> tiene códigos $-99$: la respuesta cambia el resto del ejercicio.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap2-e2-sol" hidden>
+            <p><strong>$\hat{t} = 1\,843\,907$ granjas, EE $= 67\,908$, IC del 95 % $= [1\,710\,268,\ 1\,977\,545]$.
+              El total real es 1 925 300 y <em>sí</em> está dentro.</strong></p>
+            <pre><code class="language-r">⟦S2⟧</code></pre>
+            <p><code>farms92</code> no tiene códigos $-99$ ni en <code>agpop</code> ni en <code>agsrs</code>, así que
+              aquí no hay que filtrar nada: la trampa del módulo 5 era específica de <code>acres92</code>. Comprobarlo
+              cuesta una línea y evita propagar un error silencioso.</p>
+            <p style="margin-bottom:0;">La estimación puntual se queda un 4,2 % por debajo del total real. No es un
+              fallo del método: es una muestra concreta de las muchas posibles, y el intervalo —que es lo que mide esa
+              incertidumbre— la contiene sin problema. Si repitieras el ejercicio con otras muestras de tamaño 300,
+              alrededor del 95 % de los intervalos contendría 1 925 300.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Se define «condado grande» como el que
+            tiene más de 200 000 acres de superficie sembrada. Estima con <code>agsrs</code> la <strong>proporción</strong>
+            de condados grandes y su error estándar. Después calcula cuántos condados harían falta para estimar esa
+            proporción con un margen de error de 0,03 al 95 %, primero usando tu $\hat{p}$ y luego con la cota
+            conservadora $p = 0{,}5$. ¿Cuánto cuesta ser conservador aquí?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e3-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e3-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap2-e3-pista" hidden>
+            <p style="margin:0;">Una proporción es la media de una variable que vale 0 o 1, así que
+              <code>svymean</code> la estima igual que cualquier otra media: crea la columna indicadora y pídesela. Ojo
+              con un detalle que hace fallar a mucha gente: el objeto de diseño guarda una <em>copia</em> de los datos,
+              así que si añades la columna después de crearlo hay que volver a declararlo.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap2-e3-sol" hidden>
+            <p><strong>$\hat{p} = 0{,}4900$ con EE $= 0{,}0275$; hacen falta $n = 793$ condados, y con la cota
+              conservadora salen los mismos 793.</strong></p>
+            <pre><code class="language-r">⟦S3⟧</code></pre>
+            <p>La proporción real en la población es 0,4855, dentro del intervalo. Y como $\hat{p} = 0{,}49$ está
+              pegado a $0{,}5$, el producto $p(1-p)$ es casi idéntico en los dos casos —0,2499 frente a 0,25— y ser
+              conservador <strong>no cuesta nada</strong>: 1 066,65 frente a 1 067,07 antes del fpc, el mismo 793
+              después.</p>
+            <p style="margin-bottom:0;">Eso no siempre pasa. Si la proporción de interés fuera 0,10, el tamaño bajaría
+              a 342 condados y usar $p = 0{,}5$ por costumbre multiplicaría el costo del estudio por más de dos. La
+              cota conservadora es barata cuando la proporción está cerca de la mitad, y cara cuando es extrema.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Aplica un muestreo
+            <strong>sistemático 1 en 6</strong> sobre los 3 059 condados con dato válido y calcula la varianza exacta
+            de la media sistemática, la del MAS del mismo tamaño y el DEFF. Hazlo dos veces: con el archivo en su orden
+            original y ordenado por <code>acres87</code>. ¿Por qué la varianza del sistemático se puede calcular
+            <em>exactamente</em> aquí, si en el módulo 9 se dijo que no era estimable?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e4-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap2-e4-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap2-e4-pista" hidden>
+            <p style="margin:0;">La pregunta del final es la importante, y la respuesta está en <em>qué</em> se tiene a
+              mano en cada situación. Fíjate en cuántas muestras distintas existen con $k = 6$ y en cuáles de ellas
+              puede calcular sus medias alguien que solo dispone de <strong>una</strong> muestra.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap2-e4-sol" hidden>
+            <p><strong>DEFF = 0,508 con el orden original y 0,104 ordenado por <code>acres87</code>: el sistemático es
+              el doble de preciso que el MAS en el primer caso y diez veces más preciso en el segundo.</strong></p>
+            <pre><code class="language-r">⟦S4⟧</code></pre>
+            <p>Con $k = 6$ solo existen <strong>seis</strong> muestras posibles, así que la varianza de diseño es un
+              promedio de seis números y se calcula de una vez —siempre que se conozca la población entera, que aquí
+              se conoce porque <code>agpop</code> es un censo—. Lo que dice el módulo 9 es otra cosa: quien tiene
+              <em>una sola</em> muestra sistemática no puede estimar esa varianza, porque las otras cinco medias no las
+              observó y ningún estimador puede reconstruirlas. Conocer la población y tener una muestra son
+              situaciones distintas, y aquí estamos en la primera.</p>
+            <p style="margin-bottom:0;">Ordenar por <code>acres87</code> —correlación 0,996 con <code>acres92</code>—
+              hace que cada muestra sistemática recorra el rango entero de tamaños, que es estratificación implícita.
+              Es la mejor mejora de precisión que existe a costo cero: solo hay que ordenar el archivo antes de
+              muestrear.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, S.L. (2021). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>capítulo 2 completo</strong>
+            — el MAS, los intervalos, el tamaño de muestra y el sistemático, con la notación del texto guía. Es la
+            lectura obligatoria de las semanas 3 y 4.</li>
+          <li>Gutiérrez, H.A. <em>Estrategias de muestreo</em>, <strong>capítulos 2 y 3</strong> — el marco $p(s)$,
+            $\pi_k$, $\pi_{kl}$ y Horvitz–Thompson con las demostraciones completas, y el MAS y el Bernoulli como
+            casos particulares. De
+            <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
+            abierto</a>: es la referencia que sostiene los módulos 1 a 4.</li>
+          <li>Särndal, Swensson y Wretman (1992). <em>Model Assisted Survey Sampling</em>, <strong>secciones 2.2 a
+            2.8</strong> — la fuente de la notación que usa este material y el tratamiento canónico de la varianza de
+            Horvitz–Thompson.</li>
+          <li>Lumley, T. <em>survey: Analysis of Complex Survey Samples</em> — la
+            <a href="https://cran.r-project.org/package=survey" target="_blank" rel="noopener">documentación del
+            paquete</a>, en particular la viñeta sobre <code>svydesign</code> y el argumento <code>fpc</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

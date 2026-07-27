@@ -1,0 +1,269 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · Muestreo sistemático                               -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Muestreo sistemático
+          <span class="text-gray-400 font-normal text-2xl">/ Systematic sampling</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Un diseño con $\pi_k$ perfectamente correctas y
+              $\pi_{kl} = 0$ en casi todos los pares. Ver qué implica eso: la varianza no se puede estimar sin sesgo, y
+              el diseño puede ser el mejor o el peor según cómo esté ordenada la lista.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-list-ol mr-2" aria-hidden="true"></i>Definición 2.10: muestreo sistemático 1 en $k$</h4>
+        <ol style="margin-bottom:0;">
+          <li>Se ordena el marco muestral de $N$ unidades y se fija el <strong>intervalo</strong> $k = N/n$.</li>
+          <li>Se sortea un <strong>arranque aleatorio</strong> $r$ uniforme en $\{1, \dots, k\}$.</li>
+          <li>Se toman las unidades en las posiciones $r,\; r+k,\; r+2k,\; \dots$</li>
+        </ol>
+      </div>
+
+      <p>Es el diseño más fácil de aplicar en campo —«entrevista una vivienda de cada diez»— y no necesita numerar el
+        marco de antemano. Pero al escribir su $p(s)$ aparece algo raro.</p>
+
+      <div class="formula">
+        <p>Solo hay <strong>$k$ muestras posibles</strong>, una por arranque, y todas equiprobables:</p>
+        $$p(s_r) = \frac{1}{k} \ \ \text{ para } r = 1,\dots,k, \qquad p(s) = 0 \ \text{ para cualquier otra } s$$
+        <p>De ahí salen las probabilidades de inclusión:</p>
+        $$\pi_k = \frac{1}{k} = \frac{n}{N}, \qquad
+          \pi_{kl} = \begin{cases} 1/k & \text{si } k \text{ y } l \text{ caen en el mismo arranque} \\
+          \boldsymbol{0} & \text{en cualquier otro caso}\end{cases}$$
+      </div>
+
+      <p>Las $\pi_k$ son exactamente las del MAS, así que el estimador de Horvitz–Thompson es el mismo, $N\bar{y}$, y
+        sigue siendo <strong>insesgado</strong>. El problema no está en la estimación puntual: está en la varianza.</p>
+
+      <div class="warning">
+        <h4><i class="fas fa-ban mr-2" aria-hidden="true"></i>Por qué la varianza no se puede estimar sin sesgo</h4>
+        <p>El estimador de la varianza del módulo 3 divide entre $\pi_{kl}$:</p>
+        $$\hat{V}(\hat{t}_\pi) = \sum_{k \in s}\sum_{l \in s} \frac{\pi_{kl} - \pi_k\pi_l}{\pi_{kl}}\,
+          \frac{y_k}{\pi_k}\frac{y_l}{\pi_l}$$
+        <p style="margin-bottom:0;">Los pares que <em>sí</em> aparecen juntos en la muestra tienen $\pi_{kl} = 1/k &gt; 0$,
+          de acuerdo. Pero los pares que están en arranques distintos tienen $\pi_{kl} = 0$ y <strong>nunca se
+          observan</strong>, así que su aporte a la varianza real es invisible para cualquier fórmula que use solo la
+          muestra. No es que la fórmula sea difícil de calcular: es que <strong>la información no está</strong>. Con
+          una sola muestra sistemática la varianza de diseño es inestimable, y punto.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Otra manera de verlo, que se retoma en el capítulo 5.</strong> El muestreo sistemático es un
+          muestreo por conglomerados en el que se ha seleccionado <strong>un solo conglomerado</strong>: los $k$
+          arranques son $k$ conglomerados que particionan la población, y el sorteo elige uno. Y con un único
+          conglomerado observado no hay variabilidad entre conglomerados que medir, igual que no se puede estimar una
+          varianza con una sola observación.</p>
+      </div>
+
+      <h3>2.9.1 El caso patológico: cuando el orden tiene un ciclo</h3>
+
+      <p>La varianza sí se puede calcular <em>si se conoce la población</em>, porque solo hay $k$ muestras: basta
+        promediar. Y al hacerlo aparece el comportamiento que hace del sistemático un diseño de dos caras.</p>
+
+      <div class="simulador" data-simulador="sistematico-periodico">
+        <h4><i class="fas fa-wave-square" aria-hidden="true"></i> Sistemático sobre una lista con periodicidad</h4>
+        <p class="simulador-intro">Ciento veinte registros ordenados por mes a lo largo de diez años: la lista tiene un
+          ciclo de longitud 12. Mueve $n$ y observa el desastre cuando $k$ resulta ser múltiplo de 12: el arranque
+          elige un mes y la muestra entera cae siempre en ese mes. Con $n = 10$ ($k = 12$) el DEFF llega a
+          <strong>9,81</strong> —diez veces peor que un MAS del mismo tamaño—, y con $n = 5$ ($k = 24$) a 4,74. En
+          cualquier otro $k$ el sistemático <em>gana</em>, porque recorre el ciclo entero y hace de estratificación
+          implícita.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Población periódica con las unidades seleccionadas por el arranque elegido" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Varianza exacta del muestreo sistemático">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R15⟧</code></pre>
+        </div>
+      </div>
+
+      <h3>2.9.2 Y sobre <code>agpop</code>: el mismo diseño, tres resultados</h3>
+
+      <p>La población de condados no tiene ciclos naturales, pero el orden del archivo sí importa. El comparador de
+        abajo aplica el mismo sistemático 1 en 10 a la misma población, cambiando solo cómo está ordenada la lista.</p>
+
+      <div class="simulador" data-simulador="mas-vs-sistematico">
+        <h4><i class="fas fa-arrows-turn-to-dots" aria-hidden="true"></i> MAS frente a sistemático sobre <code>agpop</code></h4>
+        <p class="simulador-intro">El histograma es la distribución de la media bajo MAS ($n = 300$); los rombos son
+          las <strong>diez</strong> medias posibles del sistemático, una por arranque. Cuanto más juntas estén, más
+          preciso es el diseño. Con el archivo en su orden original (alfabético por estado, lo que agrupa condados
+          vecinos) el sistemático ya gana; ordenado por <code>acres87</code> gana mucho más; y con un orden en el que
+          el tamaño depende de la posición dentro del ciclo, se descalabra: DEFF <strong>219,9</strong>.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Distribución de la media bajo MAS y las diez medias sistemáticas posibles" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Sistemático sobre agpop">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R16⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Qué se hace en la práctica.</strong> Como la varianza no es estimable, se usan aproximaciones, y hay
+          que decir cuál se usó:</p>
+        <ul style="margin-bottom:0;">
+          <li><strong>Tratarlo como si fuera MAS.</strong> Es lo que hace <code>svydesign(id = ~1, fpc = ...)</code>. Si
+            la lista está ordenada por algo relacionado con $y$, esto <em>sobreestima</em> la varianza y el análisis
+            queda conservador. Si la lista tiene un ciclo, la <em>subestima</em> gravísimamente —y ahí sí se publican
+            intervalos demasiado estrechos—.</li>
+          <li><strong>Tratarlo como estratificado por pares.</strong> Se agrupan unidades consecutivas de dos en dos y
+            se usa la diferencia dentro de cada par. Suele ser la mejor aproximación cuando hay tendencia en la lista.</li>
+          <li><strong>Tomar varios arranques.</strong> Con $m$ arranques independientes ($k' = mk$) la varianza
+            <em>sí</em> es estimable: hay $m$ observaciones de la misma cantidad. Cuesta un poco de precisión y resuelve
+            el problema de raíz.</li>
+        </ul>
+      </div>
+
+      <div class="note">
+        <p><strong>Antes de usar un sistemático, mira la lista.</strong> No hay nada intrínsecamente bueno ni malo en
+          este diseño: todo depende del orden del marco, que es información que se tiene <em>antes</em> de muestrear.
+          Ordenar por una auxiliar correlacionada con $y$ convierte al sistemático en el mejor diseño disponible sin
+          coste alguno; dejar la lista con un ciclo oculto lo convierte en el peor. Y la diferencia entre 0,09 y 219,9
+          de DEFF no se ve en ninguna salida de <code>survey</code>.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · Teoría de aleatorización                          -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Teoría de aleatorización
+          <span class="text-gray-400 font-normal text-2xl">/ Randomization theory</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Cerrar el marco: qué se supone y qué no, en qué se
+              diferencia del enfoque basado en modelo, y dónde reaparece todo esto en ciencia de datos.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Todo el capítulo se apoya en una única fuente de aleatoriedad: el sorteo que el investigador ejecuta. Es una
+        posición inusual y vale la pena decirla explícitamente, porque en el resto de la estadística la aleatoriedad se
+        supone en la naturaleza.</p>
+
+      <table>
+        <caption class="sr-only">Comparación entre inferencia de diseño e inferencia de modelo</caption>
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Basada en el diseño (<em>design-based</em>)</th>
+            <th scope="col">Basada en modelo (<em>model-based</em>)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Qué es aleatorio</strong></td>
+            <td>Solo la muestra: los indicadores $I_k$</td>
+            <td>Los valores $y_k$, generados por un modelo</td>
+          </tr>
+          <tr>
+            <td><strong>Los $y_k$</strong></td>
+            <td>Constantes fijas desconocidas</td>
+            <td>Realizaciones de variables aleatorias</td>
+          </tr>
+          <tr>
+            <td><strong>Esperanza respecto de</strong></td>
+            <td>$p(s)$, que el investigador conoce</td>
+            <td>El modelo, que el investigador supone</td>
+          </tr>
+          <tr>
+            <td><strong>Si el supuesto falla</strong></td>
+            <td>No falla: $p(s)$ se ejecutó, no se supuso</td>
+            <td>Las conclusiones pueden ser inválidas</td>
+          </tr>
+          <tr>
+            <td><strong>Fuerte en</strong></td>
+            <td>Estimar totales y medias de poblaciones reales</td>
+            <td>Predecir, explicar, estimar en dominios pequeños</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>La ventaja de la inferencia de diseño es que su supuesto central es verificable: o se ejecutó el sorteo
+        declarado, o no. Su límite es que solo responde preguntas sobre <em>esta</em> población finita. Si lo que se
+        quiere es predecir el condado 3 079, que no existe en el marco, hace falta un modelo. En el
+        <strong>capítulo 3</strong> los dos enfoques se combinan en los estimadores asistidos por modelo, que usan un
+        modelo para ganar precisión pero conservan la insesgadez de diseño si el modelo falla.</p>
+
+      <h3>2.10.1 El mismo marco, en ciencia de datos</h3>
+
+      <p>Quien haya entrenado un modelo predictivo ya ha diseñado muestras, aunque no las haya llamado así. Estas tres
+        rutinas son diseños muestrales con su $p(s)$, y verlas de ese modo aclara qué garantizan y qué no.</p>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>Train/test split.</strong> Apartar el 20 % de las filas para test es exactamente un MAS de
+            tamaño $n = 0{,}2N$ sobre el conjunto de datos. Sus $\pi_k = 0{,}2$ son iguales para todas las filas, así
+            que la media de la métrica en test es insesgada para la métrica sobre el conjunto completo, y su varianza
+            lleva su fpc. Ese fpc explica algo que se observa siempre: <em>con un test pequeño la métrica baila</em>.</li>
+          <li><strong>Validación cruzada de $K$ partes.</strong> Aquí $\pi_k = 1$ para toda fila: todas pasan por test
+            exactamente una vez. Lo aleatorio no es <em>si</em> una fila entra, sino <em>en qué pliegue</em> cae. Por
+            eso la validación cruzada no tiene error de muestreo en el sentido de este capítulo, y por eso sus $K$
+            estimaciones <strong>no son independientes</strong>: comparten datos de entrenamiento. Tratarlas como si lo
+            fueran —y calcular un error estándar dividiendo por $\sqrt{K}$— subestima la incertidumbre.</li>
+          <li><strong>Bootstrap.</strong> Es muestreo con reemplazo de tamaño $n = N$ sobre el propio conjunto de
+            datos. De ahí sale el conocido «el 63 % de las filas aparece en cada réplica»: es la $\pi_k$ del módulo 8,
+            $1 - (1 - 1/N)^N \to 1 - e^{-1} = 0{,}632$.</li>
+        </ol>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Un train/test split como diseño muestral">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R17⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Y el <em>split</em> estratificado es un diseño estratificado.</strong> Cuando <code>scikit-learn</code>
+          ofrece <code>StratifiedKFold</code> para conservar la proporción de clases en cada pliegue, está haciendo lo
+          mismo que el capítulo 4 de este curso: reducir la varianza forzando que la muestra respete una partición
+          conocida de la población. Que la biblioteca lo llame <em>stratified</em> no es una coincidencia de
+          vocabulario.</p>
+      </div>
+
+      <div class="warning">
+        <h4><i class="fas fa-robot mr-2" aria-hidden="true"></i>Donde esto se rompe: los datos que no se sortearon</h4>
+        <p style="margin-bottom:0;">Casi ningún conjunto de datos de ciencia de datos proviene de un sorteo. Los
+          <em>logs</em> de una plataforma incluyen a quien usa la plataforma; un corpus web incluye lo que alguien
+          publicó. En esos casos $p(s)$ existe —algún mecanismo decidió qué se registró— pero es
+          <strong>desconocida</strong>, y las $\pi_k$ no se pueden calcular. Ahí no vale nada de este capítulo: no hay
+          insesgadez que invocar, y aumentar $n$ no arregla el problema porque el sesgo no depende de $n$. El
+          <strong>capítulo 1</strong> lo mostró con el <em>Literary Digest</em> y sus 2,4 millones de respuestas, y el
+          <strong>capítulo 8</strong> vuelve a ello con la fórmula del sesgo de no respuesta.</p>
+      </div>
+    </div>
+  </template>

@@ -1,0 +1,506 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · El diseño muestral p(s)                            -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El diseño muestral $p(s)$ <span
+            class="text-gray-400 font-normal text-2xl">/ The sampling design</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Entender que un diseño muestral es una <em>distribución
+              de probabilidad sobre muestras</em>, y que todo lo demás del curso —MAS, estratificado, conglomerados,
+              PPT— sale de elegir esa distribución de una manera u otra.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Casi toda la estadística que se ha visto hasta ahora empieza suponiendo que $y_1, \dots, y_n$ son variables
+        aleatorias independientes con alguna distribución. En muestreo de poblaciones finitas <strong>no</strong> es
+        así. Los valores $y_k$ de la población son números fijos: la superficie sembrada de cada condado en 1992 es la
+        que es, no es aleatoria. Lo único aleatorio es <strong>qué unidades se acaban observando</strong>, y eso lo
+        decide el investigador. Esa es la idea central de este capítulo, y la que sostiene los seis siguientes.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Definición 2.1: población, muestra y soporte</h4>
+        <p>Sea $U = \{1, 2, \dots, N\}$ el conjunto de índices de una <strong>población finita</strong> (<em>finite
+          population</em>) de tamaño $N$ conocido. Una <strong>muestra</strong> $s$ es un subconjunto $s \subseteq U$.
+          El conjunto de todas las muestras a las que se les asigna probabilidad positiva es el <strong>soporte</strong>
+          del diseño, $Q$.</p>
+        <p style="margin-bottom:0;">A cada unidad $k \in U$ le corresponde un valor $y_k$ de la variable de interés.
+          Los $y_k$ son <strong>constantes desconocidas</strong>, no variables aleatorias.</p>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-dice mr-2" aria-hidden="true"></i>Definición 2.2: diseño muestral</h4>
+        <p>Un <strong>diseño muestral</strong> (<em>sampling design</em>) es una función $p(\cdot)$ que asigna a cada
+          muestra posible una probabilidad de ser seleccionada:</p>
+        $$p(s) \ge 0 \quad \text{para toda } s \subseteq U, \qquad \sum_{s \subseteq U} p(s) = 1$$
+        <p style="margin-bottom:0;">Un <strong>muestreo probabilístico</strong> es aquel en el que $p(s)$ está
+          especificado por el investigador, es conocido y se puede calcular. Sin $p(s)$ no hay inferencia de diseño:
+          no hay nada respecto de lo cual tomar esperanzas.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Nota sobre notación.</strong> Lohr escribe $P(S)$ y llama $S$ a la muestra; Gutiérrez escribe $p(s)$
+          y reserva las mayúsculas para los conjuntos. En este material se usa <strong>$p(s)$</strong>, que es la
+          convención de Särndal, Swensson y Wretman y la que se necesita para el resto del curso. El
+          <strong>glosario del módulo 2</strong> traduce ambas notaciones término a término.</p>
+      </div>
+
+      <h3>2.1.1 Una población de cinco condados</h3>
+
+      <p>Para ver el espacio de muestras completo hace falta una población lo bastante pequeña como para escribirla
+        entera. Cinco condados, y de cada uno se quiere estimar $y_k$, la superficie sembrada en miles de acres. Se
+        conoce además $x_k$, el número de granjas del censo anterior: una <strong>variable auxiliar</strong>
+        (<em>auxiliary variable</em>) que está disponible para <em>toda</em> la población <em>antes</em> de muestrear, y
+        que por eso puede usarse para diseñar.</p>
+
+      <table>
+        <caption class="sr-only">Población de cinco condados</caption>
+        <thead>
+          <tr>
+            <th scope="col">Unidad $k$</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th>
+            <th scope="col">4</th><th scope="col">5</th><th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>$y_k$ (miles de acres, <strong>desconocida</strong>)</td>
+            <td>14</td><td>18</td><td>27</td><td>33</td><td>58</td><td><strong>$t = 150$</strong></td></tr>
+          <tr><td>$x_k$ (granjas, <strong>conocida</strong>)</td>
+            <td>1</td><td>1</td><td>2</td><td>2</td><td>4</td><td>10</td></tr>
+        </tbody>
+      </table>
+
+      <p>Con $n = 2$ hay $\binom{5}{2} = 10$ subconjuntos posibles. Un diseño muestral es, literalmente, repartir una
+        probabilidad entre esas diez muestras. Hay infinitas maneras de repartirla, y tres de ellas se van a usar
+        durante todo el capítulo:</p>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>Diseño A — MAS sin reemplazo.</strong> Las diez muestras son igual de probables: $p(s) = 1/10$.</li>
+          <li><strong>Diseño B — estratificado.</strong> Se parte $U$ en $\{1,2,3\}$ y $\{4,5\}$ y se toma una unidad de
+            cada estrato. Solo <strong>seis</strong> de las diez muestras son posibles; las otras cuatro tienen
+            $p(s) = 0$ y quedan fuera del soporte.</li>
+          <li><strong>Diseño C — probabilidades desiguales.</strong> $p(s)$ proporcional al tamaño total de la muestra,
+            $p(s) \propto x_k + x_l$. Las muestras que contienen condados grandes salen más a menudo.</li>
+        </ol>
+      </div>
+
+      <div class="simulador" data-simulador="espacio-muestras">
+        <h4><i class="fas fa-table-list" aria-hidden="true"></i> El espacio de muestras completo</h4>
+        <p class="simulador-intro">Las diez muestras posibles con su $p(s)$ bajo cada diseño. Cambia de diseño y
+          observa qué cambia: en el estratificado, cuatro barras caen a cero —esas muestras <em>no pueden salir</em>—;
+          en el desigual, las muestras con el condado 5 (el más grande) son las más probables. En los tres casos la
+          suma de las barras es 1: eso es lo que hace que $p$ sea un diseño.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Probabilidad $p(s)$ de cada una de las diez muestras</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Probabilidad de cada muestra bajo el diseño elegido" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>El código que sigue construye los tres diseños. Fíjate en que <strong>no hay ningún sorteo</strong>: un diseño
+        muestral no es el acto de seleccionar, es la tabla de probabilidades que gobierna esa selección.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La población de cinco condados">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-ruler mr-2" aria-hidden="true"></i>Definición 2.3: tamaño de muestra fijo y aleatorio</h4>
+        <p style="margin-bottom:0;">Un diseño es de <strong>tamaño fijo</strong> si todas las muestras de su soporte
+          tienen el mismo número de unidades, es decir si $n_s = n$ para toda $s \in Q$. Los tres diseños de arriba lo
+          son. El <strong>diseño Bernoulli</strong> del módulo 8 no lo es: allí $n_s$ es una variable aleatoria, y
+          varias fórmulas de este capítulo dejan de valer.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>Lo que no es un diseño muestral.</strong> Preguntar a quien pase por el pasillo, publicar una
+          encuesta en redes y quedarse con quien responda, o elegir «los casos representativos» a criterio del
+          investigador. En ninguno de esos casos existe una $p(s)$ que se pueda escribir, y sin ella no hay error
+          estándar, no hay intervalo de confianza y no hay insesgadez que discutir. Se pueden reportar números, pero
+          no se puede decir con qué precisión. Eso es lo que el capítulo 1 llamaba <em>sesgo de selección</em>; aquí
+          está su versión formal: <strong>$p(s)$ desconocida</strong>.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · Probabilidades de inclusión                        -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Probabilidades de inclusión
+          <span class="text-gray-400 font-normal text-2xl">/ Inclusion probabilities</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Pasar de $p(s)$ —que tiene $2^N$ entradas y es
+              inmanejable— a las $\pi_k$ y $\pi_{kl}$, que son $N$ y $N^2$ números y bastan para estimar totales y
+              varianzas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La tabla de $p(s)$ del módulo anterior tenía diez filas porque $N = 5$. Con $N = 3\,078$ condados y $n = 300$
+        tendría $\binom{3078}{300}$ filas, un número con más de 400 cifras. Nadie escribe esa tabla. Y resulta que no
+        hace falta: para estimar un total y su varianza basta con dos resúmenes de $p(s)$.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-percent mr-2" aria-hidden="true"></i>Definición 2.4: probabilidades de inclusión</h4>
+        <p>La <strong>probabilidad de inclusión de primer orden</strong> de la unidad $k$ es la probabilidad de que $k$
+          acabe en la muestra:</p>
+        $$\pi_k = P(k \in s) = \sum_{s \ni k} p(s)$$
+        <p>La <strong>de segundo orden</strong> es la probabilidad de que $k$ <em>y</em> $l$ entren las dos:</p>
+        $$\pi_{kl} = P(k \in s \text{ y } l \in s) = \sum_{s \supseteq \{k,l\}} p(s), \qquad \pi_{kk} = \pi_k$$
+      </div>
+
+      <p>Las dos se obtienen sumando columnas de la tabla de $p(s)$: son un <em>resumen</em> del diseño, no un objeto
+        nuevo. Y cumplen dos identidades que conviene usar como comprobación cada vez que se calcula un diseño.</p>
+
+      <div class="formula">
+        <p>Suma de las probabilidades de primer orden:</p>
+        $$\sum_{k \in U} \pi_k = E(n_s) \qquad \text{y, si el diseño es de tamaño fijo,} \qquad \sum_{k \in U} \pi_k = n$$
+        <p>Suma de una fila de segundo orden, quitando la diagonal (solo a tamaño fijo):</p>
+        $$\sum_{l \in U,\, l \neq k} \pi_{kl} = (n - 1)\, \pi_k$$
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-sumapi">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver por qué $\sum_U \pi_k = E(n_s)$</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-sumapi" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Se define la <strong>variable indicadora</strong> de la unidad $k$: vale 1 si $k$ entra en la muestra
+                y 0 si no.</p>
+              $$I_k = \begin{cases} 1 & \text{si } k \in s \\ 0 & \text{si } k \notin s\end{cases}$$
+            </li>
+            <li>
+              <p>Como $I_k$ solo toma los valores 0 y 1, su esperanza <em>es</em> la probabilidad del suceso. Aquí
+                aparece $\pi_k$ por primera vez como una esperanza, que es como se va a usar de ahora en adelante:</p>
+              $$E(I_k) = 1 \cdot P(k \in s) + 0 \cdot P(k \notin s) = \pi_k$$
+            </li>
+            <li>
+              <p>El tamaño de la muestra es la suma de los indicadores: $n_s = \sum_{k \in U} I_k$. Tomando esperanza y
+                usando que la esperanza de una suma es la suma de las esperanzas —que vale siempre, haya o no
+                independencia—:</p>
+              $$E(n_s) = E\!\left(\sum_{k \in U} I_k\right) = \sum_{k \in U} E(I_k) = \sum_{k \in U} \pi_k$$
+            </li>
+            <li>
+              <p>Si el diseño es de tamaño fijo, $n_s = n$ con probabilidad 1, así que $E(n_s) = n$.</p>
+            </li>
+          </ol>
+          <p class="derivacion-resultado">La identidad $\sum_U \pi_k = n$ es la comprobación más barata que existe: si
+            las $\pi_k$ de un diseño no suman $n$, el diseño está mal calculado. Se usará en todos los capítulos que
+            vienen, y en el capítulo 6 será la restricción que hace que el diseño $\pi$PT no siempre exista.</p>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="matriz-pikl">
+        <h4><i class="fas fa-border-all" aria-hidden="true"></i> De $p(s)$ a $\pi_k$ y $\pi_{kl}$</h4>
+        <p class="simulador-intro">La matriz completa de segundo orden para cada diseño. La diagonal es $\pi_k$. Mira
+          el diseño <strong>estratificado</strong>: los pares dentro de un mismo estrato tienen
+          $\boldsymbol{\pi_{kl} = 0}$, porque esas dos unidades no pueden salir juntas nunca. Esa casilla en cero es el
+          motivo de que en el módulo 9 la varianza del muestreo sistemático no se pueda estimar sin sesgo.</p>
+        <div class="simulador-controles"></div>
+        <div class="matriz-pikl-marco" style="overflow-x:auto;"></div>
+        <p class="grafico-etiqueta">Probabilidades de inclusión \(\pi_k\)</p>
+        <div class="grafico-wrapper" style="height:190px;">
+          <canvas aria-label="Probabilidades de inclusión de cada unidad bajo el diseño elegido" role="img"></canvas>
+        </div>
+        <p class="grafico-etiqueta">Pesos \(d_k = 1/\pi_k\)</p>
+        <div class="grafico-wrapper" style="height:190px;">
+          <canvas aria-label="Pesos de diseño de cada unidad bajo el diseño elegido" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Cálculo de las probabilidades de inclusión">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Un diseño con $\pi_k = 0$ para alguna unidad deja de ser probabilístico.</strong> Esa unidad no puede
+          salir nunca, así que ninguna muestra la observará y ningún estimador podrá recuperar su aporte al total. Es
+          exactamente el <strong>error de no cobertura</strong> del capítulo 1 escrito en el lenguaje del diseño: el
+          <em>Literary Digest</em> le asignó $\pi_k = 0$ a quien no tenía teléfono ni automóvil, y ninguna cantidad de
+          muestra arregla eso.</p>
+      </div>
+
+      <h3>2.2.1 Dos libros, una sola notación</h3>
+
+      <p>El curso sigue el orden de Lohr y el aparato formal de Gutiérrez. Los dos libros escriben lo mismo de maneras
+        distintas, y eso confunde más que cualquier fórmula. Esta tabla queda aquí y se repite en todos los capítulos:</p>
+
+      <div class="glosario-notacion" data-glosario="marco-pi"></div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 2</strong> — la construcción de $p(s)$,
+            $\pi_k$ y $\pi_{kl}$ con más detalle y con las demostraciones completas. De
+            <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
+            abierto</a>.</li>
+          <li>Lohr, <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>sección 2.1</strong> — el mismo marco con
+            la notación del texto guía.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · El estimador de Horvitz-Thompson                   -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El estimador de
+          Horvitz–Thompson <span class="text-gray-400 font-normal text-2xl">/ The HT estimator</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Un estimador del total que funciona para
+              <strong>cualquier</strong> diseño con $\pi_k &gt; 0$, y su varianza. A partir de aquí, cada diseño del
+              curso es un caso particular.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Si la unidad $k$ entra en la muestra con probabilidad $\pi_k = 1/40$, es razonable pensar que <em>representa</em>
+        a unas 40 unidades de la población. Esa intuición es todo el estimador de Horvitz–Thompson: cada unidad
+        observada se multiplica por lo que representa, y se suma.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-scale-balanced mr-2" aria-hidden="true"></i>Definición 2.5: estimador de Horvitz–Thompson</h4>
+        <p>Para un diseño con $\pi_k &gt; 0$ para toda $k \in U$, el <strong>estimador de Horvitz–Thompson</strong> del
+          total poblacional $t = \sum_{k \in U} y_k$ es</p>
+        $$\hat{t}_\pi = \sum_{k \in s} \frac{y_k}{\pi_k} = \sum_{k \in s} d_k\, y_k, \qquad d_k = \frac{1}{\pi_k}$$
+        <p style="margin-bottom:0;">A $d_k$ se le llama <strong>peso de diseño</strong> (<em>design weight</em>) o
+          <strong>factor de expansión</strong>. La suma de los pesos de la muestra estima el tamaño de la población:
+          $\hat{N} = \sum_{k \in s} d_k$.</p>
+      </div>
+
+      <p>La suma recorre solo la muestra, que es lo único que se observa. Pero para estudiar sus propiedades conviene
+        reescribirlo como una suma sobre <em>toda</em> la población usando los indicadores del módulo 2:</p>
+
+      <div class="formula">
+        $$\hat{t}_\pi = \sum_{k \in U} \frac{y_k}{\pi_k}\, I_k$$
+        <p style="margin-bottom:0;">Ahora se ve dónde está el azar: los $y_k$ y los $\pi_k$ son constantes; lo único
+          aleatorio son los $I_k$. Esta reescritura es la que hace que todas las demostraciones sean cortas.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-ht-insesgado">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver la demostración de que $\hat{t}_\pi$ es insesgado</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-ht-insesgado" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Se parte de la forma con indicadores y se toma esperanza respecto del diseño. Los $y_k/\pi_k$ salen
+                fuera porque son constantes:</p>
+              $$E(\hat{t}_\pi) = E\!\left(\sum_{k \in U} \frac{y_k}{\pi_k} I_k\right) = \sum_{k \in U} \frac{y_k}{\pi_k}\, E(I_k)$$
+            </li>
+            <li>
+              <p>Del módulo 2, $E(I_k) = \pi_k$. Aquí es donde se necesita $\pi_k &gt; 0$: si fuera cero, el cociente no
+                existiría.</p>
+              $$= \sum_{k \in U} \frac{y_k}{\pi_k}\, \pi_k = \sum_{k \in U} y_k = t$$
+            </li>
+          </ol>
+          <p class="derivacion-resultado">$E(\hat{t}_\pi) = t$ para <strong>cualquier</strong> diseño, por raro que
+            sea, siempre que todas las $\pi_k$ sean positivas y conocidas. No se ha supuesto tamaño fijo, ni
+            independencia, ni normalidad, ni nada sobre los $y_k$. Esa generalidad es lo que hace que valga la pena
+            montar todo el andamiaje de $p(s)$.</p>
+        </div>
+      </div>
+
+      <p>La varianza sale del mismo modo, pero ahora hacen falta las covarianzas entre indicadores, y ahí es donde
+        entran las $\pi_{kl}$.</p>
+
+      <div class="formula">
+        <h4>Varianza del estimador de Horvitz–Thompson</h4>
+        $$V(\hat{t}_\pi) = \sum_{k \in U}\sum_{l \in U} (\pi_{kl} - \pi_k \pi_l)\, \frac{y_k}{\pi_k}\, \frac{y_l}{\pi_l}$$
+        <p>La cantidad $\Delta_{kl} = \pi_{kl} - \pi_k \pi_l$ mide cuánto se aparta el diseño de seleccionar $k$ y $l$
+          de forma independiente. Si $\Delta_{kl} = 0$ para todo par, el doble sumatorio se queda solo con la diagonal.</p>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-equals mr-2" aria-hidden="true"></i>Forma de Sen–Yates–Grundy</h4>
+        <p>Si el diseño es de <strong>tamaño fijo</strong>, la varianza admite una forma equivalente y más legible:</p>
+        $$V_{SYG}(\hat{t}_\pi) = -\frac{1}{2}\sum_{k \in U}\sum_{l \neq k} (\pi_{kl} - \pi_k \pi_l)
+          \left(\frac{y_k}{\pi_k} - \frac{y_l}{\pi_l}\right)^{2}$$
+        <p style="margin-bottom:0;">Dice algo que la primera forma esconde: la varianza depende de cuánto
+          <strong>difieren entre sí</strong> los valores expandidos $y_k/\pi_k$. Si se pudiera elegir $\pi_k \propto
+          y_k$, todos los $y_k/\pi_k$ serían iguales y la varianza sería <strong>cero</strong>. No se puede —$y_k$ es
+          justo lo que no se conoce—, pero es el principio que justifica el diseño $\pi$PT del capítulo 6: usar una
+          auxiliar $x_k$ parecida a $y_k$.</p>
+      </div>
+
+      <div class="simulador" data-simulador="ht-vs-expansion">
+        <h4><i class="fas fa-scale-unbalanced" aria-hidden="true"></i> Horvitz–Thompson frente a la media muestral</h4>
+        <p class="simulador-intro">El valor de dos estimadores en cada una de las diez muestras: $\hat{t}_\pi$ y el
+          <em>estimador de expansión</em> $N\bar{y}$, que es lo que uno escribiría sin pensar. La línea horizontal es
+          el total verdadero, $t = 150$. Con MAS los dos coinciden exactamente. En cuanto las $\pi_k$ dejan de ser
+          iguales, $N\bar{y}$ se desplaza hacia arriba —porque el diseño saca más a menudo a los condados grandes— y
+          <strong>ya no es insesgado</strong>, mientras que $\hat{t}_\pi$ sigue centrado en 150.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Valor de los dos estimadores en cada muestra posible" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El estimador HT sobre una muestra">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La esperanza de arriba se calculó <strong>exactamente</strong>, recorriendo las diez muestras y pesándolas por
+        su $p(s)$. No es una simulación que se aproxima a 150: <em>es</em> 150. Con poblaciones de tamaño real eso deja
+        de ser posible y hay que simular, pero conviene haber visto una vez la cuenta exacta.</p>
+
+      <div class="warning">
+        <p><strong>El estimador de la varianza no es la varianza.</strong> $V(\hat{t}_\pi)$ depende de todos los $y_k$
+          de la población, que no se conocen. Lo que se calcula con la muestra es un <em>estimador</em> de esa varianza,
+          que sustituye los pares $(k,l)$ de la población por los pares observados, divididos por $\pi_{kl}$:</p>
+        $$\hat{V}(\hat{t}_\pi) = \sum_{k \in s}\sum_{l \in s} \frac{\pi_{kl} - \pi_k \pi_l}{\pi_{kl}}\,
+          \frac{y_k}{\pi_k}\, \frac{y_l}{\pi_l}$$
+        <p style="margin-bottom:0;">Y aquí hace falta $\pi_{kl} &gt; 0$ para todo par, no solo $\pi_k &gt; 0$. Cuando
+          algún $\pi_{kl}$ es cero —muestreo sistemático, módulo 9— este estimador simplemente no existe.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Insesgadez de diseño y representatividad           -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Insesgadez de diseño y
+          «muestra representativa» <span class="text-gray-400 font-normal text-2xl">/ Design unbiasedness</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Entender respecto de qué se toma la esperanza, y por qué
+              «esta muestra es representativa» no es una frase que signifique algo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-bullseye mr-2" aria-hidden="true"></i>Definición 2.6: insesgadez de diseño</h4>
+        <p>Un estimador $\hat{\theta}$ es <strong>insesgado por diseño</strong> (<em>design-unbiased</em>) para
+          $\theta$ si</p>
+        $$E_p(\hat{\theta}) = \sum_{s \in Q} p(s)\, \hat{\theta}(s) = \theta$$
+        <p style="margin-bottom:0;">El subíndice $p$ no es decorativo: la esperanza se toma sobre el
+          <strong>diseño</strong>, es decir sobre las muestras que <em>podrían</em> haber salido. La población es fija;
+          lo que varía de una repetición a otra es qué unidades se observan.</p>
+      </div>
+
+      <p>Esto responde una pregunta que a casi todo el mundo le incomoda la primera vez: <em>si solo tengo una muestra,
+        ¿qué sentido tiene hablar de esperanza?</em> El mismo que tiene decir que una moneda es equilibrada después de
+        lanzarla una vez. La insesgadez es una propiedad del <strong>procedimiento</strong>, no de la muestra que salió.
+        Un buen procedimiento aplicado una vez puede dar un resultado malo; lo que se puede acotar es cuánto de malo,
+        y eso es la varianza.</p>
+
+      <p>Los tres diseños del capítulo lo muestran a la vez. Todos son insesgados con Horvitz–Thompson. Ninguno es
+        insesgado con el estimador de expansión $N\bar{y}$, salvo el MAS. Y las varianzas son muy distintas:</p>
+
+      <div class="tabla-ranking" data-ranking="disenos">
+        <p class="tabla-ranking-titulo">Los tres diseños comparados</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación de los tres diseños de la población de cinco condados"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Insesgadez y varianza de los tres diseños">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Las dos filas coinciden hasta el último decimal, y no es casualidad: son dos expresiones algebraicamente
+        equivalentes de la misma cantidad. Cuando en un problema real no coinciden, casi siempre es que el diseño no es
+        de tamaño fijo —y entonces Sen–Yates–Grundy no aplica— o que hay un $\pi_{kl}$ mal calculado. <strong>Calcular
+        toda varianza por dos caminos independientes es la regla de este material</strong>, no un adorno.</p>
+
+      <div class="warning">
+        <h4><i class="fas fa-triangle-exclamation mr-2" aria-hidden="true"></i>«Es que la muestra tiene que ser
+          representativa»</h4>
+        <p>La frase suena a que <em>una muestra concreta</em> puede examinarse y declararse representativa. No es así.
+          Con MAS sobre los cinco condados, la muestra $\{1, 2\}$ —los dos más pequeños— tiene exactamente la misma
+          probabilidad que cualquier otra, $1/10$, y da $\hat{t}_\pi = 80$ frente a un total de 150. Es una muestra
+          mala, pero salió de un procedimiento correcto.</p>
+        <p style="margin-bottom:0;">Lo que se puede exigir no es que la muestra «se parezca» a la población, sino que
+          el <strong>procedimiento</strong> tenga tres propiedades: $\pi_k &gt; 0$ para todas las unidades,
+          $\pi_k$ conocida, y $\pi_{kl} &gt; 0$ si además se quiere estimar la varianza. Con eso hay insesgadez y hay
+          error estándar. Sin eso no hay nada, por mucho que la muestra «se vea equilibrada».</p>
+      </div>
+
+      <div class="note">
+        <p><strong>El otro enfoque, en una frase.</strong> Existe una alternativa, la <em>inferencia basada en modelo</em>
+          (<em>model-based</em>), en la que los $y_k$ sí se tratan como realizaciones de un modelo y la aleatoriedad
+          viene de ahí. No es peor ni mejor: responde a otra pregunta, y es la que usa buena parte de la estadística
+          que se ve en otros cursos. En el <strong>capítulo 3</strong> aparecerá mezclada con la de diseño en los
+          estimadores asistidos por modelos, y en el <strong>módulo 10</strong> de este capítulo se compara con detalle.
+          Por ahora basta con saber que en este curso, salvo aviso, la esperanza es $E_p$.</p>
+      </div>
+    </div>
+  </template>

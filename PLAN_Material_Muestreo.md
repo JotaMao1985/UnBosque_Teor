@@ -458,30 +458,107 @@ los caps. 1–4.
 
 ---
 
-### Fase 1 — Capítulo 2 (el pivote)
+### Fase 1 — Capítulo 2 (el pivote) — ✅ COMPLETADA (2026-07-27)
 
 Se produce antes que el 1 a propósito: es el que fija el marco π para todo el material. Si la
 notación no convence, se rehace **un** capítulo y no ocho.
 
-- [ ] **T1.1 — Precálculo del cap. 2** (`precalculo/genera_cap2.R`): espacio de muestras `N=5,n=2`;
-      distribución de muestreo de `ȳ` sobre `agpop` (10 000 réplicas, semilla fija); cobertura
-      empírica del IC; MAS ↔ sistemático sobre población con periodicidad; Bernoulli.
-- [ ] **T1.2 — Módulos 1–4** (marco de diseño, `π_k`, HT, insesgadez) con derivaciones plegables.
-- [ ] **T1.3 — Módulos 5–10** (MAS, IC, tamaño, Bernoulli, sistemático, aleatorización).
-- [ ] **T1.4 — Los 8 simuladores** del capítulo.
-- [ ] **T1.5 — Autoevaluación (≥ 8 preguntas) y ≥ 3 ejercicios guiados**, con soluciones calculadas
-      en `precalculo/genera_soluciones.R`.
-- [ ] **T1.6 — Componente `.glosario-notacion`** + retropropagación a la plantilla.
-- [ ] **T1.7 — Verificación completa del capítulo** (protocolo de abajo).
+**Decisiones tomadas al abrir la fase** (las cuatro recomendadas, aceptadas):
+1. El `.glosario-notacion` entra en la **plantilla y en el cap. 2**; los caps. 1, 3 y 4 lo reciben
+   al reescribirse en las fases 2–3, porque hoy todavía no usan la notación que el glosario
+   traduce. **Deuda anotada**: los tres tienen 5 clases CSS menos que la plantilla, y son
+   exactamente las del glosario.
+2. **Python solo donde el cálculo explícito es la lección** (6 de los 17 bloques de R): espacio de
+   muestras, `π_k`/`π_kl`, HT, media y EE a mano, tamaño de muestra y Bernoulli.
+3. **Ejercicios originales** sobre los datos de Lohr, resueltos en `precalculo/genera_soluciones.R`.
+4. La conexión con ciencia de datos va **dentro del módulo 10**, no en un módulo aparte.
 
-*Criterios del capítulo:* ≥ 10 módulos, ≥ 8 simuladores, ≥ 8 preguntas, ≥ 3 ejercicios guiados,
-todo bloque de R y Python ejecutado, toda cifra contrastada.
-*Alcance:* L, dividido en 7 tareas S/M.
+- [x] **T1.1 — Precálculo del cap. 2** → `precalculo/genera_cap2.R` (semilla 2026) y
+      `precalculo/salidas/cap2_datos.json` (63 KB). Espacio de muestras `N=5, n=2` con **tres**
+      diseños (MAS, estratificado y desigual con `p(s) ∝ x_k + x_l`), resueltos **exactamente** por
+      enumeración; distribución de muestreo sobre `agpop` (10 000 réplicas × 8 tamaños); cobertura
+      empírica del IC; Bernoulli (5 000 réplicas × 4 valores de π); sistemático sobre población
+      periódica y sobre `agpop` en tres órdenes.
+      *Verificado:* `V(t̂_π)` coincide por espacio de muestras y por Sen–Yates–Grundy en los tres
+      diseños (dif. ≤ 9·10⁻¹³), y con la fórmula cerrada del MAS; `survey::svymean` y la fórmula a
+      mano dan el mismo EE sobre `agsrs` (dif. relativa 7·10⁻¹⁵); el CV teórico del HT bajo
+      Bernoulli (0,1342) cuadra con el simulado (0,1332).
+- [x] **T1.2 — Módulos 1–4** (diseño `p(s)`, `π_k`/`π_kl`, HT + Sen–Yates–Grundy, insesgadez de
+      diseño) con tres derivaciones plegables y la `.tabla-ranking` comparando los tres diseños.
+- [x] **T1.3 — Módulos 5–10** (MAS, IC y fpc, tamaño de muestra, Bernoulli y con reemplazo,
+      sistemático, aleatorización + ciencia de datos).
+- [x] **T1.4 — Nueve simuladores** (uno más que los ocho previstos): espacio de muestras, matriz
+      `π_kl`, HT vs expansión, distribución de muestreo, cobertura del IC, calculadora de tamaño,
+      Bernoulli, sistemático periódico y comparador MAS ↔ sistemático sobre `agpop`.
+- [x] **T1.5 — 11 preguntas de autoevaluación** (los cuatro tipos) y **4 ejercicios guiados**
+      resueltos en `precalculo/genera_soluciones.R`.
+- [x] **T1.6 — Componente `.glosario-notacion`** (12 filas: este material ↔ Lohr ↔ Gutiérrez ↔ R)
+      retropropagado a la plantilla en la misma sesión, junto con los ayudantes de gráficos con eje
+      x numérico (`crearGraficoXY`, `serieHistograma`, `serieVertical`) que nacieron aquí.
+- [x] **T1.7 — Verificación completa.** Ver «Auditoría de la fase 1» abajo.
+
+**Resultado:** 11 módulos, 9 simuladores, 11 preguntas, 4 ejercicios, 27 bloques de código
+(21 de R + 6 de Python), 345 KB.
+
+**Ensamblado versionado.** Las fuentes están en `ensamblado/`: `ensambla_cap2.py`,
+`modulos/cap2/`, `componentes/glosario.*` y `codigo/cap2/cadena.{R,py}`. Se comprobó la regla de
+oro del `ensamblado/README.md`: volver a ejecutar el script produce el capítulo publicado
+**byte a byte**.
+
+**Anotaciones de la fase, para no repetir el tropiezo:**
+- **Un error de sintaxis en el JS en línea no da error visible**: la página carga, los CDN cargan y
+  el contenido simplemente no aparece porque el `<script>` entero no se ejecutó. Pasó al
+  retropropagar el glosario (`const GLOSARIOS` declarado dos veces, una por la plantilla y otra por
+  el ensamblador). Desde ahora, `node --check` sobre el motor extraído antes de dar nada por bueno;
+  el comando está en `ensamblado/README.md`.
+- **Un componente puede fallar silenciosamente en un solo módulo.** La `.tabla-ranking` construía
+  sus filas y no las devolvía en el objeto de configuración; el módulo 4 lanzaba una excepción y
+  los otros diez seguían perfectos. Recorrer **todos** los módulos con la consola instrumentada,
+  no mirar dos y confiar.
+- **Los datos de Lohr traen `-99` como código de faltante.** En `agpop`, 19 condados lo tienen en
+  `acres92` y 15 en `acres87`. Promediarlos cambia la media de 308 582 a 306 677. La población de
+  referencia de este material es de **3 059** condados, y está dicho en el capítulo con su caja de
+  advertencia y su enlace al capítulo 8.
+- **Olvidar el fpc ensancha el intervalo, no lo estrecha** (EE 19 892,7 en vez de 18 898,4, un 5,3 %
+  más). Es lo contrario de lo que uno espera, y el texto del módulo 6 lo dice explícitamente para
+  que no se confunda con el error de ignorar conglomerados, que sí produce intervalos estrechos y
+  es el tema del capítulo 7.
+- **No simular lo que se puede enumerar.** El sistemático 1 en *k* solo tiene *k* muestras posibles:
+  su varianza es exacta y simularla solo añade ruido de Monte Carlo. El primer borrador del
+  precálculo lo simulaba.
+- **Construir un caso patológico cuesta pensarlo.** El primer intento de orden «malo» para el
+  sistemático agrupaba índices en vez de hacer que el valor dependiera de la *posición dentro del
+  ciclo*, y el sistemático seguía ganando (DEFF 0,17). Bien construido, el DEFF es 219,9.
+- El preview del navegador **no hace scroll** en archivos fuera de la carpeta del proyecto. Para ver
+  un componente que está abajo, quitar del DOM los hermanos anteriores y recargar después.
+
+### Auditoría de la fase 1 (2026-07-27)
+
+| Comprobación | Resultado |
+|---|---|
+| Cifras `#>` contrastadas con la salida real (`verifica_bloques.py`) | **291 de 291**, 0 discrepancias |
+| Sesiones de R y de Python encadenadas | terminan con código 0 |
+| Regresión del propio verificador (fixture con cifra falsa) | sigue cazándola (6 de 7) |
+| Caps. 1, 3 y 4 tras los cambios | sin regresión |
+| Varianzas por dos vías | espacio de muestras ↔ SYG ↔ fórmula cerrada; `survey` ↔ fórmula |
+| `node --check` del motor del capítulo y de la plantilla | OK los dos |
+| Consola del navegador, 11 módulos | 0 errores, 0 avisos |
+| KaTeX | 0 errores; 441 expresiones renderizadas |
+| Gráficos por módulo | `charts` = `canvas` en los 11; al salir del módulo quedan 0 |
+| Simuladores en todos sus valores y extremos | 9 de 9 responden; ningún `NaN`/`undefined`/`Infinity` |
+| Autoevaluación | 11 preguntas, 4 tipos, flujo fallo → pista → reintento correcto |
+| Ejercicios guiados | 8 paneles abren; 4 soluciones con su bloque de R |
+| CSS frente a la plantilla | 130 clases, **0 faltantes**; llaves 330/330 |
+| Geometría a 1440 px | cabecera 1430, lateral 280, contenido 904; sin solapes ni desbordamiento |
+| JSON incrustado | válido, y **idéntico** al de `precalculo/salidas/` |
+| Enlaces de `index.html` | los 4 resuelven a archivos existentes |
 
 ### Checkpoint 1 — Revisión de Javier · **BLOQUEANTE**
 - [ ] Revisar el cap. 2 completo: ¿el marco π funciona didácticamente para el nivel del curso?
 - [ ] ¿La densidad de simuladores es la correcta o sobra/falta interactividad?
 - [ ] ¿El glosario de notación resuelve la convivencia Lohr ↔ Gutiérrez?
+- [ ] ¿La población de referencia con `N = 3 059` (excluyendo los `-99`) convence, o se prefiere
+      seguir a Lohr y usar 3 078 en todo?
 - [ ] No se produce ningún capítulo más hasta esta revisión.
 
 ---
@@ -490,6 +567,9 @@ todo bloque de R y Python ejecutado, toda cifra contrastada.
 - [ ] **T2.1** Cap. 1 — precálculo, módulos, 6 simuladores, autoevaluación, ejercicios, verificación.
 - [ ] **T2.2** Cap. 3 — ídem con 7 simuladores; incorporar GREG y estimación de mediana.
 - [ ] **T2.3** Retropropagar a los caps. 1–3 cualquier componente nuevo aparecido en la fase.
+- [ ] **T2.4 — Deuda de la fase 1:** insertar el `.glosario-notacion` en los caps. 1 y 3 al
+      reescribirlos (hoy les faltan sus 5 clases CSS frente a la plantilla). El cap. 4 queda para
+      la fase 3.
 
 ### Checkpoint 2 — Primer tercio
 - [ ] Caps. 1, 2 y 3 verificados y navegables entre sí.
@@ -514,7 +594,10 @@ todo bloque de R y Python ejecutado, toda cifra contrastada.
 
 ### Fase 5 — Capítulo 8, portada y publicación
 - [ ] **T5.1** Cap. 8 — no respuesta, ponderación, imputación, taller de diseño y auditoría de IA.
-- [ ] **T5.2** `index.html` — portada con 8 tarjetas, totales actualizados.
+- [ ] **T5.2** `index.html` — portada con 8 tarjetas, totales actualizados. *La tarjeta del cap. 2
+      ya se corrigió en la fase 1* (decía «Muestreo Aleatorio Simple · 8 módulos», que dejó de ser
+      cierto en cuanto se publicó el capítulo nuevo); las otras siguen describiendo el material
+      viejo hasta que se reescriban.
 - [ ] **T5.3** `README.md` — tabla de contenido, tecnología, cómo está construido, créditos.
 - [ ] **T5.4** Auditoría final de sitio: recuento de módulos/simuladores/preguntas/ejercicios;
       selectores CSS homogéneos entre los 8 capítulos; consola limpia en los 8.
