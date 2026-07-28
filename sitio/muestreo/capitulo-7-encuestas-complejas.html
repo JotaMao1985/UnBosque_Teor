@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Capítulo 6 del material de Muestreo Estadístico (Universidad El Bosque): encuestas complejas, pesos muestrales, efecto de diseño, linealización de Taylor, métodos de replicación (jackknife, BRR, bootstrap), calibración y raking, y el costo de ignorar el diseño, con simuladores y código en R y Python.">
+    content="Capítulo 7 del material de Muestreo Estadístico (Universidad El Bosque): encuestas complejas, pesos muestrales, efecto de diseño, linealización de Taylor, métodos de replicación (jackknife, BRR, bootstrap), calibración y raking, y el costo de ignorar el diseño, con simuladores y código en R y Python.">
   <meta name="author" content="Javier Mauricio Sierra">
   <meta name="keywords" content="encuestas complejas, pesos muestrales, efecto de diseno, deff, tamano efectivo, linealizacion de Taylor, jackknife, BRR, bootstrap, replicacion, calibracion, raking, IPFP, post-estratificacion, NHANES, SYC, survey, R, Python, Lohr, Gutiérrez, UnBosque">
   <title>Capítulo 7 · Encuestas complejas — Muestreo Estadístico</title>
@@ -2895,6 +2895,258 @@
         padding: 0.05rem 0;
       }
     }
+
+    /* ================================================================
+       Rúbrica analítica (componente nuevo del capítulo 8)
+
+       Una rúbrica es una matriz: criterios × niveles de desempeño.
+       Impresa completa no se lee —24 celdas de texto denso—, así que
+       aquí se recorre por criterio: el estudiante elige uno y ve sus
+       cuatro niveles ordenados de mayor a menor, cada uno con su rango
+       de puntos y con lo que hay que VER en el trabajo, que es lo que
+       distingue una rúbrica analítica de una impresión general.
+
+       La franja final acumula el total y declara las condiciones que
+       anulan la entrega, que no son un nivel más: son un umbral.
+       ================================================================ */
+    .rubrica {
+      margin: 1.75rem 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .rubrica-titulo {
+      margin: 0;
+      padding: 0.7rem 1.1rem;
+      background: #012820;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .rubrica-puntos-total {
+      margin-left: auto;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 50px;
+      padding: 0.15rem 0.6rem;
+      white-space: nowrap;
+    }
+
+    .rubrica-intro {
+      margin: 0;
+      padding: 0.75rem 1.1rem 0;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .rubrica-criterios {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.9rem 1.1rem 0.35rem;
+    }
+
+    .rubrica-criterio {
+      flex: 1 1 9.5rem;
+      min-width: 9.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.2rem;
+      font-family: inherit;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.6rem;
+      padding: 0.6rem 0.7rem;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease, color 0.15s ease;
+    }
+
+    .rubrica-criterio:hover {
+      border-color: #012820;
+      box-shadow: 0 1px 4px rgba(1, 40, 32, 0.12);
+    }
+
+    .rubrica-criterio.activo {
+      background: #012820;
+      border-color: #012820;
+      color: white;
+    }
+
+    .rubrica-criterio-clave {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #FF6600;
+    }
+
+    .rubrica-criterio.activo .rubrica-criterio-clave {
+      color: #ffb37a;
+    }
+
+    .rubrica-criterio-nombre {
+      font-size: 0.8rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #1e293b;
+    }
+
+    .rubrica-criterio.activo .rubrica-criterio-nombre {
+      color: white;
+    }
+
+    .rubrica-criterio-puntos {
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    .rubrica-criterio.activo .rubrica-criterio-puntos {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .rubrica-detalle {
+      margin: 0.5rem 1.1rem 0;
+    }
+
+    .rubrica-foco {
+      margin: 0 0 0.6rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      padding: 0.7rem 0.9rem;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: #334155;
+    }
+
+    .rubrica-foco strong {
+      color: #012820;
+    }
+
+    .rubrica-niveles {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .rubrica-nivel {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #94a3b8;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.85rem;
+    }
+
+    .rubrica-nivel[data-grado="0"] { border-left-color: #12805c; }
+    .rubrica-nivel[data-grado="1"] { border-left-color: #0f766e; }
+    .rubrica-nivel[data-grado="2"] { border-left-color: #d97706; }
+    .rubrica-nivel[data-grado="3"] { border-left-color: #b91c1c; }
+
+    .rubrica-nivel-marca {
+      flex: 0 0 5.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .rubrica-nivel-nombre {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #1e293b;
+      line-height: 1.2;
+    }
+
+    .rubrica-nivel-rango {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .rubrica-nivel-observa {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #334155;
+    }
+
+    .rubrica-nivel-observa strong {
+      color: #012820;
+    }
+
+    .rubrica-anula {
+      margin: 0.85rem 1.1rem 0;
+      background: rgba(185, 28, 28, 0.05);
+      border: 1px dashed rgba(185, 28, 28, 0.35);
+      border-radius: 0.5rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.83rem;
+      color: #1e293b;
+    }
+
+    .rubrica-anula .rotulo {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #b91c1c;
+      margin-bottom: 0.3rem;
+    }
+
+    .rubrica-anula ul {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .rubrica-anula li {
+      margin: 0.2rem 0;
+      color: #475569;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .rubrica-nota {
+      margin: 0;
+      padding: 0.75rem 1.1rem 1rem;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+
+    @media (max-width: 900px) {
+      .rubrica-criterio {
+        min-width: 0;
+      }
+
+      .rubrica-nivel {
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .rubrica-nivel-marca {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 0.5rem;
+      }
+    }
   </style>
 </head>
 
@@ -4683,6 +4935,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
         iniciarGlosarios();
         iniciarArbolesError();
         iniciarDiagramasDiseno();
+        iniciarRubricas();
         iniciarMapasEstacionales();
         renderMathInElement(mainContent, {
           delimiters: [
@@ -5706,6 +5959,99 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
 
       const acumulado = raiz.querySelector('.diagrama-diseno-acumulado');
       if (acumulado && typeof katexEn === 'function') katexEn(acumulado);
+      seleccionar(0);
+    }
+
+    // ================================================================
+    // Rúbrica analítica (v1, capítulo 8)
+    //
+    // RUBRICAS['id'] = {titulo, intro, total, criterios, anulan, nota}
+    // sobre un contenedor con data-rubrica="id". Cada criterio es
+    //
+    //   { clave, nombre, puntos, foco, niveles: [{nombre, rango, observa}] }
+    //
+    // Los niveles se declaran de mayor a menor desempeño; el índice
+    // decide el color de la banda lateral, así que el orden importa.
+    // `foco` es la frase que dice qué mide el criterio — sin ella, una
+    // rúbrica se lee como una lista de castigos.
+    //
+    // El texto admite LaTeX entre $…$ y marcado HTML sencillo; al
+    // cambiar de criterio se vuelve a pasar KaTeX por el panel, igual
+    // que hacen el árbol de error y el diagrama de diseño.
+    // ================================================================
+    const RUBRICAS = {};
+
+    function iniciarRubricas() {
+      mainContent.querySelectorAll('[data-rubrica]').forEach(raiz => {
+        const spec = RUBRICAS[raiz.dataset.rubrica];
+        if (!spec) {
+          console.warn(`Rúbrica no registrada: ${raiz.dataset.rubrica}`);
+          return;
+        }
+        pintarRubrica(raiz, spec);
+      });
+    }
+
+    function pintarRubrica(raiz, spec) {
+      const suma = spec.criterios.reduce((a, c) => a + (c.puntos || 0), 0);
+      const total = spec.total || suma;
+      if (spec.total && spec.total !== suma) {
+        console.warn(`Rúbrica ${raiz.dataset.rubrica}: los criterios suman ${suma} y el total declarado es ${spec.total}`);
+      }
+
+      raiz.innerHTML = `
+        <p class="rubrica-titulo"><i class="fas fa-list-check" aria-hidden="true"></i>${spec.titulo}
+          <span class="rubrica-puntos-total">${total} pts</span></p>
+        ${spec.intro ? `<p class="rubrica-intro">${spec.intro}</p>` : ''}
+        <div class="rubrica-criterios" role="group" aria-label="${spec.titulo}"></div>
+        <div class="rubrica-detalle" role="status" aria-live="polite"></div>
+        ${(spec.anulan || []).length ? `<div class="rubrica-anula">
+          <span class="rotulo">${spec.rotuloAnula || 'Condiciones que anulan el trabajo'}</span>
+          <ul>${spec.anulan.map(a => `<li>${a}</li>`).join('')}</ul>
+        </div>` : ''}
+        ${spec.nota ? `<p class="rubrica-nota">${spec.nota}</p>` : ''}`;
+
+      const lista = raiz.querySelector('.rubrica-criterios');
+      const detalle = raiz.querySelector('.rubrica-detalle');
+
+      spec.criterios.forEach((crit, i) => {
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'rubrica-criterio';
+        boton.dataset.criterio = String(i);
+        boton.setAttribute('aria-pressed', 'false');
+        boton.innerHTML = `
+          <span class="rubrica-criterio-clave">${crit.clave}</span>
+          <span class="rubrica-criterio-nombre">${crit.nombre}</span>
+          <span class="rubrica-criterio-puntos">${crit.puntos} pts · ${Math.round(100 * crit.puntos / total)} % de la nota</span>`;
+        boton.addEventListener('click', () => seleccionar(i));
+        lista.appendChild(boton);
+      });
+
+      function seleccionar(i) {
+        const crit = spec.criterios[i];
+        lista.querySelectorAll('.rubrica-criterio').forEach(b => {
+          const activo = b.dataset.criterio === String(i);
+          b.classList.toggle('activo', activo);
+          b.setAttribute('aria-pressed', String(activo));
+        });
+
+        detalle.innerHTML =
+          (crit.foco ? `<p class="rubrica-foco"><strong>${crit.clave} · ${crit.nombre} (${crit.puntos} pts).</strong> ${crit.foco}</p>` : '') +
+          `<div class="rubrica-niveles">${crit.niveles.map((n, g) => `
+            <div class="rubrica-nivel" data-grado="${g}">
+              <span class="rubrica-nivel-marca">
+                <span class="rubrica-nivel-nombre">${n.nombre}</span>
+                <span class="rubrica-nivel-rango">${n.rango} pts</span>
+              </span>
+              <p class="rubrica-nivel-observa">${n.observa}</p>
+            </div>`).join('')}</div>`;
+
+        if (typeof katexEn === 'function') katexEn(detalle);
+      }
+
+      const anula = raiz.querySelector('.rubrica-anula');
+      if (anula && typeof katexEn === 'function') katexEn(anula);
       seleccionar(0);
     }
 

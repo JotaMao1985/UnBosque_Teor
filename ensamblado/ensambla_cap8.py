@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Ensambla sitio/muestreo/capitulo-7-encuestas-complejas.html desde la
+"""Ensambla sitio/muestreo/capitulo-8-no-respuesta-ponderacion.html desde la
 plantilla, los módulos escritos aparte y las cadenas de código ya ejecutadas.
 
-Mismo mecanismo que ensambla_cap6.py. Este capítulo es NUEVO: cubre la
-semana 14, que el material viejo no tocaba. Es el primero que usa el
-componente .ciclo (módulo 9), heredado de Series de Tiempo.
+Mismo mecanismo que ensambla_cap7.py. Este capítulo cierra el curso: cubre las
+semanas 15 y 16 y estrena el componente .rubrica (módulo 8), que
+retropropaga_rubrica.py debe haber puesto antes en la plantilla.
+
+Aviso heredado de la fase 4: al clonar un ensamblador con `sed`, el DESTINO se
+queda con el nombre del capítulo anterior si ese nombre no contiene la cadena
+sustituida. Comprobar SIEMPRE el nombre que imprime el script al terminar.
 """
 import html as html_mod
 import json
@@ -15,7 +19,7 @@ from pathlib import Path
 # Se ejecuta desde la raíz del repositorio (la carpeta Muestreo/).
 RAIZ = Path(__file__).resolve().parent.parent
 PLANTILLA = RAIZ / "plantilla" / "plantilla-capitulo-muestreo.html"
-DESTINO = RAIZ / "sitio" / "muestreo" / "capitulo-7-encuestas-complejas.html"
+DESTINO = RAIZ / "sitio" / "muestreo" / "capitulo-8-no-respuesta-ponderacion.html"
 
 
 def corta(texto, inicio, fin, que):
@@ -65,27 +69,28 @@ def main():
         ('content="Plantilla base para los capítulos del material de Muestreo Estadístico '
          '(Universidad El Bosque): cajas, código R/Python en pestañas, simuladores con Chart.js, '
          'autoevaluación y ejercicios guiados."',
-         'content="Capítulo 7 del material de Muestreo Estadístico (Universidad El Bosque): '
-         'encuestas complejas, pesos muestrales, efecto de diseño, linealización de Taylor, '
-         'métodos de replicación (jackknife, BRR, bootstrap), calibración y raking, y el costo de '
-         'ignorar el diseño, con simuladores y código en R y Python."'),
+         'content="Capítulo 8 del material de Muestreo Estadístico (Universidad El Bosque): '
+         'no respuesta de unidad y de ítem, mecanismos MCAR/MAR/MNAR, la fórmula del sesgo de no '
+         'respuesta, ajuste de pesos por clases, calibración y raking, imputación simple y '
+         'múltiple con las reglas de Rubin, diagnóstico con R-indicators, taller de diseño y '
+         'verificación de salidas de IA, con simuladores y código en R y Python."'),
         ('<meta name="keywords" content="muestreo estadístico, muestreo probabilístico, '
          'Horvitz-Thompson, probabilidades de inclusión, estratificado, conglomerados, PPT, survey, '
          'R, Python, UnBosque">',
-         '<meta name="keywords" content="encuestas complejas, pesos muestrales, efecto de diseno, '
-         'deff, tamano efectivo, linealizacion de Taylor, jackknife, BRR, bootstrap, replicacion, '
-         'calibracion, raking, IPFP, post-estratificacion, NHANES, SYC, survey, R, Python, Lohr, '
-         'Gutiérrez, UnBosque">'),
+         '<meta name="keywords" content="no respuesta, nonresponse, sesgo de no respuesta, MCAR, '
+         'MAR, MNAR, ajuste de pesos, clases de respuesta, post-estratificacion, raking, '
+         'calibracion, imputacion, hot-deck, imputacion multiple, reglas de Rubin, R-indicator, '
+         'AAPOR, Literary Digest, survey, mitools, R, Python, Lohr, Gutiérrez, UnBosque">'),
         ('<title>Plantilla de capítulo — Muestreo Estadístico</title>',
-         '<title>Capítulo 7 · Encuestas complejas — Muestreo Estadístico</title>'),
+         '<title>Capítulo 8 · No respuesta y ponderación — Muestreo Estadístico</title>'),
         ('<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">PLANTILLA BASE •\n'
          '              4 MÓDULOS DE DEMOSTRACIÓN • UNBOSQUE</p>',
-         '<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">CAPÍTULO 7 •\n'
-         '              ENCUESTAS COMPLEJAS • SEMANA 14 • UNBOSQUE</p>'),
+         '<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">CAPÍTULO 8 •\n'
+         '              NO RESPUESTA Y PONDERACIÓN • SEMANAS 15–16 • UNBOSQUE</p>'),
         ('<p class="text-xs mt-1 text-white/60" style="text-align:center;">Plantilla de capítulo • UnBosque 2026\n        </p>',
-         '<p class="text-xs mt-1 text-white/60" style="text-align:center;">Muestreo Estadístico • Capítulo 7 • UnBosque 2026-II\n        </p>'),
+         '<p class="text-xs mt-1 text-white/60" style="text-align:center;">Muestreo Estadístico • Capítulo 8 • UnBosque 2026-II\n        </p>'),
         ('<i class="fas fa-layer-group text-xl text-white" aria-hidden="true"></i>',
-         '<i class="fas fa-clipboard-list text-xl text-white" aria-hidden="true"></i>'),
+         '<i class="fas fa-user-slash text-xl text-white" aria-hidden="true"></i>'),
     ]
     for viejo, nuevo in reemplazos:
         if viejo not in html:
@@ -96,20 +101,22 @@ def main():
     for marca, quien in [(".glosario-notacion {", "el CSS del glosario"),
                          (".arbol-error {", "el CSS del árbol del error"),
                          (".diagrama-diseno {", "el CSS del diagrama de diseño"),
+                         (".rubrica {", "el CSS de la rúbrica, que estrena el módulo 8"),
                          ("const GLOSARIOS", "el motor del glosario"),
                          ("const ARBOLES_ERROR", "el motor del árbol del error"),
                          ("const DIAGRAMAS_DISENO", "el motor del diagrama de diseño"),
-                         ("iniciarDiagramasDiseno();", "la llamada al diagrama en loadModule"),
-                         (".ciclo-etapas {", "el CSS del ciclo, que estrena el módulo 9"),
+                         ("const RUBRICAS", "el motor de la rúbrica"),
+                         ("iniciarRubricas();", "la llamada a la rúbrica en loadModule"),
+                         (".ciclo-etapas {", "el CSS del ciclo, que usa el módulo 8"),
                          ("iniciarCiclos();", "la llamada al ciclo en loadModule")]:
         if marca not in html:
             sys.exit(f"ABORTA: la plantilla no trae {quien}. Ejecuta antes "
-                     f"ensamblado/retropropaga_diagrama_diseno.py")
+                     f"ensamblado/retropropaga_rubrica.py")
 
     # ---------------------------------------------------------------- módulos
-    modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap7" / f).read_text(encoding="utf-8")
-                      for f in ["modulos_1_3.html", "modulos_4_6.html",
-                                "modulos_7_10.html"])
+    modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap8" / f).read_text(encoding="utf-8")
+                      for f in ["modulos_1_4.html", "modulos_5_8.html",
+                                "modulos_9_11.html"])
     antes, despues = corta(
         html,
         "  <!-- ============================================================ -->\n  <!-- MÓDULO 1 · Cajas y tipografía",
@@ -118,28 +125,29 @@ def main():
     html = antes + modulos + despues
 
     # ---------------------------------------------------------------- courseData + datos
-    datos = json.loads((RAIZ / "precalculo" / "salidas" / "cap7_datos.json").read_text(encoding="utf-8"))
+    datos = json.loads((RAIZ / "precalculo" / "salidas" / "cap8_datos.json").read_text(encoding="utf-8"))
     course = """    const courseData = {
-      title: "Encuestas complejas",
+      title: "No respuesta y ponderación",
       modules: [
-        { id: 1, title: "Anatomía de una encuesta compleja", shortTitle: "Anatomía", duration: "22 min" },
-        { id: 2, title: "Los pesos muestrales", shortTitle: "Pesos", duration: "20 min" },
-        { id: 3, title: "DEFF y tamaño efectivo", shortTitle: "DEFF", duration: "25 min" },
-        { id: 4, title: "Linealización de Taylor", shortTitle: "Linealización", duration: "25 min" },
-        { id: 5, title: "Métodos de replicación", shortTitle: "Replicación", duration: "28 min" },
-        { id: 6, title: "Calibración y raking", shortTitle: "Calibración", duration: "25 min" },
-        { id: 7, title: "Dos encuestas reales, analizadas", shortTitle: "Dos encuestas", duration: "20 min" },
-        { id: 8, title: "El error más caro", shortTitle: "El error caro", duration: "22 min" },
-        { id: 9, title: "El ciclo de diseño de una encuesta", shortTitle: "El ciclo", duration: "20 min" },
-        { id: 10, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
+        { id: 1, title: "Quien no contesta también cuenta", shortTitle: "Los mecanismos", duration: "25 min" },
+        { id: 2, title: "La fórmula del sesgo de no respuesta", shortTitle: "La fórmula", duration: "28 min" },
+        { id: 3, title: "Ajuste de pesos por clases de respuesta", shortTitle: "Clases", duration: "25 min" },
+        { id: 4, title: "Calibrar contra el mundo exterior", shortTitle: "Calibración", duration: "25 min" },
+        { id: 5, title: "Rellenar la casilla: métodos de imputación", shortTitle: "Imputación", duration: "22 min" },
+        { id: 6, title: "La varianza que la imputación se come", shortTitle: "Varianza", duration: "28 min" },
+        { id: 7, title: "Más allá de la tasa de respuesta", shortTitle: "Diagnóstico", duration: "20 min" },
+        { id: 8, title: "Taller de diseño: el proyecto integrador", shortTitle: "Taller", duration: "30 min" },
+        { id: 9, title: "IA asistida en diseño muestral", shortTitle: "IA verificada", duration: "25 min" },
+        { id: 10, title: "El curso entero, en un árbol", shortTitle: "Repaso", duration: "20 min" },
+        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
       ]
     };
     // ================================================================
-    // Datos del capítulo, generados por precalculo/genera_cap7.R con
+    // Datos del capítulo, generados por precalculo/genera_cap8.R con
     // semilla %d. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP7 = %s;
+    const DATOS_CAP8 = %s;
 """ % (datos["meta"]["semilla"], json.dumps(datos, ensure_ascii=False, separators=(",", ":")))
 
     antes, despues = corta(
@@ -150,7 +158,7 @@ def main():
     html = antes + course + "\n" + despues
 
     # ---------------------------------------------------------------- simuladores + quiz
-    sims = (RAIZ / "ensamblado" / "modulos" / "cap7" / "simuladores.js").read_text(encoding="utf-8")
+    sims = (RAIZ / "ensamblado" / "modulos" / "cap8" / "simuladores.js").read_text(encoding="utf-8")
     antes, despues = corta(
         html,
         "    // ================================================================\n    // Simuladores de demostración",
@@ -160,8 +168,8 @@ def main():
 
     # ---------------------------------------------------------------- código
     codigo = {}
-    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap7" / "cadena.R"))
-    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap7" / "cadena.py"))
+    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap8" / "cadena.R"))
+    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap8" / "cadena.py"))
     faltan = []
     for marca in re.findall(r'⟦([A-Za-z0-9]+)⟧', html):
         if marca not in codigo:

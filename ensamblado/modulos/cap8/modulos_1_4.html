@@ -1,0 +1,609 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · Quien no contesta también cuenta                   -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Quien no contesta
+          también cuenta <span class="text-gray-400 font-normal text-2xl">/ Unit and item nonresponse</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Distinguir la no respuesta de unidad de la de
+              ítem, y construir los tres mecanismos —MCAR, MAR y MNAR— para ver qué sesgo produce cada uno.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>En 1994, Rita Gnap repartió un cuestionario sobre carga laboral a los profesores de 31 escuelas
+        primarias del condado de Maricopa, Arizona. Eran <strong>754 profesores</strong>. Devolvieron el
+        cuestionario <strong>310</strong>: el <strong>41,1 %</strong>. De los que sí lo devolvieron,
+        <strong>24 dejaron en blanco</strong> la pregunta sobre minutos de preparación.</p>
+
+      <p>Los siete capítulos anteriores del curso suponen que quien es sorteado, responde. Con esa suposición
+        se construyeron $\pi_k$, el estimador de Horvitz–Thompson y todo lo demás. Aquí se cae: la encuesta
+        que llegó al analista tiene 310 filas donde el diseño había previsto 754, y las 444 que faltan
+        <strong>no son un subconjunto al azar</strong>.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Dos no respuestas, dos problemas</h4>
+        <p>La <strong>no respuesta de unidad</strong> (<em>unit nonresponse</em>) ocurre cuando una unidad
+          sorteada no aporta ningún dato: no se la localiza, se niega, o el cuestionario nunca vuelve. La
+          <strong>no respuesta de ítem</strong> (<em>item nonresponse</em>) ocurre cuando la unidad responde
+          pero deja preguntas en blanco.</p>
+        <p style="margin-bottom:0;">No son grados de lo mismo. La primera se trata <strong>ponderando</strong>
+          (módulos 3 y 4): quien responde carga con el peso de quien no lo hizo. La segunda se trata
+          <strong>imputando</strong> (módulos 5 y 6): se rellena la casilla con un valor plausible y se paga
+          el precio en varianza. Confundirlas lleva a aplicar la herramienta equivocada.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La encuesta y sus dos no respuestas">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El <code>-9</code> no es un dato.</strong> Este archivo codifica los faltantes como
+          <code>-9</code>, y R los lee como números perfectamente válidos. Promediar <code>hrwork</code> tal
+          cual da 34,50 horas; con los tres <code>-9</code> fuera da 34,92. Son 25 minutos semanales de
+          diferencia inventados por un código de faltante. Cada archivo tiene el suyo —<code>-99</code> en
+          <code>impute.csv</code>, <code>9</code> en <code>syc.csv</code>— y buscarlo es la primera línea de
+          trabajo con datos ajenos.</p>
+      </div>
+
+      <h3>Tres mecanismos, no tres nombres</h3>
+
+      <p>Que falten datos no basta para que haya sesgo. Lo que importa es <strong>de qué depende</strong> la
+        probabilidad de responder. Rubin (1976) le puso nombre a los tres casos, y la diferencia entre ellos
+        no es filosófica: decide si el problema tiene arreglo.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>MCAR, MAR y MNAR</h4>
+        <p>Sea $R_k = 1$ si la unidad $k$ responde y $\phi_k = P(R_k = 1)$ su <strong>propensión a
+          responder</strong>. Con $y$ la variable de interés y $x$ una auxiliar conocida para toda la muestra:</p>
+        <ul style="margin-bottom:0.5rem;">
+          <li><strong>MCAR</strong> (<em>missing completely at random</em>): $\phi_k$ no depende ni de $y$ ni
+            de $x$. Los respondientes son una submuestra aleatoria de la muestra.</li>
+          <li><strong>MAR</strong> (<em>missing at random</em>): $\phi_k$ depende de $x$, pero dentro de cada
+            valor de $x$ ya no depende de $y$. Es el caso <em>reparable</em>: ponderar por $x$ lo arregla.</li>
+          <li><strong>MNAR</strong> (<em>missing not at random</em>): $\phi_k$ depende de $y$ incluso
+            conociendo $x$. Ningún ajuste basado en $x$ puede verlo.</li>
+        </ul>
+        <p style="margin-bottom:0;">La distinción es <strong>relativa al $x$ que se tenga</strong>. El mismo
+          mecanismo es MNAR para un analista sin datos auxiliares y MAR para otro que sí los tiene. Conseguir
+          buenas variables auxiliares de los <em>no</em> respondientes es, por eso, la inversión más rentable
+          del diseño de campo.</p>
+      </div>
+
+      <p>Los tres se pueden <strong>construir</strong> y medir. Sobre <code>agpop</code>, con
+        $y$ = <code>acres92</code> y el auxiliar $x$ = <code>acres87</code>, se fabrican cuatro mecanismos que
+        comparten el mismo perfil de propensiones —de 0,85 a 0,35, con media 0,60— y solo cambian en qué
+        variable ordena las clases:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los cuatro mecanismos, construidos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El cuarto caso, «MAR fino», es el que aparece en la práctica.</strong> Ahí la propensión sí
+          depende solo de $x$ —es MAR de libro—, pero varía <em>dentro</em> de cada clase de ajuste: de 0,94 a
+          0,18 entre la primera clase y la quinta, y también dentro de cada una. El ajuste por clases lo
+          corrige en parte, y esa parte se puede medir. Es la diferencia entre «MAR» como teorema y «MAR» como
+          procedimiento con clases concretas.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El sesgo que produce cada mecanismo">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="mecanismos">
+        <h4><i class="fas fa-diagram-project" aria-hidden="true"></i> Los cuatro mecanismos, medidos</h4>
+        <p class="simulador-intro">El deslizador elige el mecanismo. Las barras son el sesgo de la media de
+          los respondientes, en acres, con y sin ajuste por clases de la auxiliar; la banda gris es el error
+          de Monte Carlo de las 2 000 réplicas. Fíjate en que <strong>MCAR no tiene sesgo que corregir</strong>
+          y en que <strong>con MNAR el ajuste no cambia nada</strong>: las dos barras son la misma.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Sesgo de la media estimada, sin ajustar y ajustando por clases de $x$</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Sesgo de cada mecanismo antes y después del ajuste por clases" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §8.1 y §8.2: efectos de la no respuesta y los mecanismos.</li>
+          <li>Little y Rubin — <em>Statistical Analysis with Missing Data</em>, cap. 1: la formalización
+            original de MCAR / MAR / MNAR.</li>
+          <li>Este material — cap. 1, módulo 4: el sesgo de selección, del que la no respuesta es un caso.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · La fórmula del sesgo de no respuesta               -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">La fórmula del sesgo
+          de no respuesta <span class="text-gray-400 font-normal text-2xl">/ The nonresponse bias formula</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Escribir el sesgo como producto de dos
+              factores, medirlo sobre datos reales, y entender por qué $n$ no aparece en la fórmula.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Gnap hizo algo que casi nadie hace: <strong>persiguió a una muestra de los que no habían
+        contestado</strong> y consiguió sus datos. Son 26 profesores del estrato grande, y están en
+        <code>teachnr.csv</code>. Con ellos, las dos medias se pueden comparar en vez de imaginar:</p>
+
+      <div class="formula">
+        <p style="margin:0;">Respondientes: $\bar y_R = 34{,}63$ horas semanales · No respondientes:
+          $\bar y_{NR} = 36{,}46$ horas</p>
+      </div>
+
+      <p>Los profesores que <strong>no</strong> devolvieron el cuestionario sobre carga laboral trabajan
+        <strong>1,83 horas más a la semana</strong> que los que sí lo devolvieron. La dirección es la que uno
+        esperaría —el que va agobiado no rellena encuestas sobre lo agobiado que va— y el contraste da
+        $t = -4{,}73$: no es ruido.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Respondientes contra no respondientes">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>El sesgo de no respuesta</h4>
+        <p>Partiendo la población en respondientes ($M_R$ unidades, media $\bar y_R$) y no respondientes
+          ($M_{NR}$, media $\bar y_{NR}$), con tasa de respuesta $R = M_R / M$:</p>
+        <p>$$\text{sesgo}(\bar y_R) \;=\; \bar y_R - \bar y_U \;=\; (1 - R)\,(\bar y_R - \bar y_{NR})$$</p>
+        <p style="margin-bottom:0;">Un <strong>producto de dos factores</strong>: cuánta gente falta y cuánto
+          se diferencia. Si cualquiera de los dos es cero, no hay sesgo — y ninguno de los dos es $n$.</p>
+      </div>
+
+      <details class="derivacion">
+        <summary>De dónde sale la fórmula</summary>
+        <div>
+          <p>La media poblacional es la media ponderada de los dos grupos:</p>
+          <p>$$\bar y_U = \frac{M_R \bar y_R + M_{NR}\bar y_{NR}}{M} = R\,\bar y_R + (1-R)\,\bar y_{NR}$$</p>
+          <p>Restando $\bar y_U$ de $\bar y_R$ y agrupando:</p>
+          <p>$$\bar y_R - \bar y_U = \bar y_R - R\,\bar y_R - (1-R)\bar y_{NR}
+             = (1-R)\bar y_R - (1-R)\bar y_{NR} = (1-R)(\bar y_R - \bar y_{NR})$$</p>
+          <p style="margin-bottom:0;">Es álgebra de tres líneas, y no interviene ninguna suposición
+            probabilística: el «sesgo» aquí es una identidad sobre la población finita. Por eso la fórmula no
+            se puede evitar con un estimador más listo.</p>
+        </div>
+      </details>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El sesgo y el estimador de dos fases">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Una hora de trabajo semanal, y $n$ no la toca.</strong> Con $R = 0{,}398$ y una brecha de
+          1,83 horas, el sesgo vale $-1{,}10$ horas: la encuesta subestima la carga laboral docente en más de
+          una hora por semana. El error estándar de la estimación es 0,53 horas (módulo 3). Es decir: el sesgo
+          <strong>duplica</strong> al error estándar, y el intervalo del 95 % ni siquiera contiene el valor
+          que la propia autora midió con su submuestra. Multiplicar la muestra por cien reduciría el error
+          estándar a 0,05 y dejaría el sesgo en $-1{,}10$: un intervalo diez veces más estrecho, centrado en
+          el mismo sitio equivocado.</p>
+      </div>
+
+      <div class="simulador" data-simulador="sesgo">
+        <h4><i class="fas fa-scale-unbalanced" aria-hidden="true"></i> Los dos factores del sesgo</h4>
+        <p class="simulador-intro">Mueve la tasa de respuesta y la brecha entre los dos grupos, en horas. La
+          curva es la raíz del error cuadrático medio en función de $n$: el error estándar cae con
+          $\sqrt{n}$ y el sesgo no se mueve, así que la curva se aplana sobre el sesgo en vez de bajar a cero.
+          El punto naranja marca la encuesta de Gnap. Busca una configuración en la que crecer la muestra
+          sirva de algo — solo la hay si la brecha es prácticamente nula.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Raíz del error cuadrático medio, en horas, según el tamaño de muestra</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Raíz del error cuadrático medio frente al tamaño de muestra" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <h3>Cuando se puede perseguir a los ausentes</h3>
+
+      <p>Con la submuestra de no respondientes se puede hacer algo mejor que medir el sesgo: <strong>quitarlo
+        </strong>. El estimador de dos fases de Hansen y Hurwitz (1946) usa las dos partes con el peso que le
+        corresponde a cada una:</p>
+
+      <div class="formula">
+        <p>$$\hat{\bar y}_{HH} \;=\; R\,\bar y_R + (1 - R)\,\bar y_{NR}
+          \;=\; 0{,}398 \times 34{,}63 + 0{,}602 \times 36{,}46 \;=\; 35{,}73$$</p>
+      </div>
+
+      <p>Es el número que el capítulo usará como referencia: cada método de ajuste de los módulos siguientes
+        se juzgará por lo cerca que quede de 35,73. Cuesta caro —hay que volver a campo a por una submuestra
+        de los ausentes—, y por eso casi ninguna encuesta lo tiene. Cuando lo tiene, es la mejor información
+        del estudio.</p>
+
+      <h3>El <em>Literary Digest</em>, ahora con la fórmula</h3>
+
+      <p>El capítulo 1 abrió el curso con el desastre de 1936: la revista predijo Landon 54 % / Roosevelt 41 %
+        con más de dos millones de papeletas, y Roosevelt ganó con el 61 %. Entonces se dijo «la muestra no
+        era aleatoria». Ahora se puede decir <strong>cuánto</strong>:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El Literary Digest con la identidad de Meng">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Este bloque y el capítulo 1 usan recuentos distintos del mismo sondeo, y conviene saber
+          por qué.</strong> El capítulo 1 trabaja con las cifras del relato de Lohr §1.1 —1 293 669 papeletas
+          para Landon y 972 897 para Roosevelt, y los porcentajes redondeados de la elección (61 % y 37 %)—
+          y con ellas el sesgo sale de <strong>−19,32 puntos</strong>. Este módulo usa las del ejercicio
+          15.14 de la 3.ª edición —1 286 511 y 966 352 papeletas, y los votos exactos, 27,753 y 16,675
+          millones—, y el sesgo sale de <strong>−19,57 puntos</strong>.</p>
+        <p style="margin-bottom:0;">La diferencia, un cuarto de punto sobre casi veinte, no cambia ninguna
+          conclusión, y las dos versiones son de la misma autora. Se declara por la regla del curso: cuando dos
+          fuentes de un mismo dato no coinciden, se dice cuál se usa y por qué, en vez de elegir la que salga
+          mejor. Aquí se usan las del ejercicio 15.14 porque son las que traen los votos <em>sin redondear</em>,
+          y la identidad de Meng necesita $\sigma_y$ y $f$ exactos. Por lo mismo, las 2 252 863 papeletas de
+          este bloque son solo las de los dos candidatos principales: el total devuelto, con los menores,
+          fue el «más de 2,3 millones» que cita el capítulo 1.</p>
+      </div>
+
+      <p>La identidad de Meng (2018), que Lohr da como su ecuación (15.12), reescribe el sesgo de otra forma
+        igualmente exacta:</p>
+
+      <div class="formula">
+        <p>$$\bar y_R - \bar y_U \;=\; \underbrace{\rho_{R,y}}_{\text{calidad}} \times
+          \underbrace{\sqrt{\tfrac{1-f}{f}}}_{\text{cantidad}} \times \underbrace{\sigma_y}_{\text{dificultad}}$$</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>Dos millones de papeletas que valían por seis personas.</strong> La correlación entre
+          responder y votar a Landon fue de <strong>0,0934</strong> — un número que en cualquier otro contexto
+          se llamaría despreciable. Multiplicada por $\sqrt{(1-f)/f} = 4{,}33$, produjo un error de 19,6
+          puntos porcentuales. Y al igualar el error cuadrático medio con el de un muestreo aleatorio simple,
+          sale que la encuesta del <em>Literary Digest</em>, con <strong>2 252 863 papeletas</strong>, tenía
+          la precisión de un MAS de <strong>6 personas</strong>.</p>
+        <p style="margin-bottom:0;">El capítulo 1 ya había llegado a ese número —6,30 votantes, con su
+          recuento de papeletas— comparando errores cuadráticos medios a mano. Lo que cambia aquí es que ya
+          no hace falta comparar: la identidad da el resultado en una línea y, sobre todo, dice
+          <strong>de qué depende</strong>. El tamaño de una muestra no informa de su calidad si el mecanismo
+          de respuesta no está controlado, y la misma cuenta se puede hacer con cualquier «encuesta» de un
+          millón de respuestas en redes sociales.</p>
+      </div>
+
+      <div class="simulador" data-simulador="digest">
+        <h4><i class="fas fa-newspaper" aria-hidden="true"></i> Correlación diminuta, desastre enorme</h4>
+        <p class="simulador-intro">El deslizador mueve la correlación $\rho_{R,y}$ entre responder y la
+          variable de interés, manteniendo las cifras reales de 1936. La curva compara el error cuadrático
+          medio de un MAS de tamaño $n$ con el de la encuesta del <em>Digest</em>: donde se cruzan está el
+          tamaño equivalente. Lleva $\rho$ a cero y la curva del <em>Digest</em> se desploma — es el mismo
+          censo defectuoso, sin el defecto.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Raíz del ECM de un MAS de tamaño $n$ frente a la del <em>Literary Digest</em></p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Error cuadrático medio de un muestreo aleatorio simple frente al del Literary Digest" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §8.2 (el sesgo), §8.3 (dos fases) y ej. 15.14 (el <em>Digest</em> con la identidad).</li>
+          <li>Meng (2018) — <em>Statistical paradises and paradoxes in big data</em>: la identidad y el
+            «paradoja del big data».</li>
+          <li>Hansen y Hurwitz (1946) — el diseño de dos fases para no respuesta, todavía vigente.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · Ajuste de pesos por clases de respuesta            -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ajuste de pesos por
+          clases de respuesta <span class="text-gray-400 font-normal text-2xl">/ Weighting class adjustment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Construir el peso ajustado
+              $w_k = d_k / \hat\phi_c$, aplicarlo a la encuesta real y comprobar contra la verdad conocida si
+              mejora o empeora.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Las 23 escuelas del estrato grande no respondieron igual. La escuela 15 devolvió los
+        <strong>24 de 24</strong> cuestionarios; la escuela 41 devolvió <strong>2 de 30</strong>. Si el
+        analista trata las 250 respuestas como si valieran lo mismo, está dejando que la escuela 15 hable por
+        las dos poblaciones y que la 41 casi no hable.</p>
+
+      <p>El peso de diseño es el mismo para todos —245 escuelas del estrato, 23 sorteadas, luego
+        $d_k = 245/23 = 10{,}65$— y ese peso ya no describe a quién representa cada respuesta.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>El peso ajustado por no respuesta</h4>
+        <p>Se agrupan las unidades en <strong>clases de respuesta</strong> $c$ construidas con variables
+          conocidas <em>para respondientes y no respondientes</em>. Dentro de cada clase se estima la
+          propensión $\hat\phi_c$ como la proporción que respondió, y el peso final es</p>
+        <p>$$w_k \;=\; \underbrace{\frac{1}{\pi_k}}_{d_k\;\text{de diseño}} \times
+          \underbrace{\frac{1}{\hat\phi_{c(k)}}}_{\text{ajuste}}$$</p>
+        <p style="margin-bottom:0;">La lectura es literal: cada respondiente de una clase donde solo contestó
+          la mitad carga con el peso de dos personas. El estimador resultante es <strong>insesgado si el
+          mecanismo es MAR con esas clases</strong>, y solo entonces.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Ajuste por clases sobre la encuesta real">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El ajuste empeoró la estimación, y se puede demostrar.</strong> Sin ajustar, 34,63 horas.
+          Ajustando por tamaño de escuela, <strong>34,37</strong>. Usando cada escuela como su propia clase,
+          <strong>33,82</strong>. La verdad aproximada, la que da la submuestra de no respondientes, es
+          <strong>35,73</strong>. Los tres ajustes se alejan del objetivo, y el más «fino» —una clase por
+          escuela— es el que más se aleja. Además cuestan varianza: el deff de Kish sube de 1,00 a 1,61 y el
+          error estándar, de 0,534 a 0,709.</p>
+        <p style="margin-bottom:0;">No es un fallo del método: es el diagnóstico correcto. Lo que hace que un
+          profesor no conteste es <strong>su</strong> carga de trabajo, no el tamaño de su escuela. El
+          mecanismo es MNAR respecto a las variables disponibles, y contra eso ningún reparto de pesos puede
+          nada. La simulación del módulo 1 lo había anticipado con precisión.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Doble vía del error estándar">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>La varianza sigue siendo la del capítulo 5.</strong> Ajustar pesos no cambia el diseño: son
+          23 conglomerados de 245, y el error estándar sale de la fórmula del estimador de razón sobre
+          conglomerados, con los pesos nuevos dentro. La comprobación de arriba —fórmula a mano contra
+          <code>survey</code>— coincide hasta $4\times10^{-15}$. Lo que el ajuste sí hace es
+          <strong>desigualar los pesos</strong>, y eso se paga con el deff de Kish del capítulo 7.</p>
+      </div>
+
+      <div class="simulador" data-simulador="clases">
+        <h4><i class="fas fa-layer-group" aria-hidden="true"></i> Las 23 escuelas y sus tasas</h4>
+        <p class="simulador-intro">Cada barra es una escuela: su altura, la proporción de cuestionarios que
+          devolvió; su anchura conceptual, los profesores que tenía. El deslizador elige cuántas clases de
+          ajuste formar agrupando escuelas por tamaño, y la lectura da la estimación resultante y su distancia
+          a la verdad conocida (35,73). Ninguna configuración la alcanza.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Tasa de respuesta de cada una de las 23 escuelas del estrato grande</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Tasa de respuesta por escuela y clases de ajuste" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <h3>Lo que la simulación ya sabía</h3>
+
+      <p>El módulo 1 fabricó cuatro mecanismos y midió el sesgo sin ajustar. La misma simulación traía la
+        segunda columna:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Qué arregla el ajuste y qué no">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p style="margin:0;">MCAR: no había sesgo · MAR: el ajuste elimina el <strong>100,4 %</strong> ·
+          MAR fino: el <strong>81,6 %</strong> · MNAR: el <strong>−1,1 %</strong></p>
+      </div>
+
+      <p>Los cuatro números resumen el módulo. Ponderar por clases es una herramienta excelente <em>para el
+        problema que resuelve</em>, y la pregunta que hay que hacerse antes de usarla no es «¿tengo variables
+        auxiliares?» sino «¿capturan mis variables auxiliares lo que hace que la gente no conteste?».</p>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §8.4: ajuste de pesos por clases y sus supuestos.</li>
+          <li>Este material — cap. 7, módulo 2: los tres factores del peso final, del que este es el segundo.</li>
+          <li>Este material — cap. 5: la fórmula de varianza para conglomerados que se reutiliza aquí.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Calibrar contra el mundo exterior                  -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Calibrar contra el
+          mundo exterior <span class="text-gray-400 font-normal text-2xl">/ Poststratification and raking</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Usar totales poblacionales conocidos para
+              ajustar por no respuesta, y ver qué se gana y qué se paga al hacerlo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Zhang y sus coautores (2020) estudiaron a los <em>respondientes profesionales</em>: gente que se
+        apunta a paneles en línea y contesta encuestas por dinero. El panel tiene 2 404 personas. Comparado
+        con la población adulta de Estados Unidos según la <em>American Community Survey</em> de 2011:</p>
+
+      <div class="formula">
+        <p style="margin:0;">Sin estudios universitarios — panel <strong>21,4 %</strong>, población
+          <strong>42,9 %</strong> · Con posgrado — panel <strong>36,8 %</strong>, población
+          <strong>26,0 %</strong></p>
+      </div>
+
+      <p>El panel tiene <strong>la mitad</strong> de personas sin estudios universitarios de las que debería y
+        <strong>una vez y media</strong> las que tienen posgrado. Nadie diseñó eso: es lo que produce dejar
+        que la gente se apunte sola. Y aquí, a diferencia del módulo 3, se sabe cuál <em>debería</em> ser la
+        respuesta, porque la ACS la publica.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Post-estratificación y raking</h4>
+        <p>La <strong>post-estratificación</strong> reparte la muestra en celdas $c$ cuyo total poblacional
+          $N_c$ se conoce, y fija el peso de forma que los pesos de cada celda sumen su total:</p>
+        <p>$$w_k = \frac{N_c}{n_c}, \qquad k \in c \qquad\Longrightarrow\qquad \sum_{k \in c} w_k = N_c$$</p>
+        <p style="margin-bottom:0;">El <strong>raking</strong> (o IPFP) hace lo mismo cuando solo se conocen
+          los <strong>márgenes</strong> y no el cruce completo: ajusta iterativamente a un margen, luego a
+          otro, y repite hasta que todos cuadran a la vez. Es el caso habitual, porque los censos publican
+          tablas por sexo y por edad mucho más a menudo que el cruce sexo × edad × educación.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Deducir la correspondencia de categorías">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El primer obstáculo de una calibración real no es estadístico: es que las categorías no
+          coinciden.</strong> El cuestionario codifica la edad en cuatro grupos y el archivo de control, en
+          tres, y el codebook no viaja con los datos. De los tres colapsos ordenados posibles, solo
+          <code>{1}{2,3}{4}</code> deja los márgenes a menos de 3,4 puntos de la ACS; los otros dos se van a
+          22 y a 31 puntos. La deducción es sólida precisamente porque <em>sabemos</em> que este panel se
+          desvía de la ACS: en educación se desvía 21 puntos, y aun así la edad colapsada así encaja. Se
+          adopta esa correspondencia y se declara: es una inferencia sobre el archivo, no un dato.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Post-estratificar a las 18 celdas de la ACS">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R11⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Los pesos resultantes van de 54 562 a 401 464: una razón de <strong>7,4 a 1</strong>, con coeficiente
+        de variación 0,632 y deff de Kish <strong>1,399</strong>. Traducido con el vocabulario del capítulo 7:
+        la calibración cuesta un <strong>40 % de varianza extra</strong>, y ese es el precio del ajuste.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Raking sobre los márgenes">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R12⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El raking sale más barato en varianza y no reproduce el cruce.</strong> Con solo los tres
+          márgenes, el CV de los pesos baja de 0,632 a 0,540 —pesos más suaves, menos varianza— pero los
+          pesos individuales llegan a diferir en 170 702 unidades respecto a la post-estratificación completa.
+          Cuál usar no es cuestión de gusto: si se conoce el cruce, la post-estratificación corrige más
+          desequilibrios; si no se conoce, el raking es lo único disponible. Lo que no se puede es fingir que
+          dan lo mismo.</p>
+      </div>
+
+      <div class="simulador" data-simulador="calibracion">
+        <h4><i class="fas fa-sliders" aria-hidden="true"></i> Qué corrige la calibración y qué cuesta</h4>
+        <p class="simulador-intro">El deslizador recorre los tres márgenes de control. Las barras comparan la
+          composición del panel con la de la ACS, y la lectura da el desequilibrio del margen, el efecto sobre
+          la estimación de las cinco preguntas de frecuencia y el precio en varianza. La educación es donde el
+          panel está más torcido — y también donde la calibración más mueve las respuestas.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Composición del panel frente a la de la población (ACS 2011)</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Composición del panel frente a la población en cada margen de calibración" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Calibrar no certifica nada.</strong> Después del ajuste, el panel reproduce exactamente los
+          totales de la ACS por sexo, edad y educación. Eso no significa que sus respuestas sobre frecuencia
+          de participación en encuestas se parezcan a las de la población: significa que ya no se distingue de
+          ella <em>en esas tres variables</em>. Lo que hace que alguien se apunte a un panel por dinero no es
+          su nivel educativo, y el ajuste no lo toca. Es exactamente la lección del módulo 3, con más datos
+          externos y el mismo límite.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §8.5 y cap. 15 (ej. 9 y 10): post-estratificación con los datos de este módulo.</li>
+          <li>Este material — cap. 7, módulo 6: el IPFP paso a paso, y cap. 4, módulo 10:
+            post-estratificación como caso de calibración.</li>
+          <li>Zhang et al. (2020) — el estudio original sobre respondientes profesionales.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

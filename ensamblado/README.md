@@ -28,6 +28,23 @@ original. Se escriben ahí, se **ejecutan de verdad**, se anotan sus salidas rea
 `#>` y solo entonces el ensamblador las inserta en el HTML escapando el marcado. Así el bloque
 que lee el estudiante es, byte a byte, el que se probó, y no una transcripción.
 
+Las salidas **no se transcriben a mano**. En cada fase del proyecto han vuelto a fallar cifras
+copiadas a ojo (una en la fase 1, dos en la 3, cinco en la 4), así que desde la fase 5 las anota
+un script a partir de la ejecución real:
+
+```bash
+python3 precalculo/anota_salidas.py ensamblado/codigo/cap8/cadena.R
+python3 precalculo/anota_salidas.py ensamblado/codigo/cap8/cadena.py --check   # como regresión
+```
+
+Dos trampas de las cadenas, ya pagadas:
+
+- Una línea `print("\n...")` **dentro** de un bloque hace que el ensamblador crea que quedan
+  restos del marcador y aborte. Usar `print()` y luego el texto.
+- Todo lo que el bloque necesite para correr suelto tiene que estar **dentro del bloque**:
+  `options(scipen=)`, `pd.set_option`, y también los `library()` que no cargue la cabecera del
+  verificador. El bloque de las reglas de Rubin del capítulo 8 tuvo que cargar `mitools` él mismo.
+
 Los bloques van separados por `cat("\n###BLOQUE-XX###\n")` (o `print(...)` en Python). El
 ensamblador parte por esos marcadores y recorta los restos de la propia llamada; aborta si algún
 bloque queda vacío o conserva restos, porque un bloque mal recortado no compilaría en manos del

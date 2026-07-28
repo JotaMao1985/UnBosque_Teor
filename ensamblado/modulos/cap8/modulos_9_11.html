@@ -1,0 +1,374 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · IA asistida en diseño muestral                     -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">IA asistida en diseño
+          muestral <span class="text-gray-400 font-normal text-2xl">/ What to always verify</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Refutar con código tres afirmaciones que suenan
+              razonables y son falsas, y quedarse con una lista de verificación aplicable a cualquier salida
+              de un asistente.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El syllabus admite el uso de asistentes de IA en este curso y lo exige <strong>declarado y
+        verificado</strong>. La razón no es desconfianza genérica: es que en muestreo hay un puñado de
+        afirmaciones que aparecen constantemente —en manuales, en foros, en salidas de asistentes— que suenan
+        bien, se repiten mucho y son <strong>falsas</strong>. Las tres siguientes se refutan con el material
+        de este mismo capítulo.</p>
+
+      <h3>Afirmación 1: «con una muestra suficientemente grande, el sesgo de no respuesta se diluye»</h3>
+
+      <p>Es la más común y la más peligrosa, porque describe correctamente lo que pasa con el
+        <em>error estándar</em> y lo extiende, sin justificación, al sesgo.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Refutación de la primera afirmación">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R19⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Refutada por la propia fórmula.</strong> $\text{sesgo} = (1-R)(\bar y_R - \bar y_{NR})$ no
+          contiene a $n$. Con la encuesta de Gnap: a $n = 25$ el error estándar vale 0,695 y el sesgo 1,102;
+          a $n = 25\,600$ el error estándar vale 0,022 y el sesgo sigue valiendo <strong>1,102</strong>. La
+          raíz del error cuadrático medio baja de 1,303 a 1,102 y ahí se queda para siempre. A partir de
+          $n = 10$ —diez profesores— el sesgo ya domina, y multiplicar por mil solo produce un intervalo
+          estrecho y confiado alrededor del número equivocado.</p>
+      </div>
+
+      <h3>Afirmación 2: «ponderar por las variables demográficas corrige la no respuesta»</h3>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Refutación de la segunda afirmación">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R20⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Corrige si el mecanismo es MAR con esas variables; si no, no.</strong> La simulación del
+          módulo 1 lo mide: con MAR el ajuste elimina el 100 % del sesgo, con «MAR fino» el 82 %, con MNAR el
+          −1 %. Y sobre la encuesta real, donde la verdad se conoce por la submuestra, el ajuste
+          <strong>alejó</strong> la estimación: de 34,63 a 34,37, cuando el objetivo era 35,73. La afirmación
+          no es falsa siempre — es falsa <em>como afirmación general</em>, y quien la usa sin comprobar la
+          condición está aplicando una técnica correcta al problema equivocado.</p>
+      </div>
+
+      <h3>Afirmación 3: «con un 80 % de respuesta no hay que preocuparse por el sesgo»</h3>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Refutación de la tercera afirmación">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R21⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La tasa es un factor de un producto, no el producto.</strong> Con el 80 % de respuesta y
+          una brecha de 5 unidades, el sesgo vale 1,0. Con el 40 % y una brecha de 0,5, vale 0,3: la encuesta
+          «mala» sesga <strong>tres veces menos</strong> que la «buena». Los umbrales de tasa de respuesta
+          —el 80 %, el 60 %— son reglas administrativas útiles para comparar operativos de campo, y no dicen
+          nada por sí solos sobre el sesgo. Lo que hace falta es una estimación de la brecha, y eso pide
+          datos de los ausentes: submuestra (módulo 2), variables auxiliares (módulo 3) o totales externos
+          (módulo 4).</p>
+      </div>
+
+      <div class="diagram">
+        <h4><i class="fas fa-list-check mr-2" aria-hidden="true"></i>Lista de verificación para cualquier
+          salida de IA sobre muestreo</h4>
+        <ol style="margin-bottom:0;">
+          <li><strong>¿Se puede escribir $\pi_k$?</strong> Si la respuesta describe un diseño, pedir la
+            probabilidad de inclusión de cada unidad. Si el asistente no la da o la da mal, el diseño no
+            sirve, aunque el código corra.</li>
+          <li><strong>¿La varianza corresponde al diseño?</strong> El error más caro del curso es usar
+            $s/\sqrt{n}$ sobre una muestra por conglomerados. Comprobar que la fórmula propuesta contiene los
+            estratos, los conglomerados y los pesos que el diseño tiene.</li>
+          <li><strong>¿De dónde salen las cifras?</strong> Ejecutar el código y comparar con lo que el texto
+            afirma. Un asistente puede escribir un número plausible en la explicación que su propio código no
+            produce; este material ha cazado ese error en cada fase de su construcción.</li>
+          <li><strong>¿Se declaró el supuesto de no respuesta?</strong> Cualquier ajuste de pesos supone MAR
+            con unas clases concretas. Si la respuesta no dice cuáles ni por qué, el supuesto está escondido.</li>
+          <li><strong>¿Los códigos de faltante se trataron?</strong> Pedirle explícitamente que busque los
+            <code>-9</code>, <code>-99</code>, <code>9</code>, <code>99</code> del archivo. Es el fallo
+            silencioso más frecuente con datos reales.</li>
+          <li><strong>¿La simulación trae su error de Monte Carlo?</strong> Una simulación sin barra de error
+            no es una medición. Si compara dos métodos, la diferencia tiene que superar al ruido.</li>
+          <li><strong>¿Se puede verificar por dos vías?</strong> Toda varianza de este curso se comprobó con
+            la fórmula a mano <em>y</em> con <code>survey</code>. Es la prueba que ningún texto plausible
+            supera por casualidad.</li>
+          <li><strong>¿Qué dice que NO se puede concluir?</strong> Una respuesta que solo afirma, sin acotar
+            su alcance, está incompleta — la venga de quien la venga.</li>
+        </ol>
+      </div>
+
+      <div class="note">
+        <p><strong>Esto no es un argumento contra usar asistentes.</strong> Los tres bloques de arriba son
+          código breve que un asistente escribe bien y rápido; el trabajo intelectual está en <em>saber qué
+          hay que comprobar</em>, y eso es exactamente lo que enseñan los ocho capítulos. La regla del
+          proyecto es la del syllabus: usarlo, declararlo y mostrar la verificación. Un resultado de IA sin
+          verificar se califica como un error propio, porque lo es.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Este material — cap. 1, módulo 9: sesgo de muestreo en ciencia de datos e IA, que este módulo
+            cierra.</li>
+          <li>Meng (2018) — por qué «más datos» empeora el problema cuando el mecanismo no está controlado.</li>
+          <li>Kim y Wang (2019) — <em>Sampling techniques for big data analysis</em>: el diseño muestral en
+            fuentes de datos no probabilísticas.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · Repaso integrador del curso                       -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El curso entero, en
+          un árbol <span class="text-gray-400 font-normal text-2xl">/ Putting it together</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Volver al árbol del error total del capítulo 1
+              con las ocho ramas ya recorridas, y ver qué herramienta ataca cada una.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El capítulo 1 abrió con un árbol del error total de encuesta cuyas hojas eran, en su mayoría,
+        promesas: «esto se trata en el capítulo 5», «esto en el 7». Ahora están todas cumplidas. El mismo
+        árbol, releído al final, es el índice del curso — y sobre todo es la respuesta a la pregunta que
+        gobierna el oficio: <strong>¿este error lo arregla más muestra, o no?</strong></p>
+
+      <div class="arbol-error" data-arbol="repaso"></div>
+
+      <div class="warning">
+        <p><strong>La asimetría del árbol es la lección.</strong> Todo el aparato de los capítulos 2 a 7
+          —diseños, estimadores, estratos, conglomerados, PPT, calibración, replicación— ataca la mitad
+          <em>izquierda</em>: la varianza. Es la mitad que $n$ reduce, la que tiene fórmulas cerradas y la que
+          el software calcula. La mitad <em>derecha</em>, la de los sesgos, se ataca casi toda antes de
+          recoger un solo dato: eligiendo bien el marco, redactando bien las preguntas y diseñando el
+          operativo de campo. Y una vez recogidos los datos, lo único que queda es acotarla y declararla.</p>
+      </div>
+
+      <h3>Los tres módulos del curso, en tres frases</h3>
+
+      <div class="diagram">
+        <h4><i class="fas fa-route mr-2" aria-hidden="true"></i>De dónde viene cada idea</h4>
+        <ul style="margin-bottom:0;">
+          <li><strong>Módulo I — el marco (caps. 1–3).</strong> Una muestra es probabilística si se puede
+            escribir $\pi_k$ para cada unidad; con eso, el estimador de Horvitz–Thompson
+            $\hat t_\pi = \sum_{k \in s} y_k/\pi_k$ es insesgado sea cual sea el diseño. Todo lo demás del
+            curso son casos particulares de esa línea, y las variables auxiliares (razón, regresión, GREG)
+            son la primera forma de aprovechar lo que se sabe de antemano.</li>
+          <li><strong>Módulo II — los diseños (caps. 4–6).</strong> Estratificar reparte la varianza y la
+            reduce; conglomerar reparte el costo y la aumenta; las probabilidades desiguales apuestan a una
+            proporcionalidad que hay que comprobar —el capítulo 6 mostró un πPT perdiendo contra un MAS—.
+            Elegir un diseño es negociar varianza contra presupuesto con los números delante.</li>
+          <li><strong>Módulo III — la realidad (caps. 7–8).</strong> Una encuesta real apila estratos,
+            etapas, pesos y ajustes, y su varianza no se parece a la de ningún libro: hay que declarar el
+            diseño y replicar. Y siempre falta gente. El sesgo que eso produce no depende de $n$, se corrige
+            solo bajo MAR, y cuando no se puede corregir hay que <strong>decirlo</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="note">
+        <p><strong>Lo que queda para el proyecto.</strong> El módulo 8 recorrió las cinco decisiones y la
+          rúbrica. Este módulo da el mapa. Entre los dos está el examen de conciencia que conviene hacerse
+          antes de entregar: ¿de qué rama del árbol es el error más grande de nuestro estudio, y lo hemos
+          declarado?</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Este material — cap. 1, módulo 7: el árbol del error total, primera versión.</li>
+          <li>Groves et al. — <em>Survey Methodology</em>: el paradigma del error total de encuesta.</li>
+          <li>Gutiérrez — <em>Estrategias de muestreo</em>: el marco $\pi$ completo, con los diseños que este
+            curso solo nombró.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 11 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-11">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 11</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y
+          ejercicios guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprobar el capítulo completo: mecanismos,
+              fórmula del sesgo, ajuste de pesos, calibración, imputación, varianza y diagnóstico.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El glosario primero — este capítulo introduce el vocabulario de la no respuesta, que Lohr y Gutiérrez
+        escriben de forma distinta:</p>
+
+      <div class="glosario-notacion" data-glosario="norespuesta"></div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al
+        final, el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos
+        antes de abrir la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap8">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 8</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia
+          retroalimentación, también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre encuestas distintas a la
+          del hilo principal. Las cifras de cada solución salen de
+          <code>ensamblado/codigo/cap8/cadena.R</code>, que se ejecuta de verdad: ninguna está escrita a mano.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>La misma pregunta sobre
+            inteligencia se hizo por teléfono (<code>intelltel</code>, 1 838 respuestas) y por internet
+            (<code>intellonline</code>, 983). Compara la composición educativa de las dos muestras y el efecto
+            de sus pesos de post-estratificación. ¿Cuál de los dos modos necesita pesos más extremos, y por qué?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Mira <code>prop.table(table(education))</code> en cada archivo y la razón
+              $w_{\max}/w_{\min}$ de la columna <code>postwt</code>. El modo que más se aleja de la población
+              es el que necesita pesos más desiguales para volver a ella.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R22⟧</code></pre>
+            <p>La muestra en línea tiene un 12,3 % de personas sin estudios universitarios y la telefónica, un
+              26,1 %: la brecha entre modos es mayor que la que produce cualquier ajuste posterior. Los pesos
+              en línea van de 0,435 a 6,73 —una razón de <strong>15,5 a 1</strong>— frente a 12,9 a 1 en el
+              teléfono. Y el efecto va en direcciones opuestas: ponderar <em>sube</em> la media en línea (de
+              2,472 a 2,526) y la <em>baja</em> por teléfono (de 2,435 a 2,334). Es el aviso del módulo 4 en
+              su forma más clara: dos encuestas de la misma población, las dos calibradas a los mismos totales,
+              siguen sin coincidir — porque el modo de recolección selecciona en variables que los totales no
+              controlan.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>En <code>teachers</code>, 24
+            de los 310 cuestionarios devueltos dejaron en blanco <code>preprmin</code> (minutos de
+            preparación). Imputa con la media de la escuela y compara la estimación y su error estándar contra
+            el análisis de casos completos. ¿Qué cambia más?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Cuidado con el <code>-9</code> antes de nada. La media por escuela sale con
+              <code>tapply(..., mean, na.rm = TRUE)</code>. Compara por separado la estimación puntual y el
+              error estándar, como en el módulo 6.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R23⟧</code></pre>
+            <p>La estimación apenas se mueve: 177,89 minutos con casos completos, 178,12 imputando. El error
+              estándar, en cambio, <strong>baja</strong> de 6,602 a 6,189, un 6,3 % menos. Otra vez el mismo
+              patrón del módulo 6, ahora sobre una variable con 286 observaciones reales: imputar con la media
+              de la escuela añade 24 valores sin dispersión propia, y el software los cuenta como datos. La
+              estimación puntual perdona; la incertidumbre, no. Es la misma frase con la que cerró el
+              capítulo 7, aplicada a otro descuido.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>En la
+            <em>Survey of Youth in Custody</em> (<code>syc</code>), la variable <code>livewith</code> —con
+            quién vivía el joven antes de entrar— tiene 43 códigos <code>9</code> y 4 códigos <code>99</code>.
+            Imputa por hot-deck dentro de clases de sexo y edad, y comprueba si la distribución cambia.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Los dos códigos de faltante se marcan con <code>ifelse(livewith %in% c(9, 99), NA, livewith)</code>.
+              Para cada faltante, sortea un donante entre los observados de su clase. Compara
+              <code>prop.table(table(...))</code> antes y después.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R24⟧</code></pre>
+            <p>La distribución casi no se mueve: la categoría 1 pasa de 0,4992 a 0,4983 y la 3, de 0,3061 a
+              0,3071. Con 47 faltantes sobre 2 621 —un 1,8 %— eso es lo que tiene que pasar, y el ejercicio
+              enseña justamente eso: <strong>el hot-deck no arregla nada porque no había nada que arreglar</strong>.
+              La imputación es una herramienta para conservar filas y mantener consistentes los análisis
+              multivariados, no un método para mejorar estimaciones. Si el 1,8 % de faltantes hubiera cambiado
+              la distribución de forma apreciable, lo sospechoso sería la imputación.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Repite el análisis del
+            módulo 2 con <code>assist</code> (minutos semanales de auxiliar en el aula), que es la variable
+            con la mayor brecha del archivo. Calcula el sesgo relativo y comprueba si el ajuste por clases del
+            módulo 3 lo mejora.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Aplica $(1-R)(\bar y_R - \bar y_{NR})$ con $R = 0{,}398$ y divide por el estimador de dos fases
+              para obtener el sesgo relativo. Después compara <code>svymean(~assist)</code> con pesos
+              ajustados contra ese mismo estimador de dos fases.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R25⟧</code></pre>
+            <p>Los no respondientes tienen <strong>2,76 veces</strong> más minutos de auxiliar que los
+              respondientes: 152,3 frente a 55,1. El sesgo vale −58,5 minutos, un
+              <strong>−51,5 % en términos relativos</strong>: la encuesta reporta menos de la mitad del apoyo
+              real que reciben los profesores. Y el ajuste por clases lo deja en 51,4 cuando el objetivo es
+              113,6 — no solo no corrige, sino que empeora ligeramente. La lectura sustantiva es la que
+              importa: los profesores con auxiliar en el aula son los que <em>menos</em> contestaron, y
+              cualquier conclusión sobre recursos de apoyo basada en esta encuesta está gravemente sesgada. Un
+              informe honesto no publica «55 minutos»: publica la brecha medida y el intervalo que la
+              contiene.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Hasta aquí el curso.</strong> Ocho capítulos, dieciséis semanas, y una idea que los recorre
+          todos: una muestra vale lo que valga su diseño, y lo que no se puede estimar hay que declararlo. El
+          proyecto integrador es el sitio donde eso deja de ser una frase. Suerte con él — y midan la no
+          respuesta desde el primer día de campo, que es cuando aún se puede.</p>
+      </div>
+    </div>
+  </template>

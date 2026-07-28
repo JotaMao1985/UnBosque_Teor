@@ -153,8 +153,21 @@ TEXTO_RE = re.compile(r'<(p|li|h4)\b[^>]*>(.*?)</\1>', re.S)
 # El número se captura ENTERO en formato español —miles con espacio fino y
 # decimales con coma—: partirlo en la coma convertía «528 609,8» en «528 609»,
 # que no casa con el 528609.8 de la salida y producía un falso positivo.
+# El signo entra en la captura: sin el, «$t = -4,73$» se comparaba como +4,73
+# contra un universo que solo tiene -4,734, y salia como cifra sin respaldo.
 CIFRA_PROSA_RE = re.compile(
-    r'(?<![\w.,$])(\d{1,3}(?:[\u2009\u00a0 ]\d{3})+(?:,\d+)?|\d+,\d{2,})(?![\w])')
+    r'(?<![\w.,])(-?(?:\d{1,3}(?:[\u2009\u00a0 ]\d{3})+(?:,\d+)?|\d+,\d{2,}))(?![\w])')
+
+# El material escribe muchas cifras DENTRO de LaTeX: $-1{,}10$, $306\,677$,
+# $92{,}65\%$. Hasta la fase 5 el verificador de prosa no las ve\u00eda \u2014la coma iba
+# entre llaves y el `$` estaba en el lookbehind\u2014, as\u00ed que las daba por buenas sin
+# mirarlas. Se normalizan antes de buscar: llaves de agrupaci\u00f3n de la coma y del
+# punto, espacio fino de LaTeX, y el signo menos tipogr\u00e1fico.
+def normaliza_latex(texto):
+    texto = texto.replace('{,}', ',').replace('{.}', '.')
+    texto = texto.replace('\\,', '\u2009').replace('\\;', ' ').replace('\\ ', ' ')
+    texto = texto.replace('\u2212', '-')
+    return texto
 
 
 def numeros_del_universo(html):
@@ -193,6 +206,7 @@ def cifras_de_prosa(html):
     fuera = []
     for _, trozo in TEXTO_RE.findall(cuerpo):
         texto = html_mod.unescape(re.sub(r'<[^>]+>', ' ', trozo))
+        texto = normaliza_latex(texto)
         texto = re.sub(r'\s+', ' ', texto).strip()
         for m in CIFRA_PROSA_RE.finditer(texto):
             ini = max(0, m.start() - 60)

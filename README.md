@@ -7,7 +7,7 @@ Docente: Javier Mauricio Sierra.
 
 | Curso | Sitio | Estado |
 |---|---|---|
-| Muestreo Estadístico (20939) | [`/muestreo/`](https://jotamao1985.github.io/UnBosque_Teor/muestreo/) | en producción — 4 de 8 capítulos en el formato nuevo |
+| Muestreo Estadístico (20939) | [`/muestreo/`](https://jotamao1985.github.io/UnBosque_Teor/muestreo/) | **completo** — los 8 capítulos, 88 módulos, 65 simuladores |
 | Series de Tiempo | [sitio propio](https://jotamao1985.github.io/Series-de-Tiempo_Un_Bosque/) | vive todavía en su repositorio; la portada lo enlaza |
 
 ## Cómo está organizado
@@ -42,19 +42,39 @@ que recordar.
 ## Antes de publicar
 
 ```bash
-python3 precalculo/verifica_bloques.py --todos    # cada cifra `#>` contra la salida real
-chmod 644 sitio/muestreo/*.html                   # un archivo sin permiso de lectura es un 404
+python3 precalculo/verifica_bloques.py --todos --prosa   # cada cifra, en los bloques y en el texto
+python3 precalculo/cuenta_sitio.py                       # los totales, contados sobre los archivos
+chmod 644 sitio/muestreo/*.html                          # un archivo sin permiso de lectura es un 404
 ```
 
 Los precálculos se ejecutan **con el R del framework 4.4**, no con el del `PATH`
 (ver `precalculo/README.md`).
 
+Y después de tocar un capítulo publicado, la regla de oro del ensamblado: volver a ejecutar su
+`ensamblado/ensambla_capN.py` y comprobar que el archivo sale **byte a byte idéntico**. Si sale
+distinto, la corrección se quedó en el archivo final y no en las fuentes.
+
 ## Cómo está hecho
 
 Cada capítulo es un único archivo HTML autocontenido: Tailwind, KaTeX, Chart.js y Prism desde CDN,
-los datos incrustados como JSON y todo el cómputo pesado precalculado en R. Ninguna cifra de los
-bloques de código se escribe a mano: sale de ejecutar los guiones de `precalculo/`, y
-`verifica_bloques.py` contrasta cada una contra la salida real antes de que el capítulo se publique.
+los datos incrustados como JSON y todo el cómputo pesado precalculado en R.
+
+**Ninguna cifra se escribe a mano.** Las de los bloques de código salen de ejecutar
+`ensamblado/codigo/capN/cadena.{R,py}` y las anota `precalculo/anota_salidas.py` a partir de la
+ejecución real; las del texto se contrastan con `verifica_bloques.py --prosa` contra las salidas y
+el JSON del precálculo. Las que no se pueden derivar automáticamente —cocientes que el autor
+deriva, cifras en otra unidad, constantes de tabla— viven en `precalculo/cifras_prosa.json` con su
+justificación, revisadas una a una ejecutando.
+
+| Herramienta | Para qué |
+|---|---|
+| `precalculo/genera_capN.R` | produce los datos del capítulo N como JSON, con semilla fija |
+| `precalculo/anota_salidas.py` | escribe en cada bloque su salida REAL en los comentarios `#>` |
+| `precalculo/verifica_bloques.py` | ejecuta los bloques encadenados y contrasta cada cifra, en el código y en la prosa |
+| `precalculo/mide_abstraccion.py` | avisa de los módulos que formalizan antes de dar un número |
+| `precalculo/cuenta_sitio.py` | cuenta módulos, simuladores, preguntas y componentes sobre los archivos |
+| `ensamblado/ensambla_capN.py` | construye el capítulo desde la plantilla, los módulos y las cadenas |
+| `ensamblado/retropropaga_*.py` | lleva un componente nuevo a la plantilla y a los capítulos anteriores |
 
 ## Créditos y fuentes
 

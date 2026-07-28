@@ -1,0 +1,554 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · Rellenar la casilla: los métodos de imputación     -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Rellenar la casilla
+          <span class="text-gray-400 font-normal text-2xl">/ Imputation methods</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aplicar los cuatro métodos de imputación sobre
+              un archivo de 20 filas donde cada valor imputado se puede seguir con el dedo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Veinte personas, seis variables, y este archivo: la persona 2 no dijo cuántos años de educación
+        tenía; la 10 no dijo ni eso ni si había cometido un delito; cuatro dejaron en blanco si el delito fue
+        violento. En total faltan <strong>3 valores de <code>education</code>, 2 de <code>crime</code> y 4 de
+        <code>violcrime</code></strong> sobre 20 filas.</p>
+
+      <p>La reacción por defecto de casi todo el software es <strong>tirar la fila entera</strong>
+        (<em>listwise deletion</em>). Con estos datos eso significa quedarse con 13 de 20 personas — y con las
+        13 que sí contestaron todo, que probablemente no son como las otras 7. Imputar es la alternativa:
+        rellenar la casilla con un valor plausible y conservar la fila.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los faltantes y la imputación determinista">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R13⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Cuatro maneras de rellenar</h4>
+        <ul style="margin-bottom:0;">
+          <li><strong>Media</strong>: se pone $\bar y_{obs}$ en todos los huecos. Conserva la media y
+            <strong>destruye la dispersión</strong>: cada valor imputado está exactamente en el centro.</li>
+          <li><strong>Regresión</strong>: se ajusta $\hat y = \hat\beta_0 + \hat\beta_1 x$ con los observados
+            y se predice el hueco. Usa la información auxiliar, pero pone a todos los imputados
+            <strong>sobre la recta</strong>, sin el ruido que tendrían de verdad.</li>
+          <li><strong>Hot-deck</strong>: se copia el valor de un <strong>donante real</strong> de la misma
+            clase. Nunca produce un valor imposible —ni 12,04 años de educación, ni una edad negativa— y
+            conserva la forma de la distribución.</li>
+          <li><strong>Múltiple</strong>: se generan $m$ conjuntos completos, cada uno con su ruido, y se
+            analizan los $m$ combinando después (módulo 6). Es la única que declara honestamente lo que no
+            sabe.</li>
+        </ul>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Hot-deck con donantes reales">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R14⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Los donantes de R y los de Python no son los mismos, y está bien.</strong> Los dos bloques
+          sortean de la misma lista de candidatos con la misma semilla nominal, pero los generadores de
+          números aleatorios de R y de <code>numpy</code> son distintos. El hot-deck no es una fórmula con una
+          respuesta: es un procedimiento aleatorio, y cada ejecución da un conjunto imputado distinto. Eso, que
+          suena a defecto, es exactamente lo que el módulo 6 va a aprovechar.</p>
+      </div>
+
+      <div class="simulador" data-simulador="imputacion">
+        <h4><i class="fas fa-fill-drip" aria-hidden="true"></i> Los cuatro métodos sobre las mismas 20 filas</h4>
+        <p class="simulador-intro">El deslizador elige el método. Los puntos son las 20 personas; los naranjas
+          son los tres valores imputados. Fíjate en dónde caen: con la media, los tres se apilan en el mismo
+          punto; con la regresión, los tres caen exactamente sobre la recta; con el hot-deck, sobre valores que
+          alguien tiene de verdad. La lectura da la media y la desviación resultantes.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Años de educación frente a edad: observados y los tres valores imputados</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Valores observados e imputados según el método de imputación" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Imputar una variable no es rellenar un hueco: es afirmar algo sobre una persona.</strong>
+          En <code>impute.csv</code> las variables que faltan son si la persona cometió un delito y si fue
+          violento. Un valor imputado ahí no es un dato de esa persona: es lo que el modelo cree que
+          diría alguien parecido. Sirve para estimar <strong>agregados</strong> —la proporción en la
+          población— y no sirve para nada a nivel individual. Un archivo imputado que se publica sin una
+          columna que marque qué valores son reales y cuáles no, es un archivo que va a ser mal usado.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §8.6: los métodos de imputación, con este mismo archivo.</li>
+          <li>Little y Rubin — caps. 4 y 5: imputación por regresión y sus variantes.</li>
+          <li>En R, el paquete estándar es <code>mice</code>; aquí se implementa a mano porque la mecánica
+            <em>es</em> la lección. Para producción, <code>mice</code> y luego
+            <code>mitools::MIcombine</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · La varianza que la imputación se come              -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">La varianza que la
+          imputación se come <span class="text-gray-400 font-normal text-2xl">/ Variance after imputation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver por qué imputar una vez produce intervalos
+              demasiado estrechos, aplicar las reglas de Rubin y medir la cobertura real con 2 000 réplicas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Aquí está el número incómodo del capítulo. Con las 17 personas que sí dijeron su educación, el error
+        estándar de la media es <strong>0,6403</strong>. Después de imputar los tres huecos por regresión, el
+        error estándar que reporta el software es <strong>0,5520</strong>.</p>
+
+      <p>Es decir: <strong>inventar tres valores hizo el intervalo un 14 % más estrecho</strong>. Se añadió
+        información que no existe y el software la contó como si fuera dato.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El error estándar que reporta cada método">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R15⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="tabla-ranking" data-ranking="metodos">
+        <p class="tabla-ranking-titulo">Los cinco métodos, ordenables por cualquier columna</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación ordenable de los métodos de imputación"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="warning">
+        <p><strong>El mecanismo del encogimiento.</strong> El error estándar de la media es
+          $s/\sqrt{n}$. Imputar sube $n$ de 17 a 20 —eso baja el denominador— y además <strong>reduce
+          $s$</strong>, porque los valores imputados están todos en el centro de la distribución (la media) o
+          exactamente sobre la recta (la regresión). Las dos cosas empujan en la misma dirección. El
+          hot-deck encoge menos, porque copia valores reales con su dispersión, pero también encoge: los
+          donantes se eligen entre los que respondieron.</p>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Las reglas de Rubin</h4>
+        <p>Con $m$ conjuntos imputados, cada uno con su estimación $\hat Q_j$ y su varianza $\hat U_j$:</p>
+        <p>$$\bar Q = \frac{1}{m}\sum_j \hat Q_j, \qquad
+             \bar U = \frac{1}{m}\sum_j \hat U_j, \qquad
+             B = \frac{1}{m-1}\sum_j (\hat Q_j - \bar Q)^2$$</p>
+        <p>$$T \;=\; \underbrace{\bar U}_{\text{incertidumbre de siempre}} \;+\;
+             \underbrace{\Big(1 + \tfrac{1}{m}\Big) B}_{\text{la que existe por imputar}}$$</p>
+        <p style="margin-bottom:0;">$B$ es la varianza <strong>entre</strong> imputaciones: mide cuánto cambia
+          la respuesta según qué valores plausibles se hayan puesto. Imputar una sola vez es exactamente
+          fijar $B = 0$ por decreto.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Imputación múltiple y reglas de Rubin">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R16⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Con tres huecos de veinte, la corrección es pequeña — y esa es la señal correcta.</strong>
+          $B = 0{,}0215$ frente a $\bar U = 0{,}3862$: el error estándar pasa de 0,6214 a 0,6418, un 3,3 % más
+          ancho, y la fracción de información perdida es 0,062. Las reglas de Rubin no inflan por inflar:
+          miden. Con un 30 % de faltantes en vez de un 15 %, la corrección es mucho mayor — que es lo que
+          mide la simulación siguiente.</p>
+      </div>
+
+      <h3>La prueba: 2 000 intervalos y cuántos aciertan</h3>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Cobertura empírica de los tres intervalos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R17⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Un intervalo «del 95 %» que cubre el 87,2 %.</strong> Con 30 % de faltantes MCAR imputados
+          por regresión, y datos completos como referencia: la cobertura pasa de <strong>92,65 %</strong> a
+          <strong>87,15 %</strong> si se imputa una vez y se calla, y vuelve a <strong>91,15 %</strong> con
+          imputación múltiple. El error de Monte Carlo de las tres cifras es ±0,49 puntos, así que las
+          diferencias son reales.</p>
+        <p style="margin-bottom:0;">Hay que leer las tres, no dos. La referencia <em>no</em> es 95 % sino
+          92,65 %: la asimetría de <code>acres92</code> ya descuenta dos puntos con $n = 200$, exactamente
+          como documentó el capítulo 4. Imputar y callarse cuesta <strong>5,5 puntos más</strong>; Rubin
+          recupera 4 de esos 5,5. Lo que Rubin no puede arreglar es la asimetría, porque no es su problema.</p>
+      </div>
+
+      <div class="simulador" data-simulador="cobertura">
+        <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> Cobertura y anchura de los tres intervalos</h4>
+        <p class="simulador-intro">Las barras son la cobertura empírica medida con 2 000 réplicas; la línea
+          discontinua, el 95 % nominal. El deslizador cambia lo que se muestra: cobertura o anchura media del
+          intervalo. Compara las dos vistas — el intervalo de la imputación única es el <em>más estrecho</em>
+          de los tres y el que menos acierta, que es la definición operativa de un intervalo engañoso.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Cobertura empírica del intervalo nominal del 95 %</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Cobertura y anchura de los tres intervalos comparados" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §8.7: varianza con datos imputados.</li>
+          <li>Rubin (1987) — <em>Multiple Imputation for Nonresponse in Surveys</em>: la fuente de las reglas.</li>
+          <li>Este material — cap. 7, módulo 8: el mismo tipo de medición sobre el error de ignorar los
+            conglomerados, que costaba mucho más.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · Diagnóstico: más allá de la tasa de respuesta      -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Más allá de la tasa
+          de respuesta <span class="text-gray-400 font-normal text-2xl">/ AAPOR rates and R-indicators</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reportar la no respuesta con los estándares
+              AAPOR y medir con el R-indicator lo que la tasa global esconde.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La encuesta de Gnap tiene una tasa de respuesta del <strong>39,8 %</strong> en el estrato grande. Ese
+        único número esconde que la escuela 15 devolvió el <strong>100 %</strong> de sus cuestionarios y la
+        escuela 41, el <strong>6,7 %</strong>. Dos encuestas con la misma tasa global pueden estar en
+        situaciones completamente distintas, y la fórmula del módulo 2 dice por qué: el sesgo depende de la
+        <em>brecha</em>, y una no respuesta concentrada en un tipo de unidad produce brechas grandes.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Tasas AAPOR y R-indicator</h4>
+        <p>La <strong>AAPOR</strong> (<em>American Association for Public Opinion Research</em>) estandarizó
+          el reporte: cada caso de la muestra recibe un código de disposición —entrevista completa, parcial,
+          rechazo, no contactado, no elegible— y de ahí salen las tasas. La más exigente, RR1, es
+          entrevistas completas sobre todos los casos elegibles; las demás relajan el numerador o el
+          denominador. <strong>Publicar «la tasa de respuesta» sin decir cuál es no informa de nada.</strong></p>
+        <p>El <strong>R-indicator</strong> (Schouten et al., 2009) mide la otra mitad del problema: no cuánta
+          gente falta, sino cuán <em>desigual</em> es la falta. Con $\hat\phi_k$ la propensión estimada de
+          cada unidad y $S(\hat\phi)$ su desviación típica poblacional:</p>
+        <p>$$R \;=\; 1 - 2\,S(\hat\phi)$$</p>
+        <p style="margin-bottom:0;">Vale 1 cuando todos responden con la misma probabilidad —la no respuesta
+          es entonces MCAR y no sesga— y baja hacia 0 cuando unos grupos responden y otros no. Es
+          independiente de la tasa global: se puede tener 80 % de respuesta con $R$ bajo, y eso es peor que
+          40 % con $R$ alto.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Tasas por escuela y R-indicator">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R18⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>$R = 0{,}473$.</strong> La propensión a responder varía de escuela a escuela con una
+          desviación típica de 0,263 sobre una media de 0,398: hay escuelas que devolvieron todo y escuelas
+          que no devolvieron casi nada. Ese número, y no el 39,8 %, es el que anuncia que el ajuste por
+          clases del módulo 3 iba a tener trabajo — y el que no anuncia, porque no puede, que las clases
+          disponibles no capturarían el mecanismo.</p>
+      </div>
+
+      <div class="simulador" data-simulador="rindicator">
+        <h4><i class="fas fa-chart-simple" aria-hidden="true"></i> La misma tasa, dos encuestas distintas</h4>
+        <p class="simulador-intro">Las barras son las 23 escuelas ordenadas por tasa de respuesta. El
+          deslizador <em>homogeneiza</em>: en 0 están las tasas reales; en 1, todas las escuelas responden al
+          39,8 % — la misma tasa global, la misma cantidad de datos, y $R = 1$. Mira cómo el R-indicator sube
+          mientras la tasa global no se mueve ni un punto.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Tasa de respuesta por escuela y su dispersión</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Tasas de respuesta por escuela y el efecto de homogeneizarlas" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Qué hay que publicar.</strong> Un informe de encuesta honesto trae, como mínimo: la tasa de
+          respuesta con su definición AAPOR, las tasas por estrato y por dominio, la comparación de la muestra
+          conseguida con cualquier total externo disponible, y —si existe— la comparación entre respondientes
+          y no respondientes en las variables auxiliares. Es la ficha técnica del capítulo 7 con la sección
+          que aquel capítulo dejó abierta.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>AAPOR — <em>Standard Definitions</em>: los códigos de disposición y las fórmulas RR1 a RR6.</li>
+          <li>Schouten, Cobben y Bethlehem (2009) — el R-indicator y su uso en encuestas oficiales.</li>
+          <li>Groves (2006) — por qué la tasa de respuesta predice mal el sesgo de no respuesta.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · Taller de diseño: el proyecto integrador           -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Taller de diseño
+          <span class="text-gray-400 font-normal text-2xl">/ The design workshop</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Recorrer las cinco decisiones del proyecto
+              integrador, con la rúbrica delante, antes de tomarlas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El proyecto integrador del curso pide diseñar, ejecutar y analizar una encuesta por muestreo sobre
+        una población finita real. No es un ejercicio de aplicar una fórmula: se evalúa que el diseño sea
+        probabilístico, que la estimación sea coherente con él, y que el equipo <strong>sepa decir qué no
+        puede concluir</strong>.</p>
+
+      <p>Este módulo es el taller previo. Cada etapa plantea una decisión, dice qué se entrega y nombra el
+        error que más se repite — que casi siempre es el mismo error del capítulo 1 cometido sobre el propio
+        trabajo.</p>
+
+      <div class="ciclo" data-ciclo="taller">
+        <ol class="ciclo-etapas" role="tablist" aria-label="Etapas del taller de diseño">
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="true" aria-controls="ciclo-taller-poblacion" tabindex="0">
+              <span class="ciclo-numero">Etapa 1</span>
+              <span class="ciclo-titulo">Población y marco</span>
+              <span class="ciclo-resumen">¿Qué lista existe de verdad?</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-taller-pi" tabindex="-1">
+              <span class="ciclo-numero">Etapa 2</span>
+              <span class="ciclo-titulo">Escribir $\pi_k$</span>
+              <span class="ciclo-resumen">El criterio que decide si el trabajo cuenta</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-taller-tamano" tabindex="-1">
+              <span class="ciclo-numero">Etapa 3</span>
+              <span class="ciclo-titulo">Tamaño</span>
+              <span class="ciclo-resumen">Justificado, no elegido «porque sí»</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-taller-campo" tabindex="-1">
+              <span class="ciclo-numero">Etapa 4</span>
+              <span class="ciclo-titulo">Campo y no respuesta</span>
+              <span class="ciclo-resumen">Lo que este capítulo añade al proyecto</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-taller-informe" tabindex="-1">
+              <span class="ciclo-numero">Etapa 5</span>
+              <span class="ciclo-titulo">Estimar y declarar límites</span>
+              <span class="ciclo-resumen">Qué NO puede concluirse</span>
+            </button>
+          </li>
+        </ol>
+        <p class="ciclo-retorno">Las etapas se recorren con clic o con las flechas del teclado; el taller se
+          repite en cada asesoría con el trabajo ya avanzado.</p>
+
+        <div class="ciclo-panel" id="ciclo-taller-poblacion" role="tabpanel">
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué decides</span>
+            <p>Qué población finita van a estudiar y qué <strong>lista</strong> existe de sus unidades. Las
+              dos cosas no son la misma, y la distancia entre ellas es el error de cobertura del capítulo 1.
+              Sirve cualquier población con marco accesible: los matriculados de un programa, los
+              establecimientos de una localidad, los libros de una biblioteca, los predios de un barrio.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué entregas</span>
+            <p>El protocolo de la semana 11: objetivo, población objetivo, marco muestral y
+              <strong>qué unidades de la población quedan fuera del marco</strong>, con la dirección del sesgo
+              que eso produce.</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">El error que más se repite</span>
+            <p>Confundir el marco con la población: decir que se muestrean «los estudiantes de la universidad»
+              cuando en realidad se muestrean «quienes responden un formulario». Es el
+              <em>Literary Digest</em> otra vez, en pequeño y con las mismas consecuencias.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-taller-pi" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué decides</span>
+            <p>El diseño. Y el criterio operativo es uno solo: para <strong>cada</strong> unidad de la
+              población, ¿pueden escribir su probabilidad de inclusión $\pi_k$? Si la respuesta es no, no es
+              un diseño probabilístico y el trabajo no cumple, por bien redactado que esté. Un formulario
+              difundido por WhatsApp no tiene $\pi_k$.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué entregas</span>
+            <p>El script de R con semilla fija que selecciona la muestra, y la expresión de $\pi_k$ para cada
+              unidad. Todo el curso vive aquí: MAS (cap. 2), estratos (cap. 4), conglomerados (cap. 5), PPT
+              (cap. 6).</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">El error que más se repite</span>
+            <p>La muestra de conveniencia disfrazada: un diseño que se describe con vocabulario técnico pero
+              donde nadie podría reconstruir $\pi_k$. La comprobación es fácil y hay que hacerla —contar,
+              simular, o comparar con la fórmula.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-taller-tamano" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué decides</span>
+            <p>Cuántas unidades, y por qué. El mínimo del encargo es $n = 30$ unidades finales, pero el número
+              tiene que salir de algo: de una precisión objetivo (cap. 2, módulo 7), de un presupuesto
+              (cap. 5, módulo 8), o de los dos.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué entregas</span>
+            <p>El cálculo, con el $S^2$ que se haya supuesto y de dónde salió. Si el diseño es por
+              conglomerados, además el deff previsto: 30 unidades finales en 3 conglomerados no equivalen a
+              30 unidades independientes.</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">El error que más se repite</span>
+            <p>Estratificar por una variable que no separa la variable de interés. Se ve muy bien en el
+              protocolo y no gana nada. Antes de comprometerse, estimar la ganancia: el simulador de
+              asignación del capítulo 4 la mide.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-taller-campo" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué decides</span>
+            <p>Qué hacer cuando la unidad sorteada no conteste — porque va a pasar. Sustituir por el vecino
+              <strong>no</strong> es una opción: rompe $\pi_k$ y convierte el diseño en una muestra de
+              conveniencia. Lo que sí se decide de antemano es cuántos intentos de contacto, qué variables
+              auxiliares se registran de los ausentes, y qué clases de ajuste se van a usar.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué entregas</span>
+            <p>El registro de disposición de cada caso —contactado, rechazo, no localizado, no elegible—, la
+              tasa de respuesta con su definición, y el ajuste de pesos si se hizo. Si es viable, una
+              submuestra de no respondientes: es lo que convirtió la encuesta de Gnap en el mejor ejemplo de
+              este capítulo.</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">El error que más se repite</span>
+            <p>No registrar nada de los que faltan, y descubrirlo al escribir el informe. Sin variables
+              auxiliares de los ausentes, la no respuesta es irreparable: no se puede ajustar ni evaluar.
+              Cinco minutos de registro en campo valen más que cualquier técnica posterior.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-taller-informe" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué decides</span>
+            <p>Qué se concluye y, sobre todo, qué <strong>no</strong>. Toda estimación va con su error
+              estándar y su intervalo, calculados con el diseño usado. Si el diseño es complejo, el análisis
+              tiene que reconocerlo: analizar una muestra por conglomerados como si fuera aleatoria simple es
+              lo que más penaliza la rúbrica, porque produce intervalos falsamente estrechos.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué entregas</span>
+            <p>El informe final, máximo 10 páginas sin anexos, con la ficha técnica del capítulo 7 y la
+              sección de no respuesta de este. Y la declaración del uso de IA: en qué se usó, qué devolvió y
+              <strong>qué verificación se hizo</strong> (módulo 9).</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">El error que más se repite</span>
+            <p>Limitaciones genéricas de manual en vez de las propias. «El estudio tiene limitaciones» no dice
+              nada; «nuestro marco dejaba fuera a los estudiantes de jornada nocturna, que son el 22 % del
+              programa, y son precisamente los que trabajan» sí.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La rúbrica se entrega con el enunciado, en la semana 9. Una rúbrica que se conoce después de trabajar
+        no orienta a nadie:</p>
+
+      <div class="rubrica" data-rubrica="proyecto"></div>
+
+      <div class="note">
+        <p><strong>El criterio que más enseña es C5.</strong> Un informe que reporta su no respuesta y razona
+          el sesgo que introduce vale más que uno con números impecables sobre un marco que dejaba fuera a
+          media población. Este capítulo entero es el material de C5: la fórmula del módulo 2 permite
+          <em>acotar</em> el sesgo aunque no se pueda estimar, y el módulo 7 dice qué publicar.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Este material — cap. 7, módulo 9: el ciclo completo de diseño de una encuesta, del que este
+            taller es la versión ejecutable.</li>
+          <li>Lohr — cap. 8 y §1.2: el proceso de una encuesta de principio a fin.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

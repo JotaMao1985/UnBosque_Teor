@@ -12,6 +12,11 @@ en el formato de Series de Tiempo**, cubriendo las 16 semanas del cronograma del
 marco de diseño (π-estimador / Horvitz–Thompson) de Gutiérrez como columna vertebral y Lohr como
 orden y fuente de ejemplos.
 
+> [!success] Estado: **completado el 2026-07-28**. Los ocho capítulos están escritos, verificados y
+> publicados: 88 módulos, 65 simuladores, 88 preguntas de autoevaluación, 33 ejercicios guiados y
+> 2 399 cifras contrastadas contra la salida real (2 035 en los bloques de código y 364 en el
+> texto). Queda abierta la revisión de contenido por Javier (Checkpoint 4).
+
 El sitio se publica en **https://jotamao1985.github.io/UnBosque_Teor/muestreo/** desde el
 repositorio `JotaMao1985/UnBosque_Teor` (rama `gh-pages`). Hasta el 2026-07-28 vivía en
 `JotaMao1985/Muestreo-Un_Bosque_JMS`, que ahora solo conserva una página de redirección.
@@ -138,7 +143,7 @@ Muestreo/                              ← RAÍZ DEL REPO GIT (rama main) = UnBo
         ├── capitulo-5-conglomerados.html             ✅ fase 3
         ├── capitulo-6-probabilidades-desiguales.html ✅ fase 4
         ├── capitulo-7-encuestas-complejas.html       ✅ fase 4
-        └── capitulo-8-no-respuesta-ponderacion.html  (fase 5)
+        └── capitulo-8-no-respuesta-ponderacion.html  ✅ fase 5
 ```
 
 Cuando Series de Tiempo se mude aquí, entrará como `sitio/series-de-tiempo/` y sus fuentes tendrán
@@ -391,6 +396,7 @@ Se heredan de Series de Tiempo: `.quiz`, `.ejercicio-guiado`, `.derivacion`, `.c
 | `.glosario-notacion` | Tabla plegable que traduce la notación de Lohr ↔ Gutiérrez (`t̂_HT` ↔ `t̂_π`, `S²` ↔ `S²_yU`, …). Es el puente que hace legible el material con dos fuentes | cap. 2 y luego todos |
 | `.arbol-error` ✅ | Árbol plegable del error total: cada hoja dice si sesga o solo dispersa, si aumentar $n$ la reduce y en qué capítulo se trata. **Hecho en la fase 2**; en la plantilla y en el cap. 2, y usado en el módulo 7 del cap. 1 | cap. 1, y de nuevo en el 8 |
 | `.diagrama-diseno` | Esquema recorrible de un diseño complejo (población → estratos → UPM → USM → pesos) | caps. 4, 5, 6, 7 (ampliado al 4 el 2026-07-27) |
+| `.rubrica` ✅ | Rúbrica analítica recorrible por criterio: cada uno con sus cuatro niveles, su rango de puntos y lo que hay que **ver** en el trabajo, más la franja de condiciones que anulan la entrega. **Hecha en la fase 5**; en la plantilla y en los caps. 1–7 (CSS + motor), con su única instancia en el módulo 8 del cap. 8 | cap. 8 |
 
 **Regla de retropropagación (heredada, no negociable):** un componente nuevo no está terminado
 hasta que está en la plantilla **y** en todos los capítulos anteriores que lo necesiten. Si el
@@ -1091,20 +1097,188 @@ inyecciones de prueba.
   muestra que falla por un 15 %: eso motiva la insesgadez *en promedio* mucho mejor que un ejemplo
   elegido para dar el resultado exacto, que además huele a truco.
 
-### Fase 5 — Capítulo 8, portada y publicación
-- [ ] **T5.1** Cap. 8 — no respuesta, ponderación, imputación, taller de diseño y auditoría de IA.
-- [ ] **T5.2** `index.html` — portada con 8 tarjetas, totales actualizados. *La tarjeta del cap. 2
-      ya se corrigió en la fase 1* (decía «Muestreo Aleatorio Simple · 8 módulos», que dejó de ser
-      cierto en cuanto se publicó el capítulo nuevo); las otras siguen describiendo el material
-      viejo hasta que se reescriban.
-- [ ] **T5.3** `README.md` — tabla de contenido, tecnología, cómo está construido, créditos.
-- [ ] **T5.4** Auditoría final de sitio: recuento de módulos/simuladores/preguntas/ejercicios;
-      selectores CSS homogéneos entre los 8 capítulos; consola limpia en los 8.
-- [ ] **T5.5** Publicar: `git commit` + `git push origin main`; verificar el sitio en vivo.
+### Fase 5 — Capítulo 8, portada y publicación — ✅ COMPLETADA (2026-07-28)
 
-### Checkpoint 4 — Cierre
-- [ ] Los 8 capítulos cubren las 16 semanas del cronograma, verificado contra el syllabus.
-- [ ] Revisión de contenido por Javier.
+**Decisiones tomadas al abrir la fase, consultadas a Javier:**
+1. **Hilo de datos: `teachers`/`teachnr` como caso central** (recomendado, aceptado). Es la encuesta
+   de carga laboral docente de Gnap (1995), y es el único caso del curso en el que el sesgo de no
+   respuesta se puede **medir** en vez de suponerlo, porque la autora submuestreó a los no
+   respondientes. `profresp` + `profrespacs` estrenan la calibración contra totales reales de la
+   ACS; `impute` lleva los métodos de imputación; `intell*` queda para el ejercicio 1; y `agpop`
+   sirve para simular los mecanismos, que es la única forma de conocer la verdad.
+2. **Componente nuevo `.rubrica`, retropropagado a los 7 capítulos** (Javier amplió sobre la
+   recomendación de no crear componentes en la última fase, fiel a su patrón). Rúbrica recorrible
+   por criterio, con sus cuatro niveles y el rango de puntos.
+3. **Imputación múltiple a mano + `mitools::MIcombine`** (recomendado, aceptado): cero paquetes
+   nuevos, y la mecánica de Rubin —que es el tema del módulo— queda a la vista en vez de dentro de
+   una caja negra. `mice` se menciona como el paquete estándar para producción.
+4. **Módulo 9 con tres afirmaciones refutadas con código + lista de verificación** (recomendado,
+   aceptado), en vez de auditar un diseño de IA inventado.
+
+Supuestos aplicados sin re-preguntar: marco completo `N = 3 078`; Python solo donde el cálculo
+explícito es la lección (fórmula del sesgo, ajuste por clases, hot-deck, reglas de Rubin);
+ejercicios originales sobre datos de Lohr; publicar al cierre auditado de la fase.
+
+- [x] **T5.0 — Componente `.rubrica`** → `ensamblado/componentes/rubrica.{css,js}` y
+      `retropropaga_rubrica.py` (idempotente). Rúbrica analítica recorrible: se elige un criterio y
+      se ven sus cuatro niveles ordenados de mayor a menor, cada uno con su rango de puntos y con
+      lo que hay que **ver** en el trabajo. Franja final con las condiciones que anulan la entrega.
+      Insertado en la plantilla (CSS + motor + demostración) y en los caps. 1–7 (CSS + motor, sin
+      instancia). *Verificado:* idempotencia, los 7 ensambladores siguen reproduciendo byte a byte,
+      `node --check` en los 8 motores, y la demo probada en navegador (2 criterios, 4 niveles,
+      KaTeX en la franja de anulación, 822 px dentro de 904). Los 8 capítulos pasan de 168 a
+      **187 clases CSS, 0 faltantes**.
+- [x] **T5.1 — Capítulo 8** → `capitulo-8-no-respuesta-ponderacion.html` (352 KB), nuevo.
+      **11 módulos, 8 simuladores + 1 tabla-ranking, 11 preguntas (los 4 tipos), 4 ejercicios
+      guiados, 29 bloques (25 R + 4 Python)**, `.glosario-notacion` propio, la **segunda instancia
+      del `.arbol-error`** (el árbol del cap. 1 releído con los ocho capítulos dentro), un `.ciclo`
+      con las cinco decisiones del taller y la **primera `.rubrica`** del material.
+      Precálculo en `genera_cap8.R` → `cap8_datos.json`; ensamblado en `ensambla_cap8.py`.
+- [x] **T5.2 — Portada del curso** con 8 tarjetas y totales recontados por `cuenta_sitio.py` sobre
+      los propios archivos: **88 módulos, 65 simuladores**. Actualizada también la **portada
+      paraguas** `sitio/index.html`, que se había quedado en la fase 2 («4 capítulos · 43 módulos ·
+      22 simuladores»).
+- [x] **T5.3 — READMEs.** El del repositorio gana la tabla de herramientas y la regla de oro del
+      ensamblado; el del curso, la tabla de los 8 capítulos con sus temas y la lista de componentes
+      propios; el de `ensamblado/`, el anotador de salidas y sus dos trampas.
+- [x] **T5.4 — Auditoría final del sitio.** Ver abajo.
+- [x] **T5.5 — Publicación.** `git push origin main` + `git subtree push --prefix sitio origin
+      gh-pages`.
+
+### Auditoría de la fase 5 (2026-07-28)
+
+| Comprobación | Resultado |
+|---|---|
+| Cifras `#>` contrastadas con la salida real | cap. 8: **458/458** · regresión caps. 1–7: 155 + 323 + 151 + 246 + 163 + 315 + 224, 0 discrepancias. **Total del sitio: 2 035** |
+| Cifras de la **prosa** contrastadas | **364 respaldadas, 0 sin respaldo** en los 8 capítulos (79 de ellas en el cap. 8) |
+| Sesiones de R y de Python encadenadas | terminan con código 0 en los ocho capítulos |
+| Doble vía para toda varianza | ee del estimador de razón sobre conglomerados: fórmula del cap. 5 a mano ↔ `survey`, **coinciden a 4·10⁻¹⁵**; post-estratificación: $N_c/n_c$ a mano ↔ `postStratify` (dif. 5·10⁻¹⁰) y los pesos suman el total de control exacto; reglas de Rubin a mano ↔ `mitools::MIcombine` (dif. 0); estimador de dos fases por tasas ↔ por conteos |
+| Construcción de los mecanismos, comprobada | la propensión media de MNAR es 0,60 en las cinco clases de ajuste, así que el ajuste no puede verla; con `stopifnot` en el precálculo |
+| Regresión del verificador de bloques | el fixture con la cifra falsa sigue cazándola (6 de 7) |
+| Regresión del verificador de **prosa** | inyectada `$-1{,}10$ → $-7{,}31$` en modo matemático: **la caza** (antes de esta fase no la habría visto, ver hallazgo 1) |
+| `node --check` del motor | OK en la plantilla y en los caps. 1–8 |
+| Consola del navegador | 0 errores y **0 avisos** en los **88 módulos** de los ocho capítulos |
+| KaTeX | 0 errores en los ocho; **1 652 expresiones** renderizadas (152 en el cap. 8) |
+| Gráficos por módulo | `charts` = `canvas` en los 88 módulos; al salir del módulo quedan solo los del activo |
+| Simuladores en todos sus valores y extremos | 8 de 8, **123 estados** probados (39 en barrido completo de los discretos + 84 en pasada densa de los tres continuos), 0 lecturas vacías, 0 `NaN`/∞ |
+| Componentes | `.rubrica`: 6 criterios × 4 niveles, 100 pts, KaTeX en foco y en la franja de anulación; `.arbol-error`: 12 nodos con 12 fichas distintas; `.ciclo`: 5 etapas × 3 campos; `.tabla-ranking`: 5 filas ordenables por 3 columnas; `.glosario`: 12 filas |
+| Autoevaluación | 11 preguntas nuevas, los 4 tipos (3 numéricas, 5 de opción, 2 múltiples, 1 gráfica), 7 módulos cubiertos, flujo fallo → pista → reintento correcto, y el marcador distingue primer y segundo intento |
+| Ejercicios guiados | 4 nuevos; los 8 paneles abren; las 4 soluciones con su bloque verificado |
+| CSS frente a la plantilla | caps. 1–8: **187 clases, 0 faltantes**; llaves 434/434 |
+| Geometría a 1440 px | cabecera 1430, lateral 280, contenido 904; sin solapes ni desbordamiento en ningún módulo |
+| Módulos que formalizan antes de anclar | **0 de 88** (`mide_abstraccion.py`) |
+| JSON incrustado | válido e **idéntico** al de `precalculo/salidas/` |
+| Regla de oro del ensamblado | los **ocho** capítulos se reproducen byte a byte |
+| Enlaces y permisos | los 8 `href` de `index.html` resuelven; los 9 HTML del sitio en `644` |
+| `.gitignore` de lista blanca | `git check-ignore` limpio sobre los 14 archivos y carpetas nuevos |
+
+**Seis hallazgos de la auditoría que cambiaron el material o las herramientas:**
+
+1. **`verifica_bloques.py --prosa` no miraba las cifras escritas en modo matemático, que son la
+   mitad del material.** La expresión regular exigía `\d+,\d{2,}` en texto plano, y el material
+   escribe `$-1{,}10$`, `$306\,677$`: la coma va entre llaves y el `$` estaba en el *lookbehind*.
+   Se descubrió inyectando una cifra falsa y viendo que **no protestaba**. Corregido: se normaliza
+   el LaTeX antes de buscar y el signo entra en la captura (sin eso, `$t = -4{,}73$` se comparaba
+   como $+4{,}73$). Consecuencia inmediata: la cobertura de prosa pasa de 246 a **364 cifras**, y
+   con ella salieron a la luz los hallazgos 2 y 3. **La cifra de «246 cifras de prosa verificadas»
+   de la fase 4.5 solo cubría las de texto plano.**
+2. **Los capítulos 1 y 8 usaban recuentos distintos del mismo sondeo de 1936.** El cap. 1 trabaja
+   con las cifras del relato de Lohr §1.1 (1 293 669 y 972 897 papeletas, porcentajes redondeados
+   de la elección) y da un sesgo de **−19,32 puntos**; el cap. 8 usa las del ejercicio 15.14 de la
+   3.ª ed. (1 286 511 y 966 352, votos exactos) y da **−19,57**. Las dos son de la misma autora.
+   Se declara en una caja de advertencia del módulo 2 con el motivo de la elección —la identidad
+   de Meng necesita $\sigma_y$ y $f$ sin redondear—, en vez de quedarse con la que saliera mejor.
+3. **Un redondeo mal hecho, cazado por la herramienta recién arreglada:** el texto anunciaba
+   $B = 0{,}0214$ y el valor es 0,02145037, que a cuatro decimales es **0,0215**. Corregido.
+4. **El `<meta name="description">` del capítulo 7 decía «Capítulo 6».** Es el residuo del clon con
+   `sed` que ya había provocado que el cap. 7 sobrescribiera el archivo del 6 en la fase 4:
+   la misma cadena mal sustituida, esta vez en un sitio que no se ve al abrir la página. Corregido
+   en `ensambla_cap7.py` y republicado.
+5. **La portada paraguas se había quedado en la fase 2** («4 capítulos · 43 módulos ·
+   22 simuladores»). Las fases 3 y 4 actualizaron la del curso y olvidaron la del repositorio.
+   Ahora los totales de las dos portadas y del README los produce `cuenta_sitio.py`, que los
+   cuenta sobre los archivos.
+6. **El simulador del R-indicator leía los campos un nivel por encima de donde están** (`G.school`
+   en vez de `G.escuelas.school`) y rompía el módulo 7 entero. Lo cazó el recorrido instrumentado
+   de los 11 módulos, no la lectura del código — es la tercera vez que ese recorrido caza un fallo
+   que ninguna otra comprobación ve.
+
+**Cinco resultados del capítulo que conviene recordar:**
+
+1. **El sesgo de no respuesta, medido y no supuesto.** Los profesores que **no** devolvieron el
+   cuestionario sobre carga laboral trabajan 36,46 horas semanales; los que sí, 34,63. Con una tasa
+   de respuesta del 39,8 %, el sesgo vale **−1,10 horas**: la encuesta subestima la carga docente
+   en más de una hora por semana, y el error estándar es 0,53, así que **el sesgo lo duplica**. A
+   partir de $n = 10$ el sesgo ya domina al error estándar.
+2. **El ajuste de pesos empeoró la estimación, y se puede demostrar.** Sin ajustar 34,63; por
+   clases de tamaño 34,37; con una clase por escuela 33,82; la verdad aproximada, 35,73. Los tres
+   ajustes se alejan, y el más fino es el que más. No es un fallo del método: es que el mecanismo
+   es MNAR respecto a las variables disponibles —lo que impide contestar es la carga del propio
+   profesor—, y la simulación de los cuatro mecanismos lo había anticipado con precisión: MAR 100 %
+   del sesgo eliminado, «MAR fino» 82 %, **MNAR −1 %**.
+3. **Dos millones de papeletas que valían por seis personas.** La correlación entre responder y
+   votar a Landon fue de 0,093 y, multiplicada por $\sqrt{(1-f)/f} = 4{,}33$, produjo 19,6 puntos
+   de error. El cap. 1 ya había llegado a ese número comparando ECM a mano; la identidad de Meng lo
+   da en una línea y dice de qué depende.
+4. **Imputar y callarse deja un error estándar MENOR que tirar las filas incompletas.** Con casos
+   completos, 0,6403; imputando por regresión, 0,5520 — un 14 % más estrecho con tres valores
+   inventados dentro. Medido con 2 000 réplicas: la cobertura del IC del 95 % cae de 92,65 %
+   (datos completos, que ya no es 95 % por la asimetría de `acres92`) a **87,15 %**, y las reglas
+   de Rubin recuperan 4 de esos 5,5 puntos.
+5. **La variable con más sesgo del archivo es `assist`**: los no respondientes tienen 2,76 veces
+   más minutos de auxiliar en el aula (152,3 contra 55,1). El sesgo relativo es del **−51,5 %**:
+   cualquier conclusión sobre recursos de apoyo basada en esa encuesta está gravemente sesgada. Es
+   el ejercicio 4.
+
+**Anotaciones de la fase, para no repetir el tropiezo:**
+- **Una herramienta de verificación también hay que verificarla, y con una inyección que no exista
+  en el archivo.** El primer intento de probar el modo `--prosa` usó `-2{,}47`, que resultó ser el
+  redondeo de una desviación típica real del capítulo, y el verificador la dio por buena
+  legítimamente. La conclusión no es que la herramienta falle: es que comprueba que **la cifra
+  exista**, no que sea **la correcta en ese sitio**. Eso último no lo puede hacer una regla.
+- **El primer diseño de la simulación de mecanismos no servía.** Con `acres87` y `acres92`
+  correlacionados a 0,995, «MAR sobre x» y «MNAR sobre y» eran casi el mismo mecanismo (81 464
+  contra 81 476 de sesgo). Hubo que construir MNAR como dependiente de $y$ **dentro** de cada clase
+  de ajuste: así la tasa de respuesta de cada clase vale 0,60 exactamente y el ajuste no tiene nada
+  que ver. La definición operativa vale más que la nominal.
+- **Un auxiliar demasiado bueno tampoco sirve para enseñar.** La simulación de cobertura con
+  `acres87` ($R^2 = 0{,}99$) daba 0,9240 contra 0,9265: la imputación acertaba casi siempre y no
+  había lección. Con `largef92` ($R^2 = 0{,}46$), que es la fuerza de un modelo real, la diferencia
+  salta a 5,5 puntos.
+- **El colapso de categorías de un archivo ajeno se deduce y se declara.** `profresp` codifica la
+  edad en 4 grupos y `profrespacs` en 3, sin codebook. De los tres colapsos ordenados posibles solo
+  uno deja los márgenes a menos de 3,4 puntos de la ACS; los otros dos se van a 22 y 31. El
+  argumento es sólido porque *sabemos* que el panel se desvía —21 puntos en educación— y aun así la
+  edad encaja. Va en el bloque, con la evidencia, y en una caja de advertencia.
+- **Un `print("\n...")` dentro de un bloque hace abortar al ensamblador**, que lo confunde con
+  restos del marcador. Usar `print()` y luego el texto.
+- **Los `library()` que no cargue la cabecera del verificador tienen que ir dentro del bloque.** Es
+  la misma regla que ya existía para `options(scipen=)`: el bloque publicado tiene que correr solo.
+  `mitools` lo necesitaba el bloque de las reglas de Rubin.
+- **El anotador de salidas es ahora una herramienta versionada** (`precalculo/anota_salidas.py`),
+  no un script de usar y tirar como en la fase 4. Ejecuta la cadena, parte la salida por los
+  marcadores y reescribe los `#>` de cada bloque. Con `--check` sirve de regresión.
+
+### Checkpoint 4 — Cierre — ✅ SUPERADO (2026-07-28)
+- [x] **Los 8 capítulos cubren las 16 semanas del cronograma**, verificado contra el syllabus
+      (`Syllabus/Syllabus_Muestreo_Estadistico_2026-II.pdf`, sección 4):
+
+  | Semanas | Syllabus | Material |
+  |---|---|---|
+  | 1–2 | Lohr 1.1–1.6: *Literary Digest*, sesgos, cuestionarios | cap. 1 (10 M) |
+  | 3–4 | Lohr 2.1–2.6: MAS, tamaño de muestra, sistemático | cap. 2 (11 M) |
+  | 5–6 | Lohr 3.1–3.3: razón, regresión, dominios | cap. 3 (12 M) |
+  | 7–9 | Lohr 4.1–4.8: estratificado, asignación, post-estratificación y cuotas | cap. 4 (12 M) |
+  | 10–11 | Lohr 5.1–5.5: conglomerados una y dos etapas, DEFF | cap. 5 (11 M) |
+  | 12–13 | Lohr 6.1–6.5: PPT, Hansen–Hurwitz, Horvitz–Thompson | cap. 6 (11 M) |
+  | 14 | Lohr 7.1–7.3: encuestas complejas, pesos y DEFF | cap. 7 (10 M) |
+  | 15 | Lohr 8.1–8.6 + **AI-assisted survey design workshop** | cap. 8, módulos 1–9 |
+  | 16 | Integración, revisión de los tres módulos, proyecto integrador | cap. 8, módulos 8, 10 y 11 |
+
+  Las dos actividades que el syllabus nombra explícitamente para las semanas 15 y 16 —el taller de
+  diseño con verificación crítica de IA, y la revisión integradora de los módulos I, II y III—
+  tienen módulo propio (9 y 10) y no quedan como texto suelto.
+- [ ] **Revisión de contenido por Javier.** Pendiente.
 
 ---
 
@@ -1147,15 +1321,19 @@ Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
 
 ## Estimación de volumen
 
-| | Al empezar | Hoy (tras fase 4) | Objetivo |
+| | Al empezar | Al cierre (fase 5) | Objetivo |
 |---|---:|---:|---:|
-| Capítulos en el formato nuevo | 0 | **7** | 8 |
-| Módulos | 37 (formato viejo) | **77** | ~88 |
-| Simuladores | 0 | **57** (+7 tablas-ranking) | ~59 |
-| Preguntas de autoevaluación | 0 | **77** | ~64 ✅ superado |
-| Ejercicios guiados | 0 | **29** | ~26 ✅ superado |
-| Bloques de código verificados | 0 | **154** (1 577 cifras) | — |
-| Semanas del cronograma cubiertas | 9 / 16 | **14 / 16** | 16 / 16 |
+| Capítulos en el formato nuevo | 0 | **8** ✅ | 8 |
+| Módulos | 37 (formato viejo) | **88** ✅ | ~88 |
+| Simuladores | 0 | **65** (+8 tablas-ranking) ✅ | ~59 |
+| Preguntas de autoevaluación | 0 | **88** ✅ | ~64 |
+| Ejercicios guiados | 0 | **33** ✅ | ~26 |
+| Bloques de código verificados | 0 | **183** (2 035 cifras + 364 de prosa) | — |
+| Semanas del cronograma cubiertas | 9 / 16 | **16 / 16** ✅ | 16 / 16 |
+
+Los totales los cuenta `precalculo/cuenta_sitio.py` sobre los archivos publicados, no se escriben
+a mano. Componentes: 8 glosarios, 2 árboles de error (caps. 1 y 8), 4 diagramas de diseño
+(caps. 4–7), 2 ciclos (caps. 7 y 8) y 1 rúbrica (cap. 8).
 
 Los simuladores que aparecen listados en cada capítulo son el núcleo mínimo; la cifra del
 encabezado de cada capítulo (`~n S`) es el objetivo, y suele incluir alguno más de apoyo.
@@ -1176,9 +1354,9 @@ encabezado de cada capítulo (`~n S`) es el objetivo, y suele incluir alguno má
 
 ## Pendiente que no depende de este plan
 
-- [ ] **Cambiar la fuente de GitHub Pages a `gh-pages` / `/`** en Settings → Pages del repositorio
-      `JotaMao1985/Muestreo-Un_Bosque_JMS`. Es un ajuste en la web de GitHub; hasta hacerlo, el
-      sitio publicado no refleja la nueva estructura.
+- [x] ~~**Cambiar la fuente de GitHub Pages a `gh-pages` / `/`**~~ → hecho el 2026-07-28 por API con
+      el token de `gh`, en `UnBosque_Teor`. El repositorio viejo `Muestreo-Un_Bosque_JMS` mantiene
+      su Pages sirviendo solo redirecciones.
 - [ ] Decidir si los 82 CSV de Lohr siguen versionados en el repositorio público. Están incluidos
       porque sin ellos los precálculos no son reproducibles, y **pesan 13 MB** —el grueso son
       `vius.csv` (7,8 MB), `ipums.csv` (1,9 MB) y `nhanes.csv` (1,0 MB)—. Git lo soporta sin
