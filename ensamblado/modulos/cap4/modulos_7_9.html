@@ -1,0 +1,298 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · Un modelo para el estratificado                    -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Un modelo para el
+          estratificado <span class="text-gray-400 font-normal text-2xl">/ A model</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Explicar con la descomposición ANOVA de dónde sale
+              exactamente la ganancia del estratificado, y verla en la distribución de muestreo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Todo el capítulo ha repetido «la varianza entre estratos desaparece». Este módulo lo convierte en una
+        identidad contable. La variabilidad total de la población se parte en dos sumandos que no comparten nada:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">La descomposición ANOVA de la población</p>
+        $$\underbrace{\sum_{k \in U} (y_k - \bar{y}_U)^2}_{\text{SST: total}}
+        \;=\;
+        \underbrace{\sum_{h} N_h (\bar{y}_{U_h} - \bar{y}_U)^2}_{\text{SSB: entre estratos}}
+        \;+\;
+        \underbrace{\sum_{h} \sum_{k \in U_h} (y_k - \bar{y}_{U_h})^2}_{\text{SSW: dentro de estratos}}$$
+        <p style="margin-bottom:0;">El MAS carga con SST entera. El estratificado solo carga con SSW: el término
+          SSB — lo lejos que están las medias de los estratos unas de otras — lo paga el <em>diseñador</em> al fijar
+          las cuotas, no el azar.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La descomposición ANOVA de agpop por región">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+      </div>
+
+      <p>El 18 % de la variabilidad de <code>acres92</code> vive <em>entre</em> regiones — y el deff de la asignación
+        proporcional era 0,82. No es coincidencia: para la proporcional (ignorando los fpc), $\text{deff} \approx
+        \text{SSW}/\text{SST} = 1 - R^2$. La regla del módulo 6 era esto: <strong>estratificar renta exactamente lo
+        que la variable de estratificación explica de $y$</strong>. Por eso <code>acres87</code> ($R^2 \approx
+        0{,}46$ con la superficie del 92) gana a la región ($R^2 = 0{,}18$) y por eso el azar ($R^2 = 0$) no renta
+        nada.</p>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-modelo">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver el modelo de superpoblación que hay detrás</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-modelo" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>El enfoque asistido por modelos (capítulo 3, módulo 9) también ilumina este diseño. El modelo
+                implícito del estratificado es el ANOVA de un factor:</p>
+              $$Y_k = \mu_h + \varepsilon_k \quad \text{si } k \in U_h, \qquad
+                E_M(\varepsilon_k) = 0, \quad V_M(\varepsilon_k) = \sigma_h^2$$
+            </li>
+            <li>
+              <p>Bajo ese modelo, la estrategia óptima es exactamente la del capítulo: estimar cada $\mu_h$ con la
+                media muestral de su estrato y agregar con los pesos $W_h$. El estratificado es al ANOVA lo que la
+                razón era a la recta por el origen.</p>
+            </li>
+            <li>
+              <p>Y la moraleja asistida por modelos de siempre: si el modelo es malo (las medias $\mu_h$ son todas
+                iguales), el estimador <strong>no se sesga</strong> — el diseño lo protege —, solo deja de ganar
+                varianza. Comparar con el estimador de razón, que tampoco se sesgaba (asintóticamente) con un mal
+                modelo pero podía perder contra la expansión.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <p>La distribución de muestreo hace visible todo lo anterior. El precálculo sorteó <strong>10 000 muestras</strong>
+        de cada diseño sobre <code>agpop</code> — urna única contra estratificado proporcional — y estimó la media con
+        cada una:</p>
+
+      <div class="simulador" data-simulador="distribucion">
+        <h4><i class="fas fa-chart-area" aria-hidden="true"></i> 10 000 muestras de cada diseño</h4>
+        <p class="simulador-intro">Los histogramas son las 10 000 réplicas reales de cada diseño (verde: MAS; naranja:
+          estratificado proporcional); la línea de puntos, la media verdadera. Con el deslizador superpones la curva
+          normal teórica de cada asignación del módulo 4 — la campana de Neyman es visiblemente más estrecha que la
+          del MAS. La lectura compara varianza teórica y empírica: el precálculo comprobó que difieren menos del
+          5 %.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Distribución de muestreo de la media estimada, n = 300</p>
+        <div class="grafico-wrapper" style="height:280px;">
+          <canvas aria-label="Histogramas de las réplicas del MAS y del estratificado con curvas teóricas" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La cobertura empírica no llegó al 95 %.</strong> Con $n = 300$, el intervalo normal cubrió la
+          media verdadera el <strong>93,1 %</strong> de las veces bajo MAS y el <strong>93,4 %</strong> bajo
+          estratificado. No es un error del material ni del diseño: <code>acres92</code> es fuertemente asimétrica
+          (el módulo 6 del capítulo 2 documentó el mismo efecto), y la aproximación normal paga ese peaje incluso
+          con 300 observaciones. Estratificar mejora la varianza, <em>no</em> arregla la asimetría: las dos cosas
+          son problemas distintos.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.6 (2.ª ed.) / §3.4.3 (3.ª ed.): el modelo del muestreo estratificado.</li>
+          <li>Gutiérrez — cap. 17: el enfoque asistido por modelos, del que este módulo es un caso.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · El efecto de diseño                                -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El efecto de diseño
+          <span class="text-gray-400 font-normal text-2xl">/ Design effect</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Condensar el capítulo en un solo número —el deff—,
+              medirlo con las dos muestras reales del material y ordenar todos los diseños vistos.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este material va a comparar diseños durante cinco capítulos más, así que conviene fijar ya la vara de
+        medir. La propuso Kish:</p>
+
+      <div class="definition">
+        <h4>Efecto de diseño (deff) y tamaño de muestra efectivo</h4>
+        $$\text{deff} = \frac{V(\hat{\theta} \mid \text{diseño})}{V(\hat{\theta} \mid \text{MAS con el mismo } n)},
+        \qquad n_{\text{ef}} = \frac{n}{\text{deff}}$$
+        <p style="margin-bottom:0;">deff &lt; 1: el diseño le gana al MAS (el estratificado vive aquí). deff &gt; 1:
+          el diseño pierde contra el MAS — el capítulo 5 mostrará que los conglomerados viven allí, y con cifras
+          grandes. El tamaño efectivo traduce el deff a la moneda que todo el mundo entiende: «estas $n$ entrevistas
+          valen como $n_{\text{ef}}$ de un MAS».</p>
+      </div>
+
+      <p>Las dos muestras oficiales del material lo miden con datos reales — mismo $n = 300$, misma población, un
+        sorteo con estructura y otro sin ella:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El deff empírico con agsrs y agstrat">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+      </div>
+
+      <p>deff estimado 0,75: <strong>las 300 entrevistas de <code>agstrat</code> rinden como 399 de un MAS</strong>.
+        Estratificar por región regaló el equivalente a 99 entrevistas — un tercio del presupuesto — a cambio de
+        conocer una columna que el marco ya traía. La tabla siguiente ordena todo lo que el capítulo ha medido;
+        pulsa las cabeceras para reordenarla:</p>
+
+      <div class="tabla-ranking" data-ranking="disenos">
+        <p class="tabla-ranking-titulo">Todos los diseños del capítulo, sobre la misma población</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación ordenable de los diseños del capítulo"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="note">
+        <p><strong>El deff viaja mal entre variables.</strong> El 0,75 vale para <code>acres92</code>; para la
+          proporción de condados pequeños, u otra variable menos ligada a la región, el deff de esta misma muestra es
+          otro. En encuestas multipropósito se reporta el deff por variable — y el capítulo 7 lo usará como pieza
+          de diagnóstico central, incluida su versión con pesos de Kish.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Kish, <em>Survey Sampling</em> (1965) — §8.2: el efecto de diseño original.</li>
+          <li>Lohr — §7.5 (ambas ediciones): deff en encuestas complejas, el destino de esta idea.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · Estratificado con probabilidades proporcionales    -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estratificado con
+          probabilidades proporcionales <span class="text-gray-400 font-normal text-2xl">/ Stratified PPS</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Combinar estratos con probabilidades desiguales dentro
+              de cada uno: el diseño STPPS de Gutiérrez sobre BigLucy, y el estimador de Hansen–Hurwitz que lo
+              acompaña.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Dentro de un estrato nada obliga a sortear con probabilidades iguales. Si el marco trae una medida de
+        tamaño $x_k$ — empleados de una empresa, camas de un hospital, matrícula de un colegio — conviene que las
+        unidades grandes entren con más probabilidad, porque son las que mandan en los totales. Este módulo
+        presenta la versión <em>con reemplazo</em>, que es la de arranque de Gutiérrez (§5.3) y la puerta de
+        entrada al capítulo 6, donde las probabilidades desiguales toman el escenario completo.</p>
+
+      <div class="definition">
+        <h4>Diseño STPPS y el estimador de Hansen–Hurwitz</h4>
+        <p>En el estrato $h$ se hacen $m_h$ extracciones <strong>con reemplazo</strong>; en cada extracción, la
+          unidad $k$ sale con probabilidad $\psi_k = x_k / \sum_{l \in U_h} x_l$. El estimador del total del
+          estrato promedia los cocientes $y_k/\psi_k$:</p>
+        $$\hat{t}_{y,h} = \frac{1}{m_h} \sum_{i=1}^{m_h} \frac{y_{k_i}}{\psi_{k_i}}, \qquad
+        \widehat{V}(\hat{t}_{y,h}) = \frac{1}{m_h}\, s^2_{\{y_{k_i}/\psi_{k_i}\}}$$
+        <p style="margin-bottom:0;">Cada cociente $y_{k_i}/\psi_{k_i}$ es, por sí solo, un estimador insesgado del
+          total; Hansen–Hurwitz promedia $m_h$ de ellos, y su varianza estimada es la varianza muestral de esos
+          cocientes entre $m_h$. Si $y_k$ es aproximadamente proporcional a $x_k$, los cocientes casi no varían y
+          la varianza se desploma. El total poblacional suma los estratos: $\hat{t}_y = \sum_h \hat{t}_{y,h}$.</p>
+      </div>
+
+      <p>El laboratorio es <strong>BigLucy</strong>: 85 296 empresas con sus ingresos ($y$) y sus empleados ($x$),
+        estratificadas por nivel de tamaño. Como es un censo, la verdad está disponible para juzgar al
+        estimador:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="STPPS sobre BigLucy con TeachingSampling">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R11⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Con 380 extracciones sobre 85 296 empresas (el 0,4 %), el estimador queda a un 2 % del total verdadero, con
+        un coeficiente de variación del 2,6 %. Y el motor por dentro no tiene misterio — es la definición aplicada
+        al estrato Big:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Hansen-Hurwitz a mano en el estrato Big">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R12⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="psi-pesos">
+        <h4><i class="fas fa-dharmachakra" aria-hidden="true"></i> La rueda de las ψ</h4>
+        <p class="simulador-intro">Elige un estrato y el número de empleados de una empresa imaginaria. La gráfica
+          sitúa su $\psi_k$ frente a los deciles reales de su estrato en BigLucy; la lectura muestra la cuenta
+          completa: su probabilidad en cada extracción, las veces que espera salir en las $m_h$, y el peso con el
+          que entraría al estimador. Duplicar los empleados duplica la $\psi$ y parte el peso por dos: esa es toda
+          la mecánica del PPT.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">La ψ de tu empresa frente a los deciles de su estrato</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Probabilidad de seleccion de la empresa elegida frente a los deciles del estrato" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>¿Por qué con reemplazo, si el capítulo 2 lo despreció?</strong> Porque las probabilidades
+          desiguales <em>sin</em> reemplazo exigen las $\pi_{kl}$ de segundo orden, que en general no tienen forma
+          cerrada — es el problema técnico central del capítulo 6. Con reemplazo, la independencia entre
+          extracciones regala una varianza estimable con una sola línea. El precio: alguna empresa puede salir dos
+          veces, y con fracciones de muestreo grandes eso desperdicia información. Aquí, con el 0,4 % de la
+          población, el precio es despreciable y el atajo es honesto. El capítulo 6 pagará el precio completo del
+          sin-reemplazo con Horvitz–Thompson.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Gutiérrez — §5.3: el diseño STPPS con <code>S.STPPS</code>/<code>E.STPPS</code> y BigLucy, que este
+            módulo reproduce.</li>
+          <li>Lohr — §6.2 (ambas ediciones): muestreo con probabilidades desiguales con reemplazo, la teoría que el
+            capítulo 6 desarrolla.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

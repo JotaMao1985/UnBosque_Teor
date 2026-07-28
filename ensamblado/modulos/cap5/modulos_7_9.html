@@ -1,0 +1,219 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · La varianza, etapa por etapa                       -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">La varianza, etapa por etapa
+          <span class="text-gray-400 font-normal text-2xl">/ Variance by stage</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver qué etapa pone la varianza — casi siempre la
+              primera — y qué decisiones de diseño se siguen de eso.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La fórmula del módulo 6 es una suma de dos pisos, y saber cuál pesa más no es curiosidad contable: decide
+        dónde gastar. El cálculo explícito con <code>schools</code>:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La descomposición de la varianza a mano">
+          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="python">
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <p><strong>La etapa 1 pone el 99,2 % de la varianza.</strong> Y no es una rareza de estos datos: los totales
+        escolares $t_i$ varían entre escuelas muchísimo más de lo que varía la estimación de cada total con 20 de
+        sus estudiantes. Es el patrón general de las encuestas multietapa, y deja tres lecciones de diseño:</p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong>Más conglomerados, no más unidades por conglomerado.</strong> Si la etapa 1 domina, duplicar
+          $m$ apenas rasca la varianza; duplicar $n$ casi la parte en dos. Es la versión estructural del deff
+          lineal en $m$ del módulo 4, y el módulo 8 le pone precios.</li>
+        <li><strong>El atajo del «conglomerado último» es legítimo.</strong> Estimar la varianza como si los
+          $\hat{t}_i$ fueran una etapa única (lo que hace survey si solo se declara la etapa 1) sobreestima un
+          poquito — ignora que parte del segundo piso ya está contenida en la dispersión de los $\hat{t}_i$ — y
+          con primeras etapas dominantes el error es cosmético. Las encuestas reales del capítulo 7 viven de este
+          atajo.</li>
+        <li><strong>Censar la segunda etapa casi nunca compensa.</strong> Pasar de $m = 20$ a censar las escuelas
+          solo ataca el 0,8 % del problema, multiplicando el costo por ocho.</li>
+      </ul>
+
+      <div class="simulador" data-simulador="dos-etapas-varianza">
+        <h4><i class="fas fa-chart-column" aria-hidden="true"></i> Los dos pisos de la varianza</h4>
+        <p class="simulador-intro">Las 100 zonas de BigLucy como conglomerados, con sus tamaños y varianzas reales.
+          Mueve cuántas zonas sorteas ($n$) y cuántas empresas visitas en cada una ($m$): las barras apilan los dos
+          sumandos exactos de la varianza del total de ingresos. Comprueba las tres lecciones: subir $m$ mueve poco,
+          subir $n$ mueve mucho, y el piso «dentro» se extingue mientras el «entre» no cede.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Varianza del total estimado, apilada por etapa</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Varianza entre y dentro segun el numero de zonas y el submuestreo" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.3, la discusión tras el ejemplo 5.8; §7.4 para el conglomerado último.</li>
+          <li>Särndal, Swensson y Wretman — §4.3: la descomposición general por etapas.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · Cuántos conglomerados y de qué tamaño              -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Cuántos y de qué tamaño
+          <span class="text-gray-400 font-normal text-2xl">/ Choosing n and m</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Elegir $n$ y $m$ con presupuesto: el submuestreo
+              óptimo depende solo de la ICC y del cociente de costos.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El capítulo 4 repartía $n$ entre estratos; aquí la decisión es cuántos conglomerados visitar ($n$) y
+        cuánto excavar en cada uno ($m$). Con costo $c_1$ por conglomerado — el desplazamiento, el permiso, el
+        supervisor — y $c_2$ por unidad, el presupuesto es $C = c_1 n + c_2 n m$, y minimizar la varianza da un
+        resultado de una elegancia inusual:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">El tamaño de subespécimen óptimo</p>
+        $$m_{\text{opt}} = \sqrt{\frac{c_1}{c_2}\cdot\frac{1-\rho}{\rho}}
+        \qquad\qquad n_{\text{opt}} = \frac{C}{c_1 + c_2\, m_{\text{opt}}}$$
+        <p style="margin-bottom:0;">$m_{\text{opt}}$ <strong>no depende del presupuesto</strong>: el dinero decide
+          cuántos conglomerados, no cuánto excavar en cada uno. Solo entran el cociente de costos (si llegar es
+          caro, quédate más) y la ICC (si los vecinos se repiten, vete antes).</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El m óptimo con la ICC de BigLucy">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R12⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="presupuesto-mn">
+        <h4><i class="fas fa-sack-dollar" aria-hidden="true"></i> El presupuesto por etapas</h4>
+        <p class="simulador-intro">Elige el presupuesto, el costo por conglomerado y tu $m$. La lectura calcula
+          cuántos conglomerados te alcanzan, la varianza relativa que consigues y cuánto pierdes frente al $m$
+          óptimo (marcado en la gráfica). La curva es plana cerca del óptimo y castiga lejos: equivocarse por poco
+          es gratis, enamorarse de conglomerados grandes no.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Varianza relativa según el m elegido, con el óptimo marcado</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Varianza relativa en funcion del submuestreo m con el optimo marcado" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>De dónde sale la ICC antes de muestrear.</strong> La fórmula pide la $\rho$ que uno todavía no
+          midió — el mismo círculo de Neyman con las $S_h$ —, y se rompe igual: un piloto, una encuesta anterior o
+          la literatura del sector (las encuestas de hogares publican ICC típicas por variable). Y la planitud
+          cerca del óptimo perdona los errores razonables de esa aproximación.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.4: diseño de muestras por conglomerados con costos.</li>
+          <li>Cochran, <em>Sampling Techniques</em> — §10.6: la deducción clásica del m óptimo.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · Estratos y conglomerados a la vez                  -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estratos × conglomerados
+          <span class="text-gray-400 font-normal text-2xl">/ Combined designs</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Combinar los dos capítulos: estratificar los
+              conglomerados recupera buena parte de lo que el conglomerado pierde.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Estratos y conglomerados no compiten: se apilan. El diseño estándar de una encuesta nacional estratifica
+        las UPM — por región, por urbano/rural, por tamaño — y sortea conglomerados <em>dentro de cada
+        estrato</em>. La lógica es la del capítulo 4 aplicada al nivel de las UPM: que el azar no pueda concentrar
+        los conglomerados sorteados en una sola punta del país.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Región como estrato, estado como conglomerado">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R13⟧</code></pre>
+        </div>
+      </div>
+
+      <p>El precálculo repitió ese sorteo 5 000 veces y comparó los tres diseños de conglomerados posibles sobre la
+        misma población. La tabla ordena el resultado:</p>
+
+      <div class="tabla-ranking" data-ranking="estrategias">
+        <p class="tabla-ranking-titulo">Ocho estados de una punta u ocho repartidos: los diseños comparados</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación ordenable de estrategias de conglomerados"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué funciona.</strong> El deff del conglomerado venía de la varianza <em>entre</em>
+          conglomerados (módulo 7); los estratos eliminan de esa varianza su componente entre-regiones (capítulo 4,
+          módulo 7). Son los dos teoremas del curso trabajando en serie: el conglomerado paga por juntar el azar,
+          el estrato cobra por confinarlo. La cuenta no vuelve a la del MAS — deff ≈ 16 sigue siendo caro —, pero
+          el diseño ya es operable: ocho desplazamientos en vez de trescientos sesenta y nueve.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>El requisito técnico: al menos 2 UPM por estrato.</strong> Con una sola UPM sorteada en un
+          estrato no hay con qué estimar la varianza de ese estrato — es el problema del sistemático del
+          capítulo 2 en miniatura. La opción <code>survey.lonely.psu</code> que este material fija desde el
+          capítulo 1 existe exactamente para ese caso, y el capítulo 7 lo encontrará en encuestas reales.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.5 y cap. 7: los diseños complejos como estratos × conglomerados × etapas.</li>
+          <li>Gutiérrez — cap. 7: diseños en dos etapas con estratificación de UPM.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

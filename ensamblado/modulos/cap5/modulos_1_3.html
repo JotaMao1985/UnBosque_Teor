@@ -1,0 +1,270 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · ¿Por qué conglomerar?                              -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">¿Por qué conglomerar?
+          <span class="text-gray-400 font-normal text-2xl">/ Why clusters</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Entender el intercambio que define este capítulo:
+              muestrear grupos enteros abarata cada observación y encarece cada unidad de información.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El capítulo 4 partió la población en grupos para meter <em>todos</em> los grupos en la muestra, con cuota
+        garantizada. Este capítulo hace exactamente lo contrario: parte la población en grupos y sortea <strong>qué
+        grupos entran, enteros</strong>. La cuchilla es la misma; el filo va al revés, y las consecuencias sobre la
+        varianza también.</p>
+
+      <div class="definition">
+        <h4>Muestreo por conglomerados (una etapa)</h4>
+        <p>La población de unidades de observación está agrupada en $N$ <strong>conglomerados</strong> (unidades
+          primarias de muestreo, UPM) de tamaños $M_1, \dots, M_N$. Se sortea un MAS de $n$ conglomerados y se
+          observan <strong>todas</strong> las unidades de los conglomerados elegidos.</p>
+        <p style="margin-bottom:0;">La diferencia crítica con los estratos: allí el azar corría <em>dentro</em> de
+          cada grupo y todos los grupos estaban representados; aquí el azar corre <em>entre</em> los grupos, y los no
+          sorteados quedan fuera por completo.</p>
+      </div>
+
+      <p>¿Por qué aceptar eso? Porque muestrear no cuesta lo mismo por unidad que por grupo. Entrevistar 400 hogares
+        dispersos por todo el país exige 400 desplazamientos; entrevistar 400 hogares en 8 municipios exige 8. El
+        conglomerado convierte kilómetros en entrevistas — y a cambio cobra un precio en información que este módulo
+        mide con la población del curso.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los estados como conglomerados de agpop">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Esa $R_a = 0{,}475$ es la <strong>correlación intraclase</strong> que el módulo 4 desarrolla: los condados
+        del mismo estado se parecen — comparten clima, cultivo y tamaño — y casi la mitad de la estructura de la
+        población vive <em>entre</em> estados. Muestrear estados enteros significa comprar información repetida, y
+        el precálculo lo midió sorteando <strong>10 000 veces</strong> cada diseño:</p>
+
+      <div class="simulador" data-simulador="estados">
+        <h4><i class="fas fa-map" aria-hidden="true"></i> Seis estados enteros contra 369 condados sueltos</h4>
+        <p class="simulador-intro">Los dos diseños observan en promedio los mismos ~370 condados: uno los sortea
+          sueltos (MAS), el otro sortea 6 estados y se queda con todos los suyos. Los histogramas son las 10 000
+          réplicas reales de cada uno. Con el deslizador aíslas cada diseño; la lectura da el precio exacto del
+          conglomerado.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Distribución de muestreo de la media estimada, mismo n esperado</p>
+        <div class="grafico-wrapper" style="height:280px;">
+          <canvas aria-label="Histogramas de réplicas del diseño por estados y del MAS equivalente" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>deff ≈ 30.</strong> La misma cantidad de condados rinde <strong>treinta veces menos</strong>
+          varianza-a-varianza cuando llega en estados enteros: las 371 observaciones del diseño por estados valen lo
+          que unas 12 de un MAS. Es el deff más brutal de todo el material — los conglomerados geográficos con una
+          variable tan territorial como la superficie sembrada son el peor caso posible — y la razón de que ninguna
+          encuesta seria use una sola etapa con conglomerados grandes: se combinan etapas (módulo 6), estratos
+          (módulo 9) y submuestreo para domar este número.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>El conglomerado no se elige: se hereda.</strong> Los estratos se diseñan buscando homogeneidad
+          interna; los conglomerados los impone el mundo — manzanas, escuelas, hospitales, nidadas — y suelen ser
+          internamente <em>homogéneos</em> justo en el sentido que perjudica. La regla del capítulo 4 se invierte
+          entera: el estratificado quería estratos distintos entre sí; el conglomerado quisiera conglomerados que
+          fueran, cada uno, una miniatura de la población. Casi nunca lo son.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — cap. 5 (ambas ediciones), §5.1: por qué y cuándo conglomerar.</li>
+          <li>Gutiérrez — cap. 6: el muestreo de conglomerados en el marco π.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · La notación de dos niveles                         -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">La notación de dos niveles
+          <span class="text-gray-400 font-normal text-2xl">/ Two-level notation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Dominar el glosario que más confunde del curso —
+              $N$, $M_i$, $n$, $m_i$, $K$ — y ver que π vuelve a ser un producto de etapas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La mitad de los errores con conglomerados son errores de notación: dos niveles de unidades significan dos
+        familias de símbolos, y confundir «cuántos grupos» con «cuántas unidades» rompe cualquier fórmula del
+        capítulo. La tabla siguiente es la referencia; conviene tenerla a mano hasta que duela no necesitarla.</p>
+
+      <div class="glosario-notacion" data-glosario="conglomerados"></div>
+
+      <p>El laboratorio de dos etapas del capítulo es la encuesta escolar de Lohr: 75 escuelas, de las que se
+        sortean 10, y 20 estudiantes dentro de cada una. Recorre el diseño completo:</p>
+
+      <div class="diagrama-diseno" data-diagrama="dos-etapas"></div>
+
+      <p>La franja final del diagrama es la novedad estructural del capítulo: por primera vez en el curso, la
+        probabilidad de inclusión es un <strong>producto de etapas</strong>. El código lo comprueba contra la
+        columna de pesos que trae el archivo:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Probabilidades y pesos de dos etapas en schools">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="pi-dos-etapas">
+        <h4><i class="fas fa-xmark" aria-hidden="true"></i> π como producto: la calculadora de dos etapas</h4>
+        <p class="simulador-intro">Mueve el número de escuelas sorteadas $n$, el submuestreo $m$ y el tamaño $M_i$
+          de la escuela de un estudiante concreto. Las barras muestran las dos probabilidades parciales y su
+          producto; la lectura, el peso resultante y cuántas unidades observa el diseño. Fíjate en el efecto cruzado:
+          agrandar la escuela <em>baja</em> la π de sus estudiantes — hay más entre quienes repartir las $m$
+          plazas — y <em>sube</em> su peso.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Las dos etapas de π y su producto</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Probabilidad de cada etapa y su producto para la unidad elegida" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>$N$ cambió de significado y no va a avisar.</strong> En los capítulos 2–4, $N$ contaba unidades
+          de observación; en este, $N$ cuenta <strong>conglomerados</strong> y el total de unidades es
+          $K = \sum M_i$. Lohr y Gutiérrez ($N_I$) hacen lo mismo. Al leer cualquier fórmula de este capítulo, la
+          primera pregunta es siempre: ¿esta letra cuenta grupos o cuenta unidades?</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.1, tabla de notación; Gutiérrez — §6.1 ($N_I$, $n_I$) y §7.1.</li>
+          <li>El diagrama de dos etapas de este módulo, frente al de una etapa del capítulo 4, módulo 1.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · Una etapa, conglomerados de igual tamaño           -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Una etapa, igual tamaño
+          <span class="text-gray-400 font-normal text-2xl">/ One stage, equal sizes</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Estimar con el caso más limpio — conglomerados del
+              mismo tamaño, censados por dentro — y medir cuánto miente el análisis que ignora el diseño.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El truco que resuelve todo el capítulo aparece ya en el caso más simple: <strong>los conglomerados son las
+        unidades de muestreo, así que se trabaja con sus totales</strong>. El ejemplo clásico de Lohr: estimar el
+        promedio académico en 100 suites de una residencia universitaria, sorteando 5 suites y preguntando a sus 4
+        ocupantes.</p>
+
+      <div class="formula">
+        <p class="formula-titulo">El estimador de una etapa con $M$ constante</p>
+        $$\hat{\bar{y}} = \frac{\sum_{i \in s} t_i}{nM}, \qquad
+        \widehat{V}(\hat{\bar{y}}) = \left(1 - \frac{n}{N}\right) \frac{s_t^2}{n M^2},
+        \qquad s_t^2 = \frac{1}{n-1}\sum_{i \in s}\left(t_i - \bar{t}\right)^2$$
+        <p style="margin-bottom:0;">donde $t_i$ es el total del conglomerado $i$. Es, letra por letra, el MAS del
+          capítulo 2 aplicado a la población de los $N$ totales $t_i$ — porque eso es exactamente lo que el diseño
+          sortea. Toda la varianza se juzga <em>entre</em> conglomerados: lo que pase dentro no genera azar, porque
+          dentro se censa.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El estimador de suites a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="survey y el espejismo del MAS imaginario">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El signo del pecado cambió de capítulo.</strong> Olvidar el fpc (capítulo 2) ensanchaba el
+          intervalo: un error conservador. Ignorar los conglomerados lo <strong>estrecha</strong> — aquí, un 46 % —
+          y publica una precisión que no existe. De los dos errores silenciosos, este es el caro: produce
+          afirmaciones «significativas» que no se sostienen, y es tan común que el capítulo 7 le dedica un módulo
+          entero («el error más caro»).</p>
+      </div>
+
+      <div class="simulador" data-simulador="espejismo-ee">
+        <h4><i class="fas fa-mask" aria-hidden="true"></i> Cuánto miente el error estándar ingenuo</h4>
+        <p class="simulador-intro">El factor de mentira es $\sqrt{\text{deff}} = \sqrt{1 + (m-1)\rho}$: depende solo
+          del tamaño del conglomerado y de la correlación intraclase que el módulo 4 formaliza. Mueve los dos y mira
+          las barras: el «ee» que reportaría el análisis ingenuo contra el real. Con los valores de gpa
+          ($m = 4$, $\rho = 0{,}42$) la mentira es modesta; con aulas de 25 como algebra, ya no.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Error estándar reportado por el análisis ingenuo frente al real</p>
+        <div class="grafico-wrapper" style="height:220px;">
+          <canvas aria-label="Comparación del error estándar ingenuo y el real según m y rho" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>¿Y si $M$ varía?</strong> Todo lo de arriba supone conglomerados del mismo tamaño. En cuanto los
+          $M_i$ difieren — que es siempre —, aparecen dos estimadores rivales y una decisión con teoría propia: es
+          el módulo 5, con las nidadas de focha.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.2.1: conglomerados de igual tamaño; el ejemplo de las suites es el 5.2.</li>
+          <li>Gutiérrez — §6.2: el diseño SI de conglomerados como π-estimador.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

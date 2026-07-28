@@ -1,0 +1,263 @@
+
+    /* ================================================================
+       Diagrama de diseño muestral (componente nuevo del capítulo 4)
+
+       Un diseño complejo es una tubería: población → estratos → UPM →
+       USM → pesos. El estudiante recorre las etapas y en cada una lee
+       qué unidad se muestrea, con qué diseño, qué probabilidad de
+       inclusión aporta y qué factor de peso deja. La franja final
+       muestra la lección que justifica el componente: la probabilidad
+       de inclusión final es el producto de las de cada etapa, y el
+       peso final el producto de los pesos.
+       ================================================================ */
+    .diagrama-diseno {
+      margin: 1.75rem 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .diagrama-diseno-titulo {
+      margin: 0;
+      padding: 0.7rem 1.1rem;
+      background: #012820;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .diagrama-diseno-intro {
+      margin: 0;
+      padding: 0.75rem 1.1rem 0;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .diagrama-diseno-flujo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0.4rem;
+      padding: 1rem 1.1rem 0.25rem;
+    }
+
+    .diagrama-diseno-etapa {
+      flex: 1 1 8.5rem;
+      min-width: 8.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: inherit;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.6rem;
+      padding: 0.7rem 0.6rem 0.6rem;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease, color 0.15s ease;
+    }
+
+    .diagrama-diseno-etapa:hover {
+      border-color: #012820;
+      box-shadow: 0 1px 4px rgba(1, 40, 32, 0.12);
+    }
+
+    .diagrama-diseno-etapa.activo {
+      background: #012820;
+      border-color: #012820;
+      color: white;
+    }
+
+    .diagrama-diseno-icono {
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      background: rgba(1, 40, 32, 0.08);
+      color: #012820;
+    }
+
+    .diagrama-diseno-etapa.activo .diagrama-diseno-icono {
+      background: rgba(255, 255, 255, 0.16);
+      color: white;
+    }
+
+    .diagrama-diseno-etiqueta {
+      font-size: 0.8rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #1e293b;
+    }
+
+    .diagrama-diseno-etapa.activo .diagrama-diseno-etiqueta {
+      color: white;
+    }
+
+    .diagrama-diseno-unidad {
+      font-size: 0.72rem;
+      line-height: 1.3;
+      color: #64748b;
+    }
+
+    .diagrama-diseno-etapa.activo .diagrama-diseno-unidad {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .diagrama-diseno-flecha {
+      flex: 0 0 auto;
+      align-self: center;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      padding: 0 0.1rem;
+    }
+
+    .diagrama-diseno-detalle {
+      margin: 0.85rem 1.1rem 0;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .diagrama-diseno-detalle h5 {
+      margin: 0 0 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #012820;
+    }
+
+    .diagrama-diseno-detalle p {
+      margin: 0 0 0.6rem;
+      color: #334155;
+      line-height: 1.55;
+    }
+
+    .diagrama-diseno-formulas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.55rem 0;
+    }
+
+    .diagrama-diseno-formula {
+      flex: 1 1 12rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.4rem;
+      padding: 0.5rem 0.7rem;
+      font-size: 0.82rem;
+      color: #1e293b;
+    }
+
+    .diagrama-diseno-formula .rotulo {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    .diagrama-diseno-cifras {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .diagrama-diseno-cifra {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.55rem;
+      border-radius: 50px;
+      border: 1px solid #cbd5e1;
+      background: #f1f5f9;
+      color: #334155;
+      white-space: nowrap;
+    }
+
+    .diagrama-diseno-cifra strong {
+      color: #012820;
+    }
+
+    .diagrama-diseno-ejemplo {
+      margin: 0.55rem 0 0;
+      padding: 0.55rem 0.7rem;
+      background: #f8fafc;
+      border-radius: 0.4rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    .diagrama-diseno-ejemplo strong {
+      color: #012820;
+    }
+
+    .diagrama-diseno-acumulado {
+      margin: 0.85rem 1.1rem 0;
+      background: rgba(1, 40, 32, 0.05);
+      border: 1px dashed rgba(1, 40, 32, 0.35);
+      border-radius: 0.5rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.83rem;
+      color: #1e293b;
+    }
+
+    .diagrama-diseno-acumulado-formula {
+      text-align: center;
+      overflow-x: auto;
+      padding: 0.15rem 0;
+    }
+
+    .diagrama-diseno-acumulado .rotulo {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #012820;
+      margin-bottom: 0.3rem;
+    }
+
+    .diagrama-diseno-acumulado p {
+      margin: 0.35rem 0 0;
+      color: #475569;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .diagrama-diseno-nota {
+      margin: 0;
+      padding: 0.75rem 1.1rem 1rem;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+
+    @media (max-width: 900px) {
+      .diagrama-diseno-flujo {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .diagrama-diseno-etapa {
+        min-width: 0;
+      }
+
+      .diagrama-diseno-flecha {
+        transform: rotate(90deg);
+        padding: 0.05rem 0;
+      }
+    }

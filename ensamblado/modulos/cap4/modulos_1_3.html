@@ -1,0 +1,322 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · ¿Por qué estratificar?                             -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">¿Por qué estratificar?
+          <span class="text-gray-400 font-normal text-2xl">/ Why stratify</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Entender qué problema resuelve partir la población en
+              estratos antes de sortear, y recorrer el diseño completo de la muestra oficial del capítulo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El capítulo 2 sorteó los 300 condados de <code>agsrs</code> de una sola urna con los 3 078. Ese diseño es
+        insesgado y honesto, pero tiene un defecto que se ve en cuanto uno mira la población por dentro: <strong>trata
+        igual lo que no es igual</strong>. La superficie sembrada de un condado del Oeste no se parece en nada a la de
+        uno del Nordeste:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La heterogeneidad entre regiones">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Un condado medio del Oeste siembra <strong>723 344 acres</strong>; uno del Nordeste, <strong>90 619</strong>.
+        Ocho veces menos. Y dentro de cada región la dispersión también cambia: la desviación del Oeste (835 639) es
+        diez veces la del Nordeste (79 365). Cuando la urna única sortea, puede salirle una muestra cargada de Oeste
+        —y la estimación se dispara— o corta de Oeste —y se hunde—. Toda esa lotería es varianza.</p>
+
+      <div class="definition">
+        <h4>Muestreo estratificado</h4>
+        <p>La población $U$ se parte <strong>antes de muestrear</strong> en $H$ grupos disjuntos y exhaustivos
+          $U_1, \dots, U_H$ —los <strong>estratos</strong>— de tamaños conocidos $N_1, \dots, N_H$. Dentro de cada
+          estrato se sortea una muestra <em>independiente</em> de tamaño $n_h$, aquí siempre con MAS sin reemplazo.</p>
+        <p style="margin-bottom:0;">La palabra clave es <em>independiente</em>: lo que salga en el Oeste no afecta lo
+          que salga en el Sur. El azar queda <strong>confinado dentro de cada estrato</strong>, y la composición de la
+          muestra por regiones deja de ser aleatoria: la fija el diseñador.</p>
+      </div>
+
+      <p>El diseño completo se recorre mejor que se cuenta. Esta es la tubería de <code>agstrat</code>, la muestra
+        estratificada oficial de Lohr que acompaña todo el capítulo:</p>
+
+      <div class="diagrama-diseno" data-diagrama="estratificado"></div>
+
+      <div class="note">
+        <p><strong>Dos condiciones para poder estratificar.</strong> Primera: el marco tiene que traer la variable de
+          estratificación <em>para todas las unidades</em> (aquí, la región de cada condado). Segunda: los tamaños
+          $N_h$ tienen que conocerse. Ninguna de las dos es gratis; cuando el marco no trae nada útil, el capítulo 10
+          enseña el plan B (postestratificar).</p>
+      </div>
+
+      <p>¿Y qué se gana a cambio? Tres cosas, en orden de importancia práctica:</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong>Precisión.</strong> La varianza del estimador solo paga la variabilidad <em>dentro</em> de los
+          estratos; la que hay <em>entre</em> estratos desaparece del sorteo. En este capítulo esa ganancia se mide
+          en cada módulo, y el módulo 7 explica de dónde sale exactamente.</li>
+        <li><strong>Garantías por subgrupo.</strong> Con la urna única, el Nordeste (el 7 % de los condados) puede
+          salir casi vacío en una muestra concreta. Estratificando, sus $n_h = 21$ condados están garantizados, y se
+          pueden publicar estimaciones regionales con precisión controlada.</li>
+        <li><strong>Logística y costo.</strong> Cada estrato puede tener su propio operativo: encuestadores del
+          Oeste para el Oeste, marcos distintos, hasta modos de entrevista distintos. El módulo 5 convierte esto en
+          fórmula.</li>
+      </ul>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <em>Sampling: Design and Analysis</em> — cap. 4 (2.ª ed.) / cap. 3 (3.ª ed.), §1: qué es y por qué
+            funciona. Ojo: la numeración de capítulos cambió entre ediciones.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em> — cap. 5: el estratificado dentro del marco π.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · La teoría en el marco π                            -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">La teoría en el marco π
+          <span class="text-gray-400 font-normal text-2xl">/ Theory</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Deducir el estimador estratificado como caso particular
+              del π-estimador del capítulo 2, con su varianza exacta.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Nada de lo que sigue es nuevo: es el capítulo 2 aplicado a un diseño concreto. Un diseño muestral es una
+        distribución $p(s)$ sobre las muestras posibles; el estratificado es el $p(s)$ que reparte probabilidad
+        <strong>solo entre las muestras que respetan las cuotas</strong> $n_1, \dots, n_H$, uniformemente dentro de
+        cada estrato.</p>
+
+      <div class="glosario-notacion" data-glosario="estratificado"></div>
+
+      <p>Las probabilidades de inclusión salen solas. Dentro del estrato $h$ hay un MAS de $n_h$ entre $N_h$, y los
+        estratos no se hablan entre sí:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Probabilidades de inclusión del diseño estratificado (STSI)</p>
+        $$\pi_k = \frac{n_h}{N_h} \quad \text{si } k \in U_h, \qquad
+        \pi_{kl} = \begin{cases}
+          \dfrac{n_h}{N_h}\cdot\dfrac{n_h-1}{N_h-1} & \text{si } k, l \in U_h, \\[2ex]
+          \dfrac{n_h}{N_h}\cdot\dfrac{n_g}{N_g} & \text{si } k \in U_h,\ l \in U_g,\ h \neq g.
+        \end{cases}$$
+        <p style="margin-bottom:0;">La segunda línea es la novedad frente al MAS: para unidades de estratos
+          <em>distintos</em>, $\pi_{kl} = \pi_k \pi_l$ exactamente, porque los sorteos son independientes. Ese
+          término no aporta varianza.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Probabilidades de inclusión y pesos de agstrat">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Con las $\pi_k$ en la mano, el π-estimador del total hace lo de siempre — cada unidad representa a
+        $1/\pi_k$ unidades de su estrato — y al agrupar por estratos aparece la forma clásica:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">El estimador estratificado es el π-estimador</p>
+        $$\hat{t}_{\pi} = \sum_{k \in s} \frac{y_k}{\pi_k}
+          = \sum_{h=1}^{H} \frac{N_h}{n_h} \sum_{k \in s_h} y_k
+          = \sum_{h=1}^{H} N_h \, \bar{y}_h, \qquad
+          \bar{y}_{\text{str}} = \frac{\hat{t}_{\pi}}{N} = \sum_{h=1}^{H} W_h \, \bar{y}_h$$
+        <p style="margin-bottom:0;">con $W_h = N_h/N$ los <strong>pesos de estrato</strong> (la fracción de la
+          población que vive en cada uno). La media estratificada es un promedio de las medias por estrato, ponderado
+          por el tamaño <em>poblacional</em> de cada estrato — no por el muestral.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-var-str">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver cómo la varianza general se reduce a la fórmula clásica</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-var-str" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>La varianza del π-estimador del capítulo 2 (forma de Sen–Yates–Grundy, válida porque el tamaño
+                muestral es fijo) suma sobre pares de unidades:</p>
+              $$V(\hat{t}_{\pi}) = -\frac{1}{2}\sum_{k \in U}\sum_{l \neq k}
+                (\pi_{kl} - \pi_k\pi_l)\left(\frac{y_k}{\pi_k} - \frac{y_l}{\pi_l}\right)^2$$
+            </li>
+            <li>
+              <p>Para pares de estratos <em>distintos</em>, $\pi_{kl} = \pi_k \pi_l$: su término es cero. Solo
+                sobreviven los pares dentro del mismo estrato, y la doble suma se parte en $H$ sumas
+                independientes — la varianza de un MAS por estrato.</p>
+            </li>
+            <li>
+              <p>Cada una de esas sumas es exactamente la varianza del capítulo 2 con $N_h$, $n_h$ y la varianza
+                poblacional del estrato $S^2_{y,h}$:</p>
+              $$V(\hat{t}_{\pi}) = \sum_{h=1}^{H} N_h^2 \left(1 - \frac{n_h}{N_h}\right)\frac{S^2_{y,h}}{n_h}
+              \qquad\Longrightarrow\qquad
+              V(\bar{y}_{\text{str}}) = \sum_{h=1}^{H} W_h^2 \left(1 - \frac{n_h}{N_h}\right)\frac{S^2_{y,h}}{n_h}$$
+            </li>
+            <li>
+              <p>Cada estrato lleva <strong>su propio fpc</strong> $(1 - n_h/N_h)$: un estrato censado
+                ($n_h = N_h$) aporta varianza cero, se haya censado o no el resto. Y en toda la fórmula solo
+                aparecen las $S^2_{y,h}$ de <em>dentro</em> de los estratos; la distancia entre las medias de los
+                estratos no está. Esa es la ganancia, y el módulo 7 la mide.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <p>Sobre los cinco condados del capítulo 2 el diseño se puede <strong>enumerar completo</strong>: estratos
+        $\{1,2,3\}$ con $n_A = 2$ y $\{4,5\}$ con $n_B = 1$ dan $3 \times 2 = 6$ muestras posibles, cada una con
+        probabilidad $1/6$. La varianza exacta por enumeración y la de la fórmula clásica coinciden hasta el último
+        decimal — el precálculo del capítulo lo comprueba y guarda las seis muestras, que puedes ver en el simulador
+        del módulo 7 del capítulo 2 cambiando el diseño a «estratificado».</p>
+
+      <div class="note">
+        <p><strong>Insesgadez sin condiciones.</strong> $E(\bar{y}_{\text{str}}) = \sum_h W_h \, E(\bar{y}_h) =
+          \sum_h W_h \bar{y}_{U_h} = \bar{y}_U$. No pide que los estratos estén «bien» construidos: una
+          estratificación inútil no sesga, solo deja de ahorrar varianza. Construir mal los estratos cuesta
+          precisión, nunca validez — con una excepción que el módulo 3 subraya: usar los pesos equivocados.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.2 (2.ª ed.) / §3.2 (3.ª ed.): teoría del muestreo estratificado.</li>
+          <li>Gutiérrez — §5.1–5.2: STSI como caso del π-estimador, con las mismas π que aquí.</li>
+          <li>Särndal, Swensson y Wretman, <em>Model Assisted Survey Sampling</em> — §3.7.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · Pesos y estimación                                 -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Pesos y estimación
+          <span class="text-gray-400 font-normal text-2xl">/ Weights &amp; estimation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Estimar medias, totales y proporciones con
+              <code>agstrat</code> por las dos vías del protocolo: la fórmula a mano y <code>survey</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Primero a mano. El estimador es una suma ponderada de medias por estrato y su varianza suma estrato a
+        estrato — dos líneas de R sin ninguna función de encuestas:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El estimador estratificado a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La media estratificada es <strong>295 561 acres</strong> con error estándar <strong>16 380</strong>. La del
+        MAS del capítulo 2 era 297 897 con error estándar 18 898: mismo tamaño de muestra, misma población, un 13 %
+        menos de error solo por sortear con estructura. Ahora la segunda vía:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El mismo estimador con survey">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Los tres argumentos que definen el diseño.</strong> <code>strata=</code> dice dónde estaba
+          confinado el azar; <code>weights=</code> trae los $N_h/n_h$; <code>fpc=</code> da los $N_h$ para la
+          corrección por población finita de cada estrato. Si se omite <code>strata=</code>, survey cree que hubo
+          urna única y el error estándar sale mal — casi siempre <em>más grande</em> de lo que corresponde, como en
+          el capítulo 2 pasaba al olvidar el fpc. El intervalo usa la normal ($\pm 1{,}96\,$ee), el convenio de
+          todo el material.</p>
+      </div>
+
+      <p>Una proporción no necesita teoría nueva: es la media de una variable 0/1. La proporción de condados que
+        siembran menos de 200 000 acres:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Proporción estratificada">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Queda la advertencia más importante del módulo. La asignación de <code>agstrat</code> es casi proporcional,
+        así que sus pesos son casi iguales y hasta el promedio bruto habría salido decente. Eso es una
+        <strong>casualidad del diseño</strong>, no una propiedad del estratificado. En cuanto la asignación se
+        aparta de la proporcional —y los módulos 4 y 5 dan razones de peso para apartarse—, el promedio bruto se
+        sesga. Compruébalo:</p>
+
+      <div class="simulador" data-simulador="promedio-bruto">
+        <h4><i class="fas fa-scale-unbalanced" aria-hidden="true"></i> El promedio bruto contra el ponderado</h4>
+        <p class="simulador-intro">Reparte las 300 entrevistas entre las regiones con los deslizadores. Las barras
+          comparan el <strong>valor esperado del promedio bruto</strong> (tratar la muestra como si fuera un MAS) con
+          el del <strong>estimador ponderado</strong>. El ponderado no se mueve de la media poblacional pase lo que
+          pase con el reparto; el bruto la sigue solo cuando el reparto es exactamente proporcional.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Valor esperado de los dos estimadores frente a la media verdadera</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Promedio bruto frente a estimador ponderado según el reparto de la muestra" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La regla que no admite excepciones.</strong> Una muestra estratificada se analiza <em>siempre</em>
+          con sus pesos. «Se me olvidaron los pesos» no produce un aviso ni un error: produce un número con aspecto
+          perfectamente razonable que estima <strong>otra cosa</strong> — la media de una población imaginaria donde
+          cada estrato pesa lo que pesó en la muestra. Es el error silencioso más común en el análisis de encuestas,
+          y reaparece con toda su artillería en el capítulo 7.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.3 (2.ª ed.) / §3.3 (3.ª ed.): pesos de muestreo en el estratificado.</li>
+          <li>Lumley, <em>Complex Surveys: A Guide to Analysis Using R</em> — cap. 2: <code>svydesign</code> con
+            estratos y fpc.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

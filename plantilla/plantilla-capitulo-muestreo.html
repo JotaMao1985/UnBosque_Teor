@@ -2632,6 +2632,269 @@
         position: static;
       }
     }
+
+    /* ================================================================
+       Diagrama de diseño muestral (componente nuevo del capítulo 4)
+
+       Un diseño complejo es una tubería: población → estratos → UPM →
+       USM → pesos. El estudiante recorre las etapas y en cada una lee
+       qué unidad se muestrea, con qué diseño, qué probabilidad de
+       inclusión aporta y qué factor de peso deja. La franja final
+       muestra la lección que justifica el componente: la probabilidad
+       de inclusión final es el producto de las de cada etapa, y el
+       peso final el producto de los pesos.
+       ================================================================ */
+    .diagrama-diseno {
+      margin: 1.75rem 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .diagrama-diseno-titulo {
+      margin: 0;
+      padding: 0.7rem 1.1rem;
+      background: #012820;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .diagrama-diseno-intro {
+      margin: 0;
+      padding: 0.75rem 1.1rem 0;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .diagrama-diseno-flujo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0.4rem;
+      padding: 1rem 1.1rem 0.25rem;
+    }
+
+    .diagrama-diseno-etapa {
+      flex: 1 1 8.5rem;
+      min-width: 8.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: inherit;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.6rem;
+      padding: 0.7rem 0.6rem 0.6rem;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease, color 0.15s ease;
+    }
+
+    .diagrama-diseno-etapa:hover {
+      border-color: #012820;
+      box-shadow: 0 1px 4px rgba(1, 40, 32, 0.12);
+    }
+
+    .diagrama-diseno-etapa.activo {
+      background: #012820;
+      border-color: #012820;
+      color: white;
+    }
+
+    .diagrama-diseno-icono {
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      background: rgba(1, 40, 32, 0.08);
+      color: #012820;
+    }
+
+    .diagrama-diseno-etapa.activo .diagrama-diseno-icono {
+      background: rgba(255, 255, 255, 0.16);
+      color: white;
+    }
+
+    .diagrama-diseno-etiqueta {
+      font-size: 0.8rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #1e293b;
+    }
+
+    .diagrama-diseno-etapa.activo .diagrama-diseno-etiqueta {
+      color: white;
+    }
+
+    .diagrama-diseno-unidad {
+      font-size: 0.72rem;
+      line-height: 1.3;
+      color: #64748b;
+    }
+
+    .diagrama-diseno-etapa.activo .diagrama-diseno-unidad {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .diagrama-diseno-flecha {
+      flex: 0 0 auto;
+      align-self: center;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      padding: 0 0.1rem;
+    }
+
+    .diagrama-diseno-detalle {
+      margin: 0.85rem 1.1rem 0;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .diagrama-diseno-detalle h5 {
+      margin: 0 0 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #012820;
+    }
+
+    .diagrama-diseno-detalle p {
+      margin: 0 0 0.6rem;
+      color: #334155;
+      line-height: 1.55;
+    }
+
+    .diagrama-diseno-formulas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.55rem 0;
+    }
+
+    .diagrama-diseno-formula {
+      flex: 1 1 12rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.4rem;
+      padding: 0.5rem 0.7rem;
+      font-size: 0.82rem;
+      color: #1e293b;
+    }
+
+    .diagrama-diseno-formula .rotulo {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    .diagrama-diseno-cifras {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .diagrama-diseno-cifra {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.55rem;
+      border-radius: 50px;
+      border: 1px solid #cbd5e1;
+      background: #f1f5f9;
+      color: #334155;
+      white-space: nowrap;
+    }
+
+    .diagrama-diseno-cifra strong {
+      color: #012820;
+    }
+
+    .diagrama-diseno-ejemplo {
+      margin: 0.55rem 0 0;
+      padding: 0.55rem 0.7rem;
+      background: #f8fafc;
+      border-radius: 0.4rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    .diagrama-diseno-ejemplo strong {
+      color: #012820;
+    }
+
+    .diagrama-diseno-acumulado {
+      margin: 0.85rem 1.1rem 0;
+      background: rgba(1, 40, 32, 0.05);
+      border: 1px dashed rgba(1, 40, 32, 0.35);
+      border-radius: 0.5rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.83rem;
+      color: #1e293b;
+    }
+
+    .diagrama-diseno-acumulado-formula {
+      text-align: center;
+      overflow-x: auto;
+      padding: 0.15rem 0;
+    }
+
+    .diagrama-diseno-acumulado .rotulo {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #012820;
+      margin-bottom: 0.3rem;
+    }
+
+    .diagrama-diseno-acumulado p {
+      margin: 0.35rem 0 0;
+      color: #475569;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .diagrama-diseno-nota {
+      margin: 0;
+      padding: 0.75rem 1.1rem 1rem;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+
+    @media (max-width: 900px) {
+      .diagrama-diseno-flujo {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .diagrama-diseno-etapa {
+        min-width: 0;
+      }
+
+      .diagrama-diseno-flecha {
+        transform: rotate(90deg);
+        padding: 0.05rem 0;
+      }
+    }
   </style>
 </head>
 
@@ -2897,6 +3160,14 @@
         el capítulo donde se trata.</p>
 
       <div class="arbol-error" data-arbol="demo"></div>
+
+      <p>Cuando el diseño tiene varias etapas, ni el árbol ni el ciclo lo cuentan bien: lo que hay que
+        ver es la <strong>tubería</strong> — qué unidad se muestrea en cada etapa, qué probabilidad
+        aporta y qué factor de peso deja. Se declara en JavaScript
+        (<code>DIAGRAMAS_DISENO['id']</code>) y la franja final da la lección completa: el peso final
+        es el producto de los pesos de las etapas.</p>
+
+      <div class="diagrama-diseno" data-diagrama="demo"></div>
       <table>
         <caption class="sr-only">Ejemplo de tabla</caption>
         <thead>
@@ -3227,6 +3498,7 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
         iniciarTablasRanking();
         iniciarGlosarios();
         iniciarArbolesError();
+        iniciarDiagramasDiseno();
         iniciarMapasEstacionales();
         renderMathInElement(mainContent, {
           delimiters: [
@@ -4147,6 +4419,109 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
       raizUl.setAttribute('role', 'none');
       raizUl.appendChild(elemento(spec.raiz));
       panelArbol.appendChild(raizUl);
+      seleccionar(0);
+    }
+
+    // ================================================================
+    // Diagrama de diseño muestral (v1, capítulo 4)
+    //
+    // DIAGRAMAS_DISENO['id'] = {titulo, intro, nota, etapas, acumulado}
+    // sobre un contenedor con data-diagrama="id". Cada etapa es
+    //
+    //   { etiqueta, unidad, icono, resumen, pi, peso, cifras, ejemplo }
+    //
+    // `pi` y `peso` son LaTeX (sin $): la probabilidad de inclusión que
+    // la etapa aporta y el factor de peso que deja. `cifras` es una
+    // lista de {k, v} con los números reales del ejemplo. La franja
+    // `acumulado` = {formula, texto} cierra con la lección del
+    // componente: π y peso finales son el producto de las etapas.
+    //
+    // El texto admite LaTeX entre $…$; al cambiar de etapa se vuelve a
+    // pasar KaTeX por el panel, igual que hace el árbol de error.
+    // ================================================================
+    const DIAGRAMAS_DISENO = {};
+
+    function iniciarDiagramasDiseno() {
+      mainContent.querySelectorAll('[data-diagrama]').forEach(raiz => {
+        const spec = DIAGRAMAS_DISENO[raiz.dataset.diagrama];
+        if (!spec) {
+          console.warn(`Diagrama de diseño no registrado: ${raiz.dataset.diagrama}`);
+          return;
+        }
+        pintarDiagramaDiseno(raiz, spec);
+      });
+    }
+
+    function pintarDiagramaDiseno(raiz, spec) {
+      raiz.innerHTML = `
+        <p class="diagrama-diseno-titulo"><i class="fas fa-project-diagram" aria-hidden="true"></i>${spec.titulo}</p>
+        ${spec.intro ? `<p class="diagrama-diseno-intro">${spec.intro}</p>` : ''}
+        <div class="diagrama-diseno-flujo" role="group" aria-label="${spec.titulo}"></div>
+        <div class="diagrama-diseno-detalle" role="status" aria-live="polite"></div>
+        ${spec.acumulado ? `<div class="diagrama-diseno-acumulado">
+          <span class="rotulo">${spec.acumulado.rotulo || 'El diseño completo'}</span>
+          <div class="diagrama-diseno-acumulado-formula">${'$$'}${spec.acumulado.formula}${'$$'}</div>
+          ${spec.acumulado.texto ? `<p>${spec.acumulado.texto}</p>` : ''}
+        </div>` : ''}
+        ${spec.nota ? `<p class="diagrama-diseno-nota">${spec.nota}</p>` : ''}`;
+
+      const flujo = raiz.querySelector('.diagrama-diseno-flujo');
+      const detalle = raiz.querySelector('.diagrama-diseno-detalle');
+
+      spec.etapas.forEach((etapa, i) => {
+        if (i > 0) {
+          const flecha = document.createElement('span');
+          flecha.className = 'diagrama-diseno-flecha';
+          flecha.setAttribute('aria-hidden', 'true');
+          flecha.innerHTML = '<i class="fas fa-arrow-right"></i>';
+          flujo.appendChild(flecha);
+        }
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'diagrama-diseno-etapa';
+        boton.dataset.etapa = String(i);
+        boton.setAttribute('aria-pressed', 'false');
+        boton.innerHTML = `
+          <span class="diagrama-diseno-icono"><i class="fas ${etapa.icono || 'fa-layer-group'}" aria-hidden="true"></i></span>
+          <span class="diagrama-diseno-etiqueta">${etapa.etiqueta}</span>
+          ${etapa.unidad ? `<span class="diagrama-diseno-unidad">${etapa.unidad}</span>` : ''}`;
+        boton.addEventListener('click', () => seleccionar(i));
+        flujo.appendChild(boton);
+      });
+
+      // Las etiquetas y unidades de la franja se pintan una sola vez;
+      // si llevan $…$ hay que pasarles KaTeX aquí, no en seleccionar().
+      if (typeof katexEn === 'function') katexEn(flujo);
+
+      function seleccionar(i) {
+        const etapa = spec.etapas[i];
+        flujo.querySelectorAll('.diagrama-diseno-etapa').forEach(b => {
+          const activo = b.dataset.etapa === String(i);
+          b.classList.toggle('activo', activo);
+          b.setAttribute('aria-pressed', String(activo));
+        });
+
+        const formulas = [];
+        if (etapa.pi) {
+          formulas.push(`<div class="diagrama-diseno-formula"><span class="rotulo">Probabilidad que aporta</span>$${etapa.pi}$</div>`);
+        }
+        if (etapa.peso) {
+          formulas.push(`<div class="diagrama-diseno-formula"><span class="rotulo">Factor de peso que deja</span>$${etapa.peso}$</div>`);
+        }
+
+        detalle.innerHTML =
+          `<h5>Etapa ${i + 1} de ${spec.etapas.length} · ${etapa.etiqueta}</h5>` +
+          (etapa.resumen ? `<p>${etapa.resumen}</p>` : '') +
+          (formulas.length ? `<div class="diagrama-diseno-formulas">${formulas.join('')}</div>` : '') +
+          ((etapa.cifras || []).length ? `<div class="diagrama-diseno-cifras">${etapa.cifras.map(c =>
+            `<span class="diagrama-diseno-cifra">${c.k}: <strong>${c.v}</strong></span>`).join('')}</div>` : '') +
+          (etapa.ejemplo ? `<p class="diagrama-diseno-ejemplo"><strong>En el ejemplo:</strong> ${etapa.ejemplo}</p>` : '');
+
+        if (typeof katexEn === 'function') katexEn(detalle);
+      }
+
+      const acumulado = raiz.querySelector('.diagrama-diseno-acumulado');
+      if (acumulado && typeof katexEn === 'function') katexEn(acumulado);
       seleccionar(0);
     }
 
@@ -5109,6 +5484,49 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
     // filas son las de ese capítulo, y la tabla se repite en todos.
     // Demostración del componente .arbol-error. En un capítulo real los nodos
     // son los de ese capítulo; aquí basta con dos niveles para ver la mecánica.
+    // Demostración del componente .diagrama-diseno. En un capítulo real
+    // las etapas son las del diseño de ese capítulo; aquí basta un diseño
+    // de dos etapas genérico para ver la mecánica.
+    DIAGRAMAS_DISENO['demo'] = {
+      titulo: 'Diagrama de demostración: un diseño en dos etapas',
+      intro: 'Pulsa cada etapa para leer su ficha; la franja inferior acumula el diseño completo.',
+      nota: 'Los campos <code>pi</code> y <code>peso</code> son los que hacen didáctico al ' +
+        'componente: cada etapa declara la probabilidad que aporta y el factor de peso que deja.',
+      etapas: [
+        {
+          etiqueta: 'Población',
+          unidad: '$N_I$ conglomerados',
+          icono: 'fa-globe-americas',
+          resumen: 'El marco agrupa las unidades finales en conglomerados; todavía no se muestrea nada.',
+          cifras: [{ k: 'Conglomerados', v: '$N_I$' }, { k: 'Unidades', v: '$N$' }]
+        },
+        {
+          etiqueta: 'Etapa 1: UPM',
+          unidad: 'MAS de $n_I$ conglomerados',
+          icono: 'fa-th-large',
+          resumen: 'Se sortean conglomerados completos: son las unidades primarias de muestreo.',
+          pi: '\\pi_{Ii} = n_I/N_I',
+          peso: 'N_I/n_I',
+          ejemplo: 'sortear escuelas antes de encuestar a nadie.'
+        },
+        {
+          etiqueta: 'Etapa 2: USM',
+          unidad: 'MAS de $m_i$ unidades',
+          icono: 'fa-user-check',
+          resumen: 'Dentro de cada conglomerado sorteado se muestrean las unidades finales.',
+          pi: '\\pi_{k|i} = m_i/M_i',
+          peso: 'M_i/m_i',
+          ejemplo: 'sortear estudiantes dentro de cada escuela elegida.'
+        }
+      ],
+      acumulado: {
+        formula: '\\pi_k = \\pi_{Ii}\\,\\pi_{k|i} \\qquad w_k = \\frac{N_I}{n_I}\\cdot\\frac{M_i}{m_i}',
+        texto: 'La probabilidad de inclusión final es el producto de las etapas, y el peso final ' +
+          'el producto de los pesos. Ese producto es lo que el estudiante ve romperse cuando ' +
+          'ignora una etapa del diseño.'
+      }
+    };
+
     ARBOLES_ERROR['demo'] = {
       titulo: 'Árbol de demostración',
       intro: 'Pulsa una rama para leer su ficha; el galón de la izquierda la pliega.',

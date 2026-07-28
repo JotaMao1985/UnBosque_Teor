@@ -1,0 +1,315 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · La correlación intraclase                          -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">La correlación intraclase
+          <span class="text-gray-400 font-normal text-2xl">/ ICC</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Condensar en un número — la ICC — cuánto se parecen
+              las unidades del mismo conglomerado, y traducirlo a efecto de diseño y tamaño efectivo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El módulo 3 midió el castigo; este explica su tamaño. La cantidad que gobierna todo el capítulo es la
+        <strong>correlación intraclase</strong> (ICC, $\rho$): cuánto más se parecen dos unidades del mismo
+        conglomerado que dos unidades cualesquiera. La versión ANOVA que usa el material — la $R_a$ ajustada de
+        Lohr — compara la variabilidad de dentro con la total:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">ICC y su consecuencia: el efecto de diseño</p>
+        $$R_a = 1 - \frac{\text{MSW}}{S^2}
+        \qquad\qquad
+        \text{deff} \approx 1 + (\bar{M} - 1)\,\rho$$
+        <p style="margin-bottom:0;">La segunda fórmula, de Kish, es la más citada de la estadística de encuestas:
+          con conglomerados de tamaño medio $\bar{M}$, cada punto de ICC multiplica el exceso de varianza por
+          $\bar{M} - 1$. Basta $\rho = 0{,}05$ con aulas de 25 para que deff $\approx 2{,}2$ — la mitad de la
+          muestra, tirada.</p>
+      </div>
+
+      <p>Con <code>algebra</code> — 12 aulas censadas por dentro — la ICC se calcula a mano en cuatro líneas:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La ICC de algebra por ANOVA">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="algebra con survey y su deff">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Nótese la diferencia entre las dos cifras de deff: la <strong>teórica</strong> de Kish (2,72, con la ICC y
+        el $\bar{M}$ muestrales) y la <strong>empírica</strong> (2,10, comparando errores estándar). La fórmula de
+        Kish es una aproximación para conglomerados iguales sin fpc; con 12 aulas de tamaños 20–34 y una fracción
+        muestral del 6 %, el orden de magnitud coincide y los decimales no. Las dos dicen lo mismo que importa:
+        estas 299 observaciones rinden como unas 140.</p>
+
+      <div class="simulador" data-simulador="icc-deff">
+        <h4><i class="fas fa-wave-square" aria-hidden="true"></i> La ICC al mando</h4>
+        <p class="simulador-intro">Mueve $\rho$ y el tamaño del conglomerado $m$. La curva muestra el deff en función
+          de $m$ para tu $\rho$; el punto, tu diseño; la lectura, el tamaño efectivo de una muestra de 1 000
+          unidades. Dos cosas que ver: con $\rho = 0$ el conglomerado sale gratis (deff = 1 para todo $m$), y con
+          cualquier $\rho > 0$ el deff crece <em>linealmente</em> con $m$ — por eso las encuestas reales prefieren
+          muchos conglomerados chicos a pocos grandes.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">deff = 1 + (m − 1)ρ en función del tamaño del conglomerado</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Efecto de diseño en función del tamaño de conglomerado para la ICC elegida" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>La ICC casi nunca es negativa, pero puede serlo.</strong> Una ICC negativa — unidades del mismo
+          conglomerado <em>menos</em> parecidas que al azar — haría al conglomerado más eficiente que el MAS. Ocurre
+          en conglomerados construidos adrede para ser diversos (el muestreo sistemático del capítulo 2 es
+          exactamente eso: una muestra sistemática es <em>un</em> conglomerado que recorre toda la población). Los
+          conglomerados que impone la geografía, en cambio, vienen con $\rho > 0$ prácticamente siempre.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.2.2: ICC y ANOVA poblacional; la $R_a$ ajustada.</li>
+          <li>Kish, <em>Survey Sampling</em> — §5.4: la fórmula deff = 1 + (m − 1)ρ.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · Conglomerados de tamaño desigual                   -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tamaños desiguales
+          <span class="text-gray-400 font-normal text-2xl">/ Unequal sizes</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Estimar cuando cada conglomerado tiene su propio
+              $M_i$: el estimador de razón, y el parámetro equivocado que estima la media ingenua.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los conglomerados reales no vienen en tallas iguales: las nidadas de focha americana de <code>coots</code>
+        tienen entre 5 y 13 huevos ($M_i$), y de cada una se midieron 2. ¿El volumen medio de un huevo? La trampa
+        está en la pregunta: ¿medio <em>entre qué</em>? Hay dos poblaciones posibles — la de los huevos y la de las
+        nidadas — y cada una tiene su media.</p>
+
+      <div class="formula">
+        <p class="formula-titulo">El estimador de razón para la media por unidad</p>
+        $$\hat{\bar{y}}_r = \frac{\sum_{i \in s} \hat{t}_i}{\sum_{i \in s} M_i}, \qquad
+        \widehat{V}(\hat{\bar{y}}_r) = \frac{1}{n\,\bar{M}^2}\cdot
+        \frac{\sum_{i \in s} (\hat{t}_i - \hat{\bar{y}}_r M_i)^2}{n-1}$$
+        <p style="margin-bottom:0;">Es el estimador de razón del capítulo 3 con $x_i = M_i$: numerador y denominador
+          son aleatorios (no se sabe cuántos huevos traerá la muestra), y la varianza usa los residuos
+          $e_i = \hat{t}_i - \hat{\bar{y}}_r M_i$. Cada nidada pesa lo que pesa en la población de huevos.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La razón de coots a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La diferencia no es decorativa: <strong>2,49 contra 2,33</strong>, un 6,7 %. El volumen crece con el tamaño
+        de la nidada, y la media ingenua — que da a cada <em>huevo medido</em> el mismo voto — subrepresenta a las
+        nidadas grandes, que traen más huevos a la población. No es un estimador «peor» del mismo número: es un
+        estimador de <strong>otro parámetro</strong> (la media de la nidada típica, no la del huevo típico).</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La razón de coots con survey">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Nota de auditoría del archivo oficial.</strong> La nidada 88 registra <code>csize</code>
+          distinto en sus dos huevos (9 y 11): una inconsistencia del archivo publicado con el libro. El material
+          sigue la convención de Lohr — cada huevo pondera con su propio <code>csize</code>/2 — y con ella la vía a
+          mano y <code>survey</code> coinciden hasta la última cifra; la primera versión del precálculo, que tomaba
+          «el» tamaño de la nidada, difería en la cuarta cifra decimal, y así se encontró la inconsistencia. Ninguna
+          de las dos convenciones cambia nada visible (dif. relativa 8 × 10⁻⁵), pero el protocolo del material
+          exige explicar cada discrepancia, no taparla con tolerancia.</p>
+      </div>
+
+      <div class="simulador" data-simulador="coots-submuestras">
+        <h4><i class="fas fa-egg" aria-hidden="true"></i> Las dos medias, con más o menos nidadas</h4>
+        <p class="simulador-intro">El deslizador toma submuestras (con semilla fija) de las 184 nidadas. Las barras
+          comparan el estimador de razón con la media ingenua en cada tamaño; las líneas marcan los valores con la
+          muestra completa. La brecha entre ambos <em>no se cierra</em> al crecer $n$: un parámetro equivocado no se
+          arregla con más datos — es el «$n$ grande no salva» del capítulo 1, en versión conglomerados.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Razón frente a media ingenua según el número de nidadas</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Estimador de razón y media ingenua para distintos números de nidadas" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.2.2–5.2.3: tamaños desiguales y el ejemplo de las fochas (Arnold, 1991).</li>
+          <li>Capítulo 3 de este material — el estimador de razón, del que este módulo es un caso.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · Muestreo en dos etapas                             -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Muestreo en dos etapas
+          <span class="text-gray-400 font-normal text-2xl">/ Two-stage sampling</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">No censar los conglomerados sorteados sino
+              submuestrearlos: el estimador MAS-MAS por tres vías — a mano, survey y E.2SI.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Censar cada conglomerado sorteado (módulos 3–5) desperdicia dinero justo donde menos rinde: el módulo 4
+        mostró que, pasadas unas cuantas, las unidades del mismo conglomerado repiten información. La jugada
+        natural es cortar la segunda mitad: sortear conglomerados <em>y luego sortear dentro</em>. Ese es el
+        muestreo en dos etapas, y con MAS en ambas (el SI-SI de Gutiérrez) el estimador queda:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">El π-estimador de dos etapas y su varianza</p>
+        $$\hat{t} = \frac{N}{n} \sum_{i \in s} \hat{t}_i, \quad \hat{t}_i = M_i \bar{y}_i,
+        \qquad
+        \widehat{V}(\hat{t}) = \underbrace{N^2\left(1 - \frac{n}{N}\right)\frac{s_t^2}{n}}_{\text{etapa 1: entre}}
+        + \underbrace{\frac{N}{n}\sum_{i \in s} M_i^2\left(1 - \frac{m_i}{M_i}\right)\frac{s_i^2}{m_i}}_{\text{etapa 2: dentro}}$$
+        <p style="margin-bottom:0;">La primera etapa aporta la varianza del módulo 3 — como si los $\hat{t}_i$
+          fueran totales exactos —; la segunda paga el precio de que no lo son: cada escuela sorteada aporta la
+          incertidumbre de estimar su total con $m_i$ de sus $M_i$ estudiantes.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-dos-etapas">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver de dónde salen los dos sumandos (condicionar por etapas)</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-dos-etapas" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>La herramienta es la descomposición de la varianza condicionando en la primera etapa
+                ($s_1$ = qué conglomerados salieron):</p>
+              $$V(\hat{t}) = V\!\big(E(\hat{t} \mid s_1)\big) + E\!\big(V(\hat{t} \mid s_1)\big)$$
+            </li>
+            <li>
+              <p>Dado $s_1$, cada $\hat{t}_i = M_i\bar{y}_i$ es insesgado para $t_i$ (es un MAS dentro del
+                conglomerado), así que $E(\hat{t} \mid s_1) = \frac{N}{n}\sum_{i \in s_1} t_i$ — el estimador de
+                una etapa del módulo 3. Su varianza es el <strong>primer sumando</strong>.</p>
+            </li>
+            <li>
+              <p>La varianza condicional dada $s_1$ suma las varianzas de estimar cada total: MAS dentro de cada
+                conglomerado, expandido por $(N/n)^2$; al promediar sobre $s_1$ queda el <strong>segundo
+                sumando</strong>. La misma lógica se apila para tres etapas o más — condicionando etapa a etapa —
+                y es la estructura de las encuestas de hogares reales del capítulo 7.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <p>Las tres vías del protocolo sobre la encuesta escolar — la fórmula a mano, <code>survey</code> con las
+        dos etapas declaradas, y <code>E.2SI</code> de Gutiérrez:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Dos etapas a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Dos etapas con survey">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Dos etapas con E.2SI">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R11⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Cómo se declara la segunda etapa en survey.</strong> <code>id = ~schoolid + stu</code> dice
+          «primero escuelas, luego estudiantes»; <code>fpc = ~fpc1 + Mi</code> da el tamaño del sorteo en cada
+          etapa. Con solo la primera etapa declarada (<code>id = ~schoolid</code>, fpc de 75), survey usaría la
+          aproximación de «conglomerados últimos», que aquí casi no cambia nada — el módulo 7 explica por qué ese
+          atajo suele ser legítimo.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>La media necesita otro dato.</strong> $\hat{t}$ estima el total sin pedir nada nuevo, pero la
+          media por estudiante exige dividir por $K = \sum M_i$… que no se conoce (solo se conocen los $M_i$ de las
+          escuelas sorteadas). <code>svymean</code> resuelve con la razón $\hat{t}/\widehat{K}$ — media 33,12, ee
+          1,66 — y por eso la media de dos etapas es un estimador de razón con todas las consecuencias del
+          capítulo 3.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §5.3: dos etapas; el ejemplo de las escuelas es el 5.8.</li>
+          <li>Gutiérrez — §7.2: el diseño SI-SI y <code>E.2SI</code>, que este módulo reproduce.</li>
+          <li>Särndal, Swensson y Wretman — cap. 4: la teoría general multietapa.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

@@ -1,0 +1,296 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Asignación de observaciones                        -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Asignación de observaciones
+          <span class="text-gray-400 font-normal text-2xl">/ Allocation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Repartir el presupuesto de $n$ entrevistas entre los
+              estratos: proporcional, igual y Neyman, con la ganancia de cada una medida sobre la población real.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Estratificar abre una decisión que el MAS no tenía: ¿cuántas entrevistas van a cada estrato? La fórmula de la
+        varianza del módulo 2 la convierte en un problema de optimización con tres respuestas célebres.</p>
+
+      <div class="definition">
+        <h4>Las tres asignaciones</h4>
+        <ul style="margin-bottom:0;">
+          <li><strong>Proporcional:</strong> $n_h = n \, W_h$. La muestra es una maqueta de la población, los pesos
+            salen todos iguales (<em>autoponderada</em>) y nunca lo hace peor que el MAS.</li>
+          <li><strong>Igual:</strong> $n_h = n/H$. Reparte precisión por igual entre los estratos: es la elección
+            cuando el objetivo son las <em>comparaciones entre</em> estratos, no el agregado nacional.</li>
+          <li><strong>Neyman:</strong> $n_h \propto N_h S_{y,h}$. Minimiza la varianza del agregado: manda
+            entrevistas donde hay más unidades <em>y</em> más dispersión.</li>
+        </ul>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-neyman">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver de dónde sale la asignación de Neyman</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-neyman" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Se minimiza la parte de la varianza que depende del reparto, sujeta a que el reparto sume $n$:</p>
+              $$\min_{n_1,\dots,n_H} \; \sum_{h} \frac{W_h^2 S^2_{y,h}}{n_h}
+                \quad \text{sujeto a} \quad \sum_h n_h = n$$
+              <p>(el término $-\sum_h W_h^2 S^2_{y,h}/N_h$ del fpc no depende de los $n_h$ y no juega).</p>
+            </li>
+            <li>
+              <p>Lagrange: $\dfrac{\partial}{\partial n_h}\left[\sum_h \dfrac{W_h^2 S^2_{y,h}}{n_h} +
+                \lambda \sum_h n_h\right] = -\dfrac{W_h^2 S^2_{y,h}}{n_h^2} + \lambda = 0
+                \;\Longrightarrow\; n_h = \dfrac{W_h S_{y,h}}{\sqrt{\lambda}}.$</p>
+            </li>
+            <li>
+              <p>Imponer $\sum_h n_h = n$ fija $\lambda$ y deja</p>
+              $$n_h = n \cdot \frac{N_h S_{y,h}}{\sum_g N_g S_{y,g}}$$
+              <p>Cada estrato recibe en proporción a su masa por su dispersión. Un estrato homogéneo casi no
+                necesita muestra por grande que sea; uno disperso la necesita aunque sea chico.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <p>Sobre <code>agpop</code> las tres asignaciones se calculan con dos líneas, y como la población completa está
+        disponible, la varianza de cada una es <strong>exacta</strong>, no estimada:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las tres asignaciones sobre agpop">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Hay dos sorpresas en esa tabla, y las dos enseñan algo:</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong>Neyman vacía el Nordeste y llena el Oeste.</strong> Al Nordeste (220 condados, la desviación más
+          chica) le tocan <strong>5</strong> entrevistas; al Oeste (422 condados, desviación gigante),
+          <strong>107</strong> — de 41 que le daba la proporcional. El error estándar del agregado baja de 21 124 a
+          17 291: un 18 % menos con el mismo dinero.</li>
+        <li><strong>Aquí la igual le gana a la proporcional</strong> (deff 0,74 contra 0,82). No es lo habitual, y
+          la razón es instructiva: repartir 75 y 75 sobre-muestrea el Oeste respecto a su tamaño, que es
+          exactamente la dirección en la que empuja Neyman. La proporcional ignora las $S_{y,h}$, y con estratos
+          tan desiguales en dispersión, ignorarlas cuesta.</li>
+      </ul>
+
+      <div class="simulador" data-simulador="asignador">
+        <h4><i class="fas fa-sliders" aria-hidden="true"></i> El asignador: reparte y mide</h4>
+        <p class="simulador-intro">Reparte tú las entrevistas con un deslizador por región. La primera gráfica muestra
+          tu reparto contra el de Neyman (naranja); la segunda, el error estándar que consigue tu asignación frente a
+          las tres de referencia y al MAS. Intenta ganarle a Neyman — la teoría dice que no se puede, pero comprobarlo
+          educa la intuición: fíjate cuánto castiga quitarle entrevistas al Oeste y qué poco castiga quitárselas al
+          Nordeste.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Tu reparto frente al de Neyman</p>
+        <div class="grafico-wrapper" style="height:220px;">
+          <canvas aria-label="Reparto elegido frente al reparto de Neyman por región" role="img"></canvas>
+        </div>
+        <p class="grafico-etiqueta">Error estándar del agregado con cada asignación</p>
+        <div class="grafico-wrapper" style="height:220px;">
+          <canvas aria-label="Error estándar de la asignación elegida frente a las de referencia" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Neyman necesita conocer las $S_{y,h}$, y nadie las conoce.</strong> Se aproximan con un censo
+          anterior, un piloto o una variable correlacionada (aquí serviría <code>acres87</code>). La buena noticia:
+          la varianza es plana cerca del óptimo — equivocarse moderadamente en las $S_{y,h}$ cuesta poco. La mala:
+          la asignación óptima para <em>una</em> variable no es la óptima para otra; una encuesta multipropósito
+          suele quedarse cerca de la proporcional como compromiso.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.4 (2.ª ed.) / §3.4 (3.ª ed.): asignación de observaciones.</li>
+          <li>Neyman (1934), «On the two different aspects of the representative method» — el artículo que fundó
+            esto y de paso el muestreo probabilístico moderno.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · Asignación óptima con costos                       -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Asignación óptima con costos
+          <span class="text-gray-400 font-normal text-2xl">/ Optimal allocation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Pasar de «repartir $n$ entrevistas» a «repartir $C$
+              pesos»: la asignación óptima cuando entrevistar no cuesta lo mismo en todas partes.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Neyman responde a la pregunta equivocada. El presupuesto real de una encuesta no está en entrevistas: está
+        en dinero, y una entrevista en un condado remoto del Oeste no cuesta lo que una en el Nordeste. Con costo
+        $c_h$ por entrevista en el estrato $h$ y presupuesto total $C$, el problema pasa a ser</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Asignación óptima con costos desiguales</p>
+        $$\min \sum_h \frac{W_h^2 S^2_{y,h}}{n_h} \;\; \text{sujeto a} \;\; \sum_h c_h n_h = C
+        \qquad\Longrightarrow\qquad
+        n_h \;\propto\; \frac{N_h S_{y,h}}{\sqrt{c_h}}$$
+        <p style="margin-bottom:0;">La misma cuenta de Lagrange del módulo 4 con la restricción nueva. El costo entra
+          con <strong>raíz cuadrada</strong>: que el Oeste cueste el triple no divide su muestra entre tres, sino
+          entre $\sqrt{3} \approx 1{,}7$. Neyman es el caso particular $c_h$ constante.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La asignación óptima con costos sobre agpop">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Léelo con calma, porque el resultado es contraintuitivo: con 3 000 pesos de presupuesto, el óptimo compra
+        <strong>menos entrevistas</strong> (265 en vez de las ~301 que compraría la proporcional al mismo costo) y
+        aun así consigue <strong>menos varianza</strong> — error estándar 18 916 frente a 21 124 de la proporcional
+        con $n = 300$. Compra entrevistas <em>mejor situadas</em>: mantiene las del Sur y las del Oeste que más
+        varianza recortan y deja de pagar entrevistas baratas que aportaban poco.</p>
+
+      <div class="simulador" data-simulador="presupuesto">
+        <h4><i class="fas fa-coins" aria-hidden="true"></i> El presupuesto manda</h4>
+        <p class="simulador-intro">Mueve el presupuesto total y el costo de entrevistar en el Oeste. La gráfica de
+          barras muestra el reparto óptimo resultante; la lectura, cuántas entrevistas compra, qué error estándar
+          consigue y cuánto le saca a la proporcional del mismo costo. Observa el efecto de la raíz: duplicar el
+          costo del Oeste no divide su muestra entre dos.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Reparto óptimo de entrevistas según presupuesto y costos</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Asignación óptima por región según el presupuesto y el costo del Oeste" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El óptimo puede pedir imposibles.</strong> Nada en la fórmula impide que salga $n_h > N_h$ (más
+          entrevistas que unidades tiene el estrato) o $n_h < 2$ (con una sola unidad no hay con qué estimar
+          $s^2_h$). En la práctica se truncan esos estratos y se re-optimiza el resto — el mismo truncamiento
+          iterativo que el simulador de la portada del material le aplica a las π del πPT. Y las $n_h$ salen con
+          decimales: se redondean, y la pérdida por redondear es despreciable.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.4 (2.ª ed.) / §3.4.2 (3.ª ed.): asignación con costos.</li>
+          <li>Cochran, <em>Sampling Techniques</em> — §5.5: el tratamiento clásico, con costo fijo $c_0$ incluido.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · Definición de estratos                             -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Definición de estratos
+          <span class="text-gray-400 font-normal text-2xl">/ Building strata</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Decidir con qué variable estratificar y en cuántos
+              estratos, midiendo cada opción sobre la población real.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los módulos anteriores dieron por hechos los estratos. Pero la región no era la única opción: cualquier
+        columna del marco puede partir la población. ¿Cuál conviene? La teoría da una regla limpia — estratificar
+        rinde lo que la variable de estratificación <strong>explica</strong> de la variable de interés — y con
+        <code>agpop</code> completa se puede medir cada opción sin estimar nada:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Cuatro maneras de partir agpop en cuatro estratos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La tabla ordena las lecciones sola:</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong>Cuartiles de <code>acres87</code>: deff 0,54.</strong> La superficie de 1987 predice la de 1992
+          mejor que la geografía; estratificar por ella casi duplica la ganancia de la región. Es la misma variable
+          auxiliar que el capítulo 3 usaba para el estimador de razón, entrando ahora por el diseño.</li>
+        <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
+          la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
+        <li><strong>Cuartiles de <code>farms92</code>: deff 0,99.</strong> El <em>número</em> de granjas casi no
+          dice nada de la <em>superficie</em> sembrada. Estratificar por una variable poco correlacionada es
+          trabajar gratis.</li>
+        <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
+          $y$ ni ganan ni pierden — el estratificado degenera en un MAS con papeleo extra.</li>
+      </ul>
+
+      <div class="simulador" data-simulador="constructor">
+        <h4><i class="fas fa-layer-group" aria-hidden="true"></i> El constructor de estratos</h4>
+        <p class="simulador-intro">¿Y cuántos estratos? Mueve $H$ y mira caer el deff al partir <code>agpop</code>
+          en $H$ estratos por cuantiles de <code>acres87</code>, siempre con asignación proporcional de 300. Las
+          líneas de referencia marcan la región, <code>farms92</code> y el azar. La caída es fuerte al principio y
+          casi nula después de $H \approx 6$: los rendimientos decrecientes son la razón por la que las encuestas
+          reales rara vez pasan de pocos estratos por variable.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">deff al aumentar el número de estratos por cuantiles de acres87</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Efecto de diseño según el número de estratos por cuantiles de acres87" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Los −99 también se estratifican.</strong> Los 23 condados con <code>acres87 = −99</code> (código
+          de faltante, capítulo 1) caen todos en el primer cuantil, porque −99 es el valor más chico del archivo.
+          Con el marco completo que usa este material eso es consistente — son parte de la población que se
+          muestrea—, pero conviene saber que están ahí: una variable de estratificación con faltantes disfrazados
+          fabrica un estrato «basura» silencioso. El capítulo 8 recoge este hilo.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.5 (2.ª ed.) / §3.5 (3.ª ed.): definición de estratos.</li>
+          <li>Dalenius y Hodges (1959): el método clásico de cortes óptimos por cuantiles acumulados de
+            $\sqrt{f}$.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

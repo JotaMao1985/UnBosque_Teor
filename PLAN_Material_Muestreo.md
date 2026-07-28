@@ -390,7 +390,7 @@ Se heredan de Series de Tiempo: `.quiz`, `.ejercicio-guiado`, `.derivacion`, `.c
 |---|---|---|
 | `.glosario-notacion` | Tabla plegable que traduce la notación de Lohr ↔ Gutiérrez (`t̂_HT` ↔ `t̂_π`, `S²` ↔ `S²_yU`, …). Es el puente que hace legible el material con dos fuentes | cap. 2 y luego todos |
 | `.arbol-error` ✅ | Árbol plegable del error total: cada hoja dice si sesga o solo dispersa, si aumentar $n$ la reduce y en qué capítulo se trata. **Hecho en la fase 2**; en la plantilla y en el cap. 2, y usado en el módulo 7 del cap. 1 | cap. 1, y de nuevo en el 8 |
-| `.diagrama-diseno` | Esquema recorrible de un diseño complejo (población → estratos → UPM → USM → pesos) | caps. 5, 6, 7 |
+| `.diagrama-diseno` | Esquema recorrible de un diseño complejo (población → estratos → UPM → USM → pesos) | caps. 4, 5, 6, 7 (ampliado al 4 el 2026-07-27) |
 
 **Regla de retropropagación (heredada, no negociable):** un componente nuevo no está terminado
 hasta que está en la plantilla **y** en todos los capítulos anteriores que lo necesiten. Si el
@@ -719,10 +719,112 @@ tres capítulos ya escritos, no solo al 2:
 >   (`Unrecognized Unicode character "–"`). No rompe nada, pero hay que sustituirlo por `--`.
 > - No tiene simuladores, ni autoevaluación, ni ejercicios guiados.
 
-- [ ] **T3.1** Cap. 4 — actualización + asignación con costos + estratificado PPT + `.tabla-ranking`.
-- [ ] **T3.2** Cap. 5 — conglomerados, nuevo desde cero; reutilizar `material_estudio_cluster.html`
-      y los chunks de `material_muestreo_cap4_5_lohr.Rmd` **tras ejecutarlos**.
-- [ ] **T3.3** Componente `.diagrama-diseno` + retropropagación.
+**Decisiones tomadas al abrir la fase (2026-07-27), consultadas a Javier:**
+1. **`.diagrama-diseno` con instancia en los caps. 4 y 5** (recomendado, aceptado): el cap. 4 se
+   reescribe en esta misma fase y el diseño estratificado es el caso más simple para estrenar el
+   componente antes del de dos etapas. Los caps. 1–3 reciben CSS + motor sin instancia, como se
+   hizo con el `.arbol-error` en el cap. 2, para que el conjunto de selectores siga idéntico.
+2. **Módulo ML del cap. 4 con pestaña R además de Python** (Javier amplió sobre la recomendación,
+   fiel a su patrón): se instaló `rsample` 1.3.2 en el R 4.4 y el módulo muestra
+   `vfold_cv(strata=)` junto a `StratifiedKFold`. Es la excepción inversa a la regla «R principal»:
+   aquí la herramienta nativa es scikit-learn y la pestaña R es la equivalencia.
+3. **Publicar al cierre auditado de la fase** (recomendado, aceptado): push a `main` + subtree a
+   `gh-pages` tras superar el protocolo de verificación completo.
+
+Supuestos aplicados sin re-preguntar (decisiones ya cerradas): marco completo `N = 3 078` con los
+`-99` incluidos — los chunks del Rmd viejo los **filtran** (`filter(acres87 > 0)`) y eso **no** se
+hereda—; Python solo donde el cálculo explícito es la lección (más la excepción del módulo ML);
+ejercicios originales sobre datos de Lohr resueltos en `genera_soluciones.R`; ICC por ANOVA
+(vía de Lohr) como camino principal y `lmer` (ya instalado, 1.1.37) solo en el módulo 10 del
+cap. 5 como conexión con ciencia de datos.
+
+- [x] **T3.0 — Componente `.diagrama-diseno`** → `ensamblado/componentes/diagrama_diseno.{css,js}`
+      y `retropropaga_diagrama_diseno.py` (idempotente). Esquema recorrible por etapas: cada una
+      declara la probabilidad que aporta y el factor de peso que deja, y la franja final da la
+      lección completa (π y peso finales como producto). Insertado en la plantilla (CSS + motor +
+      demostración de dos etapas) y retropropagado a los caps. 1–3 (CSS + motor sin instancia).
+      *Verificado:* idempotencia, los tres ensambladores siguen reproduciendo byte a byte,
+      `node --check` en los 4 motores, demo probada en navegador (3 etapas, KaTeX, responsive
+      <900 px con flechas rotadas). Los 4 capítulos pasan de 149 a **165 clases CSS, 0 faltantes**.
+- [x] **T3.1 — Capítulo 4** → `capitulo-4-muestreo-estratificado.html` (305 KB), reescrito entero
+      desde la plantilla. **12 módulos, 8 simuladores + 1 tabla-ranking, 11 preguntas (los 4
+      tipos), 4 ejercicios guiados, 23 bloques (19 R + 4 Python)**, `.glosario-notacion` propio y
+      `.diagrama-diseno` con instancia (el diseño de agstrat). Módulo ML con pestañas
+      Python (sklearn) **y R (`rsample`, instalado 1.3.2)**. Precálculo en `genera_cap4.R` →
+      `cap4_datos.json`; ensamblado en `ensambla_cap4.py` + `modulos/cap4/` + `codigo/cap4/`.
+      **Toda la deuda heredada saldada**: clases CSS al día, 246 cifras `#>` anunciadas y
+      verificadas (antes: 0), sin avisos KaTeX.
+- [x] **T3.2 — Capítulo 5** → `capitulo-5-conglomerados.html` (279 KB), nuevo. **11 módulos,
+      8 simuladores + 1 tabla-ranking, 11 preguntas (los 4 tipos), 4 ejercicios guiados,
+      22 bloques (18 R + 4 Python)**, `.glosario-notacion` propio y `.diagrama-diseno` de dos
+      etapas (schools). Los chunks 5xx del Rmd viejo se ejecutaron antes de reutilizar nada, como
+      manda el plan: dos hallazgos (un SE = 0 por diseño mal declarado y un chunk con encoding
+      roto) confirmaron que había que recalcular todo. Precálculo en `genera_cap5.R`; ensamblado
+      en `ensambla_cap5.py` + `modulos/cap5/` + `codigo/cap5/`.
+- [x] **T3.3 — Auditoría, portada y publicación.** Ver «Auditoría de la fase 3» abajo.
+      `index.html`: tarjeta del cap. 4 reescrita, tarjeta del cap. 5 nueva, totales a
+      **5 capítulos / 56 módulos**, Gutiérrez añadido a la descripción.
+
+### Auditoría de la fase 3 (2026-07-28)
+
+| Comprobación | Resultado |
+|---|---|
+| Cifras `#>` contrastadas con la salida real | cap. 4: **246/246** · cap. 5: **163/163** · regresión caps. 1–3: **155 + 323 + 151**, 0 discrepancias |
+| Sesiones de R y de Python encadenadas | terminan con código 0 en los cinco capítulos |
+| Regresión del propio verificador (cifra falsa inyectada) | sigue cazándola (6 de 7) |
+| Doble vía para toda varianza | cap. 4: estratificado, proporción, PPT (HH a mano ↔ E.STPPS), postestratificación (a mano ↔ postStratify); cap. 5: gpa, algebra, coots, y schools por **tres vías** (fórmula ↔ survey ↔ E.2SI, dif. ≤ 2·10⁻¹⁶) |
+| Optimalidad comprobada, no asumida | la asignación con costos se perturbó conservando el presupuesto y la varianza no bajó |
+| `node --check` del motor | OK en plantilla y en los caps. 1–5 |
+| Consola del navegador | 0 errores y 0 avisos en los 23 módulos nuevos (12 + 11) y en los 33 de regresión |
+| KaTeX | 0 errores en los cinco capítulos (los 5 avisos del guion largo del cap. 4 viejo, extintos) |
+| Gráficos por módulo | `charts` = simuladores visibles en los 23 módulos; al salir quedan solo los del módulo activo |
+| Simuladores en todos sus valores y extremos | 16 de 16, **143 estados** probados (76 + 67), 0 lecturas con NaN/∞ |
+| Componentes nuevos | `.diagrama-diseno`: 2 instancias (4 etapas cada una) + demo; 2 tablas-ranking; 2 glosarios de 12 filas |
+| Autoevaluación | 22 preguntas nuevas, los 4 tipos (incl. 2 de tipo gráfico), flujo fallo → pista → reintento correcto |
+| Ejercicios guiados | 8 nuevos; los 16 paneles abren; soluciones con bloque de R verificado |
+| CSS frente a la plantilla | caps. 1–5: **165 clases, 0 faltantes**; llaves 398/398 |
+| Geometría a 1440 px | cabecera 1430, lateral 280, contenido 904; sin desbordes en los dos capítulos |
+| JSON incrustado | válido e **idéntico** al de `precalculo/salidas/` en los dos capítulos |
+| Regla de oro del ensamblado | los **cinco** capítulos se reproducen byte a byte |
+| Enlaces de `index.html` | los 5 resuelven a archivos existentes |
+| `.gitignore` de lista blanca | `git check-ignore` limpio sobre todas las carpetas nuevas |
+
+**Hallazgos de la auditoría que cambiaron el material:**
+
+1. **La nidada 88 de `coots.csv` trae `csize` inconsistente** entre sus dos huevos (9 y 11): una
+   inconsistencia del archivo oficial de Lohr. La cazó la doble vía (dif. 8·10⁻⁵ entre la fórmula
+   a mano y `survey`); el material adopta la convención de Lohr (cada huevo pondera con su propio
+   `csize`/2), con la que ambas vías coinciden a 10⁻¹⁶, y lo declara en una nota del módulo 5.
+2. **`rsample::vfold_cv(strata=)` des-estratifica en silencio las clases raras**: su `pool = 0.1`
+   fusiona los estratos con menos del 10 % de los datos — exactamente las clases minoritarias que
+   uno quiere proteger. Con la clase del 5 % del material, `strata=` solo no hace nada (los
+   pliegues bailan igual que sin estratificar) y hay que bajar `pool` explícitamente. Documentado
+   como trampa real en el módulo 11 del cap. 4, con las tres filas de evidencia en el bloque.
+3. **La cobertura empírica del IC a n = 300 es ~93 %, no 95 %** (0,931 MAS, 0,933 estratificado):
+   la asimetría de `acres92` pasa la factura incluso con 300 observaciones. Declarado en caja de
+   advertencia del módulo 7 del cap. 4 — estratificar mejora varianza, no arregla asimetría.
+4. **En `coots`, la corrección de la razón importa para el volumen (2,49 vs 2,33) y casi nada
+   para la longitud (48,649 vs 48,634)**: la ponderación pesa exactamente lo que se correlacionen
+   $y$ y $M_i$. Convertido en el ejercicio 2 del cap. 5.
+5. **Los chunks del Rmd viejo no eran fuente de verdad**, como ya se sospechaba: su bloque de
+   `coots` producía SE = 0 (diseño mal declarado en survey) y el chunk `55-plot` ni compila
+   (encoding roto). Todo se recalculó de cero.
+
+**Anotaciones de la fase, para no repetir el tropiezo:**
+- **En las fórmulas de `svydesign`, todo nombre se resuelve contra el data frame.**
+  `fpc = ~rep(N_su, nrow(gpa))` falla porque `gpa` dentro de la fórmula es la COLUMNA gpa, no el
+  data frame. Columna explícita (`gpa$fpc <- 100`) y a otra cosa.
+- **`round()` sobre un `data.frame` con columnas de texto es error**, no aviso. Construir la tabla
+  con las columnas ya redondeadas.
+- **Las barras de LaTeX en literales de JS van dobladas** (`'\\pi'`): JS se come la barra simple
+  en cadenas y KaTeX recibe `pi_{...}` sin comando. Pasó en la demo del diagrama y se cazó antes
+  de publicar releyendo el archivo generado.
+- **El castigo de las cifras a ojo en los comentarios**: dos comentarios de la cadena del cap. 5
+  anunciaban «44.79 contra 45.28» y «un 9 %» escritos de memoria; la salida real decía 48.634 y
+  48.8 %. El mismo error que la fase 1 documentó, en su enésima forma: ningún número al texto sin
+  pasar por la ejecución.
+- El tipo de pregunta `grafico` reusa los ayudantes de gráficos (`serieHistograma` + `dibujar:`),
+  así que una pregunta puede mostrar los datos reales del precálculo: se usó en los dos capítulos.
 
 ### Fase 4 — Capítulos 6 y 7
 - [ ] **T4.1** Cap. 6 — PPT/HH/HT; reutilizar `material_muestreo_cap6_lohr.Rmd` tras ejecutarlo.
@@ -788,18 +890,18 @@ Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
 
 ## Estimación de volumen
 
-| | Actual | Objetivo |
-|---|---:|---:|
-| Capítulos | 4 | 8 |
-| Módulos | 37 | 88 |
-| Simuladores | 0 | ~59 |
+| | Al empezar | Hoy (tras fase 3) | Objetivo |
+|---|---:|---:|---:|
+| Capítulos en el formato nuevo | 0 | **5** | 8 |
+| Módulos | 37 (formato viejo) | **56** | ~88 |
+| Simuladores | 0 | **38** (+3 tablas-ranking) | ~59 |
+| Preguntas de autoevaluación | 0 | **55** | ~64 |
+| Ejercicios guiados | 0 | **21** | ~26 |
+| Bloques de código verificados | 0 | **108** (1 038 cifras) | — |
+| Semanas del cronograma cubiertas | 9 / 16 | **11 / 16** | 16 / 16 |
 
 Los simuladores que aparecen listados en cada capítulo son el núcleo mínimo; la cifra del
 encabezado de cada capítulo (`~n S`) es el objetivo, y suele incluir alguno más de apoyo.
-| Preguntas de autoevaluación | 0 | **33** | ~64 |
-| Ejercicios guiados | 0 | **13** | ~26 |
-| Bloques de código verificados | 0 | **63** (629 cifras) | — |
-| Semanas del cronograma cubiertas | 9 / 16 | 9 / 16 | 16 / 16 |
 
 ---
 

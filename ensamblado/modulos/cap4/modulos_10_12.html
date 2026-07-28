@@ -1,0 +1,343 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · Postestratificación como calibración              -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Postestratificación
+          <span class="text-gray-400 font-normal text-2xl">/ Post-stratification</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Estratificar <em>después</em> de muestrear: ajustar los
+              pesos de un MAS a los totales conocidos del marco, y entender esto como el primer caso de
+              calibración.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El estratificado exige conocer el estrato de cada unidad <em>antes</em> de sortear. Pero hay un plan B con
+        casi la misma recompensa: si los tamaños $N_h$ se conocen, aunque el sorteo los haya ignorado, se pueden
+        imponer <strong>después</strong>. El MAS <code>agsrs</code> del capítulo 2 sorteó sin mirar regiones, y la
+        composición regional le salió como le salió:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los pesos antes y después de postestratificar">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R13⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>Postestratificación</h4>
+        <p>Con un MAS de $n$ unidades del que se observan $n_h$ en cada estrato (aleatorios, no fijados), el
+          estimador postestratificado aplica la fórmula del estratificado con los $n_h$ que salieron:</p>
+        $$\bar{y}_{\text{post}} = \sum_{h=1}^{H} W_h \, \bar{y}_h
+        \qquad\text{— es decir, el peso de la unidad } k \in U_h \text{ pasa de } \frac{N}{n} \text{ a } \frac{N_h}{n_h}.$$
+        <p style="margin-bottom:0;">La operación es una <strong>calibración</strong>: retocar los pesos lo mínimo
+          para que la muestra reproduzca exactamente los totales que el marco conoce ($\sum_{s_h} w_k = N_h$ para
+          todo $h$). El capítulo 7 generaliza esta idea a varios márgenes a la vez (raking) y a totales continuos
+          (GREG, que ya asomó en el capítulo 3).</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La media postestratificada a mano y con survey">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R14⟧</code></pre>
+        </div>
+      </div>
+
+      <p>El error estándar bajó de 18 898 a 17 513 — un 7 % — <strong>sin una sola entrevista nueva</strong>, solo
+        confesándole al estimador algo que el marco sabía desde el principio. No alcanza al estratificado de diseño
+        (16 380, porque este además <em>fijó</em> los $n_h$ donde convenía), y esa diferencia es la prima que se
+        paga por decidir tarde.</p>
+
+      <div class="simulador" data-simulador="calibracion">
+        <h4><i class="fas fa-anchor" aria-hidden="true"></i> La calibración ancla el estimador</h4>
+        <p class="simulador-intro">Mueve los $n_h$ que «le salieron» al MAS — como si repitieras el sorteo y la
+          composición regional saliera distinta. El promedio bruto se va detrás de la composición; el
+          postestratificado apenas se inmuta, porque los pesos $N_h/n_h$ compensan cada desequilibrio. La lectura
+          muestra los pesos resultantes y el error estándar condicional de cada escenario.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Promedio bruto y postestratificado según la composición que salga</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Efecto de la composición de la muestra sobre el promedio bruto y el postestratificado" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Dos errores estándar para el mismo estimador.</strong> <code>survey</code> reporta 17 513 y la
+          fórmula condicional del texto da 17 635. No es un bug de nadie: la varianza se puede calcular
+          <em>condicional</em> a los $n_h$ observados (la recomendación clásica de Lohr) o <em>incondicional</em>,
+          promediando sobre lo que pudo salir, y <code>survey</code> usa una linealización que se acerca a la
+          segunda. Con $n_h$ grandes la diferencia es cosmética (aquí, 0,7 %); con celdas chicas puede no serlo, y
+          el capítulo 7 vuelve sobre esto. El protocolo del material —toda varianza por dos vías— existe para que
+          estas discrepancias se encuentren y se expliquen, no para esconderlas.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Cuándo postestratificar.</strong> (1) El marco no traía la variable, pero sus totales se conocen
+          por otra fuente — el censo, un registro administrativo. (2) Como ajuste parcial de no respuesta, el uso
+          estrella del capítulo 8. (3) Nunca con celdas casi vacías: un $n_h$ de 2 o 3 fabrica pesos gigantes y una
+          varianza peor que la que venía. Regla práctica habitual: exigir $n_h \geq 20$ o fusionar celdas.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.7 (2.ª ed.) / §4.4 (3.ª ed.): postestratificación.</li>
+          <li>Gutiérrez — §10.1: calibración, donde esta idea se vuelve sistema.</li>
+          <li>Holt y Smith (1979), «Post stratification» — la defensa clásica del análisis condicional.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 11 · Estratificación en machine learning               -->
+  <!-- ============================================================ -->
+  <template id="module-11">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 11</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estratificación en machine
+          learning <span class="text-gray-400 font-normal text-2xl">/ Stratification in ML</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer el muestreo estratificado dentro de
+              <code>StratifiedKFold</code> y <code>stratify=</code>: por qué la evaluación de un modelo es una
+              encuesta, y qué pasa cuando se diseña mal.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Evaluar un modelo predictivo <em>es</em> estimar un parámetro poblacional con una muestra: la exactitud
+        «verdadera» del modelo sobre los datos que verá en producción, estimada con un conjunto de prueba. Todo lo
+        que este curso dice de las encuestas aplica: si el conjunto de prueba no representa la población, la
+        métrica sale sesgada — con el agravante de que nadie publica el error estándar de su <em>accuracy</em>. La
+        conexión no es una metáfora de este material: el propio Lohr abre el capítulo señalando que una muestra
+        estratificada «bien hecha da estimaciones más precisas», y la comunidad de ML redescubrió la regla con el
+        nombre de <em>stratified split</em>.</p>
+
+      <p>El caso donde más duele es el desbalance de clases. En <code>agpop</code>, los condados «grandes» (más de
+        un millón de acres) son el <strong>5 %</strong> — la clase que interesa detectar y la que menos unidades
+        tiene, como el fraude en las transacciones o la enfermedad rara en los tamizajes:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="KFold contra StratifiedKFold sobre agpop">
+          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+          <button class="code-tab-btn" data-lang="r" role="tab" aria-selected="false">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="python">
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="r" hidden>
+          <pre><code class="language-r">⟦R15⟧</code></pre>
+        </div>
+      </div>
+
+      <p><code>KFold</code> a secas deja pliegues con el 3,3 % de grandes y otros con el 6,8 % — la métrica de un
+        clasificador de minorías puede cambiar por completo entre esos dos extremos. <code>StratifiedKFold</code>
+        es, literalmente, asignación proporcional con la clase como estrato: clava el 5 % en los cinco pliegues.
+        La misma protección existe para la partición única de entrenamiento y prueba:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="train_test_split con y sin stratify">
+          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="python">
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La trampa de la pestaña R, que es una trampa de verdad.</strong> <code>rsample::vfold_cv</code>
+          acepta <code>strata=</code>, pero su parámetro <code>pool</code> (por defecto 0,1) <strong>fusiona en
+          silencio los estratos con menos del 10 % de los datos</strong> — exactamente las clases minoritarias que
+          uno quería proteger. Con nuestra clase del 5 %, <code>strata = grande</code> sin más <em>no estratifica
+          nada</em>, y el resultado lo demuestra: sus pliegues bailan igual que los no estratificados. Hay que bajar
+          <code>pool</code> explícitamente (el paquete avisa con un mensaje que conviene leer completo antes de
+          descartarlo). La moraleja es de auditoría, no de sintaxis: <strong>comprueba siempre las proporciones por
+          pliegue después de partir</strong> — es una línea de código y detecta el fallo venga de donde venga.</p>
+      </div>
+
+      <div class="simulador" data-simulador="kfold">
+        <h4><i class="fas fa-diagram-project" aria-hidden="true"></i> Pliegues estratificados contra pliegues a secas</h4>
+        <p class="simulador-intro">Mueve la prevalencia de la clase minoritaria y el número de pliegues $k$. Las
+          barras muestran la proporción de la clase en cada pliegue con partición simple (verde) y estratificada
+          (naranja), sobre una población sintética de 3 000 puntos re-sorteada con semilla fija. Con clases chicas y
+          $k$ grande, algún pliegue simple puede quedarse casi sin positivos — y la métrica calculada sobre él es
+          ruido con decimales.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Proporción de la clase minoritaria en cada pliegue</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Proporcion de la clase minoritaria por pliegue con y sin estratificar" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Hasta dónde llega el paralelismo.</strong> El <em>split</em> estratificado es asignación
+          proporcional, no Neyman: iguala composición, no varianzas. Y en ML también existe el paso siguiente — el
+          <em>importance sampling</em> pondera ejemplos como Horvitz–Thompson pondera unidades, y las curvas de
+          aprendizaje con clases re-balanceadas son el pariente del módulo 9. Ese hilo se retoma en la conexión del
+          capítulo 6 con el <em>active learning</em>.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Kohavi (1995), «A study of cross-validation and bootstrap» — la recomendación empírica original de
+            estratificar la validación cruzada.</li>
+          <li>scikit-learn, <em>User Guide</em> §3.1 (Cross-validation) y <code>rsample::vfold_cv</code> — la
+            documentación de <code>pool</code> que este módulo invita a leer con lupa.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 12 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-12">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 12</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
+          guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre los once módulos y cuatro
+              ejercicios de diseño resueltos con el código real del capítulo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al
+        final, el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos antes
+        de abrir la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap4">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 4</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro son problemas de diseño sobre los datos reales
+          del capítulo. Las cifras de cada solución salen de <code>ensamblado/codigo/cap4/cadena.R</code>, que se
+          ejecuta de verdad: ninguna está escrita a mano.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>agstrat</code>, estima el
+            <strong>total nacional de acres sembrados en 1992</strong> con su intervalo del 95 %. Después ve a
+            <code>agpop</code> —que es un censo— y comprueba si el intervalo contuvo la verdad.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>El diseño ya está declarado en el módulo 3: <code>svytotal</code> y <code>confint</code> hacen el
+              resto. La verdad es <code>sum(agpop$acres92)</code>, con los −99 incluidos — recuerda la decisión del
+              capítulo 2 sobre el marco completo.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R16⟧</code></pre>
+            <p>El total estimado es 909 736 036 con intervalo [810 920 045, 1 008 552 026]; la verdad, 943 951 718,
+              cae dentro con holgura. Nota el ancho del intervalo — ±11 % — pese al deff favorable: los totales de
+              variables asimétricas son caros de estimar, y esa es la motivación del PPT del módulo 9.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>El presupuesto sube a
+            <strong>$n = 400$</strong>. Reparte con Neyman y con proporcional, y cuantifica en porcentaje del error
+            estándar lo que la asignación óptima le saca a la cómoda.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Las $S_{y,h}$ poblacionales ya están calculadas en el módulo 4. Neyman: $n_h = 400 \cdot N_h S_h /
+              \sum N_g S_g$; redondea al entero. La función de varianza del módulo 4 acepta cualquier reparto.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R17⟧</code></pre>
+            <p>Neyman: 115/7/136/142 frente a 137/29/180/55 de la proporcional; error estándar 14 566 contra 17 925 —
+              un <strong>18,7 %</strong> menos con el mismo presupuesto. Compara con el 18,1 % que ganaba en
+              $n = 300$: la ventaja relativa de Neyman es estable con el tamaño, porque depende de la estructura de
+              la población, no de $n$.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Diseña sobre <strong>BigLucy</strong>
+            un estratificado <em>clásico</em> (MAS dentro de cada nivel) con $n = 380$ repartido proporcionalmente, y
+            estima el <strong>total de impuestos</strong> con su intervalo. ¿Atrapó la verdad?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Los $N_h$ salen de <code>table(BigLucy$Level)</code>; el reparto proporcional da 13/115/252. Sortea
+              con <code>sample()</code> dentro de cada nivel, arma los pesos $N_h/n_h$ y declara el diseño con
+              <code>svydesign(strata =, weights =, fpc =)</code>.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R18⟧</code></pre>
+            <p>Total estimado 1 015 706 con intervalo [920 481, 1 110 931]; la verdad es 1 008 426 — dentro, a un
+              0,7 % del centro. Con el 0,4 % de la población, el diseño estratificado deja el total de una variable
+              tan sesgada como los impuestos a tiro de piedra.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Sobre BigLucy y con el mismo
+            $n = 380$, el módulo 9 estimó ingresos con <strong>PPT por empleados</strong> y el ejercicio 3 estimó
+            impuestos con <strong>MAS por estrato</strong>. Compara la calidad de las dos estrategias con el
+            coeficiente de variación estimado y explica la diferencia.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>$\text{CV} = \text{ee}/\hat{t}$. Los dos objetos ya existen en la sesión: <code>est</code> (módulo 9)
+              y <code>disL</code> (ejercicio 3). La explicación está en qué tan proporcional es cada $y$ al tamaño
+              de la empresa.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R19⟧</code></pre>
+            <p>CV del 2,6 % para el PPT contra 4,8 % del estratificado clásico. Los ingresos siguen al número de
+              empleados de cerca, así que los cocientes $y_k/\psi_k$ del PPT casi no varían — la condición exacta
+              bajo la que Hansen–Hurwitz brilla. No son la misma variable, y por eso la comparación es de
+              estrategias, no un experimento controlado; el capítulo 6 la hará en igualdad de condiciones.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Hacia el capítulo 5.</strong> Este capítulo partió la población en grupos para meterlos
+          <em>todos</em> en la muestra con cuota garantizada. El siguiente hace lo contrario: parte la población en
+          grupos y sortea <em>cuáles</em> grupos entran completos. Estratos y conglomerados son la misma cuchilla
+          con el filo al revés — y las consecuencias sobre la varianza tienen el signo opuesto.</p>
+      </div>
+    </div>
+  </template>

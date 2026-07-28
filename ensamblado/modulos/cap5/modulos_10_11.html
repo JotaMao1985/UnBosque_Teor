@@ -1,0 +1,226 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · Datos agrupados en ciencia de datos               -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Datos agrupados en ciencia
+          de datos <span class="text-gray-400 font-normal text-2xl">/ Grouped data in ML</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer la ICC fuera de las encuestas: minibatches
+              correlacionados, validación cruzada que respeta grupos, y el modelo mixto como pariente del ANOVA.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los datos de la práctica moderna casi nunca son independientes: vienen en sesiones de un mismo usuario,
+        pacientes de un mismo hospital, fotogramas de un mismo video. Todo eso son conglomerados, la ICC les aplica
+        sin cambiar una letra, y los dos errores clásicos de este capítulo — creer que $K$ observaciones
+        correlacionadas valen como $K$ independientes, y dejar que un grupo se parta entre entrenamiento y prueba —
+        tienen nombre y castigo en machine learning.</p>
+
+      <div class="definition">
+        <h4>El minibatch como conglomerado</h4>
+        <p>Si un minibatch de tamaño $m$ se arma con ejemplos del mismo grupo (la misma sesión, el mismo shard, el
+          mismo archivo), la varianza del gradiente promedio no es $\sigma^2/m$ sino</p>
+        $$V(\bar{g}) = \frac{\sigma^2}{m}\,\big(1 + (m-1)\rho\big)$$
+        <p style="margin-bottom:0;">— la fórmula de Kish del módulo 4, con otro disfraz. Con $\rho = 0{,}2$ y
+          $m = 64$, el minibatch «de 64» informa como uno de 5: por eso los cargadores de datos barajan globalmente
+          y por eso muestrear shards enteros sale caro en pasos de entrenamiento.</p>
+      </div>
+
+      <div class="simulador" data-simulador="minibatch">
+        <h4><i class="fas fa-microchip" aria-hidden="true"></i> El minibatch correlacionado</h4>
+        <p class="simulador-intro">Mueve la correlación intra-grupo y el tamaño del batch. Las barras comparan el
+          tamaño nominal con el <strong>tamaño informativo</strong> $m/(1+(m-1)\rho)$; la lectura lo traduce a
+          «cuántos pasos de más» necesita el entrenamiento para la misma señal. Es el mismo simulador del módulo 4
+          con las etiquetas cambiadas — a propósito: la estadística es idéntica.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Tamaño nominal del batch frente a su tamaño informativo</p>
+        <div class="grafico-wrapper" style="height:220px;">
+          <canvas aria-label="Tamano nominal e informativo del minibatch segun la correlacion" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>El segundo error — partir un grupo entre entrenamiento y prueba — es la versión ML de ignorar el diseño al
+        estimar la varianza, y se corrige con la herramienta correcta de partición:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="GroupKFold contra KFold sobre las aulas de algebra">
+          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="python">
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <p><strong>48 de 48 posibles</strong>: KFold corriente parte <em>todas</em> las aulas en <em>todos</em> los
+        pliegues, y el modelo evalúa sobre estudiantes cuyos compañeros de aula vio en entrenamiento. Con ICC
+        positiva eso es información filtrada y métricas optimistas. <code>GroupKFold</code> es el submuestreo por
+        conglomerados de este capítulo con otro nombre: los grupos viajan enteros a un lado o al otro.</p>
+
+      <p>Y la tercera conexión es de modelado. La ICC que el ANOVA describe, el modelo mixto la <em>estima</em>:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La ICC como modelo mixto con lme4">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R14⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Dos números, dos preguntas.</strong> El 0,072 del ANOVA describe cuánta estructura de grupo hay
+          <em>en esta población finita</em>; el 0,043 de <code>lmer</code> estima el parámetro de un modelo de
+          superpoblación, con REML encogiendo las medias de aula hacia la global. Ninguno está mal: responden
+          preguntas distintas — la misma distinción diseño/modelo que el material viene marcando desde el módulo 9
+          del capítulo 3, y que aquí por primera vez produce dos cifras visiblemente diferentes con los mismos
+          datos.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>scikit-learn, <em>User Guide</em> §3.1.2: particiones por grupos (GroupKFold y familia).</li>
+          <li>Gelman y Hill, <em>Data Analysis Using Regression and Multilevel Models</em> — cap. 12: la ICC en
+            modelos jerárquicos.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 11 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-11">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 11</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
+          guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre los diez módulos y cuatro
+              ejercicios resueltos con el código real del capítulo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al
+        final, el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos antes
+        de abrir la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap5">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 5</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre los datos reales del capítulo.
+          Las cifras de cada solución salen de <code>ensamblado/codigo/cap5/cadena.R</code>, que se ejecuta de
+          verdad: ninguna está escrita a mano.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>algebra</code>, construye
+            el intervalo del 95 % para la nota media <strong>ignorando el diseño</strong> y <strong>declarándolo</strong>.
+            ¿Cuánto más ancho es el honesto, y qué tiene que ver con el deff del módulo 4?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>El ingenuo usa $s/\sqrt{299}$; el honesto, el ee de <code>svymean</code> con el diseño del módulo 4.
+              La relación de anchos debería recordarte a $\sqrt{2{,}10}$.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R15⟧</code></pre>
+            <p>[60,55; 64,59] contra [59,65; 65,49]: el honesto es 1,45 veces más ancho — exactamente
+              $\sqrt{\text{deff}} = \sqrt{2{,}10}$. El intervalo ingenuo no es «casi igual de bueno»: su cobertura
+              real está muy por debajo del 95 % que promete.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Estima la <strong>longitud media</strong>
+            del huevo de focha con el diseño de razón de <code>coots</code> y compárala con la media ingenua.
+            ¿Por qué aquí casi coinciden, cuando en el volumen diferían un 6,7 %?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>El diseño <code>dis_coots</code> del módulo 5 sirve tal cual: cambia la variable. La respuesta a la
+              segunda pregunta está en qué tanto se correlaciona cada variable con el tamaño de la nidada.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R16⟧</code></pre>
+            <p>48,649 contra 48,634: casi nada. La ponderación por $M_i$ importa exactamente en la medida en que
+              $y$ se correlacione con $M_i$ — el volumen crece con el tamaño de la nidada, la longitud apenas. Es
+              el criterio del capítulo 3 (¿sirve la auxiliar?) aplicado al revés: aquí dice cuándo la corrección
+              es imprescindible y cuándo cosmética.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Estima el <strong>total de la prueba
+            de lectura</strong> en las 75 escuelas por las tres vías del módulo 6 — a mano, <code>survey</code> y
+            <code>E.2SI</code> — y comprueba que coinciden.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Es el módulo 6 con <code>reading</code> en lugar de <code>math</code>. Las tres vías comparten los
+              $M_i$ y el diseño; solo cambian los totales por escuela.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R17⟧</code></pre>
+            <p>528 609,8 con ee 53 350,7 por las tres vías, hasta el decimal. Si en tu réplica alguna difiere, el
+              diseño está mal declarado en esa vía — que es precisamente la utilidad de tener tres.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Con $c_1 = 100$, $c_2 = 4$ y
+            $C = 8\,000$ sobre las zonas de BigLucy, ¿cuántos conglomerados y de qué tamaño? Cuantifica el castigo
+            de ignorar la fórmula y usar $m = 40$.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>$m^* = \sqrt{c_1(1-\rho)/(c_2\rho)}$ con la ICC de las zonas (0,2166); $n$ sale del presupuesto. Para
+              el castigo, compara $V \propto (1+(m-1)\rho)/(nm)$ en los dos puntos.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R18⟧</code></pre>
+            <p>$m^* = 9{,}5$ y $n^* = 58$. Doblar el $m$ óptimo cuesta un 10 % — la curva es plana cerca del
+              óptimo, como la de Neyman —, pero $m = 40$ cuesta un <strong>49 %</strong>: con ICC 0,22, la
+              información del conglomerado se agota rápido y las visitas largas pagan varianza sin recibir nada.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Hacia el capítulo 6.</strong> Este capítulo sorteó conglomerados con probabilidades iguales, y
+          eso choca con un hecho: un estado con 254 condados no debería pesar lo mismo en el sorteo que uno con 3.
+          Darle a cada conglomerado una probabilidad proporcional a su tamaño — el PPT que el capítulo 4 asomó por
+          estratos — es la idea que organiza el capítulo 6, con Hansen–Hurwitz y Horvitz–Thompson como
+          protagonistas y las encuestas de hogares reales como destino.</p>
+      </div>
+    </div>
+  </template>
