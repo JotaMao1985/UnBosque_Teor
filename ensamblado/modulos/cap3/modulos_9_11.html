@@ -1,0 +1,332 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · Modelos poblacionales                              -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelos poblacionales
+          <span class="text-gray-400 font-normal text-2xl">/ Model-assisted inference</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Separar dos usos del modelo que se confunden todo el
+              tiempo: el que <em>construye</em> el estimador y el que <em>justifica</em> la inferencia.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los tres estimadores de los módulos anteriores salieron de una intuición gráfica: una recta ajustada a la
+        nube. Detrás de cada uno hay un modelo, y hacerlo explícito es lo que permite construir el estimador
+        general del módulo siguiente.</p>
+
+      <div class="definition">
+        <h4>El modelo de trabajo</h4>
+        <p style="text-align:center;">$$\xi:\qquad y_k = \beta\,x_k + \varepsilon_k, \qquad E_\xi(\varepsilon_k) = 0,
+          \qquad V_\xi(\varepsilon_k) = \sigma^2 v_k$$</p>
+        <p style="margin-bottom:0;">La letra $\xi$ (xi) se reserva para el modelo, y se distingue del diseño $p(s)$
+          a propósito: son dos fuentes de aleatoriedad distintas. Bajo el diseño, los $y_k$ son constantes fijas y
+          lo aleatorio es qué unidades se observan; bajo el modelo, los $y_k$ son variables aleatorias.</p>
+      </div>
+
+      <h3>Las tres posturas</h3>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Basada en el diseño</h4>
+          <p class="text-sm" style="margin-bottom:0;">La del capítulo 2. No hay modelo: los $y_k$ son constantes y
+            toda la inferencia se toma respecto de $p(s)$. Es la más segura y la que menos supone, y por eso es la
+            que usan las agencias estadísticas para las cifras oficiales.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Basada en el modelo</h4>
+          <p class="text-sm" style="margin-bottom:0;">La inferencia se toma respecto de $\xi$: se predicen los $y_k$
+            no observados y se suman. Es lo que hace un análisis de regresión corriente. Da estimadores muy
+            eficientes <strong>si el modelo es correcto</strong>, y estimaciones sesgadas y con intervalos
+            engañosamente estrechos si no lo es. Y la muestra no permite comprobar el modelo fuera del rango
+            observado.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Asistida por modelos</h4>
+          <p class="text-sm" style="margin-bottom:0;">La del resto de este capítulo, y la del capítulo 7. El modelo
+            se usa <strong>para construir</strong> el estimador —de ahí salen $\hat{B}$, $b_1$ y los pesos $g_k$—,
+            pero la insesgadez y la varianza se calculan <strong>respecto del diseño</strong>. Si el modelo es bueno,
+            se gana muchísima precisión; si es malo, se pierde eficiencia pero <em>no</em> validez.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué esto importa fuera del aula.</strong> Es exactamente la discusión que reaparece cada vez
+          que alguien propone sustituir una encuesta por un modelo predictivo sobre datos administrativos. La
+          respuesta del muestreo no es «no», es «asistido por modelos»: usa el modelo para todo lo que quieras
+          construir, y deja que la garantía la dé el diseño. El capítulo 1 dejó dicho lo que pasa cuando no hay
+          diseño que dé ninguna garantía.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-modelo-razon">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver por qué $v_k = x_k$ lleva justo al estimador de razón</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-modelo-razon" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Bajo el modelo $y_k = \beta x_k + \varepsilon_k$ con $V_\xi(\varepsilon_k) = \sigma^2 v_k$, el
+                estimador de mínimos cuadrados <em>ponderados</em> de $\beta$ pesa cada observación por el inverso
+                de su varianza:</p>
+              $$\hat\beta = \frac{\sum_{k \in s} x_k y_k / v_k}{\sum_{k \in s} x_k^2 / v_k}$$
+            </li>
+            <li>
+              <p>Con $v_k = x_k$ —la varianza crece proporcionalmente al tamaño, que es lo que se observa en
+                <code>agpop</code>— los $x_k$ se cancelan:</p>
+              $$\hat\beta = \frac{\sum_{k \in s} x_k y_k / x_k}{\sum_{k \in s} x_k^2 / x_k}
+                = \frac{\sum_{k \in s} y_k}{\sum_{k \in s} x_k} = \frac{\bar{y}}{\bar{x}} = \hat{B}$$
+            </li>
+            <li>
+              <p style="margin-bottom:0;">Con $v_k = 1$ —varianza constante— no se cancela nada y queda la pendiente
+                de la regresión sin intercepto. Y añadiendo el intercepto al modelo se obtiene $b_1$, la pendiente
+                ordinaria. Los tres estimadores del capítulo son <strong>tres supuestos distintos sobre
+                $v_k$</strong>, y nada más.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>sección 3.4</strong> (2.ª ed.) o <strong>4.5</strong> (3.ª ed.) — modelos para la razón y
+            la regresión, y el análisis basado en modelos de <code>agsrs</code>.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 17</strong> — el enfoque asistido por
+            modelos desarrollado en general.</li>
+          <li>Särndal, Swensson y Wretman (1992), <strong>capítulos 5 y 6</strong> — la referencia canónica del
+            enfoque asistido por modelos y del GREG.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · El estimador general de regresión (GREG)          -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El estimador general de
+          regresión <span class="text-gray-400 font-normal text-2xl">/ The GREG estimator</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver que los cuatro estimadores del capítulo son
+              cuatro puntos de una misma recta, y quedarse con el paraguas que los contiene.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>El GREG con una variable auxiliar</h4>
+        <p style="text-align:center;">$$\hat{t}_{\text{GREG}} = \hat{t}_{y,\pi} + \beta\,\big(t_x - \hat{t}_{x,\pi}\big)$$</p>
+        <p style="margin-bottom:0;">Léase como una <strong>corrección</strong>: se parte del estimador de
+          Horvitz–Thompson y se ajusta según lo que la muestra se equivocó al estimar algo que <em>sí</em> se conoce.
+          Si la muestra subestimó $t_x$, probablemente también subestimó $t_y$, y $\beta$ dice en qué proporción.</p>
+      </div>
+
+      <p>El término $t_x - \hat{t}_{x,\pi}$ es medible: aquí vale 34 050 852, es decir, la muestra estimó el total de
+        1987 con un 3,53 % de defecto. Lo único que falta es cuánto de eso trasladar a $y$, y esa es toda la elección
+        que ofrece el GREG.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El GREG y sus casos particulares">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>La comprobación que cierra el módulo.</strong> Con $v_k = x_k$, la pendiente sale
+          <strong>0,98656524</strong> y el total <strong>950 520 496</strong>: exactamente $\hat{B}$ y exactamente
+          $\hat{t}_r$, hasta la última cifra. No es un parecido, es una identidad algebraica, y la derivación
+          plegable del módulo 9 la demuestra. Una nota de detalle: el cálculo con pesos $1/x_k$ deja fuera una
+          unidad, el condado de Hudson (Nueva Jersey), que tiene $x = 0$ e $y = 0$; como no aporta a ninguna de las
+          dos sumas, la identidad sigue siendo exacta. Comprobarlo cuesta una línea y es lo que separa una
+          afirmación de una suposición.</p>
+      </div>
+
+      <div class="simulador" data-simulador="greg">
+        <h4><i class="fas fa-sliders-h" aria-hidden="true"></i> Los cuatro estimadores son cuatro valores de $\beta$</h4>
+        <p class="simulador-intro">La recta es $\hat{t}_{\text{GREG}}(\beta)$; los cuatro puntos naranjas son los
+          estimadores del capítulo. Empieza en $\beta = 0$ —la expansión, la más alejada del total real— y sube
+          despacio: alrededor de $\beta \approx 1$ los tres estimadores con auxiliar se agolpan, y la curva cruza el
+          total real en torno a $\beta = 0{,}79$. Que ninguno de los cuatro caiga exactamente ahí no es un fallo:
+          el valor de $\beta$ que acierta con <em>esta</em> muestra no es el que acierta en promedio.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:270px;">
+          <canvas aria-label="Total estimado por el GREG en función de la pendiente del modelo" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-greg-general">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver la forma general del GREG, con varias auxiliares</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-greg-general" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Con $J$ variables auxiliares, cada unidad lleva un vector $\mathbf{x}_k \in \mathbb{R}^J$ y se conoce
+                el vector de totales $\mathbf{t}_x$. El GREG es la misma expresión con productos escalares:</p>
+              $$\hat{t}_{\text{GREG}} = \hat{t}_{y,\pi} + \big(\mathbf{t}_x - \hat{\mathbf{t}}_{x,\pi}\big)^{\!\top}\hat{\boldsymbol{\beta}}$$
+            </li>
+            <li>
+              <p>con $\hat{\boldsymbol{\beta}}$ el estimador $\pi$-ponderado de mínimos cuadrados generalizados:</p>
+              $$\hat{\boldsymbol{\beta}} = \left(\sum_{k \in s} \frac{\mathbf{x}_k \mathbf{x}_k^{\!\top}}{\pi_k v_k}\right)^{-1}
+                \sum_{k \in s} \frac{\mathbf{x}_k\, y_k}{\pi_k v_k}$$
+            </li>
+            <li>
+              <p>Reordenando, el GREG se escribe como un estimador de Horvitz–Thompson con los pesos retocados:</p>
+              $$\hat{t}_{\text{GREG}} = \sum_{k \in s} w_k\, y_k, \qquad w_k = \frac{g_k}{\pi_k}$$
+              <p>y esos $g_k$ son los <strong>pesos de calibración</strong>: los que hacen que
+                $\sum_{k \in s} w_k \mathbf{x}_k = \mathbf{t}_x$ exactamente.</p>
+            </li>
+            <li>
+              <p style="margin-bottom:0;">Ahí está el puente. <strong>Calibrar es exigirle a los pesos que
+                reproduzcan totales conocidos</strong>, y el GREG es la solución de ese problema con una función de
+                distancia cuadrática. El capítulo 7 retoma esto para la postestratificación y el <em>raking</em>, y
+                el capítulo 8 lo usa para ajustar por no respuesta. En este capítulo, con una sola auxiliar, el
+                factor común es $g = t_x / \hat{t}_{x,\pi} = 1{,}036637$: cada peso del muestreo aleatorio simple
+                pasa de 10,26 a 10,635895.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Särndal, Swensson y Wretman (1992), <strong>capítulo 6</strong> — el GREG en su forma general, con la
+            demostración de la insesgadez asintótica de diseño.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulos 10 y 17</strong> — calibración y
+            estimadores asistidos por modelos.</li>
+          <li>Deville, J.-C. y Särndal, C.-E. (1992). «Calibration estimators in survey sampling».
+            <em>Journal of the American Statistical Association</em> 87 — el artículo que fundó la calibración
+            moderna.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 11 · Parámetros no lineales: razón poblacional y mediana -->
+  <!-- ============================================================ -->
+  <template id="module-11">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 11</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Parámetros no lineales
+          <span class="text-gray-400 font-normal text-2xl">/ Nonlinear parameters</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Estimar algo que no es una suma ponderada de los
+              $y_k$: la mediana. Y ver que la receta es siempre la misma.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Todo el marco $\pi$ del capítulo 2 está construido para parámetros <strong>lineales</strong>: totales,
+        medias, proporciones. La razón del módulo 2 fue el primer parámetro no lineal del curso, y la receta que
+        funcionó fue <em>linealizar</em>. La mediana es más dura, porque ni siquiera es una función suave de los
+        datos, y hace falta una idea distinta.</p>
+
+      <div class="definition">
+        <h4>Estimar la función de distribución</h4>
+        <p>Todo cuantil se define a partir de $F$, así que se estima $F$ primero. Como
+          $F(t) = \frac{1}{N}\sum_{k \in U} \mathbb{1}(y_k \le t)$ es una <strong>media poblacional</strong> de una
+          variable indicadora, se estima con las herramientas del capítulo 2:</p>
+        <p style="text-align:center;">$$\hat{F}(t) = \frac{\sum_{k \in s} w_k\, \mathbb{1}(y_k \le t)}{\sum_{k \in s} w_k},
+          \qquad w_k = 1/\pi_k$$</p>
+        <p style="margin-bottom:0;">y el cuantil de orden $p$ es
+          $\hat{Q}(p) = \inf\{t : \hat{F}(t) \ge p\}$. Ni una fórmula nueva: es el marco $\pi$ aplicado a una
+          indicadora, y después una inversión.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La mediana por la función de distribución estimada">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Una trampa que cuesta media tarde.</strong> $\hat{F}$ vale <em>exactamente</em> 0,5 en la unidad
+          150 de 300, y ahí la mediana muestral <strong>no está definida de forma única</strong>: la unidad 150 vale
+          196 701 y la 151 vale 196 733, y las dos son legítimas según el convenio. <code>svyquantile</code> ofrece
+          nueve en su argumento <code>qrule</code>; el de por defecto (<code>"math"</code>) da 196 733 y
+          <code>"hf4"</code> da 196 701, que es el de la definición $\inf\{\cdot\}$ de arriba. Son 32 acres sobre
+          197 000 —un 0,016 %—, pero conviene saberlo antes de pasar la tarde buscando un error que no existe. Este
+          material usa <code>hf4</code> para que el cálculo a mano y <code>survey</code> coincidan de verdad y no
+          solo en apariencia.</p>
+      </div>
+
+      <div class="simulador" data-simulador="mediana">
+        <h4><i class="fas fa-percent" aria-hidden="true"></i> La función de distribución estimada</h4>
+        <p class="simulador-intro">La escalera verde es $\hat{F}$ construida con los 300 de la muestra; la gris, la
+          $F$ real de los 3 078 condados. Mueve el nivel $p$: donde la línea naranja corta la escalera verde está el
+          cuantil estimado. Fíjate en que la escalera verde va <strong>por debajo</strong> de la gris en casi todo el
+          rango: esta muestra concreta salió con condados algo más grandes de la cuenta, y por eso todos sus
+          cuantiles sobrestiman.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:280px;">
+          <canvas aria-label="Función de distribución estimada y real, con el cuantil seleccionado" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>La mediana también es una razón, en el fondo.</strong> $\hat{F}(t)$ es un cociente de dos sumas
+          ponderadas, así que su varianza sale de la misma linealización del módulo 4; y de ahí, invirtiendo, sale el
+          intervalo de confianza de la mediana. Ese es el motivo de que este módulo esté en <em>este</em> capítulo y
+          no en otro: la razón, los dominios y los cuantiles se estiman todos con la misma herramienta. En el
+          capítulo 7 se le pondrá nombre —linealización de Taylor— y se le añadirán las alternativas de remuestreo.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>secciones 8.2 y 8.3</strong> — parámetros no
+            lineales, la razón poblacional y los cuantiles estimados desde $\hat{F}$.</li>
+          <li>Lohr, <strong>sección 7.5</strong> (3.ª ed.) — estimación de cuantiles en encuestas complejas y sus
+            intervalos de confianza.</li>
+          <li>Lumley, T. — la documentación de
+            <a href="https://cran.r-project.org/package=survey" target="_blank" rel="noopener"><code>svyquantile</code></a>,
+            con la descripción de los nueve convenios de <code>qrule</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

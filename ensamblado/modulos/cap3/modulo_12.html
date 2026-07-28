@@ -1,0 +1,222 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 12 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-12">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 12</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
+          guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre los once módulos y cuatro
+              ejercicios con los datos de Lohr, resueltos en R.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al final,
+        el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos antes de abrir
+        la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap3">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 3</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro se resuelven con los datos oficiales de Lohr que
+          ya están cargados en los bloques anteriores. Las cifras de las soluciones salen de
+          <code>ensamblado/codigo/cap3/cadena.R</code>, que se ejecuta de verdad y cuyas salidas se contrastan una a
+          una.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>agsrs</code>, estima el
+            <strong>total de granjas</strong> en 1992 (<code>farms92</code>) usando como auxiliar el número de granjas
+            de 1987 (<code>farms87</code>), cuyo total poblacional se conoce. Da el estimador de razón y el de
+            expansión con sus errores estándar, y compáralos con el total real. ¿Cuánto se gana aquí frente a lo que
+            se ganaba con <code>acres92</code>?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e1-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e1-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap3-e1-pista" hidden>
+            <p style="margin:0;">El objeto <code>dis</code> del módulo 2 ya declara el diseño con su <code>fpc</code>
+              y sirve para cualquier variable de <code>agsrs</code>: no hay que volver a crearlo. Antes de comparar
+              las ganancias, calcula la correlación entre <code>farms87</code> y <code>farms92</code> y compárala con
+              el 0,9958 de las superficies.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap3-e1-sol" hidden>
+            <p><strong>Razón: 1 930 836 granjas con EE 8 208. Expansión: 1 843 907 con EE 67 908. El total real es
+              1 925 300, y la razón se queda a un 0,29 % de él con un error estándar <em>68 veces</em> menor en
+              varianza.</strong></p>
+            <pre><code class="language-r">⟦S1⟧</code></pre>
+            <p>La correlación es 0,9933, algo menor que el 0,9958 de las superficies, y la ganancia también es algo
+              menor: la varianza se divide por 68 en vez de por 110. Es la relación que el módulo 3 anticipa: la
+              eficiencia del estimador de razón depende de lo pequeños que sean los residuos, y eso lo gobierna la
+              correlación.</p>
+            <p style="margin-bottom:0;">Fíjate además en el error de la expansión: −4,2 %, el mismo orden que tenía
+              con <code>acres92</code>. No es casualidad. Esta muestra concreta salió con condados algo más pequeños
+              que la media en las dos variables a la vez, y el estimador de razón corrige <em>las dos</em> porque la
+              corrección la hace el auxiliar, no la variable de interés.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>El archivo <code>cherry</code> tiene
+            el diámetro, la altura y el volumen de 31 cerezos negros. Un ingeniero quiere estimar el volumen total de
+            madera de un bosque en el que ha medido el diámetro de todos los árboles pero solo ha talado estos 31.
+            ¿Debe usar el estimador de razón? Justifícalo con números, no con la correlación.</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e2-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e2-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap3-e2-pista" hidden>
+            <p style="margin:0;">«Justifícalo con números, no con la correlación» es la mitad del ejercicio: el
+              $R^2$ va a salir alto y no va a decidir nada. El número que decide es el <strong>intercepto</strong>,
+              comparado con el rango de los volúmenes. Y si te preguntas por qué la relación no pasa por el origen,
+              piensa en qué relación geométrica hay entre el diámetro de un cilindro y su volumen.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap3-e2-sol" hidden>
+            <p><strong>No. El intercepto ajustado es −36,94 sobre volúmenes que van de 10 a 77 pies cúbicos: más de
+              la mitad del rango. La recta por el origen no describe estos datos, aunque el $R^2$ sea 0,9353.</strong></p>
+            <pre><code class="language-r">⟦S2⟧</code></pre>
+            <p>El estimador de razón supondría $\hat{B} = 2{,}2773$ pies cúbicos por pulgada de diámetro, constante.
+              Pero la recta ajustada tiene pendiente 5,07 y arranca en −36,9: en el rango observado las dos rectas
+              se cruzan, y fuera de él se separan sin remedio. Aplicar la razón sobrestimaría el volumen de los
+              árboles delgados y lo subestimaría en los gruesos.</p>
+            <p style="margin-bottom:0;">La razón de fondo es geométrica: el volumen de un tronco crece
+              aproximadamente con el <em>cuadrado</em> del diámetro por la altura, no linealmente con el diámetro.
+              Una recta ajusta bien dentro del rango observado —de ahí el $R^2$ alto— y no tiene por qué pasar por el
+              origen. La solución correcta para este bosque es usar $x = \text{diámetro}^2$ como auxiliar, o el
+              estimador de regresión con el diámetro; el de razón, no. Es exactamente el punto del módulo 3:
+              <strong>correlación alta no es lo mismo que recta por el origen</strong>.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Estima la superficie sembrada media
+            de los condados del <strong>Oeste</strong> a partir de <code>agsrs</code>, con su error estándar. El valor
+            real se puede calcular con <code>agpop</code>: ¿cae la estimación cerca? Explica por qué el error estándar
+            de este dominio es tan grande comparado con el de la media global, y qué se podría haber hecho al diseñar
+            la muestra para evitarlo.</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e3-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e3-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap3-e3-pista" hidden>
+            <p style="margin:0;">Dos causas se suman aquí y conviene separarlas: cuántas unidades del dominio cayeron
+              en la muestra, y cómo de dispersa es la variable <em>dentro</em> de ese dominio en particular. Mira la
+              desviación típica del Oeste en la tabla del capítulo 1 antes de responder. Y para la última parte:
+              ¿qué palabra del temario significa «fijar de antemano cuántas unidades salen de cada grupo»?</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap3-e3-sol" hidden>
+            <p><strong>Media estimada 598 681 acres con EE 77 637 (CV del 13 %). El valor real es 723 344: la
+              estimación se queda un 17,2 % por debajo, a 1,6 errores estándar. Es un resultado perfectamente
+              compatible con el azar, y aun así incómodo.</strong></p>
+            <pre><code class="language-r">⟦S3⟧</code></pre>
+            <p>Las dos causas se suman. La primera: solo <strong>39</strong> de los 300 condados de la muestra cayeron
+              en el Oeste, y ese número no se eligió —es aleatorio, porque el Oeste es un dominio y no un estrato—.
+              La segunda: el Oeste es con diferencia la región más dispersa, con una desviación típica de 835 639
+              acres frente a los 79 365 del Nordeste. Poca muestra sobre lo más variable es la peor combinación
+              posible.</p>
+            <p style="margin-bottom:0;">Qué se podría haber hecho: <strong>estratificar por región</strong>. Si el
+              Oeste hubiera sido un estrato, $n_W$ lo habría fijado el diseño en vez del azar, y se le habrían podido
+              asignar más unidades precisamente por ser el más variable —que es la asignación de Neyman del capítulo
+              4—. Con la muestra ya tomada no hay vuelta atrás para el diseño, pero sí para el análisis: la
+              postestratificación del capítulo 4 y la calibración del capítulo 7 permiten recuperar parte de la
+              precisión usando los $N_h$ conocidos.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Para estimar el número de árboles
+            muertos de una zona, se divide en 100 parcelas y se cuentan los árboles muertos en una fotografía aérea de
+            cada una: la media por fotografía de las 100 parcelas es <strong>11,3</strong>. La fotografía se equivoca,
+            así que se visitan 25 parcelas elegidas al azar y se cuentan en campo (<code>deadtrees</code>). Estima la
+            media poblacional de árboles muertos por parcela con el estimador de diferencia y con el de regresión.
+            ¿Cuál usarías, y por qué la media muestral de campo sola no sirve?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e4-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e4-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap3-e4-pista" hidden>
+            <p style="margin:0;">Empieza por comprobar si las 25 parcelas visitadas tienen una media fotográfica igual
+              a la de las 100. Si no la tienen, ya sabes por qué la media de campo sola se queda corta, y en qué
+              dirección. Para elegir entre diferencia y regresión, mira si la pendiente ajustada está cerca de 1.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap3-e4-sol" hidden>
+            <p><strong>Por diferencia, 12,26 árboles por parcela con EE 0,457; por regresión, 11,99. La media de
+              campo sola daría 11,56, y se queda corta porque las 25 parcelas visitadas resultaron ser algo más
+              vacías que la media en la fotografía.</strong></p>
+            <pre><code class="language-r">⟦S4⟧</code></pre>
+            <p>La media fotográfica de las 25 visitadas es 10,6 frente a los 11,3 de las 100: la muestra cayó 0,7
+              árboles por debajo. Como el conteo de campo y el fotográfico están fuertemente relacionados, ese defecto
+              se arrastra a la media de campo, y el estimador de diferencia lo corrige sumando la discrepancia
+              observada: $11{,}3 + \bar{d}$.</p>
+            <p style="margin-bottom:0;">Entre los dos estimadores hay poco que elegir aquí, y el de <strong>diferencia
+              está especialmente justificado</strong>: las dos variables cuentan lo mismo —árboles muertos en la misma
+              parcela— y la fotografía se equivoca por una cantidad más o menos constante, no por un factor. Cuando
+              eso pasa, fijar la pendiente en 1 en vez de estimarla ahorra un parámetro y quita el sesgo: el
+              estimador de diferencia es <em>exactamente</em> insesgado, mientras que el de regresión no lo es. Este
+              es el diseño clásico de <em>doble muestreo</em>: una medición barata y sesgada en toda la población, y
+              una cara y correcta en una submuestra.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, S.L. <em>Sampling: Design and Analysis</em>, <strong>capítulo 3 completo en la 2.ª edición</strong>
+            —que es el <strong>capítulo 4 en la 3.ª</strong>—. Es la lectura obligatoria de las semanas 5 y 6, y la
+            fuente de los cuatro ejercicios de este módulo. La numeración cambió entre ediciones: si tienes la 3.ª,
+            razón y regresión está en el 4 y el 3 es muestreo estratificado.</li>
+          <li>Gutiérrez, H.A. <em>Estrategias de muestreo</em>, <strong>capítulos 8 y 9</strong> — la razón y los
+            parámetros no lineales en el marco $\pi$ general, sin suponer muestreo aleatorio simple, y con las
+            demostraciones que aquí solo se enuncian. De
+            <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
+            abierto</a>.</li>
+          <li>Gutiérrez, <strong>capítulos 10 y 17</strong> — calibración y estimadores asistidos por modelos, que es
+            adonde lleva el módulo 10.</li>
+          <li>Särndal, C.-E., Swensson, B. y Wretman, J. (1992). <em>Model Assisted Survey Sampling</em>,
+            <strong>capítulos 5 a 7</strong> — la referencia canónica del GREG y de la inferencia asistida por
+            modelos.</li>
+          <li>Lumley, T. <em>survey: Analysis of Complex Survey Samples</em> — la
+            <a href="https://cran.r-project.org/package=survey" target="_blank" rel="noopener">documentación del
+            paquete</a>, en particular <code>svyratio</code>, <code>calibrate</code>, <code>svyby</code> y
+            <code>svyquantile</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

@@ -12,14 +12,15 @@ en el formato de Series de Tiempo**, cubriendo las 16 semanas del cronograma del
 marco de diseño (π-estimador / Horvitz–Thompson) de Gutiérrez como columna vertebral y Lohr como
 orden y fuente de ejemplos.
 
-El sitio ya existe y está publicado en https://jotamao1985.github.io/Muestreo-Un_Bosque_JMS/
-desde `Htmls_Muestreo/` (rama `main`, raíz). Este plan **modifica ese sitio**, no crea uno nuevo.
+El sitio se publica en **https://jotamao1985.github.io/UnBosque_Teor/muestreo/** desde el
+repositorio `JotaMao1985/UnBosque_Teor` (rama `gh-pages`). Hasta el 2026-07-28 vivía en
+`JotaMao1985/Muestreo-Un_Bosque_JMS`, que ahora solo conserva una página de redirección.
 
 ---
 
 ## Diagnóstico del material actual
 
-Medido sobre los 4 archivos de `Htmls_Muestreo/` el 2026-07-27:
+Medido sobre los 4 archivos del sitio el 2026-07-27:
 
 | | Muestreo (hoy) | Series de Tiempo (objetivo) |
 |---|---:|---:|
@@ -85,8 +86,12 @@ cap. 6). Todo se ejecuta.
 5. **Datos:** los CSV oficiales de Lohr como hilo conductor + `BigLucy` para el marco π.
 6. **Formato:** un HTML autocontenido por capítulo, sin build ni `fetch`; datos incrustados como
    JSON; cómputo pesado precalculado en R.
-7. **Publicación:** se conserva el repo actual `JotaMao1985/Muestreo-Un_Bosque_JMS`, que publica
-   desde `main` / raíz de `Htmls_Muestreo/`.
+7. **Publicación — cambiada el 2026-07-28 por decisión de Javier.** El sitio se muda a
+   `JotaMao1985/UnBosque_Teor`, un repositorio **paraguas** para las asignaturas teóricas, con una
+   carpeta por curso dentro del sitio: `sitio/muestreo/` → `…/UnBosque_Teor/muestreo/`. Series de
+   Tiempo se queda de momento en su propio repositorio y la portada lo enlaza. El repositorio
+   viejo, `Muestreo-Un_Bosque_JMS`, conserva su Pages encendido con una página de redirección para
+   que los enlaces ya repartidos sigan funcionando.
 
 ---
 
@@ -95,9 +100,12 @@ cap. 6). Todo se ejecuta.
 Réplica exacta del montaje de Series de Tiempo: **la raíz del repositorio es la carpeta del
 curso**, y el sitio publicado es solo una subcarpeta que va a `gh-pages`.
 
+La carpeta local sigue llamándose `Muestreo/`; el repositorio remoto es `UnBosque_Teor`.
+
 ```
-Muestreo/                              ← RAÍZ DEL REPO GIT (rama main)
+Muestreo/                              ← RAÍZ DEL REPO GIT (rama main) = UnBosque_Teor
 ├── .gitignore                         ← lista blanca: ignora todo salvo lo del proyecto
+├── README.md                          ← portada del repositorio
 ├── PLAN_Material_Muestreo.md          ← este documento (memoria entre sesiones)
 ├── CSV data sets for SDA 3e/          ← 82 datasets oficiales de Lohr
 ├── *.Rmd                              ← código R previo reutilizable (5 archivos)
@@ -107,22 +115,35 @@ Muestreo/                              ← RAÍZ DEL REPO GIT (rama main)
 │   ├── README.md · _comun.R
 │   ├── verifica_paquetes.R            ← prueba de humo del entorno
 │   ├── verifica_bloques.py            ← contrasta cada cifra `#>` con la salida real
+│   ├── genera_cap1.R · genera_cap2.R · genera_cap3.R · genera_soluciones.R
+│   ├── salidas/cap1_datos.json · cap2_datos.json · cap3_datos.json
 │   └── pruebas/fixture_verificador.html
 ├── ensamblado/                        ← ensamblado y retropropagación (NO se publica)
-│   └── README.md
-└── Htmls_Muestreo/                    ← SITIO PUBLICADO (esto y solo esto va a gh-pages)
-    ├── index.html                     ← portada (actualizar a 8 tarjetas)
-    ├── README.md                      ← actualizar al cierre
-    ├── .nojekyll
-    ├── capitulo-1-encuestas-sesgos.html          (reescritura del actual cap. 1)
-    ├── capitulo-2-diseno-mas-sistematico.html    (reescritura del actual cap. 2)
-    ├── capitulo-3-razon-y-regresion.html         (actualización)
-    ├── capitulo-4-muestreo-estratificado.html    (actualización)
-    ├── capitulo-5-conglomerados.html             (NUEVO)
-    ├── capitulo-6-probabilidades-desiguales.html (NUEVO)
-    ├── capitulo-7-encuestas-complejas.html       (NUEVO)
-    └── capitulo-8-no-respuesta-ponderacion.html  (NUEVO)
+│   ├── README.md
+│   ├── ensambla_cap1.py · ensambla_cap2.py · ensambla_cap3.py
+│   ├── retropropaga_glosario.py · retropropaga_arbol_error.py
+│   ├── componentes/glosario.* · arbol_error.*
+│   ├── modulos/cap1/ · cap2/ · cap3/
+│   └── codigo/cap1/ · cap2/ · cap3/   ← las cadenas ejecutables de R y Python
+└── sitio/                             ← SITIO PUBLICADO (esto y solo esto va a gh-pages)
+    ├── .nojekyll · .gitignore
+    ├── index.html                     ← portada del PARAGUAS: una tarjeta por curso
+    └── muestreo/                      ← el sitio del curso
+        ├── index.html                 ← portada del curso (actualizar a 8 tarjetas)
+        ├── README.md                  ← actualizar al cierre
+        ├── capitulo-1-encuestas-sesgos.html          ✅ fase 2
+        ├── capitulo-2-diseno-mas-sistematico.html    ✅ fase 1
+        ├── capitulo-3-razon-y-regresion.html         ✅ fase 2
+        ├── capitulo-4-muestreo-estratificado.html    (formato antiguo — fase 3)
+        ├── capitulo-5-conglomerados.html             (NUEVO)
+        ├── capitulo-6-probabilidades-desiguales.html (NUEVO)
+        ├── capitulo-7-encuestas-complejas.html       (NUEVO)
+        └── capitulo-8-no-respuesta-ponderacion.html  (NUEVO)
 ```
+
+Cuando Series de Tiempo se mude aquí, entrará como `sitio/series-de-tiempo/` y sus fuentes tendrán
+que convivir con las de Muestreo en la raíz de `main`: hoy la raíz es el proyecto de Muestreo
+directamente, y ese día habrá que decidir si cada curso pasa a su propia carpeta de fuentes.
 
 **Nombres de archivo — decisión tomada el 2026-07-27: SÍ se renombran.** Los capítulos 1 y 2
 pasaron de `capitulo-1-introduccion.html` y `capitulo-2-muestreo-aleatorio-simple.html` a
@@ -132,25 +153,24 @@ publicadas cambian**: cualquier enlace repartido con los nombres antiguos dejar�
 Si aparece la necesidad, se pueden añadir dos ficheros de redirección con `meta refresh` en los
 nombres viejos.
 
-**Publicación — decisión tomada el 2026-07-27: se replica el montaje de Series de Tiempo.**
-La rama `main` contiene el proyecto entero (plan, precálculos, ensamblado, datos y sitio) y la
-rama `gh-pages` contiene **solo** el sitio. Para publicar un cambio:
+**Publicación — se replica el montaje de Series de Tiempo.** La rama `main` contiene el proyecto
+entero (plan, precálculos, ensamblado, datos y sitio) y la rama `gh-pages` contiene **solo** el
+contenido de `sitio/`. Para publicar un cambio:
 
 ```bash
 git push origin main
-git subtree push --prefix Htmls_Muestreo origin gh-pages
+git subtree push --prefix sitio origin gh-pages
 ```
 
 Es el mismo flujo que Series de Tiempo, así que no hay dos maneras de publicar que recordar.
 Los precálculos y el ensamblado quedan versionados pero **fuera del sitio público**, que era el
 motivo de mover la raíz del repositorio un nivel hacia arriba.
 
-> [!warning] Un cambio manual pendiente en GitHub
-> El repositorio publicaba desde `main` / raíz. Con la nueva estructura, esa configuración
-> serviría un directorio sin `index.html`. **Hay que cambiar la fuente de GitHub Pages a la rama
-> `gh-pages` / `/`** en Settings → Pages. Orden seguro para no dejar el sitio caído: primero
-> `git subtree push` (crea `gh-pages`), después cambiar el ajuste en GitHub, y solo entonces
-> `git push origin main`.
+> [!note] Estado de la publicación (2026-07-28)
+> `UnBosque_Teor` estaba vacío, así que no había nada que romper: se empujó `main`, se creó
+> `gh-pages` por subtree y se configuró Pages a `gh-pages` / `/`. El repositorio viejo
+> `Muestreo-Un_Bosque_JMS` mantiene su Pages encendido sirviendo **solo una redirección** a la URL
+> nueva, para que los enlaces ya repartidos no den 404.
 
 ---
 
@@ -369,6 +389,7 @@ Se heredan de Series de Tiempo: `.quiz`, `.ejercicio-guiado`, `.derivacion`, `.c
 | Componente | Para qué | Aparece en |
 |---|---|---|
 | `.glosario-notacion` | Tabla plegable que traduce la notación de Lohr ↔ Gutiérrez (`t̂_HT` ↔ `t̂_π`, `S²` ↔ `S²_yU`, …). Es el puente que hace legible el material con dos fuentes | cap. 2 y luego todos |
+| `.arbol-error` ✅ | Árbol plegable del error total: cada hoja dice si sesga o solo dispersa, si aumentar $n$ la reduce y en qué capítulo se trata. **Hecho en la fase 2**; en la plantilla y en el cap. 2, y usado en el módulo 7 del cap. 1 | cap. 1, y de nuevo en el 8 |
 | `.diagrama-diseno` | Esquema recorrible de un diseño complejo (población → estratos → UPM → USM → pesos) | caps. 5, 6, 7 |
 
 **Regla de retropropagación (heredada, no negociable):** un componente nuevo no está terminado
@@ -565,32 +586,139 @@ oro del `ensamblado/README.md`: volver a ejecutar el script produce el capítulo
 | JSON incrustado | válido, y **idéntico** al de `precalculo/salidas/` |
 | Enlaces de `index.html` | los 4 resuelven a archivos existentes |
 
-### Checkpoint 1 — Revisión de Javier · **BLOQUEANTE**
-- [ ] Revisar el cap. 2 completo: ¿el marco π funciona didácticamente para el nivel del curso?
+### Checkpoint 1 — Revisión de Javier · **LEVANTADO el 2026-07-27**
+Javier autorizó proceder con la fase 2 y aceptó tratar esa instrucción como aprobación del
+checkpoint. Las tres preguntas de fondo **siguen abiertas** y su respuesta se retropropagaría a los
+tres capítulos ya escritos, no solo al 2:
+- [ ] ¿El marco π funciona didácticamente para el nivel del curso?
 - [ ] ¿La densidad de simuladores es la correcta o sobra/falta interactividad?
 - [ ] ¿El glosario de notación resuelve la convivencia Lohr ↔ Gutiérrez?
 - [x] ~~¿`N = 3 059` o los 3 078 de Lohr?~~ → **Los 3 078, decidido el 2026-07-27.** Aplicado a
       todo el capítulo y al precálculo; la media poblacional del material es 306 677.
-- [ ] No se produce ningún capítulo más hasta esta revisión.
 
 ---
 
-### Fase 2 — Capítulos 1 y 3
-- [ ] **T2.1** Cap. 1 — precálculo, módulos, 6 simuladores, autoevaluación, ejercicios, verificación.
-- [ ] **T2.2** Cap. 3 — ídem con 7 simuladores; incorporar GREG y estimación de mediana.
-- [ ] **T2.3** Retropropagar a los caps. 1–3 cualquier componente nuevo aparecido en la fase.
-- [ ] **T2.4 — Deuda de la fase 1:** insertar el `.glosario-notacion` en los caps. 1 y 3 al
-      reescribirlos (hoy les faltan sus 5 clases CSS frente a la plantilla). El cap. 4 queda para
-      la fase 3.
+### Fase 2 — Capítulos 1 y 3 — ✅ COMPLETADA (2026-07-27)
 
-### Checkpoint 2 — Primer tercio
-- [ ] Caps. 1, 2 y 3 verificados y navegables entre sí.
-- [ ] Los enlaces entre capítulos resuelven a archivos existentes (comprobar el `href`, no navegar:
-      la vista previa local sirve instantáneas estáticas y los enlaces no navegan aunque estén bien).
+**Decisiones tomadas al abrir la fase** (las cuatro recomendadas, aceptadas):
+1. Se levanta el Checkpoint 1 y se replica en los caps. 1 y 3 el formato del cap. 2 tal cual.
+2. Los tres módulos «extra» del cap. 1 antiguo (5 ejercicios resueltos y los casos de estudio)
+   **se reconvierten** al formato nuevo: los ejercicios pasan a `.ejercicio-guiado` del módulo 10 y
+   las preguntas conceptuales, a la autoevaluación. Nada se pierde y el capítulo queda en 10 módulos.
+3. **GREG escalar** en el cap. 3, con la forma matricial general en una `.derivacion` plegable y el
+   puente explícito a la calibración del cap. 7.
+4. Componente nuevo **`.arbol-error`** para el módulo 7 del cap. 1, retropropagado a la plantilla.
+
+- [x] **T2.0 — Componente `.arbol-error`.** `ensamblado/componentes/arbol_error.{css,js}` y
+      `retropropaga_arbol_error.py` (idempotente). Árbol plegable del error total: 14 nodos, 9 hojas,
+      cada una con su ficha, el efecto que produce (sesgo / varianza / ambos), si aumentar $n$ lo
+      reduce, y el capítulo donde se trata. `role="tree"` con galones independientes del botón de
+      selección. Insertado en la plantilla (CSS + motor + demostración + llamada en `loadModule`) y
+      en el cap. 2 (CSS + motor, sin instancia) para que el conjunto de selectores siga siendo
+      idéntico. *Verificado en navegador:* 14 fichas distintas, plegado/desplegado, KaTeX dentro del
+      panel, sin solapes ni desbordamiento; y el cap. 2 sigue reproduciéndose byte a byte.
+- [x] **T2.1 — Capítulo 1** → `capitulo-1-encuestas-sesgos.html`, 310 KB.
+      10 módulos, **7 simuladores**, 11 preguntas (los 4 tipos), **5 ejercicios guiados**,
+      18 bloques de código (14 de R + 4 de Python), `.arbol-error` y `.glosario-notacion`.
+      Precálculo en `precalculo/genera_cap1.R` → `salidas/cap1_datos.json` (14 KB).
+- [x] **T2.2 — Capítulo 3** → `capitulo-3-razon-y-regresion.html`, 311 KB.
+      12 módulos, **6 simuladores + 1 `.tabla-ranking`**, 11 preguntas, 4 ejercicios guiados,
+      18 bloques (14 R + 4 Python), 3 derivaciones plegables y `.glosario-notacion`.
+      Precálculo en `precalculo/genera_cap3.R` → `salidas/cap3_datos.json` (38 KB).
+- [x] **T2.3 — Retropropagación.** Hecha en la misma sesión (ver T2.0).
+- [x] **T2.4 — Deuda de la fase 1 saldada en los caps. 1 y 3:** los dos llevan ya su
+      `.glosario-notacion` propio —12 filas cada uno, con el vocabulario de su capítulo— y pasan de
+      127 a **149 clases CSS, 0 faltantes** frente a la plantilla.
+
+**Ensamblado versionado.** `ensambla_cap1.py` y `ensambla_cap3.py`, con `modulos/cap{1,3}/`,
+`codigo/cap{1,3}/cadena.{R,py}` y `componentes/arbol_error.*`. Se comprobó la regla de oro:
+**los tres ensambladores reproducen su capítulo publicado byte a byte.**
+
+### Auditoría de la fase 2 (2026-07-27)
+
+| Comprobación | Resultado |
+|---|---|
+| Cifras `#>` contrastadas con la salida real | cap. 1: **155/155** · cap. 3: **151/151** · cap. 2 (regresión): **323/323** |
+| Sesiones de R y de Python encadenadas | terminan con código 0 en los tres capítulos |
+| Regresión del propio verificador (cifra falsa inyectada) | sigue cazándola (6 de 7) |
+| Doble vía para toda varianza | razón, regresión, diferencia, dominios y mediana: fórmula a mano ↔ `survey` |
+| Tercera vía externa (cifras publicadas por Lohr) | `s_e` = 31 657,218 y `t̂_x` = 929 413 560 coinciden; `t_x` **no** (ver abajo) |
+| `node --check` del motor | OK en la plantilla y en los caps. 1, 2 y 3 |
+| Consola del navegador | 0 errores en los 43 módulos de los cuatro capítulos |
+| KaTeX | 0 errores; 115 expresiones en el cap. 1 y 244 en el cap. 3 |
+| Gráficos por módulo | se destruyen al salir (3 → 0 en el módulo 7 del cap. 1; 1 → 0 en el 11 del cap. 3) |
+| Simuladores en todos sus valores y extremos | 13 de 13, **70 estados** probados, 0 lecturas vacías, 0 `NaN` |
+| Componentes nuevos | `.arbol-error`: 14 nodos recorridos; `.tabla-ranking`: 4 filas ordenables; 3 derivaciones |
+| Autoevaluación | 22 preguntas nuevas, los 4 tipos, flujo fallo → pista → reintento correcto |
+| Ejercicios guiados | 9 nuevos; los 18 paneles abren |
+| CSS frente a la plantilla | caps. 1, 2 y 3: **149 clases, 0 faltantes**; llaves 364/364 |
+| Geometría a 1440 px | cabecera 1430, lateral 280, contenido 902; sin solapes ni desbordamiento |
+| JSON incrustado | válido e **idéntico** al de `precalculo/salidas/` en los dos capítulos |
+| Regla de oro del ensamblado | los tres capítulos se reproducen byte a byte |
+| Enlaces de `index.html` | los 4 resuelven a archivos existentes |
+
+**Tres hallazgos de la auditoría que cambiaron el material:**
+
+1. **`t_x` no cuadra con Lohr, y no son los `-99`.** Sumar `acres87` en `agpop.csv` da
+   **963 464 412**; el ejemplo 4.6 de la 3.ª edición usa 964 470 625, un **0,104 % más**. La muestra
+   *sí* es la misma —`s_e` coincide hasta el tercer decimal y `t̂_x` también—, así que la diferencia
+   está solo en el total poblacional del libro, y excluir los 23 códigos `-99` no la explica (daría
+   963 466 689). Se usa **la suma del archivo**, que es lo único reproducible, y el capítulo lo
+   declara en una caja de advertencia. Consecuencia: `t̂_r` = 950 520 496 en vez de 951 513 191.
+2. **R y Python daban cuantiles distintos.** Con pesos iguales, $\hat F$ vale exactamente $p$ en el
+   borde, y `cumsum()/sum()` deja 0,4999999999 en R y 0,5000000000001 en Python: sin tolerancia, las
+   dos pestañas del mismo capítulo publicaban medianas distintas. Corregido con `>= p - 1e-9` en las
+   tres implementaciones (precálculo, R y Python).
+3. **La mediana muestral no es única**, y no era un error de nadie. Cuando $\hat F$ alcanza 0,5
+   exactamente, la unidad 150 (196 701) y la 151 (196 733) son ambas legítimas.
+   `svyquantile` ofrece nueve convenios en `qrule`: el de por defecto da la segunda y `hf4` da la
+   primera. El material usa `hf4` para que las dos vías coincidan de verdad, y lo explica en una caja.
+
+### Checkpoint 2 — Primer tercio — ✅ SUPERADO (2026-07-27)
+- [x] Caps. 1, 2 y 3 verificados; los tres con el mismo formato, el mismo glosario y 0 clases CSS
+      faltantes frente a la plantilla.
+- [x] Los enlaces de `index.html` resuelven a archivos existentes (comprobado por `href`, no
+      navegando). Los capítulos no enlazan entre sí: la navegación es siempre por la portada.
+- [x] `index.html` actualizado: tarjetas de los caps. 1 y 3 reescritas y el total pasa de 37 a
+      **43 módulos**.
+
+**Anotaciones de la fase, para no repetir el tropiezo:**
+- **`jsonlite` escribe los `data.frame` como array de FILAS, no de columnas.** Escribir
+  `D3.estimadores.nombre` en vez de `D3.estimadores.map(f => f.nombre)` rompió **tres** módulos del
+  cap. 3 a la vez, y cada uno lanzó su excepción en silencio dejando los otros nueve perfectos. Lo
+  cazó el recorrido instrumentado de los 12 módulos, no la lectura del código.
+- **Una opción de formato en la cabecera de la cadena no viaja con el bloque.** `pd.set_option` en
+  la cabecera de `cadena.py` hacía que la cadena entera imprimiera bien y que el verificador —que
+  ejecuta los bloques con su propia cabecera— viera notación científica: 24 cifras marcadas como
+  discrepancia. Todo lo que afecte a la salida tiene que estar **dentro** del primer bloque
+  publicado, que además es lo correcto para quien copie el bloque suelto.
+- **El navegador tiene tope de pestañas.** El hook que abre cada archivo escrito llenó las nueve
+  disponibles y `navigate` empezó a fallar con «el archivo puede faltar o ser ilegible», que apunta
+  al sitio equivocado. Cerrar pestañas con `tabs_close` lo resolvió.
+- **Un capítulo publicado puede quedarse con permisos `600`.** `capitulo-3-…` los tenía heredados y
+  el navegador no podía abrirlo. `chmod 644` sobre los HTML publicados, y comprobarlo antes de
+  empujar: en `gh-pages` un archivo sin permiso de lectura es un 404.
+- **La numeración de Lohr cambió entre ediciones.** Razón y regresión es el **capítulo 3 en la 2.ª
+  edición y el 4 en la 3.ª**; los caps. 5 a 8 coinciden. El syllabus y el material previo usan la
+  2.ª, así que se conserva, y **todas las referencias del cap. 3 dan las dos numeraciones**.
+- Las cifras del *Literary Digest* del cap. 1 antiguo estaban ligeramente mal (decía «Landon 55 %» y
+  «solo el 23 % respondió»). Las de Lohr 3.ª ed. §1.1 son **Landon 54 % / Roosevelt 41 %** en la
+  predicción, **Roosevelt 61 % / Landon 37 %** en la elección, diez millones enviados y más de 2,3
+  millones devueltos. Corregidas y con su fuente anotada en el precálculo.
 
 ---
 
 ### Fase 3 — Capítulos 4 y 5
+
+> [!warning] Deuda que hereda la fase 3, toda ella en el capítulo 4
+> - Le faltan **24 clases CSS** frente a la plantilla: las 5 del `.glosario-notacion` y las 19 del
+>   `.arbol-error`. Se saldan al reescribirlo, igual que se hizo con los caps. 1 y 3.
+> - Sus 13 bloques de Python **no anuncian ninguna cifra `#>`**, así que el verificador informa
+>   «0 de 0»: hoy no hay nada que contrastar en ese capítulo.
+> - KaTeX emite 5 avisos por un guion largo dentro de una expresión matemática
+>   (`Unrecognized Unicode character "–"`). No rompe nada, pero hay que sustituirlo por `--`.
+> - No tiene simuladores, ni autoevaluación, ni ejercicios guiados.
+
 - [ ] **T3.1** Cap. 4 — actualización + asignación con costos + estratificado PPT + `.tabla-ranking`.
 - [ ] **T3.2** Cap. 5 — conglomerados, nuevo desde cero; reutilizar `material_estudio_cluster.html`
       y los chunks de `material_muestreo_cap4_5_lohr.Rmd` **tras ejecutarlos**.
@@ -668,9 +796,10 @@ Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
 
 Los simuladores que aparecen listados en cada capítulo son el núcleo mínimo; la cifra del
 encabezado de cada capítulo (`~n S`) es el objetivo, y suele incluir alguno más de apoyo.
-| Preguntas de autoevaluación | 0 | ~64 |
-| Ejercicios guiados | 0 | ~26 |
-| Semanas del cronograma cubiertas | 9 / 16 | 16 / 16 |
+| Preguntas de autoevaluación | 0 | **33** | ~64 |
+| Ejercicios guiados | 0 | **13** | ~26 |
+| Bloques de código verificados | 0 | **63** (629 cifras) | — |
+| Semanas del cronograma cubiertas | 9 / 16 | 9 / 16 | 16 / 16 |
 
 ---
 

@@ -1,0 +1,364 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · Variables auxiliares                               -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Variables auxiliares
+          <span class="text-gray-400 font-normal text-2xl">/ Auxiliary information</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver qué se gana cuando, además de la muestra, se sabe
+              algo de <em>toda</em> la población — y qué hace falta exactamente para poder usarlo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Hasta aquí, el capítulo 2 construyó estimadores que solo usan lo observado en la muestra: el estimador de
+        Horvitz–Thompson $\hat{t}_\pi = \sum_{k \in s} y_k/\pi_k$ y, bajo muestreo aleatorio simple, el de expansión
+        $N\bar{y}$. Este capítulo añade un ingrediente nuevo, y es el que más rendimiento da por peso invertido:
+        <strong>información que ya se conoce de todas las unidades de la población</strong>.</p>
+
+      <div class="definition">
+        <h4>Variable auxiliar</h4>
+        <p>Una variable $x$ es auxiliar cuando se cumplen las <strong>dos</strong> condiciones a la vez:</p>
+        <ol>
+          <li>$x_k$ se observa en las unidades de la muestra, y</li>
+          <li>su total poblacional $t_x = \sum_{k \in U} x_k$ (o su media $\bar{x}_U$) <strong>se conoce</strong>.</li>
+        </ol>
+        <p style="margin-bottom:0;">La segunda es la restrictiva. Es lo que limita en la práctica qué variables sirven:
+          registros administrativos, censos anteriores, padrones. Si solo se tiene $x_k$ en la muestra, no hay
+          información nueva que aportar.</p>
+      </div>
+
+      <p>El ejemplo del capítulo es el censo agrícola. Se quiere el total de superficie sembrada en 1992
+        ($y = $ <code>acres92</code>), y se conoce por completo la de 1987 ($x = $ <code>acres87</code>) porque hubo un
+        censo. Las dos variables miden lo mismo con cinco años de diferencia, así que la correlación es altísima.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La muestra y la variable auxiliar">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="glosario-notacion" data-glosario="razon-regresion"></div>
+
+      <div class="warning">
+        <p><strong>Una nota de auditoría sobre $t_x$.</strong> Sumar la columna <code>acres87</code> de
+          <code>agpop.csv</code> da <strong>963 464 412</strong>. Lohr, en el ejemplo equivalente de la 3.ª edición,
+          usa 964 470 625: un 0,104 % más. Se comprobó que la muestra es la misma —la desviación de los residuos
+          coincide hasta el tercer decimal, y $\hat{t}_x$ también—, así que la diferencia está solo en el total
+          poblacional del libro, y no la explican los 23 códigos $-99$. Este material usa <strong>la suma del archivo
+          que tienen los estudiantes</strong>, que es lo único reproducible. Consecuencia: donde el libro publica
+          951 513 191, aquí sale 950 520 496.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <em>Sampling: Design and Analysis</em>, <strong>sección 3.1</strong> (2.ª ed.) o
+            <strong>4.1</strong> (3.ª ed.) — razón y variables auxiliares. La numeración cambió entre ediciones: en la
+            3.ª, razón y regresión es el capítulo 4.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 8</strong> — el mismo material con la
+            notación $\pi$ y sin suponer muestreo aleatorio simple. De
+            <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
+            abierto</a>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · El estimador de razón                              -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El estimador de razón
+          <span class="text-gray-400 font-normal text-2xl">/ Ratio estimation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Construir $\hat{t}_r$, calcular su error estándar por
+              dos vías y entender de dónde sale la ganancia.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>La razón poblacional y su estimador</h4>
+        <p>El parámetro es el cociente de dos totales:</p>
+        <p style="text-align:center;">$$B = \frac{t_y}{t_x} = \frac{\bar{y}_U}{\bar{x}_U}$$</p>
+        <p>y se estima con el mismo cociente calculado sobre la muestra. En el marco $\pi$ del capítulo 2, con
+          cualquier diseño:</p>
+        <p style="text-align:center;">$$\hat{B} = \frac{\hat{t}_{y,\pi}}{\hat{t}_{x,\pi}} = \frac{\sum_{k \in s} y_k/\pi_k}{\sum_{k \in s} x_k/\pi_k}
+          \qquad\text{y bajo MAS}\qquad \hat{B} = \frac{\bar{y}}{\bar{x}}$$</p>
+        <p style="margin-bottom:0;">De ahí sale el <strong>estimador de razón del total</strong>, que es el objeto
+          central del capítulo:</p>
+        <p style="text-align:center; margin-bottom:0;">$$\hat{t}_r = \hat{B}\, t_x$$</p>
+      </div>
+
+      <p>La idea es sencilla y vale la pena decirla en palabras: <em>en la muestra, la superficie de 1992 fue el
+        98,66 % de la de 1987; si esa proporción se mantiene en toda la población, el total de 1992 debería ser el
+        98,66 % del total conocido de 1987</em>.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El estimador de razón frente al de expansión">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El total real es 943 951 718.</strong> La expansión da 916 927 110 —un 2,86 % por debajo— con un
+          error estándar de 58,2 millones. La razón da 950 520 496 —un 0,70 % por encima— con un error estándar de
+          5,54 millones: <strong>diez veces más pequeño</strong>. La información auxiliar no cambió ni un dato de la
+          muestra; solo cambió cómo se usan.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-ee-razon">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver de dónde sale el error estándar de $\hat{t}_r$</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-ee-razon" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>$\hat{t}_r$ es un cociente, y un cociente no tiene varianza exacta manejable. Se escribe el error
+                y se multiplica y divide por $\hat{t}_{x,\pi}$:</p>
+              $$\hat{t}_r - t_y = \frac{t_x}{\hat{t}_{x,\pi}}\Big(\hat{t}_{y,\pi} - B\,\hat{t}_{x,\pi}\Big)$$
+            </li>
+            <li>
+              <p>El paréntesis es el estimador $\pi$ de una variable nueva: el <strong>residuo</strong>
+                $e_k = y_k - B\,x_k$. Es lineal en los $e_k$, y de eso sí se sabe la varianza.</p>
+              $$\hat{t}_{y,\pi} - B\,\hat{t}_{x,\pi} = \sum_{k \in s} \frac{e_k}{\pi_k}$$
+            </li>
+            <li>
+              <p>El factor $t_x/\hat{t}_{x,\pi}$ tiende a 1, así que se sustituye por 1: ese es el
+                <strong>único</strong> paso aproximado de toda la derivación, y es el que introduce el sesgo de
+                orden $1/n$ que estudia el módulo 4.</p>
+              $$V(\hat{t}_r) \approx V\!\left(\sum_{k \in s} \frac{e_k}{\pi_k}\right)$$
+            </li>
+            <li>
+              <p style="margin-bottom:0;">Bajo MAS, esa varianza es la de siempre pero con $e_k$ en lugar de $y_k$, y
+                al estimarla se sustituye $B$ por $\hat{B}$:</p>
+              $$\widehat{V}(\hat{t}_r) = N^2\left(1 - \frac{n}{N}\right)\frac{s_e^2}{n},
+                \qquad s_e^2 = \frac{1}{n-1}\sum_{k \in s}\big(y_k - \hat{B}x_k\big)^2$$
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El error estándar por las dos vías">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Las dos vías dan la misma cifra hasta el último bit: la discrepancia relativa es $1{,}68 \times 10^{-16}$, que
+        es la precisión de la aritmética de la máquina. La fórmula de la derivación y lo que hace
+        <code>svyratio</code> son literalmente lo mismo.</p>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>secciones 3.1 y 3.1.1</strong> (2.ª ed.) o <strong>4.1 y 4.2</strong> (3.ª ed.) — el
+            estimador de razón, su error estándar y los ejemplos con <code>agsrs</code> que se reproducen aquí.</li>
+          <li>Gutiérrez, <strong>sección 8.2</strong> — la razón poblacional como parámetro no lineal, con la
+            linealización hecha en el marco $\pi$ general.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · ¿Cuándo gana la razón?                             -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">¿Cuándo gana la razón?
+          <span class="text-gray-400 font-normal text-2xl">/ When ratio wins</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Saber mirar una nube de puntos y decidir si la recta
+              tiene que pasar por el origen o no. Es la decisión de todo el capítulo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El error estándar de $\hat{t}_r$ depende de $s_e$, la desviación de los <strong>residuos</strong> respecto de
+        la recta por el origen, no de $s_y$. Todo se reduce entonces a una pregunta: ¿cuánto más pequeños son los
+        residuos que los propios datos?</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="De dónde sale la ganancia">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La desviación pasa de 344 552 a 31 657: una reducción del <strong>90,8 %</strong>, que en varianza es un
+        factor de 110. Esa es toda la historia. Y el requisito para que ocurra es exigente:</p>
+
+      <div class="definition">
+        <h4>La razón conviene cuando…</h4>
+        <ul style="margin-bottom:0;">
+          <li>la relación entre $y$ y $x$ es <strong>aproximadamente lineal y pasa por el origen</strong>: si $x_k$
+            es cero, $y_k$ tiende a ser cero;</li>
+          <li>la <strong>dispersión crece con $x$</strong> (las unidades grandes varían más en términos absolutos),
+            que es justo el modelo de varianza que la razón supone;</li>
+          <li>y la correlación es alta. Como regla, la razón bate a la expansión cuando
+            $r > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$.</li>
+        </ul>
+      </div>
+
+      <div class="simulador" data-simulador="nube-razon-regresion">
+        <h4><i class="fas fa-chart-line" aria-hidden="true"></i> Recta por el origen frente a recta con intercepto</h4>
+        <p class="simulador-intro">Cuatro conjuntos de datos reales. Empieza por <code>agsrs</code>: el intercepto es
+          $-2\,548$ sobre un rango de más de un millón de acres, prácticamente cero, y las dos rectas se superponen.
+          Pasa después a <code>cherry</code>: ahí el intercepto ajustado es $-36{,}9$ sobre un rango de 70, y la recta
+          por el origen se despega de la nube en los dos extremos. En <code>deadtrees</code>, activa además la recta
+          $y = x$ y mira lo cerca que queda.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:290px;">
+          <canvas aria-label="Nube de puntos con la recta por el origen y la recta con intercepto" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Correlación alta no es lo mismo que recta por el origen.</strong> Los cerezos tienen
+          $R^2 = 0{,}935$ y la razón es <em>mala</em> para ellos: el volumen crece con el cubo del diámetro, así que
+          la relación lineal que se ajusta bien en el rango observado no se prolonga hasta el origen. Confundir las
+          dos cosas es el error más frecuente del capítulo, y el simulador está para desactivarlo.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>sección 3.1.1</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — cuándo usar el
+            estimador de razón, con la regla sobre las correlaciones y los coeficientes de variación.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Sesgo y error cuadrático medio                     -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sesgo y error cuadrático
+          medio <span class="text-gray-400 font-normal text-2xl">/ Bias and MSE</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aceptar un estimador sesgado a sabiendas, después de
+              medir cuánto vale ese sesgo y qué se compra con él.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El estimador de razón <strong>es sesgado</strong>. No es un defecto de implementación: es una consecuencia
+        matemática de que $\hat{B}$ sea un cociente de dos variables aleatorias, y la esperanza de un cociente no es
+        el cociente de las esperanzas. El capítulo 1 dejó la herramienta para decidir qué hacer con eso: el error
+        cuadrático medio, $\text{ECM} = B^2 + V$.</p>
+
+      <div class="formula">
+        $$B(\hat{t}_r) \;\approx\; \frac{N(1 - n/N)}{n}\cdot\frac{B\,S_x^2 - S_{xy}}{\bar{x}_U}
+          \;=\; \frac{1}{n}\times(\text{algo que no depende de } n)$$
+      </div>
+
+      <p>El sesgo es de <strong>orden $1/n$</strong>, mientras que el error estándar es de orden $1/\sqrt{n}$. Eso
+        significa que, al crecer la muestra, el sesgo desaparece <em>más rápido</em> que la variabilidad: su peso
+        relativo se hace despreciable. Pero la afirmación no hay que creerla, hay que medirla.</p>
+
+      <div class="simulador" data-simulador="sesgo-razon">
+        <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> El sesgo, medido con 5 000 réplicas por tamaño</h4>
+        <p class="simulador-intro">Para cada tamaño se extrajeron 5 000 muestras aleatorias de <code>agpop</code>, se
+          calculó $\hat{t}_r$ en cada una y se promedió. Las barras naranjas son el sesgo medido; las verdes, la
+          aproximación teórica de orden $1/n$. Con $n = 10$ el sesgo es de casi dos millones de acres; con $n = 300$
+          se queda en diez mil, un 0,001 % del total.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Sesgo simulado y sesgo teórico del estimador de razón según el tamaño de muestra" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>La cifra que resuelve el dilema.</strong> Con $n = 300$, el sesgo del estimador de razón vale unos
+          10 500 acres y su error estándar 7,1 millones: el sesgo es <strong>676 veces menor</strong> que la
+          variabilidad. Elevado al cuadrado dentro del ECM, su contribución relativa es de $2{,}2 \times 10^{-6}$. Cambiar un
+          estimador insesgado por otro que reduce el error estándar diez veces a cambio de eso no es un compromiso:
+          es una ganga.</p>
+      </div>
+
+      <h3>Qué se desprecia exactamente</h3>
+
+      <p>La aproximación del módulo 2 consistió en sustituir $t_x/\hat{t}_{x,\pi}$ por 1. El simulador de abajo mide
+        qué se pierde con eso: en el eje horizontal, el error exacto $\hat{t}_r - t_y$ de cada muestra; en el
+        vertical, lo que da la aproximación lineal.</p>
+
+      <div class="simulador" data-simulador="linealizacion">
+        <h4><i class="fas fa-ruler-combined" aria-hidden="true"></i> Linealización de Taylor: el término que se cae</h4>
+        <p class="simulador-intro">3 000 muestras de tamaño 50 —deliberadamente pequeño, para que la aproximación se
+          note—. Si la linealización fuera exacta, todos los puntos caerían sobre la diagonal. La nube se desvía en
+          las colas, y esa desviación sistemática hacia abajo <em>es</em> el sesgo del estimador.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:280px;">
+          <canvas aria-label="Error exacto frente a su aproximación lineal en 3000 muestras" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>sección 3.1.2</strong> (2.ª ed.) o <strong>4.2.2</strong> (3.ª ed.) — sesgo y error
+            cuadrático medio del estimador de razón, con la aproximación de Taylor completa.</li>
+          <li>Gutiérrez, <strong>sección 8.3</strong> — linealización de parámetros no lineales en el marco $\pi$,
+            que es la herramienta que reaparece en los capítulos 7 y 8.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

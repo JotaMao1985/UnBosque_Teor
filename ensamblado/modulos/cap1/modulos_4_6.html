@@ -1,0 +1,387 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Sesgo de selección                                 -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sesgo de selección
+          <span class="text-gray-400 font-normal text-2xl">/ Selection bias</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Separar las tres formas en que la selección puede
+              sesgar —no cobertura, autoselección y no respuesta— y medir la tercera con una fórmula exacta.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>Definición</h4>
+        <p style="margin-bottom:0;">Hay sesgo de selección cuando la probabilidad de que una unidad acabe observada
+          <strong>depende de su propio valor</strong> $y_k$. Da igual si esa dependencia la introduce el marco, la
+          unidad o el investigador: el efecto es el mismo y no lo corrige el tamaño de muestra.</p>
+      </div>
+
+      <h3>Las tres formas</h3>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">1 · No cobertura</h4>
+          <p class="text-sm">El marco deja fuera parte de la población: esas unidades tienen probabilidad cero.</p>
+          <p class="text-xs text-gray-500" style="margin-bottom:0;"><em>Ejemplo:</em> la encuesta telefónica de 2009 de
+            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de móvil. Ese año, el 24,5 % de
+            los hogares de Estados Unidos solo tenía móvil y otro 2 % no tenía teléfono: uno de cada cuatro hogares
+            estaba fuera del marco por construcción.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">2 · Autoselección</h4>
+          <p class="text-sm">Es la unidad quien decide entrar. La probabilidad de inclusión deja de ser conocida y pasa
+            a depender de la variable de interés.</p>
+          <p class="text-xs text-gray-500" style="margin-bottom:0;"><em>Ejemplo:</em> el panel de Mechanical Turk de
+            este módulo, y el estudio de Hite del módulo 1. También los paneles de opinión en línea, los sondeos de
+            redes sociales y —el módulo 9 insiste en esto— casi cualquier conjunto de datos de entrenamiento.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">3 · No respuesta</h4>
+          <p class="text-sm">La unidad se selecciona correctamente, pero no contesta. El diseño era probabilístico; lo
+            que se observa, ya no.</p>
+          <p class="text-xs text-gray-500" style="margin-bottom:0;"><em>Ejemplo:</em> Allentown en 1936, y el
+            <strong>2,3 %</strong> de números que produjeron entrevista en la encuesta telefónica de este módulo.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Dos parientes: conveniencia y juicio</h4>
+          <p class="text-sm" style="margin-bottom:0;">Muestrear lo que está a mano, o lo que «parece representativo»,
+            no es un diseño con probabilidades desconocidas: es un diseño <em>sin</em> probabilidades. No hay $p(s)$
+            respecto de la cual tomar esperanzas, así que ni el sesgo ni la varianza están definidos.</p>
+        </div>
+      </div>
+
+      <h3>Dos encuestas, la misma pregunta, la misma población</h3>
+
+      <p>En 2009 y 2011 se preguntó a adultos de Estados Unidos por su acuerdo con la frase «soy más inteligente que la
+        persona promedio». La <strong>encuesta 1</strong> marcó 79 014 números de línea fija al azar y obtuvo 1 838
+        entrevistas. La <strong>encuesta 2</strong> reclutó a 983 voluntarios en Mechanical Turk pagando 0,25 dólares.
+        Las dos se calibraron después al censo de 2010 sobre las mismas ocho celdas de sexo, edad y raza.</p>
+
+      <p>Que las dos se calibren a las mismas celdas tiene una ventaja inesperada: permite <strong>recuperar el
+        censo</strong> desde los pesos, y por dos caminos independientes que tienen que coincidir.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Recuperar el censo desde los pesos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Coinciden con una discrepancia máxima de 0,28 sobre 750, que es el redondeo de los pesos a tres decimales. Con
+        el censo en la mano se puede ver a quién representa realmente cada muestra.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Composición demográfica de las dos encuestas">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>60,7 años frente a 33,7.</strong> La celda «mujer, 44 años o más, blanca» es el 18,1 % del censo, el
+          47,8 % de la muestra telefónica y el 13,7 % del panel online. Las dos encuestas fallan, en direcciones
+          opuestas: la telefónica porque quien tiene línea fija y contesta a un desconocido tiende a ser mayor, y el
+          panel porque quien trabaja en Mechanical Turk tiende a ser joven. Ninguna de las dos es la población.</p>
+      </div>
+
+      <div class="simulador" data-simulador="encuestas-intell">
+        <h4><i class="fas fa-users" aria-hidden="true"></i> ¿A quién representa cada muestra?</h4>
+        <p class="simulador-intro">Elige la variable de comparación. Con las ocho celdas de calibración se dispone
+          además del censo de 2010 como referencia; con las demás variables solo se pueden comparar las dos encuestas
+          entre sí, porque no se calibró por ellas —y esa es justamente la razón por la que los pesos no arreglan el
+          problema.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Composición de las dos encuestas frente al censo" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La estimación con y sin pesos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Lee la tabla despacio.</strong> Sin pesos, las dos encuestas se llevan 5,9 puntos (61,6 % frente a
+          67,6 %). Con pesos se llevan 0,9 (64,8 % frente a 65,6 %)… en la estimación puntual. Pero ponderar movió a la
+          telefónica <em>hacia arriba</em> y al panel <em>hacia abajo</em>: cada una en la dirección de su propia
+          desviación demográfica. Calibrar por sexo, edad y raza corrige lo que se midió; no toca lo que hizo que una
+          persona contestara y otra no. La estimación ponderada de la encuesta telefónica, 64,8 %, es la que da título
+          al artículo original: «el 65 % de los estadounidenses cree que está por encima de la media».</p>
+      </div>
+
+      <h3>La no respuesta tiene fórmula</h3>
+
+      <p>Parte la población en dos estratos artificiales: los que responderían si se les preguntara, con media
+        $\bar{y}_R$ y una fracción $r$ de la población, y los que no, con media $\bar{y}_M$. Entonces</p>
+
+      <div class="formula">
+        $$\bar{y}_U = r\,\bar{y}_R + (1-r)\,\bar{y}_M
+        \qquad\Longrightarrow\qquad
+        \underbrace{\bar{y}_R - \bar{y}_U}_{\text{sesgo}} = (1-r)\,(\bar{y}_R - \bar{y}_M)$$
+      </div>
+
+      <p>El sesgo es un <strong>producto</strong> de dos factores: cuánta gente falta y cuánto se diferencian. Que sea
+        un producto tiene dos consecuencias que conviene tener claras. Una tasa de respuesta del 100 % anula el sesgo
+        aunque los dos grupos sean distintísimos; y una tasa del 5 % lo anula igual <em>si</em> los que faltan son
+        idénticos a los que responden. Lo malo es que esto último no se puede comprobar con los datos de la encuesta:
+        $\bar{y}_M$ no se observa nunca.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La fórmula del sesgo de no respuesta">
+          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="python">
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Cuando la población se puede partir en <strong>clases de respuesta</strong> con tasas $r_h$ distintas, la
+        media de los respondientes es un promedio ponderado por $N_h r_h$ en vez de por $N_h$:</p>
+
+      <div class="formula">
+        $$\bar{y}_R = \frac{\sum_h N_h\, r_h\, \bar{y}_h}{\sum_h N_h\, r_h}$$
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Sesgo con clases de respuesta">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El resultado que sorprende a todo el mundo.</strong> Una tasa de respuesta del 10 % pareja en las
+          cuatro regiones da sesgo <strong>cero</strong>, exactamente el mismo que una del 60 %. Lo que sesga no es que
+          falte gente: es que <em>falte de manera desigual</em>. Una tasa baja pero pareja destroza la varianza y deja
+          intacta la insesgadez; una tasa alta pero desigual hace justo lo contrario. Por eso las agencias estadísticas
+          vigilan las tasas <em>por subgrupo</em> y no solo la global.</p>
+      </div>
+
+      <div class="simulador" data-simulador="no-respuesta">
+        <h4><i class="fas fa-user-slash" aria-hidden="true"></i> No respuesta diferencial sobre <code>agpop</code></h4>
+        <p class="simulador-intro">Las cuatro regiones hacen de clases de respuesta, con sus medias reales. Mueve las
+          tasas y mira la línea naranja —la media de los que responden— separarse de la verde, que es la verdad.
+          Prueba primero a bajar las cuatro por igual hasta el 5 %: la línea no se mueve. Después baja solo la del
+          Oeste.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Media por región y media estimada según las tasas de respuesta" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>sección 1.4</strong> — la tipología del sesgo de selección; y
+            <strong>sección 8.2</strong>, donde la fórmula del sesgo de no respuesta se demuestra en general.</li>
+          <li>Heck, P.R., Simons, D.J. y Chabris, C.F. (2018). «65 % of Americans believe they are above average in
+            intelligence: Results of two nationally representative surveys».
+            <a href="https://doi.org/10.1371/journal.pone.0200103" target="_blank" rel="noopener"><em>PLOS ONE</em>
+            13(7)</a> — el artículo del que salen las dos encuestas de este módulo, de acceso abierto.</li>
+          <li>Lohr (2021), <strong>ejercicio 15.13</strong> — la comparación de las dos encuestas, planteada como
+            ejercicio sobre muestras no probabilísticas.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · Sesgo de medición                                  -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sesgo de medición
+          <span class="text-gray-400 font-normal text-2xl">/ Measurement bias</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Distinguir el error que se cancela al promediar del que
+              no, y saber cuál de los dos es el peligroso.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>El modelo de medición</h4>
+        <p>Lo que queda registrado para la unidad $k$ no es su valor verdadero $y_k$, sino</p>
+        <p style="text-align:center;">$$y_k^{\text{obs}} = y_k + b_k + \varepsilon_k$$</p>
+        <p style="margin-bottom:0;">donde $b_k$ es un desplazamiento <strong>sistemático</strong> del instrumento y
+          $\varepsilon_k$ un error aleatorio con media cero. Los dos ensucian el dato, pero de manera muy distinta:
+          $\varepsilon_k$ se cancela al promediar y solo infla la varianza; $b_k$ <strong>no se cancela nunca</strong>,
+          por muchas unidades que se midan.</p>
+      </div>
+
+      <p>Esa asimetría es la razón de que este módulo exista. Un instrumento ruidoso es un inconveniente que se paga
+        con más muestra. Un instrumento desviado es un error que ninguna cantidad de datos arregla, y que además no
+        deja rastro en los propios datos: la estimación sale con un intervalo de confianza estrecho y perfectamente
+        centrado… en el valor equivocado.</p>
+
+      <h3>De dónde sale el desplazamiento sistemático</h3>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Deseabilidad social</h4>
+          <p class="text-sm" style="margin-bottom:0;">Las preguntas sobre conductas valoradas o penalizadas se
+            contestan en la dirección que queda mejor: se declara más ejercicio, más lectura y más participación
+            electoral de la real, y menos consumo de alcohol y menos ingresos. Es el sesgo más estudiado y el más
+            difícil de eliminar.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Memoria y telescopaje</h4>
+          <p class="text-sm" style="margin-bottom:0;">Preguntar «¿cuántas veces en el último año?» produce respuestas
+            que arrastran hechos anteriores hacia el periodo de referencia. El error no es simétrico: se recuerda de
+            más, casi nunca de menos.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">El entrevistador</h4>
+          <p class="text-sm" style="margin-bottom:0;">El tono, el énfasis y hasta las características visibles de quien
+            pregunta mueven las respuestas. Como cada entrevistador atiende a un grupo de unidades, su efecto se
+            comporta como un conglomerado: no solo sesga, también correlaciona respuestas dentro del grupo. El
+            capítulo 5 explica por qué eso además infla la varianza.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">El modo de recolección</h4>
+          <p class="text-sm" style="margin-bottom:0;">La misma pregunta contestada por teléfono, en papel o en una
+            pantalla no da lo mismo: sin interlocutor humano, la deseabilidad social baja. Cuando se comparan dos
+            encuestas hechas por modos distintos —como las del módulo 4—, la diferencia mezcla selección y medición, y
+            separarlas es un problema abierto.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Cómo se ataca.</strong> El sesgo de medición se combate <em>antes</em> de recoger el primer dato:
+          prueba piloto, preguntas con marco temporal explícito y términos definidos, entrenamiento de entrevistadores,
+          y —cuando se puede— validación contra un registro externo. Después ya no hay estadística que valga: es la
+          única familia de errores del capítulo que no tiene ningún estimador que la corrija.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>sección 1.5</strong> y <strong>sección 16.3</strong> — el sesgo de medición y los
+            modelos de error de medición en encuestas.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.4</strong> — los errores ajenos al
+            muestreo en el marco de la teoría del error total.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · Diseño de cuestionarios                            -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Diseño de cuestionarios
+          <span class="text-gray-400 font-normal text-2xl">/ Questionnaire design</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer los defectos de redacción que producen sesgo
+              de medición, y practicar la reescritura sobre ítems reales.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Escribir preguntas es la parte del oficio que más se subestima y la que más barato sale hacer bien. Un
+        cuestionario mal redactado produce sesgo de medición, que —como acaba de verse— es el que no se arregla
+        después con ninguna técnica.</p>
+
+      <h3>Los defectos que hay que saber nombrar</h3>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Sugestiva</h4>
+          <p class="text-sm" style="margin-bottom:0;">La pregunta lleva la respuesta puesta o da por sentado el hecho
+            que investiga. <em>«¿No está de acuerdo en que…?»</em>, <em>«¿Con qué frecuencia te trata como
+            inferior?»</em>.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Doble cañón</h4>
+          <p class="text-sm" style="margin-bottom:0;">Dos preguntas cosidas en una. <em>«¿Está satisfecho con el precio
+            y la calidad?»</em>: quien valore distinto cada cosa contestará a otra pregunta, y no habrá manera de saber
+            a cuál.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Doble negación</h4>
+          <p class="text-sm" style="margin-bottom:0;">Obliga a resolver una lógica antes de opinar, y una parte de los
+            encuestados la resuelve mal. <em>«¿Está en desacuerdo con que no se debería…?»</em>.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Términos sin definir y sin marco temporal</h4>
+          <p class="text-sm" style="margin-bottom:0;"><em>«¿Hace usted ejercicio?»</em> no tiene respuesta correcta
+            hasta que se diga qué cuenta como ejercicio y en qué periodo. Cada encuestado inventará su definición, y el
+            porcentaje resultante no medirá nada concreto.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Abierta o cerrada, y en qué orden</h4>
+          <p class="text-sm" style="margin-bottom:0;">La abierta captura lo que no se anticipó y es cara de codificar;
+            la cerrada es fácil de analizar y fuerza opiniones que quizá no existen. En las cerradas, el orden de las
+            opciones y la presencia o ausencia de un punto medio cambian el reparto de respuestas.</p>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="auditor-preguntas">
+        <h4><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Auditor de preguntas</h4>
+        <p class="simulador-intro">Elige un ítem, marca los defectos que creas que tiene y comprueba tu diagnóstico. La
+          reformulación aparece cuando estén todos identificados. No hay ningún porcentaje aquí, y es deliberado: el
+          efecto de una redacción concreta sobre una respuesta concreta no se puede leer de estos datos, y ponerle una
+          cifra inventada sería exactamente el error que este capítulo enseña a no cometer.</p>
+        <div class="simulador-controles"></div>
+        <div class="warning" data-panel="original"></div>
+        <div class="note" data-panel="corregida"></div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>La regla que resume el módulo.</strong> Ninguna prueba estadística detecta una pregunta mal
+          redactada: los datos salen limpios, los intervalos salen estrechos y el número sale equivocado. La única
+          defensa es la prueba piloto —quince personas de la población objetivo contestando en voz alta lo que
+          entienden— y hacerla antes de imprimir nada.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>sección 1.5 y sección 16.2</strong> — redacción de preguntas y diseño de
+            cuestionarios, con ejemplos de experimentos de redacción.</li>
+          <li>Lohr (1999), <strong>capítulo 1</strong> — el análisis del cuestionario de Hite, de donde sale el primer
+            ítem del auditor.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

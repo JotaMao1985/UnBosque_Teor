@@ -1,0 +1,342 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · Una controversia de muestreo                       -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Una controversia de muestreo
+          <span class="text-gray-400 font-normal text-2xl">/ What can go wrong</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver dos encuestas que fallaron con muestras enormes, y
+              descubrir que el tamaño no tuvo nada que ver.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El muestreo se estudia mejor empezando por lo que puede salir mal. Los dos casos de este módulo tienen algo en
+        común que conviene tener presente todo el semestre: <strong>los dos tenían muestras gigantescas</strong>, y los
+        dos se equivocaron por márgenes que ninguna muestra pequeña bien tomada habría producido.</p>
+
+      <h3>Caso 1 · Shere Hite (1987)</h3>
+
+      <p>El libro <em>Women and Love: A Cultural Revolution in Progress</em> publicó cifras que dieron la vuelta a la
+        prensa estadounidense:</p>
+
+      <ul>
+        <li>el <strong>84 %</strong> de las mujeres «no están satisfechas emocionalmente con sus relaciones» (p. 804);</li>
+        <li>el <strong>70 %</strong> de las casadas desde hace cinco o más años «tienen relaciones fuera del matrimonio» (p. 856);</li>
+        <li>el <strong>95 %</strong> «reporta formas de acoso emocional y psicológico» (p. 810);</li>
+        <li>el <strong>84 %</strong> «reporta formas de condescendencia» (p. 809).</li>
+      </ul>
+
+      <div class="warning">
+        <p><strong>La metodología.</strong> Se enviaron <strong>100 000 cuestionarios</strong> a organizaciones de
+          mujeres, centros de asesoramiento, grupos parroquiales y asociaciones profesionales. Devolvieron el
+          <strong>4,5 %</strong>: unas 4 500 respuestas. El cuestionario tenía 127 preguntas abiertas, la mayoría con
+          varias partes.</p>
+      </div>
+
+      <p>4 500 es una muestra grande. El problema no es ese. El problema es que quien decidía entrar en la muestra era
+        <em>la propia encuestada</em>, y que devolver 127 preguntas abiertas exige una motivación que no está repartida
+        al azar entre las mujeres de Estados Unidos. Hite no se equivocó al recoger esas voces ni al publicarlas: se
+        equivocó al ponerles un porcentaje y atribuirlo a todas las mujeres.</p>
+
+      <div class="note">
+        <p><strong>Dale la vuelta a la pregunta.</strong> Si en la población el porcentaje real fuera del 25 % en vez
+          del 84 %, ¿qué tendrían que haber contestado las que <em>no</em> devolvieron el cuestionario? La fórmula del
+          sesgo de no respuesta —que se monta en el módulo 4 y se formaliza en el capítulo 8— responde: bastaría con
+          que fuera el <strong>22,2 %</strong>. Nada extraordinario. Los datos de Hite son compatibles con casi
+          cualquier valor poblacional, y por eso no dicen nada sobre él.</p>
+      </div>
+
+      <h3>Caso 2 · <em>The Literary Digest</em> (1936)</h3>
+
+      <p><em>The Literary Digest</em> era una de las revistas más respetadas de Estados Unidos y llevaba veinte años
+        acertando elecciones. En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %. En 1936 envió
+        <strong>diez millones de papeletas</strong> y le devolvieron <strong>más de 2,3 millones</strong>.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+        <div class="bg-red-50 p-3 rounded">
+          <p class="font-bold text-center" style="margin:0;">Predicción del sondeo</p>
+          <p class="text-center text-2xl font-bold" style="margin:0;">Landon 54 % · Roosevelt 41 %</p>
+        </div>
+        <div class="bg-green-50 p-3 rounded">
+          <p class="font-bold text-center" style="margin:0;">Elección</p>
+          <p class="text-center text-2xl font-bold" style="margin:0;">Roosevelt 61 % · Landon 37 %</p>
+        </div>
+      </div>
+
+      <p>Roosevelt ganó 523 de los 531 votos electorales. La revista desapareció en 1938. El recuento del propio sondeo
+        fue de 1 293 669 papeletas para Landon y 972 897 para Roosevelt; sobre la base de esos dos candidatos, el
+        sondeo dio un <strong>42,92 %</strong> a Roosevelt cuando el valor real era <strong>62,24 %</strong>. El sesgo
+        fue de <strong>−19,32 puntos</strong>.</p>
+
+      <div class="definition">
+        <h4>Las dos causas, y por qué hay que separarlas</h4>
+        <p><strong>No cobertura.</strong> La lista se armó con guías de teléfono, registros de automóviles, listas de
+          suscriptores y padrones electorales. En 1936, tener teléfono o coche era señal de estar por encima de la
+          media, y la opinión sobre las políticas de Roosevelt dependía justamente de la posición económica.</p>
+        <p style="margin-bottom:0;"><strong>No respuesta.</strong> Contestó menos de una cuarta parte de los
+          solicitados, y los partidarios de Landon devolvieron la papeleta con mucha más frecuencia. En Allentown
+          (Pensilvania) la revista escribió a <em>todos</em> los votantes registrados —marco perfecto, cero no
+          cobertura— y el resultado seguía siendo erróneo, porque solo devolvió la papeleta un tercio.</p>
+      </div>
+
+      <p>El caso de Allentown es el que zanja el argumento: <strong>la no respuesta sola basta para arruinar una
+        encuesta</strong>, aunque el marco sea impecable. El simulador de abajo permite repartir el sesgo entre las dos
+        causas y ver que los datos, por sí solos, no distinguen cuál pesó más.</p>
+
+      <div class="simulador" data-simulador="digest">
+        <h4><i class="fas fa-vote-yea" aria-hidden="true"></i> El sesgo del <em>Digest</em>, partido en dos</h4>
+        <p class="simulador-intro">Mueve la cobertura del marco $C$, la brecha de apoyo entre los que quedaron dentro y
+          fuera, y la respuesta relativa $\rho$ de los partidarios de Roosevelt. La primera gráfica compara el apoyo
+          real, el apoyo dentro del marco y lo que acaba viendo el sondeo. La segunda dibuja <strong>todas</strong> las
+          combinaciones que reproducen exactamente el 42,9 % publicado: cuando el punto negro cae sobre la curva
+          naranja, tu escenario es indistinguible del que ocurrió.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Apoyo a Roosevelt (base de dos candidatos)</p>
+        <div class="grafico-wrapper" style="height:230px;">
+          <canvas aria-label="Apoyo real, apoyo dentro del marco y estimación del sondeo" role="img"></canvas>
+        </div>
+        <p class="grafico-etiqueta">Combinaciones compatibles con el resultado observado</p>
+        <div class="grafico-wrapper" style="height:230px;">
+          <canvas aria-label="Curva de combinaciones de brecha de cobertura y razón de respuesta que reproducen el sondeo" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>La aritmética entera cabe en unas líneas. Ni una sola función de librería: cuatro números y dos divisiones.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La descomposición del sesgo del Literary Digest">
+          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="python">
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Con esos parámetros, el modelo reproduce el 42,92 % exactamente. Y una vez reproducido, el sesgo se parte en
+        dos sumandos que suman el total sin resto:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los dos sumandos del sesgo">
+          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="python">
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La lección que atraviesa el curso.</strong> Ninguno de los dos sumandos depende del número de
+          papeletas. Con el mismo marco y la misma respuesta diferencial, mandar cien millones en vez de diez habría
+          dado el mismo 42,9 %, solo que con menos ruido alrededor del número equivocado. En el módulo 7 se pone cifra
+          a esto: el sondeo de 2 266 566 papeletas valía lo mismo que una muestra aleatoria de <strong>seis</strong>
+          votantes.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, S.L. (2021). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>sección 1.1 y ejemplo
+            1.1</strong> — de ahí salen todas las cifras del <em>Digest</em> que se citan aquí, incluido el caso de
+            Allentown.</li>
+          <li>Lohr, S.L. (1999). <em>Sampling: Design and Analysis</em> (1.ª ed.), <strong>capítulo 1</strong> — el
+            análisis del estudio de Hite, con las páginas exactas del libro original.</li>
+          <li>Gutiérrez, H.A. <em>Estrategias de muestreo</em>, <strong>capítulo 1</strong> — el mismo argumento desde
+            la teoría de diseños, de
+            <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
+            abierto</a>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · Marco conceptual                                   -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Marco conceptual
+          <span class="text-gray-400 font-normal text-2xl">/ Populations and frames</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Nombrar con precisión las seis cosas que hay que
+              distinguir antes de tocar un dato. Casi todos los desastres del módulo 1 son un choque entre dos de
+              ellas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los dos casos del módulo anterior se diagnostican con el mismo vocabulario. Vale la pena fijarlo ahora, porque
+        el resto del curso lo da por sabido.</p>
+
+      <div class="definition">
+        <h4>Las seis piezas</h4>
+        <p><strong>Población objetivo.</strong> El conjunto sobre el que se quiere concluir. Se escribe
+          $U = \{1, 2, \dots, N\}$, y $N$ es su tamaño. Definirla exige decidir tres cosas: <em>qué</em> unidades,
+          <em>dónde</em> y <em>cuándo</em>.</p>
+        <p><strong>Unidad de muestreo.</strong> Lo que se selecciona. <strong>Unidad de observación.</strong> Aquello
+          de lo que se toma el dato. No siempre coinciden: se selecciona un hogar y se entrevista a cada persona.</p>
+        <p><strong>Marco muestral.</strong> La lista concreta de la que se extrae la muestra. Es un objeto físico —un
+          archivo, un padrón, un directorio— y casi nunca coincide con $U$.</p>
+        <p><strong>Población muestreada.</strong> El conjunto que <em>realmente</em> tenía alguna posibilidad de entrar.
+          Es a esta, y no a la objetivo, a la que se refieren las conclusiones cuando el marco falla.</p>
+        <p><strong>Variable de interés.</strong> El valor $y_k$ que lleva cada unidad $k$ de la población. Es una
+          constante fija, desconocida: lo aleatorio es <em>qué unidades se observan</em>, no cuánto vale $y_k$.</p>
+        <p style="margin-bottom:0;"><strong>Parámetro.</strong> La función de todos los $y_k$ que se quiere conocer:
+          el total $t = \sum_{k \in U} y_k$, la media $\bar{y}_U = t/N$, una proporción, una mediana.</p>
+      </div>
+
+      <div class="diagram">
+        <p><strong>Población objetivo</strong> &nbsp;→&nbsp; <strong>marco muestral</strong> &nbsp;→&nbsp;
+          <strong>muestra seleccionada</strong> &nbsp;→&nbsp; <strong>muestra observada</strong></p>
+        <p style="margin-bottom:0;">Cada flecha puede perder unidades. La primera pierde por <em>no cobertura</em>; la
+          tercera, por <em>no respuesta</em>. El capítulo 2 se ocupa de la segunda flecha, que es la única que el
+          estadístico controla del todo.</p>
+      </div>
+
+      <div class="glosario-notacion" data-glosario="conceptos"></div>
+
+      <h3>La población del curso</h3>
+
+      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: los 3 078 condados agrícolas de Estados
+        Unidos en el censo agrícola de 1992. Tiene una propiedad que ninguna población real tiene en el trabajo diario
+        y que la hace insustituible para aprender: <strong>está entera</strong>, así que cualquier estimación se puede
+        comparar con la verdad.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La población agpop">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+      </div>
+
+      <h3>Un error de procesamiento que viene de fábrica</h3>
+
+      <p>Los archivos de Lohr codifican el dato faltante como <code>−99</code>. No es una superficie negativa: es un
+        <em>no valor</em> disfrazado de número, y ninguna función de R protesta al promediarlo.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El código de faltante -99">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La convención de este material.</strong> Se trabaja con el <strong>marco completo de Lohr,
+          $N = 3\,078$</strong>, sin excluir nada, que es lo que hace el texto guía. Conviene saber exactamente lo que
+          eso cuesta: la media poblacional que se usa aquí es <strong>306 677</strong> acres, y la de los 3 059
+          condados con dato válido sería 308 582 —1 905 acres, un 0,6 %, por debajo—. Todo lo demás del curso es exacto
+          para esa población; lo único que no es, es la superficie sembrada media de verdad. Los 19 códigos
+          <code>−99</code> son un caso de <em>no respuesta de ítem</em>, y se tratan en el capítulo 8.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>sección 1.2</strong> — población objetivo, marco, unidad de muestreo y de
+            observación, con los ejemplos que se reutilizan en los ejercicios del módulo 10.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.2</strong> — la misma partición con la
+            notación $U$, $y_k$, $t_y$ que usa este material.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · Requisitos de una buena muestra                    -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Requisitos de una buena
+          muestra <span class="text-gray-400 font-normal text-2xl">/ What makes a sample good</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Sustituir la idea intuitiva de «muestra representativa»
+              por una condición que se puede comprobar.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>«Representativa» es una palabra que suena a garantía y no lo es. Una muestra de 2,4 millones de personas puede
+        ser espectacularmente poco representativa, y una de mil puede bastar. Lo que separa a una de otra no es el
+        tamaño ni el parecido aparente con la población: es <strong>cómo se eligió</strong>.</p>
+
+      <div class="definition">
+        <h4>Muestra probabilística</h4>
+        <p style="margin-bottom:0;">Una muestra es probabilística cuando se conoce, antes de seleccionarla, la
+          probabilidad con la que cada unidad de la población puede entrar; y esa probabilidad es <strong>positiva para
+          todas</strong>. Solo entonces tienen sentido las palabras «insesgado», «varianza» y «error estándar»: las
+          tres son esperanzas respecto de ese mecanismo de selección.</p>
+      </div>
+
+      <p>Es una definición exigente y tiene consecuencias inmediatas. Si una unidad tiene probabilidad cero —porque no
+        está en el marco, o porque decidió no participar— <strong>ningún estimador puede ser insesgado</strong> para
+        la población que la incluye. No es un problema que se arregle después con más datos o con un modelo mejor: es
+        una propiedad del procedimiento de selección, y se decide antes de recoger nada.</p>
+
+      <h3>Los tres requisitos, en orden de importancia</h3>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">1 · Un marco que cubra la población</h4>
+          <p class="text-sm" style="margin-bottom:0;">Todas las unidades de $U$ tienen que estar en la lista de la que
+            se muestrea. Lo que falte del marco no lo recupera ningún diseño posterior.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">2 · Un mecanismo de selección aleatorio y conocido</h4>
+          <p class="text-sm" style="margin-bottom:0;">No basta con que sea aleatorio: hay que <em>saber</em> con qué
+            probabilidad entra cada unidad, porque esas probabilidades son las que después ponderan la estimación. Es
+            el objeto que se construye en el capítulo 2.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">3 · Una tasa de respuesta alta</h4>
+          <p class="text-sm" style="margin-bottom:0;">La no respuesta convierte un diseño probabilístico impecable en
+            una muestra autoseleccionada. Es el capítulo 8, y es donde se pierden la mayoría de las encuestas reales.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Y entonces, ¿por qué no un censo?</strong> Porque una muestra bien tomada suele ser
+          <em>mejor</em>, no solo más barata: llega más rápido, permite controlar la calidad de la medición sobre pocos
+          casos, y no destruye la población cuando la medición es destructiva. Y porque el error de muestreo, que es lo
+          único que el censo elimina, es casi siempre el más pequeño de todos los errores en juego. El módulo 7 lo
+          cuantifica.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>secciones 1.3 y 1.6</strong> — qué hace buena a una muestra y por qué se muestrea en
+            vez de censar.</li>
+          <li>Särndal, Swensson y Wretman (1992). <em>Model Assisted Survey Sampling</em>, <strong>sección
+            1.3</strong> — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

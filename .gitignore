@@ -1,11 +1,16 @@
 # Lista blanca: se ignora todo lo de la raíz y se reactiva solo lo que forma parte
-# del proyecto. La carpeta Muestreo/ tiene 62 MB de material de trabajo (libros,
-# knits de 13 MB, cachés) que no debe acabar en un repositorio público.
+# del proyecto. La carpeta de trabajo tiene 62 MB de material (libros, knits de
+# 13 MB, cachés) que no debe acabar en un repositorio público.
+#
+# Al añadir una carpeta nueva al proyecto hay que añadir también su `!/carpeta/`,
+# y comprobarlo con `git check-ignore -v ruta`: la lista blanca se traga en
+# silencio cualquier cosa que no esté aquí.
 /*
 
 !/.gitignore
+!/README.md
 !/PLAN_Material_Muestreo.md
-!/Htmls_Muestreo/
+!/sitio/
 !/plantilla/
 !/precalculo/
 !/ensamblado/

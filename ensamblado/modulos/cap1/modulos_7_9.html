@@ -1,0 +1,345 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · El error total de encuesta                         -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El error total de encuesta
+          <span class="text-gray-400 font-normal text-2xl">/ Total survey error</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Colocar todos los errores del capítulo en un solo
+              esquema y en una sola fórmula, y ponerle número a «una muestra grande no salva nada».</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>La descomposición</h4>
+        <p>La calidad de una estimación $\hat\theta$ se mide con el <strong>error cuadrático medio</strong>, que se
+          parte en dos piezas y nada más que dos:</p>
+        <p style="text-align:center;">$$\text{ECM}(\hat\theta) = \underbrace{\big[E(\hat\theta) - \theta\big]^2}_{\text{sesgo}^2} + \underbrace{V(\hat\theta)}_{\text{varianza}}$$</p>
+        <p style="margin-bottom:0;">La varianza baja con $n$; el sesgo, no. Todo el capítulo cabe en esa frase.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-ecm">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver de dónde sale la descomposición</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-ecm" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>El ECM es la distancia cuadrática esperada al valor verdadero. Se le suma y se le resta la esperanza
+                del estimador, que es el truco entero:</p>
+              $$\text{ECM} = E\big[(\hat\theta - \theta)^2\big]
+                = E\Big[\big((\hat\theta - E\hat\theta) + (E\hat\theta - \theta)\big)^2\Big]$$
+            </li>
+            <li>
+              <p>Se desarrolla el cuadrado. El segundo paréntesis es una constante —no depende de la muestra—, así que
+                sale fuera de la esperanza:</p>
+              $$= E\big[(\hat\theta - E\hat\theta)^2\big] + 2\,(E\hat\theta - \theta)\,E\big[\hat\theta - E\hat\theta\big] + (E\hat\theta - \theta)^2$$
+            </li>
+            <li>
+              <p>El término cruzado se anula, porque $E[\hat\theta - E\hat\theta] = 0$ por definición de esperanza. Lo
+                que queda son los dos sumandos:</p>
+              $$\text{ECM} = V(\hat\theta) + B(\hat\theta)^2$$
+            </li>
+            <li>
+              <p style="margin-bottom:0;">La consecuencia práctica está en el papel de $n$. Bajo muestreo aleatorio
+                simple, $V = (1 - n/N)\,S^2/n$, que tiende a cero cuando $n \to N$. El sesgo $B$ no contiene $n$ por
+                ningún lado: es una propiedad del <em>procedimiento</em>, no del tamaño. Un censo hace $V = 0$ y deja
+                $B$ intacto.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <h3>El mapa completo</h3>
+
+      <p>Con la fórmula en la mano, todos los errores del capítulo se ordenan en un solo esquema. Recórrelo entero: en
+        cada hoja, lo que importa son las dos etiquetas de color.</p>
+
+      <div class="arbol-error" data-arbol="error-total"></div>
+
+      <h3>Sesgo contra varianza, sobre <code>agpop</code></h3>
+
+      <p>Aquí se ve la asimetría en cifras. La población es la de los 3 078 condados, con media 306 677 acres; el
+        deslizador introduce un sesgo como porcentaje de esa media, y el gráfico recorre los tamaños de muestra.</p>
+
+      <div class="simulador" data-simulador="sesgo-varianza">
+        <h4><i class="fas fa-scale-balanced" aria-hidden="true"></i> ECM = sesgo² + varianza</h4>
+        <p class="simulador-intro">Con el sesgo en cero, las barras del primer gráfico caen hasta desaparecer al
+          llegar al censo. Con un sesgo del 5 %, la caída se detiene: en $n = N$ la varianza vale exactamente cero y
+          lo único que queda son los 15 334 acres del sesgo. El segundo gráfico lo dice de otra manera: la proporción
+          del ECM atribuible al sesgo sube hasta el 100 %. <strong>Un censo no elimina el sesgo.</strong></p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Raíz del error cuadrático medio (acres)</p>
+        <div class="grafico-wrapper" style="height:220px;">
+          <canvas aria-label="Raíz del error cuadrático medio según el tamaño de muestra" role="img"></canvas>
+        </div>
+        <p class="grafico-etiqueta">Qué porcentaje del ECM es sesgo</p>
+        <div class="grafico-wrapper" style="height:200px;">
+          <canvas aria-label="Porcentaje del error cuadrático medio atribuible al sesgo" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <h3>Cuánto vale realmente una muestra sesgada de 2,3 millones</h3>
+
+      <p>Volvamos al <em>Literary Digest</em> con la fórmula del ECM. El sondeo tenía 2 266 566 papeletas útiles y un
+        sesgo de −0,1932. Un muestreo aleatorio simple de votantes no tiene sesgo, y una varianza mucho mayor.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El sesgo del sondeo del Literary Digest">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Comparación con un muestreo aleatorio de 1000">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>6,3 votantes.</strong> Ese es el tamaño de una muestra aleatoria que comete el mismo error
+          cuadrático medio que el sondeo de 2 266 566 papeletas. Dicho al revés: cada votante encuestado <em>al
+          azar</em> valía lo que 360 000 papeletas del <em>Digest</em>. Un muestreo aleatorio de mil votantes es
+          <strong>12,6 veces</strong> más preciso que el sondeo entero.</p>
+      </div>
+
+      <div class="simulador" data-simulador="n-grande-no-salva">
+        <h4><i class="fas fa-weight-scale" aria-hidden="true"></i> «n grande no salva»</h4>
+        <p class="simulador-intro">Las barras son la raíz del ECM de un muestreo aleatorio de $n$ votantes; la línea
+          naranja, la del sondeo de 2 266 566 papeletas. Busca el $n$ en el que las barras cruzan la línea: ahí está
+          el tamaño efectivo del sondeo.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Raíz del ECM de una muestra aleatoria pequeña frente a la del sondeo sesgado" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué esto no es un truco retórico.</strong> El cálculo es honesto en las dos direcciones: si el
+          sondeo hubiera sido insesgado, su error estándar habría sido de 0,0003 —una precisión inalcanzable para
+          cualquier encuesta real—. Toda su ventaja de tamaño existía; simplemente estaba multiplicada por un factor
+          que no dependía del tamaño. Esa es la aritmética que hay que tener en la cabeza cada vez que alguien
+          presenta un conjunto de datos enorme como si el volumen fuera una garantía.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>sección 1.6</strong> — la clasificación del error total de encuesta que sigue el
+            árbol de este módulo; y <strong>sección 15.5</strong>, donde el ECM de una muestra no probabilística se
+            desarrolla en general.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.4</strong> — la descomposición
+            $\text{ECM} = B^2 + V$ con la demostración completa.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · Las poblaciones del curso                          -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Las poblaciones del curso
+          <span class="text-gray-400 font-normal text-2xl">/ The course populations</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Conocer las dos poblaciones que aparecen en los ocho
+              capítulos, y ver por qué su forma condiciona todo lo que viene después.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este material trabaja siempre sobre poblaciones <strong>completas</strong>. No es una comodidad: es la única
+        forma de comprobar si una estimación acertó. En el trabajo real, el valor verdadero no se conoce nunca —si se
+        conociera, no habría encuesta—, así que la única manera de entender por qué funcionan los métodos es aplicarlos
+        donde sí se puede mirar la respuesta.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las dos poblaciones del curso">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="poblaciones">
+        <h4><i class="fas fa-chart-area" aria-hidden="true"></i> Explorador de las poblaciones</h4>
+        <p class="simulador-intro">La cola derecha está recortada en el percentil 99 para que el gráfico se vea: sin
+          recorte, <code>acres92</code> tiene condados de más de siete millones de acres y todo lo demás se aplasta
+          contra el eje. Las unidades de la cola no se descartan, se acumulan en la última clase.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Distribución de la población seleccionada" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;"><code>agpop</code> · 3 078 condados agrícolas</h4>
+          <p class="text-sm">Censo agrícola de Estados Unidos de 1992, con la superficie sembrada en 1992, 1987 y 1982,
+            el número de granjas y la región. Es el hilo conductor de Lohr y de este material.</p>
+          <p class="text-sm" style="margin-bottom:0;">Su forma importa: coeficiente de variación <strong>1,38</strong>
+            y asimetría <strong>5,32</strong>. Es una población fuertemente asimétrica, y eso tendrá tres
+            consecuencias en los capítulos siguientes: con $n$ pequeño la distribución de la media muestral no será
+            normal (capítulo 2), estratificar por tamaño ganará muchísimo (capítulo 4) y las probabilidades
+            proporcionales al tamaño serán la respuesta natural (capítulo 6).</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;"><code>BigLucy</code> · 85 296 empresas</h4>
+          <p class="text-sm">La población sintética de <em>Estrategias de muestreo</em>, con ingresos, número de
+            empleados, impuestos, nivel, zona y variables auxiliares. Aparece cuando el ejemplo viene de Gutiérrez, en
+            particular en el marco $\pi$ del capítulo 2 y en los diseños con probabilidades desiguales del capítulo 6.</p>
+          <p class="text-sm" style="margin-bottom:0;">Se instala con el paquete <code>TeachingSampling</code>, y su
+            tamaño —28 veces <code>agpop</code>— la hace útil para ver comportamientos asintóticos sin esperar.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Las muestras que las acompañan.</strong> Lohr distribuye, junto a <code>agpop</code>, muestras ya
+          extraídas de ella con distintos diseños: <code>agsrs</code> (aleatoria simple, $n = 300$),
+          <code>agstrat</code> (estratificada por región) y <code>agpps</code> (con probabilidades proporcionales al
+          tamaño). Cada capítulo usa la que le toca, y la comparación entre ellas es el hilo que une el curso.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>ejemplo 2.5 y apéndice de datos</strong> — la descripción de <code>agpop</code> y de
+            las muestras derivadas.</li>
+          <li>Gutiérrez, H.A. <em>TeachingSampling</em> —
+            <a href="https://cran.r-project.org/package=TeachingSampling" target="_blank" rel="noopener">el paquete en
+            CRAN</a>, con la documentación de <code>BigLucy</code> y de las funciones de selección.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · Sesgo de muestreo en ciencia de datos e IA         -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sesgo de muestreo en ciencia
+          de datos e IA <span class="text-gray-400 font-normal text-2xl">/ The same errors, new names</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Traducir el vocabulario del capítulo al de un proyecto
+              de aprendizaje automático, y comprobar que la matemática no cambia.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La tentación con un conjunto de datos grande es pensar que el muestreo es un problema de otra época: si están
+        «todos», no hay que preocuparse por cómo se eligieron. El módulo 7 acaba de mostrar que eso es exactamente al
+        revés. Un sondeo de 2,3 millones de casos equivalía a seis observaciones al azar, y la única razón era el
+        mecanismo de selección.</p>
+
+      <h3>El diccionario</h3>
+
+      <div class="diagram">
+        <p><strong>población objetivo</strong> ↔ la población sobre la que el modelo va a <em>decidir</em> en producción</p>
+        <p><strong>marco muestral</strong> ↔ el conjunto de datos de entrenamiento, con todo lo que quedó fuera de él</p>
+        <p><strong>no cobertura</strong> ↔ subpoblaciones ausentes del entrenamiento: el modelo nunca las vio</p>
+        <p><strong>autoselección</strong> ↔ los datos existen porque alguien decidió generarlos (reseñas, clics, quejas)</p>
+        <p><strong>no respuesta</strong> ↔ registros con campos vacíos, y usuarios que abandonan antes de dejar rastro</p>
+        <p><strong>sesgo de medición</strong> ↔ etiquetas ruidosas o sistemáticamente desviadas, anotadores no calibrados</p>
+        <p style="margin-bottom:0;"><strong>error de procesamiento</strong> ↔ códigos de faltante tratados como
+          números, fugas entre entrenamiento y prueba, transformaciones mal deshechas</p>
+      </div>
+
+      <p>No es una analogía decorativa: es la misma fórmula. Si la probabilidad de que un caso entre en el conjunto de
+        entrenamiento depende de la variable que se quiere predecir, la estimación —sea una media, sea un parámetro de
+        un modelo— arrastra el sesgo $(1-r)(\bar{y}_R - \bar{y}_M)$ del módulo 4, y aumentar el volumen del corpus lo
+        deja intacto.</p>
+
+      <h3>Tres casos que son el mismo caso</h3>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Un modelo entrenado con reseñas</h4>
+          <p class="text-sm" style="margin-bottom:0;">Quien escribe una reseña no es un comprador cualquiera: escribe
+            quien está muy satisfecho o muy enfadado. El corpus es una muestra autoseleccionada de la población de
+            compradores, y su distribución de satisfacción está vaciada por el centro. Es Hite con otro nombre.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Un modelo de riesgo entrenado con créditos aprobados</h4>
+          <p class="text-sm" style="margin-bottom:0;">Solo se observa el desenlace de quien recibió el crédito, y esa
+            selección la hizo un modelo anterior. Las unidades rechazadas tienen probabilidad cero de aparecer en el
+            entrenamiento: <em>no cobertura</em>, con la particularidad de que el marco lo construyó el propio sistema
+            que se quiere mejorar.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Un panel en línea como el de Mechanical Turk</h4>
+          <p class="text-sm" style="margin-bottom:0;">Es el ejemplo del módulo 4, y sigue siendo la fuente de una
+            fracción enorme de los datos de comportamiento que alimentan modelos hoy. Edad media 33,7 años frente a los
+            60,7 de una muestra probabilística de la misma población.</p>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Lo que sí ayuda, y lo que no.</strong> Ponderar por variables observables —lo que en encuestas se
+          llama postestratificación y calibración, capítulos 7 y 8— corrige la parte del sesgo que va por esas
+          variables, y nada más. El módulo 4 lo enseñó con datos: calibrar las dos encuestas por sexo, edad y raza no
+          las acercó. Lo que de verdad ayuda es lo caro: conseguir una muestra probabilística, aunque sea pequeña, y
+          usarla como referencia para medir cuánto se desvía la grande.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>La pregunta que hay que hacerse siempre.</strong> Ante cualquier conjunto de datos, antes de
+          entrenar nada: <em>¿qué tuvo que pasar para que esta fila exista?</em> Si la respuesta involucra una decisión
+          de la propia unidad, o un filtro correlacionado con lo que se quiere predecir, ya se sabe hacia dónde va a
+          apuntar el error. El capítulo 8 vuelve sobre esto en el módulo de auditoría de IA aplicada al diseño
+          muestral.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr (2021), <strong>capítulo 15</strong> — muestras no probabilísticas: cuándo se pueden usar, qué
+            supuestos hacen falta y cómo se mide su error cuadrático medio.</li>
+          <li>Meng, X.-L. (2018). «Statistical paradises and paradoxes in big data (I)». <em>The Annals of Applied
+            Statistics</em> 12(2) — el resultado general del que el «tamaño efectivo» del módulo 7 es un caso
+            particular.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

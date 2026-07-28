@@ -2402,6 +2402,236 @@
         padding: 0.28rem 0.35rem;
       }
     }
+
+    /* ================================================================
+       Árbol del error total (componente nuevo del capítulo 1)
+
+       El error total de encuesta es una taxonomía, no una secuencia: el
+       componente .ciclo no le sirve. Aquí el estudiante recorre el árbol
+       y en cada nodo lee tres cosas que se confunden constantemente:
+       si el error sesga o solo añade varianza, si aumentar n lo reduce,
+       y en qué capítulo del curso se trata.
+       ================================================================ */
+    .arbol-error {
+      margin: 1.75rem 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .arbol-error-titulo {
+      margin: 0;
+      padding: 0.7rem 1.1rem;
+      background: #012820;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .arbol-error-intro {
+      margin: 0;
+      padding: 0.75rem 1.1rem 0;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .arbol-error-marco {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1rem;
+      padding: 1rem 1.1rem 1.1rem;
+      align-items: start;
+    }
+
+    .arbol-error-arbol ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .arbol-error-arbol > ul > li > ul {
+      margin-left: 0.75rem;
+      padding-left: 0.75rem;
+      border-left: 1px dashed #cbd5e1;
+    }
+
+    .arbol-error-arbol ul ul ul {
+      margin-left: 0.75rem;
+      padding-left: 0.75rem;
+      border-left: 1px dashed #cbd5e1;
+    }
+
+    .arbol-error-nodo {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.3rem;
+      margin: 0.15rem 0;
+    }
+
+    .arbol-error-chevron {
+      flex: 0 0 auto;
+      width: 1.3rem;
+      height: 1.5rem;
+      border: none;
+      background: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 0.7rem;
+      line-height: 1;
+      padding: 0;
+      border-radius: 0.25rem;
+    }
+
+    .arbol-error-chevron:hover {
+      background: rgba(1, 40, 32, 0.08);
+      color: #012820;
+    }
+
+    .arbol-error-chevron i {
+      transition: transform 0.18s ease;
+      display: inline-block;
+    }
+
+    .arbol-error-chevron[aria-expanded="false"] i {
+      transform: rotate(-90deg);
+    }
+
+    .arbol-error-hueco {
+      flex: 0 0 auto;
+      width: 1.3rem;
+    }
+
+    .arbol-error-boton {
+      flex: 1 1 auto;
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      color: #1e293b;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 0.4rem;
+      padding: 0.2rem 0.5rem;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .arbol-error-boton:hover {
+      background: rgba(1, 40, 32, 0.07);
+    }
+
+    .arbol-error-boton.rama {
+      font-weight: 700;
+    }
+
+    .arbol-error-boton.activo {
+      background: #012820;
+      color: white;
+      border-color: #012820;
+    }
+
+    .arbol-error-boton.activo:hover {
+      background: #012820;
+    }
+
+    .arbol-error-detalle {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+      position: sticky;
+      top: 1rem;
+    }
+
+    .arbol-error-detalle h5 {
+      margin: 0 0 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #012820;
+    }
+
+    .arbol-error-detalle p {
+      margin: 0 0 0.6rem;
+      color: #334155;
+      line-height: 1.55;
+    }
+
+    .arbol-error-marcas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.5rem 0 0.7rem;
+    }
+
+    .arbol-error-marca {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.55rem;
+      border-radius: 50px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .arbol-error-marca.sesgo {
+      color: #991b1b;
+      background: rgba(220, 38, 38, 0.09);
+      border-color: rgba(220, 38, 38, 0.35);
+    }
+
+    .arbol-error-marca.varianza {
+      color: #075985;
+      background: rgba(14, 116, 144, 0.09);
+      border-color: rgba(14, 116, 144, 0.35);
+    }
+
+    .arbol-error-marca.ambos {
+      color: #7c2d12;
+      background: rgba(255, 102, 0, 0.09);
+      border-color: rgba(255, 102, 0, 0.4);
+    }
+
+    .arbol-error-marca.donde {
+      color: #334155;
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .arbol-error-ejemplo {
+      margin: 0;
+      padding: 0.55rem 0.7rem;
+      background: #f8fafc;
+      border-radius: 0.4rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    .arbol-error-ejemplo strong {
+      color: #012820;
+    }
+
+    .arbol-error-nota {
+      margin: 0;
+      padding: 0 1.1rem 1rem;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+
+    @media (max-width: 900px) {
+      .arbol-error-marco {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .arbol-error-detalle {
+        position: static;
+      }
+    }
   </style>
 </head>
 
@@ -2660,6 +2890,13 @@
         que el estudiante no tenga que reaprenderla.</p>
 
       <div class="glosario-notacion" data-glosario="demo"></div>
+
+      <p>Una taxonomía no es una secuencia, así que el componente <code>.ciclo</code> no le sirve: para
+        un desglose jerárquico está el <strong>árbol</strong> plegable. Se declara en JavaScript
+        (<code>ARBOLES_ERROR['id']</code>) y cada nodo puede llevar su resumen, el efecto que produce y
+        el capítulo donde se trata.</p>
+
+      <div class="arbol-error" data-arbol="demo"></div>
       <table>
         <caption class="sr-only">Ejemplo de tabla</caption>
         <thead>
@@ -2989,6 +3226,7 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
         iniciarCiclos();
         iniciarTablasRanking();
         iniciarGlosarios();
+        iniciarArbolesError();
         iniciarMapasEstacionales();
         renderMathInElement(mainContent, {
           delimiters: [
@@ -3764,6 +4002,152 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
           panel.hidden = abierto;
         });
       });
+    }
+
+    // ================================================================
+    // Árbol del error total (v1, capítulo 1)
+    //
+    // ARBOLES_ERROR['id'] = {titulo, intro, nota, raiz} sobre un
+    // contenedor con data-arbol="id". Cada nodo es
+    //
+    //   { etiqueta, resumen, efecto, nAyuda, donde, ejemplo, hijos }
+    //
+    // `efecto` vale 'sesgo', 'varianza' o 'ambos' y `nAyuda` dice si
+    // aumentar el tamaño de muestra reduce ese error. Son justo las dos
+    // cosas que el estudiante confunde: un error de cobertura no se
+    // arregla con más encuestas y uno de muestreo sí.
+    //
+    // El texto admite LaTeX entre $…$: al cambiar de nodo se vuelve a
+    // pasar KaTeX por el panel, porque el contenido se pinta después de
+    // la pasada general de loadModule.
+    // ================================================================
+    const ARBOLES_ERROR = {};
+
+    const MARCA_EFECTO = {
+      sesgo: 'Sesga la estimación',
+      varianza: 'Solo añade varianza',
+      ambos: 'Sesga y añade varianza'
+    };
+
+    function iniciarArbolesError() {
+      mainContent.querySelectorAll('[data-arbol]').forEach(raiz => {
+        const spec = ARBOLES_ERROR[raiz.dataset.arbol];
+        if (!spec) {
+          console.warn(`Árbol de error no registrado: ${raiz.dataset.arbol}`);
+          return;
+        }
+        pintarArbolError(raiz, spec);
+      });
+    }
+
+    function pintarArbolError(raiz, spec) {
+      // Los nodos se numeran al recorrer el árbol para poder referirlos
+      // desde los botones sin depender de que el autor ponga ids.
+      const nodos = [];
+      (function numerar(nodo, profundidad) {
+        nodo._i = nodos.length;
+        nodo._nivel = profundidad;
+        nodos.push(nodo);
+        (nodo.hijos || []).forEach(h => numerar(h, profundidad + 1));
+      })(spec.raiz, 0);
+
+      raiz.innerHTML = `
+        <p class="arbol-error-titulo"><i class="fas fa-sitemap" aria-hidden="true"></i>${spec.titulo}</p>
+        ${spec.intro ? `<p class="arbol-error-intro">${spec.intro}</p>` : ''}
+        <div class="arbol-error-marco">
+          <div class="arbol-error-arbol" role="tree" aria-label="${spec.titulo}"></div>
+          <div class="arbol-error-detalle" role="status" aria-live="polite"></div>
+        </div>
+        ${spec.nota ? `<p class="arbol-error-nota">${spec.nota}</p>` : ''}`;
+
+      const panelArbol = raiz.querySelector('.arbol-error-arbol');
+      const panelDetalle = raiz.querySelector('.arbol-error-detalle');
+
+      function lista(hijos) {
+        const ul = document.createElement('ul');
+        ul.setAttribute('role', 'group');
+        hijos.forEach(nodo => ul.appendChild(elemento(nodo)));
+        return ul;
+      }
+
+      function elemento(nodo) {
+        const li = document.createElement('li');
+        li.setAttribute('role', 'treeitem');
+        const tieneHijos = (nodo.hijos || []).length > 0;
+
+        const fila = document.createElement('div');
+        fila.className = 'arbol-error-nodo';
+
+        if (tieneHijos) {
+          const chevron = document.createElement('button');
+          chevron.type = 'button';
+          chevron.className = 'arbol-error-chevron';
+          chevron.setAttribute('aria-expanded', 'true');
+          chevron.setAttribute('aria-label', `Plegar o desplegar ${nodo.etiqueta}`);
+          chevron.innerHTML = '<i class="fas fa-chevron-down" aria-hidden="true"></i>';
+          fila.appendChild(chevron);
+          chevron.addEventListener('click', () => {
+            const abierto = chevron.getAttribute('aria-expanded') === 'true';
+            chevron.setAttribute('aria-expanded', String(!abierto));
+            li.setAttribute('aria-expanded', String(!abierto));
+            const sub = li.querySelector(':scope > ul');
+            if (sub) sub.hidden = abierto;
+          });
+          li.setAttribute('aria-expanded', 'true');
+        } else {
+          const hueco = document.createElement('span');
+          hueco.className = 'arbol-error-hueco';
+          hueco.setAttribute('aria-hidden', 'true');
+          fila.appendChild(hueco);
+        }
+
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'arbol-error-boton' + (tieneHijos ? ' rama' : '');
+        boton.dataset.nodo = String(nodo._i);
+        boton.textContent = nodo.etiqueta;
+        boton.addEventListener('click', () => seleccionar(nodo._i));
+        fila.appendChild(boton);
+
+        li.appendChild(fila);
+        if (tieneHijos) li.appendChild(lista(nodo.hijos));
+        return li;
+      }
+
+      function seleccionar(i) {
+        const nodo = nodos[i];
+        panelArbol.querySelectorAll('.arbol-error-boton').forEach(b => {
+          b.classList.toggle('activo', b.dataset.nodo === String(i));
+        });
+
+        const marcas = [];
+        if (nodo.efecto) {
+          marcas.push(`<span class="arbol-error-marca ${nodo.efecto}">${MARCA_EFECTO[nodo.efecto] || nodo.efecto}</span>`);
+        }
+        if (nodo.nAyuda !== undefined) {
+          marcas.push(`<span class="arbol-error-marca ${nodo.nAyuda ? 'varianza' : 'sesgo'}">` +
+            (nodo.nAyuda ? 'Aumentar $n$ lo reduce' : 'Aumentar $n$ <strong>no</strong> lo reduce') + '</span>');
+        }
+        if (nodo.donde) {
+          marcas.push(`<span class="arbol-error-marca donde">${nodo.donde}</span>`);
+        }
+
+        panelDetalle.innerHTML =
+          `<h5>${nodo.etiqueta}</h5>` +
+          (nodo.resumen ? `<p>${nodo.resumen}</p>` : '') +
+          (marcas.length ? `<div class="arbol-error-marcas">${marcas.join('')}</div>` : '') +
+          (nodo.ejemplo ? `<p class="arbol-error-ejemplo"><strong>Ejemplo:</strong> ${nodo.ejemplo}</p>` : '');
+
+        if (typeof katexEn === 'function') katexEn(panelDetalle);
+      }
+
+      // El <ul> exterior es solo maquetación: sin role="none" se colaría
+      // entre el role="tree" y sus treeitem, que han de ser hijos suyos.
+      const raizUl = document.createElement('ul');
+      raizUl.setAttribute('role', 'none');
+      raizUl.appendChild(elemento(spec.raiz));
+      panelArbol.appendChild(raizUl);
+      seleccionar(0);
     }
 
     // ================================================================
@@ -4723,6 +5107,33 @@ round(mean(rnorm(200)), 4)   # 0.0117</code></pre>
 
     // Demostración del componente .glosario-notacion. En un capítulo real las
     // filas son las de ese capítulo, y la tabla se repite en todos.
+    // Demostración del componente .arbol-error. En un capítulo real los nodos
+    // son los de ese capítulo; aquí basta con dos niveles para ver la mecánica.
+    ARBOLES_ERROR['demo'] = {
+      titulo: 'Árbol de demostración',
+      intro: 'Pulsa una rama para leer su ficha; el galón de la izquierda la pliega.',
+      nota: 'Los campos <code>efecto</code> y <code>nAyuda</code> son los que hacen didáctico al ' +
+        'componente: dicen si el error sesga o solo dispersa, y si aumentar $n$ sirve de algo.',
+      raiz: {
+        etiqueta: 'Nodo raíz',
+        resumen: 'El nodo raíz se selecciona solo al cargar el módulo.',
+        hijos: [
+          {
+            etiqueta: 'Rama con efecto de varianza',
+            resumen: 'Un error que solo dispersa la estimación alrededor del valor correcto.',
+            efecto: 'varianza', nAyuda: true, donde: 'Capítulo 2',
+            ejemplo: 'la variabilidad de muestreo de $\\bar{y}$ bajo MAS.'
+          },
+          {
+            etiqueta: 'Rama con efecto de sesgo',
+            resumen: 'Un error que desplaza la estimación y no se corrige con más datos.',
+            efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 8',
+            ejemplo: 'la no respuesta correlacionada con la variable de interés.'
+          }
+        ]
+      }
+    };
+
     GLOSARIOS['demo'] = {
       titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
       nota: 'Los campos de notación se escriben en LaTeX sin delimitadores: el componente los ' +

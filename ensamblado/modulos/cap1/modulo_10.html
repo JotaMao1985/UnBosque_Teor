@@ -1,0 +1,267 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
+          guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre los nueve módulos y cinco encuestas
+              reales que hay que diagnosticar de principio a fin.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al final,
+        el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos antes de abrir
+        la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap1">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 1</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cinco son encuestas reales. Para cada una hay que
+          identificar la población objetivo, el marco muestral, la unidad de muestreo y la de observación, y las
+          fuentes de error. Cuando hay números, las cifras de la solución salen de
+          <code>ensamblado/codigo/cap1/cadena.R</code>, que se ejecuta de verdad.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>El artículo «What Readers Say About
+            Marijuana» informó de que <strong>más del 75 %</strong> de los lectores que participaron en una encuesta
+            telefónica opinaba que la marihuana debía ser legal. La encuesta se anunció en la revista y los lectores
+            debían llamar a un número 1-900 con un costo de 75 centavos. Describe población objetivo, marco, unidad de
+            muestreo y de observación, y las fuentes de sesgo. Después responde con la fórmula del módulo 4: si en la
+            población real el apoyo fuera del 30 %, ¿qué tendrían que opinar los que no llamaron?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e1-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e1-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e1-pista" hidden>
+            <p style="margin:0;">Fíjate en que aquí hay <em>dos</em> filtros encadenados antes de la autoselección: hay
+              que ser lector de la revista y hay que estar dispuesto a pagar 75 centavos. Y para la parte numérica,
+              nota que la fracción que llamó es diminuta: eso hace que $\bar{y}_M$ y $\bar{y}_U$ casi coincidan, lo
+              cual es en sí mismo la respuesta al ejercicio.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e1-sol" hidden>
+            <p><strong>La unidad de muestreo es la llamada, no la persona; el marco son los lectores que vieron el
+              anuncio y podían pagar; y con un 1 % de participación, un apoyo poblacional del 30 % solo exige que los
+              que no llamaron estén al 29,5 %.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> por el titular, todos los adultos de Estados Unidos. Por el
+                procedimiento, como mucho los lectores de la revista.</li>
+              <li><strong>Marco muestral:</strong> los lectores que vieron el anuncio, tenían teléfono de tonos y
+                estaban dispuestos a gastar 75 centavos en la llamada.</li>
+              <li><strong>Unidad de muestreo:</strong> la <em>llamada</em>. No es un detalle pedante: una persona podía
+                llamar varias veces, así que ni siquiera está garantizado que las unidades sean distintas.</li>
+              <li><strong>Unidad de observación:</strong> quien llama.</li>
+              <li><strong>Sesgos:</strong> autoselección (llama quien tiene una opinión fuerte, y quien quiere cambiar
+                una ley está más motivado que quien está conforme), barrera económica (el costo excluye a los de menos
+                recursos y a los indiferentes) y no cobertura tecnológica.</li>
+            </ul>
+            <pre><code class="language-r">⟦S1⟧</code></pre>
+            <p style="margin-bottom:0;">La segunda fila es la clave. Con una participación del 1 %, prácticamente
+              cualquier valor poblacional es compatible con el 75 % observado: para que la población estuviera en el
+              30 %, bastaría con que los que no llamaron estuvieran en el 29,55 %. El dato del 75 % no restringe casi
+              nada, y por eso no informa casi nada.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Una estudiante quiere estimar el
+            porcentaje de fondos mutuos que subieron de precio la semana pasada. Toma <strong>cada décimo fondo</strong>
+            de las listas publicadas en un periódico. Identifica el diseño y las fuentes de error, y decide: ¿el
+            problema está en cómo seleccionó o en de dónde seleccionó?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e2-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e2-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e2-pista" hidden>
+            <p style="margin:0;">Calcula la probabilidad de inclusión de un fondo que <em>está</em> en la lista, y
+              después la de uno que no está. Las dos respuestas juntas resuelven el ejercicio.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e2-sol" hidden>
+            <p><strong>El diseño es impecable; el marco, no. El problema está en de dónde seleccionó.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> todos los fondos mutuos existentes esa semana.</li>
+              <li><strong>Marco:</strong> la lista publicada por <em>ese</em> periódico.</li>
+              <li><strong>Diseño:</strong> muestreo sistemático 1 en 10.</li>
+              <li><strong>Unidad de muestreo y de observación:</strong> el fondo. Aquí sí coinciden.</li>
+            </ul>
+            <pre><code class="language-r">⟦S2⟧</code></pre>
+            <p>Todo fondo de la lista tiene $\pi_k = 1/10$, y las probabilidades suman el tamaño de muestra esperado.
+              Es un diseño probabilístico correcto, y en el capítulo 2 se verá que además suele ser <em>más</em>
+              preciso que el aleatorio simple cuando la lista viene ordenada.</p>
+            <p style="margin-bottom:0;">El defecto está antes: si el periódico solo publica los fondos por encima de
+              cierto tamaño o de cierto rendimiento, los que faltan tienen $\pi_k = 0$ y ningún diseño los recupera.
+              Una segunda amenaza, menor, es la periodicidad: si la lista estuviera ordenada por categorías con ciclos
+              de longitud 10, el sistemático podría caer siempre en la misma posición del ciclo. Con orden alfabético
+              es improbable, pero es el caso patológico que el capítulo 2 estudia en detalle.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Para formar jurados, el condado de
+            Maricopa envía <strong>100 300 citaciones</strong> extraídas de una lista combinada de votantes registrados
+            y conductores con licencia. De ellas, 23 000 resultan no entregables, 7 000 personas no califican y 22 000
+            son excusadas. Analiza el flujo del marco a la muestra y di quién queda sistemáticamente fuera del jurado.</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e3-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e3-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e3-pista" hidden>
+            <p style="margin:0;">No basta con contar cuántos se pierden: hay que preguntarse <em>quiénes</em> se
+              pierden en cada escalón, y si esa característica correlaciona con algo relevante para un juicio. Empieza
+              por los «no entregables»: ¿qué tipo de persona tiene una dirección desactualizada?</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e3-sol" hidden>
+            <p><strong>Se retiene el 48,16 % del marco, y las tres pérdidas van en la misma dirección: hacia jurados
+              más estables económicamente y con más arraigo residencial.</strong></p>
+            <pre><code class="language-r">⟦S3⟧</code></pre>
+            <ul>
+              <li><strong>No cobertura del marco (antes de las 100 300):</strong> quien no vota <em>ni</em> conduce no
+                está en la lista. Suele ser gente muy pobre o muy mayor.</li>
+              <li><strong>No entregables (23 %):</strong> direcciones desactualizadas, es decir, alta movilidad
+                residencial: jóvenes y arrendatarios.</li>
+              <li><strong>No calificados (7 %):</strong> criterio legal, no un sesgo del diseño; pero conviene
+                distinguirlos de los anteriores, porque estos <em>no</em> pertenecen a la población objetivo.</li>
+              <li><strong>Excusados (21,9 %):</strong> por salud o por dificultad económica. Quien no puede permitirse
+                faltar al trabajo se excusa, y queda fuera.</li>
+            </ul>
+            <p style="margin-bottom:0;">La lección de diseño es que <strong>no todas las pérdidas son iguales</strong>.
+              Los 7 000 no calificados reducen el tamaño pero no sesgan, porque no formaban parte de la población
+              objetivo. Los otros 45 000 sí sesgan, y en la misma dirección. Un análisis que solo reportara «se retuvo
+              el 48 %» ocultaría precisamente lo que importa.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>En una ciudad hay <strong>14
+            arquitectos</strong> y se quiere una muestra de 8. Se llama por orden del directorio telefónico hasta
+            conseguir 8 entrevistas. Calcula las probabilidades de inclusión suponiendo que todos aceptan, comprueba
+            cuánto suman y decide si el diseño sirve.</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e4-pista" hidden>
+            <p style="margin:0;">Que las $\pi_k$ sumen $n$ es <em>necesario</em> para un diseño válido, pero no es
+              suficiente. El requisito del módulo 3 pide algo más sobre cada $\pi_k$ por separado, no sobre su suma.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e4-sol" hidden>
+            <p><strong>Las probabilidades suman 8, como debe ser, y aun así el diseño es inservible: seis arquitectos
+              tienen $\pi_k = 0$.</strong></p>
+            <pre><code class="language-r">⟦S4⟧</code></pre>
+            <p>Si todos aceptan, los ocho primeros del directorio entran con certeza y los seis últimos no entran
+              nunca. La suma da 8 —la identidad $\sum_U \pi_k = n$ se cumple, y en el capítulo 2 se demostrará que
+              siempre se cumple—, pero eso no salva nada: el requisito del módulo 3 es que <em>todas</em> las
+              $\pi_k$ sean positivas, y aquí seis no lo son. Ningún estimador puede ser insesgado para la población de
+              los catorce.</p>
+            <p style="margin-bottom:0;">Hay un segundo defecto, más sutil. Si <em>no</em> todos aceptan, quién entra
+              depende de quién conteste el teléfono primero, que es una forma de autoselección: probablemente los que
+              tienen menos trabajo o más personal administrativo. Con 14 unidades y ganas de 8, lo correcto es un
+              muestreo aleatorio simple de 8 de los 14, con $\pi_k = 8/14 = 0{,}571$ para todos, y perseguir a los
+              seleccionados hasta conseguirlos.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">5.</span>Un bibliotecario selecciona 100
+            ubicaciones al azar en las estanterías, va a cada una y registra si el libro que está ahí necesita
+            reencuadernación. Identifica la unidad de muestreo y la de observación, y cuantifica el sesgo: si una
+            fracción $f$ de los libros está prestada y su tasa de necesidad de reencuadernación es la mitad de la de
+            los que están en el estante, ¿cuánto se sobreestima?</p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e5-pista" hidden>
+            <p style="margin:0;">La unidad que se selecciona y la que se observa no son la misma cosa, y ahí está todo
+              el ejercicio. Escribe la tasa poblacional como una mezcla de dos grupos, igual que en la fórmula del
+              sesgo de no respuesta del módulo 4: es literalmente la misma fórmula con otros nombres.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e5-sol" hidden>
+            <p><strong>Se muestrean ubicaciones y se observan libros. Con un 20 % prestado, se sobreestima la necesidad
+              de reencuadernación en 3 puntos porcentuales: 30 % frente al 27 % real.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> todos los libros de la colección.</li>
+              <li><strong>Marco:</strong> el conjunto de ubicaciones físicas de las estanterías.</li>
+              <li><strong>Unidad de muestreo:</strong> la ubicación. <strong>Unidad de observación:</strong> el libro
+                que la ocupa.</li>
+            </ul>
+            <p>El diseño es bueno en un aspecto que conviene reconocer: si las ubicaciones cubren toda la biblioteca,
+              cada <em>ubicación</em> tiene la misma probabilidad de salir. El problema es que la población de interés
+              no son las ubicaciones.</p>
+            <pre><code class="language-r">⟦S5⟧</code></pre>
+            <p style="margin-bottom:0;">Los libros prestados no están en el estante, así que tienen $\pi_k = 0$: es no
+              cobertura pura. Y no son libros cualquiera —son los más nuevos y los más solicitados—, así que su tasa
+              de necesidad de reencuadernación difiere sistemáticamente. Nótese además el hueco vacío: si el
+              bibliotecario encuentra un hueco y pasa a la siguiente ubicación sin anotar nada, está descartando en
+              silencio justo a las unidades que faltan. Registrar el hueco como «libro prestado, no observado» convierte
+              el problema en uno de no respuesta, que al menos se puede acotar.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, S.L. (2021). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>capítulo 1
+            completo</strong> — es la lectura obligatoria de las semanas 1 y 2, y la fuente de los dos casos del
+            módulo 1 y de los cinco ejercicios de este módulo.</li>
+          <li>Gutiérrez, H.A. <em>Estrategias de muestreo: diseño de encuestas y estimación de parámetros</em>,
+            <strong>capítulo 1</strong> — el mismo material desde la teoría de diseños, y la introducción de la
+            notación $U$, $y_k$, $t_y$ que se usa en todo este material. De
+            <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
+            abierto</a>.</li>
+          <li>Heck, P.R., Simons, D.J. y Chabris, C.F. (2018). «65 % of Americans believe they are above average in
+            intelligence».
+            <a href="https://doi.org/10.1371/journal.pone.0200103" target="_blank" rel="noopener"><em>PLOS ONE</em>
+            13(7)</a> — las dos encuestas del módulo 4, con la metodología completa. Acceso abierto.</li>
+          <li>Lohr, S.L. (2021), <strong>capítulo 15</strong> — muestras no probabilísticas. Es la continuación
+            natural del módulo 9 y la referencia para el proyecto integrador.</li>
+          <li>Lumley, T. <em>survey: Analysis of Complex Survey Samples</em> — la
+            <a href="https://cran.r-project.org/package=survey" target="_blank" rel="noopener">documentación del
+            paquete</a> que se usa desde el capítulo 2 en adelante.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

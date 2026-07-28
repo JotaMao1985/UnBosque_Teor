@@ -15,7 +15,7 @@ Qué hace:
      aparezcan en la salida real de ESE bloque.
 
 Uso:
-    python3 precalculo/verifica_bloques.py Htmls_Muestreo/capitulo-4-*.html
+    python3 precalculo/verifica_bloques.py sitio/muestreo/capitulo-4-*.html
     python3 precalculo/verifica_bloques.py --todos
 
 Se ejecuta desde la raíz del repositorio (la carpeta Muestreo/): las sesiones de
@@ -176,11 +176,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("html", nargs="*", help="capítulos a verificar")
     ap.add_argument("--todos", action="store_true",
-                    help="verifica todos los capítulos de Htmls_Muestreo/")
+                    help="verifica todos los capítulos de sitio/muestreo/")
     args = ap.parse_args()
 
     if args.todos:
-        rutas = sorted((RAIZ / "Htmls_Muestreo").glob("capitulo-*.html"))
+        rutas = sorted((RAIZ / "sitio" / "muestreo").glob("capitulo-*.html"))
     else:
         rutas = [Path(h) for h in args.html]
     if not rutas:

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Ensambla sitio/muestreo/capitulo-2-diseno-mas-sistematico.html desde la
-plantilla, los módulos escritos aparte y las cadenas de código ya ejecutadas.
+"""Ensambla sitio/muestreo/capitulo-1-encuestas-sesgos.html desde la plantilla,
+los módulos escritos aparte y las cadenas de código ya ejecutadas.
 
-El código de los bloques NO se escribe a mano en el HTML: se toma de
-cadena.R y cadena.py, que son los archivos que se ejecutaron de verdad. Así
-lo que lee el estudiante es, byte a byte, lo que se probó.
+Mismo mecanismo que ensambla_cap2.py: sustitución de regiones delimitadas sobre
+la plantilla, nunca concatenación de fragmentos sueltos. El código de los
+bloques NO se escribe a mano en el HTML: se toma de cadena.R y cadena.py, que
+son los archivos que se ejecutaron de verdad, así que lo que lee el estudiante
+es byte a byte lo que se probó.
 """
 import html as html_mod
 import json
@@ -15,7 +17,7 @@ from pathlib import Path
 # Se ejecuta desde la raíz del repositorio (la carpeta Muestreo/).
 RAIZ = Path(__file__).resolve().parent.parent
 PLANTILLA = RAIZ / "plantilla" / "plantilla-capitulo-muestreo.html"
-DESTINO = RAIZ / "sitio" / "muestreo" / "capitulo-2-diseno-mas-sistematico.html"
+DESTINO = RAIZ / "sitio" / "muestreo" / "capitulo-1-encuestas-sesgos.html"
 
 
 def corta(texto, inicio, fin, que):
@@ -65,45 +67,48 @@ def main():
         ('content="Plantilla base para los capítulos del material de Muestreo Estadístico '
          '(Universidad El Bosque): cajas, código R/Python en pestañas, simuladores con Chart.js, '
          'autoevaluación y ejercicios guiados."',
-         'content="Capítulo 2 del material de Muestreo Estadístico (Universidad El Bosque): '
-         'el diseño muestral p(s), probabilidades de inclusión, el estimador de Horvitz-Thompson, '
-         'muestreo aleatorio simple, Bernoulli y sistemático, con simuladores y código en R y Python."'),
+         'content="Capítulo 1 del material de Muestreo Estadístico (Universidad El Bosque): '
+         'encuestas por muestreo, sesgo de selección y de medición, el error total de encuesta '
+         'y por qué una muestra grande no corrige un mal diseño, con simuladores y código en R y Python."'),
         ('<meta name="keywords" content="muestreo estadístico, muestreo probabilístico, '
          'Horvitz-Thompson, probabilidades de inclusión, estratificado, conglomerados, PPT, survey, '
          'R, Python, UnBosque">',
-         '<meta name="keywords" content="diseño muestral, probabilidades de inclusión, '
-         'Horvitz-Thompson, Sen-Yates-Grundy, muestreo aleatorio simple, muestreo sistemático, '
-         'diseño Bernoulli, corrección por población finita, tamaño de muestra, survey, R, Python, '
-         'Lohr, Gutiérrez, UnBosque">'),
+         '<meta name="keywords" content="encuestas por muestreo, sesgo de selección, no cobertura, '
+         'autoselección, no respuesta, sesgo de medición, diseño de cuestionarios, error total de '
+         'encuesta, Literary Digest, marco muestral, población objetivo, R, Python, Lohr, '
+         'Gutiérrez, UnBosque">'),
         ('<title>Plantilla de capítulo — Muestreo Estadístico</title>',
-         '<title>Capítulo 2 · Diseño muestral, MAS y sistemático — Muestreo Estadístico</title>'),
+         '<title>Capítulo 1 · Encuestas, sesgos y error total — Muestreo Estadístico</title>'),
         ('<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">PLANTILLA BASE •\n'
          '              4 MÓDULOS DE DEMOSTRACIÓN • UNBOSQUE</p>',
-         '<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">CAPÍTULO 2 •\n'
-         '              DISEÑO MUESTRAL, MAS Y SISTEMÁTICO • SEMANAS 3–4 • UNBOSQUE</p>'),
+         '<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">CAPÍTULO 1 •\n'
+         '              ENCUESTAS, SESGOS Y ERROR TOTAL • SEMANAS 1–2 • UNBOSQUE</p>'),
         ('<p class="text-xs mt-1 text-white/60" style="text-align:center;">Plantilla de capítulo • UnBosque 2026\n        </p>',
-         '<p class="text-xs mt-1 text-white/60" style="text-align:center;">Muestreo Estadístico • Capítulo 2 • UnBosque 2026-II\n        </p>'),
+         '<p class="text-xs mt-1 text-white/60" style="text-align:center;">Muestreo Estadístico • Capítulo 1 • UnBosque 2026-II\n        </p>'),
         ('<i class="fas fa-layer-group text-xl text-white" aria-hidden="true"></i>',
-         '<i class="fas fa-dice text-xl text-white" aria-hidden="true"></i>'),
+         '<i class="fas fa-magnifying-glass-chart text-xl text-white" aria-hidden="true"></i>'),
     ]
     for viejo, nuevo in reemplazos:
         if viejo not in html:
             sys.exit(f"ABORTA: no encuentro en la plantilla el texto:\n{viejo[:110]}...")
         html = html.replace(viejo, nuevo, 1)
 
-    # ------------------------------------------------- CSS y motor del glosario
-    # Desde la retropropagación de T1.6 los trae ya la plantilla. Se insertan
-    # solo si faltan, para que el ensamblador siga sirviendo si algún día se
-    # parte de una plantilla más vieja.
-    if ".glosario-notacion {" not in html:
-        css = (RAIZ / "ensamblado" / "componentes" / "glosario.css").read_text(encoding="utf-8")
-        html = html.replace("  </style>\n</head>", css + "  </style>\n</head>", 1)
-        print("  (el CSS del glosario venía de fuera de la plantilla)")
+    # El capítulo 1 necesita el glosario y el árbol del error, que la plantilla
+    # ya trae desde la fase 1 y la retropropagación de T2.0. Si faltaran, es que
+    # se está partiendo de una plantilla vieja y hay que enterarse aquí.
+    for marca, quien in [(".glosario-notacion {", "el CSS del glosario"),
+                         (".arbol-error {", "el CSS del árbol del error"),
+                         ("const GLOSARIOS", "el motor del glosario"),
+                         ("const ARBOLES_ERROR", "el motor del árbol del error"),
+                         ("iniciarArbolesError();", "la llamada al árbol en loadModule")]:
+        if marca not in html:
+            sys.exit(f"ABORTA: la plantilla no trae {quien}. Ejecuta antes "
+                     f"ensamblado/retropropaga_arbol_error.py")
 
     # ---------------------------------------------------------------- módulos
-    modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap2" / f).read_text(encoding="utf-8")
-                      for f in ["modulos_1_4.html", "modulos_5_8.html",
-                                "modulos_9_10.html", "modulo_11.html"])
+    modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap1" / f).read_text(encoding="utf-8")
+                      for f in ["modulos_1_3.html", "modulos_4_6.html",
+                                "modulos_7_9.html", "modulo_10.html"])
     antes, despues = corta(
         html,
         "  <!-- ============================================================ -->\n  <!-- MÓDULO 1 · Cajas y tipografía",
@@ -112,30 +117,29 @@ def main():
     html = antes + modulos + despues
 
     # ---------------------------------------------------------------- courseData + datos
-    datos = json.loads((RAIZ / "precalculo" / "salidas" / "cap2_datos.json").read_text(encoding="utf-8"))
+    datos = json.loads((RAIZ / "precalculo" / "salidas" / "cap1_datos.json").read_text(encoding="utf-8"))
     course = """    const courseData = {
-      title: "Diseño muestral, MAS y sistemático",
+      title: "Encuestas, sesgos y error total",
       modules: [
-        { id: 1, title: "El diseño muestral p(s)", shortTitle: "Diseño p(s)", duration: "15 min" },
-        { id: 2, title: "Probabilidades de inclusión", shortTitle: "π_k y π_kl", duration: "15 min" },
-        { id: 3, title: "El estimador de Horvitz–Thompson", shortTitle: "Horvitz–Thompson", duration: "20 min" },
-        { id: 4, title: "Insesgadez de diseño y representatividad", shortTitle: "Insesgadez", duration: "12 min" },
-        { id: 5, title: "El MAS como caso particular", shortTitle: "MAS", duration: "25 min" },
-        { id: 6, title: "Intervalos de confianza", shortTitle: "Intervalos", duration: "18 min" },
-        { id: 7, title: "Determinación del tamaño de muestra", shortTitle: "Tamaño de muestra", duration: "15 min" },
-        { id: 8, title: "Diseño Bernoulli y muestreo con reemplazo", shortTitle: "Bernoulli", duration: "15 min" },
-        { id: 9, title: "Muestreo sistemático", shortTitle: "Sistemático", duration: "20 min" },
-        { id: 10, title: "Teoría de aleatorización", shortTitle: "Aleatorización", duration: "15 min" },
-        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "30 min" }
+        { id: 1, title: "Una controversia de muestreo", shortTitle: "Controversia", duration: "20 min" },
+        { id: 2, title: "Marco conceptual", shortTitle: "Marco conceptual", duration: "18 min" },
+        { id: 3, title: "Requisitos de una buena muestra", shortTitle: "Buena muestra", duration: "12 min" },
+        { id: 4, title: "Sesgo de selección", shortTitle: "Sesgo de selección", duration: "25 min" },
+        { id: 5, title: "Sesgo de medición", shortTitle: "Sesgo de medición", duration: "12 min" },
+        { id: 6, title: "Diseño de cuestionarios", shortTitle: "Cuestionarios", duration: "15 min" },
+        { id: 7, title: "El error total de encuesta", shortTitle: "Error total", duration: "25 min" },
+        { id: 8, title: "Las poblaciones del curso", shortTitle: "Poblaciones", duration: "12 min" },
+        { id: 9, title: "Sesgo de muestreo en ciencia de datos e IA", shortTitle: "Ciencia de datos", duration: "15 min" },
+        { id: 10, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "30 min" }
       ]
     };
 
     // ================================================================
-    // Datos del capítulo, generados por precalculo/genera_cap2.R con
+    // Datos del capítulo, generados por precalculo/genera_cap1.R con
     // semilla %d. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP2 = %s;
+    const DATOS_CAP1 = %s;
 """ % (datos["meta"]["semilla"], json.dumps(datos, ensure_ascii=False, separators=(",", ":")))
 
     antes, despues = corta(
@@ -145,19 +149,8 @@ def main():
         "courseData")
     html = antes + course + "\n" + despues
 
-    if "const GLOSARIOS" not in html:
-        glosario_js = (RAIZ / "ensamblado" / "componentes" / "glosario.js").read_text(encoding="utf-8")
-        ancla = "    // ================================================================\n    // Autoevaluación (v2)"
-        if ancla not in html:
-            sys.exit("ABORTA: no encuentro dónde insertar el motor del glosario")
-        html = html.replace(ancla, glosario_js + ancla, 1)
-        print("  (el motor del glosario venía de fuera de la plantilla)")
-    if "iniciarGlosarios();" not in html:
-        html = html.replace("        iniciarTablasRanking();\n",
-                            "        iniciarTablasRanking();\n        iniciarGlosarios();\n", 1)
-
     # ---------------------------------------------------------------- simuladores + quiz
-    sims = (RAIZ / "ensamblado" / "modulos" / "cap2" / "simuladores.js").read_text(encoding="utf-8")
+    sims = (RAIZ / "ensamblado" / "modulos" / "cap1" / "simuladores.js").read_text(encoding="utf-8")
     antes, despues = corta(
         html,
         "    // ================================================================\n    // Simuladores de demostración",
@@ -167,8 +160,8 @@ def main():
 
     # ---------------------------------------------------------------- código
     codigo = {}
-    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap2" / "cadena.R"))
-    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap2" / "cadena.py"))
+    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap1" / "cadena.R"))
+    codigo.update(bloques_de(RAIZ / "ensamblado" / "codigo" / "cap1" / "cadena.py"))
     faltan = []
     for marca in re.findall(r'⟦([A-Za-z0-9]+)⟧', html):
         if marca not in codigo:
@@ -176,9 +169,11 @@ def main():
     if faltan:
         sys.exit(f"ABORTA: no tengo código para los marcadores {sorted(set(faltan))}")
     usados = set()
+
     def sustituye(m):
         usados.add(m.group(1))
         return html_mod.escape(codigo[m.group(1)], quote=False)
+
     html = re.sub(r'⟦([A-Za-z0-9]+)⟧', sustituye, html)
 
     sin_usar = sorted(set(codigo) - usados)
@@ -187,11 +182,13 @@ def main():
 
     DESTINO.write_text(html, encoding="utf-8")
     # Solo las registraciones reales: `SIMULADORES['id']` aparece también dentro
-    # de un comentario de documentación, y contarlo inflaba el total en uno.
+    # de un comentario de documentación, y contarlo inflaría el total.
     n_sim = len(re.findall(r"\n    SIMULADORES\['", html))
     n_cod = len(re.findall(r'class="language-', html))
-    print("  escrito {}: {:,} caracteres, {} módulos, {} simuladores, {} bloques de código".format(
-        DESTINO.name, len(html), html.count("<template id="), n_sim, n_cod))
+    n_preg = len(re.findall(r'\n        tipo: ', html))
+    print("  escrito {}: {:,} caracteres, {} módulos, {} simuladores, {} bloques de código, "
+          "{} preguntas".format(DESTINO.name, len(html), html.count("<template id="),
+                                n_sim, n_cod, n_preg))
 
 
 if __name__ == "__main__":

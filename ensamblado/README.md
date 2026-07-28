@@ -48,13 +48,38 @@ visible: la página carga, los CDN cargan y el contenido simplemente no aparece,
 declarado dos veces). Comprobarlo cuesta un segundo:
 
 ```bash
-python3 -c "import re,pathlib,subprocess,sys; h=pathlib.Path(sys.argv[1]).read_text(); js=re.findall(r'<script>(.*?)</script>', h, re.S)[-1]; p='/tmp/motor.js'; open(p,'w').write(js); sys.exit(subprocess.run(['node','--check',p]).returncode)" Htmls_Muestreo/capitulo-2-diseno-mas-sistematico.html
+python3 -c "import re,pathlib,subprocess,sys; h=pathlib.Path(sys.argv[1]).read_text(); js=re.findall(r'<script>(.*?)</script>', h, re.S)[-1]; p='/tmp/motor.js'; open(p,'w').write(js); sys.exit(subprocess.run(['node','--check',p]).returncode)" sitio/muestreo/capitulo-2-diseno-mas-sistematico.html
 ```
+
+## Permisos del HTML publicado
+
+`write_text` conserva los permisos del archivo que sustituye. El capítulo 3 los tenía en `600`
+heredados, y ni el navegador local podía abrirlo; en `gh-pages` habría sido un 404. Después de
+ensamblar:
+
+```bash
+chmod 644 sitio/muestreo/*.html
+```
+
+## Los data.frame de R en el JavaScript
+
+`jsonlite::write_json` escribe un `data.frame` como **array de filas**, no como objeto de columnas.
+Desde el simulador se lee `D.map(f => f.media)`, nunca `D.media`. Escribirlo por columnas no da
+error de sintaxis: da `undefined`, y el módulo entero lanza una excepción mientras los demás siguen
+perfectos. Pasó con tres simuladores del capítulo 3 a la vez.
 
 ## Regla de oro
 
 Al terminar una auditoría en la que se corrigió el HTML publicado, **volver a ejecutar el script
 de ensamblado y comparar byte a byte**. Si sale idéntico, las correcciones están en las fuentes y
 no solo en el archivo final.
+
+```bash
+for c in 1 2 3; do
+  f=$(ls sitio/muestreo/capitulo-$c-*.html); cp "$f" /tmp/antes.html
+  python3 ensamblado/ensambla_cap$c.py > /dev/null
+  cmp -s /tmp/antes.html "$f" && echo "cap $c ok" || echo "cap $c DIFIERE"
+done
+```
 
 Plan de trabajo: `../PLAN_Material_Muestreo.md`.

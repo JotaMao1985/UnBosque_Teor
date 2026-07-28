@@ -1,0 +1,308 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · Razones y proporciones                             -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Razones y proporciones
+          <span class="text-gray-400 font-normal text-2xl">/ Ratios of proportions</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer las razones que ya se venían usando sin
+              llamarlas así, y no confundir la razón de dos proporciones con la proporción de una razón.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Muchos parámetros que parecen medias son en realidad razones. Merece la pena tener el catálogo a mano,
+        porque todos heredan lo del módulo 4: <strong>son sesgados y su varianza sale de linealizar</strong>.</p>
+
+      <div class="space-y-4">
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Una media es una razón</h4>
+          <p class="text-sm" style="margin-bottom:0;">$\bar{y}_U = t_y / N$. Cuando $N$ se conoce, el denominador es
+            una constante y no aporta variabilidad: la media es lineal y no hay sesgo. Cuando $N$ <strong>no</strong>
+            se conoce —lo habitual en muestreo por conglomerados—, hay que estimarlo, el denominador se vuelve
+            aleatorio y la media pasa a ser una razón con todo lo que eso implica. Es lo que ocurrirá en el capítulo
+            5.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Una proporción es una media</h4>
+          <p class="text-sm" style="margin-bottom:0;">Si $y_k$ vale 1 o 0, entonces $\bar{y}_U = p$. Todo lo del
+            capítulo 2 se aplica sin cambios: <code>svymean</code> sobre una columna indicadora estima la proporción
+            y su error estándar. No hace falta ninguna fórmula especial.</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <h4 class="text-primary font-bold" style="margin-top:0;">Una razón de proporciones sí es una razón</h4>
+          <p class="text-sm" style="margin-bottom:0;">«Superficie sembrada por granja» es
+            $t_{\text{acres}} / t_{\text{granjas}}$: los dos totales se estiman y el cociente es una razón con
+            denominador aleatorio. Igual «gasto por hogar», «horas por estudiante» o «casos por cada mil habitantes».
+            Se estiman con <code>svyratio</code>, nunca promediando los cocientes individuales.</p>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El error clásico: promediar cocientes.</strong> La razón poblacional es
+          $B = \sum y_k / \sum x_k$, <em>no</em> $\frac{1}{N}\sum (y_k/x_k)$. Las dos cantidades son distintas y no
+          se aproximan entre sí: la primera pondera cada unidad por su tamaño $x_k$, la segunda le da a todas el
+          mismo peso. Si se quiere «el rendimiento medio por acre del país», la respuesta correcta es la primera —un
+          condado con un millón de acres debe pesar más que uno con mil—. La segunda contesta a otra pregunta: «el
+          rendimiento del condado típico».</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Dónde reaparece esto.</strong> El estimador de razón se usa en el capítulo 4 dentro de cada
+          estrato (razón separada) o sobre el conjunto (razón combinada); en el capítulo 5 es la forma natural de
+          estimar cuando los conglomerados tienen tamaños desiguales; y en el capítulo 7 es la base de la
+          linealización de Taylor para cualquier estadístico no lineal.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>sección 3.1.3</strong> (2.ª ed.) o <strong>4.2.3</strong> (3.ª ed.) — razones con
+            variables indicadoras y estimación de proporciones dentro de dominios.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · Estimación de regresión                            -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estimación de regresión
+          <span class="text-gray-400 font-normal text-2xl">/ Regression estimation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Soltar la restricción del origen, y descubrir por el
+              camino que la regresión es calibración.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>El estimador de regresión</h4>
+        <p>Se ajusta una recta con intercepto y se corrige la media muestral por lo que la muestra se desvió en $x$:</p>
+        <p style="text-align:center;">$$\hat{\bar{y}}_{\text{reg}} = \bar{y} + b_1(\bar{x}_U - \bar{x}),
+          \qquad \hat{t}_{\text{reg}} = N\,\hat{\bar{y}}_{\text{reg}}$$</p>
+        <p style="margin-bottom:0;">Léase así: si la muestra salió con una $\bar{x}$ menor que la poblacional, y
+          $y$ crece con $x$, entonces $\bar{y}$ también se quedó corta y hay que subirla en $b_1$ por cada unidad de
+          desvío. La corrección es automática y usa la única información que se tiene de más: $\bar{x}_U$.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El estimador de regresión">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>La regresión es calibración.</strong> Fíjate en cómo se obtuvo en <code>survey</code>: no con una
+          función de regresión, sino con <code>calibrate()</code>, imponiendo que los pesos reproduzcan los dos
+          totales conocidos, $N$ y $t_x$. Esa es la lectura moderna del capítulo entero y el puente al capítulo 7,
+          donde la calibración se generaliza a cualquier número de variables auxiliares. El total coincide con la
+          fórmula clásica hasta el noveno dígito.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>Dos vías que no coinciden del todo, y por qué.</strong> El error estándar de <code>survey</code>
+          es 5 593 972 y el de la fórmula clásica $N\sqrt{(1-f)\,s^2_{\text{reg}}/n}$ es 5 330 862: difieren un
+          <strong>4,9 %</strong>. No es un error de ninguna de las dos. <code>survey</code> estima la varianza de
+          diseño del estimador calibrado teniendo en cuenta los pesos $g_k$; la fórmula de libro los ignora, porque
+          es una aproximación de primer orden que supone $g_k \approx 1$. Con $n = 300$ los $g_k$ todavía se separan
+          lo suficiente de 1 para que se note. Este material publica la de <code>survey</code> en todas sus tablas,
+          para que las cifras cuadren entre sí.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.3</strong> (3.ª ed.) — el estimador de
+            regresión y su varianza.</li>
+          <li>Lumley, T. <em>Complex Surveys: A Guide to Analysis Using R</em> — el capítulo sobre
+            <code>calibrate()</code>, que explica el estimador de varianza que usa el paquete.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · Estimación de diferencia                           -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estimación de diferencia
+          <span class="text-gray-400 font-normal text-2xl">/ Difference estimation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">El caso más simple de todos —y el único insesgado de
+              los tres— y la comparación final de los cuatro estimadores.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>El estimador de diferencia</h4>
+        <p style="text-align:center;">$$\hat{t}_d = t_x + N\,(\bar{y} - \bar{x}) = t_x + N\,\bar{d}, \qquad d_k = y_k - x_k$$</p>
+        <p style="margin-bottom:0;">Es la regresión con la pendiente <strong>fijada de antemano en 1</strong>. Y como
+          $b_1$ no se estima de la muestra, $\hat{t}_d$ es <strong>exactamente insesgado</strong>: la única cosa
+          aleatoria que contiene es $\bar{d}$, que es una media muestral corriente.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El estimador de diferencia">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Se usa cuando $x$ e $y$ miden <strong>lo mismo en las mismas unidades</strong>: dos censos de la misma
+        superficie, el conteo por fotografía y el conteo en campo de los mismos árboles, el valor declarado y el
+        valor auditado de las mismas facturas. En cuanto las unidades dejan de ser comparables, fijar la pendiente
+        en 1 no tiene sentido y hay que volver a la regresión.</p>
+
+      <h3>Los cuatro, uno al lado del otro</h3>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Comparación de los cuatro estimadores">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="tabla-ranking" data-ranking="estimadores">
+        <p class="tabla-ranking-titulo">Los cuatro estimadores sobre la misma muestra</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación ordenable de los cuatro estimadores"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="note">
+        <p><strong>Cómo leer la tabla.</strong> La columna del error real solo existe aquí porque
+          <code>agpop</code> es un censo y el total verdadero se conoce; en una encuesta de verdad no está
+          disponible, y decidir por ella sería hacer trampa. La columna que se usa para elegir es el <strong>error
+          estándar</strong>, que sí se calcula con la muestra. Los tres estimadores con auxiliar están empatados en
+          la práctica y todos multiplican por más de cien la eficiencia de la expansión.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>sección 3.2.2</strong> (2.ª ed.) o <strong>4.3.2</strong> (3.ª ed.) — el estimador de
+            diferencia y el ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 12.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · Estimación en dominios                             -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estimación en dominios
+          <span class="text-gray-400 font-normal text-2xl">/ Domain estimation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Estimar en subpoblaciones que no se planificaron, y
+              entender por qué eso convierte una media en una razón.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>Dominio</h4>
+        <p style="margin-bottom:0;">Un <strong>dominio</strong> es una subpoblación $U_d \subset U$ sobre la que se
+          quiere estimar por separado, pero que <em>no</em> se usó para diseñar la muestra. La diferencia con un
+          estrato es exactamente esa: en un estrato, $n_h$ lo fija el investigador; en un dominio, $n_d$ es
+          <strong>aleatorio</strong> —depende de cuántas unidades del dominio hayan caído en la muestra—.</p>
+      </div>
+
+      <p>Esa aleatoriedad de $n_d$ tiene una consecuencia directa: la media de dominio</p>
+
+      <div class="formula">
+        $$\hat{\bar{y}}_d = \frac{\sum_{k \in s} y_k\,\delta_k}{\sum_{k \in s} \delta_k},
+          \qquad \delta_k = \begin{cases}1 & k \in U_d\\ 0 & \text{si no}\end{cases}$$
+      </div>
+
+      <p>es un cociente con <strong>denominador aleatorio</strong>: es una razón, y su error estándar sale de
+        linealizarla igual que en el módulo 4. El residuo linealizado es $u_k = \delta_k\,(y_k - \hat{\bar{y}}_d)$.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Estimación en dominios">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Las dos vías coinciden hasta el último decimal impreso, lo cual confirma que <code>svyby</code> está
+        haciendo exactamente la linealización de la fórmula, y no otra cosa.</p>
+
+      <div class="simulador" data-simulador="dominios">
+        <h4><i class="fas fa-object-group" aria-hidden="true"></i> Dominios sobre <code>agsrs</code></h4>
+        <p class="simulador-intro">Con las cuatro regiones se puede comparar la estimación con la verdad, porque
+          <code>agpop</code> es un censo. Mira el Oeste: solo 39 de los 300 condados de la muestra cayeron ahí, la
+          estimación se queda un 17 % por debajo del valor real y su coeficiente de variación es del 13 % —cuatro
+          veces peor que el de la media global—. Es el problema de fondo de los dominios pequeños, y lo que motiva
+          la estimación en áreas pequeñas.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Media estimada y media real por dominio" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El error que se paga caro.</strong> Filtrar el <code>data.frame</code> y volver a declarar el
+          diseño sobre el subconjunto <em>no</em> es lo mismo que <code>svyby</code>: al filtrar se trata $n_d$ como
+          si fuera fijo, y el error estándar sale mal. En <code>survey</code>, la forma correcta es
+          <code>svyby()</code> o <code>subset()</code> sobre el objeto de diseño, que conservan la información del
+          diseño completo.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr, <strong>sección 3.3</strong> (2.ª ed.) o <strong>4.4</strong> (3.ª ed.) — estimación en dominios,
+            con el ejemplo de los condados con 600 granjas o más que se reproduce en el bloque de arriba.</li>
+          <li>Lohr, <strong>capítulo 14</strong> (3.ª ed.) — estimación en áreas pequeñas, que es lo que se hace
+            cuando $n_d$ es demasiado pequeño para este enfoque.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

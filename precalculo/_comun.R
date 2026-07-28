@@ -17,7 +17,7 @@ invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
 DIR_RAIZ    <- normalizePath(".", mustWork = TRUE)
 DIR_DATOS   <- file.path(DIR_RAIZ, "CSV data sets for SDA 3e")
 DIR_SALIDAS <- file.path(DIR_RAIZ, "precalculo", "salidas")
-DIR_SITIO   <- file.path(DIR_RAIZ, "Htmls_Muestreo")
+DIR_SITIO   <- file.path(DIR_RAIZ, "sitio", "muestreo")
 
 if (!dir.exists(DIR_DATOS)) {
   stop("No encuentro los datos de Lohr en '", DIR_DATOS, "'.\n",
