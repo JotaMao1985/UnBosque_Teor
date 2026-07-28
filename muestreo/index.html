@@ -5,14 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Curso interactivo de muestreo estadístico basado en Sharon L. Lohr: 4 capítulos con teoría, ejemplos resueltos, fórmulas y gráficos. Universidad El Bosque, 2026.">
+    content="Curso interactivo de muestreo estadístico basado en Lohr y Gutiérrez: 5 capítulos con teoría en el marco π, simuladores, autoevaluación y código en R y Python. Universidad El Bosque, 2026.">
   <meta name="author" content="Javier Mauricio Sierra">
   <meta name="keywords" content="Muestreo, estadística, Sharon Lohr, encuestas, estratificado, razón, regresión, UnBosque">
   <title>Fundamentos del Muestreo Estadístico · UnBosque</title>
 
   <!-- Open Graph -->
   <meta property="og:title" content="Fundamentos del Muestreo Estadístico">
-  <meta property="og:description" content="Curso interactivo de muestreo estadístico basado en Sharon L. Lohr: 4 capítulos con teoría, ejemplos resueltos, fórmulas y gráficos.">
+  <meta property="og:description" content="Curso interactivo de muestreo estadístico basado en Lohr y Gutiérrez: 5 capítulos con teoría en el marco π, simuladores, autoevaluación y código en R y Python.">
   <meta property="og:type" content="website">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -193,7 +193,8 @@
       </h1>
       <p class="text-base md:text-lg text-white/80 max-w-2xl mb-8">
         Material de estudio autónomo e interactivo basado en <em>Sampling: Design and Analysis</em> de
-        Sharon L. Lohr. Cuatro capítulos con teoría, ejemplos resueltos, fórmulas y gráficos.
+        Sharon L. Lohr y <em>Estrategias de muestreo</em> de H. A. Gutiérrez. Cinco capítulos publicados
+        de los ocho del semestre, con simuladores, autoevaluación y código en R y Python.
       </p>
       <div class="flex flex-wrap gap-3">
         <a href="#capitulos"
@@ -214,8 +215,8 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="feature-card">
           <i class="fas fa-layer-group" aria-hidden="true"></i>
-          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">4 Capítulos</h2>
-          <p class="text-xs text-gray-500" style="margin:0;">43 módulos en total</p>
+          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">5 Capítulos</h2>
+          <p class="text-xs text-gray-500" style="margin:0;">56 módulos en total</p>
         </div>
         <div class="feature-card">
           <i class="fas fa-square-root-variable" aria-hidden="true"></i>
@@ -239,7 +240,7 @@
     <section id="capitulos" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
       <div class="mb-10 text-center">
         <p class="text-secondary font-bold uppercase tracking-widest text-sm mb-2">Contenido del curso</p>
-        <h2 class="text-2xl md:text-3xl font-bold text-primary">Los cuatro capítulos</h2>
+        <h2 class="text-2xl md:text-3xl font-bold text-primary">Los capítulos</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -304,12 +305,32 @@
             <span class="chapter-card__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
           </div>
           <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Muestreo Estratificado</p>
-            <h3 class="chapter-card__title">Muestreo Estratificado</h3>
-            <p class="chapter-card__desc">Teoría del muestreo estratificado, pesos de muestreo, asignación, definición de
-              estratos, postestratificación y conexión con la ciencia de datos.</p>
+            <p class="chapter-card__kicker">Semanas 7–9 · Lohr cap. 4</p>
+            <h3 class="chapter-card__title">Muestreo estratificado</h3>
+            <p class="chapter-card__desc">El estratificado como caso del π-estimador; asignación proporcional, igual, de
+              Neyman y con costos desiguales; cómo definir estratos y cuántos; el efecto de diseño; estratificado PPT
+              sobre BigLucy; postestratificación como calibración, y <code>StratifiedKFold</code> con su trampa.</p>
             <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 10 módulos</span>
+              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 12 módulos · 8 simuladores</span>
+              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="chapter-card" href="capitulo-5-conglomerados.html">
+          <div class="chapter-card__top">
+            <span class="chapter-card__num">5</span>
+            <span class="chapter-card__icon"><i class="fas fa-cubes" aria-hidden="true"></i></span>
+          </div>
+          <div class="chapter-card__body">
+            <p class="chapter-card__kicker">Semanas 10–11 · Lohr cap. 5</p>
+            <h3 class="chapter-card__title">Muestreo por conglomerados</h3>
+            <p class="chapter-card__desc">Estados enteros contra condados sueltos (deff 30, medido con 10 000 réplicas);
+              la correlación intraclase y el deff de Kish; nidadas de tamaño desigual y el estimador de razón; dos
+              etapas por tres vías; cuántos conglomerados y de qué tamaño, y los datos agrupados en machine
+              learning.</p>
+            <div class="chapter-card__meta">
+              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 11 módulos · 8 simuladores</span>
               <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
             </div>
           </div>
