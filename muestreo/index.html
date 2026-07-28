@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Curso interactivo de muestreo estadístico basado en Sharon L. Lohr: 4 capítulos con teoría, ejemplos resueltos, fórmulas y gráficos. Universidad El Bosque, 2026.">
+  <meta name="author" content="Javier Mauricio Sierra">
+  <meta name="keywords" content="Muestreo, estadística, Sharon Lohr, encuestas, estratificado, razón, regresión, UnBosque">
+  <title>Fundamentos del Muestreo Estadístico · UnBosque</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Fundamentos del Muestreo Estadístico">
+  <meta property="og:description" content="Curso interactivo de muestreo estadístico basado en Sharon L. Lohr: 4 capítulos con teoría, ejemplos resueltos, fórmulas y gráficos.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+          },
+          colors: {
+            primary: '#012820',
+            secondary: '#FF6600',
+            navy: '#012820',
+            gold: '#90FF00',
+            bg: '#F8FAFC',
+            surface: '#FFFFFF',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .usta-gradient { background: linear-gradient(140deg, #012820 0%, #FF6600 100%); }
+    .usta-header { background: linear-gradient(180deg, #012820 0%, #001F18 100%); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(140deg, #012820 0%, #023a2e 55%, #FF6600 160%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 30%, rgba(255, 102, 0, 0.18), transparent 40%),
+                        radial-gradient(circle at 85% 20%, rgba(144, 255, 0, 0.12), transparent 35%);
+      pointer-events: none;
+    }
+
+    /* Chapter cards */
+    .chapter-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+    .chapter-card:hover {
+      box-shadow: 0 14px 38px rgba(1, 40, 32, 0.16);
+      transform: translateY(-6px);
+      border-color: rgba(255, 102, 0, 0.35);
+    }
+    .chapter-card__top {
+      background: linear-gradient(135deg, #012820 0%, #FF6600 100%);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chapter-card__num {
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1;
+      opacity: 0.95;
+    }
+    .chapter-card__icon {
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: 0.9rem;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+    .chapter-card__body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+    .chapter-card__kicker {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #FF6600;
+      margin-bottom: 0.4rem;
+    }
+    .chapter-card__title { font-size: 1.2rem; font-weight: 700; color: #012820; margin: 0 0 0.5rem; }
+    .chapter-card__desc { font-size: 0.9rem; color: #475569; flex-grow: 1; }
+    .chapter-card__meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #f1f5f9;
+    }
+    .chapter-card__modules { font-size: 0.78rem; color: #64748b; font-weight: 600; }
+    .chapter-card__go {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #FF6600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.2s ease;
+    }
+    .chapter-card:hover .chapter-card__go { gap: 0.7rem; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      padding: 0.4rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 0.9rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      text-align: center;
+    }
+    .feature-card i { color: #FF6600; font-size: 1.6rem; margin-bottom: 0.6rem; }
+
+    *:focus-visible { outline: 2px solid #012820; outline-offset: 3px; border-radius: 4px; }
+    .hero *:focus-visible { outline-color: #90FF00; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Hero / Header -->
+  <header class="hero text-white" role="banner">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 relative" style="z-index:1;">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="usta-gradient p-3 rounded-xl shadow-md">
+          <i class="fas fa-chart-pie text-2xl text-white" aria-hidden="true"></i>
+        </div>
+        <span class="pill"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Universidad El Bosque · 2026</span>
+      </div>
+      <h1 class="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4">
+        Fundamentos del<br><span class="text-gold">Muestreo Estadístico</span>
+      </h1>
+      <p class="text-base md:text-lg text-white/80 max-w-2xl mb-8">
+        Material de estudio autónomo e interactivo basado en <em>Sampling: Design and Analysis</em> de
+        Sharon L. Lohr. Cuatro capítulos con teoría, ejemplos resueltos, fórmulas y gráficos.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#capitulos"
+          class="inline-flex items-center gap-2 bg-white text-primary font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gold hover:text-primary transition-all">
+          <i class="fas fa-book-open" aria-hidden="true"></i> Explorar capítulos
+        </a>
+        <a href="capitulo-1-encuestas-sesgos.html"
+          class="inline-flex items-center gap-2 border-2 border-white/40 text-white font-semibold px-6 py-3 rounded-full hover:bg-white/10 transition-all">
+          <i class="fas fa-play" aria-hidden="true"></i> Comenzar por el Capítulo 1
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Intro features -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-12 relative" style="z-index:2;">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="feature-card">
+          <i class="fas fa-layer-group" aria-hidden="true"></i>
+          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">4 Capítulos</h2>
+          <p class="text-xs text-gray-500" style="margin:0;">43 módulos en total</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">Fórmulas KaTeX</h2>
+          <p class="text-xs text-gray-500" style="margin:0;">Notación matemática nítida</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-chart-line" aria-hidden="true"></i>
+          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">Gráficos</h2>
+          <p class="text-xs text-gray-500" style="margin:0;">Visualizaciones interactivas</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-mobile-screen" aria-hidden="true"></i>
+          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">Responsive</h2>
+          <p class="text-xs text-gray-500" style="margin:0;">Diseño accesible</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapters -->
+    <section id="capitulos" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+      <div class="mb-10 text-center">
+        <p class="text-secondary font-bold uppercase tracking-widest text-sm mb-2">Contenido del curso</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-primary">Los cuatro capítulos</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <a class="chapter-card" href="capitulo-1-encuestas-sesgos.html">
+          <div class="chapter-card__top">
+            <span class="chapter-card__num">1</span>
+            <span class="chapter-card__icon"><i class="fas fa-magnifying-glass-chart" aria-hidden="true"></i></span>
+          </div>
+          <div class="chapter-card__body">
+            <p class="chapter-card__kicker">Semanas 1–2 · Lohr cap. 1</p>
+            <h3 class="chapter-card__title">Encuestas, sesgos y error total</h3>
+            <p class="chapter-card__desc">El <em>Literary Digest</em> y el estudio de Hite; población objetivo, marco y
+              unidad; sesgo de selección y de medición; diseño de cuestionarios; el árbol del error total, y por qué
+              un sondeo de 2,3 millones de papeletas valía lo que seis votantes al azar.</p>
+            <div class="chapter-card__meta">
+              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 10 módulos · 7 simuladores</span>
+              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="chapter-card" href="capitulo-2-diseno-mas-sistematico.html">
+          <div class="chapter-card__top">
+            <span class="chapter-card__num">2</span>
+            <span class="chapter-card__icon"><i class="fas fa-dice" aria-hidden="true"></i></span>
+          </div>
+          <div class="chapter-card__body">
+            <p class="chapter-card__kicker">Semanas 3–4 · Lohr cap. 2</p>
+            <h3 class="chapter-card__title">Diseño muestral, MAS y sistemático</h3>
+            <p class="chapter-card__desc">El diseño muestral <em>p(s)</em>, las probabilidades de inclusión y el estimador de
+              Horvitz–Thompson; el MAS, los intervalos de confianza, el tamaño de muestra, el diseño Bernoulli y el
+              muestreo sistemático como casos particulares de ese marco.</p>
+            <div class="chapter-card__meta">
+              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 11 módulos · 9 simuladores</span>
+              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="chapter-card" href="capitulo-3-razon-y-regresion.html">
+          <div class="chapter-card__top">
+            <span class="chapter-card__num">3</span>
+            <span class="chapter-card__icon"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+          </div>
+          <div class="chapter-card__body">
+            <p class="chapter-card__kicker">Semanas 5–6 · Lohr cap. 3</p>
+            <h3 class="chapter-card__title">Estimación de razón y regresión</h3>
+            <p class="chapter-card__desc">Variables auxiliares y el estimador de razón; su sesgo, medido con 5 000
+              réplicas; regresión y diferencia; estimación en dominios; el estimador general de regresión (GREG) como
+              paraguas de los tres, y la mediana desde la función de distribución estimada.</p>
+            <div class="chapter-card__meta">
+              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 12 módulos · 6 simuladores</span>
+              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="chapter-card" href="capitulo-4-muestreo-estratificado.html">
+          <div class="chapter-card__top">
+            <span class="chapter-card__num">4</span>
+            <span class="chapter-card__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
+          </div>
+          <div class="chapter-card__body">
+            <p class="chapter-card__kicker">Muestreo Estratificado</p>
+            <h3 class="chapter-card__title">Muestreo Estratificado</h3>
+            <p class="chapter-card__desc">Teoría del muestreo estratificado, pesos de muestreo, asignación, definición de
+              estratos, postestratificación y conexión con la ciencia de datos.</p>
+            <div class="chapter-card__meta">
+              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 10 módulos</span>
+              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="usta-header" role="contentinfo">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fas fa-book-open" aria-hidden="true"></i> Referencias Bibliográficas
+      </h2>
+      <ul class="space-y-3 text-white/90 text-sm list-none p-0 m-0">
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Lohr, S.L. (2010). <em class="text-gold">Sampling: Design and Analysis</em> (2nd ed.). Boston:
+            Brooks/Cole.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Cochran, W.G. (1977). <em class="text-gold">Sampling Techniques</em> (3rd ed.). New York: John Wiley &
+            Sons.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Kish, L. (1965). <em class="text-gold">Survey Sampling</em>. New York: John Wiley & Sons.</span>
+        </li>
+      </ul>
+      <div class="mt-8 pt-6 border-t border-white/20 text-center">
+        <p class="text-white font-medium">Diseñado por <span class="text-gold">Javier Mauricio Sierra</span></p>
+        <p class="text-xs mt-1 text-white/60">Muestreo Estadístico · Universidad El Bosque · 2026</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
