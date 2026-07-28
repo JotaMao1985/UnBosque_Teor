@@ -3137,6 +3137,11 @@ c(E_ppt = sum(tiendas$psi * est_ppt),
         </div>
       </div>
 
+      <p>Con una sola tienda el estimador era $t_i/\psi_i$ y su varianza, 14 248. Con dos extracciones cabe esperar
+        la mitad: <strong>7 124</strong>. Y así es, exactamente — pero conviene ver por qué antes de creerlo, porque
+        la razón (las extracciones son independientes) es la que hace que este diseño tenga las cuentas más simples
+        de todo el capítulo.</p>
+
       <p>Repetir $n$ veces el sorteo del módulo 1, <strong>con reemplazo</strong>, es la forma más simple de usar
         probabilidades desiguales con $n > 1$. Cada extracción produce su estimador $t_i/\psi_i$;
         <strong>Hansen–Hurwitz los promedia</strong>:</p>
@@ -3413,6 +3418,11 @@ c(intentos_promedio = round(1 / mean(acepta), 3),
           </div>
         </div>
       </div>
+
+      <p>Las mismas cuatro tiendas, ahora <strong>dos sin reemplazo</strong>. Seis muestras posibles, un reparto de
+        probabilidad, unas $\pi_k$ que suman 2 y el estimador de siempre: el resultado es una varianza de
+        <strong>15 026</strong>… que es <em>peor</em> que los 7 124 del Hansen–Hurwitz con reemplazo del módulo 2.
+        Ese resultado incómodo es el que hace interesante este módulo.</p>
 
       <p>Aquí no hay teoría nueva que construir: <strong>ya la tienes</strong>. El marco π del capítulo 2 nunca
         exigió probabilidades iguales — el MAS era solo el caso particular más plano. Un diseño sin reemplazo con
