@@ -94,6 +94,11 @@
         </div>
       </div>
 
+      <p>La razón obliga a que la recta pase por el origen: supone que un condado con cero granjas en 1987 tuvo
+        cero acres en 1992. Con los datos de <code>agsrs</code> esa recta no es la que mejor ajusta la nube: el
+        ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto de <strong>−2 548</strong> acres.
+        Ese intercepto no nulo es la señal de que hay un estimador mejor esperando.</p>
+
       <div class="definition">
         <h4>El estimador de regresión</h4>
         <p>Se ajusta una recta con intercepto y se corrige la media muestral por lo que la muestra se desvió en $x$:</p>
@@ -163,6 +168,11 @@
           </div>
         </div>
       </div>
+
+      <p>Hay un caso en el que ni siquiera hace falta estimar la pendiente: cuando se sabe de antemano que vale 1.
+        Ocurre cuando $x$ e $y$ son <em>la misma variable medida dos veces</em> —el inventario del año pasado y el de
+        este, el padrón antiguo y el nuevo—, y entonces lo natural es trabajar con la diferencia $y_k - x_k$ en vez
+        de con el cociente.</p>
 
       <div class="definition">
         <h4>El estimador de diferencia</h4>
@@ -242,6 +252,12 @@
           </div>
         </div>
       </div>
+
+      <p>Hasta aquí se ha estimado <em>un</em> total para todo el país. Pero casi ningún informe se conforma con
+        eso: se quiere el dato por región, por tamaño, por sector. De los 300 condados de la muestra,
+        <strong>129</strong> tienen 600 granjas o más y <strong>171</strong> menos — y esos dos números
+        <em>no los eligió nadie</em>: salieron del sorteo. Esa es toda la diferencia con un estrato, y tiene
+        consecuencias sobre la varianza.</p>
 
       <div class="definition">
         <h4>Dominio</h4>

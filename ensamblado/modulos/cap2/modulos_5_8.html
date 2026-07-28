@@ -19,6 +19,19 @@
         </div>
       </div>
 
+      <p>Dejemos los cinco condados de juguete y vayamos a los datos con los que trabaja de verdad este curso.
+        <code>agsrs</code> es una muestra aleatoria simple de <strong>300 de los 3 078 condados</strong> de Estados
+        Unidos, sorteada por Lohr. La superficie sembrada media en esos 300 es <strong>297 897 acres</strong>. El
+        total estimado, multiplicando por 3 078, sale <strong>916 927 110</strong> acres.</p>
+
+      <p>Ahora bien: ese 916 927 110 salió de <em>una</em> muestra. Si Lohr hubiera sorteado otras 300, habría salido
+        otro número. La pregunta operativa —la que hay que responder para publicar cualquier cosa— es
+        <strong>cuánto habría bailado</strong>. Y eso el capítulo ya sabe contestarlo: el MAS es un diseño más, con
+        su $p(s)$ y sus $\pi_k$, así que basta particularizar las fórmulas de los módulos 3 y 4.</p>
+
+      <p>De hecho, sus $\pi$ ya las calculaste con los dedos en el módulo 2: en el MAS de los cinco condados salía
+        $\pi_k = 0{,}4 = 2/5 = n/N$ para todos, y $\pi_{kl} = 0{,}1$. Lo que sigue es esa misma cuenta en general.</p>
+
       <div class="definition">
         <h4><i class="fas fa-shuffle mr-2" aria-hidden="true"></i>Definición 2.7: MAS sin reemplazo</h4>
         <p>El <strong>muestreo aleatorio simple sin reemplazo</strong> (<em>simple random sampling without
@@ -286,8 +299,17 @@
         </div>
       </div>
 
-      <p>Es la pregunta que llega antes que ninguna otra y la que peor se responde. La cuenta se hace al revés: se fija
-        la precisión que se quiere, se despeja $n$.</p>
+      <p>Es la pregunta que llega antes que ninguna otra y la que peor se responde. Pongámosle números antes de
+        ponerle símbolos: se quiere estimar la superficie sembrada media de los 3 078 condados con un error de como
+        mucho el <strong>5 %</strong> de esa media. ¿Cuántos condados hay que visitar?</p>
+
+      <p>La respuesta —que el bloque de código de más abajo calcula— es <strong>1 506</strong>. Y si uno se conforma
+        con un 10 % de error, basta con <strong>595</strong>; con un 20 %, con <strong>174</strong>. Fíjate en la
+        forma de esa serie: <strong>relajar el error a la mitad divide el tamaño por cuatro</strong>. Esa es la
+        tiranía de la raíz cuadrada, y es lo que hace que las encuestas grandes sean tan caras: la precisión se paga
+        al cuadrado.</p>
+
+      <p>La cuenta se hace al revés que de costumbre: se fija la precisión que se quiere y se despeja $n$.</p>
 
       <div class="formula">
         <h4>Tamaño para estimar una media con margen de error $e$</h4>
@@ -369,6 +391,16 @@
           </div>
         </div>
       </div>
+
+      <p>Todos los diseños vistos hasta aquí fijan el tamaño de antemano: «sortea 300 condados». Pero hay
+        situaciones en las que eso no se puede hacer. Un auditor que revisa transacciones <em>según van llegando</em>
+        no sabe cuántas habrá; un servidor que decide si registrar cada petición tampoco. En esos casos solo cabe
+        decidir unidad por unidad, con una moneda.</p>
+
+      <p>Sobre los 3 078 condados, lanzar una moneda con $\pi = 0{,}02$ para cada uno da en promedio
+        <strong>61,6 condados</strong>… pero solo en promedio: la desviación típica del tamaño obtenido es de
+        <strong>7,7 condados</strong>, así que una realización cualquiera puede traer 50 o 75. Ese tamaño aleatorio
+        es el precio, y a cambio se obtiene el diseño con las cuentas más simples del capítulo.</p>
 
       <div class="definition">
         <h4><i class="fas fa-coins mr-2" aria-hidden="true"></i>Definición 2.8: diseño Bernoulli</h4>

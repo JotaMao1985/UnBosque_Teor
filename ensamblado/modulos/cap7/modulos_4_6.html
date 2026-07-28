@@ -21,6 +21,11 @@
         </div>
       </div>
 
+      <p>La razón peso/altura de los adultos de NHANES vale <strong>0,495476</strong> y su error estándar,
+        <strong>0,004230</strong>. La primera cifra es una división; la segunda no sale de ninguna fórmula vista
+        hasta aquí, porque todas estiman varianzas de <em>totales</em> y una razón es un cociente de dos totales
+        <em>estimados</em>, los dos aleatorios a la vez. Este módulo construye el puente.</p>
+
       <p>Toda la teoría de los capítulos 2 a 6 estima la varianza de <strong>totales</strong>. Pero casi nada de
         lo que se publica es un total: son medias, razones, proporciones, medianas, coeficientes de regresión,
         índices de Gini. La linealización es el puente, y su idea cabe en una línea: <strong>sustituir el
@@ -36,25 +41,25 @@
           <ol class="derivacion-pasos">
             <li>
               <p>La razón es un cociente de dos totales estimados, cada uno de los cuales sí sabemos manejar:</p>
-              $$\hat{R} = \frac{\hat{t}_y}{\hat{t}_x}, \qquad
+              $$\hat{B} = \frac{\hat{t}_y}{\hat{t}_x}, \qquad
               \hat{t}_y = \sum_{k \in s} w_k y_k, \quad \hat{t}_x = \sum_{k \in s} w_k x_k$$
             </li>
             <li>
               <p>Se desarrolla $f(a, b) = a/b$ en serie de Taylor alrededor del punto verdadero
                 $(t_y, t_x)$, quedándose con los términos de primer orden:</p>
-              $$\hat{R} \approx R + \frac{1}{t_x}(\hat{t}_y - t_y) - \frac{R}{t_x}(\hat{t}_x - t_x)$$
+              $$\hat{B} \approx B + \frac{1}{t_x}(\hat{t}_y - t_y) - \frac{B}{t_x}(\hat{t}_x - t_x)$$
             </li>
             <li>
-              <p>Se agrupa: el error de $\hat R$ es (aproximadamente) el error del total de una
+              <p>Se agrupa: el error de $\hat B$ es (aproximadamente) el error del total de una
                 <strong>variable nueva</strong> $u_k$, construida a partir de los datos:</p>
-              $$\hat{R} - R \approx \frac{1}{t_x}\sum_{k \in s} w_k\,(y_k - R\,x_k)
-              = \sum_{k \in s} w_k u_k, \qquad u_k = \frac{y_k - R\,x_k}{t_x}$$
+              $$\hat{B} - B \approx \frac{1}{t_x}\sum_{k \in s} w_k\,(y_k - B\,x_k)
+              = \sum_{k \in s} w_k u_k, \qquad u_k = \frac{y_k - B\,x_k}{t_x}$$
             </li>
             <li>
               <p>Y por tanto la varianza del estadístico no lineal es la varianza de un <em>total</em>, que es
                 exactamente lo que las fórmulas del diseño saben calcular:</p>
-              $$\widehat{V}(\hat{R}) = \widehat{V}\!\left(\sum_{k \in s} w_k \hat{u}_k\right),
-              \qquad \hat{u}_k = \frac{y_k - \hat{R}x_k}{\hat{t}_x}$$
+              $$\widehat{V}(\hat{B}) = \widehat{V}\!\left(\sum_{k \in s} w_k \hat{u}_k\right),
+              \qquad \hat{u}_k = \frac{y_k - \hat{B}x_k}{\hat{t}_x}$$
             </li>
             <li>
               <p>El término despreciado es de orden $(\hat t_x - t_x)^2$: relativamente pequeño cuando el
@@ -77,7 +82,7 @@
 
       <div class="simulador" data-simulador="linealizacion">
         <h4><i class="fas fa-ruler-combined" aria-hidden="true"></i> La variable linealizada</h4>
-        <p class="simulador-intro">El histograma de los $\hat u_k = (y_k - \hat R x_k)/\hat t_x$ de NHANES
+        <p class="simulador-intro">El histograma de los $\hat u_k = (y_k - \hat B x_k)/\hat t_x$ de NHANES
           (escalados por $10^6$ para que se lean). Es la variable cuya <em>suma ponderada</em> tiene la misma
           varianza que la razón. Nota que está centrada en casi cero: por construcción, $\sum w_k \hat u_k = 0$
           exactamente. Los residuos grandes son las personas cuya relación peso–altura se aparta del promedio.</p>

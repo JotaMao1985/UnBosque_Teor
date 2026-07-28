@@ -176,8 +176,21 @@ cat(sprintf("total real = %.0f\n", t_y))
 # desaparece al crecer la muestra; aquí se mide sobre agpop con simulación,
 # y se contrasta con la aproximación teórica
 #   B(t_yr) ≈ (N (1 - n/N) / n) * (B S_x^2 - S_xy) / xbar_U
+#
+# HALLAZGO DE LA REVISIÓN DEL CHECKPOINT 1 (2026-07-28). Con M = 5 000 réplicas,
+# el "sesgo medido" a partir de n ≈ 100 era PURO RUIDO DE MONTE CARLO: salía con
+# signo contrario al teórico (+97 085 frente a -123 438 en n = 100) y era menor
+# que su propio error de estimación (ee/sqrt(M) ≈ 181 000). El material lo citaba
+# como si fuera una medición del sesgo.
+#
+# La corrección tiene dos partes:
+#   1. M sube a 200 000, que divide el error de Monte Carlo por 6,3 y hace el
+#      sesgo medible hasta n = 100.
+#   2. El error de Monte Carlo se calcula, se guarda y se publica junto a cada
+#      sesgo. Una simulación sin su propia barra de error no es una medición:
+#      es una anécdota con muchos decimales.
 set.seed(SEMILLA)
-M <- 5000
+M <- 200000
 tam <- c(10, 20, 30, 50, 75, 100, 200, 300, 500)
 Sx2 <- var(agpop$acres87); Sxy <- cov(agpop$acres87, agpop$acres92)
 B_pob <- t_y / t_x
@@ -189,17 +202,28 @@ sim <- lapply(tam, function(nn) {
     tr[m] <- (mean(agpop$acres92[s]) / mean(agpop$acres87[s])) * t_x
   }
   teorico <- (N * (1 - nn / N) / nn) * (B_pob * Sx2 - Sxy) / xbar_U
-  list(n = nn, media = mean(tr), sesgo = mean(tr) - t_y, sesgoTeorico = teorico,
-       ee = sd(tr), sesgoRelEE = (mean(tr) - t_y) / sd(tr))
+  sesgo <- mean(tr) - t_y
+  eeMC <- sd(tr) / sqrt(M)          # incertidumbre CON LA QUE se midió el sesgo
+  list(n = nn, media = mean(tr), sesgo = sesgo, sesgoTeorico = teorico,
+       ee = sd(tr), eeMC = eeMC,
+       # ¿el sesgo medido se distingue de cero con estas réplicas?
+       medible = abs(sesgo) > 2 * eeMC,
+       sesgoRelEE = sesgo / sd(tr))
 })
 tabla_sesgo <- do.call(rbind, lapply(sim, as.data.frame))
 print(tabla_sesgo, digits = 5)
-# El sesgo simulado y el teórico tienen que ir de la mano; con n grande el
-# ruido de Monte Carlo domina, así que se compara solo donde el sesgo importa.
-cor_sesgo <- cor(tabla_sesgo$sesgo[tabla_sesgo$n <= 100],
-                 tabla_sesgo$sesgoTeorico[tabla_sesgo$n <= 100])
-cat(sprintf("correlación sesgo simulado ↔ teórico (n ≤ 100): %.4f\n", cor_sesgo))
+cat(sprintf("  el sesgo es medible (|sesgo| > 2 EE_MC) hasta n = %d\n",
+            max(tabla_sesgo$n[tabla_sesgo$medible])))
+
+# El sesgo simulado y el teórico tienen que ir de la mano DONDE el sesgo es
+# medible; más allá, lo que se compara es ruido contra señal.
+medibles <- tabla_sesgo$medible
+cor_sesgo <- cor(tabla_sesgo$sesgo[medibles], tabla_sesgo$sesgoTeorico[medibles])
+cat(sprintf("correlación sesgo simulado ↔ teórico (donde es medible): %.4f\n", cor_sesgo))
 stopifnot(cor_sesgo > 0.95)
+# Y en la zona medible, simulado y teórico deben coincidir en SIGNO. Que no lo
+# hicieran era justo el síntoma que delató el problema.
+stopifnot(all(sign(tabla_sesgo$sesgo[medibles]) == sign(tabla_sesgo$sesgoTeorico[medibles])))
 
 # ===========================================================================
 # 7 · Linealización: qué término se desprecia

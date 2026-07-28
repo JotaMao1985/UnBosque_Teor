@@ -120,9 +120,9 @@ r <- svyratio(~bmxwt, ~bmxht, dis_nh)
 r
 
 # La misma cuenta, a mano, para ver que hace survey por dentro:
-R_hat <- as.numeric(coef(r))
+B_hat <- as.numeric(coef(r))   # la razon: B en la notacion del curso (cap. 3)
 X_hat <- sum(nh_ad$wtmec2yr * nh_ad$bmxht)     # total estimado del denominador
-nh_ad$u <- (nh_ad$bmxwt - R_hat * nh_ad$bmxht) / X_hat   # variable linealizada
+nh_ad$u <- (nh_ad$bmxwt - B_hat * nh_ad$bmxht) / X_hat   # variable linealizada
 dis_u <- svydesign(id = ~sdmvpsu, strata = ~sdmvstra, weights = ~wtmec2yr,
                    data = nh_ad, nest = TRUE)
 c(ee_svyratio = as.numeric(SE(r)),

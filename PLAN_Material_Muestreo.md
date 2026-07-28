@@ -586,13 +586,20 @@ oro del `ensamblado/README.md`: volver a ejecutar el script produce el capítulo
 | JSON incrustado | válido, y **idéntico** al de `precalculo/salidas/` |
 | Enlaces de `index.html` | los 4 resuelven a archivos existentes |
 
-### Checkpoint 1 — Revisión de Javier · **LEVANTADO el 2026-07-27**
-Javier autorizó proceder con la fase 2 y aceptó tratar esa instrucción como aprobación del
-checkpoint. Las tres preguntas de fondo **siguen abiertas** y su respuesta se retropropagaría a los
-tres capítulos ya escritos, no solo al 2:
-- [ ] ¿El marco π funciona didácticamente para el nivel del curso?
-- [ ] ¿La densidad de simuladores es la correcta o sobra/falta interactividad?
-- [ ] ¿El glosario de notación resuelve la convivencia Lohr ↔ Gutiérrez?
+### Checkpoint 1 — Revisión de Javier · **RESPONDIDO el 2026-07-28**
+Javier autorizó proceder el 2026-07-27 sin revisar, y respondió al fondo el 2026-07-28:
+*«si quiero que mejores la explicación, a ratos es muy abstracta, revisa también la notación y los
+cálculos»*. Las tres cosas se atendieron en la **fase 4.5** (ver abajo), sobre los siete capítulos
+ya escritos.
+- [x] **¿El marco π funciona didácticamente?** Sí, pero **estaba mal presentado**: 22 de los 77
+      módulos formalizaban antes de dar un solo número, y el cap. 2 —el pivote— era el peor con 7
+      de 11. El marco no se tocó; el orden de exposición, entero. Ahora **0 módulos** abren
+      formalizando, medido con `precalculo/mide_abstraccion.py`.
+- [x] **¿La densidad de simuladores es la correcta?** No se tocó: Javier no la señaló, y el
+      diagnóstico no encontró módulos sin interactividad donde hiciera falta. Queda como está.
+- [x] **¿El glosario resuelve la convivencia Lohr ↔ Gutiérrez?** Sí, y la auditoría de notación lo
+      confirmó salvo en un punto: la razón poblacional era `B` en el cap. 3 y `R` en el 7,
+      contradiciendo el propio glosario. Unificado en `B`.
 - [x] ~~¿`N = 3 059` o los 3 078 de Lohr?~~ → **Los 3 078, decidido el 2026-07-27.** Aplicado a
       todo el capítulo y al precálculo; la media poblacional del material es 306 677.
 
@@ -977,6 +984,112 @@ byte a byte.
 - [x] Todas las varianzas de diseño reproducidas por dos vías (varias por tres).
 - [x] Los caps. 7 y 8 no necesitaron partirse: el 7 cerró en 10 módulos (el riesgo anotado abajo
       preveía partirlo si pasaba de 12).
+
+### Fase 4.5 — Revisión del Checkpoint 1 — ✅ COMPLETADA (2026-07-28)
+
+**Javier respondió al Checkpoint 1**: «si quiero que mejores la explicación, a ratos es muy
+abstracta, revisa también la notación y los cálculos». Las tres cosas se auditaron y se
+corrigieron. Las cuatro decisiones de apertura (las cuatro recomendadas, aceptadas):
+
+1. **Retropropagar el patrón «concreto → formal» a los 22 módulos** que abrían formalizando,
+   empezando por el cap. 2. El patrón ya existía en los caps. 6 y 7 (cuatro tiendas con cifras
+   antes de la definición); se trataba de llevarlo hacia atrás.
+2. **Subir a 200 000 réplicas y declarar el error de Monte Carlo** en el sesgo del cap. 3.
+3. **Ampliar `verifica_bloques.py` a las cifras de la prosa**, con línea base revisada.
+4. **Unificar la razón poblacional en `B`** (la notación de Lohr, ya usada por el cap. 3).
+
+#### El diagnóstico, medido
+
+Se escribió `precalculo/mide_abstraccion.py`, que compara la posición de la primera
+**formalización** (fórmula de bloque, caja `.definition` o `.formula`) con la del primer
+**anclaje** (bloque de código, simulador, tabla, o un párrafo con cifras concretas).
+
+| | Antes | Después |
+|---|---:|---:|
+| Módulos que formalizan antes de anclar | **22 de 77** | **0** |
+| — de ellos, en el cap. 2 (el pivote) | 7 de 11 | 0 |
+
+El cap. 2 era el peor con diferencia: sus módulos 1–5 soltaban la definición entre un 29 % y un
+42 % del módulo antes del primer número. El módulo 3 abría con *una frase* de intuición y
+encadenaba seis fórmulas —definición, indicadores, insesgadez, varianza, Sen–Yates–Grundy— sin un
+solo dato.
+
+#### Qué se cambió en el contenido
+
+- **Cap. 2, módulo 1:** la población de cinco condados sube del 50 % al 11 % del módulo, y las
+  definiciones de $p(s)$ y soporte salen *de ella* en vez de precederla.
+- **Cap. 2, módulo 3:** el HT se introduce resolviendo una muestra concreta —$\{3,5\}$ bajo el
+  diseño desigual, $27 \times 2{,}50 + 58 \times 1{,}82 = 172{,}95$— **que no acierta** (el total
+  es 150). Esa «falla» motiva la insesgadez del módulo 4 mucho mejor que un ejemplo que cuadre.
+- **Cap. 2, módulos 2, 4, 5, 7, 8 y 9:** aperturas con la cuenta hecha a mano (contar en cuántas
+  de las diez parejas sale el condado 1), con los datos reales de `agsrs`, o con el resultado que
+  el módulo va a explicar.
+- **Los otros 15 módulos** (caps. 1, 3, 4, 5, 6 y 7) reciben un párrafo de apertura con el dato
+  que motiva el módulo: el error estándar que cae de 58,2 a 5,54 millones (cap. 3, m1), el reparto
+  de Neyman que asigna 5 condados al Nordeste (cap. 4, m4), el 99,2 % de varianza que viene de la
+  primera etapa (cap. 5, m6), los 15 grados de libertad de NHANES (cap. 7, m1).
+
+#### Los cálculos: un error real encontrado
+
+**El «sesgo medido» del cap. 3 era ruido de Monte Carlo.** Con las 5 000 réplicas originales, a
+partir de $n \approx 100$ el sesgo simulado salía **con signo contrario al teórico** y era **menor
+que su propia incertidumbre de estimación**. El material publicaba «con $n = 300$ el sesgo vale
+unos 10 500 acres» cuando el valor real es **−38 963** — un factor 4 y el signo cambiado.
+
+| n | sesgo con M = 5 000 | sesgo con M = 200 000 | teórico | ee de Monte Carlo |
+|---:|---:|---:|---:|---:|
+| 100 | **+97 085** | −100 486 | −123 438 | ±28 402 |
+| 300 | **+10 479** | −38 963 | −38 383 | ±15 891 |
+
+La corrección sube $M$ a 200 000, **publica el error de Monte Carlo junto a cada sesgo**, añade
+barras de error al simulador y mete dos `stopifnot` en el precálculo: que el sesgo sea medible y
+que simulado y teórico **coincidan en signo**. La caja nueva del módulo 4 convierte el tropiezo en
+lección: *una simulación sin barra de error no es una medición*.
+
+Las **92 fórmulas de bloque** del material se revisaron una a una: todas correctas, incluidas las
+derivaciones delicadas (sesgo de la razón por Taylor, varianza de Poisson, jackknife estratificado,
+SYG). Único matiz anotado: el deff de Kish escribe $1 + s_w^2/\bar w^2 = n\sum w^2/(\sum w)^2$ como
+igualdad, y solo es exacta con divisor $n$; el código usa `var()`, que divide por $n-1$ (diferencia
+de orden $1/n$, irrelevante con $n = 5\,406$).
+
+#### La notación
+
+`B` (Lohr, y ya la del cap. 3) frente a `R` (Gutiérrez) para la razón poblacional: el cap. 7 usaba
+`R` **contradiciendo el glosario del propio material**. Unificado en `B` en las 11 ocurrencias
+—fórmulas, prosa, autoevaluación y `cadena.R`— y añadida la fila «Razón poblacional» al glosario
+del cap. 7. El resto de la notación se auditó y es consistente: `d_k` de diseño frente a `w_k`
+final está bien distinguido, y `S²` frente a `σ²` también.
+
+#### El verificador, ampliado
+
+`verifica_bloques.py --prosa` contrasta ahora las cifras citadas en **párrafos, cajas y listas**
+—no solo las de los comentarios `#>`— contra las salidas ejecutadas y el JSON del precálculo.
+Las que no se pueden derivar automáticamente (cocientes que el autor deriva, cifras en otra unidad,
+constantes de tabla) viven en `precalculo/cifras_prosa.json` **con su justificación**, revisadas
+una a una ejecutando. Funciona como regresión: solo protesta por cifras nuevas.
+
+*Prueba de regresión del propio verificador:* la primera versión aceptaba cambios de escala
+(×100, ×1000, ×10⁶) para casar «7,1 millones» con 7081850, y con eso **coló un `deff ≈ 47,83`
+inventado**. Se endureció a comparación estricta por redondeo, y entonces cazó las tres
+inyecciones de prueba.
+
+**Resultado de la revisión completa: 1 577 cifras de bloques + 246 de prosa, 0 discrepancias.**
+
+**Anotaciones de la fase, para no repetir el tropiezo:**
+- **Escribir prosa nueva con cifras de memoria falla, y falló tres veces en esta misma sesión** —
+  precisamente mientras se corregía ese problema. Se escribió «$\pi_5 = 0{,}7$» donde era 0,55,
+  «96,9» donde era 98,46 y «5,53» donde era 5,59. **Regla nueva: consultar el JSON del precálculo
+  ANTES de redactar el párrafo, no después.** El verificador de prosa existe justamente porque
+  esta disciplina falla incluso sabiéndola.
+- **Una métrica estrecha esconde el progreso.** La primera versión de `mide_abstraccion.py` solo
+  contaba código y simuladores como anclaje, así que no veía las mejoras hechas con prosa y
+  reportaba 5 módulos malos donde ya solo quedaba 1. Un párrafo que resuelve un caso con números
+  ancla tanto como un bloque de R.
+- **Un verificador permisivo da falsa calma.** Sin la prueba de inyección, la versión laxa habría
+  pasado por buena y el proyecto habría creído tener cubierta la prosa.
+- **El mejor ejemplo pedagógico no es el que cuadra.** El HT del módulo 3 se introduce con una
+  muestra que falla por un 15 %: eso motiva la insesgadez *en promedio* mucho mejor que un ejemplo
+  elegido para dar el resultado exacto, que además huele a truco.
 
 ### Fase 5 — Capítulo 8, portada y publicación
 - [ ] **T5.1** Cap. 8 — no respuesta, ponderación, imputación, taller de diseño y auditoría de IA.

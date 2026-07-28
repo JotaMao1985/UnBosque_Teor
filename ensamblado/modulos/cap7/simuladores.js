@@ -566,7 +566,8 @@
         { concepto: 'Efecto de diseño', aqui: '\\text{deff}', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'svymean(deff = TRUE)' },
         { concepto: 'deff solo por pesos', aqui: '\\text{deff}_{K}', lohr: '\\text{deff}_{Kish}', gutierrez: '1 + cv^2(w)', r: '1 + var(w)/mean(w)^2' },
         { concepto: 'Tamaño efectivo', aqui: 'n_{ef}', lohr: 'n/\\text{deff}', gutierrez: 'n_{eff}', r: 'nrow(d)/deff(m)' },
-        { concepto: 'Variable linealizada', aqui: 'u_k', lohr: 'q_i', gutierrez: 'u_k', r: '(y - R*x)/Xhat' },
+        { concepto: 'Razón poblacional', aqui: 'B = t_y/t_x', lohr: 'B', gutierrez: 'R', r: 'coef(svyratio())' },
+        { concepto: 'Variable linealizada', aqui: 'u_k', lohr: 'q_i', gutierrez: 'u_k', r: '(y - B*x)/Xhat' },
         { concepto: 'Réplica jackknife', aqui: '\\hat\\theta_{(hi)}', lohr: '\\hat\\theta_{(j)}', gutierrez: '\\hat\\theta_{(k)}', r: 'as.svrepdesign(type="JKn")' },
         { concepto: 'Post-estratificación', aqui: 'g_k', lohr: 'w_i^{post}', gutierrez: 'g_k', r: 'postStratify()' },
         { concepto: 'Raking / IPFP', aqui: '\\text{IPFP}', lohr: 'raking', gutierrez: '\\text{calibración}', r: 'rake()' }
@@ -620,15 +621,15 @@
       {
         tipo: 'opcion',
         modulo: 4,
-        pregunta: 'La linealización de Taylor convierte la razón $\\hat R = \\hat t_y / \\hat t_x$ en un total. ¿Cuál es exactamente la variable cuyo total se estima?',
+        pregunta: 'La linealización de Taylor convierte la razón $\\hat B = \\hat t_y / \\hat t_x$ en un total. ¿Cuál es exactamente la variable cuyo total se estima?',
         pista: 'Escribe el desarrollo de primer orden y agrupa por unidad.',
         opciones: [
-          { texto: '$u_k = (y_k - R\\,x_k)/t_x$: el residuo de $y$ respecto a la recta por el origen de pendiente $R$, escalado por el total del denominador.', correcta: true,
-            retro: 'Exacto — y es el mismo residuo que el capítulo 3 usó para la varianza del estimador de razón. Aquel $e_k = y_k - \\hat R x_k$ es este $u_k$ sin el escalado.' },
+          { texto: '$u_k = (y_k - B\\,x_k)/t_x$: el residuo de $y$ respecto a la recta por el origen de pendiente $B$, escalado por el total del denominador.', correcta: true,
+            retro: 'Exacto — y es el mismo residuo que el capítulo 3 usó para la varianza del estimador de razón. Aquel $e_k = y_k - \\hat B x_k$ es este $u_k$ sin el escalado.' },
           { texto: '$u_k = y_k / x_k$: la razón individual de cada unidad.', correcta: false,
             retro: 'Ese es el promedio de razones, un estimador DISTINTO (y sesgado para $R$). La linealización no promedia razones individuales: linealiza el cociente de totales.' },
           { texto: '$u_k = y_k - \\bar y$: el residuo respecto a la media.', correcta: false,
-            retro: 'Eso linealizaría la media, no la razón. El punto de la razón es que el denominador TAMBIÉN es aleatorio, y por eso aparece $R x_k$ y no $\\bar y$.' },
+            retro: 'Eso linealizaría la media, no la razón. El punto de la razón es que el denominador TAMBIÉN es aleatorio, y por eso aparece $B x_k$ y no $\\bar y$.' },
           { texto: '$u_k = w_k y_k$: el valor ya ponderado.', correcta: false,
             retro: 'Los pesos entran después, al estimar el total de $u$. La variable linealizada se construye con los valores, no con los pesos.' }
         ]

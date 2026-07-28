@@ -122,21 +122,40 @@
       const g = crearGraficoBarras(raiz.querySelector('canvas'), etiquetas,
         SR.map(f => f.sesgo / 1e6), {
           etiqueta: 'Sesgo simulado (millones de acres)', color: COLORES_GRAFICO.secundario,
-          tituloX: 'Tamaño de muestra', min: -2.5, max: 0.5,
+          tituloX: 'Tamaño de muestra', min: -1.8, max: 0.3,
           barrasExtra: [{ etiqueta: 'Sesgo teórico de orden 1/n',
                           valores: SR.map(f => f.sesgoTeorico / 1e6),
                           color: COLORES_GRAFICO.primario }],
           lineas: [{ valor: 0, etiqueta: '', color: '#94a3b8' }]
         });
 
+      // Barras de error de Monte Carlo (±2 ee_MC) sobre el sesgo simulado. Sin
+      // ellas, el gráfico invita a leer como medición lo que puede ser ruido:
+      // con 5 000 réplicas esta misma serie salía con el signo cambiado.
+      g.data.datasets.push({
+        type: 'scatter', label: 'incertidumbre de Monte Carlo (±2 ee)',
+        data: SR.flatMap((f, i) => [
+          { x: i, y: (f.sesgo - 2 * f.eeMC) / 1e6 },
+          { x: i, y: (f.sesgo + 2 * f.eeMC) / 1e6 }
+        ]),
+        backgroundColor: '#DC2626', pointRadius: 2.5, pointStyle: 'line',
+        showLine: false, order: 0
+      });
+      g.update('none');
+
       function pintar() {
         const f = SR[params.i];
+        const cociente = Math.abs(f.sesgo) / f.eeMC;
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'tamaño destacado:', valor: 'n = ' + f.n },
           { etiqueta: 'sesgo simulado:', valor: fmtNum(f.sesgo, 0) + ' acres' },
           { etiqueta: 'sesgo teórico:', valor: fmtNum(f.sesgoTeorico, 0) + ' acres' },
-          { etiqueta: 'error estándar:', valor: fmtNum(f.ee, 0) + ' acres' },
-          { etiqueta: 'sesgo / EE:', valor: fmtNum(f.sesgoRelEE, 4) },
+          { etiqueta: 'incertidumbre de Monte Carlo (ee/√M):', valor: '± ' + fmtNum(f.eeMC, 0) + ' acres' },
+          { etiqueta: '¿el sesgo se distingue de cero?',
+            valor: fmtNum(cociente, 1) + ' veces su incertidumbre — ' +
+                   (f.medible ? 'sí, es medible' : 'NO: haría falta más réplicas') },
+          { etiqueta: 'error estándar del estimador:', valor: fmtNum(f.ee, 0) + ' acres' },
+          { etiqueta: 'sesgo / EE:', valor: fmtNum(f.sesgoRelEE, 5) },
           { etiqueta: 'sesgo como % del total real:',
             valor: fmtNum(100 * f.sesgo / D3.agsrs.tY, 4) + ' %' }
         ]);

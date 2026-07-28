@@ -19,6 +19,12 @@
         </div>
       </div>
 
+      <p>Un dato para abrir boca. Con la misma muestra de 300 condados del capítulo anterior —los mismos datos, sin
+        recoger una observación más— el error estándar del total estimado pasa de <strong>58,2 millones</strong> de
+        acres a <strong>5,54 millones</strong>. Diez veces menos error, gratis. Lo único que cambia es que el segundo
+        método usa un dato que ya estaba ahí: la superficie sembrada de esos mismos condados <em>en 1987</em>, que
+        el censo publica para los 3 078.</p>
+
       <p>Hasta aquí, el capítulo 2 construyó estimadores que solo usan lo observado en la muestra: el estimador de
         Horvitz–Thompson $\hat{t}_\pi = \sum_{k \in s} y_k/\pi_k$ y, bajo muestreo aleatorio simple, el de expansión
         $N\bar{y}$. Este capítulo añade un ingrediente nuevo, y es el que más rendimiento da por peso invertido:
@@ -313,11 +319,12 @@
         relativo se hace despreciable. Pero la afirmación no hay que creerla, hay que medirla.</p>
 
       <div class="simulador" data-simulador="sesgo-razon">
-        <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> El sesgo, medido con 5 000 réplicas por tamaño</h4>
-        <p class="simulador-intro">Para cada tamaño se extrajeron 5 000 muestras aleatorias de <code>agpop</code>, se
-          calculó $\hat{t}_r$ en cada una y se promedió. Las barras naranjas son el sesgo medido; las verdes, la
-          aproximación teórica de orden $1/n$. Con $n = 10$ el sesgo es de casi dos millones de acres; con $n = 300$
-          se queda en diez mil, un 0,001 % del total.</p>
+        <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> El sesgo, medido con 200 000 réplicas por tamaño</h4>
+        <p class="simulador-intro">Para cada tamaño se extrajeron 200 000 muestras aleatorias de <code>agpop</code>,
+          se calculó $\hat{t}_r$ en cada una y se promedió. Las barras naranjas son el sesgo medido —con su
+          <strong>barra de error de Monte Carlo</strong>— y las verdes, la aproximación teórica de orden $1/n$. Con
+          $n = 10$ el sesgo ronda el millón y medio de acres; con $n = 300$ baja a unos 39 000, un 0,004 % del
+          total. Las dos series son negativas en todos los tamaños: el estimador de razón subestima aquí.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:250px;">
           <canvas aria-label="Sesgo simulado y sesgo teórico del estimador de razón según el tamaño de muestra" role="img"></canvas>
@@ -325,12 +332,23 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <div class="warning">
+        <p><strong>Una simulación sin barra de error no es una medición.</strong> Este material midió antes el mismo
+          sesgo con 5 000 réplicas, y a partir de $n = 100$ el resultado era <em>ruido</em>: salía con signo
+          contrario al teórico y era más pequeño que la propia incertidumbre con la que se había medido. El promedio
+          de $M$ réplicas tiene error estándar $\text{ee}/\sqrt{M}$, y con $M = 5\,000$ eso valía unos 100 000
+          acres — cuando el sesgo que se pretendía medir era de 39 000. Con $M = 200\,000$ la incertidumbre baja a
+          15 900 y el sesgo por fin se distingue de cero. <strong>La regla, que vale para cualquier simulación del
+          curso:</strong> antes de leer un número simulado, comprobar que es mayor que su propio error de Monte
+          Carlo. El deslizador del simulador muestra esa comparación en cada tamaño.</p>
+      </div>
+
       <div class="note">
         <p><strong>La cifra que resuelve el dilema.</strong> Con $n = 300$, el sesgo del estimador de razón vale unos
-          10 500 acres y su error estándar 7,1 millones: el sesgo es <strong>676 veces menor</strong> que la
-          variabilidad. Elevado al cuadrado dentro del ECM, su contribución relativa es de $2{,}2 \times 10^{-6}$. Cambiar un
-          estimador insesgado por otro que reduce el error estándar diez veces a cambio de eso no es un compromiso:
-          es una ganga.</p>
+          $-39\,000$ acres y su error estándar 7,11 millones: el sesgo es <strong>182 veces menor</strong> que la
+          variabilidad. Elevado al cuadrado dentro del ECM, su contribución relativa es de $3{,}0 \times 10^{-5}$.
+          Cambiar un estimador insesgado por otro que reduce el error estándar diez veces a cambio de eso no es un
+          compromiso: es una ganga.</p>
       </div>
 
       <h3>Qué se desprecia exactamente</h3>
