@@ -9,17 +9,23 @@ de Lohr, con los datos oficiales de *Sampling: Design and Analysis*.
 
 ## Contenido
 
+Ocho capítulos que cubren las 16 semanas del cronograma. **88 módulos, 65 simuladores,
+88 preguntas de autoevaluación, 33 ejercicios guiados y 183 bloques de código** (148 de R,
+35 de Python) con **2 033 cifras contrastadas contra la salida real**.
+
 | # | Capítulo | Semanas | Temas | Módulos | Simuladores |
 |---|---|:---:|---|:---:|:---:|
 | 1 | [Encuestas, sesgos y error total](capitulo-1-encuestas-sesgos.html) | 1–2 | *Literary Digest* y Hite, marco muestral, sesgo de selección y de medición, cuestionarios, árbol del error total, sesgo en ciencia de datos | 10 | 7 |
 | 2 | [Diseño muestral, MAS y sistemático](capitulo-2-diseno-mas-sistematico.html) | 3–4 | El diseño `p(s)`, probabilidades de inclusión, Horvitz–Thompson, MAS, intervalos, tamaño de muestra, Bernoulli, sistemático | 11 | 9 |
 | 3 | [Estimación de razón y regresión](capitulo-3-razon-y-regresion.html) | 5–6 | Variables auxiliares, razón, sesgo y ECM, regresión, diferencia, dominios, GREG, mediana | 12 | 6 |
-| 4 | [Muestreo estratificado](capitulo-4-muestreo-estratificado.html) | 7–9 | Estratos, pesos, asignación, postestratificación, ciencia de datos | 10 | — |
+| 4 | [Muestreo estratificado](capitulo-4-muestreo-estratificado.html) | 7–9 | Estratos y pesos, asignación proporcional, de Neyman y con costos, construcción de estratos, postestratificación, PPT estratificado, muestreo estratificado en machine learning | 12 | 8 |
+| 5 | [Muestreo por conglomerados](capitulo-5-conglomerados.html) | 10–11 | Conglomerados de igual y distinto tamaño, ICC y efecto de diseño, dos etapas, descomposición de la varianza, asignación bajo presupuesto, datos agrupados en ciencia de datos | 11 | 8 |
+| 6 | [Probabilidades desiguales](capitulo-6-probabilidades-desiguales.html) | 12–13 | Hansen–Hurwitz, métodos acumulativo y de Lahiri, Horvitz–Thompson sin reemplazo, πPT, Poisson, Sen–Yates–Grundy, PPT en dos etapas, muestreo por importancia | 11 | 10 |
+| 7 | [Encuestas complejas](capitulo-7-encuestas-complejas.html) | 14 | NHANES y SYC en paralelo, los tres factores del peso, DEFF descompuesto, linealización de Taylor, jackknife, BRR y bootstrap, calibración y raking, el ciclo de diseño | 10 | 9 |
+| 8 | [No respuesta, ponderación e imputación](capitulo-8-no-respuesta-ponderacion.html) | 15–16 | MCAR/MAR/MNAR medidos, la fórmula del sesgo, ajuste por clases de respuesta, calibración contra la ACS, imputación simple y múltiple con reglas de Rubin, R-indicators, taller del proyecto integrador, verificación de salidas de IA | 11 | 8 |
 
-Los capítulos 5 a 8 —conglomerados, probabilidades desiguales, encuestas complejas y no
-respuesta— están en producción. El capítulo 4 conserva todavía el formato anterior.
-
-La portada [`index.html`](index.html) enlaza todos los capítulos.
+La portada [`index.html`](index.html) enlaza todos los capítulos. La navegación es siempre por la
+portada: los capítulos no enlazan entre sí, aunque sí se citan («esto se trata en el capítulo 5»).
 
 ## Qué trae cada capítulo
 
@@ -35,6 +41,9 @@ La portada [`index.html`](index.html) enlaza todos los capítulos.
 - **Ejercicios guiados** con pista y solución resuelta en R.
 - **Glosario de notación** que traduce entre este material, Lohr y Gutiérrez, porque el curso
   convive con dos fuentes que escriben lo mismo de maneras distintas.
+- **Componentes propios del curso**: el árbol del error total (caps. 1 y 8), el diagrama de un
+  diseño complejo etapa por etapa (caps. 4 a 7), el ciclo de diseño de una encuesta (caps. 7 y 8)
+  y la rúbrica recorrible del proyecto integrador (cap. 8).
 
 ## Tecnología
 
