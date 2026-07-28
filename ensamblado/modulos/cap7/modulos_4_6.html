@@ -1,0 +1,337 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Linealización de Taylor                            -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Linealización de Taylor
+          <span class="text-gray-400 font-normal text-2xl">/ Taylor linearization</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Convertir cualquier estadístico suave en un total
+              — el único objeto cuya varianza sabemos estimar — y verificar la receta contra
+              <code>survey</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Toda la teoría de los capítulos 2 a 6 estima la varianza de <strong>totales</strong>. Pero casi nada de
+        lo que se publica es un total: son medias, razones, proporciones, medianas, coeficientes de regresión,
+        índices de Gini. La linealización es el puente, y su idea cabe en una línea: <strong>sustituir el
+        estadístico por su aproximación lineal y estimar la varianza de esa</strong>.</p>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-taylor">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver el desarrollo paso a paso</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-taylor" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>La razón es un cociente de dos totales estimados, cada uno de los cuales sí sabemos manejar:</p>
+              $$\hat{R} = \frac{\hat{t}_y}{\hat{t}_x}, \qquad
+              \hat{t}_y = \sum_{k \in s} w_k y_k, \quad \hat{t}_x = \sum_{k \in s} w_k x_k$$
+            </li>
+            <li>
+              <p>Se desarrolla $f(a, b) = a/b$ en serie de Taylor alrededor del punto verdadero
+                $(t_y, t_x)$, quedándose con los términos de primer orden:</p>
+              $$\hat{R} \approx R + \frac{1}{t_x}(\hat{t}_y - t_y) - \frac{R}{t_x}(\hat{t}_x - t_x)$$
+            </li>
+            <li>
+              <p>Se agrupa: el error de $\hat R$ es (aproximadamente) el error del total de una
+                <strong>variable nueva</strong> $u_k$, construida a partir de los datos:</p>
+              $$\hat{R} - R \approx \frac{1}{t_x}\sum_{k \in s} w_k\,(y_k - R\,x_k)
+              = \sum_{k \in s} w_k u_k, \qquad u_k = \frac{y_k - R\,x_k}{t_x}$$
+            </li>
+            <li>
+              <p>Y por tanto la varianza del estadístico no lineal es la varianza de un <em>total</em>, que es
+                exactamente lo que las fórmulas del diseño saben calcular:</p>
+              $$\widehat{V}(\hat{R}) = \widehat{V}\!\left(\sum_{k \in s} w_k \hat{u}_k\right),
+              \qquad \hat{u}_k = \frac{y_k - \hat{R}x_k}{\hat{t}_x}$$
+            </li>
+            <li>
+              <p>El término despreciado es de orden $(\hat t_x - t_x)^2$: relativamente pequeño cuando el
+                denominador está bien estimado, y la razón por la que la linealización necesita muestras
+                grandes. Con $n$ pequeño o denominadores inestables, la aproximación se degrada — y ahí entra
+                la replicación del módulo 5.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La razón por dos vías: svyratio y linealización a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="linealizacion">
+        <h4><i class="fas fa-ruler-combined" aria-hidden="true"></i> La variable linealizada</h4>
+        <p class="simulador-intro">El histograma de los $\hat u_k = (y_k - \hat R x_k)/\hat t_x$ de NHANES
+          (escalados por $10^6$ para que se lean). Es la variable cuya <em>suma ponderada</em> tiene la misma
+          varianza que la razón. Nota que está centrada en casi cero: por construcción, $\sum w_k \hat u_k = 0$
+          exactamente. Los residuos grandes son las personas cuya relación peso–altura se aparta del promedio.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Distribución de la variable linealizada $\hat u_k \times 10^6$</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Histograma de la variable linealizada de la razón peso-altura" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>La misma receta, para todo.</strong> Escribir el estadístico como función de totales, derivar,
+          construir $u_k$, estimar el total de $u$. Sirve para la media (donde $u_k = (y_k - \bar y)/\hat N$),
+          para los coeficientes de una regresión, para el índice de Gini. <code>survey</code> lo hace por dentro
+          en <code>svymean</code>, <code>svyratio</code>, <code>svyglm</code>: cuando ves «linearization» en su
+          documentación, es esto. Donde la receta se atasca es en estadísticos no suaves — la mediana, que no es
+          derivable —, y ese es el hueco que llena el módulo 5.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §9.1 (3.ª ed.): linealización; Särndal et al. §5.5 para el caso general.</li>
+          <li>Este material — cap. 3, módulo 3: la misma linealización aplicada al estimador de razón.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · Replicación: jackknife, BRR y bootstrap            -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Métodos de replicación
+          <span class="text-gray-400 font-normal text-2xl">/ Replication methods</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Implementar el jackknife estratificado desde cero,
+              y saber cuándo usar BRR o bootstrap en su lugar.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>La segunda familia de estimadores de varianza cambia el álgebra por la fuerza bruta: <strong>recalcular
+        el estadístico muchas veces sobre versiones perturbadas de la muestra</strong> y medir cuánto baila. No
+        hace falta derivar nada, y por eso funciona con cualquier estadístico.</p>
+
+      <div class="definition">
+        <h4>Los tres métodos</h4>
+        <p><strong>Jackknife (JKn).</strong> Se elimina una PSU y se reponderan las que quedan en su estrato por
+          $n_h/(n_h - 1)$. Una réplica por PSU. Es el más transparente y el más usado.</p>
+        <p><strong>BRR</strong> (<em>balanced repeated replication</em>). Diseñado para el caso de
+          <strong>exactamente 2 PSU por estrato</strong>: cada réplica se queda con una de las dos en cada
+          estrato, siguiendo una matriz de Hadamard que garantiza el equilibrio. Con 15 estratos bastan 16
+          réplicas — menos que las 30 del jackknife.</p>
+        <p style="margin-bottom:0;"><strong>Bootstrap.</strong> Se remuestrean PSU con reemplazo dentro de cada
+          estrato, tantas veces como se quiera. El más flexible y el más caro; imprescindible cuando el
+          estadístico es muy irregular.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El jackknife estratificado a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="formula-titulo">La varianza jackknife estratificada</p>
+        $$\widehat{V}_{JK}(\hat\theta) = \sum_{h=1}^{H} \frac{n_h - 1}{n_h}
+        \sum_{i=1}^{n_h}\left(\hat\theta_{(hi)} - \hat\theta\right)^2$$
+        <p style="margin-bottom:0;">$\hat\theta_{(hi)}$ es el estadístico recalculado sin la PSU $i$ del estrato
+          $h$. El factor $(n_h-1)/n_h$ compensa que quitar una PSU de dos perturba mucho más que quitarla de
+          cincuenta — por eso el ejercicio 4, sobre SYC, tiene que calcular $n_h$ por estrato en vez de fijarlo
+          en 2.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los tres métodos en survey contra la linealización">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="tabla-ranking" data-ranking="varianzas">
+        <p class="tabla-ranking-titulo">Los cuatro caminos hacia el mismo error estándar</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación ordenable de métodos de estimación de varianza"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="simulador" data-simulador="jackknife">
+        <h4><i class="fas fa-arrows-rotate" aria-hidden="true"></i> Las 30 réplicas del jackknife</h4>
+        <p class="simulador-intro">Cada barra es una réplica: el IMC medio recalculado <em>sin</em> esa PSU. La
+          línea marca la estimación completa. El deslizador resalta una réplica y la lectura da su desviación y
+          su aporte a la varianza. Nota que las réplicas van por pares (las dos PSU de cada estrato se separan
+          simétricamente): esa es la firma del diseño de 2 PSU por estrato.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">IMC medio recalculado al eliminar cada PSU</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Réplicas jackknife del IMC medio, una por conglomerado eliminado" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>Donde la replicación gana de verdad es en estadísticos que la linealización no alcanza. La mediana no es
+        derivable — su linealización necesita estimar la densidad —, pero recalcularla es trivial:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La mediana por linealización y por jackknife">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>BRR no siempre es una opción.</strong> Exige exactamente 2 PSU por estrato — NHANES lo cumple
+          por diseño, SYC (de 7 a 154) no, y <code>as.svrepdesign(type = "BRR")</code> falla. Tampoco sirve
+          <code>JK1</code>, el jackknife no estratificado, sobre un diseño con estratos: <code>survey</code> se
+          niega explícitamente. La elección del método no es una preferencia estética: la determina la
+          estructura del diseño.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §9.3: jackknife, BRR y bootstrap para encuestas.</li>
+          <li>Lumley — <em>Complex Surveys</em>, cap. 2: <code>as.svrepdesign</code> y sus tipos.</li>
+          <li>Rao y Wu (1988): el bootstrap para muestras complejas que implementa <code>subbootstrap</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · Calibración, post-estratificación y raking         -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Calibración y raking
+          <span class="text-gray-400 font-normal text-2xl">/ Calibration and raking</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ajustar los pesos para que reproduzcan totales
+              conocidos, y ver converger el algoritmo IPFP paso a paso.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los pesos de diseño no reproducen los totales que ya se conocen de la población. Si el censo dice que
+        hay 49 % de hombres y la muestra ponderada dice 47,9 %, esa discrepancia es información desperdiciada —
+        y a menudo síntoma de no respuesta diferencial. <strong>Calibrar</strong> es modificar los pesos lo
+        mínimo posible para que cuadren con lo conocido.</p>
+
+      <div class="definition">
+        <h4>Las tres calibraciones, de menor a mayor generalidad</h4>
+        <p><strong>Post-estratificación:</strong> ajustar a los totales de <em>una</em> clasificación completa
+          (por ejemplo, cada casilla sexo × edad). Requiere conocer la tabla entera.</p>
+        <p><strong>Raking (IPFP):</strong> ajustar a los <em>márgenes</em> de varias clasificaciones sin conocer
+          las casillas. Se cuadran las filas, luego las columnas, y se repite hasta converger. Es lo que se usa
+          casi siempre, porque los censos publican márgenes, no tablas cruzadas completas.</p>
+        <p style="margin-bottom:0;"><strong>Calibración general (GREG):</strong> ajustar a totales de variables
+          continuas, no solo categóricas. El capítulo 3 ya montó el estimador de regresión general; calibrar es
+          su cara operativa — mismo estimador, otra puerta de entrada.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La tabla ponderada y los márgenes objetivo">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+      </div>
+
+      <p>El algoritmo del raking — <strong>IPFP</strong>, <em>iterative proportional fitting</em> — es de una
+        simplicidad desconcertante: multiplicar cada fila por lo que le falta, luego cada columna por lo que le
+        falta, y repetir. Cada paso rompe un poco el anterior, y aun así converge:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="IPFP a mano, con el error cayendo">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R11⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="ipfp">
+        <h4><i class="fas fa-table-cells-large" aria-hidden="true"></i> El raking, iteración a iteración</h4>
+        <p class="simulador-intro">La tabla sexo × edad de NHANES con sus márgenes objetivo. El deslizador
+          avanza por las iteraciones del IPFP: las barras son las seis casillas y la lectura muestra el error
+          máximo respecto a los márgenes. Mira cómo cae — de $1{,}3\times10^{-1}$ a $10^{-14}$ en cinco pasos —
+          y qué poco se mueven las casillas después de la segunda iteración.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Casillas de la tabla (millones de personas) en cada iteración</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Casillas de la tabla ajustada en cada iteración del IPFP" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="rake() de survey y su efecto">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R12⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Calibrar corrigió aquí casi nada, y eso también es un resultado.</strong> El IMC pasa de
+          29,3891 a 29,3912 y el error estándar sube ligeramente. Con márgenes cercanos a los que la muestra ya
+          tenía, calibrar no tiene mucho que arreglar. Su valor real aparece cuando la <em>no respuesta</em> ha
+          desbalanceado la muestra de verdad — que es el capítulo 8 — o cuando la variable de interés está
+          fuertemente correlacionada con las de calibración, que es el argumento del GREG del capítulo 3.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Gutiérrez — §10.1–10.5: calibración, la fuente principal de este módulo.</li>
+          <li>Lohr — §8.6: post-estratificación y raking como ajuste por no respuesta.</li>
+          <li>Deville y Särndal (1992): el artículo que fundó la calibración moderna.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

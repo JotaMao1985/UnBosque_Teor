@@ -1,0 +1,224 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · Importancia y active learning                     -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Muestreo por importancia
+          y <em>active learning</em> <span class="text-gray-400 font-normal text-2xl">/ Importance sampling</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer el PPT con reemplazo como el muestreo por
+              importancia de Monte Carlo, y trasladar la teoría del capítulo a la IA moderna.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Quita del módulo 2 la palabra «tienda» y pon «punto de evaluación»: el estimador
+        $\frac{1}{n}\sum y_i/\psi_i$ con extracciones de una «propuesta» $\psi$ es, literalmente, el
+        <strong>muestreo por importancia</strong> con el que Monte Carlo integra funciones difíciles desde los
+        años 50. La teoría del capítulo responde la pregunta central de esa literatura — ¿qué propuesta minimiza
+        la varianza? — con la fórmula de HH: la $\psi$ óptima es proporcional a $|y|$, y la varianza es
+        <em>exactamente cero</em> si $\psi_i = y_i/t$. El problema, claro: para usarla habría que conocer $y$.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Tres propuestas y sus varianzas exactas">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R15⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P5⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="importancia">
+        <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> El camino hacia la propuesta perfecta</h4>
+        <p class="simulador-intro">Sobre BigLucy (85 296 empresas, estimar el ingreso total con $n = 100$): el
+          deslizador interpola la propuesta desde el uniforme ($\alpha = 0$), pasando por $\psi \propto$
+          empleados ($\alpha = 1$, lo que un diseñador real puede hacer), hasta $\psi \propto y$
+          ($\alpha = 2$, la perfección inalcanzable). La curva es la varianza <strong>exacta</strong> del
+          precálculo. Nota la asimetría del viaje: de 0 a 1 se gana poco (correlación 0,64); casi toda la
+          ganancia vive entre 1 y 2 — donde ya no se puede caminar.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Varianza exacta del HH según la propuesta interpolada</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Curva de la varianza exacta al interpolar la propuesta de importancia" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Dónde vive esto en la IA de hoy.</strong> <em>Active learning:</em> etiquetar los ejemplos
+          donde el modelo más duda es darles $\psi$ grande — y los pesos $1/\psi$ son obligatorios para que la
+          pérdida estimada siga siendo insesgada, exactamente como en HH. <em>Priorizado en RL:</em> los
+          <em>replay buffers</em> muestrean transiciones con $\psi \propto$ error TD y corrigen con pesos de
+          importancia. <em>Evaluación off-policy:</em> $y/\psi$ con colas pesadas es el elefante del módulo 8 con
+          otro nombre. Las tres comunidades redescubrieron, con décadas de diferencia, el mismo teorema de
+          varianza que este capítulo enumeró con cuatro tiendas.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>La condición no negociable: $\psi$ conocida y positiva.</strong> Todo el edificio — insesgadez
+          incluida — descansa en conocer $\psi_i$ para lo muestreado y en $\psi_i > 0$ para todo el soporte. Un
+          <em>dataset</em> recolectado «según llegaba» no tiene $\psi$ conocida, y ninguna ponderación posterior
+          lo arregla del todo: ese es el puente con el capítulo 1 (sesgo de selección) y con el 8 (ajustes por no
+          respuesta, que son intentos de <em>reconstruir</em> una $\psi$ que nadie anotó).</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Owen — <em>Monte Carlo theory</em>, cap. 9: importance sampling (libre en línea).</li>
+          <li>Settles — <em>Active Learning Literature Survey</em>: la corrección por pesos en §5.</li>
+          <li>Gutiérrez — §4.2: la varianza del PPT-WR que aquí se reinterpreta.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 11 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-11">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 11</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y
+          ejercicios guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprobar el capítulo completo: ψ y π, HH y HT,
+              selección, Poisson, SYG, autoponderación e importancia.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El glosario primero — este capítulo maneja <em>dos</em> familias de probabilidades ($\psi_i$ con
+        reemplazo, $\pi_k$ sin) y confundirlas es el error número uno:</p>
+
+      <div class="glosario-notacion" data-glosario="ppt"></div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al
+        final, el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos
+        antes de abrir la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap6">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 6</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre los datos reales del capítulo.
+          Las cifras de cada solución salen de <code>ensamblado/codigo/cap6/cadena.R</code>, que se ejecuta de
+          verdad: ninguna está escrita a mano.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>statepps</code>, saca
+            una muestra Hansen–Hurwitz de $n = 10$ con $\psi \propto$ población y estima el total de condados con
+            su ee; repite con probabilidades iguales. ¿Qué diseño «parece» mejor en tu realización, y qué dice la
+            varianza exacta del módulo 10?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p><code>sample(51, 10, replace = TRUE, prob = psi)</code> y el promedio de $z_i = y_i/\psi_i$; para
+              probabilidades iguales, $z_i = 51\,y_i$. La segunda pregunta se contesta con el bloque del módulo
+              10, no con esta muestra.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R16⟧</code></pre>
+            <p>En esta realización el PPT «gana» (ee estimado 588 contra 1 126) — y es un espejismo: la varianza
+              exacta dice lo contrario (963 006 contra 557 287). Un ee estimado con $n = 10$ es demasiado ruidoso
+              para adjudicar; la comparación seria se hace con las fórmulas exactas o con réplicas, como en el
+              módulo 5.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Sortea 5 clases de
+            <code>classes.csv</code> con el método acumulativo, con reemplazo, usando $\psi_i = M_i/647$. Anota
+            qué pasa si dos uniformes caen en el tramo de la misma clase.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p><code>cumsum(class_size)</code> define los tramos y <code>findInterval()</code> hace el resto. Con
+              15 clases y 5 extracciones, las repeticiones no son raras: la clase 9 ocupa el 8,35 % del segmento.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R17⟧</code></pre>
+            <p>La clase 9 salió dos veces — dos uniformes (360,1 y 359,3) cayeron en su tramo. No se descarta ni
+              se reemplaza: sus estudiantes se sortean dos veces y aporta dos $z_i$ al promedio HH. Así es como el
+              «con reemplazo» mantiene la independencia entre extracciones.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Repite el módulo 7 sobre
+            <code>agpps</code> con <code>acres87</code> — la variable de tamaño con la que se construyeron las π.
+            ¿Qué le pasa al estimador SYG, y por qué?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Antes de calcular nada, mira <code>range(acres87 / SelectionProb)</code>. La fórmula SYG suma
+              términos $(d_k - d_l)^2$.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R18⟧</code></pre>
+            <p>Los 15 cocientes $y_k/\pi_k$ valen lo mismo hasta la sexta cifra (64 429 949 a 64 429 951): el ee
+              queda en ~1 acre sobre un total de 966 millones. Es el πPT llevado al límite: para la variable que
+              define las π, la varianza es cero por construcción. La ganancia real con <code>acres92</code>
+              (cv 1,3 %) mide cuánto se parece la agricultura del 92 a la del 87.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Calcula la varianza exacta del
+            HT bajo Poisson para <code>waterarea</code> en <code>statepps</code> y compárala con la varianza
+            empírica del πPT sistemático del precálculo. Repite mentalmente con <code>counties</code> (los números
+            están en el módulo 6). ¿Cuánto cuesta el $n$ aleatorio en cada caso?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>La fórmula exacta es $\sum_U (1-\pi_k)\,y_k^2/\pi_k$. La empírica del sistemático está en el JSON
+              del precálculo (<code>statepps$waterarea$vPps</code>).</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R19⟧</code></pre>
+            <p>Con <code>waterarea</code> la razón es 1,03 — casi gratis, porque la varianza está dominada por el
+              desajuste π–variable, no por el $n$ aleatorio. Con <code>counties</code> sube a 2,8: cuando las π
+              trabajan bien, el $n$ aleatorio es lo único que queda por pagar, y se nota. Moraleja doble: el
+              precio de Poisson depende de qué tan buena sea ya la parte πPT del diseño.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Hacia el capítulo 7.</strong> Ya están todas las piezas de una encuesta real: estratos
+          (cap. 4), conglomerados y etapas (cap. 5), PPT y pesos (este). El capítulo 7 las apila — estratos ×
+          UPM con PPT × submuestreo × pesos ajustados — y responde la pregunta que el software hace inevitable:
+          ¿cómo se estima la varianza cuando el diseño es todo eso a la vez y las $\pi_{kl}$ no existen ni en
+          sueños? Respuesta corta: con la ficción WR del módulo 9, linealización y replicación.</p>
+      </div>
+    </div>
+  </template>

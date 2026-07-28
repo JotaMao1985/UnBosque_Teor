@@ -1,0 +1,273 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · Estimar la varianza: SYG y el cuello de botella    -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estimar la varianza:
+          $\pi_{kl}$ como cuello de botella <span class="text-gray-400 font-normal text-2xl">/ Variance estimation</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Calcular los dos estimadores de varianza del HT
+              sobre un πPT real de Lohr — y ver con datos por qué el de Sen–Yates–Grundy es el que se usa.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Estimar $\hat{t}_\pi$ pide solo las $\pi_k$ de la muestra. Estimar su <strong>varianza</strong> pide las
+        conjuntas $\pi_{kl}$ de cada par muestreado — y ahí se atasca todo: en el πPT sistemático muchas
+        $\pi_{kl}$ son cero (no hay estimador insesgado), y en los diseños que sí las tienen, calcularlas es lo
+        más caro del capítulo. Primero, el caso pequeño donde todo se ve — las cuatro tiendas del módulo 4, con
+        su matriz completa:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La matriz pi_kl del diseño pequeño y el SYG">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="syg-pares">
+        <h4><i class="fas fa-table-cells" aria-hidden="true"></i> La varianza, par por par</h4>
+        <p class="simulador-intro">La forma SYG es una suma sobre los 6 pares: cada término lleva el «estorbo»
+          $\pi_k\pi_l - \pi_{kl}$ y la discrepancia $(y_k/\pi_k - y_l/\pi_l)^2$. Recorre los pares con el
+          deslizador: la lectura muestra las tres piezas y la barra resaltada, cuánto aporta ese par a
+          $V = 15\,026$. Los pares con D concentran casi todo — discrepancias grandes con estorbos grandes.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Aporte de cada par a la varianza SYG del diseño</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Aporte de cada par de tiendas a la varianza de Sen-Yates-Grundy" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>Y ahora con datos reales: <code>agpps</code> es la muestra πPT <strong>de verdad</strong> que Lohr sorteó
+        — 15 condados con π proporcional a <code>acres87</code> — y trae de fábrica lo que casi ningún archivo
+        trae: la matriz 15 × 15 de probabilidades conjuntas. Se pueden montar los dos estimadores rivales:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="agpps: forma HT y forma SYG a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="survey con ppsmat reproduce ambos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R11⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Mismos datos, mismos $\pi_{kl}$: ee de 11,7 millones o de 70,5 millones.</strong> Los dos
+          estimadores apuntan a la misma varianza teórica, pero la forma HT suma términos enormes de signos
+          opuestos que casi se cancelan — cualquier temblor la desestabiliza, y puede llegar a dar
+          <em>negativa</em>. La forma SYG suma cuadrados con coeficientes positivos (en los diseños de tamaño
+          fijo usuales) y se queda quieta. Regla operativa desde Lohr y Gutiérrez: <strong>tamaño fijo ⇒ SYG</strong>;
+          la forma HT queda para los diseños donde SYG no aplica — como Poisson, que por eso usó su propia fórmula
+          en el módulo 6.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Cuando no hay $\pi_{kl}$: las aproximaciones honestas.</strong> El πPT sistemático del módulo 5
+          no tiene estimador insesgado, y la salida universal es la <strong>aproximación con reemplazo</strong>
+          del bloque R8 — tratar los $y_k/\pi_k$ como si fueran $z_i$ de Hansen–Hurwitz. Sobreestima un poco
+          (es conservadora) y solo pide π de primer orden. Las variantes afinadas llevan nombre propio —
+          Hartley–Rao, Brewer — y todas son eso: <em>aproximaciones declaradas</em>, no fórmulas exactas. El
+          capítulo 7 vive de esta idea: las encuestas reales casi nunca conocen sus $\pi_{kl}$.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §6.4.3: los dos estimadores; el ejemplo de agpps es el 6.6 de la 3.ª ed.</li>
+          <li>Gutiérrez — §4.5: SYG en el marco π; Särndal et al. §2.8 para la teoría fina.</li>
+          <li>Este material — cap. 2, módulo 3: donde SYG apareció por primera vez.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · Cuándo el HT se comporta mal                       -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Cuándo el HT se comporta
+          mal <span class="text-gray-400 font-normal text-2xl">/ When HT breaks down</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Diseccionar el modo de falla del π-estimador —
+              $\pi_k$ pequeño con $y_k$ grande — y sacar las reglas de diseño que lo previenen.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El HT es insesgado siempre; <em>bien portado</em>, no. Su talón de Aquiles está a la vista en la fórmula
+        de Poisson: cada unidad aporta $(1/\pi_k - 1)\,y_k^2$ a la varianza. Una unidad con $y_k$ grande y
+        $\pi_k$ chico es una bomba: si sale, su $y_k/\pi_k$ dispara el estimador hacia arriba; si no sale — que
+        es casi siempre —, lo deja corto. La población sintética del precálculo lo escenifica: 20 negocios con π
+        proporcional al área, y un «elefante» con área mínima y el 82 % de las ventas.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La curva de la varianza explosiva">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R12⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="explosiva">
+        <h4><i class="fas fa-bomb" aria-hidden="true"></i> El elefante y su π</h4>
+        <p class="simulador-intro">Cada barra es el aporte exacto $(1/\pi_k - 1)\,y_k^2$ de un negocio a la
+          varianza (escala logarítmica); la naranja es el elefante. Mueve su $\pi$ — de la que le tocaría por
+          área (0,065) hacia abajo o hacia arriba — y mira la lectura: con $\pi = 0{,}005$ la varianza total se
+          multiplica por ~200 y el elefante pone más del 99 %. Subirlo hacia la inclusión forzosa desactiva la
+          bomba.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Aporte de cada unidad a $V$ bajo Poisson (escala log)</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Aporte de cada unidad a la varianza, con el elefante resaltado" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Las tres defensas, en orden de uso.</strong> (1) <em>Tamaños al día:</em> el elefante nace de
+          una medida de tamaño desactualizada — el negocio creció y su $x_k$ no. (2) <em>Inclusión forzosa:</em>
+          ante la sospecha, $\pi_k = 1$ y esa unidad deja de generar azar (módulo 5). (3) <em>Recorte de
+          pesos:</em> si el elefante ya salió en la muestra con un peso enorme, recortarlo cambia sesgo por
+          varianza — es una decisión del capítulo 7, no de este. Lo que <strong>no</strong> es defensa: eliminar
+          la observación «rara». Esa unidad es legítima; el problema fue el diseño que le dio π chica.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>El mismo fantasma ronda la IA.</strong> En muestreo por importancia (módulo 10), los pesos
+          $w = f/\psi$ con $\psi$ chica en zonas de $|y|$ grande explotan igual — es el problema de los
+          <em>importance weights</em> de colas pesadas en RL <em>off-policy</em> y en la evaluación de políticas.
+          La misma medicina también: recortar o suavizar pesos, aceptando algo de sesgo por mucha estabilidad.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §6.7 (3.ª ed.): «cosas que salen mal» con probabilidades desiguales.</li>
+          <li>Särndal et al. — §2.8: condiciones para que el π-estimador sea eficiente.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · PPT en dos etapas: el diseño de las encuestas      -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">PPT en dos etapas
+          <span class="text-gray-400 font-normal text-2xl">/ Two-stage PPS</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Armar el diseño de las encuestas de hogares reales
+              — UPM con PPT, submuestreo fijo — y descubrir por qué produce pesos exactamente iguales.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este módulo junta el capítulo 5 con este: conglomerados <em>y</em> probabilidades desiguales. El
+        capítulo 5 cerró con una injusticia — la escuela de 367 estudiantes salía con la misma probabilidad que
+        la de 109, y sus estudiantes acababan con π distintas y pesos dispares. La cura es sortear las UPM
+        <strong>con PPT</strong>:</p>
+
+      <div class="diagrama-diseno" data-diagrama="ppt-dos-etapas"></div>
+
+      <p>El laboratorio es <code>classpps</code> (Lohr, ej. 6.11): 15 clases universitarias, 5 sorteadas con
+        $\psi_i = M_i/647$ con reemplazo, 4 estudiantes por clase. El estimador es el Hansen–Hurwitz del módulo 2
+        aplicado a los <em>totales estimados</em> de cada clase:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="HH de dos etapas a mano">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R13⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="survey y el diseño autoponderado">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R14⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>Diseño autoponderado</h4>
+        <p style="margin-bottom:0;">Un diseño es <strong>autoponderado</strong> si todas las unidades observadas
+          tienen el mismo peso final. PPT en la primera etapa + número fijo $m$ en la segunda lo consigue por
+          cancelación: $w = \dfrac{K}{n M_i}\cdot\dfrac{M_i}{m} = \dfrac{K}{nm}$ — el $M_i$ se va. Cada
+          estudiante de <code>classpps</code> pesa 32,35, salga de la clase de 22 o de la de 100. La media es
+          entonces (casi) la media simple de los datos, el sueño de cualquier analista — y el estándar de las
+          encuestas de hogares: DANE, INEGI, la GEIH, la ENAHO sortean sus UPM con PPT por esta cancelación.</p>
+      </div>
+
+      <div class="simulador" data-simulador="autoponderado">
+        <h4><i class="fas fa-balance-scale" aria-hidden="true"></i> La cancelación, en vivo</h4>
+        <p class="simulador-intro">Las barras son los pesos finales de un estudiante de cada clase del marco. En
+          «PPT + m fijo», da igual el tamaño: pesos idénticos. Cambia a «iguales + m fijo» (el diseño ingenuo del
+          capítulo 5) y mira cómo los pesos se disparan con $M_i$ — el estudiante de la clase de 100 pesa 4,5
+          veces el de la de 22. El deslizador de $m$ muestra que el nivel del peso cambia, pero la igualdad (o su
+          ruptura) no depende de él.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Peso final por clase del marco, según el diseño de primera etapa</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Pesos finales por clase bajo PPT y bajo probabilidades iguales" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>El «con reemplazo» es una ficción útil.</strong> Ninguna encuesta seria visita dos veces la
+          misma UPM con gusto — pero declarar el diseño como WR permite estimar la varianza con la dispersión de
+          los $z_i$ entre UPM (módulo 2), sin $\pi_{kl}$ de ninguna etapa. Con $n/N$ chico, el sesgo de esa
+          ficción es minúsculo y conservador. Es la aproximación sobre la que el capítulo 7 construye
+          <em>todo</em> el análisis de encuestas complejas: «ultimate cluster» es su nombre de guerra.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §6.3 y 6.5: PPT en dos etapas con y sin reemplazo; el ejemplo 6.11.</li>
+          <li>Gutiérrez — §7.3: diseños de dos etapas con PPT en la primera.</li>
+          <li>Este material — cap. 5, módulos 2 y 6: la notación y el caso de probabilidades iguales.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

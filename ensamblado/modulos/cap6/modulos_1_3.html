@@ -1,0 +1,255 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 1 · ¿Por qué probabilidades desiguales?                -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 1</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">¿Por qué probabilidades
+          desiguales? <span class="text-gray-400 font-normal text-2xl">/ Why unequal probabilities</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver, con cuatro tiendas y una enumeración exacta, por
+              qué tratar igual a unidades de tamaño muy distinto es regalar varianza.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El capítulo 5 terminó con una incomodidad: el sorteo trataba igual al estado de 254 condados y al de 3.
+        Este capítulo la resuelve con la idea más productiva del muestreo moderno: <strong>dejar que la probabilidad
+        de selección acompañe al tamaño de la unidad</strong>. El ejemplo con el que Lohr abre su capítulo 6 cabe en
+        una tabla: una firma audita las ventas de una cadena con cuatro tiendas, y la tienda D — diez veces el área
+        de la A — concentra el 82 % de las ventas.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las cuatro tiendas: dos sorteos enumerados exactos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>Probabilidad de selección $\psi_i$</h4>
+        <p style="margin-bottom:0;">En un sorteo de <strong>una extracción</strong>, $\psi_i$ es la probabilidad de
+          que salga la unidad $i$, con $\sum_U \psi_i = 1$. El estimador insesgado del total es
+          $\hat{t}_\psi = t_i/\psi_i$: la unidad observada, <em>expandida por su propia probabilidad</em>. Elegir
+          bien los $\psi_i$ no toca la insesgadez — la enumeración de arriba da $E(\hat{t}_\psi) = 300$ con
+          cualquier $\psi$ — pero decide la varianza por completo.</p>
+      </div>
+
+      <div class="simulador" data-simulador="psi-enumeracion">
+        <h4><i class="fas fa-scale-unbalanced" aria-hidden="true"></i> Cuatro muestras posibles, dos sorteos</h4>
+        <p class="simulador-intro">Cada barra es $\hat{t} = t_i/\psi_i$ si la muestra (de una sola tienda) cae en
+          esa tienda. Con $\psi$ proporcional al área, las cuatro barras quedan cerca de $t = 300$; con
+          probabilidades iguales, la muestra ve $44$ o $980$ según la suerte. La media ponderada de las barras es
+          300 en ambos casos — insesgadez —, pero la dispersión alrededor no tiene nada que ver.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">$\hat{t}$ según qué tienda salga, frente al total verdadero</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Estimador por tienda bajo sorteo proporcional y bajo sorteo uniforme" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>La varianza baja 10,8 veces sin subir el costo.</strong> El sorteo proporcional no observa más
+          tiendas ni gasta más: solo reparte mejor el azar. La contrapartida es seria y organiza el resto del
+          capítulo: con $\psi$ desiguales, <strong>ninguna cuenta vuelve a ser una media simple</strong> — cada
+          observación carga su peso $1/\psi_i$, y olvidarlo produce estimadores sesgados, no solo imprecisos.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>De dónde vienen los tamaños.</strong> $\psi_i$ se construye con una <strong>medida de
+          tamaño</strong> conocida para todo el marco: metros cuadrados, población del censo anterior, matrícula
+          escolar, acres de 1987. La variable de interés no se conoce — para eso se muestrea —, así que el diseño
+          apuesta a que el tamaño de ayer prediga la variable de hoy. Cuánto rinde esa apuesta, y qué pasa cuando
+          falla, es exactamente lo que miden los módulos 5 y 8.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — cap. 6 (ambas ediciones), §6.1: el ejemplo de las cuatro tiendas.</li>
+          <li>Gutiérrez — cap. 4: los diseños de probabilidades desiguales en el marco π.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 2 · Hansen-Hurwitz: con reemplazo                      -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 2</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El estimador de
+          Hansen–Hurwitz <span class="text-gray-400 font-normal text-2xl">/ Sampling with replacement</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Construir el estimador con reemplazo, verificar su
+              insesgadez por enumeración y entender su varianza como «qué tan constante es $t_i/\psi_i$».</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Repetir $n$ veces el sorteo del módulo 1, <strong>con reemplazo</strong>, es la forma más simple de usar
+        probabilidades desiguales con $n > 1$. Cada extracción produce su estimador $t_i/\psi_i$;
+        <strong>Hansen–Hurwitz los promedia</strong>:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Estimador de Hansen–Hurwitz y su varianza</p>
+        $$\hat{t}_{HH} = \frac{1}{n}\sum_{i=1}^{n} \frac{y_i}{\psi_i}, \qquad
+        V(\hat{t}_{HH}) = \frac{1}{n}\sum_{i \in U} \psi_i\left(\frac{t_i}{\psi_i} - t\right)^2, \qquad
+        \widehat{V}(\hat{t}_{HH}) = \frac{s_z^2}{n}$$
+        <p style="margin-bottom:0;">con $z_i = y_i/\psi_i$. La tercera fórmula es el regalo del «con reemplazo»:
+          las extracciones son independientes, así que la varianza se estima con la <strong>varianza muestral de
+          los $z_i$</strong> — sin probabilidades conjuntas, sin estructura, el capítulo 2 aplicado a los $z$. Ese
+          regalo reaparece en el módulo 9 y explica medio capítulo 7.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Hansen-Hurwitz enumerado y sorteado">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="hh-exacto">
+        <h4><i class="fas fa-dice-two" aria-hidden="true"></i> La distribución exacta del HH con $n = 2$</h4>
+        <p class="simulador-intro">Con 4 tiendas y 2 extracciones hay 16 pares ordenados: la distribución del
+          estimador se enumera completa, sin simular. Compara el sorteo proporcional con el de probabilidades
+          iguales: mismo soporte de ideas, varianzas en mundos distintos. La barra de cada valor mide su
+          probabilidad exacta.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Valores posibles de $\hat{t}_{HH}$ y su probabilidad exacta</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Distribución exacta del estimador de Hansen-Hurwitz bajo los dos sorteos" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>¿Y si una tienda sale dos veces?</strong> Se usa dos veces: sus dos $z_i$ entran al promedio.
+          No es un defecto — es lo que mantiene las extracciones independientes y la varianza tan simple. Con $n$
+          pequeño frente a $N$, la probabilidad de repetición es baja y el «desperdicio» de observar dos veces lo
+          mismo, menor que el beneficio de la simplicidad. Cuando $n/N$ crece, conviene pasar a sin reemplazo: es
+          el módulo 4.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §6.2: muestreo con reemplazo de una etapa; la demostración de insesgadez está en §6.6.</li>
+          <li>Gutiérrez — §4.2: el diseño «PPT con reemplazo» y su π-estimador.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 3 · Cómo se sortea: acumulativo y Lahiri               -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 3</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Cómo se sortea: acumulativo
+          y Lahiri <span class="text-gray-400 font-normal text-2xl">/ Selecting with unequal probabilities</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Implementar los dos algoritmos clásicos de selección
+              con $\psi_i$ desiguales y verificar empíricamente que ambos cumplen lo que prometen.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Un diseño no está completo hasta que se puede <em>ejecutar</em>. Los dos métodos clásicos convierten
+        uniformes de $[0,1)$ en selecciones con las $\psi_i$ correctas, y los dos caben en cinco líneas:</p>
+
+      <div class="definition">
+        <h4>Método acumulativo y método de Lahiri</h4>
+        <p><strong>Acumulativo:</strong> cada unidad ocupa un tramo de $[0, \sum M_i]$ de longitud $M_i$; un
+          uniforme cae en un tramo y esa unidad sale. Exacto y directo, pero exige <strong>acumular todo el
+          marco</strong> — con millones de unidades, ordenar y acumular tiene costo.</p>
+        <p style="margin-bottom:0;"><strong>Lahiri (rechazo):</strong> se sortea una unidad al azar y un uniforme
+          contra $M_{\max}$; si $u \cdot M_{\max} \le M_i$ la unidad queda, si no se repite. No acumula nada, a
+          cambio de repetir en promedio $N M_{\max} / \sum M_i$ veces. Es el mismo <em>rejection sampling</em> que
+          usan los generadores de variables aleatorias.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Método acumulativo con verificación">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Método de Lahiri">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="seleccion">
+        <h4><i class="fas fa-arrows-to-dot" aria-hidden="true"></i> El sorteo por dentro</h4>
+        <p class="simulador-intro">Mueve el uniforme y mira qué tienda sale. En modo acumulativo, $u$ recorre
+          $[0, 1600]$ y las barras son los tramos; en modo Lahiri, la primera perilla elige la tienda candidata y
+          la segunda es el uniforme contra $M_{\max} = 1000$: si supera el área de la candidata, se rechaza y toca
+          volver a intentar. La lectura acumula la moraleja: D atrapa el 62,5 % del segmento en un método y acepta
+          10 de cada 10 en el otro.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Tramos del acumulativo / umbral de aceptación de Lahiri</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Tramos acumulados o umbral de aceptación según el método elegido" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>En la práctica: <code>sampling</code> y <code>sample()</code>.</strong> R trae el acumulativo de
+          serie: <code>sample(N, n, replace = TRUE, prob = psi)</code> hace exactamente eso. El paquete
+          <code>sampling</code> añade los diseños sin reemplazo del módulo 5 (<code>UPsystematic</code>,
+          <code>UPbrewer</code>...). Lahiri sobrevive donde el marco no cabe en memoria o llega por partes — y como
+          idea: es el puente conceptual entre el muestreo clásico y los métodos de Monte Carlo.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §6.2.1: método acumulativo y método de Lahiri, con el ejemplo de las clases.</li>
+          <li>Gutiérrez — §4.2.1: algoritmos de selección PPT.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

@@ -1,0 +1,267 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 4 · Sin reemplazo: Horvitz-Thompson otra vez           -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 4</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sin reemplazo:
+          Horvitz–Thompson otra vez <span class="text-gray-400 font-normal text-2xl">/ Back to the π world</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer que el capítulo 2 ya resolvió este
+              problema: el HT es insesgado con <em>cualquier</em> $p(s)$, también con π desiguales.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Aquí no hay teoría nueva que construir: <strong>ya la tienes</strong>. El marco π del capítulo 2 nunca
+        exigió probabilidades iguales — el MAS era solo el caso particular más plano. Un diseño sin reemplazo con
+        probabilidades desiguales es, simplemente, un $p(s)$ cuyas $\pi_k$ no son constantes, y el estimador sigue
+        siendo el de siempre:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">El π-estimador, sin cambios</p>
+        $$\hat{t}_\pi = \sum_{k \in s} \frac{y_k}{\pi_k}, \qquad E(\hat{t}_\pi) = t
+        \quad \text{para cualquier } p(s) \text{ con } \pi_k > 0\ \forall k$$
+        <p style="margin-bottom:0;">La demostración es la del capítulo 2, módulo 4, con indicadoras $I_k$ — no
+          depende de cómo se repartan las π. Lo que sí cambia con el diseño es la <strong>varianza</strong>, y ese
+          es el tema real de este capítulo: elegir $p(s)$ para que $y_k/\pi_k$ quede lo más constante posible.</p>
+      </div>
+
+      <p>El laboratorio: las mismas cuatro tiendas, ahora <strong>dos sin reemplazo</strong>. Hay 6 muestras
+        posibles; el diseño de abajo asigna $p(s) \propto M_k + M_l$ y todo — $\pi_k$, el HT de cada muestra, su
+        esperanza y su varianza — se enumera exacto:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Espacio de muestras sin reemplazo">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="espacio-wor">
+        <h4><i class="fas fa-sitemap" aria-hidden="true"></i> Seis muestras, un espacio completo</h4>
+        <p class="simulador-intro">Cada barra es una de las 6 muestras posibles: su altura, la probabilidad
+          $p(s)$; el rótulo, el valor del HT si sale esa muestra. La línea marca $t = 300$. Verás la insesgadez
+          funcionando a la vista — las muestras con HT bajo (las que no contienen a D) pesan poco — y también su
+          precio: cuando salen, el HT se queda en 77–100.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">$p(s)$ y $\hat{t}_\pi$ de cada muestra posible</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Probabilidad y estimador de cada una de las seis muestras posibles" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>El HT no hace magia: hereda las π que le den.</strong> Este diseño tiene $V = 15\,026$ — peor
+          que el Hansen–Hurwitz del módulo 2 ($7\,124$), a pesar de ser «sin reemplazo». La razón: $p(s) \propto
+          M_k + M_l$ produce π mucho más planas ($0{,}375$ a $0{,}75$) que las $\psi$ proporcionales. La lección
+          vale oro: <em>sin reemplazo</em> no es automáticamente mejor — lo que manda es cuánto acompañan las π a
+          la variable. El diseño que las alinea de verdad es el πPT del módulo siguiente.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §6.4: muestreo sin reemplazo con probabilidades desiguales; §6.6 para las demostraciones.</li>
+          <li>Gutiérrez — cap. 4: los diseños πPT como caso general del marco del cap. 2.</li>
+          <li>Este material — cap. 2, módulos 1–4: todo lo que aquí se reutiliza.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · El diseño πPT sobre statepps                       -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El diseño πPT y cuándo
+          gana <span class="text-gray-400 font-normal text-2xl">/ πPS designs</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Construir $\pi_k \propto x_k$ sobre los 51 estados,
+              toparse con la inclusión forzosa de California, y medir con 10 000 réplicas cuándo el πPT gana — y
+              cuándo pierde.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El diseño estrella del capítulo fija directamente las probabilidades de inclusión:
+        $\pi_k = n\,x_k / \sum_U x_l$, proporcionales al tamaño y <strong>sin reemplazo con tamaño fijo</strong>.
+        Gutiérrez lo llama πPT; Lohr, «πps». Pero la fórmula tiene una fuga: nada impide que salga
+        $\pi_k > 1$, y con los 51 estados de EE.UU. (50 + DC) pasa de inmediato:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las pi del diseño y la inclusión forzosa">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="definition">
+        <h4>Inclusión forzosa</h4>
+        <p style="margin-bottom:0;">Si $n\,x_k/\sum x > 1$, la unidad $k$ entra <strong>siempre</strong>:
+          $\pi_k = 1$, no aporta varianza, y las demás π se reescalan para que $\sum \pi_k = n$ se conserve. Es la
+          respuesta estándar a las unidades gigantes — el mismo instinto del estrato de «grandes contribuyentes»
+          del capítulo 4, ahora dentro del formalismo π. <code>sampling::inclusionprobabilities()</code> lo hace
+          con un truncamiento iterativo (el ayudante <code>probInclusionPPT</code> de este material, igual).</p>
+      </div>
+
+      <p>Con las π en la mano falta <em>sortear</em> una muestra que las respete. El πPT sistemático — ordenar,
+        acumular las π y recorrer con paso 1 — es el más usado por su simplicidad:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Selección sistemática y HT">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="ppt-mc">
+        <h4><i class="fas fa-chart-column" aria-hidden="true"></i> ¿Cuándo gana el πPT? 10 000 réplicas contra el MAS</h4>
+        <p class="simulador-intro">Tres variables sobre los mismos estados, del precálculo: <code>counties</code>
+          (correlación 0,46 con la población), <code>waterarea</code> (0,04) y <code>pop2019</code> — la propia
+          medida de tamaño (1,00). Cambia la variable y compara los histogramas del πPT sistemático y del MAS con
+          el mismo $n = 10$. La sorpresa pedagógica: con correlación «decente» (0,46), el πPT <em>pierde</em>.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Distribución de muestreo del HT del total, πPT frente a MAS</p>
+        <div class="grafico-wrapper" style="height:280px;">
+          <canvas aria-label="Histogramas de las réplicas del diseño proporcional al tamaño y del MAS" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>πPT no es un amuleto: es una apuesta a la proporcionalidad.</strong> La varianza del HT depende
+          de qué tan constante sea $y_k/\pi_k$. Si $y$ es <em>proporcional</em> al tamaño, el cociente es casi
+          constante y la varianza se desploma (con <code>pop2019</code>, a prácticamente cero). Si la relación es
+          difusa — <code>counties</code> tiene correlación 0,46 pero <em>no</em> proporcionalidad —, las π
+          desiguales meten más ruido del que quitan y el MAS gana (deff 1,25). Con <code>waterarea</code>, el
+          castigo es deff 9. La regla práctica de Lohr: πPT cuando la variable «se mueve con» el tamaño (ventas,
+          matrícula, cosecha), no cuando apenas lo roza.</p>
+      </div>
+
+      <div class="tabla-ranking" data-ranking="disenos">
+        <p class="tabla-ranking-titulo">Cuatro diseños para el mismo total, con el mismo n</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación ordenable de diseños con probabilidades desiguales"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §6.4.1–6.4.2: diseños πps; el ejemplo de los estados es el 6.10 de la 3.ª ed.</li>
+          <li>Gutiérrez — §4.3–4.4: πPT sistemático y por qué no siempre existe un diseño con esas π.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 6 · El diseño de Poisson                               -->
+  <!-- ============================================================ -->
+  <template id="module-6">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 6</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El diseño de Poisson
+          <span class="text-gray-400 font-normal text-2xl">/ Poisson sampling</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Entender el diseño de monedas independientes: el
+              único con varianza del HT sin $\pi_{kl}$, al precio de un $n$ aleatorio cuya distribución exacta
+              vas a calcular.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El Bernoulli del capítulo 2 lanzaba la <em>misma</em> moneda por cada unidad. El diseño de Poisson es su
+        generalización natural: la moneda de la unidad $k$ cae cara con <strong>su propia</strong> $\pi_k$, todas
+        independientes. Esa independencia lo vuelve el diseño más transparente del capítulo:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Poisson: lo que regala y lo que cobra</p>
+        $$\pi_{kl} = \pi_k \pi_l \;\Rightarrow\;
+        \widehat{V}(\hat{t}_\pi) = \sum_{k \in s} (1 - \pi_k)\frac{y_k^2}{\pi_k^2}, \qquad
+        n_s \sim \text{suma de Bernoullis:}\quad E(n_s) = \sum_U \pi_k,\; V(n_s) = \sum_U \pi_k(1-\pi_k)$$
+        <p style="margin-bottom:0;">Sin $\Delta_{kl}$, sin matriz de conjuntas, sin aproximaciones: la
+          independencia anula las covarianzas. A cambio, $n_s$ es aleatorio — y su dispersión no es simbólica:
+          aquí la desviación es 2,4 unidades sobre $E(n) = 10$.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Poisson sobre statepps con varianza exacta">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="poisson-n">
+        <h4><i class="fas fa-coins" aria-hidden="true"></i> La lotería del tamaño de muestra</h4>
+        <p class="simulador-intro">La distribución <strong>exacta</strong> de $n_s$ (Poisson-binomial, calculada
+          por convolución — la pestaña Python la programa en cuatro líneas). El deslizador reescala todas las π
+          por un factor: con la mitad de presupuesto esperado, ¿cuánto se ensancha la lotería? La lectura da
+          $P(n = E(n))$: incluso en el diseño nominal, solo el 16 % de las veces sale exactamente 10.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Distribución exacta del tamaño de muestra $n_s$</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Distribución exacta del tamaño de muestra bajo el diseño de Poisson" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>¿Para qué sirve un diseño que no fija $n$?</strong> Para los marcos que <em>llegan</em>, no
+          que <em>están</em>: auditar transacciones conforme ocurren, muestrear tráfico de red paquete a paquete,
+          <em>web scraping</em> con presupuesto de peticiones. Cada unidad se decide en el momento, sin conocer
+          las demás — exactamente lo que las monedas independientes permiten y ningún diseño de tamaño fijo puede
+          hacer. El ejercicio 4 cuantifica el precio: con π bien alineadas, hasta 2,8 veces la varianza del
+          sistemático. Es la versión π del resultado del capítulo 2: Bernoulli pagaba lo mismo por su $n$
+          aleatorio.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Gutiérrez — §4.1: el diseño de Poisson (Lohr lo trata solo de pasada, en los ejercicios del cap. 6).</li>
+          <li>Särndal, Swensson y Wretman — §3.2: Poisson como familia de diseños «de lista».</li>
+          <li>Este material — cap. 2, módulo 8: Bernoulli, el caso de π constante.</li>
+        </ul>
+      </div>
+    </div>
+  </template>

@@ -115,16 +115,16 @@ Muestreo/                              ← RAÍZ DEL REPO GIT (rama main) = UnBo
 │   ├── README.md · _comun.R
 │   ├── verifica_paquetes.R            ← prueba de humo del entorno
 │   ├── verifica_bloques.py            ← contrasta cada cifra `#>` con la salida real
-│   ├── genera_cap1.R · genera_cap2.R · genera_cap3.R · genera_soluciones.R
-│   ├── salidas/cap1_datos.json · cap2_datos.json · cap3_datos.json
+│   ├── genera_cap1.R … genera_cap7.R · genera_soluciones.R
+│   ├── salidas/cap1_datos.json … cap7_datos.json
 │   └── pruebas/fixture_verificador.html
 ├── ensamblado/                        ← ensamblado y retropropagación (NO se publica)
 │   ├── README.md
-│   ├── ensambla_cap1.py · ensambla_cap2.py · ensambla_cap3.py
-│   ├── retropropaga_glosario.py · retropropaga_arbol_error.py
-│   ├── componentes/glosario.* · arbol_error.*
-│   ├── modulos/cap1/ · cap2/ · cap3/
-│   └── codigo/cap1/ · cap2/ · cap3/   ← las cadenas ejecutables de R y Python
+│   ├── ensambla_cap1.py … ensambla_cap7.py
+│   ├── retropropaga_glosario.py · retropropaga_arbol_error.py · retropropaga_diagrama_diseno.py
+│   ├── componentes/glosario.* · arbol_error.* · diagrama_diseno.*
+│   ├── modulos/cap1/ … cap7/
+│   └── codigo/cap1/ … cap7/           ← las cadenas ejecutables de R y Python
 └── sitio/                             ← SITIO PUBLICADO (esto y solo esto va a gh-pages)
     ├── .nojekyll · .gitignore
     ├── index.html                     ← portada del PARAGUAS: una tarjeta por curso
@@ -134,11 +134,11 @@ Muestreo/                              ← RAÍZ DEL REPO GIT (rama main) = UnBo
         ├── capitulo-1-encuestas-sesgos.html          ✅ fase 2
         ├── capitulo-2-diseno-mas-sistematico.html    ✅ fase 1
         ├── capitulo-3-razon-y-regresion.html         ✅ fase 2
-        ├── capitulo-4-muestreo-estratificado.html    (formato antiguo — fase 3)
-        ├── capitulo-5-conglomerados.html             (NUEVO)
-        ├── capitulo-6-probabilidades-desiguales.html (NUEVO)
-        ├── capitulo-7-encuestas-complejas.html       (NUEVO)
-        └── capitulo-8-no-respuesta-ponderacion.html  (NUEVO)
+        ├── capitulo-4-muestreo-estratificado.html    ✅ fase 3
+        ├── capitulo-5-conglomerados.html             ✅ fase 3
+        ├── capitulo-6-probabilidades-desiguales.html ✅ fase 4
+        ├── capitulo-7-encuestas-complejas.html       ✅ fase 4
+        └── capitulo-8-no-respuesta-ponderacion.html  (fase 5)
 ```
 
 Cuando Series de Tiempo se mude aquí, entrará como `sitio/series-de-tiempo/` y sus fuentes tendrán
@@ -826,13 +826,157 @@ cap. 5 como conexión con ciencia de datos.
 - El tipo de pregunta `grafico` reusa los ayudantes de gráficos (`serieHistograma` + `dibujar:`),
   así que una pregunta puede mostrar los datos reales del precálculo: se usó en los dos capítulos.
 
-### Fase 4 — Capítulos 6 y 7
-- [ ] **T4.1** Cap. 6 — PPT/HH/HT; reutilizar `material_muestreo_cap6_lohr.Rmd` tras ejecutarlo.
-- [ ] **T4.2** Cap. 7 — encuestas complejas, DEFF, replicación, calibración.
+### Fase 4 — Capítulos 6 y 7 — ✅ COMPLETADA (2026-07-28)
 
-### Checkpoint 3 — Segundo tercio
-- [ ] Caps. 4–7 verificados; el marco π se sostiene coherente desde el cap. 2 hasta el 7.
-- [ ] Todas las varianzas de diseño reproducidas por dos vías (fórmula a mano ↔ `survey`).
+**Decisiones tomadas al abrir la fase, consultadas a Javier:**
+1. **Módulo 5 del cap. 7: jackknife a mano; BRR y bootstrap con `survey`** (recomendado, aceptado).
+   El jackknife estratificado se implementa explícitamente en R y en Python —eliminar una PSU y
+   reponderar su estrato es la lección—, y BRR y el bootstrap de Rao–Wu se calculan con
+   `as.svrepdesign`. Los cuatro métodos se comparan en una `.tabla-ranking`.
+2. **NHANES y SYC en paralelo en el módulo 7** (Javier amplió sobre la recomendación de usar solo
+   NHANES, fiel a su patrón). Resultó la mejor decisión de la fase: las dos encuestas tienen
+   estructuras **opuestas** —NHANES, 2 PSU en cada uno de sus 15 estratos; SYC, de 7 a 154 en 16—
+   y esa oposición es didáctica pura: separa lo general (declarar el diseño, ponderar, replicar) de
+   lo que depende del caso (grados de libertad, qué método de varianza es aplicable, deff).
+   **Frontera repartida:** NHANES y SYC llevan el hilo de los módulos; `ipums`, `integerwt` y
+   `wtshare` quedaban para los ejercicios. `wtshare` **se descartó** al comprobar que sus columnas
+   son indicadores 0/1 y no conteos de adultos (ver hallazgo 5); el ejercicio 4 pasó a ser el
+   jackknife sobre SYC, que además cierra el contraste entre las dos estructuras.
+3. **Publicar al cierre auditado de la fase** (recomendado, aceptado).
+
+Supuestos aplicados sin re-preguntar: marco completo `N = 3 078`; Python solo donde el cálculo
+explícito es la lección (cap. 6: HH, acumulativo/Lahiri, π_kl+SYG, Poisson-binomial, importancia;
+cap. 7: DEFF a mano, jackknife, IPFP, cobertura); ejercicios originales sobre datos de Lohr;
+aproximaciones de π_kl declaradas como tales; **ningún paquete nuevo** (todo con `survey`,
+`sampling` y `TeachingSampling` ya instalados).
+
+- [x] **T4.0 — Ejecución del Rmd viejo antes de reutilizar nada.** `material_muestreo_cap6_lohr.Rmd`
+      se ejecutó chunk a chunk con el R 4.4: **16 de 22 chunks OK**. Los 6 que fallan son las tres
+      tablas decorativas con encoding roto (`Caracterí`, `Diseñ` como token inválido) y sus tres
+      cascadas. Ningún chunk de cálculo estaba mal, pero **todo se recalculó igualmente**.
+- [x] **T4.1 — Capítulo 6** → `capitulo-6-probabilidades-desiguales.html` (301 KB), nuevo.
+      **11 módulos, 10 simuladores + 1 tabla-ranking, 11 preguntas (los 4 tipos), 4 ejercicios
+      guiados, 24 bloques (19 R + 5 Python)**, `.glosario-notacion` propio (12 filas, con la
+      distinción ψ ↔ π como nota) y `.diagrama-diseno` de PPT en dos etapas (classpps).
+      Precálculo en `genera_cap6.R` → `cap6_datos.json` (11 KB); ensamblado en `ensambla_cap6.py`.
+- [x] **T4.2 — Capítulo 7** → `capitulo-7-encuestas-complejas.html` (299 KB), nuevo.
+      **10 módulos, 9 simuladores + 2 tablas-ranking, 11 preguntas, 4 ejercicios guiados,
+      22 bloques (18 R + 4 Python)**, `.glosario-notacion` propio, `.diagrama-diseno` de NHANES
+      (4 capas) y **la primera instancia del componente `.ciclo`** del curso: el ciclo de diseño
+      de una encuesta, 6 etapas, cada una con su campo «qué te devuelve atrás».
+      Precálculo en `genera_cap7.R` → `cap7_datos.json`; ensamblado en `ensambla_cap7.py`.
+- [x] **T4.3 — Auditoría, portada y publicación.** Ver «Auditoría de la fase 4» abajo.
+      `index.html`: tarjetas 6 y 7 nuevas, totales a **7 capítulos / 77 módulos** (contados por
+      script sobre los propios archivos, no a ojo), hero y `keywords` al día.
+
+**El `.ciclo` no necesitó retropropagación.** Es un componente heredado de Series de Tiempo que ya
+estaba en la plantilla y, por tanto, en los CSS de los 7 capítulos: su conjunto de selectores no
+cambió (168 clases, 0 faltantes, antes y después). Lo único nuevo es la primera **instancia**.
+
+### Auditoría de la fase 4 (2026-07-28)
+
+| Comprobación | Resultado |
+|---|---|
+| Cifras `#>` contrastadas con la salida real | cap. 6: **315/315** · cap. 7: **224/224** · regresión caps. 1–5: **155 + 323 + 151 + 246 + 163**, 0 discrepancias. **Total del sitio: 1 577** |
+| Sesiones de R y de Python encadenadas | terminan con código 0 en los siete capítulos |
+| Doble vía para toda varianza | cap. 6: HH enumerado ↔ fórmula cerrada; HT por espacio de muestras ↔ doble suma ↔ SYG; agpps por **tres vías** (a mano forma HT ↔ a mano SYG ↔ `survey` con `ppsmat`, dif. ≤ 1·10⁻¹⁴); classpps a mano ↔ `survey`. cap. 7: razón por `svyratio` ↔ linealización a mano (dif. 0); **jackknife a mano ↔ `JKn`** (2,9·10⁻⁷) en NHANES *y* en SYC; IPFP a mano ↔ `rake()` (1,4·10⁻¹²); estratificado a mano ↔ `survey` |
+| Cuatro estimadores de varianza sobre el mismo dato | linealización 0,253197 · jackknife 0,253259 · BRR 0,258531 · bootstrap 0,254364 |
+| `node --check` del motor | OK en la plantilla y en los caps. 1–7 |
+| Consola del navegador | 0 errores y **0 avisos** en los 21 módulos nuevos y en los de regresión |
+| KaTeX | 0 errores; 210 expresiones en el cap. 6 y 92 en el cap. 7 (el 7 es operativo, no algebraico: 8 fórmulas de bloque y 38 inline en sus módulos, más glosario y quiz) |
+| Gráficos por módulo | se destruyen al salir (2 → 0 al pasar del módulo 8 al 9 del cap. 7) |
+| Simuladores en todos sus valores y extremos | 19 de 19, **97 estados** probados (57 + 40), 0 lecturas con `NaN`/∞/vacías |
+| Componentes | `.ciclo`: 6 etapas, cada una abre solo su panel y todas traen su «qué te devuelve atrás»; `.diagrama-diseno`: 2 instancias nuevas; 3 tablas-ranking nuevas; 2 glosarios de 12 filas |
+| Autoevaluación | 22 preguntas nuevas, los 4 tipos, flujo fallo → pista → reintento correcto |
+| Ejercicios guiados | 8 nuevos; los 16 paneles abren; las 8 soluciones con su bloque verificado |
+| CSS frente a la plantilla | caps. 1–7: **168 clases, 0 faltantes**; llaves 398/398 |
+| Geometría a 1440 px | cabecera 1430, lateral 280, contenido 902; sin solapes ni desbordamiento en ningún componente de los 21 módulos |
+| JSON incrustado | válido e **idéntico** al de `precalculo/salidas/` en los dos capítulos |
+| Regla de oro del ensamblado | los **siete** capítulos se reproducen byte a byte |
+| Enlaces y permisos | los 7 `href` de `index.html` resuelven; los 8 HTML en `644` |
+| `.gitignore` de lista blanca | `git check-ignore` limpio sobre los 12 archivos nuevos |
+
+**Cinco hallazgos de la auditoría que cambiaron el material:**
+
+1. **El πPT PIERDE frente al MAS con `counties`, y era la variable «buena».** Con 10 000 réplicas:
+   deff 1,25 con `counties` (correlación 0,46 con la población), 9,17 con `waterarea` (0,04) y
+   prácticamente 0 con `pop2019` (1,00). La lección que el capítulo construye sobre eso es que
+   **πPT es una apuesta a la proporcionalidad, no a la correlación**, y se dejó como resultado
+   destacado —tabla-ranking del módulo 5 con el MAS en primer lugar— en vez de buscar una variable
+   que hiciera quedar bien al método. La misma trampa reaparece en el ejercicio 1, donde el ee
+   *estimado* con n = 10 contradice a la varianza exacta.
+2. **La descomposición del DEFF no es monótona.** Sobre NHANES: 1,00 → 1,73 (pesos) → **1,71
+   (estratos, BAJA)** → 6,92 (conglomerados). Y el 6,92 no coincide con el 7,12 que reporta
+   `svymean(deff = TRUE)` porque `survey` compara contra un MAS *con estos pesos* y la
+   descomposición contra el MAS *ideal*. Las dos cosas se declaran en el material (módulo 3, caja
+   de advertencia y nota) en vez de esconder la discrepancia.
+3. **Recortar pesos en NHANES no compensa.** El recorte al percentil 80 baja el Kish de 1,89 a
+   1,31 —los pesos se aplanan, que era el objetivo— pero el error estándar **no mejora** (0,2532 →
+   0,2559) y la media se desplaza 0,057. La razón la da el hallazgo 2: la varianza la ponen los
+   conglomerados, no los pesos. El módulo 8 lo convierte en regla: **antes de recortar, descomponer
+   el deff**.
+4. **Un intervalo «del 95 %» que cubre el 56,3 %.** La simulación de 2 000 réplicas con ICC = 0,15
+   y conglomerados de 40 mide el costo real de ignorar el diseño. Traducido a contrastes: la tasa
+   de falsos positivos pasa del 5 % nominal a más del 40 %.
+5. **`wtshare` no es lo que el plan suponía.** Sus columnas `child`, `preschool` y `numadult` son
+   **indicadores 0/1**, no conteos de adultos por hogar, así que el ejercicio de «peso compartido»
+   que se había redactado sobre él era imposible. Se descartó el dataset y el ejercicio 4 pasó a
+   ser el jackknife sobre SYC. Otro caso de la regla del proyecto: mirar los datos antes de
+   escribir sobre ellos.
+
+**Hallazgo de coherencia del Checkpoint 3 — corregido:** una auditoría transversal de la notación
+π del cap. 2 al 7 encontró que **el capítulo 5 era el único sin `\pi` en su prosa** (lo tenía solo
+en su glosario y su diagrama, que viven en JavaScript). Se añadió al módulo 2 del cap. 5 una caja
+`.formula` que escribe el diseño de conglomerados en el marco π —`π_k = (n/N)(m_i/M_i)`, su peso y
+el HT— y lo enlaza con el caso de una etapa. Reverificado: 163/163 cifras, 0 errores de consola,
+la fórmula renderiza (5 expresiones, 822 px dentro de 902) y el capítulo sigue reproduciéndose
+byte a byte.
+
+**Anotaciones de la fase, para no repetir el tropiezo:**
+- **Un ensamblador clonado con `sed` conserva el `DESTINO` viejo si el nombre del archivo no
+  contiene la cadena sustituida.** `ensambla_cap7.py` nació de `sed s/cap6/cap7/` sobre el del 6,
+  pero el destino era `capitulo-6-probabilidades-desiguales.html` —sin «cap6» dentro— y además el
+  `.replace(..., 1)` posterior solo tocó la primera ocurrencia, la del docstring. Resultado: **el
+  cap. 7 sobrescribió el archivo del cap. 6**. Se detectó al instante porque el propio script
+  imprime el nombre de lo que escribe. Regla: **leer el nombre que imprime el ensamblador antes de
+  seguir**, y clonar comprobando `DESTINO` explícitamente.
+- **La `.tabla-ranking` necesita sus cuatro hijos en el HTML**, no solo el `div` con
+  `data-ranking`: `pintarTablaRanking` busca `.tabla-ranking-marco` y **retorna en silencio** si no
+  lo encuentra. El componente salió vacío en el cap. 6 y no dio ningún error. A diferencia del
+  `.diagrama-diseno` y el `.glosario-notacion`, que sí se autopintan sobre un `div` vacío. Lo cazó
+  el recorrido instrumentado, no la lectura del código.
+- **KaTeX avisa por texto acentuado en modo matemático.** El glosario envuelve *cada* campo de
+  notación en `$…$`, así que poner `'inclusión forzosa'` en la columna de Gutiérrez metía una «ó»
+  en modo matemático. Se arregló con `\text{incl. forzosa}`. Los campos `concepto` no se envuelven
+  y sí admiten acentos.
+- **`as.matrix()` no le quita la clase `table` a una tabla de R**, y `jsonlite` no serializa
+  objetos `table`: hay que reconstruir la matriz numérica (`matrix(as.numeric(m), nrow = ...)`).
+  El precálculo del cap. 7 murió dos veces por esto, la segunda después de «arreglarlo».
+- **`survey` devuelve `DEff = Inf` si no se declara `fpc`**, porque no tiene el N poblacional del
+  MAS de referencia. Pasó con `ipums`; el deff hay que calcularlo a mano. Se convirtió en la
+  segunda trampa del ejercicio 2, en vez de esconderlo.
+- **`JK1` no sirve con diseños estratificados** (`survey` se niega explícitamente) y **BRR exige
+  exactamente 2 PSU por estrato**. La elección del método de replicación la fija la estructura del
+  diseño, no la preferencia del analista — y por eso el cap. 7 necesita dos encuestas.
+- **Un bucle `while` de truncamiento de π puede no terminar en Python** si se reescala sobre el
+  vector ya truncado: la primera versión de `cadena.py` se colgó. Hay que llevar una máscara de
+  «forzosas» y recalcular desde el vector original en cada vuelta.
+- **El generador de R y el de Python no dan la misma simulación**: la cobertura salió 0,563 en R y
+  0,545 en Python con la misma semilla nominal. No es un error; se declara en el propio bloque.
+- **Las cifras a ojo volvieron a fallar, cinco veces**, esta vez en los comentarios `#>` de la
+  cadena de Python del cap. 7 (deff 6,9219 por 6,9206; los seis errores del IPFP; la tabla final;
+  la cobertura). Para el cap. 7 se escribió un script que **anota las salidas reales
+  automáticamente** a partir de la ejecución capturada, en vez de transcribirlas a mano.
+
+### Checkpoint 3 — Segundo tercio — ✅ SUPERADO (2026-07-28)
+- [x] Caps. 4–7 verificados; **el marco π se sostiene coherente desde el cap. 2 hasta el 7**,
+      comprobado con una auditoría transversal de notación (ver el hallazgo de coherencia arriba):
+      los 7 capítulos tienen su `.glosario-notacion` de 12 filas, ninguno usa notación rival sin
+      declararla, y los dos únicos «3 059» en prosa son las cajas que **declaran** la decisión del
+      marco `N = 3 078`.
+- [x] Todas las varianzas de diseño reproducidas por dos vías (varias por tres).
+- [x] Los caps. 7 y 8 no necesitaron partirse: el 7 cerró en 10 módulos (el riesgo anotado abajo
+      preveía partirlo si pasaba de 12).
 
 ### Fase 5 — Capítulo 8, portada y publicación
 - [ ] **T5.1** Cap. 8 — no respuesta, ponderación, imputación, taller de diseño y auditoría de IA.
@@ -890,15 +1034,15 @@ Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
 
 ## Estimación de volumen
 
-| | Al empezar | Hoy (tras fase 3) | Objetivo |
+| | Al empezar | Hoy (tras fase 4) | Objetivo |
 |---|---:|---:|---:|
-| Capítulos en el formato nuevo | 0 | **5** | 8 |
-| Módulos | 37 (formato viejo) | **56** | ~88 |
-| Simuladores | 0 | **38** (+3 tablas-ranking) | ~59 |
-| Preguntas de autoevaluación | 0 | **55** | ~64 |
-| Ejercicios guiados | 0 | **21** | ~26 |
-| Bloques de código verificados | 0 | **108** (1 038 cifras) | — |
-| Semanas del cronograma cubiertas | 9 / 16 | **11 / 16** | 16 / 16 |
+| Capítulos en el formato nuevo | 0 | **7** | 8 |
+| Módulos | 37 (formato viejo) | **77** | ~88 |
+| Simuladores | 0 | **57** (+7 tablas-ranking) | ~59 |
+| Preguntas de autoevaluación | 0 | **77** | ~64 ✅ superado |
+| Ejercicios guiados | 0 | **29** | ~26 ✅ superado |
+| Bloques de código verificados | 0 | **154** (1 577 cifras) | — |
+| Semanas del cronograma cubiertas | 9 / 16 | **14 / 16** | 16 / 16 |
 
 Los simuladores que aparecen listados en cada capítulo son el núcleo mínimo; la cifra del
 encabezado de cada capítulo (`~n S`) es el objetivo, y suele incluir alguno más de apoyo.

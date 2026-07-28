@@ -128,8 +128,22 @@
       <div class="diagrama-diseno" data-diagrama="dos-etapas"></div>
 
       <p>La franja final del diagrama es la novedad estructural del capítulo: por primera vez en el curso, la
-        probabilidad de inclusión es un <strong>producto de etapas</strong>. El código lo comprueba contra la
-        columna de pesos que trae el archivo:</p>
+        probabilidad de inclusión es un <strong>producto de etapas</strong>. Escrito en la notación del
+        capítulo 2, este diseño es un caso particular más del marco π:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Los conglomerados en el marco π del capítulo 2</p>
+        $$\pi_k = \underbrace{\frac{n}{N}}_{\text{sale su conglomerado}} \times
+        \underbrace{\frac{m_i}{M_i}}_{\text{sale él dentro}}, \qquad
+        w_k = \frac{1}{\pi_k} = \frac{N}{n}\cdot\frac{M_i}{m_i}, \qquad
+        \hat{t}_\pi = \sum_{k \in s} \frac{y_k}{\pi_k}$$
+        <p style="margin-bottom:0;">El estimador es el de Horvitz–Thompson de siempre; lo único nuevo es de
+          dónde salen las $\pi_k$. En una etapa ($m_i = M_i$) el segundo factor vale 1 y queda
+          $\pi_k = n/N$ para todas las unidades del conglomerado: el capítulo 2 aplicado a los totales $t_i$,
+          que es exactamente lo que hizo el módulo 3.</p>
+      </div>
+
+      <p>El código comprueba ese producto contra la columna de pesos que trae el archivo:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Probabilidades y pesos de dos etapas en schools">

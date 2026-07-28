@@ -1,0 +1,533 @@
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 7 · Dos encuestas reales, analizadas                   -->
+  <!-- ============================================================ -->
+  <template id="module-7">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 7</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Dos encuestas reales,
+          analizadas <span class="text-gray-400 font-normal text-2xl">/ NHANES and SYC side by side</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver el análisis completo de dos encuestas de
+              estructura opuesta y entender qué decisiones cambian con cada una.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los seis módulos anteriores construyeron las herramientas sobre NHANES. Este pone las dos encuestas una
+        al lado de la otra: <strong>el mismo procedimiento, dos estructuras, y las decisiones que cambian</strong>.
+        La tabla siguiente resume todo lo que se ha calculado de cada una.</p>
+
+      <div class="tabla-ranking" data-ranking="encuestas">
+        <p class="tabla-ranking-titulo">NHANES y SYC: lo que cada estructura permite</p>
+        <div class="tabla-ranking-marco" aria-label="Comparación ordenable de las dos encuestas"></div>
+        <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
+        <p class="tabla-ranking-pie"></p>
+      </div>
+
+      <div class="warning">
+        <p><strong>La estructura decide el método, no el gusto del analista.</strong> NHANES, con 2 PSU por
+          estrato, admite BRR y da 15 grados de libertad: los intervalos usan $t = 2{,}131$ y hay poco margen
+          para estadísticos delicados. SYC, con 861 centros en 16 estratos, no admite BRR pero regala 845 grados
+          de libertad y jackknife de sobra. Antes de elegir el estimador de varianza, se cuenta cuántas UPM hay
+          por estrato — es la primera línea de código que se escribe con una encuesta ajena.</p>
+      </div>
+
+      <div class="simulador" data-simulador="comparador">
+        <h4><i class="fas fa-scale-balanced" aria-hidden="true"></i> El precio de ignorar el diseño, en las dos</h4>
+        <p class="simulador-intro">Para cada encuesta, el error estándar que reportaría un análisis ingenuo
+          frente al del diseño declarado, y el intervalo del 95 % que produce cada uno. Cambia de encuesta y de
+          estimando: la magnitud del engaño varía, la dirección nunca.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Semiamplitud del intervalo del 95 %: ingenuo frente a diseño</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Comparación de intervalos ingenuo y del diseño en las dos encuestas" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué dos encuestas y no una.</strong> Con una sola, es fácil confundir las propiedades del
+          <em>diseño</em> con las del <em>método</em>. Con dos de estructura opuesta se separa lo que es general
+          (declarar el diseño, ponderar, replicar) de lo que depende del caso (cuántos grados de libertad, qué
+          método de varianza, cuánto vale el deff). El ejercicio 4 rehace el jackknife del módulo 5 sobre SYC
+          para forzar exactamente esa distinción.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §7.4: análisis de SYC paso a paso; el apéndice trae la ficha técnica completa.</li>
+          <li>Lumley — <em>Complex Surveys</em>, cap. 3: NHANES como ejemplo recurrente.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 8 · El error más caro                                  -->
+  <!-- ============================================================ -->
+  <template id="module-8">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El error más caro
+          <span class="text-gray-400 font-normal text-2xl">/ The costliest mistake</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Medir con 2 000 réplicas la cobertura real de un
+              intervalo que ignora el diseño, y aprender a leer la descomposición del deff antes de «arreglar»
+              los pesos.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El capítulo 5 lo anunció: ignorar los conglomerados <strong>estrecha</strong> los intervalos, y es el
+        error caro precisamente porque el resultado parece mejor. Aquí se mide cuánto cuesta, con una población
+        sintética donde la verdad se conoce:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Cobertura empírica de los dos intervalos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R13⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Un intervalo «del 95 %» que cubre el 56 % de las veces.</strong> Casi uno de cada dos
+          intervalos publicados no contiene el valor verdadero — y nadie lo nota, porque el número sale
+          plausible y estrecho. Traducido a contrastes de hipótesis: la tasa de falsos positivos se dispara del
+          5 % nominal a más del 40 %. Toda una literatura de «efectos significativos» que no se replican tiene
+          aquí una de sus raíces.</p>
+      </div>
+
+      <div class="simulador" data-simulador="cobertura">
+        <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> Cobertura contra ICC</h4>
+        <p class="simulador-intro">La simulación del bloque usa ICC = 0,15 y conglomerados de 40. El deslizador
+          mueve la ICC y el tamaño del conglomerado: la curva es la cobertura <em>teórica</em> del intervalo
+          ingenuo, calculada con la aproximación normal y el deff de Kish. El punto naranja marca la
+          configuración simulada, cuya cobertura empírica real (0,563 con 2 000 réplicas) aparece en la lectura.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Cobertura del intervalo nominal del 95 % que ignora los conglomerados</p>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Cobertura teórica del intervalo ingenuo según la correlación intraclase" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>La reacción instintiva ante pesos muy desiguales es <strong>recortarlos</strong>: topar el peso máximo
+        y reescalar. Es una práctica extendida y a veces correcta. Sobre NHANES da un resultado incómodo:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El recorte de pesos y su efecto real">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R14⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="simulador" data-simulador="recorte">
+        <h4><i class="fas fa-scissors" aria-hidden="true"></i> Recortar pesos: qué se gana y qué se paga</h4>
+        <p class="simulador-intro">El deslizador elige el cuantil de corte. Las dos barras son el error estándar
+          y el desplazamiento de la media respecto a la estimación sin recortar. Busca el punto donde recortar
+          compense... y observa que en NHANES no lo hay: el ee no baja y el desplazamiento sí crece.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Efecto del recorte sobre el error estándar y sobre la media</p>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Error estándar y desplazamiento de la media según el nivel de recorte" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Recortar pesos aquí no compensa, y la descomposición del módulo 3 dice por qué.</strong> El
+          recorte agresivo baja el deff de Kish de 1,89 a 1,31 — aplana los pesos, que era el objetivo — pero
+          el error estándar no mejora (0,2532 → 0,2559, incluso peor) y la media se desplaza 0,057. La razón es
+          estructural: en NHANES la varianza la ponen los <strong>conglomerados</strong> (el salto de 1,71 a
+          6,92 del módulo 3), no los pesos. Aplanar pesos ataca el ingrediente equivocado y solo aporta sesgo.
+          <strong>La regla:</strong> antes de recortar, descomponer el deff; si el peso de Kish es pequeño frente
+          al deff total, el recorte no es la herramienta.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §7.6: consecuencias de ignorar el diseño; §11.4 sobre recorte de pesos.</li>
+          <li>Este material — cap. 5, módulo 3: el mismo error, medido sobre conglomerados de igual tamaño.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · El ciclo de diseño de una encuesta                 -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El ciclo de diseño de
+          una encuesta <span class="text-gray-400 font-normal text-2xl">/ The survey design cycle</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Recorrer el proceso completo — de la pregunta al
+              informe — y saber qué te devuelve a cada etapa anterior.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Diseñar una encuesta no es una lista de pasos: es un <strong>ciclo</strong>. Casi todas las decisiones
+        se revisan cuando la siguiente etapa devuelve malas noticias, y una encuesta real se rediseña varias
+        veces antes de salir a campo. Recorre las seis etapas y fíjate especialmente en el campo «qué te devuelve
+        atrás»:</p>
+
+      <div class="ciclo" data-ciclo="encuesta">
+        <ol class="ciclo-etapas" role="tablist" aria-label="Etapas del ciclo de diseño de una encuesta">
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="true" aria-controls="ciclo-encuesta-objetivos" tabindex="0">
+              <span class="ciclo-numero">Etapa 1</span>
+              <span class="ciclo-titulo">Objetivos</span>
+              <span class="ciclo-resumen">¿Qué se quiere estimar y con qué precisión?</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-encuesta-marco" tabindex="-1">
+              <span class="ciclo-numero">Etapa 2</span>
+              <span class="ciclo-titulo">Marco</span>
+              <span class="ciclo-resumen">¿Qué lista existe realmente?</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-encuesta-diseno" tabindex="-1">
+              <span class="ciclo-numero">Etapa 3</span>
+              <span class="ciclo-titulo">Diseño</span>
+              <span class="ciclo-resumen">Estratos, etapas, π y tamaño</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-encuesta-campo" tabindex="-1">
+              <span class="ciclo-numero">Etapa 4</span>
+              <span class="ciclo-titulo">Campo</span>
+              <span class="ciclo-resumen">Recolección y sus tropiezos</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-encuesta-pesos" tabindex="-1">
+              <span class="ciclo-numero">Etapa 5</span>
+              <span class="ciclo-titulo">Pesos</span>
+              <span class="ciclo-resumen">Ajuste y calibración</span>
+            </button>
+          </li>
+          <li class="ciclo-etapa" role="presentation">
+            <button type="button" class="ciclo-boton" role="tab"
+              aria-selected="false" aria-controls="ciclo-encuesta-analisis" tabindex="-1">
+              <span class="ciclo-numero">Etapa 6</span>
+              <span class="ciclo-titulo">Análisis</span>
+              <span class="ciclo-resumen">Estimar, medir el error, publicar</span>
+            </button>
+          </li>
+        </ol>
+        <p class="ciclo-retorno">El ciclo se recorre con clic o con las flechas del teclado, y vuelve al principio cuantas veces haga falta.</p>
+
+        <div class="ciclo-panel" id="ciclo-encuesta-objetivos" role="tabpanel">
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Escribir los <strong>estimandos</strong> con nombre y apellido — «la proporción de adultos con
+              obesidad, por región, con un error de ±2 puntos» — y sus dominios. Un objetivo vago produce una
+              encuesta que no sirve para nada en concreto. Aquí se fija también la precisión objetivo, que es lo
+              que hará calculable el tamaño de muestra en la etapa 3.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p>Nada de software todavía: documento de objetivos, lista de dominios y precisión requerida por
+              cada uno. El capítulo 2, módulo 7, da la fórmula del tamaño; los dominios, el capítulo 3.</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Es el principio: solo se vuelve aquí desde el análisis, cuando la precisión conseguida no alcanza
+              para lo que se prometió y hay que renegociar el alcance o el presupuesto.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-encuesta-marco" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Averiguar qué lista de unidades existe de verdad y compararla con la población objetivo. La
+              brecha entre ambas es el <strong>error de cobertura</strong> del capítulo 1, y decide más sobre
+              la calidad final que cualquier refinamiento posterior del estimador.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p>Registros administrativos, marcos de áreas, listas telefónicas. Se documentan las
+              <strong>medidas de tamaño</strong> disponibles: sin ellas no hay PPT (capítulo 6) ni asignación
+              óptima (capítulo 4).</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Si el marco no cubre un dominio que la etapa 1 exigía —población rural dispersa, migrantes sin
+              registro—, hay que volver a los objetivos: o se consigue otro marco, o ese dominio sale del
+              alcance. Prometer lo que el marco no puede dar es el fraude silencioso más común.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-encuesta-diseno" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Elegir estratos, etapas y probabilidades, y calcular el tamaño. Es donde vive todo el curso:
+              $\pi_k$ y el marco π (cap. 2), estratos (cap. 4), conglomerados y etapas (cap. 5), PPT (cap. 6).
+              Se escribe el diseño esperado y se <strong>simula su varianza</strong> antes de gastar un peso.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p><code>sampling::inclusionprobabilities()</code>, <code>UPsystematic()</code>,
+              <code>TeachingSampling::E.2SI()</code>, y las fórmulas de asignación del capítulo 4.</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Si el tamaño necesario para la precisión de la etapa 1 no cabe en el presupuesto, se vuelve a los
+              objetivos (menos dominios, menos precisión) o al marco (mejores medidas de tamaño). Esta
+              negociación es el corazón del oficio.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-encuesta-campo" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Recolectar. Y registrar meticulosamente lo que <em>no</em> salió: unidades no localizadas,
+              rechazos, sustituciones. Ese registro es la materia prima del ajuste de la etapa 5 — sin él, la no
+              respuesta es irreparable.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p>Disposición de cada caso según los códigos AAPOR, tasas de respuesta por estrato, y las variables
+              auxiliares de los respondentes <em>y</em> de los no respondentes (capítulo 8).</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Una tasa de respuesta muy por debajo de lo previsto obliga a volver al diseño: ampliar la muestra,
+              reforzar el seguimiento, o rediseñar la asignación por estratos. Si el marco resulta estar
+              desactualizado —direcciones que no existen—, se vuelve a la etapa 2.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-encuesta-pesos" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Construir el peso final: $1/\pi_k$ del diseño, dividido por la propensión a responder, por el
+              factor de calibración (módulos 2 y 6). Se documenta cada factor por separado, aunque el archivo
+              publicado lleve solo el producto.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p><code>survey::postStratify()</code>, <code>rake()</code>, <code>calibrate()</code>. Y la
+              comprobación obligatoria: <strong>¿suman los pesos lo que deben?</strong></p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Pesos extremos o un raking que no converge son señal de que el campo dejó celdas casi vacías: se
+              vuelve a la etapa 4 (¿se puede recuperar a alguien más?) o se colapsan celdas, con el costo en
+              sesgo que eso implica.</p>
+          </div>
+        </div>
+
+        <div class="ciclo-panel" id="ciclo-encuesta-analisis" role="tabpanel" hidden>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Qué haces</span>
+            <p>Declarar el diseño, estimar, medir el error con linealización o replicación (módulos 4 y 5),
+              publicar con intervalos honestos y con la ficha técnica: estratos, UPM, grados de libertad, deff.
+              Sin ficha técnica, nadie puede reanalizar los datos correctamente.</p>
+          </div>
+          <div class="ciclo-campo">
+            <span class="ciclo-etiqueta">Con qué</span>
+            <p><code>svydesign()</code>, <code>svymean(deff = TRUE)</code>, <code>as.svrepdesign()</code>,
+              <code>degf()</code>.</p>
+          </div>
+          <div class="ciclo-campo ciclo-vuelta">
+            <span class="ciclo-etiqueta">Qué te devuelve atrás</span>
+            <p>Si la precisión conseguida no alcanza para lo prometido, el ciclo entero vuelve a empezar — con
+              la ventaja de que ahora se conocen los deff reales, y la próxima ronda se diseña con datos en vez
+              de con conjeturas. Esa flecha de vuelta es lo que convierte una lista de pasos en un oficio.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El proyecto integrador del curso recorre este ciclo completo.</strong> Las seis etapas de
+          arriba son, una a una, los apartados de su entrega: objetivos y dominios, evaluación del marco, diseño
+          justificado con su cálculo de tamaño, plan de campo con protocolo de no respuesta, construcción de
+          pesos, y análisis con intervalos honestos. El capítulo 8 añade la etapa que aquí se ha nombrado sin
+          desarrollar: qué hacer cuando el campo devuelve menos de lo que se pidió.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — cap. 1 (§1.2, el proceso) y cap. 8 (no respuesta) cierran el ciclo.</li>
+          <li>Groves et al. — <em>Survey Methodology</em>: el ciclo completo, con el error total como hilo.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 10 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-10">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 10</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y
+          ejercicios guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprobar el capítulo completo: diseño declarado,
+              pesos, DEFF, linealización, replicación, calibración y lectura crítica.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El glosario primero — este capítulo mezcla el vocabulario de los cinco anteriores con el del software:</p>
+
+      <div class="glosario-notacion" data-glosario="complejas"></div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al
+        final, el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos
+        antes de abrir la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap7">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 7</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre encuestas reales distintas a
+          la del hilo principal. Las cifras de cada solución salen de
+          <code>ensamblado/codigo/cap7/cadena.R</code>, que se ejecuta de verdad: ninguna está escrita a mano.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>syc</code>, estima la
+            proporción de jóvenes que han cometido un delito violento (<code>everviol</code>) declarando el
+            diseño y sin declararlo. ¿Cuál de las dos cosas cambia más: la estimación o su incertidumbre?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p><code>svymean(~everviol, dis_sy)</code> contra <code>mean()</code> y la fórmula binomial
+              $\sqrt{p(1-p)/n}$. Compara por separado el punto y el error estándar.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R15⟧</code></pre>
+            <p>La estimación puntual se mueve un punto porcentual (0,61275 ponderada frente a 0,62228 sin
+              ponderar), pero el error estándar se multiplica por <strong>2,40</strong>: de ±1,9 puntos a ±4,5.
+              Es la lección del capítulo en una línea — la estimación puntual perdona los descuidos de diseño;
+              la incertidumbre, no.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Con <code>ipums</code> (9
+            estratos, 10 PSU cada uno), estima el ingreso medio de los adultos y su deff. Cuidado con dos
+            trampas del archivo.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>La primera trampa está en <code>inctot</code>: mira su mínimo. La segunda aparece cuando pides
+              <code>deff = TRUE</code> sin declarar <code>fpc</code>.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R16⟧</code></pre>
+            <p>Trampa 1: hay 110 ingresos negativos (código de faltante). Trampa 2: <code>survey</code> devuelve
+              <code>DEff = Inf</code> porque sin <code>fpc</code> no tiene el $N$ poblacional para el MAS de
+              referencia — hay que calcular el deff a mano. Resultado: 49 692 personas, 81 grados de libertad,
+              deff 10,6, <strong>tamaño efectivo 4 695</strong>. El tamaño nominal de una encuesta compleja dice
+              muy poco sobre su precisión.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Con <code>integerwt</code>
+            (2 000 observaciones en 4 estratos, con $N_h$ = 3 000, 3 000, 2 000, 2 000), calcula la media
+            estratificada a mano y con <code>survey</code>. ¿Coinciden?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Los pesos son $N_h/n_h$ y el <code>fpc</code> es $N_h$. La fórmula a mano es la del capítulo 4:
+              $\sum W_h \bar y_h$ con $W_h = N_h/N$.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R17⟧</code></pre>
+            <p>Idénticos hasta el quinto decimal: 20,577 con error estándar 0,12853. El diseño estratificado del
+              capítulo 4 es un caso particular del vocabulario de este — se declaran pesos y <code>fpc</code>, y
+              <code>survey</code> reproduce exactamente la fórmula que allí se dedujo a mano. Fíjate en que los
+              $n_h$ son muy desiguales (200/800/400/600) y aun así todo cuadra: los pesos se encargan.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Repite el jackknife del módulo 5
+            sobre <code>syc</code>, cuya estructura es la opuesta a NHANES. ¿Qué línea del código hay que cambiar,
+            y por qué el BRR ya no es una opción?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>En NHANES, el factor de reponderación era $2/(2-1)$ porque todos los estratos tenían 2 PSU. En SYC
+              hay de 7 a 154. Y BRR exige exactamente 2.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R18⟧</code></pre>
+            <p>Solo cambia una línea: $n_h$ se calcula por estrato en vez de fijarse en 2. Con eso, las tres vías
+              vuelven a coincidir (0,130106 a mano y con <code>JKn</code>; 0,128882 por linealización). Son
+              <strong>861 réplicas</strong> frente a las 30 de NHANES — el jackknife escala con el número de
+              PSU —, y el BRR queda descartado porque su construcción por matrices de Hadamard presupone dos
+              PSU por estrato.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Hacia el capítulo 8.</strong> Este capítulo supuso que quien fue sorteado, respondió. La
+          realidad es otra: la etapa 4 del ciclo siempre devuelve menos de lo que se pidió, y los que faltan no
+          son un subconjunto al azar. El capítulo 8 cierra el curso con la fórmula del sesgo de no respuesta —
+          que explica por fin, y del todo, el desastre del <em>Literary Digest</em> del capítulo 1 —, los ajustes
+          de peso que aquí se nombraron sin desarrollar, la imputación y el taller de diseño integrador.</p>
+      </div>
+    </div>
+  </template>
