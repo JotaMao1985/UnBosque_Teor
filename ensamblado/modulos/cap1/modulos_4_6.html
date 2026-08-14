@@ -74,9 +74,13 @@
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Recuperar el censo desde los pesos">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR3⟧</code></pre>
         </div>
       </div>
 
@@ -86,9 +90,13 @@
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Composición demográfica de las dos encuestas">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR4⟧</code></pre>
         </div>
       </div>
 
@@ -112,12 +120,39 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este gráfico?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El selector cambia la variable por la que se comparan las dos encuestas. Y
+            está partido en dos mitades que conviene no confundir: las ocho celdas de sexo, edad y raza son
+            <em>aquellas por las que se calibró</em>; educación, región e ingreso, no.</p>
+          <p><strong>Qué se ve.</strong> Empieza por las celdas y quédate con la impresión. Después cambia a educación o
+            a ingreso, donde no hay censo de referencia y solo se comparan las dos encuestas entre sí: la distancia
+            entre las barras verde y naranja sigue ahí, intacta. Ponderar no acercó las dos muestras a la población en
+            general; las acercó en las variables por las que se ponderó, y en ninguna más.</p>
+          <p><strong>Por qué importa.</strong> Un peso de calibración no es un corrector de sesgo: es una promesa
+            condicional. Dice «dentro de cada celda, quien contestó se parece a quien no contestó». Si la razón por la
+            que alguien coge el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
+            raza—, la promesa es falsa y los pesos no lo detectan.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            La ponderación arregla lo que mides, no lo que te falta. Antes de aceptar una estimación ponderada, pregunta
+            siempre por qué variables se calibró y cuáles quedaron fuera. Es el mecanismo completo del capítulo 4
+            (post-estratificación) y del 8 (ponderación por no respuesta).
+          </p>
+        </div>
+      </details>
+
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La estimación con y sin pesos">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR5⟧</code></pre>
         </div>
       </div>
 
@@ -149,9 +184,13 @@
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La fórmula del sesgo de no respuesta">
-          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
-        <div class="code-tab-panel" data-lang="python">
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦RP3⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python">⟦P3⟧</code></pre>
         </div>
       </div>
@@ -166,9 +205,13 @@
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Sesgo con clases de respuesta">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR6⟧</code></pre>
         </div>
       </div>
 
@@ -192,6 +235,30 @@
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> Una tasa de respuesta por región, con las medias reales de cada una debajo. La
+            línea verde es la verdad —la media de los 3 078 condados— y la naranja, lo que estimarías con quienes
+            respondieron.</p>
+          <p><strong>Qué se ve.</strong> Baja las cuatro tasas a la vez hasta el mínimo: la línea naranja no se mueve ni
+            un píxel, aunque la lectura de abajo diga que responden poquísimos condados. Ahora sube tres y deja una
+            sola hundida: la naranja se despega de inmediato. Fíjate en que puedes llegar a la misma tasa global de
+            respuesta con la naranja pegada a la verde o muy lejos de ella.</p>
+          <p><strong>La consecuencia práctica.</strong> La tasa global de respuesta —la cifra que se reporta, la que
+            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de coste, no de
+            puntería. Y hay algo que este simulador puede enseñar y una encuesta real no: aquí ves la línea verde
+            porque <code>agpop</code> es una población completa. En campo, esa línea no existe; solo tienes la naranja,
+            y nada dentro de los datos te dice a qué distancia quedó.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            No sesga que falte gente: sesga que falte de manera <strong>desigual</strong>. Por eso las agencias vigilan
+            las tasas por subgrupo y no solo la global, y por eso el capítulo 8 construye clases de respuesta antes de
+            ponderar nada.
+          </p>
+        </div>
+      </details>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -371,6 +438,29 @@
         <div class="note" data-panel="corregida"></div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de esta herramienta?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué haces aquí.</strong> No mueves un parámetro: emites un diagnóstico. Lees un ítem, señalas qué
+            defectos tiene y compruebas si acertaste. El ejercicio consiste en pasar de «esta pregunta suena rara» a
+            <em>nombrar</em> el defecto, que es lo único que se puede corregir.</p>
+          <p><strong>Qué se ve al comparar.</strong> Mira las reformulaciones: ninguna es más corta que el original.
+            Casi todas añaden algo —un marco temporal, un umbral concreto, una escala en vez de un sí/no—, y todas
+            preguntan una cosa sola. Ese es el patrón: una pregunta mala suele serlo por vaguedad o por acumulación, y
+            las dos se arreglan concretando y separando, no recortando.</p>
+          <p><strong>Y fíjate en lo que falta.</strong> Aquí no hay ni un porcentaje, a diferencia del resto del
+            capítulo. Es deliberado y forma parte de la lección: el efecto de una redacción concreta sobre una
+            respuesta concreta no se puede leer de estos datos. Ponerle una cifra sería inventarla, que es justo el
+            error que el módulo enseña a no cometer.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            El sesgo de medición se combate con vocabulario, no con estadística: pregunta sugestiva, doble cañón,
+            término sin definir, doble negación, falta de marco temporal. Quien sabe nombrarlos los ve en el borrador;
+            quien no, los descubre cuando los datos ya están recogidos y no hay nada que hacer.
+          </p>
+        </div>
+      </details>
 
       <div class="note">
         <p><strong>La regla que resume el módulo.</strong> Ninguna prueba estadística detecta una pregunta mal

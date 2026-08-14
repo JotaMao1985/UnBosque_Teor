@@ -3147,6 +3147,163 @@
         gap: 0.5rem;
       }
     }
+
+    /* ================================================================
+       Lectura guiada (componente nuevo del capítulo 1)
+
+       Un gráfico no enseña solo. El estudiante mueve el deslizador, ve
+       que la curva «sube», y sigue leyendo sin haber extraído la idea
+       que el gráfico existía para dar. Esta caja cierra ese hueco: va
+       DESPUÉS del simulador y dice en prosa qué debía verse.
+
+       Va CERRADA a propósito, y no es un detalle de estilo. Abierta se
+       convierte en un pie de figura que se lee antes de mirar, y
+       entonces el gráfico sobra. Cerrada obliga a formular la propia
+       lectura primero y a usar la caja como contraste, que es donde
+       está el aprendizaje.
+
+       No lleva motor de JavaScript: es <details>/<summary> nativo, así
+       que abre con Enter y con Espacio, entra en el orden de tabulación
+       y lo anuncia el lector de pantalla sin que haya que declarar ni
+       un aria-expanded. El componente que no se programa no se rompe.
+
+       Se distingue del <details> genérico de la plantilla —el de
+       .ejercicio-pista y .ejercicio-solucion, que es una tarjeta blanca
+       sobria— por la banda naranja y el fondo cálido: son dos cosas
+       distintas y no deben leerse igual. La pista ayuda a resolver un
+       ejercicio; esta caja cierra una lectura.
+       ================================================================ */
+    .lectura-guiada {
+      background: rgba(255, 102, 0, 0.035);
+      border: 1px solid rgba(255, 102, 0, 0.22);
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      padding: 0;
+      margin: 1.25rem 0 2rem;
+      overflow: hidden;
+    }
+
+    /* Pegada al simulador que comenta: .simulador cierra con 2rem de
+       margen inferior y aquí se recuperan 1,25 para que las dos piezas
+       se lean como una sola unidad y no como dos bloques sueltos. */
+    .simulador + .lectura-guiada,
+    .grafico-wrapper + .lectura-guiada {
+      margin-top: -1.25rem;
+    }
+
+    .lectura-guiada > summary {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #012820;
+      cursor: pointer;
+      list-style: none;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    /* El triángulo por defecto del navegador se sustituye por el galón
+       de la derecha; hay que quitarlo en las dos familias. */
+    .lectura-guiada > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .lectura-guiada > summary:hover {
+      background: rgba(255, 102, 0, 0.07);
+      color: #FF6600;
+    }
+
+    .lectura-guiada > summary i {
+      color: #FF6600;
+      font-size: 0.9rem;
+    }
+
+    /* Galón dibujado con dos bordes en vez de un glifo de fuente: no
+       depende de que Font Awesome haya cargado, y gira al abrir. La
+       transición la anula sola la regla global de prefers-reduced-motion. */
+    .lectura-guiada > summary::after {
+      content: '';
+      flex: none;
+      margin-left: auto;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translateY(-0.12rem) rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+
+    .lectura-guiada[open] > summary::after {
+      transform: translateY(0.06rem) rotate(-135deg);
+    }
+
+    .lectura-guiada[open] > summary {
+      border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+    }
+
+    .lectura-guiada-cuerpo {
+      padding: 0.9rem 1rem 1rem;
+    }
+
+    .lectura-guiada-cuerpo > p {
+      margin: 0 0 0.7rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #334155;
+    }
+
+    .lectura-guiada-cuerpo > p:last-child {
+      margin-bottom: 0;
+    }
+
+    .lectura-guiada-cuerpo strong {
+      color: #012820;
+    }
+
+    /* La idea transferible: lo único que hay que recordar cuando ya no
+       se tenga el gráfico delante. Va en tarjeta aparte porque el
+       estudiante que solo abre la caja y ojea debe llevarse ESTO.
+
+       Es un <p> y no un <div>, y eso NO es indiferente: el modo --prosa
+       de verifica_bloques.py solo mira dentro de <p>, <li> y <h4>. En un
+       <div>, cualquier cifra escrita aquí quedaría fuera de la
+       verificación, que es exactamente el agujero que esa herramienta
+       existe para tapar. El selector lleva la clase junto a la etiqueta
+       para ganarle en especificidad a `.lectura-guiada-cuerpo > p`. */
+    .lectura-guiada-cuerpo > p.lectura-guiada-clave {
+      margin: 0.85rem 0 0;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.15);
+      border-left: 3px solid #012820;
+      border-radius: 0.4rem;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .lectura-guiada-clave .rotulo {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #012820;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .lectura-guiada > summary {
+        align-items: flex-start;
+        line-height: 1.35;
+      }
+
+      .lectura-guiada > summary::after {
+        margin-top: 0.2rem;
+      }
+    }
   </style>
 </head>
 
@@ -3361,13 +3518,59 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> Los tres deslizadores reparten la culpa entre las dos causas: $C$ dice cuánta
+            población entró en el marco, la brecha dice cuánto se diferenciaban los que quedaron fuera, y $\rho$, cuánto
+            más devolvían la papeleta los partidarios de un candidato que los del otro.</p>
+          <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
+            estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
+            naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
+            resultado que se publicó. Recórrela —mucha no cobertura y poca no respuesta, o justo al revés— y el punto
+            negro sigue encima de ella: el sondeo sale idéntico en los dos casos.</p>
+          <p><strong>Y ahí está la trampa.</strong> Si escenarios distintos producen el mismo dato observado, el dato no
+            puede decirte en cuál estabas. Ninguna cantidad de papeletas arregla eso, porque no es un problema de ruido:
+            la información no está. Lo que zanjó el caso no fue el resultado nacional, sino Allentown: allí el marco era
+            completo, lo que pone una de las dos causas exactamente a cero y deja la otra a la vista.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            Cuando dos causas entran sumadas en un mismo número, los datos por sí solos no las separan: hace falta
+            información de fuera de la encuesta. Es la primera aparición de un problema que vuelve en el capítulo 8, al
+            decidir qué se está suponiendo sobre los que no respondieron para poder ponderar.
+          </p>
+        </div>
+      </details>
+
       <p>La aritmética entera cabe en unas líneas. Ni una sola función de librería: cuatro números y dos divisiones.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La descomposición del sesgo del Literary Digest">
-          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
-        <div class="code-tab-panel" data-lang="python">
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># El sesgo del Literary Digest, partido en sus dos causas. El modelo tiene
+# cuatro numeros y ninguna libreria: es aritmetica, y esa es la leccion.
+#
+#   p    apoyo real a Roosevelt (base de dos candidatos)
+#   C    fraccion de votantes que estaba en el marco (listas de telefono,
+#        registros de automovil, directorios)
+#   d    cuanto MAS apoyaban a Roosevelt los que quedaron fuera del marco
+#   rho  tasa de respuesta de los partidarios de Roosevelt dividida por la de
+#        los de Landon
+p &lt;- 0.62245; C &lt;- 0.55; d &lt;- 0.25
+p_obs &lt;- 972897 / (1293669 + 972897)              # lo que publico el sondeo
+
+p_C   &lt;- p - (1 - C) * d                          # apoyo dentro del marco
+rho   &lt;- p_obs * (1 - p_C) / (p_C * (1 - p_obs))  # la rho que reproduce el sondeo
+p_hat &lt;- p_C * rho / (p_C * rho + (1 - p_C))
+
+round(c(p_C = p_C, rho = rho, p_estimado = p_hat, p_publicado = p_obs), 5)
+#&gt;         p_C         rho  p_estimado p_publicado
+#&gt;     0.50995     0.72270     0.42924     0.42924</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># El sesgo del Literary Digest, partido en sus dos causas. El modelo tiene
 # cuatro numeros y ninguna libreria: es aritmetica, y esa es la leccion.
 #
@@ -3398,9 +3601,25 @@ print(pd.Series({"p_C": p_C, "rho": rho, "p_estimado": p_hat,
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Los dos sumandos del sesgo">
-          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
-        <div class="code-tab-panel" data-lang="python">
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
+sesgo_cobertura &lt;- p_C - p                        # aunque contestaran todos
+sesgo_respuesta &lt;- p_hat - p_C                    # aunque el marco fuera perfecto
+round(c(sesgo_cobertura    = sesgo_cobertura,
+        sesgo_no_respuesta = sesgo_respuesta,
+        suma               = sesgo_cobertura + sesgo_respuesta,
+        sesgo_total        = p_hat - p), 5)
+#&gt;    sesgo_cobertura sesgo_no_respuesta               suma        sesgo_total
+#&gt;           -0.11250           -0.08071           -0.19321           -0.19321
+
+# Los dos sumandos dan el total EXACTAMENTE: no es una aproximacion.
+round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12)
+#&gt; [1] 0</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura = p_C - p                 # aunque contestaran todos
 sesgo_respuesta = p_hat - p_C             # aunque el marco fuera perfecto
@@ -3512,6 +3731,7 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La población agpop">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># agpop: los 3078 condados agricolas de EE.UU. (censo agricola de 1992).
@@ -3534,6 +3754,28 @@ head(agpop[, c("county", "state", "acres92", "region")], 3)
 #&gt; 2        ANCHORAGE AREA    AK   47146      W
 #&gt; 3        FAIRBANKS AREA    AK  141338      W</code></pre>
         </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># agpop: los 3078 condados agricolas de EE.UU. (censo agricola de 1992).
+# Es la POBLACION del curso, y como esta entera se puede comprobar cualquier
+# estimacion contra el valor verdadero. Fuera de un aula eso no pasa nunca.
+agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
+
+# Las cuatro piezas del marco conceptual, sobre este archivo:
+#   poblacion objetivo  -&gt; los condados agricolas de EE.UU.
+#   marco muestral      -&gt; la lista de 3078 filas de este archivo
+#   unidad              -&gt; un condado (una fila)
+#   variable de interes -&gt; acres92, la superficie sembrada en 1992
+print(pd.Series({"condados": len(agpop), "variables": agpop.shape[1],
+                 "estados": agpop["state"].nunique()}).to_string())
+#&gt; condados     3078
+#&gt; variables      15
+#&gt; estados        50
+print(agpop[["county", "state", "acres92", "region"]].head(3).to_string(index=False))
+#&gt;                county state  acres92 region
+#&gt; ALEUTIAN ISLANDS AREA    AK   683533      W
+#&gt;        ANCHORAGE AREA    AK    47146      W
+#&gt;        FAIRBANKS AREA    AK   141338      W</code></pre>
+        </div>
       </div>
 
       <h3>Un error de procesamiento que viene de fábrica</h3>
@@ -3544,6 +3786,7 @@ head(agpop[, c("county", "state", "acres92", "region")], 3)
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El código de faltante -99">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
@@ -3561,6 +3804,26 @@ round(c(marco_completo = mean(agpop$acres92),
                                 mean(agpop$acres92) - 1)), 4)
 #&gt; marco_completo   solo_validos diferencia_pct
 #&gt;    306676.9714    308582.4122         0.6213</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
+# NO-VALOR disfrazado de numero, y pandas lo promedia sin protestar.
+print(pd.Series({v: int((agpop[v] == -99).sum())
+                 for v in ["acres92", "acres87", "acres82"]}).to_string())
+#&gt; acres92    19
+#&gt; acres87    23
+#&gt; acres82    17
+
+# Que le hace a la media. La decision de este material es usar el marco
+# completo de Lohr, N = 3078, sin excluir nada: es una poblacion perfectamente
+# valida que contiene 19 codigos -99. Lo que NO es, es la superficie media real.
+completo = agpop["acres92"].mean()
+validos  = agpop.loc[agpop["acres92"] != -99, "acres92"].mean()
+print(pd.Series({"marco_completo": completo, "solo_validos": validos,
+                 "diferencia_pct": 100 * (validos / completo - 1)}).round(4).to_string())
+#&gt; marco_completo    306676.9714
+#&gt; solo_validos      308582.4122
+#&gt; diferencia_pct         0.6213</code></pre>
         </div>
       </div>
 
@@ -3739,6 +4002,7 @@ round(c(marco_completo = mean(agpop$acres92),
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Recuperar el censo desde los pesos">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Dos encuestas sobre el mismo item -"soy mas inteligente que la persona
@@ -3759,6 +4023,27 @@ c(suma_tel = sum(censo_tel), suma_online = sum(censo_online),
 #&gt;            suma_tel         suma_online discrepancia_maxima
 #&gt;             750.124             749.792               0.280</code></pre>
         </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># Dos encuestas sobre el mismo item -"soy mas inteligente que la persona
+# promedio"- en la misma poblacion. Una es telefonica por marcacion aleatoria
+# (1838 entrevistas de 79014 numeros); la otra es un panel de voluntarios de
+# Mechanical Turk (983 personas pagadas a 0,25 dolares).
+tel    = pd.read_csv("CSV data sets for SDA 3e/intelltel.csv")
+online = pd.read_csv("CSV data sets for SDA 3e/intellonline.csv")
+pesos  = pd.read_csv("CSV data sets for SDA 3e/intellwts.csv")
+
+# Las dos encuestas se calibraron al censo de 2010 sobre las mismas 8 celdas
+# de sexo x edad x raza. Eso permite RECUPERAR el censo desde los pesos, y por
+# dos caminos independientes que tienen que coincidir.
+censo_tel    = pesos["tel_n"]    * pesos["tel_wgt"]
+censo_online = pesos["online_n"] * pesos["online_wgt"]
+print(pd.Series({"suma_tel": censo_tel.sum(), "suma_online": censo_online.sum(),
+                 "discrepancia_maxima": (censo_tel - censo_online).abs().max()
+                 }).round(3).to_string())
+#&gt; suma_tel               750.124
+#&gt; suma_online            749.792
+#&gt; discrepancia_maxima      0.280</code></pre>
+        </div>
       </div>
 
       <p>Coinciden con una discrepancia máxima de 0,28 sobre 750, que es el redondeo de los pesos a tres decimales. Con
@@ -3767,6 +4052,7 @@ c(suma_tel = sum(censo_tel), suma_online = sum(censo_online),
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Composición demográfica de las dos encuestas">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># La composicion demografica de cada muestra frente a la del censo.
@@ -3792,6 +4078,33 @@ c(edad_telefonica = mean(tel$age), edad_online = mean(online$age))
 #&gt; edad_telefonica     edad_online
 #&gt;        60.74864        33.71414</code></pre>
         </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># La composicion demografica de cada muestra frente a la del censo. Los
+# porcentajes se redondean ANTES de restar, igual que en la pestana de R: si se
+# restara antes de redondear, la ultima cifra de sesgo_online no coincidiria.
+comp = pd.DataFrame({
+    "celda":  pesos["sex"] + " " + pesos["agegroup"] + " " + pesos["race"],
+    "censo":  (100 * censo_tel / censo_tel.sum()).round(1),
+    "telef":  (100 * pesos["tel_n"] / pesos["tel_n"].sum()).round(1),
+    "online": (100 * pesos["online_n"] / pesos["online_n"].sum()).round(1)})
+comp["sesgo_online"] = comp["online"] - comp["censo"]
+print(comp.to_string(index=False))
+#&gt;                 celda  censo  telef  online  sesgo_online
+#&gt; Female Young Nonwhite    7.6    2.6    11.8           4.2
+#&gt;    Female Young White   18.1    6.2    31.7          13.6
+#&gt;   Female Old Nonwhite    7.6    6.1     1.4          -6.2
+#&gt;      Female Old White   18.1   47.8    13.7          -4.4
+#&gt;   Male Young Nonwhite    7.2    1.5     8.2           1.0
+#&gt;      Male Young White   17.1    5.1    25.8           8.7
+#&gt;     Male Old Nonwhite    7.2    4.8     0.8          -6.4
+#&gt;        Male Old White   17.1   26.0     6.4         -10.7
+
+# La edad media resume el desastre en un numero.
+print(pd.Series({"edad_telefonica": tel["age"].mean(),
+                 "edad_online": online["age"].mean()}).to_string())
+#&gt; edad_telefonica    60.74864
+#&gt; edad_online        33.71414</code></pre>
+        </div>
       </div>
 
       <div class="warning">
@@ -3814,9 +4127,33 @@ c(edad_telefonica = mean(tel$age), edad_online = mean(online$age))
         <div class="simulador-lectura"></div>
       </div>
 
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este gráfico?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El selector cambia la variable por la que se comparan las dos encuestas. Y
+            está partido en dos mitades que conviene no confundir: las ocho celdas de sexo, edad y raza son
+            <em>aquellas por las que se calibró</em>; educación, región e ingreso, no.</p>
+          <p><strong>Qué se ve.</strong> Empieza por las celdas y quédate con la impresión. Después cambia a educación o
+            a ingreso, donde no hay censo de referencia y solo se comparan las dos encuestas entre sí: la distancia
+            entre las barras verde y naranja sigue ahí, intacta. Ponderar no acercó las dos muestras a la población en
+            general; las acercó en las variables por las que se ponderó, y en ninguna más.</p>
+          <p><strong>Por qué importa.</strong> Un peso de calibración no es un corrector de sesgo: es una promesa
+            condicional. Dice «dentro de cada celda, quien contestó se parece a quien no contestó». Si la razón por la
+            que alguien coge el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
+            raza—, la promesa es falsa y los pesos no lo detectan.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            La ponderación arregla lo que mides, no lo que te falta. Antes de aceptar una estimación ponderada, pregunta
+            siempre por qué variables se calibró y cuáles quedaron fuera. Es el mecanismo completo del capítulo 4
+            (post-estratificación) y del 8 (ponderación por no respuesta).
+          </p>
+        </div>
+      </details>
+
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La estimación con y sin pesos">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
@@ -3832,6 +4169,24 @@ round(rbind(
 #&gt;            sin_pesos con_pesos
 #&gt; telefonica    0.6164    0.6476
 #&gt; online        0.6755    0.6563
+
+# Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
+# y raza no arregla una seleccion que fallo por otras variables.</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
+# acuerdo" (2). El 5 es "no se", que cuenta como 0.
+agree_tel    = tel["int"].isin([1, 2]).astype(int)
+agree_online = online["int"].isin([1, 2]).astype(int)
+
+print(pd.DataFrame(
+    {"sin_pesos": [agree_tel.mean(), agree_online.mean()],
+     "con_pesos": [np.average(agree_tel,    weights=tel["postwt"]),
+                   np.average(agree_online, weights=online["postwt"])]},
+    index=["telefonica", "online"]).round(4).to_string())
+#&gt;             sin_pesos  con_pesos
+#&gt; telefonica     0.6164     0.6476
+#&gt; online         0.6755     0.6563
 
 # Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
 # y raza no arregla una seleccion que fallo por otras variables.</code></pre>
@@ -3866,9 +4221,26 @@ round(rbind(
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La fórmula del sesgo de no respuesta">
-          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
-        <div class="code-tab-panel" data-lang="python">
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># La formula del sesgo de no respuesta, termino a termino.
+#   mu = r mu_R + (1 - r) mu_M     =&gt;     mu_R - mu = (1 - r)(mu_R - mu_M)
+r &lt;- 0.045; mu_R &lt;- 0.84; mu_M &lt;- 0.30
+mu &lt;- r * mu_R + (1 - r) * mu_M
+round(c(tasa_respuesta         = r,
+        media_respondientes    = mu_R,
+        media_no_respondientes = mu_M,
+        media_poblacional      = mu,
+        sesgo                  = mu_R - mu,
+        sesgo_por_la_formula   = (1 - r) * (mu_R - mu_M)), 5)
+#&gt;         tasa_respuesta    media_respondientes media_no_respondientes
+#&gt;                 0.0450                 0.8400                 0.3000
+#&gt;      media_poblacional                  sesgo   sesgo_por_la_formula
+#&gt;                 0.3243                 0.5157                 0.5157</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># La formula del sesgo de no respuesta, termino a termino.
 #   mu = r mu_R + (1 - r) mu_M     =&gt;     mu_R - mu = (1 - r)(mu_R - mu_M)
 r, mu_R, mu_M = 0.045, 0.84, 0.30
@@ -3896,10 +4268,16 @@ print(pd.Series({"tasa_respuesta": r, "media_respondientes": mu_R,
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Sesgo con clases de respuesta">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
 # hacen de clases; r_h es la tasa de respuesta de cada una.
+#
+# Ojo al reutilizar nombres: el bloque anterior deja `mu` valiendo una
+# proporcion del ejemplo de juguete. Aqui se REDEFINE como la media de acres92,
+# que es lo que significa en este bloque; sin esa linea, el bloque heredaria el
+# valor equivocado en cuanto se ejecutara la cadena de arriba abajo.
 #
 #   mu_R = suma(N_h r_h mu_h) / suma(N_h r_h)      sesgo = mu_R - mu
 reg  &lt;- split(agpop$acres92, agpop$region)
@@ -3920,6 +4298,45 @@ round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
         desiguales  = sesgo_no_respuesta(c(0.50, 0.65, 0.35, 0.20))), 2)
 #&gt; todas_al_60 todas_al_10  desiguales
 #&gt;        0.00        0.00   -30359.12</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
+# hacen de clases; r_h es la tasa de respuesta de cada una.
+#
+# Ojo al reutilizar nombres: el bloque anterior deja `mu` valiendo una
+# proporcion del ejemplo de juguete. Aqui se REDEFINE como la media de acres92,
+# que es lo que significa en este bloque; sin esa linea, el bloque heredaria el
+# valor equivocado en cuanto se ejecutara la cadena de arriba abajo.
+#
+#   mu_R = suma(N_h r_h mu_h) / suma(N_h r_h)      sesgo = mu_R - mu
+reg  = agpop.groupby("region")["acres92"]
+N_h  = reg.size()                       # el indice queda NC, NE, S, W
+mu_h = reg.mean()
+mu   = agpop["acres92"].mean()
+
+def sesgo_no_respuesta(r_h):
+    peso = N_h * r_h
+    return (peso * mu_h).sum() / peso.sum() - mu
+
+# Tres escenarios. Los dos primeros tienen tasas IGUALES entre clases: una es
+# altisima y la otra ridicula, y las dos dan sesgo cero. El tercero baja la
+# tasa donde los condados son mas grandes (NC, NE, S, W en orden alfabetico).
+#
+# El `+ 0.0` no cambia ninguna cifra: normaliza el CERO CON SIGNO. Con tasas
+# iguales el sesgo es cero, pero en coma flotante sale -5.8e-11, y al redondear
+# queda un -0.0 que pandas imprime como "-0.00" y R como "0.00". En IEEE 754,
+# -0.0 + 0.0 = +0.0, asi que la suma solo hace que las dos pestanas publiquen la
+# misma cifra para el mismo numero. El residuo binario sigue ahi si se mira sin
+# redondear, y es la leccion de fondo: "exactamente cero" y "cero en coma
+# flotante" no son lo mismo.
+print((pd.Series({
+    "todas_al_60": sesgo_no_respuesta(np.repeat(0.60, 4)),
+    "todas_al_10": sesgo_no_respuesta(np.repeat(0.10, 4)),
+    "desiguales":  sesgo_no_respuesta(np.array([0.50, 0.65, 0.35, 0.20]))
+    }).round(2) + 0.0).to_string())
+#&gt; todas_al_60        0.00
+#&gt; todas_al_10        0.00
+#&gt; desiguales    -30359.12</code></pre>
         </div>
       </div>
 
@@ -3943,6 +4360,30 @@ round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> Una tasa de respuesta por región, con las medias reales de cada una debajo. La
+            línea verde es la verdad —la media de los 3 078 condados— y la naranja, lo que estimarías con quienes
+            respondieron.</p>
+          <p><strong>Qué se ve.</strong> Baja las cuatro tasas a la vez hasta el mínimo: la línea naranja no se mueve ni
+            un píxel, aunque la lectura de abajo diga que responden poquísimos condados. Ahora sube tres y deja una
+            sola hundida: la naranja se despega de inmediato. Fíjate en que puedes llegar a la misma tasa global de
+            respuesta con la naranja pegada a la verde o muy lejos de ella.</p>
+          <p><strong>La consecuencia práctica.</strong> La tasa global de respuesta —la cifra que se reporta, la que
+            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de coste, no de
+            puntería. Y hay algo que este simulador puede enseñar y una encuesta real no: aquí ves la línea verde
+            porque <code>agpop</code> es una población completa. En campo, esa línea no existe; solo tienes la naranja,
+            y nada dentro de los datos te dice a qué distancia quedó.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            No sesga que falte gente: sesga que falte de manera <strong>desigual</strong>. Por eso las agencias vigilan
+            las tasas por subgrupo y no solo la global, y por eso el capítulo 8 construye clases de respuesta antes de
+            ponderar nada.
+          </p>
+        </div>
+      </details>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -4123,6 +4564,29 @@ round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
         <div class="simulador-lectura"></div>
       </div>
 
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de esta herramienta?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué haces aquí.</strong> No mueves un parámetro: emites un diagnóstico. Lees un ítem, señalas qué
+            defectos tiene y compruebas si acertaste. El ejercicio consiste en pasar de «esta pregunta suena rara» a
+            <em>nombrar</em> el defecto, que es lo único que se puede corregir.</p>
+          <p><strong>Qué se ve al comparar.</strong> Mira las reformulaciones: ninguna es más corta que el original.
+            Casi todas añaden algo —un marco temporal, un umbral concreto, una escala en vez de un sí/no—, y todas
+            preguntan una cosa sola. Ese es el patrón: una pregunta mala suele serlo por vaguedad o por acumulación, y
+            las dos se arreglan concretando y separando, no recortando.</p>
+          <p><strong>Y fíjate en lo que falta.</strong> Aquí no hay ni un porcentaje, a diferencia del resto del
+            capítulo. Es deliberado y forma parte de la lección: el efecto de una redacción concreta sobre una
+            respuesta concreta no se puede leer de estos datos. Ponerle una cifra sería inventarla, que es justo el
+            error que el módulo enseña a no cometer.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            El sesgo de medición se combate con vocabulario, no con estadística: pregunta sugestiva, doble cañón,
+            término sin definir, doble negación, falta de marco temporal. Quien sabe nombrarlos los ve en el borrador;
+            quien no, los descubre cuando los datos ya están recogidos y no hay nada que hacer.
+          </p>
+        </div>
+      </details>
+
       <div class="note">
         <p><strong>La regla que resume el módulo.</strong> Ninguna prueba estadística detecta una pregunta mal
           redactada: los datos salen limpios, los intervalos salen estrechos y el número sale equivocado. La única
@@ -4243,6 +4707,29 @@ round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
         <div class="simulador-lectura"></div>
       </div>
 
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de estos dos gráficos?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> Un solo deslizador que importa: el sesgo, expresado como porcentaje de la
+            media poblacional. El otro solo elige qué barra se detalla abajo.</p>
+          <p><strong>Qué se ve.</strong> Con el sesgo en cero, las barras del primer gráfico caen hasta desaparecer al
+            llegar al censo: sin sesgo, mirar a todo el mundo da la respuesta exacta. Sube el deslizador un poco —basta
+            un porcentaje pequeño— y la caída se para en seco a media altura. La última barra ya no es cero, y no lo
+            será nunca: ahí $n = N$, la varianza vale exactamente cero y lo único que sobrevive es el sesgo.</p>
+          <p><strong>El segundo gráfico es el que cambia cómo se lee un conjunto de datos grande.</strong> Dice qué
+            fracción del error cuadrático medio la pone el sesgo, y sube hacia el 100 % conforme crece $n$. Lo que hay que leer ahí es un
+            umbral: pasado cierto tamaño, casi todo tu error dejó de ser muestreo, y recoger más datos ya no compra
+            nada. La pregunta «¿de qué tamaño hago la muestra?» solo tiene respuesta después de la pregunta «¿de qué
+            tamaño es mi sesgo?».</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            $n$ está en la varianza y no está en el sesgo. Por eso el tamaño compra precisión pero nunca puntería, y por
+            eso un censo mal diseñado se equivoca con toda la seguridad del mundo. Es la asimetría que ordena el resto
+            del curso.
+          </p>
+        </div>
+      </details>
+
       <h3>Cuánto vale realmente una muestra sesgada de 2,3 millones</h3>
 
       <p>Volvamos al <em>Literary Digest</em> con la fórmula del ECM. El sondeo tenía 2 266 566 papeletas útiles y un
@@ -4251,6 +4738,7 @@ round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El sesgo del sondeo del Literary Digest">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Error total = error de muestreo + error ajeno al muestreo. En terminos de
@@ -4269,6 +4757,30 @@ round(c(n_digest = n_digest, p_sondeo = p_sondeo, p_real = p_real, sesgo = sesgo
 #&gt;      n_digest      p_sondeo        p_real         sesgo
 #&gt; 2266566.00000       0.42924       0.62245      -0.19321</code></pre>
         </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># Error total = error de muestreo + error ajeno al muestreo. En terminos de
+# error cuadratico medio,  ECM = sesgo^2 + varianza,  y solo el segundo
+# sumando baja con n.
+#
+# El sondeo del Literary Digest de 1936, sobre la base de dos candidatos:
+digest_landon    = 1293669
+digest_roosevelt =  972897
+n_digest = digest_landon + digest_roosevelt
+p_sondeo = digest_roosevelt / n_digest
+p_real   = 61 / (61 + 37)             # Roosevelt 61 %, Landon 37 % en la eleccion
+sesgo    = p_sondeo - p_real
+S2       = p_real * (1 - p_real)
+# float_format explicito: sin el, pandas ve juntos 2,3 millones y 0,43 y pasa
+# toda la serie a notacion cientifica, que aqui no se lee. Las cifras son las
+# mismas; lo unico que se fija es como se imprimen.
+print(pd.Series({"n_digest": n_digest, "p_sondeo": p_sondeo,
+                 "p_real": p_real, "sesgo": sesgo}).round(5)
+      .to_string(float_format=lambda v: f"{v:.5f}"))
+#&gt; n_digest   2266566.00000
+#&gt; p_sondeo         0.42924
+#&gt; p_real           0.62245
+#&gt; sesgo           -0.19321</code></pre>
+        </div>
       </div>
 
       <div class="code-tabs">
@@ -4285,17 +4797,46 @@ round(c(recm_digest = sqrt(ecm_digest), recm_mas = sqrt(ecm_mas),
 #&gt; recm_digest    recm_mas  veces_peor
 #&gt;      0.1932      0.0153     12.6035
 
+# El suelo, tamano a tamano. Solo la varianza baja con n: la columna insesgada
+# tiende a cero y la sesgada se para en el sesgo y ya no se mueve.
+ecm     &lt;- function(n, b) b^2 + S2 / n
+tamanos &lt;- c(1000, 10000, 100000, 1000000, n_digest)
+data.frame(n              = tamanos,
+           recm_insesgado = round(sqrt(ecm(tamanos, 0)), 5),
+           recm_sesgado   = round(sqrt(ecm(tamanos, sesgo)), 5))
+#&gt;         n recm_insesgado recm_sesgado
+#&gt; 1    1000        0.01533      0.19382
+#&gt; 2   10000        0.00485      0.19327
+#&gt; 3  100000        0.00153      0.19322
+#&gt; 4 1000000        0.00048      0.19321
+#&gt; 5 2266566        0.00032      0.19321
+
 # Tamano efectivo: el n de un muestreo aleatorio con el MISMO error cuadratico
 # medio que el sondeo sesgado. Se despeja de  S2 / n = ECM.
 round(S2 / ecm_digest, 2)
 #&gt; [1] 6.3</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Error cuadratico medio = sesgo^2 + varianza. Solo el segundo sumando baja
-# con n, asi que el primero pone un SUELO que ningun tamano de muestra cruza.
+          <pre><code class="language-python"># El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
+#
+# Los tres numeros se vuelven a declarar, ya redondeados, para que el bloque se
+# pueda ejecutar suelto. Se comprobo que no cambia nada de lo publicado: partir
+# de estos valores redondeados o de los exactos del bloque anterior da las
+# mismas cifras en las dos tablas, hasta el ultimo decimal que se imprime.
 p_real, sesgo, n_digest = 0.62245, -0.19321, 2266566
 S2 = p_real * (1 - p_real)
 
+ecm_digest = sesgo**2 + S2 / n_digest
+ecm_mas    = S2 / 1000
+print(pd.Series({"recm_digest": np.sqrt(ecm_digest),
+                 "recm_mas":    np.sqrt(ecm_mas),
+                 "veces_peor":  np.sqrt(ecm_digest / ecm_mas)}).round(4).to_string())
+#&gt; recm_digest     0.1932
+#&gt; recm_mas        0.0153
+#&gt; veces_peor     12.6035
+
+# El suelo, tamano a tamano. Solo la varianza baja con n: la columna insesgada
+# tiende a cero y la sesgada se para en el sesgo y ya no se mueve.
 ecm = lambda n, b: b**2 + S2 / n
 tamanos = [1000, 10000, 100000, 1000000, n_digest]
 tabla = pd.DataFrame({
@@ -4335,6 +4876,27 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este gráfico?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El tamaño de una muestra aleatoria pequeña. Las barras son su error; la línea
+            naranja, el del sondeo entero del <em>Digest</em>.</p>
+          <p><strong>Qué se ve, y es lo único que hay que ver.</strong> Las barras bajan deprisa. La línea no baja: es
+            horizontal. Y se cruzan en un número de votantes que cabe en una mesa. Busca ese cruce moviendo el
+            deslizador hasta que la lectura de abajo cambie de ganador.</p>
+          <p><strong>Por qué la línea es horizontal.</strong> Porque en su altura no aparece $n$ por ningún lado. Ese es
+            el argumento entero del módulo, dibujado: una cantidad que depende del tamaño contra otra que no. Puedes
+            multiplicar las papeletas por mil y la línea se queda donde está. Cualquier conjunto de datos cuyo sesgo no
+            sepas acotar es una línea horizontal, y no hay volumen que pase por debajo.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            «Muchos datos» no es una propiedad de calidad; es una propiedad de cantidad. Antes de dejarte impresionar
+            por el tamaño de una base, pregunta cómo entraron las unidades. El módulo 9 lleva este mismo argumento a los
+            datos de entrenamiento de un modelo, donde la tentación de confundir volumen con validez es mayor.
+          </p>
+        </div>
+      </details>
 
       <div class="note">
         <p><strong>Por qué esto no es un truco retórico.</strong> El cálculo es honesto en las dos direcciones: si el
@@ -4386,6 +4948,7 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Las dos poblaciones del curso">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Las dos poblaciones del curso. agpop, por region:
@@ -4404,6 +4967,32 @@ c(empresas = nrow(BigLucy), variables = ncol(BigLucy),
 #&gt;      empresas     variables ingreso_medio      pct_spam
 #&gt;    85296.0000       11.0000      429.5012       60.8950</code></pre>
         </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># Las dos poblaciones del curso. agpop, por region:
+resumen = pd.DataFrame({"N": N_h,
+                        "media": mu_h.round().astype(int),
+                        "sd": reg.std().round().astype(int)}).rename_axis(None)
+print(resumen.sort_values("media", ascending=False).to_string())
+#&gt;       N   media      sd
+#&gt; W   422  723344  835639
+#&gt; NC 1054  325951  271303
+#&gt; S  1382  199140  243956
+#&gt; NE  220   90619   79365
+
+# BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
+# dentro del paquete TeachingSampling, que no existe para Python; aqui se lee el
+# CSV que exporta precalculo/exporta_biglucy.R desde ese mismo paquete. Las dos
+# pestanas calculan sobre el mismo dato en vez de copiarse las cifras.
+big = pd.read_csv("precalculo/salidas/BigLucy.csv.gz")
+print(pd.Series({"empresas": len(big), "variables": big.shape[1],
+                 "ingreso_medio": big["Income"].mean(),
+                 "pct_spam": 100 * (big["SPAM"] == "yes").mean()}).round(4)
+      .to_string(float_format=lambda v: f"{v:.4f}"))
+#&gt; empresas        85296.0000
+#&gt; variables          11.0000
+#&gt; ingreso_medio     429.5012
+#&gt; pct_spam           60.8950</code></pre>
+        </div>
       </div>
 
       <div class="simulador" data-simulador="poblaciones">
@@ -4417,6 +5006,32 @@ c(empresas = nrow(BigLucy), variables = ncol(BigLucy),
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este explorador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> La población que se dibuja: <code>agpop</code> entera, <code>agpop</code>
+            partida por regiones o <code>BigLucy</code>. No hay parámetros que tocar; lo que se explora es la
+            <em>forma</em>.</p>
+          <p><strong>Qué se ve.</strong> Una montaña pegada al eje izquierdo y una cola larguísima hacia la derecha. Y
+            un detalle que conviene mirar dos veces: la línea de la media no cae donde está el grueso de los condados,
+            sino bastante a su derecha. En una población así, «el condado medio» no existe —hay muchos pequeños y unos
+            pocos enormes que tiran de la media—, y una muestra que por azar recoja o no recoja uno de los grandes dará
+            resultados muy distintos.</p>
+          <p><strong>Y lo que el gráfico te está escondiendo.</strong> La cola está recortada en el percentil 99 para
+            que se vea algo; sin recorte, todo lo demás se aplastaría contra el eje. Es decir, la asimetría real es
+            <em>peor</em> que la que estás viendo. Cuando cambies a regiones verás la otra mitad del problema: las
+            cuatro medias se separan muchísimo entre sí, y la media global —la única que se estimaría sin estratificar—
+            queda lejos de las dos extremas.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            Esta forma no es un detalle descriptivo: es la razón de ser de medio curso. Su asimetría hace que con $n$
+            pequeño la media muestral no sea normal (capítulo 2), que estratificar por tamaño gane muchísimo
+            (capítulo 4) y que las probabilidades proporcionales al tamaño sean la respuesta natural (capítulo 6). Mira
+            el histograma antes de elegir el diseño, no después.
+          </p>
+        </div>
+      </details>
 
       <div class="space-y-4">
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4638,7 +5253,13 @@ c(empresas = nrow(BigLucy), variables = ncol(BigLucy),
                 una ley está más motivado que quien está conforme), barrera económica (el costo excluye a los de menos
                 recursos y a los indiferentes) y no cobertura tecnológica.</li>
             </ul>
-            <pre><code class="language-r"># Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="La fórmula del sesgo de no respuesta sobre la encuesta de Parade">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
 #   mu = r mu_R + (1 - r) mu_M
 # Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
 # esto es lo que tendrian que opinar los que NO llamaron para que el
@@ -4651,6 +5272,23 @@ rbind(si_la_poblacion_fuera = mu,
 #&gt;                         [,1]   [,2]   [,3]   [,4]
 #&gt; si_la_poblacion_fuera 0.2000 0.3000 0.4000 0.5000
 #&gt; los_que_no_llamaron   0.1944 0.2955 0.3965 0.4975</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python"># Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
+#   mu = r mu_R + (1 - r) mu_M
+# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
+# esto es lo que tendrian que opinar los que NO llamaron para que el
+# porcentaje poblacional fuera cada valor de la primera fila.
+r, mu_R = 0.01, 0.75        # una fraccion diminuta de los lectores llamo
+mu = np.array([0.20, 0.30, 0.40, 0.50])
+print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
+                   index=["si_la_poblacion_fuera", "los_que_no_llamaron"]
+                   ).to_string(header=False))
+
+#&gt; si_la_poblacion_fuera  0.2000  0.3000  0.4000  0.5000
+#&gt; los_que_no_llamaron    0.1944  0.2955  0.3965  0.4975</code></pre>
+              </div>
+            </div>
             <p style="margin-bottom:0;">La segunda fila es la clave. Con una participación del 1 %, prácticamente
               cualquier valor poblacional es compatible con el 75 % observado: para que la población estuviera en el
               30 %, bastaría con que los que no llamaron estuvieran en el 29,55 %. El dato del 75 % no restringe casi
@@ -4683,7 +5321,13 @@ rbind(si_la_poblacion_fuera = mu,
               <li><strong>Diseño:</strong> muestreo sistemático 1 en 10.</li>
               <li><strong>Unidad de muestreo y de observación:</strong> el fondo. Aquí sí coinciden.</li>
             </ul>
-            <pre><code class="language-r"># Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión del sistemático 1 en 10">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
 # reparte la misma probabilidad de inclusion a todo lo que este en la lista.
 N_lista &lt;- 1250            # supongamos que el periodico publica 1250 fondos
 k &lt;- 10
@@ -4693,6 +5337,22 @@ c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
 
 # El defecto esta antes: si el periodico solo publica los fondos por encima de
 # cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python"># Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
+# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
+N_lista = 1250              # supongamos que el periodico publica 1250 fondos
+k = 10
+print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
+                 "n_esperado": N_lista / k}).to_string())
+
+# El defecto esta antes: si el periodico solo publica los fondos por encima de
+# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.
+#&gt; pi_k            0.1
+#&gt; suma_pi       125.0
+#&gt; n_esperado    125.0</code></pre>
+              </div>
+            </div>
             <p>Todo fondo de la lista tiene $\pi_k = 1/10$, y las probabilidades suman el tamaño de muestra esperado.
               Es un diseño probabilístico correcto, y en el capítulo 2 se verá que además suele ser <em>más</em>
               preciso que el aleatorio simple cuando la lista viene ordenada.</p>
@@ -4725,7 +5385,13 @@ c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
           <div class="ejercicio-panel solucion" id="cap1-e3-sol" hidden>
             <p><strong>Se retiene el 48,16 % del marco, y las tres pérdidas van en la misma dirección: hacia jurados
               más estables económicamente y con más arraigo residencial.</strong></p>
-            <pre><code class="language-r"># Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="El flujo de las citaciones, del marco a la muestra">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
 citaciones    &lt;- 100300
 no_entregada  &lt;-  23000
 no_calificado &lt;-   7000
@@ -4736,6 +5402,25 @@ round(c(citaciones = citaciones, quedan = quedan,
         perdida_pct   = 100 * (citaciones - quedan) / citaciones), 2)
 #&gt;    citaciones        quedan retencion_pct   perdida_pct
 #&gt;     100300.00      48300.00         48.16         51.84</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python"># Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
+citaciones    = 100300
+no_entregada  =  23000
+no_calificado =   7000
+excusado      =  22000
+quedan = citaciones - no_entregada - no_calificado - excusado
+print(pd.Series({"citaciones": citaciones, "quedan": quedan,
+                 "retencion_pct": 100 * quedan / citaciones,
+                 "perdida_pct":   100 * (citaciones - quedan) / citaciones
+                 }).round(2).to_string(float_format=lambda v: f"{v:.2f}"))
+
+#&gt; citaciones      100300.00
+#&gt; quedan           48300.00
+#&gt; retencion_pct       48.16
+#&gt; perdida_pct         51.84</code></pre>
+              </div>
+            </div>
             <ul>
               <li><strong>No cobertura del marco (antes de las 100 300):</strong> quien no vota <em>ni</em> conduce no
                 está en la lista. Suele ser gente muy pobre o muy mayor.</li>
@@ -4773,7 +5458,13 @@ round(c(citaciones = citaciones, quedan = quedan,
           <div class="ejercicio-panel solucion" id="cap1-e4-sol" hidden>
             <p><strong>Las probabilidades suman 8, como debe ser, y aun así el diseño es inservible: seis arquitectos
               tienen $\pi_k = 0$.</strong></p>
-            <pre><code class="language-r"># Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión de los catorce arquitectos">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
 # conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
 # son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
 N_arq &lt;- 14; n_arq &lt;- 8
@@ -4785,6 +5476,24 @@ c(suma_pi = sum(pi_arq), n = n_arq, minimo = min(pi_arq))
 # Suma n, como debe ser, y aun asi el diseno es inservible: seis arquitectos
 # tienen probabilidad CERO de salir, asi que ningun estimador puede ser
 # insesgado para la poblacion de los catorce.</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python"># Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
+# conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
+# son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
+N_arq, n_arq = 14, 8
+pi_arq = np.concatenate([np.ones(n_arq), np.zeros(N_arq - n_arq)])
+print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
+                 "minimo": int(pi_arq.min())}).to_string())
+
+# Suma n, como debe ser, y aun asi el diseno es inservible: seis arquitectos
+# tienen probabilidad CERO de salir, asi que ningun estimador puede ser
+# insesgado para la poblacion de los catorce.
+#&gt; suma_pi    8
+#&gt; n          8
+#&gt; minimo     0</code></pre>
+              </div>
+            </div>
             <p>Si todos aceptan, los ocho primeros del directorio entran con certeza y los seis últimos no entran
               nunca. La suma da 8 —la identidad $\sum_U \pi_k = n$ se cumple, y en el capítulo 2 se demostrará que
               siempre se cumple—, pero eso no salva nada: el requisito del módulo 3 es que <em>todas</em> las
@@ -4829,7 +5538,13 @@ c(suma_pi = sum(pi_arq), n = n_arq, minimo = min(pi_arq))
             <p>El diseño es bueno en un aspecto que conviene reconocer: si las ubicaciones cubren toda la biblioteca,
               cada <em>ubicación</em> tiene la misma probabilidad de salir. El problema es que la población de interés
               no son las ubicaciones.</p>
-            <pre><code class="language-r"># Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="El sesgo de muestrear ubicaciones en vez de libros">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de
 # necesidad de reencuadernacion es la mitad de la de los que si estan:
 p_estante &lt;- 0.30                     # tasa entre los libros presentes
@@ -4843,6 +5558,24 @@ rbind(fraccion_prestada = f,
 #&gt; fraccion_prestada 0.100 0.20 0.300
 #&gt; valor_real        0.285 0.27 0.255
 #&gt; sesgo             0.015 0.03 0.045</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python"># Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
+# los prestados no estan. Si una fraccion f esta prestada y su tasa de
+# necesidad de reencuadernacion es la mitad de la de los que si estan:
+p_estante = 0.30                      # tasa entre los libros presentes
+f = np.array([0.10, 0.20, 0.30])
+p_prestado = p_estante / 2
+p_real_libro = (1 - f) * p_estante + f * p_prestado
+print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4)],
+                   index=["fraccion_prestada", "valor_real", "sesgo"]
+                   ).to_string(header=False))
+
+#&gt; fraccion_prestada  0.100  0.20  0.300
+#&gt; valor_real         0.285  0.27  0.255
+#&gt; sesgo              0.015  0.03  0.045</code></pre>
+              </div>
+            </div>
             <p style="margin-bottom:0;">Los libros prestados no están en el estante, así que tienen $\pi_k = 0$: es no
               cobertura pura. Y no son libros cualquiera —son los más nuevos y los más solicitados—, así que su tasa
               de necesidad de reencuadernación difiere sistemáticamente. Nótese además el hueco vacío: si el

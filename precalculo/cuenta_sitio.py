@@ -30,6 +30,9 @@ COMPONENTES = [
     ("diagrama",  'data-diagrama="'),
     ("ciclo",     'data-ciclo="'),
     ("rúbrica",   'data-rubrica="'),
+    # La lectura guiada no lleva `data-`: es <details> nativo y no tiene motor
+    # al que declararle un id, así que se cuenta por su clase.
+    ("lectura",   '<details class="lectura-guiada"'),
 ]
 
 

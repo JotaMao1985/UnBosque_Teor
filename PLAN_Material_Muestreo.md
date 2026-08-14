@@ -1256,8 +1256,10 @@ ejercicios originales sobre datos de Lohr; publicar al cierre auditado de la fas
   la misma regla que ya existía para `options(scipen=)`: el bloque publicado tiene que correr solo.
   `mitools` lo necesitaba el bloque de las reglas de Rubin.
 - **El anotador de salidas es ahora una herramienta versionada** (`precalculo/anota_salidas.py`),
-  no un script de usar y tirar como en la fase 4. Ejecuta la cadena, parte la salida por los
-  marcadores y reescribe los `#>` de cada bloque. Con `--check` sirve de regresión.
+  no un script de usar y tirar como en la fase 4. Ejecuta la cadena y reescribe cada grupo `#>`
+  con la salida de **sus** sentencias, no la del bloque entero: esa distinción, que la primera
+  versión no hacía, es la que corrompió `cap1/cadena.R` en la fase 6 (ver T6.3). Con `--check`
+  sirve de regresión.
 
 ### Checkpoint 4 — Cierre — ✅ SUPERADO (2026-07-28)
 - [x] **Los 8 capítulos cubren las 16 semanas del cronograma**, verificado contra el syllabus
@@ -1279,6 +1281,295 @@ ejercicios originales sobre datos de Lohr; publicar al cierre auditado de la fas
   diseño con verificación crítica de IA, y la revisión integradora de los módulos I, II y III—
   tienen módulo propio (9 y 10) y no quedan como texto suelto.
 - [ ] **Revisión de contenido por Javier.** Pendiente.
+
+---
+
+### Fase 6 — Revisión del capítulo 1: redacción, paralelismo R/Python y lectura guiada — EN CURSO (2026-08-13)
+
+Nace de una petición de Javier: revisar ortografía y redacción del capítulo 1, dar a **cada** bloque
+de código su pestaña en el otro lenguaje, y poner tras cada gráfico o simulador una caja expandible
+que le diga al estudiante qué debía extraer. Con auditoría.
+
+**Decisiones tomadas el 2026-08-13.**
+1. Alcance: el capítulo 1 completo. El componente queda estampado en la plantilla y en los ocho
+   publicados; el contenido de las cajas, solo en el cap. 1. Los otros siete se deciden después, con
+   el piloto auditado a la vista.
+2. Las 5 soluciones de los ejercicios guiados (módulo 10) pasan a pestañas R + Python.
+3. La caja va **cerrada por defecto** y convive con `.simulador-lectura`, que se queda como está.
+4. Auditoría en tres capas: herramientas del repo, auditor independiente y pasada de navegador.
+
+**Suposiciones declaradas.** Los comentarios del código están sin tildes a propósito y la revisión
+ortográfica no los toca. En los tres bloques hoy solo-Python, al añadir R la pestaña activa pasa a
+ser R, homogéneo con la decisión de arquitectura nº 3. Las cajas van solo tras los simuladores: el
+glosario no es un gráfico.
+
+**Línea base medida antes de tocar nada (2026-08-13).** `ensambla_cap1.py` reproducía el capítulo
+byte a byte; `verifica_bloques.py --todos --prosa` daba 2 035 cifras de bloques y 365 de prosa con
+0 discrepancias. El cap. 1 tenía 18 bloques (14 R + 4 Python), 1 de los 12 `code-tabs` con las dos
+pestañas, 5 `<pre>` sueltos fuera de pestañas y 0 cajas de lectura guiada.
+
+**Los 16 bloques que faltan**, en orden de documento: `RP1`, `RP2` (módulo 1) · `PR1`, `PR2`
+(módulo 2) · `PR3`, `PR4`, `PR5`, `RP3`, `PR6` (módulo 4) · `PR7` (módulo 7) · `PR9` (módulo 8) ·
+`PS1`–`PS5` (módulo 10). Son 13 de Python y 3 de R; el capítulo pasa de 18 a 34 bloques. Ningún
+bloque del cap. 1 usa `survey` ni `sampling` —es base R sobre los CSV de Lohr—, así que Python puede
+reproducir cada cifra sin aproximar.
+
+- [x] **T6.1 — Componente `.lectura-guiada`.** `ensamblado/componentes/lectura_guiada.css` y
+      `ensamblado/retropropaga_lectura_guiada.py`. Es el primer componente del proyecto **sin motor
+      de JavaScript**: `<details>`/`<summary>` nativo, que abre con Enter y con Espacio, entra en el
+      orden de tabulación y lo anuncia el lector de pantalla sin declarar un solo `aria-expanded`.
+      Por eso el retropropagador solo estampa CSS y no añade ninguna llamada a `loadModule()`.
+
+      Nace en el cap. 1 y se propaga **hacia adelante** (caps. 2–8), al revés que la rúbrica. El
+      cap. 1 queda fuera de la lista porque su ensamblador lo regenera desde la plantilla.
+
+      Verificado: idempotente (segunda pasada = «ya lo tiene»); los ocho capítulos suman +150 líneas
+      y **0 eliminadas**; el conjunto de selectores `.lectura-guiada` es idéntico en la plantilla y
+      en los ocho; los ocho ensambladores vuelven a salir byte a byte; `verifica_bloques.py --todos
+      --prosa` sigue en 0 discrepancias. En el navegador, sobre la demo de la plantilla: cerrada de
+      origen, 45 px cerrada y 257 px abierta, el `padding: 1rem` del `details` genérico queda
+      sobrescrito a 0, el galón gira de 45° a −135°, el triángulo nativo no reserva ni un píxel
+      (`list-style: none` + `display: flex`), el `summary` recibe foco y conmuta, y la consola queda
+      limpia. `cuenta_sitio.py` gana la columna `lectura`.
+
+      Queda sin comprobar la regla de adyacencia `.simulador + .lectura-guiada` (margen negativo de
+      −1,25 rem): en la plantilla la demo no va detrás de ningún simulador. Se verifica en T6.2.
+
+      **Corrección aplicada durante T6.2.** La tarjeta de la idea transferible se escribió primero
+      como `<div class="lectura-guiada-clave">`, y eso abría un agujero de verificación: el modo
+      `--prosa` de `verifica_bloques.py` solo mira dentro de `<p>`, `<li>` y `<h4>`, así que
+      cualquier cifra escrita ahí habría quedado sin contrastar —exactamente lo que esa herramienta
+      existe para impedir—. Pasó a ser `<p class="lectura-guiada-clave">`, con el selector
+      `.lectura-guiada-cuerpo > p.lectura-guiada-clave` para ganar la especificidad. Se revirtieron
+      los nueve archivos y se volvió a estampar.
+- [x] **T6.2 — Las 7 cajas del capítulo 1**, una por simulador: `digest`, `encuestas-intell`,
+      `no-respuesta`, `auditor-preguntas`, `sesgo-varianza`, `n-grande-no-salva` y `poblaciones`.
+      Estructura fija: qué mueves → qué se ve → por qué importa → la idea que se lleva, con el
+      enganche al capítulo donde el asunto vuelve.
+
+      Cada caja se escribió para decir algo que el simulador **no** dice ya por su cuenta, no para
+      repetir la introducción: en `digest`, que la curva iso-resultado es un problema de
+      identificación y no de ruido; en `encuestas-intell`, que ponderar arregla las variables por
+      las que se pondera y ninguna más; en `no-respuesta`, que la tasa global que se reporta no es
+      un indicador de sesgo, y que la línea de la verdad solo existe aquí porque `agpop` es una
+      población completa; en `sesgo-varianza`, que el segundo gráfico marca el umbral a partir del
+      cual recoger más datos no compra nada; en `n-grande-no-salva`, que el argumento entero es una
+      curva que depende de $n$ contra una recta que no; en `poblaciones`, que la cola está recortada
+      y la asimetría real es peor que la dibujada.
+
+      Verificado en el navegador, recorriendo los diez módulos: las siete cajas van pegadas a su
+      simulador con el margen de −17,5 px (= −1,25 rem, que **cierra el punto pendiente de T6.1**),
+      cerradas de origen, 38 px cerradas y 354–415 px abiertas, la tarjeta clave es un `<p>` en las
+      siete, KaTeX renderiza dentro del `<details>` cerrado —siete fórmulas, ningún `$` suelto— y la
+      consola queda limpia. `verifica_bloques.py --todos --prosa` sigue en 0 cifras sin respaldo, y
+      los caps. 2–8 vuelven a salir byte a byte. `cuenta_sitio.py`: 7 en la columna `lectura`.
+
+      **Cinco errores propios cazados al releer las cajas antes de darlas por buenas**, que es la
+      razón de releerlas: (1) se listaba «raza» entre las variables **no** calibradas, cuando las
+      ocho celdas son precisamente sexo × edad × raza; (2) se afirmaba que la media global de
+      `agpop` no describe bien a ninguna de las cuatro regiones, y Centro-Norte (325 951) está muy
+      cerca de la global (306 677) —la frase se sustituyó por una comparación verdadera con las dos
+      extremas—; (3) se decía que el módulo 9 lleva «este mismo gráfico» a los datos de
+      entrenamiento, cuando lleva el mismo argumento y no el gráfico; (4) «qué fracción del error
+      total es sesgo» cuando el gráfico reporta la fracción del error **cuadrático medio** que pone
+      el sesgo²; (5) Allentown se describía como un marco «conocido por separado» cuando lo que lo
+      hace concluyente es que era **completo**, lo que anula una de las dos causas.
+- [x] **T6.3 — Los 3 bloques R** (`RP1`, `RP2`, `RP3`), colocados en `cadena.R` en la posición que
+      les toca por orden de documento: `RP1` y `RP2` antes de `R1`, y `RP3` entre `R5` y `R6`.
+      Ejecutados con el Rscript 4.4 del framework. Las tres salidas son **numéricamente idénticas**
+      a las de sus gemelos `P1`, `P2` y `P3` —comprobado cifra a cifra, no de vista—, y las 155
+      cifras del capítulo siguen cuadrando.
+
+      **La colisión que anunciaba el plan era real.** `RP3` define `r`, `mu_R`, `mu_M` y `mu`, y
+      `mu` es justo el nombre con el que `R6` designa la media de `acres92`. No rompe nada porque
+      `R6` la redefine en su primera línea, pero se le añadió allí un comentario que lo dice: quien
+      lea el capítulo de arriba abajo hereda de `RP3` un `mu` que vale una proporción de juguete, y
+      es la reasignación la que lo salva. Los nombres se mantienen iguales a los de `P3` a
+      propósito: las dos pestañas tienen que leerse como el mismo programa.
+
+      **`anota_salidas.py` corrompió el archivo y hubo que revertir.** La herramienta reescribe «el
+      grupo de comentarios `#>` del final de cada bloque», y eso solo vale para el estilo de un
+      único grupo por bloque (cap. 8: 25 grupos / 25 bloques). Los capítulos 1 y 2 anotan de forma
+      **intercalada** —un grupo tras cada sentencia— y en ellos la herramienta añade un grupo
+      duplicado al final: en `cadena.R` las líneas `#>` pasaron de 53 a 89 de una sola pasada, con
+      la salida impresa antes de la sentencia que la produce. Lo grave es que
+      **`verifica_bloques.py` no lo detecta**: las cifras duplicadas sí están en la salida real, así
+      que el archivo pasa la verificación y el estudiante lee el código descolocado. Se revirtió con
+      `git checkout` y las nueve líneas nuevas se escribieron a mano desde la ejecución real,
+      comprobando después que cada cifra anotada aparece en la salida de su bloque, en los 17.
+
+      **Resuelto (2026-08-13), y el problema era más ancho de lo que decía esta nota.** No son los
+      caps. 1 y 2: son **7 de las 16 cadenas**. Grupos `#>` frente a bloques, revisando los ocho
+      capítulos:
+
+      | | R | Python |
+      |---|---|---|
+      | cap1 | 19 / 14 — **intercalado** | 6 / 4 — **intercalado** |
+      | cap2 | 31 / 21 — **intercalado** | 6 / 6 |
+      | cap3 | 16 / 14 — **intercalado** | 4 / 4 |
+      | cap4 | 39 / 19 — **intercalado** | 4 / 4 |
+      | cap5 | 35 / 18 — **intercalado** | 4 / 4 |
+      | cap6 | 49 / 19 — **intercalado** | 5 / 5 |
+      | cap7 | 18 / 18 | 4 / 4 |
+      | cap8 | 25 / 25 | 4 / 4 |
+
+      El más expuesto era `cap6/cadena.R` —49 grupos en 19 bloques—, y `cap1/cadena.py` también lo
+      estaba, aunque la nota solo hablaba de R.
+
+      La herramienta ya no reparte la salida por bloque sino **por sentencia**: parte la cadena en
+      sus sentencias de primer nivel (R: `parse()` con `keep.source`; Python: `ast`), ejecuta una
+      copia temporal con un marcador entre sentencia y sentencia, y da a cada grupo `#>` la salida
+      de las sentencias que lo preceden. «Un grupo por bloque» es el caso particular en que el
+      único grupo, al final, recibe la salida de todas las sentencias del bloque; así ninguno de
+      los dos estilos se convierte en el otro. Cuando no puede colocar una salida con certeza
+      —un grupo sin ninguna sentencia delante, dos grupos tras la misma sentencia, un grupo que
+      quedaría vacío, salida sin ningún grupo detrás, un `#>` indentado, una cadena que no se deja
+      parsear— **aborta sin escribir**; nunca vuelve al «todo al final», que es el que corrompía.
+      Y antes de escribir comprueba que el archivo, quitadas sus líneas `#>`, es idéntico al de
+      partida: el código no lo puede tocar.
+
+      **La prueba de que el reparto es correcto:** `--check` sobre las 16 cadenas reproduce **15
+      tal cual** (salvo espacios al final de línea). La única discrepancia real es un defecto del
+      material, no de la herramienta —abajo—. La regresión vive en
+      `precalculo/pruebas/prueba_anotador.py`: 8 pruebas, y la primera es que una cadena
+      intercalada al día no se toque ni se duplique. Contra la versión vieja, esa prueba falla.
+
+      De paso se cerró un peligro latente: 42 líneas de las cadenas llevan dos sentencias
+      (`teL = ...; miL = ...`), y en `cap7/cadena.py:70` son **dos `print()` en la misma línea**.
+      Entre ellas no cabe un grupo `#>`, así que ahora se anotan como una sola unidad; anotarlas
+      por separado habría atribuido toda la salida a la segunda.
+
+      Las dos cosas que quedaban, hechas el 2026-08-13:
+
+      - [x] **`cap2/cadena.R`, bloque `R17`: la anotación se inventó la alineación.** Decía
+            `#>     pi_k    pi_kl` / `#>  0.20000  0.03984`, y R imprime `   pi_k   pi_kl` /
+            `0.20000 0.03984`. Las cifras eran correctas —por eso `verifica_bloques.py` lo daba
+            por bueno—, pero el espaciado no era el que sale. Corregido por la herramienta: dos
+            líneas, ninguna otra del archivo.
+      - [x] **Normalizados los espacios finales de línea en 4 cadenas.** `cap3/cadena.R` (22
+            líneas), `cap4/cadena.py` (2), `cap7/cadena.R` (40) y `cap8/cadena.R` (62).
+            Comprobado línea a línea que el cambio es **solo de espacios** y que el número de
+            líneas no varía.
+
+      Reensamblados los caps. 2, 3, 4, 7 y 8 con el plantilla de la fase 6 —el CSS de
+      `lectura_guiada` de T6.1 sigue en los ocho—, y comprobado que en los cinco capítulos **todas
+      las líneas que cambian son líneas `#>`**: 4, 44, 4, 80 y 124 respectivamente, ni una fuera
+      de las anotaciones. `verifica_bloques.py` sobre los cinco: **1402 de 1402 cifras**, 0
+      bloques con discrepancias. Y las 16 cadenas pasan ya `--check` sin diferencias, así que a
+      partir de aquí esa bandera sirve de regresión de verdad.
+- [x] **T6.4 — Los 8 bloques Python de la prosa** (`PR1`–`PR7`, `PR9`), en `cadena.py` en orden de
+      documento. La cadena de Python queda
+      `P1 → P2 → PR1 → PR2 → PR3 → PR4 → PR5 → P3 → PR6 → PR7 → P4 → PR9`.
+      **Las 12 parejas R/Python publican las mismas cifras**, comprobado ejecutando las dos cadenas
+      y comparando conjunto contra conjunto, no de vista.
+
+      **Dos divergencias que resultaron ser de impresión, no de cálculo.** (1) En `PR6`, el
+      escenario de tasas iguales da un cero que en coma flotante es −5,82076609134674072266e−11:
+      R y Python calculan **el mismo float bit a bit**, pero al redondear queda un cero con signo
+      que pandas imprime `-0.00` y R `0.00`. Se normaliza con `+ 0.0` (en IEEE 754,
+      −0.0 + 0.0 = +0.0), con el comentario que lo explica: no se toca ningún valor, solo se hace
+      que las dos pestañas impriman igual el mismo número. (2) En `PR7`, pandas veía juntos 2,3
+      millones y 0,43 y pasaba la serie entera a notación científica; se fija con `float_format`.
+
+      Quedan dos diferencias benignas y declaradas: R numera las filas de un `data.frame` (`1 2 3`)
+      y pandas se imprime con `index=False` —poner el índice mostraría `0 1 2`, que sería peor—, y
+      las series de R se imprimen en horizontal y las de pandas en vertical, como ya ocurría en el
+      resto del capítulo.
+
+      **`BigLucy`: decisión de Javier, exportar comprimido.** Es la única población del curso que no
+      llega como CSV —vive dentro del paquete `TeachingSampling`, que no existe para Python—. Nuevo
+      `precalculo/exporta_biglucy.R`, que la escribe en `precalculo/salidas/BigLucy.csv.gz`: 1,6 MB
+      en vez de los 7,5 en claro, y tanto `read.csv()` como `pandas.read_csv()` lo leen directo sin
+      opción extra. El archivo vive fuera de `sitio/`, así que la rama `gh-pages` no lo lleva y
+      Pages no lo sirve. El script comprueba la ida y vuelta —filas, columnas, nombres y dos medias—
+      antes de dar el export por bueno. Es el mismo recurso que usa Estadística Espacial cuando un
+      dato solo existe en un paquete de R. Sirve también a los caps. 4 y 5, que usan `BigLucy`.
+
+      **El único par que ya existía, `R8`/`P4`, no era paralelo, y se arregló.** Las dos pestañas
+      del bloque «Comparación con un muestreo aleatorio de 1000» calculaban cosas distintas: R daba
+      `recm_digest`, `recm_mas` y `veces_peor`; Python, una tabla del ECM por tamaño. Solo
+      compartían el 6,3. Como la prosa cita **12,6 veces** dos veces y esa cifra sale únicamente de
+      la pestaña de R, el estudiante que trabaja en Python no veía de dónde salía el número que el
+      propio módulo destaca. Ahora las dos pestañas calculan **ambas cosas** y publican cifras
+      idénticas.
+
+      **Un fallo introducido al hacerlo, y cazado por el verificador.** Al encadenar `P4` con `PR7`
+      para que las dos pestañas partieran de los mismos valores exactos, `P4` pasó a usar `sesgo` y
+      `S2`, que en el HTML publicado todavía no existen: `PR7` no tiene marcador hasta T6.6. El
+      capítulo pasó a 159/178 con un `NameError`. Se comprobó que partir de los valores redondeados
+      da **exactamente las mismas cifras publicadas** que partir de los exactos, así que `P4` volvió
+      a ser autónomo —que es lo que pide el punto 2 del protocolo— sin perder la paridad. Capítulo
+      de nuevo en **178/178**.
+- [x] **T6.5 — Los 5 bloques Python de las soluciones** (`PS1`–`PS5`) y sus pestañas. Los cinco son
+      aritmética pura, sin datos externos, así que las cifras coinciden con `S1`–`S5` sin más. Los
+      cinco `<pre>` sueltos del módulo 10 quedan envueltos en `code-tabs` con R activo y Python
+      detrás, cada uno con su `aria-label` propio: ya **no queda ningún bloque de código fuera de
+      pestañas** en el capítulo.
+
+      Estos bloques viven dentro de `.ejercicio-panel.solucion`, que arranca con `hidden`, así que
+      había que comprobar que el motor de pestañas los alcanza. Comprobado en el navegador, sobre
+      los cinco: R activo de origen, un solo panel visible, la pulsación de Python conmuta el panel
+      y el `aria-selected` de los dos botones, y Prism resalta los diez bloques —los de R y los de
+      Python— pese a haberse cargado ocultos. Abriendo una solución como la abriría un estudiante y
+      pulsando Python se ve el código de Python, no el de R. Consola limpia.
+
+      El capítulo pasa a **23 bloques (14 R + 9 Python) y 205 cifras verificadas**, desde las 155
+      del principio de la fase.
+- [x] **T6.6 — La segunda pestaña en los 12 `code-tabs`.** Once de los doce necesitaban gemelo (el
+      duodécimo, `R8`/`P4`, ya era dual). La transformación se hizo con un script sobre los tres
+      archivos de módulos, no a mano: reconstruye cada grupo con los dos botones, los dos paneles y
+      el marcador del gemelo, **conservando el `aria-label` que ya tenía cada bloque** y dejando
+      intacto el par que ya existía.
+
+      En los tres bloques que hasta ahora eran solo de Python (`P1`, `P2`, `P3`), la pestaña activa
+      pasa a ser R, como se declaró al abrir la fase: homogéneo con el resto y con la decisión de
+      arquitectura nº 3.
+
+### Checkpoint 5 — El código del capítulo 1 · BLOQUEANTE
+- [x] `ensambla_cap1.py` sin abortar, **34 bloques**, y el aviso de «bloques ejecutados que no se
+      insertaron» desaparece: no queda ningún marcador suelto
+- [x] `verifica_bloques.py` del cap. 1: **303 de 303 cifras, 0 discrepancias**, con las dos cadenas
+      ejecutadas **encadenadas en orden de documento**, que es la prueba de que la colocación de
+      `RP1`/`RP2` antes de `R1`, la de `RP3` entre `R5` y `R6`, y la redefinición de `mu` en `R6` y
+      `PR6` son correctas. `--todos --prosa`: los 8 capítulos verdes, 0 cifras de prosa sin respaldo
+- [x] **Los 17 pares R/Python publican las mismas cifras**, comprobado ejecutando las dos cadenas y
+      comparando conjunto contra conjunto. Las únicas diferencias son de presentación y están
+      declaradas: R etiqueta las filas de un `data.frame` y las columnas de una matriz (`[,1]`),
+      pandas se imprime con `index=False`/`header=False`
+- [x] Estructura verificada sobre el archivo publicado: 17 grupos, 34 paneles, R primero y activo en
+      los 17, 17 paneles de Python con `hidden`, **0 `<pre>` fuera de pestañas**
+- [x] Verificado en el navegador, recorriendo los 10 módulos: los **17 grupos conmutan** —panel
+      correcto, `language-python` al pulsar Python, `aria-selected` actualizado en los dos botones y
+      vuelta a R— incluidos los cinco que viven dentro de paneles de solución que arrancan ocultos.
+      Consola limpia
+- [ ] **Revisión de Javier antes de entrar en la redacción**
+
+**El capítulo al cerrar el checkpoint:** 34 bloques (17 R + 17 Python) frente a los 18 del inicio
+(14 + 4); 303 cifras verificadas frente a 155; 7 cajas de lectura guiada frente a 0; ningún bloque
+de código fuera de pestañas.
+
+- [ ] **T6.7 — Ortografía y redacción, módulos 1–5.**
+- [ ] **T6.8 — Ortografía y redacción, módulos 6–10.**
+- [ ] **T6.9 — Reensamblado y verificación mecánica.**
+- [ ] **T6.10 — Auditoría independiente.**
+- [ ] **T6.11 — Pasada de navegador.**
+
+### Checkpoint 6 — Cierre de la fase 6
+- [ ] Informe de auditoría escrito aquí
+- [ ] README y tabla de volumen actualizados con lo que cuenta `cuenta_sitio.py`
+- [ ] Revisión de Javier
+- [ ] Publicación solo con su visto bueno
+
+**Riesgos de esta fase.**
+
+| Riesgo | Impacto | Mitigación |
+|---|---|---|
+| El CSS nuevo en la plantilla rompe la reproducción byte a byte de los caps. 2–8 | **Alto** | El retropropagador toca plantilla y publicados; T6.1 no cerró hasta que los ocho salieron idénticos — **ya superado** |
+| Un bloque Python publica cifra distinta de su gemelo R | **Alto** | `anota_salidas.py` escribe la salida real; comparación par a par; donde el redondeo difiera, nota didáctica, nunca maquillaje |
+| Una corrección de estilo cambia una cifra o el sentido de una definición | **Alto** | Ninguna cifra se edita en la pasada de redacción; `--prosa` como red |
+| Un bloque nuevo pisa una variable de la cadena (`r`, `p`, `mu`) | Medio | Ejecución encadenada real, nunca el bloque suelto — **ocurrió en T6.3 con `mu`; resuelto y documentado en el propio bloque** |
+| `anota_salidas.py` corrompe las cadenas de anotación intercalada, y `verifica_bloques.py` no lo ve | **Alto** | **Resuelto en T6.3.** Reparte la salida por sentencia, así que respeta los dos estilos, y aborta sin escribir cuando no puede colocarla. Eran **7 de las 16 cadenas**, no los caps. 1 y 2. Regresión: `precalculo/pruebas/prueba_anotador.py` |
+| Las cajas regalan la conclusión y matan el trabajo del estudiante | Medio | Cerradas por defecto; el auditor revisa este punto explícitamente |
 
 ---
 

@@ -2,6 +2,42 @@ suppressMessages({library(survey); library(sampling); library(TeachingSampling);
 Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 options(warn = 1, survey.lonely.psu = "adjust")
 
+cat("\n###BLOQUE-RP1###\n")
+# El sesgo del Literary Digest, partido en sus dos causas. El modelo tiene
+# cuatro numeros y ninguna libreria: es aritmetica, y esa es la leccion.
+#
+#   p    apoyo real a Roosevelt (base de dos candidatos)
+#   C    fraccion de votantes que estaba en el marco (listas de telefono,
+#        registros de automovil, directorios)
+#   d    cuanto MAS apoyaban a Roosevelt los que quedaron fuera del marco
+#   rho  tasa de respuesta de los partidarios de Roosevelt dividida por la de
+#        los de Landon
+p <- 0.62245; C <- 0.55; d <- 0.25
+p_obs <- 972897 / (1293669 + 972897)              # lo que publico el sondeo
+
+p_C   <- p - (1 - C) * d                          # apoyo dentro del marco
+rho   <- p_obs * (1 - p_C) / (p_C * (1 - p_obs))  # la rho que reproduce el sondeo
+p_hat <- p_C * rho / (p_C * rho + (1 - p_C))
+
+round(c(p_C = p_C, rho = rho, p_estimado = p_hat, p_publicado = p_obs), 5)
+#>         p_C         rho  p_estimado p_publicado
+#>     0.50995     0.72270     0.42924     0.42924
+
+cat("\n###BLOQUE-RP2###\n")
+# Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
+sesgo_cobertura <- p_C - p                        # aunque contestaran todos
+sesgo_respuesta <- p_hat - p_C                    # aunque el marco fuera perfecto
+round(c(sesgo_cobertura    = sesgo_cobertura,
+        sesgo_no_respuesta = sesgo_respuesta,
+        suma               = sesgo_cobertura + sesgo_respuesta,
+        sesgo_total        = p_hat - p), 5)
+#>    sesgo_cobertura sesgo_no_respuesta               suma        sesgo_total
+#>           -0.11250           -0.08071           -0.19321           -0.19321
+
+# Los dos sumandos dan el total EXACTAMENTE: no es una aproximacion.
+round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12)
+#> [1] 0
+
 cat("\n###BLOQUE-R1###\n")
 # agpop: los 3078 condados agricolas de EE.UU. (censo agricola de 1992).
 # Es la POBLACION del curso, y como esta entera se puede comprobar cualquier
@@ -100,9 +136,30 @@ round(rbind(
 
 # Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
 # y raza no arregla una seleccion que fallo por otras variables.
+cat("\n###BLOQUE-RP3###\n")
+# La formula del sesgo de no respuesta, termino a termino.
+#   mu = r mu_R + (1 - r) mu_M     =>     mu_R - mu = (1 - r)(mu_R - mu_M)
+r <- 0.045; mu_R <- 0.84; mu_M <- 0.30
+mu <- r * mu_R + (1 - r) * mu_M
+round(c(tasa_respuesta         = r,
+        media_respondientes    = mu_R,
+        media_no_respondientes = mu_M,
+        media_poblacional      = mu,
+        sesgo                  = mu_R - mu,
+        sesgo_por_la_formula   = (1 - r) * (mu_R - mu_M)), 5)
+#>         tasa_respuesta    media_respondientes media_no_respondientes
+#>                 0.0450                 0.8400                 0.3000
+#>      media_poblacional                  sesgo   sesgo_por_la_formula
+#>                 0.3243                 0.5157                 0.5157
+
 cat("\n###BLOQUE-R6###\n")
 # Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
 # hacen de clases; r_h es la tasa de respuesta de cada una.
+#
+# Ojo al reutilizar nombres: el bloque anterior deja `mu` valiendo una
+# proporcion del ejemplo de juguete. Aqui se REDEFINE como la media de acres92,
+# que es lo que significa en este bloque; sin esa linea, el bloque heredaria el
+# valor equivocado en cuanto se ejecutara la cadena de arriba abajo.
 #
 #   mu_R = suma(N_h r_h mu_h) / suma(N_h r_h)      sesgo = mu_R - mu
 reg  <- split(agpop$acres92, agpop$region)
@@ -149,6 +206,20 @@ round(c(recm_digest = sqrt(ecm_digest), recm_mas = sqrt(ecm_mas),
         veces_peor  = sqrt(ecm_digest / ecm_mas)), 4)
 #> recm_digest    recm_mas  veces_peor
 #>      0.1932      0.0153     12.6035
+
+# El suelo, tamano a tamano. Solo la varianza baja con n: la columna insesgada
+# tiende a cero y la sesgada se para en el sesgo y ya no se mueve.
+ecm     <- function(n, b) b^2 + S2 / n
+tamanos <- c(1000, 10000, 100000, 1000000, n_digest)
+data.frame(n              = tamanos,
+           recm_insesgado = round(sqrt(ecm(tamanos, 0)), 5),
+           recm_sesgado   = round(sqrt(ecm(tamanos, sesgo)), 5))
+#>         n recm_insesgado recm_sesgado
+#> 1    1000        0.01533      0.19382
+#> 2   10000        0.00485      0.19327
+#> 3  100000        0.00153      0.19322
+#> 4 1000000        0.00048      0.19321
+#> 5 2266566        0.00032      0.19321
 
 # Tamano efectivo: el n de un muestreo aleatorio con el MISMO error cuadratico
 # medio que el sondeo sesgado. Se despeja de  S2 / n = ECM.

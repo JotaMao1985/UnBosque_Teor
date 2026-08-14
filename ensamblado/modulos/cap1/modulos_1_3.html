@@ -111,13 +111,41 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> Los tres deslizadores reparten la culpa entre las dos causas: $C$ dice cuánta
+            población entró en el marco, la brecha dice cuánto se diferenciaban los que quedaron fuera, y $\rho$, cuánto
+            más devolvían la papeleta los partidarios de un candidato que los del otro.</p>
+          <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
+            estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
+            naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
+            resultado que se publicó. Recórrela —mucha no cobertura y poca no respuesta, o justo al revés— y el punto
+            negro sigue encima de ella: el sondeo sale idéntico en los dos casos.</p>
+          <p><strong>Y ahí está la trampa.</strong> Si escenarios distintos producen el mismo dato observado, el dato no
+            puede decirte en cuál estabas. Ninguna cantidad de papeletas arregla eso, porque no es un problema de ruido:
+            la información no está. Lo que zanjó el caso no fue el resultado nacional, sino Allentown: allí el marco era
+            completo, lo que pone una de las dos causas exactamente a cero y deja la otra a la vista.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            Cuando dos causas entran sumadas en un mismo número, los datos por sí solos no las separan: hace falta
+            información de fuera de la encuesta. Es la primera aparición de un problema que vuelve en el capítulo 8, al
+            decidir qué se está suponiendo sobre los que no respondieron para poder ponderar.
+          </p>
+        </div>
+      </details>
+
       <p>La aritmética entera cabe en unas líneas. Ni una sola función de librería: cuatro números y dos divisiones.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La descomposición del sesgo del Literary Digest">
-          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
-        <div class="code-tab-panel" data-lang="python">
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦RP1⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python">⟦P1⟧</code></pre>
         </div>
       </div>
@@ -127,9 +155,13 @@
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Los dos sumandos del sesgo">
-          <button class="code-tab-btn active" data-lang="python" role="tab" aria-selected="true">Python</button>
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
-        <div class="code-tab-panel" data-lang="python">
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦RP2⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python">⟦P2⟧</code></pre>
         </div>
       </div>
@@ -227,9 +259,13 @@
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La población agpop">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR1⟧</code></pre>
         </div>
       </div>
 
@@ -241,9 +277,13 @@
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El código de faltante -99">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR2⟧</code></pre>
         </div>
       </div>
 

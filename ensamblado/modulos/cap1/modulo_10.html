@@ -81,7 +81,18 @@
                 una ley está más motivado que quien está conforme), barrera económica (el costo excluye a los de menos
                 recursos y a los indiferentes) y no cobertura tecnológica.</li>
             </ul>
-            <pre><code class="language-r">⟦S1⟧</code></pre>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="La fórmula del sesgo de no respuesta sobre la encuesta de Parade">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r">⟦S1⟧</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">⟦PS1⟧</code></pre>
+              </div>
+            </div>
             <p style="margin-bottom:0;">La segunda fila es la clave. Con una participación del 1 %, prácticamente
               cualquier valor poblacional es compatible con el 75 % observado: para que la población estuviera en el
               30 %, bastaría con que los que no llamaron estuvieran en el 29,55 %. El dato del 75 % no restringe casi
@@ -114,7 +125,18 @@
               <li><strong>Diseño:</strong> muestreo sistemático 1 en 10.</li>
               <li><strong>Unidad de muestreo y de observación:</strong> el fondo. Aquí sí coinciden.</li>
             </ul>
-            <pre><code class="language-r">⟦S2⟧</code></pre>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión del sistemático 1 en 10">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r">⟦S2⟧</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">⟦PS2⟧</code></pre>
+              </div>
+            </div>
             <p>Todo fondo de la lista tiene $\pi_k = 1/10$, y las probabilidades suman el tamaño de muestra esperado.
               Es un diseño probabilístico correcto, y en el capítulo 2 se verá que además suele ser <em>más</em>
               preciso que el aleatorio simple cuando la lista viene ordenada.</p>
@@ -147,7 +169,18 @@
           <div class="ejercicio-panel solucion" id="cap1-e3-sol" hidden>
             <p><strong>Se retiene el 48,16 % del marco, y las tres pérdidas van en la misma dirección: hacia jurados
               más estables económicamente y con más arraigo residencial.</strong></p>
-            <pre><code class="language-r">⟦S3⟧</code></pre>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="El flujo de las citaciones, del marco a la muestra">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r">⟦S3⟧</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">⟦PS3⟧</code></pre>
+              </div>
+            </div>
             <ul>
               <li><strong>No cobertura del marco (antes de las 100 300):</strong> quien no vota <em>ni</em> conduce no
                 está en la lista. Suele ser gente muy pobre o muy mayor.</li>
@@ -185,7 +218,18 @@
           <div class="ejercicio-panel solucion" id="cap1-e4-sol" hidden>
             <p><strong>Las probabilidades suman 8, como debe ser, y aun así el diseño es inservible: seis arquitectos
               tienen $\pi_k = 0$.</strong></p>
-            <pre><code class="language-r">⟦S4⟧</code></pre>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión de los catorce arquitectos">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r">⟦S4⟧</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">⟦PS4⟧</code></pre>
+              </div>
+            </div>
             <p>Si todos aceptan, los ocho primeros del directorio entran con certeza y los seis últimos no entran
               nunca. La suma da 8 —la identidad $\sum_U \pi_k = n$ se cumple, y en el capítulo 2 se demostrará que
               siempre se cumple—, pero eso no salva nada: el requisito del módulo 3 es que <em>todas</em> las
@@ -230,7 +274,18 @@
             <p>El diseño es bueno en un aspecto que conviene reconocer: si las ubicaciones cubren toda la biblioteca,
               cada <em>ubicación</em> tiene la misma probabilidad de salir. El problema es que la población de interés
               no son las ubicaciones.</p>
-            <pre><code class="language-r">⟦S5⟧</code></pre>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="El sesgo de muestrear ubicaciones en vez de libros">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r">⟦S5⟧</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">⟦PS5⟧</code></pre>
+              </div>
+            </div>
             <p style="margin-bottom:0;">Los libros prestados no están en el estante, así que tienen $\pi_k = 0$: es no
               cobertura pura. Y no son libros cualquiera —son los más nuevos y los más solicitados—, así que su tasa
               de necesidad de reencuadernación difiere sistemáticamente. Nótese además el hueco vacío: si el

@@ -3147,6 +3147,163 @@
         gap: 0.5rem;
       }
     }
+
+    /* ================================================================
+       Lectura guiada (componente nuevo del capítulo 1)
+
+       Un gráfico no enseña solo. El estudiante mueve el deslizador, ve
+       que la curva «sube», y sigue leyendo sin haber extraído la idea
+       que el gráfico existía para dar. Esta caja cierra ese hueco: va
+       DESPUÉS del simulador y dice en prosa qué debía verse.
+
+       Va CERRADA a propósito, y no es un detalle de estilo. Abierta se
+       convierte en un pie de figura que se lee antes de mirar, y
+       entonces el gráfico sobra. Cerrada obliga a formular la propia
+       lectura primero y a usar la caja como contraste, que es donde
+       está el aprendizaje.
+
+       No lleva motor de JavaScript: es <details>/<summary> nativo, así
+       que abre con Enter y con Espacio, entra en el orden de tabulación
+       y lo anuncia el lector de pantalla sin que haya que declarar ni
+       un aria-expanded. El componente que no se programa no se rompe.
+
+       Se distingue del <details> genérico de la plantilla —el de
+       .ejercicio-pista y .ejercicio-solucion, que es una tarjeta blanca
+       sobria— por la banda naranja y el fondo cálido: son dos cosas
+       distintas y no deben leerse igual. La pista ayuda a resolver un
+       ejercicio; esta caja cierra una lectura.
+       ================================================================ */
+    .lectura-guiada {
+      background: rgba(255, 102, 0, 0.035);
+      border: 1px solid rgba(255, 102, 0, 0.22);
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      padding: 0;
+      margin: 1.25rem 0 2rem;
+      overflow: hidden;
+    }
+
+    /* Pegada al simulador que comenta: .simulador cierra con 2rem de
+       margen inferior y aquí se recuperan 1,25 para que las dos piezas
+       se lean como una sola unidad y no como dos bloques sueltos. */
+    .simulador + .lectura-guiada,
+    .grafico-wrapper + .lectura-guiada {
+      margin-top: -1.25rem;
+    }
+
+    .lectura-guiada > summary {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #012820;
+      cursor: pointer;
+      list-style: none;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    /* El triángulo por defecto del navegador se sustituye por el galón
+       de la derecha; hay que quitarlo en las dos familias. */
+    .lectura-guiada > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .lectura-guiada > summary:hover {
+      background: rgba(255, 102, 0, 0.07);
+      color: #FF6600;
+    }
+
+    .lectura-guiada > summary i {
+      color: #FF6600;
+      font-size: 0.9rem;
+    }
+
+    /* Galón dibujado con dos bordes en vez de un glifo de fuente: no
+       depende de que Font Awesome haya cargado, y gira al abrir. La
+       transición la anula sola la regla global de prefers-reduced-motion. */
+    .lectura-guiada > summary::after {
+      content: '';
+      flex: none;
+      margin-left: auto;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translateY(-0.12rem) rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+
+    .lectura-guiada[open] > summary::after {
+      transform: translateY(0.06rem) rotate(-135deg);
+    }
+
+    .lectura-guiada[open] > summary {
+      border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+    }
+
+    .lectura-guiada-cuerpo {
+      padding: 0.9rem 1rem 1rem;
+    }
+
+    .lectura-guiada-cuerpo > p {
+      margin: 0 0 0.7rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #334155;
+    }
+
+    .lectura-guiada-cuerpo > p:last-child {
+      margin-bottom: 0;
+    }
+
+    .lectura-guiada-cuerpo strong {
+      color: #012820;
+    }
+
+    /* La idea transferible: lo único que hay que recordar cuando ya no
+       se tenga el gráfico delante. Va en tarjeta aparte porque el
+       estudiante que solo abre la caja y ojea debe llevarse ESTO.
+
+       Es un <p> y no un <div>, y eso NO es indiferente: el modo --prosa
+       de verifica_bloques.py solo mira dentro de <p>, <li> y <h4>. En un
+       <div>, cualquier cifra escrita aquí quedaría fuera de la
+       verificación, que es exactamente el agujero que esa herramienta
+       existe para tapar. El selector lleva la clase junto a la etiqueta
+       para ganarle en especificidad a `.lectura-guiada-cuerpo > p`. */
+    .lectura-guiada-cuerpo > p.lectura-guiada-clave {
+      margin: 0.85rem 0 0;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.15);
+      border-left: 3px solid #012820;
+      border-radius: 0.4rem;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .lectura-guiada-clave .rotulo {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #012820;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .lectura-guiada > summary {
+        align-items: flex-start;
+        line-height: 1.35;
+      }
+
+      .lectura-guiada > summary::after {
+        margin-top: 0.2rem;
+      }
+    }
   </style>
 </head>
 

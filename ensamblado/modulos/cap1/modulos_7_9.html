@@ -100,6 +100,29 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de estos dos gráficos?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> Un solo deslizador que importa: el sesgo, expresado como porcentaje de la
+            media poblacional. El otro solo elige qué barra se detalla abajo.</p>
+          <p><strong>Qué se ve.</strong> Con el sesgo en cero, las barras del primer gráfico caen hasta desaparecer al
+            llegar al censo: sin sesgo, mirar a todo el mundo da la respuesta exacta. Sube el deslizador un poco —basta
+            un porcentaje pequeño— y la caída se para en seco a media altura. La última barra ya no es cero, y no lo
+            será nunca: ahí $n = N$, la varianza vale exactamente cero y lo único que sobrevive es el sesgo.</p>
+          <p><strong>El segundo gráfico es el que cambia cómo se lee un conjunto de datos grande.</strong> Dice qué
+            fracción del error cuadrático medio la pone el sesgo, y sube hacia el 100 % conforme crece $n$. Lo que hay que leer ahí es un
+            umbral: pasado cierto tamaño, casi todo tu error dejó de ser muestreo, y recoger más datos ya no compra
+            nada. La pregunta «¿de qué tamaño hago la muestra?» solo tiene respuesta después de la pregunta «¿de qué
+            tamaño es mi sesgo?».</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            $n$ está en la varianza y no está en el sesgo. Por eso el tamaño compra precisión pero nunca puntería, y por
+            eso un censo mal diseñado se equivoca con toda la seguridad del mundo. Es la asimetría que ordena el resto
+            del curso.
+          </p>
+        </div>
+      </details>
+
       <h3>Cuánto vale realmente una muestra sesgada de 2,3 millones</h3>
 
       <p>Volvamos al <em>Literary Digest</em> con la fórmula del ECM. El sondeo tenía 2 266 566 papeletas útiles y un
@@ -108,9 +131,13 @@
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El sesgo del sondeo del Literary Digest">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR7⟧</code></pre>
         </div>
       </div>
 
@@ -145,6 +172,27 @@
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este gráfico?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El tamaño de una muestra aleatoria pequeña. Las barras son su error; la línea
+            naranja, el del sondeo entero del <em>Digest</em>.</p>
+          <p><strong>Qué se ve, y es lo único que hay que ver.</strong> Las barras bajan deprisa. La línea no baja: es
+            horizontal. Y se cruzan en un número de votantes que cabe en una mesa. Busca ese cruce moviendo el
+            deslizador hasta que la lectura de abajo cambie de ganador.</p>
+          <p><strong>Por qué la línea es horizontal.</strong> Porque en su altura no aparece $n$ por ningún lado. Ese es
+            el argumento entero del módulo, dibujado: una cantidad que depende del tamaño contra otra que no. Puedes
+            multiplicar las papeletas por mil y la línea se queda donde está. Cualquier conjunto de datos cuyo sesgo no
+            sepas acotar es una línea horizontal, y no hay volumen que pase por debajo.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            «Muchos datos» no es una propiedad de calidad; es una propiedad de cantidad. Antes de dejarte impresionar
+            por el tamaño de una base, pregunta cómo entraron las unidades. El módulo 9 lleva este mismo argumento a los
+            datos de entrenamiento de un modelo, donde la tentación de confundir volumen con validez es mayor.
+          </p>
+        </div>
+      </details>
 
       <div class="note">
         <p><strong>Por qué esto no es un truco retórico.</strong> El cálculo es honesto en las dos direcciones: si el
@@ -196,9 +244,13 @@
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Las dos poblaciones del curso">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦PR9⟧</code></pre>
         </div>
       </div>
 
@@ -213,6 +265,32 @@
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este explorador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> La población que se dibuja: <code>agpop</code> entera, <code>agpop</code>
+            partida por regiones o <code>BigLucy</code>. No hay parámetros que tocar; lo que se explora es la
+            <em>forma</em>.</p>
+          <p><strong>Qué se ve.</strong> Una montaña pegada al eje izquierdo y una cola larguísima hacia la derecha. Y
+            un detalle que conviene mirar dos veces: la línea de la media no cae donde está el grueso de los condados,
+            sino bastante a su derecha. En una población así, «el condado medio» no existe —hay muchos pequeños y unos
+            pocos enormes que tiran de la media—, y una muestra que por azar recoja o no recoja uno de los grandes dará
+            resultados muy distintos.</p>
+          <p><strong>Y lo que el gráfico te está escondiendo.</strong> La cola está recortada en el percentil 99 para
+            que se vea algo; sin recorte, todo lo demás se aplastaría contra el eje. Es decir, la asimetría real es
+            <em>peor</em> que la que estás viendo. Cuando cambies a regiones verás la otra mitad del problema: las
+            cuatro medias se separan muchísimo entre sí, y la media global —la única que se estimaría sin estratificar—
+            queda lejos de las dos extremas.</p>
+          <p class="lectura-guiada-clave">
+            <span class="rotulo">La idea que se lleva</span>
+            Esta forma no es un detalle descriptivo: es la razón de ser de medio curso. Su asimetría hace que con $n$
+            pequeño la media muestral no sea normal (capítulo 2), que estratificar por tamaño gane muchísimo
+            (capítulo 4) y que las probabilidades proporcionales al tamaño sean la respuesta natural (capítulo 6). Mira
+            el histograma antes de elegir el diseño, no después.
+          </p>
+        </div>
+      </details>
 
       <div class="space-y-4">
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">

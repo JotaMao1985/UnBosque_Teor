@@ -74,7 +74,7 @@ justificación, revisadas una a una ejecutando.
 | `precalculo/mide_abstraccion.py` | avisa de los módulos que formalizan antes de dar un número |
 | `precalculo/cuenta_sitio.py` | cuenta módulos, simuladores, preguntas y componentes sobre los archivos |
 | `ensamblado/ensambla_capN.py` | construye el capítulo desde la plantilla, los módulos y las cadenas |
-| `ensamblado/retropropaga_*.py` | lleva un componente nuevo a la plantilla y a los capítulos anteriores |
+| `ensamblado/retropropaga_*.py` | lleva un componente nuevo a la plantilla y a los demás capítulos ya publicados |
 
 ## Créditos y fuentes
 
