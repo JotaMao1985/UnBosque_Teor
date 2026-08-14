@@ -3147,6 +3147,163 @@
         gap: 0.5rem;
       }
     }
+
+    /* ================================================================
+       Lectura guiada (componente nuevo del capítulo 1)
+
+       Un gráfico no enseña solo. El estudiante mueve el deslizador, ve
+       que la curva «sube», y sigue leyendo sin haber extraído la idea
+       que el gráfico existía para dar. Esta caja cierra ese hueco: va
+       DESPUÉS del simulador y dice en prosa qué debía verse.
+
+       Va CERRADA a propósito, y no es un detalle de estilo. Abierta se
+       convierte en un pie de figura que se lee antes de mirar, y
+       entonces el gráfico sobra. Cerrada obliga a formular la propia
+       lectura primero y a usar la caja como contraste, que es donde
+       está el aprendizaje.
+
+       No lleva motor de JavaScript: es <details>/<summary> nativo, así
+       que abre con Enter y con Espacio, entra en el orden de tabulación
+       y lo anuncia el lector de pantalla sin que haya que declarar ni
+       un aria-expanded. El componente que no se programa no se rompe.
+
+       Se distingue del <details> genérico de la plantilla —el de
+       .ejercicio-pista y .ejercicio-solucion, que es una tarjeta blanca
+       sobria— por la banda naranja y el fondo cálido: son dos cosas
+       distintas y no deben leerse igual. La pista ayuda a resolver un
+       ejercicio; esta caja cierra una lectura.
+       ================================================================ */
+    .lectura-guiada {
+      background: rgba(255, 102, 0, 0.035);
+      border: 1px solid rgba(255, 102, 0, 0.22);
+      border-left: 3px solid #FF6600;
+      border-radius: 0.5rem;
+      padding: 0;
+      margin: 1.25rem 0 2rem;
+      overflow: hidden;
+    }
+
+    /* Pegada al simulador que comenta: .simulador cierra con 2rem de
+       margen inferior y aquí se recuperan 1,25 para que las dos piezas
+       se lean como una sola unidad y no como dos bloques sueltos. */
+    .simulador + .lectura-guiada,
+    .grafico-wrapper + .lectura-guiada {
+      margin-top: -1.25rem;
+    }
+
+    .lectura-guiada > summary {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #012820;
+      cursor: pointer;
+      list-style: none;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    /* El triángulo por defecto del navegador se sustituye por el galón
+       de la derecha; hay que quitarlo en las dos familias. */
+    .lectura-guiada > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .lectura-guiada > summary:hover {
+      background: rgba(255, 102, 0, 0.07);
+      color: #FF6600;
+    }
+
+    .lectura-guiada > summary i {
+      color: #FF6600;
+      font-size: 0.9rem;
+    }
+
+    /* Galón dibujado con dos bordes en vez de un glifo de fuente: no
+       depende de que Font Awesome haya cargado, y gira al abrir. La
+       transición la anula sola la regla global de prefers-reduced-motion. */
+    .lectura-guiada > summary::after {
+      content: '';
+      flex: none;
+      margin-left: auto;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translateY(-0.12rem) rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+
+    .lectura-guiada[open] > summary::after {
+      transform: translateY(0.06rem) rotate(-135deg);
+    }
+
+    .lectura-guiada[open] > summary {
+      border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+    }
+
+    .lectura-guiada-cuerpo {
+      padding: 0.9rem 1rem 1rem;
+    }
+
+    .lectura-guiada-cuerpo > p {
+      margin: 0 0 0.7rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: #334155;
+    }
+
+    .lectura-guiada-cuerpo > p:last-child {
+      margin-bottom: 0;
+    }
+
+    .lectura-guiada-cuerpo strong {
+      color: #012820;
+    }
+
+    /* La idea transferible: lo único que hay que recordar cuando ya no
+       se tenga el gráfico delante. Va en tarjeta aparte porque el
+       estudiante que solo abre la caja y ojea debe llevarse ESTO.
+
+       Es un <p> y no un <div>, y eso NO es indiferente: el modo --prosa
+       de verifica_bloques.py solo mira dentro de <p>, <li> y <h4>. En un
+       <div>, cualquier cifra escrita aquí quedaría fuera de la
+       verificación, que es exactamente el agujero que esa herramienta
+       existe para tapar. El selector lleva la clase junto a la etiqueta
+       para ganarle en especificidad a `.lectura-guiada-cuerpo > p`. */
+    .lectura-guiada-cuerpo > p.lectura-guiada-clave {
+      margin: 0.85rem 0 0;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.15);
+      border-left: 3px solid #012820;
+      border-radius: 0.4rem;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .lectura-guiada-clave .rotulo {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #012820;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .lectura-guiada > summary {
+        align-items: flex-start;
+        line-height: 1.35;
+      }
+
+      .lectura-guiada > summary::after {
+        margin-top: 0.2rem;
+      }
+    }
   </style>
 </head>
 
@@ -3326,8 +3483,8 @@ range(table(unique(sy[, c("stratum","psu")])$stratum))
 #&gt; 1 NHANES adultos 5406       15  30 5157.019 242386.7 231785870
 #&gt; 2            SYC 2621       16 861    5.000     50.0     25012
 #&gt;
-#&gt;  2 
-#&gt; 15 
+#&gt;  2
+#&gt; 15
 #&gt; [1]   7 154</code></pre>
         </div>
       </div>
@@ -3353,10 +3510,10 @@ c(gl_nhanes = degf(dis_nh), gl_syc = degf(dis_sy))
 # 5406 personas con 15 gl. Ese numero gobierna el valor t de los intervalos.
 c(t_nhanes = qt(0.975, degf(dis_nh)), t_syc = qt(0.975, degf(dis_sy)),
   t_normal = qnorm(0.975))
-#&gt; gl_nhanes    gl_syc 
-#&gt;        15       845 
-#&gt; t_nhanes    t_syc t_normal 
-#&gt; 2.131450 1.962775 1.959964 </code></pre>
+#&gt; gl_nhanes    gl_syc
+#&gt;        15       845
+#&gt; t_nhanes    t_syc t_normal
+#&gt; 2.131450 1.962775 1.959964</code></pre>
         </div>
       </div>
 
@@ -3453,12 +3610,12 @@ kish &lt;- function(w) 1 + var(w) / mean(w)^2
 c(kish_nhanes = kish(nh_ad$wtmec2yr), kish_syc = kish(sy$finalwt))
 # 1.89 en NHANES: la desigualdad de pesos, por si sola, cuesta un 89 % de
 # varianza extra. Es UNA de las tres fuentes; el modulo 3 mide las tres.
-#&gt;     0%    25%    50%    75%   100% 
-#&gt;   5157  18588  26217  46493 242387 
-#&gt;            suma   razon_max_min 
-#&gt; 231785869.90836        47.00131 
-#&gt; kish_nhanes    kish_syc 
-#&gt;    1.893002    1.330300 </code></pre>
+#&gt;     0%    25%    50%    75%   100%
+#&gt;   5157  18588  26217  46493 242387
+#&gt;            suma   razon_max_min
+#&gt; 231785869.90836        47.00131
+#&gt; kish_nhanes    kish_syc
+#&gt;    1.893002    1.330300</code></pre>
         </div>
       </div>
 
@@ -3556,10 +3713,10 @@ c(n = nrow(nh_ad), n_efectivo = nrow(nh_ad) / as.numeric(deff(m)))
 # por quien ignore el diseno es 2.63 veces MAS ESTRECHO de lo que debe.
 #&gt;           mean      SE   DEff
 #&gt; bmxbmi 29.3891  0.2532 7.1248
-#&gt;  ee_diseno ee_ingenuo     factor 
-#&gt; 0.25319683 0.09624652 2.63071163 
-#&gt;          n n_efectivo 
-#&gt;  5406.0000   758.7546 </code></pre>
+#&gt;  ee_diseno ee_ingenuo     factor
+#&gt; 0.25319683 0.09624652 2.63071163
+#&gt;          n n_efectivo
+#&gt;  5406.0000   758.7546</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># El deff, calculado con las tres piezas a la vista. Python no tiene survey:
@@ -3755,8 +3912,8 @@ c(ee_svyratio = as.numeric(SE(r)),
 #&gt; SEs=
 #&gt;             bmxht
 #&gt; bmxwt 0.004229624
-#&gt;    ee_svyratio ee_linealizado 
-#&gt;    0.004229624    0.004229624 </code></pre>
+#&gt;    ee_svyratio ee_linealizado
+#&gt;    0.004229624    0.004229624</code></pre>
         </div>
       </div>
 
@@ -3856,8 +4013,8 @@ for (h in unique(psus$sdmvstra)) {
   v_jk &lt;- v_jk + (length(idx) - 1) / length(idx) * sum((reps[idx] - theta)^2)
 }
 c(replicas = length(reps), ee_jackknife_a_mano = sqrt(v_jk))
-#&gt;            replicas ee_jackknife_a_mano 
-#&gt;          30.0000000           0.2532593 </code></pre>
+#&gt;            replicas ee_jackknife_a_mano
+#&gt;          30.0000000           0.2532593</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># El jackknife estratificado, explicito: quitar una PSU, reponderar su
@@ -3913,10 +4070,10 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
   replicas_BRR = ncol(dis_brr$repweights$weights))
 # Los cuatro coinciden en la tercera cifra. BRR usa 16 replicas — una matriz
 # de Hadamard de orden 16 para 15 estratos — frente a las 30 del jackknife.
-#&gt; linealizacion     jackknife           BRR     bootstrap 
-#&gt;      0.253197      0.253259      0.258531      0.254364 
-#&gt; replicas_JKn replicas_BRR 
-#&gt;           30           16 </code></pre>
+#&gt; linealizacion     jackknife           BRR     bootstrap
+#&gt;      0.253197      0.253259      0.258531      0.254364
+#&gt; replicas_JKn replicas_BRR
+#&gt;           30           16</code></pre>
         </div>
       </div>
 
@@ -3959,8 +4116,8 @@ round(c(mediana = as.numeric(coef(q_lin)),
 # Esa es la ventaja practica: cambia el estadistico, no el procedimiento. Con
 # un indice de Gini o una tasa de pobreza, la replicacion es la unica salida
 # razonable.
-#&gt;          mediana ee_linealizacion     ee_jackknife 
-#&gt;         28.30000          0.32841          0.32841 </code></pre>
+#&gt;          mediana ee_linealizacion     ee_jackknife
+#&gt;         28.30000          0.32841          0.32841</code></pre>
         </div>
       </div>
 
@@ -4048,10 +4205,10 @@ round(marg_edad / 1e6, 2)
 #&gt; sexo      20-39  40-59    60+
 #&gt;   hombre 41.319 40.612 29.097
 #&gt;   mujer  42.493 42.831 35.434
-#&gt; hombre  mujer 
-#&gt; 113.58 118.21 
-#&gt; 20-39 40-59   60+ 
-#&gt; 78.81 78.81 74.17 </code></pre>
+#&gt; hombre  mujer
+#&gt; 113.58 118.21
+#&gt; 20-39 40-59   60+
+#&gt; 78.81 78.81 74.17</code></pre>
         </div>
       </div>
 
@@ -4284,8 +4441,8 @@ c(deff_teorico = cob$deffTeorico)
 #&gt;                          metodo cobertura ancho_medio
 #&gt; 1 IC ingenuo (ignora el diseno)     0.563      0.1394
 #&gt; 2                 IC del diseno     0.950      0.3800
-#&gt; deff_teorico 
-#&gt;         6.85 </code></pre>
+#&gt; deff_teorico
+#&gt;         6.85</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># El error mas caro, simulado desde cero: 200 conglomerados de 40 unidades
@@ -4693,8 +4850,8 @@ round(c(p_diseno = as.numeric(coef(p_dis)), ee_diseno = as.numeric(SE(p_dis)),
 # ponderar, un punto porcentual) pero el error estandar se multiplica por
 # 2.4 al declarar el diseno. La estimacion puntual perdona; la incertidumbre
 # no: un intervalo de +/-1.9 puntos se convierte en uno de +/-4.5.
-#&gt;   p_diseno  ee_diseno  p_ingenua ee_ingenuo     factor 
-#&gt;    0.61275    0.02274    0.62228    0.00947    2.40119 </code></pre>
+#&gt;   p_diseno  ee_diseno  p_ingenua ee_ingenuo     factor
+#&gt;    0.61275    0.02274    0.62228    0.00947    2.40119</code></pre>
             <p>La estimación puntual se mueve un punto porcentual (0,61275 ponderada frente a 0,62228 sin
               ponderar), pero el error estándar se multiplica por <strong>2,40</strong>: de ±1,9 puntos a ±4,5.
               Es la lección del capítulo en una línea — la estimación puntual perdona los descuidos de diseño;
@@ -4732,8 +4889,8 @@ round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
 # El tamano nominal de una encuesta compleja dice muy poco de su precision.
 #&gt;           mean      SE DEff
 #&gt; inctot 9849.54  159.38  Inf
-#&gt;          n         gl  ee_diseno     ee_srs       deff n_efectivo 
-#&gt;   49692.00      81.00     159.38      48.99      10.58    4694.58 </code></pre>
+#&gt;          n         gl  ee_diseno     ee_srs       deff n_efectivo
+#&gt;   49692.00      81.00     159.38      48.99      10.58    4694.58</code></pre>
             <p>Trampa 1: hay 110 ingresos negativos (código de faltante). Trampa 2: <code>survey</code> devuelve
               <code>DEff = Inf</code> porque sin <code>fpc</code> no tiene el $N$ poblacional para el MAS de
               referencia — hay que calcular el deff a mano. Resultado: 49 692 personas, 81 grados de libertad,
@@ -4775,8 +4932,8 @@ round(c(a_mano = sum(Wh * medias_h),
 # Identicos: el diseno estratificado del capitulo 4 es un caso particular del
 # vocabulario de este — pesos y fpc declarados, survey hace el resto.
 #&gt; [1] 200 800 400 600
-#&gt;    a_mano ee_a_mano    survey ee_survey 
-#&gt;  20.57700   0.12853  20.57700   0.12853 </code></pre>
+#&gt;    a_mano ee_a_mano    survey ee_survey
+#&gt;  20.57700   0.12853  20.57700   0.12853</code></pre>
             <p>Idénticos hasta el quinto decimal: 20,577 con error estándar 0,12853. El diseño estratificado del
               capítulo 4 es un caso particular del vocabulario de este — se declaran pesos y <code>fpc</code>, y
               <code>survey</code> reproduce exactamente la fórmula que allí se dedujo a mano. Fíjate en que los
@@ -4824,8 +4981,8 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
 # tres vias vuelven a coincidir. 861 replicas contra las 30 de NHANES: el
 # jackknife escala con el numero de PSU, y ahi el BRR (que necesita 2 por
 # estrato) ni siquiera es aplicable.
-#&gt;         replicas        ee_a_mano    ee_survey_JKn ee_linealizacion 
-#&gt;       861.000000         0.130106         0.130106         0.128882 </code></pre>
+#&gt;         replicas        ee_a_mano    ee_survey_JKn ee_linealizacion
+#&gt;       861.000000         0.130106         0.130106         0.128882</code></pre>
             <p>Solo cambia una línea: $n_h$ se calcula por estrato en vez de fijarse en 2. Con eso, las tres vías
               vuelven a coincidir (0,130106 a mano y con <code>JKn</code>; 0,128882 por linealización). Son
               <strong>861 réplicas</strong> frente a las 30 de NHANES — el jackknife escala con el número de
