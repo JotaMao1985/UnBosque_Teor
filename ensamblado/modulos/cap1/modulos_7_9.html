@@ -105,10 +105,11 @@
         <div class="lectura-guiada-cuerpo">
           <p><strong>Qué mueves.</strong> Un solo deslizador que importa: el sesgo, expresado como porcentaje de la
             media poblacional. El otro solo elige qué barra se detalla abajo.</p>
-          <p><strong>Qué se ve.</strong> Con el sesgo en cero, las barras del primer gráfico caen hasta desaparecer al
-            llegar al censo: sin sesgo, mirar a todo el mundo da la respuesta exacta. Sube el deslizador un poco —basta
-            un porcentaje pequeño— y la caída se para en seco a media altura. La última barra ya no es cero, y no lo
-            será nunca: ahí $n = N$, la varianza vale exactamente cero y lo único que sobrevive es el sesgo.</p>
+          <p><strong>Dónde se para la caída, y por qué eso es un número que puedes leer.</strong> La altura a la que
+            las barras dejan de bajar <em>es</em> el sesgo, medido en acres, en las mismas unidades que la superficie
+            que se quiere estimar. Eso convierte una palabra abstracta en algo comparable: pon el deslizador en un
+            sesgo que te parezca pequeño y mira cuántos acres son en realidad. Prueba también a moverlo despacio y
+            fíjate en <em>a partir de qué tamaño</em> deja de notarse el cambio de $n$.</p>
           <p><strong>El segundo gráfico es el que cambia cómo se lee un conjunto de datos grande.</strong> Dice qué
             fracción del error cuadrático medio la pone el sesgo, y sube hacia el 100 % conforme crece $n$. Lo que hay que leer ahí es un
             umbral: pasado cierto tamaño, casi todo tu error dejó de ser muestreo, y recoger más datos ya no compra
@@ -277,17 +278,17 @@
             sino bastante a su derecha. En una población así, «el condado medio» no existe —hay muchos pequeños y unos
             pocos enormes que tiran de la media—, y una muestra que por azar recoja o no recoja uno de los grandes dará
             resultados muy distintos.</p>
-          <p><strong>Y lo que el gráfico te está escondiendo.</strong> La cola está recortada en el percentil 99 para
-            que se vea algo; sin recorte, todo lo demás se aplastaría contra el eje. Es decir, la asimetría real es
-            <em>peor</em> que la que estás viendo. Cuando cambies a regiones verás la otra mitad del problema: las
-            cuatro medias se separan muchísimo entre sí, y la media global —la única que se estimaría sin estratificar—
-            queda lejos de las dos extremas.</p>
+          <p><strong>Y lo que estás viendo es la versión suave.</strong> El recorte de la cola que anuncia la
+            introducción no es cosmético: significa que la asimetría real es <em>peor</em> que la dibujada. Cambia
+            ahora a regiones y aparece la otra mitad del problema: las cuatro medias se separan muchísimo entre sí, y
+            la media global —la única que se estimaría sin estratificar— queda lejos de las dos extremas. Un solo
+            número no describe a esta población, y ese es el hueco por el que entra el capítulo 4.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
-            Esta forma no es un detalle descriptivo: es la razón de ser de medio curso. Su asimetría hace que con $n$
-            pequeño la media muestral no sea normal (capítulo 2), que estratificar por tamaño gane muchísimo
-            (capítulo 4) y que las probabilidades proporcionales al tamaño sean la respuesta natural (capítulo 6). Mira
-            el histograma antes de elegir el diseño, no después.
+            El histograma se mira <em>antes</em> de elegir el diseño, no después de que salgan los resultados raros.
+            La tarjeta de abajo pone nombre a las tres consecuencias que tiene esta forma concreta; lo transferible es
+            el hábito: ante una población nueva, la primera pregunta no es «¿de qué tamaño la muestro?», sino «¿qué
+            forma tiene?».
           </p>
         </div>
       </details>

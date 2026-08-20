@@ -1548,11 +1548,159 @@ reproducir cada cifra sin aproximar.
 (14 + 4); 303 cifras verificadas frente a 155; 7 cajas de lectura guiada frente a 0; ningún bloque
 de código fuera de pestañas.
 
-- [ ] **T6.7 — Ortografía y redacción, módulos 1–5.**
-- [ ] **T6.8 — Ortografía y redacción, módulos 6–10.**
-- [ ] **T6.9 — Reensamblado y verificación mecánica.**
-- [ ] **T6.10 — Auditoría independiente.**
-- [ ] **T6.11 — Pasada de navegador.**
+- [x] **T6.7 — Ortografía y redacción, módulos 1–5.** Los módulos 4 y 5 no necesitaron ni una
+      corrección; todo lo encontrado está en los módulos 1, 2 y 3. Siete cambios, ninguno cosmético:
+
+      1. **`<code>−99</code>` usaba el signo menos tipográfico U+2212** en cuatro sitios (dos en la
+         prosa del módulo 2, dos en el banco de preguntas), mientras el código real usa `-99` ASCII.
+         Quien copiara ese texto a R obtenía un error de sintaxis. Normalizado **solo dentro de
+         `<code>`**: en la prosa el U+2212 es la tipografía correcta y se queda (7 apariciones).
+      2. **«por debajo» decía lo contrario de lo que dice el dato.** El aviso del marco completo
+         afirmaba que la media de los 3 059 condados con dato válido, 308 582, queda «1 905 acres,
+         un 0,6 %, por debajo». Está **por encima**: el bloque `R2` publica `diferencia_pct 0.6213`
+         positivo. Reescrito sin ambigüedad de atribución.
+      3. **«2,4 millones» donde el material dice 2,3 en los otros tres sitios.** El sondeo fueron
+         2 266 566 papeletas. La cifra se le escapa a `--prosa` porque su expresión regular pide dos
+         decimales o separador de miles, y «2,4» no tiene ninguno de los dos.
+      4. Concordancia de género y coma que faltaba: «los 2 266 566 que devolvieron la papeleta de
+         los 10 000 000 enviadas» → «las 2 266 566 papeletas devueltas de las 10 000 000 enviadas».
+      5. `aria-label="El código de faltante -99"` → «El código del dato faltante -99».
+      6. Una oración empezaba con cifra («4 500 es una muestra grande»), que la RAE desaconseja.
+      7. «lo único que no es, es» → «lo único que no lo es, es».
+
+      **No se tocó el espaciado antes de `%`.** La convención del material es un espacio normal, y es
+      uniforme: 364 apariciones en los ocho capítulos y **cero** `&nbsp;`. Cambiarla en el capítulo 1
+      habría creado la inconsistencia, no arreglado ninguna.
+
+      Verificado: 303/303 cifras y 0 de prosa sin respaldo después de la pasada —ninguna corrección
+      rozó una cifra de bloque—, y en el navegador los cinco módulos con KaTeX renderizando, ningún
+      `$…$` sin resolver fuera de los bloques de código y la consola limpia.
+
+      **Pendiente fuera de esta fase:** el capítulo 4 tiene el mismo defecto del U+2212 dentro de
+      `<code>` (`ensamblado/modulos/cap4/modulos_4_6.html`, `<code>acres87 = −99</code>`). No se toca
+      porque la fase 6 es del capítulo 1; va a la lista cuando se decida qué hacer con los otros
+      siete.
+- [x] **T6.8 — Ortografía y redacción, módulos 6–10.** Aquí lo que apareció no fue ortografía: fueron
+      **defectos propios de T6.2 y T6.5**, y esta pasada es exactamente donde tenían que salir.
+
+      **Cuatro de las siete cajas de lectura guiada repetían su entorno**, justo lo que la propia
+      T6.2 se prohibió. Se midió con una comprobación de solapes de ocho palabras o más entre cada
+      caja y el resto de su módulo, en vez de a ojo: `auditor-preguntas` repetía cinco tramos de la
+      introducción de su simulador; `sesgo-varianza`, seis; `poblaciones`, el recorte del percentil
+      99 (de la introducción) y las tres consecuencias de la asimetría (de la tarjeta de justo
+      debajo); `no-respuesta`, la frase de las tasas por subgrupo (del aviso siguiente). Los cuatro
+      pasajes se reescribieron para decir algo que el entorno no dice ya: la altura a la que se
+      paran las barras **es** el sesgo en acres, y por tanto es comparable con lo que se estima; los
+      defectos de redacción vienen en grupo y arreglar uno deja el ítem roto; un solo número no
+      describe a `agpop`, y ese es el hueco por el que entra el capítulo 4; sin partir la población
+      en clases no hay forma de saber si lo que falta se reparte parejo. Reverificado: **0 solapes**.
+
+      **Dos desajustes que dejó T6.5.** El módulo 10 anunciaba que las cifras de las soluciones
+      salen de `cadena.R`, cuando desde T6.5 cada solución trae también su pestaña de Python; ahora
+      nombra las dos cadenas y dice que publican la misma cifra. Y el `post-estratificación` que se
+      coló en la caja de `encuestas-intell` se alineó con el `postestratificación` que ya usaba el
+      módulo 9 del propio capítulo.
+
+      Correcciones de lengua propiamente dichas, tres: «libros cualquiera» → «libros cualesquiera»;
+      un «también… también» en la misma oración; y el U+2212 del banco de preguntas, que se corrigió
+      junto con los de T6.7.
+
+      Verificado: 303/303 cifras y 0 de prosa sin respaldo, y en el navegador los módulos 6 a 10 sin
+      ninguna fórmula sin renderizar, ningún `<code>` con menos tipográfico y la consola limpia.
+
+      **Nota de coherencia para más adelante:** «postestratificación» aparece 11 veces sin guion y 10
+      con guion **en el conjunto del material**. El capítulo 1 ya es coherente; unificar los ocho es
+      una decisión aparte, del mismo lote que el U+2212 del capítulo 4.
+- [x] **T6.9 — Reensamblado y verificación mecánica.** Los ocho ensambladores ejecutados: solo el
+      capítulo 1 sale modificado, los otros siete **byte a byte idénticos**, que es la comprobación
+      de que ninguna corrección se quedó en el archivo final en vez de en las fuentes.
+      `verifica_bloques.py --todos --prosa`: los 8 capítulos en 0 discrepancias y **0 cifras de
+      prosa sin respaldo**; el capítulo 1, en **303 de 303**. `mide_abstraccion.py`: 0 módulos abren
+      formalizando. `cuenta_sitio.py`: cap. 1 con 17 bloques de R, 17 de Python, 154 líneas `#>`,
+      7 cajas de lectura guiada. Permisos a 644.
+- [x] **T6.10 — Auditoría independiente.** Un auditor que no escribió el material, con el encargo de
+      buscar lo que se le escapa a las herramientas y de no aceptar este plan como verdad. Entregó
+      **20 hallazgos**. Confirmó lo mecánico —303/303, las 17 parejas con las mismas cifras, el
+      ensamblado byte a byte, las 7 cajas cerradas y en su sitio— y recalculó a mano una veintena de
+      cifras del texto, todas correctas. Lo valioso es lo que encontró **fuera** del alcance de las
+      herramientas. Verifiqué por mi cuenta los hallazgos de mayor peso antes de darlos por buenos.
+
+      **G1 · El simulador `encuestas-intell` dibuja barras falsas en «Raza» e «Ingreso».**
+      CONFIRMADO ejecutando. `reparto()` en `genera_cap1.R` une los niveles de las dos encuestas y
+      rellena con **0** los ausentes, pero las dos codifican con vocabularios distintos:
+      `Black`/`African American`, `Asian`/`Asian American`, `Hispanic`/`Hispanic American`,
+      `Other`/`Another origin`, y `$40-$80k`/`$40-80k`. Resultado: **8 de los 9 niveles de raza
+      tienen una serie en cero**, y en ingreso las dos mayores distancias (33,8 y 32,4 puntos) son
+      íntegramente artefacto. El estudiante lee «la encuesta telefónica tiene 0 % de African
+      American». El propio archivo ya razona en un comentario por qué un cero dibujado se lee como
+      un dato («un cero dibujado se lee como “el censo dice 0 %”») y usa `null` para la serie del
+      censo; ese razonamiento no se aplicó aquí. Es anterior a esta fase.
+
+      **G2 · La caja de `encuestas-intell` manda mirar justo ahí, y afirma algo que el gráfico no
+      dibuja.** CONFIRMADO: `pctTel` y `pctOnline` salen de `wt$tel_n / sum(wt$tel_n)`, conteos
+      crudos, y `reparto()` usa `prop.table(table(...))`; **`postwt` no entra en ninguna vista**. La
+      caja dice «ponderar no acercó las dos muestras… las acercó en las variables por las que se
+      ponderó», que es cierto pero se demuestra en el bloque `R5`/`PR5`, no en ese gráfico. Y su
+      «cambia a ingreso… la distancia sigue ahí» apunta al peor caso de G1. Defecto introducido en
+      T6.2.
+
+      **G3 · «2 266 566 papeletas devueltas» es incorrecto, y la pasada de redacción lo empeoró.**
+      CONFIRMADO aritméticamente. 2 266 566 = 1 293 669 + 972 897 es el **subtotal de los dos
+      candidatos**; la variable del precálculo se llama, literalmente, `digest_devueltas_dos`. Con
+      ese total los porcentajes serían 57,1 y 42,9, no el «Landon 54 % · Roosevelt 41 %» que publica
+      el propio módulo 1: el total devuelto compatible con esas cifras es ≈ 2 373 000. El capítulo
+      llama «devueltas» a 2 266 566 en el módulo 2 —el que enseña a distinguir marco de muestra— y
+      solo una vez usa la expresión correcta, «papeletas útiles». El precálculo arrastra la misma
+      contradicción: `documental.devueltas = 2300000` junto a
+      `tasaRespuesta = digest_devueltas_dos / 1e7`. **En T6.7 se cambió «2,4 millones» por «2,3»
+      razonando desde 2 266 566: era el cambio equivocado, porque 2,4 era la cifra defendible.**
+
+      **Otros hallazgos confirmados.** La caja de `digest` afirma que el punto negro «sigue encima
+      de la curva» al recorrerla, y nada lo pega a ella (T6.2). `R9`/`PR9` usan `reg`, `N_h` y
+      `mu_h`, definidos seis bloques y cuatro módulos antes en `R6`/`PR6`: quien copie ese bloque
+      suelto obtiene `object 'N_h' not found`, justo el defecto que se corrigió en `P4` y se dejó en
+      el caso peor. Los `#>` de `PS2` y `PS4` quedaron separados de su sentencia por un comentario
+      de prosa, rompiendo la convención que sus gemelos de R sí respetan. Las cajas de
+      `no-respuesta` y `n-grande-no-salva` siguen repitiendo su introducción pese a la pasada de
+      T6.8 —la comprobación de solapes de ocho palabras no los vio porque están reformulados—. La
+      autoevaluación promete cubrir «los nueve módulos» y no tiene ni una pregunta de los módulos
+      3, 5 y 8.
+
+      **Un hallazgo que NO se sostiene.** El auditor da por errónea la referencia «postestratificación
+      … capítulos 7 y 8» porque contó cero apariciones en esos capítulos. Contando **las dos
+      grafías**, el capítulo 7 tiene 2 y el 8 tiene 7: el término sí aparece, escrito con guion.
+      El auditor cayó en la misma inconsistencia de guion que esta fase dejó anotada en T6.8. La
+      referencia es imprecisa —el módulo titulado «Postestratificación» está en el capítulo 4— pero
+      no falsa.
+
+      **El auditor no abrió el capítulo en un navegador**, y lo declara: sus hallazgos sobre «qué se
+      ve» los dedujo leyendo `simuladores.js`. G1, G2 y los de la caja de `digest` conviene
+      confirmarlos visualmente en T6.11.
+- [ ] **T6.11 — Pasada de navegador.** Pendiente; se retoma en otra sesión. Lo que hay que
+      comprobar, sobre `sitio/muestreo/capitulo-1-encuestas-sesgos.html` y recorriendo los diez
+      módulos: consola sin errores, KaTeX renderizado, los 17 grupos de pestañas conmutando, las 7
+      cajas abriendo y cerrando, los 7 simuladores respondiendo **en valores extremos** de sus
+      controles, los gráficos destruyéndose al cambiar de módulo, y el conjunto de selectores CSS
+      contra la plantilla (una clase inventada no da error: da un componente sin estilo).
+
+      **Cuatro trampas del entorno, ya pagadas en las tareas anteriores.** Anotadas para no volver a
+      tropezar con ellas:
+
+      1. El material se sirve por HTTP, no por `file://`: con `file://` la página se abre como
+         instantánea estática y el JavaScript no corre, así que no hay módulos. Hay un
+         `.claude/launch.json` en la raíz (nombre `raiz`, puerto 8767) que levanta
+         `python3 -m http.server`. Está fuera de la lista blanca del `.gitignore`, así que no
+         ensucia el repositorio.
+      2. **Si la pane del navegador está oculta, el documento mide 0 de ancho.** Las capturas salen
+         en blanco y `getBoundingClientRect()` devuelve geometría disparatada, porque cada línea se
+         parte. Lo que NO depende de la anchura —margen calculado, estado `open`, número de nodos
+         `.katex`, etiqueta del elemento, conmutación de pestañas— sí es fiable. Para medir alturas
+         reales, clonar el elemento dentro de un contenedor absoluto de **812 px**, que es la
+         anchura real de la columna de contenido.
+      3. El contenedor del módulo visible es **`#content-area`**, no `#mainContent`.
+      4. Buscar `$…$` sin renderizar sobre `textContent` da **falsos positivos**: R usa `$` para
+         acceder a columnas (`agpop$acres92`), así que los bloques de código disparan la búsqueda.
+         Hay que recorrer los nodos de texto excluyendo `.katex`, `pre`, `code` y `script`.
 
 ### Checkpoint 6 — Cierre de la fase 6
 - [ ] Informe de auditoría escrito aquí
@@ -1570,6 +1718,232 @@ de código fuera de pestañas.
 | Un bloque nuevo pisa una variable de la cadena (`r`, `p`, `mu`) | Medio | Ejecución encadenada real, nunca el bloque suelto — **ocurrió en T6.3 con `mu`; resuelto y documentado en el propio bloque** |
 | `anota_salidas.py` corrompe las cadenas de anotación intercalada, y `verifica_bloques.py` no lo ve | **Alto** | **Resuelto en T6.3.** Reparte la salida por sentencia, así que respeta los dos estilos, y aborta sin escribir cuando no puede colocarla. Eran **7 de las 16 cadenas**, no los caps. 1 y 2. Regresión: `precalculo/pruebas/prueba_anotador.py` |
 | Las cajas regalan la conclusión y matan el trabajo del estudiante | Medio | Cerradas por defecto; el auditor revisa este punto explícitamente |
+
+---
+
+### T6.7 — Corrección del 67,6 % del capítulo 1 y el punto ciego de `--prosa` (2026-08-19)
+
+**La cifra.** El módulo 4 del capítulo 1 decía *«Sin pesos, las dos encuestas se llevan 5,9 puntos
+(61,6 % frente a 67,6 %)»*. El 67,6 % está mal. Verificado ejecutando con el Rscript del framework
+4.4 sobre `intellonline.csv`: `int` toma valores 1..5 sin faltantes (185, 479, 145, 18, 156), las
+categorías de acuerdo suman 185 + 479 = **664 de 983 = 0,67548321 → 67,5 %**. El precálculo ya lo
+tenía bien: `cap1_datos.json` guarda `intell.agree.online.sinPesos = 67.54832146`. Era un error de
+transcripción a la prosa, no de cálculo. Las otras tres cifras del párrafo son correctas: 61,64309
+→ 61,6; 64,76449 → 64,8; 65,62910 → 65,6. La diferencia no cambia (67,548 − 61,643 = 5,905 → 5,9
+puntos), así que el argumento del párrafo se mantiene intacto.
+
+Corregido en la fuente, `ensamblado/modulos/cap1/modulos_4_6.html:161`, y reensamblado con
+`ensambla_cap1.py`. El publicado sale **byte a byte idéntico salvo esa línea** (`diff` de una sola
+línea, 4198). Aparición única: no está en ningún otro punto del capítulo ni en `cifras_prosa.json`.
+
+**Por qué `--prosa` no lo vio — el hallazgo importante.** No es que `casa()` lo aceptara: es que la
+cifra **nunca llegó a la comprobación**. `CIFRA_PROSA_RE` (`verifica_bloques.py:158`) exige
+`\d+,\d{2,}` — **dos o más decimales**— para dar por «cifra con contenido» a un número decimal. El
+párrafo entero (5,9 · 61,6 · 67,6 · 0,9 · 64,8 · 65,6) devuelve **cero coincidencias**. Y un decimal
+es justamente como el material escribe los porcentajes en prosa.
+
+El diagnóstico se cierra en los dos sentidos: si el regex la hubiera visto, `casa(67,6; dec = 1)`
+habría dado **False** contra el universo del capítulo (|67,548 − 67,6| = 0,052 > tol = 0,050) y la
+habría reportado. El único filtro que falló fue el de extracción.
+
+**Tamaño del punto ciego, medido sobre los ocho capítulos publicados:** admitiendo un solo decimal
+aparecen **126 cifras de prosa invisibles hoy**, de las cuales **47 no casan con nada del universo**
+y necesitarían revisión humana (cap. 1: 8 · cap. 2: 9 · cap. 3: 4 · cap. 4: 8 · cap. 5: 1 · cap. 6:
+4 · cap. 7: 2 · cap. 8: 11). La mayoría se ven legítimas —cocientes derivados, cifras en otra
+unidad, «2,3 millones»— pero eso es exactamente lo que decide la lista blanca, no el silencio.
+
+**Por qué el `{2,}` estaba ahí y qué costaría quitarlo.** Con un decimal entra ruido de LaTeX: los
+conjuntos `$\{1,2,3\}$` y `$\{4,5\}$` de los caps. 2 y 4 producen «1,2» y «4,5» (3 de los 47). Y la
+potencia del detector baja: con tolerancia 0,05 y universos de 500–4 400 números, la fracción de
+valores arbitrarios que casan por casualidad sube del **1–4 % (dos decimales) al 8–27 % (uno)**. Es
+decir, a un decimal el control deja pasar entre el 8 % y el 27 % de los errores, frente al 0 % de
+detección de hoy, que es lo que hay ahora mismo.
+
+**Cerrado en T6.8**, que admite el decimal, tría las cifras y corrige lo que estaba mal.
+
+**Estado del verificador tras la corrección:** `verifica_bloques.py --todos --prosa` en verde —
+2 183 de 2 183 cifras de bloque y 365 cifras de prosa respaldadas, 0 sin respaldo, 0 bloques con
+discrepancias—. Sin publicar a gh-pages: pendiente del visto bueno de Javier.
+
+---
+
+### T6.8 — Cerrar el punto ciego de un decimal, y lo que apareció al abrirlo (2026-08-19)
+
+**Lo que se cambió en el verificador.** Dos líneas de `verifica_bloques.py`:
+
+- `CIFRA_PROSA_RE` admite ahora `\d+,\d+` en vez de `\d+,\d{2,}`. Con eso entran al control las
+  cifras de un decimal, que es como el material escribe los porcentajes en prosa.
+- `CONJUNTO_LATEX_RE` vacía los `$\{1,2,3\}$` antes de buscar. Al admitir un decimal, los conjuntos
+  de índices de los caps. 2 y 4 se leían como los decimales «1,2» y «4,5». Repasadas las catorce
+  apariciones de `\{...\}` en los ocho capítulos: todas son conjuntos, ninguna encierra un resultado.
+
+**El triaje.** Las 44 cifras que quedaron sin respaldo se revisaron **una por una, ejecutando**
+contra los JSON del precálculo y las salidas de los bloques. **43 eran correctas** y están en
+`cifras_prosa.json` con la cuenta que las justifica —de `22 000/100 300 = 21,934 %` a
+`(55,13374 - 113,6238)/113,6238 = -51,477 %`—. La línea base pasa de 45 a 89 entradas, y el
+capítulo 5 estrena sección.
+
+**El error que escondían.** El capítulo 2 citaba **«2,4 millones de respuestas»** del *Literary
+Digest*, que son 2 266 566 → **2,3 millones**, como dice el capítulo 1. Y no estaba en un sitio:
+estaba en **tres**, uno de ellos dentro de un simulador.
+
+| Dónde | Qué decía |
+|---|---|
+| `modulos/cap1/modulos_1_3.html:332` | «Una muestra de 2,4 millones de personas…» |
+| `modulos/cap2/modulos_9_10.html:272` | «…el *Literary Digest* y sus 2,4 millones de respuestas» |
+| `modulos/cap2/simuladores.js:552` | «…el capítulo 1 lo vio con los 2,4 millones del *Literary Digest*» |
+
+El del capítulo 1 es el caso de libro del **falso negativo por coincidencia**: el verificador sí
+miraba ese «2,4» —está en un `<p>`— y lo dio por bueno porque algún número del universo del
+capítulo cae a menos de 0,05 de 2,4. Con un decimal y universos de 500 a 4 400 números eso pasa
+entre el 8 % y el 27 % de las veces. El control de un decimal reduce el agujero, no lo cierra: la
+consistencia entre capítulos sigue siendo trabajo humano.
+
+**Segundo punto ciego, medido y NO cerrado.** `cifras_de_prosa()` borra todo `<script>` antes de
+mirar. Los enunciados, las opciones y la retroalimentación de los simuladores —texto que el
+estudiante lee igual que un párrafo— nunca se han verificado: **168 cifras**, de las cuales **20**
+no las respalda ni el universo ni la lista blanca. Ahí vive el tercer «2,4 millones».
+**Cerrado en T6.9**, que además encontró que la medida real era mayor: 37 cifras, no 20.
+
+**Tercer hallazgo, revertido.** Al reensamblar salió que **cuatro capítulos (3, 4, 7 y 8) no son
+reproducibles byte a byte** desde sus fuentes: las cadenas ejecutables llevan el espacio final de
+línea que R escribe y el publicado lo tiene recortado. Es puramente cosmético —va dentro de `<pre>`,
+al final de la línea— así que los cuatro se devolvieron a HEAD para no ensuciar el diff. Los caps.
+5 y 6 salen idénticos. Sí se corrigió `codigo/cap2/cadena.R`, donde el `#>` del bloque de `pi_kl`
+tenía un espacio de más **respecto a la salida real de R** (comprobado ejecutándolo): ahí el
+publicado tenía razón y la cadena no.
+
+**Regresión.** `precalculo/pruebas/prueba_prosa.py`, 8 pruebas. La primera es la frase entera que
+se coló. Comprobado que **falla 3 de 8 contra el verificador de antes** y pasa 8 de 8 contra el de
+ahora; sin eso la prueba no guardaría nada.
+
+**Estado:** `verifica_bloques.py --todos --prosa` en verde — 2 183 de 2 183 cifras de bloque y
+**486 cifras de prosa** respaldadas (antes 365), 0 sin respaldo. Sin publicar a gh-pages: pendiente
+del visto bueno de Javier.
+
+---
+
+### T6.9 — El texto de los simuladores entra al control (2026-08-19)
+
+**El agujero.** `cifras_de_prosa()` empezaba borrando el `<script>` entero. Dentro viven los
+enunciados de las preguntas, las opciones, la retroalimentación y los rótulos de los gráficos:
+texto que el estudiante lee exactamente igual que un párrafo, y del que **nadie había contrastado
+una sola cifra**. Por ahí se publicaron dos de los tres «2,4 millones» de T6.8.
+
+**Cómo se cerró.** `textos_de_simuladores()` saca **todos** los literales de cadena del `<script>`
+—`'…'`, `"…"` y plantillas con acento grave— y los mete en la misma tubería que los párrafos.
+
+La decisión de diseño que importa: se cogen **todos** los literales, no una lista de campos
+(`retro`, `pista`, `pregunta`…). Una lista se queda corta en cuanto alguien añade un campo nuevo, y
+ese fallo es **silencioso**, que es justo el modo de fallo que este verificador existe para evitar.
+El precio es el ruido, y medido resultó ser mínimo: de 12 773 literales, los únicos que traen algo
+con forma de cifra española sin serlo son los colores CSS (`rgb(255,102,0)`). Tres normalizadores
+nuevos lo dejan limpio:
+
+| | Qué neutraliza | Por qué |
+|---|---|---|
+| `COLOR_CSS_RE` | `rgb(…)`, `rgba(…)`, `hsl(…)` | «255,102» no es un decimal |
+| `PARTICION_RE` | `{1}{2,3}{4}` con llaves desnudas | es un conjunto; `{2,3}` no es 2,3 |
+| `INTERPOLACION_RE` | `${…}` de las plantillas | lo calcula el navegador, no hay cifra literal |
+
+`PARTICION_RE` obligó a **reordenar `normaliza_latex()`**: la coma decimal de LaTeX (`92{,}65`) tiene
+que resolverse ANTES, o el `{,}` se lo lleva el filtro de particiones y queda «92 65». Y no se
+pueden borrar todas las llaves: `\underbrace{27 \times 2,50}` encierra una cifra que sí hay que
+contrastar. Además, los escapes del JS se deshacen antes de normalizar, o el `\\,` del espacio fino
+de LaTeX no llega y «306 677» se parte en dos.
+
+**Guarda contra el fallo silencioso**, igual que en `extrae()`: si un capítulo trae `<script>` y no
+sale de él ni una cadena, el verificador **aborta** en vez de dar el capítulo por bueno.
+
+**El triaje.** Aparecieron **37 cifras** —no las 20 que estimó T6.8, porque aquella medida usaba una
+lista de seis campos y el extractor real cubre todos—. Revisadas una por una ejecutando: **36 eran
+correctas**, y una era un error real.
+
+> El capítulo 1 decía que la mayor desviación de la telefónica en una celda era de **29,7** puntos.
+> Es **29,6**: `max |pctTel - pctCenso|` = 47,7693 - 18,1277 = **29,6416**. La del panel, 13,6314 →
+> 13,6, sí estaba bien. Corregido en `modulos/cap1/simuladores.js:741`.
+
+**Categoría nueva en la línea base: las cifras equivocadas a propósito.** Las preguntas citan
+valores falsos por diseño —el distractor «la calibración corrigió el 39,9 % del sesgo», el «si te
+dio 2,7, dividiste al revés», el «si respondiste 5 405, aplicaste $n-1$»—. Son correctas *como
+texto* y jamás casarán con el universo, así que van a `cifras_prosa.json` con la justificación
+diciendo explícitamente que lo son. Conviene no perder eso de vista al revisar la lista: una entrada
+que dice «valor equivocado de un distractor» no es una cifra sin comprobar, es una comprobada.
+
+**Estado:** `verifica_bloques.py --todos --prosa` en verde — 2 183 de 2 183 cifras de bloque y
+**612 cifras de prosa** respaldadas, 0 sin respaldo. La línea base tiene 143 entradas (45 antes de
+T6.8). `precalculo/pruebas/prueba_prosa.py` pasa **15 de 15**, y las 5 nuevas fallan contra el
+verificador de antes de esta tarea. Sin publicar a gh-pages: pendiente del visto bueno de Javier.
+
+**Lo que sigue fuera de control.** Los capítulos 3, 7 y 8 no son reproducibles byte a byte
+(espacio final de línea en las cadenas; ver T6.8). **Cerrado en T6.11**, junto con el 4. Y el verificador compara cada cifra contra
+el universo de **su propio capítulo**: una cifra que sea coherente ahí pero contradiga a otro
+capítulo —como el «2,4 millones» frente al «2,3» del capítulo 1— sigue pasando.
+
+---
+
+### T6.10 — Las dos cifras flojas que destapó la revisión (2026-08-19)
+
+De las 81 entradas nuevas de la línea base, dos eran ciertas pero flojas, y Javier pidió apretarlas.
+Las dos vivían en simuladores, así que llevan reensamblado.
+
+**`24 000` → `24 500` (cap. 1, árbol del error).** La frase dice: «con $n = 300$ sobre `agpop`, el
+error estándar de la media es de unos 24 000 acres; con $n = 1\,200$ se parte por la mitad». Lo que
+decide la cifra es la segunda mitad: **partirse por la mitad solo es cierto sin fpc**. Sin fpc,
+$S/\sqrt{300} = 24\,519$ y $S/\sqrt{1200} = 12\,260$, la mitad exacta. Con fpc serían 23 294 y 9 576,
+razón 2,43 — y la frase sería falsa. Así que la lectura correcta es la de 24 519, y el redondeo
+honesto es **24 500**, no 24 000.
+
+**`60 000` → `114 000` (cap. 4, módulo 3).** Decía «con Neyman el promedio bruto esperado sube más de
+60 000 acres». Es cierto como cota, pero se queda muy corto: el simulador que la frase comenta
+calcula `bruto = Σ n_h ȳ_h / n` y muestra `sesgo = bruto − media poblacional`, que bajo Neyman vale
+**420 650 − 306 677 = 113 973 acres**. Ahora la frase dice el número que el estudiante ve en pantalla.
+
+**Efecto colateral, aceptado a propósito.** Reensamblar el capítulo 4 arrastró las dos líneas de
+espacio final de T6.8 (`#> region` en dos bloques). No se revirtieron: la alternativa era dejar el
+publicado distinto de lo que produce `ensambla_cap4.py`, que es la deriva misma. **El capítulo 4 es
+ahora reproducible byte a byte** —reensamblarlo es idempotente, comprobado—. Quedan los caps. 3, 7
+y 8, que se cierran en T6.11; allí el capítulo 4 recupera además esas dos líneas recortadas, porque
+el arreglo va por el otro lado: se le quita el espacio a la cadena, no se le añade al publicado.
+
+---
+
+### T6.11 — Los ocho capítulos vuelven a salir de sus fuentes (2026-08-19)
+
+**La deriva.** R rellena por la derecha —los vectores con nombre y las matrices salen con espacios
+al final— y `anota_salidas.py` prefijaba esas líneas con `#> ` **tal cual**, así que el espacio
+acababa en la cadena y de ahí en el HTML. En algún momento algo lo recortó en los publicados (un
+editor al guardar, casi seguro) y desde entonces cuatro capítulos ya no salían de sus fuentes.
+Eran **126 líneas**: cap. 3 (22), cap. 4 (2, en la cadena de Python), cap. 7 (40) y cap. 8 (62).
+
+Invisible por partida doble: dentro de un `<pre>` el espacio final no se ve, y `verifica_bloques.py`
+da verde porque compara **cifras**, no espacios. Solo aparece al reensamblar y mirar el `diff` —que
+es como salió, en T6.8—.
+
+**El arreglo, en el generador y no a mano.** `anota_salidas.py` escribe ahora
+`("#> " + l).rstrip()`. Recortar solo las cadenas no habría servido: la siguiente pasada del
+anotador habría vuelto a meter el espacio. Con la herramienta arreglada, se recortaron además las
+126 líneas que ya estaban escritas.
+
+**Comprobado:** los ocho `ensambla_capN.py` son **idempotentes** —se ejecutaron dos veces seguidas y
+los ocho ficheros salen `cmp`-idénticos— y los capítulos 3, 5, 6, 7 y 8 reproducen **byte a byte**
+lo que hay en HEAD. Los caps. 1, 2 y 4 difieren solo en las siete correcciones de T6.7–T6.10, ni una
+línea más. El capítulo 4 pierde con esto las dos líneas de espacio final que T6.10 había aceptado:
+ahora su diff es únicamente el `114 000`.
+
+**Regresión.** `precalculo/pruebas/prueba_cadenas.py`, 3 pruebas: que la herramienta no escribe
+espacio final, que ninguna cadena lo tiene, y que el glob encuentra las cadenas —sin esa tercera, un
+glob roto dejaría pasar la segunda sin comprobar nada—. Comprobado que **falla 2 de 3 contra el
+estado de HEAD**.
+
+**Estado:** `verifica_bloques.py --todos --prosa` en verde, 2 183 cifras de bloque y 612 de prosa.
+`prueba_prosa.py` 15 de 15 y `prueba_cadenas.py` 3 de 3. Sin publicar a gh-pages: pendiente del
+visto bueno de Javier.
+
+**Lo que queda abierto del bloque T6.7–T6.11.** Solo una cosa: el verificador compara cada cifra
+contra el universo de **su propio capítulo**, así que una cifra coherente ahí pero que contradiga a
+otro capítulo sigue pasando. Es lo que dejó vivo el «2,4 millones» del cap. 2 teniendo el cap. 1 un
+«2,3» a tres párrafos. Los tres errores de este bloque salieron leyendo, no ejecutando.
 
 ---
 

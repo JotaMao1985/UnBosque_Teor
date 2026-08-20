@@ -16,10 +16,10 @@ t_x <- sum(agpop$acres87)     # se conoce: es un censo anterior
 t_y <- sum(agpop$acres92)     # NO se conoceria en la practica; aqui sirve de juez
 round(c(N = N, n = n, t_x = t_x, t_y = t_y,
         correlacion = cor(agsrs$acres87, agsrs$acres92)), 6)
-#>                N                n              t_x              t_y 
-#>      3078.000000       300.000000 963464412.000000 943951718.000000 
-#>      correlacion 
-#>         0.995806 
+#>                N                n              t_x              t_y
+#>      3078.000000       300.000000 963464412.000000 943951718.000000
+#>      correlacion
+#>         0.995806
 cat("\n###BLOQUE-R2###\n")
 # Sin la auxiliar, el estimador de expansion. Con ella, el de razon.
 dis <- svydesign(id = ~1, fpc = rep(N, n), data = agsrs)
@@ -32,8 +32,8 @@ raz_sv <- svyratio(~acres92, ~acres87, dis)
 ee_razon <- as.numeric(SE(raz_sv)[1]) * t_x
 round(c(expansion = as.numeric(coef(exp_sv)), ee_expansion = as.numeric(SE(exp_sv)[1]),
         B = B, razon = t_razon, ee_razon = ee_razon), 4)
-#>      expansion   ee_expansion              B          razon       ee_razon 
-#> 916927109.6400  58169381.1695         0.9866 950520496.1040   5540375.7938 
+#>      expansion   ee_expansion              B          razon       ee_razon
+#> 916927109.6400  58169381.1695         0.9866 950520496.1040   5540375.7938
 cat("\n###BLOQUE-R3###\n")
 # La misma cifra por las dos vias: survey y la formula de Lohr, que se apoya en
 # la desviacion de los RESIDUOS respecto de la recta por el origen.
@@ -51,8 +51,8 @@ cat("\n###BLOQUE-R4###\n")
 round(c(sd_y = sd(agsrs$acres92), sd_residuos = s_e,
         reduccion_pct = 100 * (1 - s_e / sd(agsrs$acres92)),
         veces_mas_eficiente = (as.numeric(SE(exp_sv)[1]) / ee_razon)^2), 4)
-#>                sd_y         sd_residuos       reduccion_pct veces_mas_eficiente 
-#>         344551.8948          31657.2182             90.8121            110.2327 
+#>                sd_y         sd_residuos       reduccion_pct veces_mas_eficiente
+#>         344551.8948          31657.2182             90.8121            110.2327
 cat("\n###BLOQUE-R5###\n")
 # Estimador de regresion: no obliga a que la recta pase por el origen.
 b1 <- cov(agsrs$acres87, agsrs$acres92) / var(agsrs$acres87)
@@ -66,10 +66,10 @@ reg_sv <- svytotal(~acres92, dis_cal)
 round(c(b0 = b0, b1 = b1, regresion_a_mano = t_regresion,
         regresion_survey = as.numeric(coef(reg_sv)),
         ee_survey = as.numeric(SE(reg_sv)[1])), 6)
-#>               b0               b1 regresion_a_mano regresion_survey 
-#>     -2548.117442         0.995004 950807843.343409 950807843.343408 
-#>        ee_survey 
-#>   5593972.160808 
+#>               b0               b1 regresion_a_mano regresion_survey
+#>     -2548.117442         0.995004 950807843.343409 950807843.343408
+#>        ee_survey
+#>   5593972.160808
 cat("\n###BLOQUE-R6###\n")
 # Estimador de diferencia: la regresion con la pendiente FIJADA en 1. Se usa
 # cuando x e y miden lo mismo en unidades comparables.
@@ -77,8 +77,8 @@ d <- agsrs$acres92 - agsrs$acres87
 t_diferencia <- t_x + N * mean(d)
 ee_diferencia <- N * sqrt((1 - n / N) * var(d) / n)
 round(c(media_diferencias = mean(d), diferencia = t_diferencia, ee = ee_diferencia), 4)
-#> media_diferencias        diferencia                ee 
-#>         -4056.677     950977961.220       5329882.042 
+#> media_diferencias        diferencia                ee
+#>         -4056.677     950977961.220       5329882.042
 cat("\n###BLOQUE-R7###\n")
 # Los cuatro, juntos y con el total real de juez.
 comparacion <- data.frame(
@@ -167,8 +167,8 @@ round(c(total_real = sum(agpop$farms92),
         expansion = as.numeric(coef(expf_sv)), ee_expansion = as.numeric(SE(expf_sv)[1]),
         razon = Bf * tx_f, ee_razon = as.numeric(SE(razf_sv)[1]) * tx_f,
         correlacion = cor(agsrs$farms87, agsrs$farms92)), 4)
-#>   total_real    expansion ee_expansion        razon     ee_razon  correlacion 
-#> 1925300.0000 1843906.6800   67908.3073 1930836.4997    8208.1013       0.9933 
+#>   total_real    expansion ee_expansion        razon     ee_razon  correlacion
+#> 1925300.0000 1843906.6800   67908.3073 1930836.4997    8208.1013       0.9933
 cat("\n###BLOQUE-S2###\n")
 # Ejercicio 2 - Cerezos: volumen a partir del diametro. Aqui la recta por el
 # origen NO sirve, y el intercepto dice por que.
@@ -177,8 +177,8 @@ ajuste <- lm(volume ~ diameter, data = cherry)
 round(c(B_razon = mean(cherry$volume) / mean(cherry$diameter),
         intercepto = as.numeric(coef(ajuste)[1]), pendiente = as.numeric(coef(ajuste)[2]),
         r2 = summary(ajuste)$r.squared), 4)
-#>    B_razon intercepto  pendiente         r2 
-#>     2.2773   -36.9435     5.0659     0.9353 
+#>    B_razon intercepto  pendiente         r2
+#>     2.2773   -36.9435     5.0659     0.9353
 cat("\n###BLOQUE-S3###\n")
 # Ejercicio 3 - El dominio "Oeste": media, error estandar y valor real.
 oeste <- as.numeric(agsrs$region == "W")
@@ -189,8 +189,8 @@ ee_W <- sqrt((1 - n / N) / n) * sd(u_W) / (n_W / n)
 round(c(n_dominio = n_W, media_estimada = ybar_W, ee = ee_W,
         media_real = mean(agpop$acres92[agpop$region == "W"]),
         cv_pct = 100 * ee_W / ybar_W), 4)
-#>      n_dominio media_estimada             ee     media_real         cv_pct 
-#>        39.0000    598680.5897     77636.5841    723343.9645        12.9679 
+#>      n_dominio media_estimada             ee     media_real         cv_pct
+#>        39.0000    598680.5897     77636.5841    723343.9645        12.9679
 cat("\n###BLOQUE-S4###\n")
 # Ejercicio 4 - Arboles muertos (Lohr): 100 parcelas fotografiadas (censo de x)
 # y 25 verificadas en campo (y). La media por foto de las 100 es 11.3.
@@ -202,5 +202,5 @@ round(c(media_muestral_y = mean(deadtrees$field),
         por_diferencia = xbarU + mean(dif),
         ee_diferencia = sqrt((1 - n_dt / N_dt) * var(dif) / n_dt),
         por_regresion = as.numeric(coef(reg)[1] + coef(reg)[2] * xbarU)), 4)
-#> media_muestral_y   por_diferencia    ee_diferencia    por_regresion 
-#>          11.5600          12.2600           0.4568          11.9893 
+#> media_muestral_y   por_diferencia    ee_diferencia    por_regresion
+#>          11.5600          12.2600           0.4568          11.9893

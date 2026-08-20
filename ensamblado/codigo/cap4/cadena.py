@@ -19,7 +19,7 @@ V_str = (Wh**2 * (1 - nh / Nh) * s2_h / nh).sum()
 print(pd.DataFrame({"Wh": Wh, "ybar_h": ybar_h, "aporte": Wh * ybar_h}))
 print(f"media = {ybar_str:.4f}   ee = {V_str**0.5:.4f}")
 #>            Wh      ybar_h      aporte
-#> region                               
+#> region
 #> NC     0.3424 300504.1553 102901.6828
 #> NE     0.0715  97629.8095   6978.0890
 #> S      0.4490 211315.0444  94878.9446
@@ -36,7 +36,7 @@ tabla = pd.DataFrame({"Nh_Sh": (Nh * Sh / 1e6).round(1), "n_h": neyman.round(1),
 print(tabla)
 print("suma =", int(tabla["redondeado"].sum()))
 #>           Nh_Sh      n_h  redondeado
-#> region                              
+#> region
 #> NC     286.0000  86.4000          86
 #> NE      17.5000   5.3000           5
 #> S      337.1000 101.8000         102

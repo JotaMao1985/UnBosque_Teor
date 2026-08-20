@@ -549,7 +549,7 @@
           { texto: 'Porque no existe una $p(s)$ conocida: no se puede decir con qué probabilidad habría salido cada muestra posible.', correcta: true,
             retro: 'Exacto. Sin $p(s)$ no hay respecto de qué tomar la esperanza, así que ni insesgadez ni varianza de diseño están definidas. Todo el capítulo cuelga de ahí.' },
           { texto: 'Porque 400 es un tamaño de muestra insuficiente.', correcta: false,
-            retro: 'El tamaño no es el problema. Con 40 000 clientes el defecto sería idéntico: el capítulo 1 lo vio con los 2,4 millones del <em>Literary Digest</em>.' },
+            retro: 'El tamaño no es el problema. Con 40 000 clientes el defecto sería idéntico: el capítulo 1 lo vio con los 2,3 millones del <em>Literary Digest</em>.' },
           { texto: 'Porque no se aplicó la corrección por población finita.', correcta: false,
             retro: 'El fpc es un factor que se aplica <em>después</em> de tener un diseño. Aquí el problema es anterior: no hay diseño.' },
           { texto: 'Porque la variable de interés no es normal.', correcta: false,

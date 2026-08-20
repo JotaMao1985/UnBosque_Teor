@@ -33,8 +33,8 @@ range(table(unique(sy[, c("stratum","psu")])$stratum))
 #> 1 NHANES adultos 5406       15  30 5157.019 242386.7 231785870
 #> 2            SYC 2621       16 861    5.000     50.0     25012
 #>
-#>  2 
-#> 15 
+#>  2
+#> 15
 #> [1]   7 154
 
 cat("\n###BLOQUE-R2###\n")
@@ -49,10 +49,10 @@ c(gl_nhanes = degf(dis_nh), gl_syc = degf(dis_sy))
 # 5406 personas con 15 gl. Ese numero gobierna el valor t de los intervalos.
 c(t_nhanes = qt(0.975, degf(dis_nh)), t_syc = qt(0.975, degf(dis_sy)),
   t_normal = qnorm(0.975))
-#> gl_nhanes    gl_syc 
-#>        15       845 
-#> t_nhanes    t_syc t_normal 
-#> 2.131450 1.962775 1.959964 
+#> gl_nhanes    gl_syc
+#>        15       845
+#> t_nhanes    t_syc t_normal
+#> 2.131450 1.962775 1.959964
 
 cat("\n###BLOQUE-R3###\n")
 # Los pesos: cuanto varian y que reconstruyen. El peso de NHANES dice a
@@ -67,12 +67,12 @@ kish <- function(w) 1 + var(w) / mean(w)^2
 c(kish_nhanes = kish(nh_ad$wtmec2yr), kish_syc = kish(sy$finalwt))
 # 1.89 en NHANES: la desigualdad de pesos, por si sola, cuesta un 89 % de
 # varianza extra. Es UNA de las tres fuentes; el modulo 3 mide las tres.
-#>     0%    25%    50%    75%   100% 
-#>   5157  18588  26217  46493 242387 
-#>            suma   razon_max_min 
-#> 231785869.90836        47.00131 
-#> kish_nhanes    kish_syc 
-#>    1.893002    1.330300 
+#>     0%    25%    50%    75%   100%
+#>   5157  18588  26217  46493 242387
+#>            suma   razon_max_min
+#> 231785869.90836        47.00131
+#> kish_nhanes    kish_syc
+#>    1.893002    1.330300
 
 cat("\n###BLOQUE-R4###\n")
 # El efecto de diseno completo, y el error estandar "ingenuo" que reportaria
@@ -88,10 +88,10 @@ c(n = nrow(nh_ad), n_efectivo = nrow(nh_ad) / as.numeric(deff(m)))
 # por quien ignore el diseno es 2.63 veces MAS ESTRECHO de lo que debe.
 #>           mean      SE   DEff
 #> bmxbmi 29.3891  0.2532 7.1248
-#>  ee_diseno ee_ingenuo     factor 
-#> 0.25319683 0.09624652 2.63071163 
-#>          n n_efectivo 
-#>  5406.0000   758.7546 
+#>  ee_diseno ee_ingenuo     factor
+#> 0.25319683 0.09624652 2.63071163
+#>          n n_efectivo
+#>  5406.0000   758.7546
 
 cat("\n###BLOQUE-R5###\n")
 # De donde sale ese 7.12? Se anade un ingrediente del diseno a la vez.
@@ -136,8 +136,8 @@ c(ee_svyratio = as.numeric(SE(r)),
 #> SEs=
 #>             bmxht
 #> bmxwt 0.004229624
-#>    ee_svyratio ee_linealizado 
-#>    0.004229624    0.004229624 
+#>    ee_svyratio ee_linealizado
+#>    0.004229624    0.004229624
 
 cat("\n###BLOQUE-R7###\n")
 # La otra familia: REPLICACION. El jackknife estratificado quita una PSU,
@@ -159,8 +159,8 @@ for (h in unique(psus$sdmvstra)) {
   v_jk <- v_jk + (length(idx) - 1) / length(idx) * sum((reps[idx] - theta)^2)
 }
 c(replicas = length(reps), ee_jackknife_a_mano = sqrt(v_jk))
-#>            replicas ee_jackknife_a_mano 
-#>          30.0000000           0.2532593 
+#>            replicas ee_jackknife_a_mano
+#>          30.0000000           0.2532593
 
 cat("\n###BLOQUE-R8###\n")
 # Los tres metodos de replicacion en survey, contra la linealizacion:
@@ -176,10 +176,10 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
   replicas_BRR = ncol(dis_brr$repweights$weights))
 # Los cuatro coinciden en la tercera cifra. BRR usa 16 replicas — una matriz
 # de Hadamard de orden 16 para 15 estratos — frente a las 30 del jackknife.
-#> linealizacion     jackknife           BRR     bootstrap 
-#>      0.253197      0.253259      0.258531      0.254364 
-#> replicas_JKn replicas_BRR 
-#>           30           16 
+#> linealizacion     jackknife           BRR     bootstrap
+#>      0.253197      0.253259      0.258531      0.254364
+#> replicas_JKn replicas_BRR
+#>           30           16
 
 cat("\n###BLOQUE-R9###\n")
 # Donde la replicacion gana de verdad: la MEDIANA. La linealizacion de un
@@ -192,8 +192,8 @@ round(c(mediana = as.numeric(coef(q_lin)),
 # Esa es la ventaja practica: cambia el estadistico, no el procedimiento. Con
 # un indice de Gini o una tasa de pobreza, la replicacion es la unica salida
 # razonable.
-#>          mediana ee_linealizacion     ee_jackknife 
-#>         28.30000          0.32841          0.32841 
+#>          mediana ee_linealizacion     ee_jackknife
+#>         28.30000          0.32841          0.32841
 
 cat("\n###BLOQUE-R10###\n")
 # CALIBRACION. Los pesos del diseno no reproducen los totales conocidos de la
@@ -218,10 +218,10 @@ round(marg_edad / 1e6, 2)
 #> sexo      20-39  40-59    60+
 #>   hombre 41.319 40.612 29.097
 #>   mujer  42.493 42.831 35.434
-#> hombre  mujer 
-#> 113.58 118.21 
-#> 20-39 40-59   60+ 
-#> 78.81 78.81 74.17 
+#> hombre  mujer
+#> 113.58 118.21
+#> 20-39 40-59   60+
+#> 78.81 78.81 74.17
 
 cat("\n###BLOQUE-R11###\n")
 # RAKING (IPFP): ajustar filas, luego columnas, y repetir. Cada paso rompe un
@@ -271,8 +271,8 @@ c(deff_teorico = cob$deffTeorico)
 #>                          metodo cobertura ancho_medio
 #> 1 IC ingenuo (ignora el diseno)     0.563      0.1394
 #> 2                 IC del diseno     0.950      0.3800
-#> deff_teorico 
-#>         6.85 
+#> deff_teorico
+#>         6.85
 
 cat("\n###BLOQUE-R14###\n")
 # RECORTE DE PESOS: la practica habitual para domar pesos extremos. Se topa
@@ -309,8 +309,8 @@ round(c(p_diseno = as.numeric(coef(p_dis)), ee_diseno = as.numeric(SE(p_dis)),
 # ponderar, un punto porcentual) pero el error estandar se multiplica por
 # 2.4 al declarar el diseno. La estimacion puntual perdona; la incertidumbre
 # no: un intervalo de +/-1.9 puntos se convierte en uno de +/-4.5.
-#>   p_diseno  ee_diseno  p_ingenua ee_ingenuo     factor 
-#>    0.61275    0.02274    0.62228    0.00947    2.40119 
+#>   p_diseno  ee_diseno  p_ingenua ee_ingenuo     factor
+#>    0.61275    0.02274    0.62228    0.00947    2.40119
 
 cat("\n###BLOQUE-R16###\n")
 # EJERCICIO 2. Con ipums (9 estratos, 10 PSU cada uno), estimar el ingreso
@@ -332,8 +332,8 @@ round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
 # El tamano nominal de una encuesta compleja dice muy poco de su precision.
 #>           mean      SE DEff
 #> inctot 9849.54  159.38  Inf
-#>          n         gl  ee_diseno     ee_srs       deff n_efectivo 
-#>   49692.00      81.00     159.38      48.99      10.58    4694.58 
+#>          n         gl  ee_diseno     ee_srs       deff n_efectivo
+#>   49692.00      81.00     159.38      48.99      10.58    4694.58
 
 cat("\n###BLOQUE-R17###\n")
 # EJERCICIO 3. Con integerwt (2 000 observaciones en 4 estratos), calcular la
@@ -358,8 +358,8 @@ round(c(a_mano = sum(Wh * medias_h),
 # Identicos: el diseno estratificado del capitulo 4 es un caso particular del
 # vocabulario de este — pesos y fpc declarados, survey hace el resto.
 #> [1] 200 800 400 600
-#>    a_mano ee_a_mano    survey ee_survey 
-#>  20.57700   0.12853  20.57700   0.12853 
+#>    a_mano ee_a_mano    survey ee_survey
+#>  20.57700   0.12853  20.57700   0.12853
 
 cat("\n###BLOQUE-R18###\n")
 # EJERCICIO 4. Replicar el jackknife del modulo 5 sobre SYC, que tiene una
@@ -391,6 +391,6 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
 # tres vias vuelven a coincidir. 861 replicas contra las 30 de NHANES: el
 # jackknife escala con el numero de PSU, y ahi el BRR (que necesita 2 por
 # estrato) ni siquiera es aplicable.
-#>         replicas        ee_a_mano    ee_survey_JKn ee_linealizacion 
-#>       861.000000         0.130106         0.130106         0.128882 
+#>         replicas        ee_a_mano    ee_survey_JKn ee_linealizacion
+#>       861.000000         0.130106         0.130106         0.128882
 

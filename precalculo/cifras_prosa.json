@@ -11,7 +11,9 @@
     "",
     "Regla: si una cifra nueva aparece en la prosa y no está aquí, el verificador",
     "protesta. Añadirla solo DESPUÉS de comprobarla ejecutando, nunca para",
-    "silenciar el aviso."
+    "silenciar el aviso.",
+    "2026-08-19: se admitio UN decimal en la expresion de extraccion. Las 44 cifras de un decimal que quedaron sin respaldo se revisaron ejecutando una por una; 43 eran correctas y estan abajo, y una era un error real (el capitulo 2 citaba 2,4 millones de papeletas del Literary Digest donde son 2 266 566, o sea 2,3).",
+    "2026-08-19 (segunda pasada): el modo --prosa mira ahora tambien los literales de cadena del <script>, que es donde viven los enunciados, las opciones y la retroalimentacion de los simuladores. Las 37 cifras que aparecieron se revisaron ejecutando; 36 eran correctas y una era un error real (el cap. 1 decia que la mayor desviacion de la telefonica era 29,7 cuando es 29,6). OJO: en las preguntas hay cifras EQUIVOCADAS A PROPOSITO —las de los distractores y las que la retro cita como error tipico—; van igual a esta lista, pero su justificacion dice que lo son."
   ],
   "global": {
     "1,960": "z de la normal al 95 %; constante de tabla",
@@ -31,7 +33,19 @@
     "360 000": "2 266 566 papeletas / 6,3 votantes equivalentes = 359 772; redondeado",
     "29,55": "(0,30 - 0,01x0,75)/0,99 = 0,29545: valor de los no respondentes compatible con un 30 % total",
     "45 000": "52 000 - 7 000 no calificados = 45 000 pérdidas que sí sesgan",
-    "-19,32": "sesgo del Literary Digest expresado en puntos porcentuales: el JSON del precálculo lo guarda como proporción, digest.sesgo = -0,19321065"
+    "-19,32": "sesgo del Literary Digest expresado en puntos porcentuales: el JSON del precálculo lo guarda como proporción, digest.sesgo = -0,19321065",
+    "4,5": "hite.tasa = 0,045 en porcentaje: 4 500 devueltos de 100 000 cuestionarios",
+    "22,2": "hite.inverso.muM en mu = 0,25 vale 0,22219895, en porcentaje; a mano, (0,25 - 0,045x0,84)/0,955 = 0,222199",
+    "2,3": "las 2 266 566 papeletas del Digest expresadas en millones; el mismo token cubre el 2,3 % de numeros que dieron entrevista, 1 838/79 014 = 2,326 %",
+    "42,9": "digest.pSondeo = 0,429238 en porcentaje, con un decimal (la version de dos esta como 42,92)",
+    "5,9": "67,54832 - 61,64309 = 5,90523 puntos: distancia entre las dos encuestas intell sin pesos",
+    "19,3": "digest.sesgo = -0,19321065 en puntos, con un decimal (las versiones de dos estan como 19,32 y -19,32)",
+    "29,5": "(0,30 - 0,01x0,75)/0,99 = 29,5455 % con un decimal (la version de dos esta como 29,55)",
+    "21,9": "22 000 excusados / 100 300 citaciones = 21,934 %; ejercicio de los jurados de Maricopa",
+    "24 500": "S/sqrt(300) = 24 519 acres, SIN fpc: es la unica lectura con la que «con n = 1 200 se parte por la mitad» es cierto (12 260 exacto); con fpc serian 23 294 y la razon 2,43. Decia «unos 24 000» hasta el 2026-08-19",
+    "1 200": "4 x 300: tamano retorico que parte el error por la mitad, no es un resultado",
+    "29,6": "mayor |pctTel - pctCenso| de las ocho celdas = 47,7693 - 18,1277 = 29,6416 (el panel, 13,6314). Decia 29,7 hasta el 2026-08-19",
+    "26,5": "24,5 % de hogares solo con movil + 2 % sin telefono = 26,5 % que el marco de fijos deja fuera"
   },
   "capitulo-2-diseno-mas-sistematico.html": {
     "3 079": "N+1: el condado que no existe en el marco, usado en el argumento sobre predicción",
@@ -40,7 +54,19 @@
     "1 066,65": "n0 con p = 0,49: 1,96^2 x 0,2499 / 0,03^2 = 1 066,645",
     "1 067,07": "n0 con p = 0,50: 1,96^2 x 0,25 / 0,03^2 = 1 067,072",
     "12 000": "número de facturas del ejemplo retórico del auditor; no es un resultado",
-    "0,632": "1 - e^-1 = 0,63212; constante que el propio texto deriva como límite de 1-(1-1/N)^N para la probabilidad de inclusión del bootstrap"
+    "0,632": "1 - e^-1 = 0,63212; constante que el propio texto deriva como límite de 1-(1-1/N)^N para la probabilidad de inclusión del bootstrap",
+    "67,5": "27 x (1/pi_3) = 27 x 2,5 = 67,5: primer sumando de t_HT de la pareja {3,5}, cuyo total es 172,9545",
+    "47,5": "sqrt(varianzaHT) del MAS en el espacio de muestras = sqrt(2 253,75) = 47,4737",
+    "29,8": "sqrt(varianzaHT) del estratificado = sqrt(891) = 29,8496",
+    "25,9": "sqrt(varianzaHT) del desigual = sqrt(670,3369) = 25,8909",
+    "5,3": "19 892,7129 / 18 898,4344 - 1 = 5,261 %: lo que crece el error estandar al quitar el fpc",
+    "94,2": "cobertura.n1000.coberturaFpc = 0,9419 en porcentaje",
+    "2,3": "las 2 266 566 papeletas del Literary Digest en millones; la misma cifra que cita el capitulo 1",
+    "4,2": "(1 925 300 - 1 843 906,68)/1 925 300 = 4,228 %: lo que se queda corta la expansion en el ejercicio de farms92",
+    "50 000 000": "N del ejemplo retorico del censo frente a la encuesta; no es un resultado",
+    "40 000": "numero de clientes del ejemplo retorico de la opcion equivocada; no es un resultado",
+    "0,0384": "20x19/(100x99) = 0,038384: pi_kl del diseno de 100 unidades con n = 20",
+    "0,0009": "0,03^2, el error admisible al cuadrado en n0 = 1,96^2 x 0,25/0,0009 = 1 067"
   },
   "capitulo-3-razon-y-regresion.html": {
     "98,66": "razón muestral B = 0,9865652, expresada en porcentaje",
@@ -62,18 +88,57 @@
     "2 548": "intercepto del ajuste libre sobre agsrs: b0 = -2 548,1",
     "5,59": "ee del estimador de regresión: 5 593 972, en millones",
     "5,33": "ee del estimador de diferencia: 5 329 882, en millones",
-    "-39 000": "redondeo a la baja de -38 963, el sesgo del estimador de razón con n = 300 medido con M = 200 000 réplicas; el texto dice «unos»"
+    "-39 000": "redondeo a la baja de -38 963, el sesgo del estimador de razón con n = 300 medido con M = 200 000 réplicas; el texto dice «unos»",
+    "58,2": "error estandar de la expansion, 58 169 381, expresado en millones (el de la razon esta como 5,54)",
+    "-4,2": "(1 843 906,68 - 1 925 300)/1 925 300 = -4,228 %: error de la expansion en farms92",
+    "17,2": "(723 344 - 598 681)/723 344 = 17,234 %: lo que se queda corta la media estimada del dominio W",
+    "10,6": "media del conteo fotografico de las 25 nidadas visitadas de deadtrees; la de las 100 es xbarU = 11,3",
+    "1,0136": "1/0,9865652 = 1,013618: el valor que sale de dividir al reves, citado como error tipico en la retro de un distractor",
+    "951,0": "963 464 412 + 3 078 x (-4 056,677) = 950 977 960, en millones",
+    "-12,5": "3 078 x (-4 056,677) = -12 486 452, en millones: la correccion del estimador de diferencia",
+    "2,7": "(196 701 - 191 486)/191 486 = 2,72 %: lo que la mediana estimada sobrepasa a la real (por survey, 2,74 %)"
   },
   "capitulo-4-muestreo-estratificado.html": {
     "85 296": "filas de BigLucy (TeachingSampling); verificado",
-    "0,46": "R^2 de la estratificación por cuartiles de acres87, derivado de su deff: 1 - 0,53964939 = 0,46035; el deff sí está en el JSON del precálculo"
+    "0,46": "R^2 de la estratificación por cuartiles de acres87, derivado de su deff: 1 - 0,53964939 = 0,46035; el deff sí está en el JSON del precálculo",
+    "1,7": "sqrt(3) = 1,7321; constante del argumento del costo en la asignacion optima",
+    "93,1": "distribucion.coberturaMas = 0,9313 en porcentaje",
+    "93,4": "distribucion.coberturaStr = 0,9335 en porcentaje",
+    "3,3": "0,0325 en porcentaje: el pliegue mas pobre de KFold sin estratificar",
+    "6,8": "0,0683 en porcentaje: el pliegue mas rico de KFold sin estratificar",
+    "18,1": "1 - sqrt(2,9906e8/4,4620e8) = 18,146 %: ganancia de Neyman sobre proporcional en n = 300",
+    "114 000": "420 650 - 306 677 = 113 973 acres: el sesgo del promedio bruto bajo Neyman, que es justo lo que el simulador del modulo 3 muestra en su lectura. Decia «mas de 60 000» hasta el 2026-08-19",
+    "1,41": "sqrt(2) = 1,4142; constante del argumento del costo",
+    "399,4": "300/0,7512 = 399,36: el n equivalente que regala estratificar, unas 99 entrevistas",
+    "4,2": "0,0422, el pliegue mas pobre de vfold_cv con strata y pool por defecto, en porcentaje",
+    "5,8": "0,0584, el pliegue mas rico del mismo, en porcentaje"
+  },
+  "capitulo-5-conglomerados.html": {
+    "6,7": "(2,4908 - 2,3334)/2,3334 = 6,746 %: la razon de coots frente a la media ingenua por huevo medido",
+    "1,46": "0,1637/0,1122 = 1,4590: cuanto crece el error estandar al pasar de una etapa a dos",
+    "7,5": "N/n = 75/10: el peso de la primera etapa de schools",
+    "18,35": "367/20: el peso de la segunda etapa del aula mas grande de schools",
+    "2,73": "1 + (25-1) x 0,072 = 2,728: el deff de un aula de 25 con ICC 0,072"
   },
   "capitulo-6-probabilidades-desiguales.html": {
     "1,25": "deff del piPT frente al MAS para counties: 571 878 / 457 576 = 1,2498",
-    "8,35": "psi de la clase 9: 54/647 = 8,346 %"
+    "8,35": "psi de la clase 9: 54/647 = 8,346 %",
+    "62,5": "seleccion.frecAcum de la tienda D = 0,6252 en porcentaje",
+    "11,7": "ee_SYG = 11 715 204 expresado en millones",
+    "70,5": "ee en forma HT = 70 466 698 expresado en millones",
+    "4,5": "100/22 = 4,5455: cociente de tamanos de clase en classpps con pesos iguales y m fijo",
+    "40,9": "7,5 x 109/20 = 40,875: el peso final mas pequeno de schools (cap. 5)",
+    "137,6": "7,5 x 367/20 = 137,625: el peso final mas grande de schools (cap. 5)",
+    "3 562": "14 248/4 = 3 562: la varianza del Hansen-Hurwitz decrece como 1/n",
+    "7,5": "70 466 698/936 291 173 = 7,526 %: el cv que implicaria el ee en forma HT de agpps"
   },
   "capitulo-7-encuestas-complejas.html": {
-    "242 386": "peso máximo de NHANES: 242 386,7 truncado"
+    "242 386": "peso máximo de NHANES: 242 386,7 truncado",
+    "47,9": "111,0/(111,0 + 120,8) = 47,886 %: hombres en la muestra NHANES ponderada",
+    "4,5": "1,96 x 0,02274 = 4,457 puntos: margen del 95 % con pesos (sin ellos, 1,96 x 0,00947 = 1,86, el 1,9 de la misma frase)",
+    "231,8": "111,0 + 120,8 = 231,8 millones: el total ponderado de adultos de NHANES",
+    "5 405": "5 406 - 1: el valor equivocado que sale de aplicar n-1 en vez de PSU menos estratos; distractor",
+    "3,35": "mantisa de 3,35e-03, el segundo error maximo del IPFP; el bloque del modulo 6 imprime la serie entera"
   },
   "capitulo-8-no-respuesta-ponderacion.html": {
     "1,83": "brecha ybar_R - ybar_NR = 34,632996 - 36,463462 = -1,830466; el texto la cita en valor absoluto y el bloque R4 la imprime con signo (dif = -1,830)",
@@ -89,6 +154,26 @@
     "972 897": "papeletas para Roosevelt según Lohr §1.1, las que usa el capítulo 1",
     "27,753": "votos de Roosevelt en millones: 27 753 000, que el bloque R6 imprime entero",
     "16,675": "votos de Landon en millones: 16 675 000, que el bloque R6 imprime entero",
-    "6,30": "n equivalente calculado en el capítulo 1 con su propio recuento de papeletas: errorTotal.nEfectivo = 6,29529478 en cap1_datos.json"
+    "6,30": "n equivalente calculado en el capítulo 1 con su propio recuento de papeletas: errorTotal.nEfectivo = 6,29529478 en cap1_datos.json",
+    "41,1": "310 devueltos / 754 profesores = 41,114 %",
+    "19,6": "0,093425 x 4,3267 x 0,484207 = 0,19573, en puntos porcentuales",
+    "21,4": "calibracion.margenes.encuesta de edu3cat = 0,2142263 en porcentaje",
+    "42,9": "calibracion.margenes.acs de edu3cat = 0,4286772 en porcentaje",
+    "3,4": "evidenciaColapso.difMax del colapso elegido {1}{2,3}{4} = 0,034353, en puntos",
+    "3,3": "0,641818/0,621442 - 1 = 3,279 %: lo que ensancha el error estandar la correccion de Rubin",
+    "87,2": "cobertura de la imputacion unica = 87,15 %, con un decimal",
+    "39,8": "diagnostico.tasaGlobal = 0,398089 en porcentaje; es tambien la media de las propensiones por escuela",
+    "26,1": "0,2612 en porcentaje: sin estudios universitarios en la muestra telefonica",
+    "1,8": "47 faltantes / 2 621 filas = 1,793 %",
+    "-51,5": "(55,13374 - 113,6238)/113,6238 = -51,477 %: sesgo relativo de los minutos de auxiliar",
+    "1,71": "deff acumulado de NHANES con estratos y sin conglomerados = 1,7099 (cap. 7)",
+    "6,92": "deff acumulado de NHANES con todo declarado = 6,9206 (cap. 7)",
+    "92,7": "cobertura con datos completos = 92,65 %, con un decimal",
+    "-38 963": "sesgo simulado del estimador de razon a n = 300 con M = 200 000 (cap. 3); alli esta redondeado como 39 000",
+    "47,6": "tasa de respuesta del estrato pequeno/mediano = 0,4761905, en porcentaje",
+    "7,7": "faltantesItem de preprmin = 0,0774194, en porcentaje: 24 en blanco de 310 devueltos",
+    "1,50": "(1 - 0,40) x 2,5 = 1,50 horas: la parte que aporta el no respondiente en el ejercicio de dos fases",
+    "2,50": "1/0,40 = 2,50: el factor de ajuste cuando la propension estimada es 80/200",
+    "39,9": "valor equivocado de un distractor: nace de leer el deff de Kish 1,399 como un 39,9 % de sesgo corregido, y la retro explica por que no lo es"
   }
 }

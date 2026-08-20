@@ -26,12 +26,12 @@ c(media_con_el_menos9 = mean(te$hrwork),
 #>    dist popteach ssteach      tasa
 #> 1 large      628     250 0.3980892
 #> 2 sm/me      126      60 0.4761905
-#>  profesores   devueltos tasa_global 
-#> 754.0000000 310.0000000   0.4111406 
-#>   hrwork     size preprmin   assist 
-#>        3       12       24       10 
-#> media_con_el_menos9 media_sin_el_menos9 
-#>            34.49968            34.92476 
+#>  profesores   devueltos tasa_global
+#> 754.0000000 310.0000000   0.4111406
+#>   hrwork     size preprmin   assist
+#>        3       12       24       10
+#> media_con_el_menos9 media_sin_el_menos9
+#>            34.49968            34.92476
 
 cat("\n###BLOQUE-R2###\n")
 # MCAR, MAR y MNAR no son tres nombres: son tres mecanismos que se pueden
@@ -102,8 +102,8 @@ round(MEC[, "sesgo_sin"] / MEC[, "ee_sin"], 1)
 #> MAR       -78377.9  550.4
 #> MAR fino -141526.9  369.3
 #> MNAR      -33435.6  575.4
-#>     MCAR      MAR MAR fino     MNAR 
-#>      0.2   -142.4   -383.3    -58.1 
+#>     MCAR      MAR MAR fino     MNAR
+#>      0.2   -142.4   -383.3    -58.1
 
 cat("\n###BLOQUE-R4###\n")
 # El caso raro y valioso: Gnap submuestreo a los NO respondientes del estrato
@@ -145,12 +145,12 @@ c(dos_fases = dos_fases,
 # Que n haria falta para que el error estandar iguale a ese sesgo.
 c(sd_y = sd(teL$hrwork, na.rm = TRUE),
   n_donde_empatan = ceiling(var(teL$hrwork, na.rm = TRUE) / sesgo^2))
-#>       tasa     ybar_R    ybar_NR      sesgo 
-#>  0.3980892 34.6329960 36.4634615 -1.1017771 
-#>   dos_fases por_conteos      brecha 
-#>   35.734773   35.734773   -1.101777 
-#>            sd_y n_donde_empatan 
-#>        3.476573       10.000000 
+#>       tasa     ybar_R    ybar_NR      sesgo
+#>  0.3980892 34.6329960 36.4634615 -1.1017771
+#>   dos_fases por_conteos      brecha
+#>   35.734773   35.734773   -1.101777
+#>            sd_y n_donde_empatan
+#>        3.476573       10.000000
 
 cat("\n###BLOQUE-R6###\n")
 # El Literary Digest, ahora con la formula. Cifras de Lohr 3a ed., ej. 15.14:
@@ -170,12 +170,12 @@ sigma <- sqrt(p_pob * (1 - p_pob))
 rho <- (p_mue - p_pob) / (sqrt((1 - f) / f) * sigma)
 # Y el tamano de un MAS con el mismo error cuadratico medio.
 c(corr_R_y = rho, mas_equivalente = f / ((1 - f) * rho^2))
-#>                 N                 n          fraccion            p_real 
-#> 44428000.00000000  2252863.00000000        0.05070818        0.37532637 
-#>        p_encuesta             error 
-#>        0.57105603        0.19572966 
-#>        corr_R_y mas_equivalente 
-#>      0.09342533      6.11996550 
+#>                 N                 n          fraccion            p_real
+#> 44428000.00000000  2252863.00000000        0.05070818        0.37532637
+#>        p_encuesta             error
+#>        0.57105603        0.19572966
+#>        corr_R_y mas_equivalente
+#>      0.09342533      6.11996550
 
 cat("\n###BLOQUE-R7###\n")
 # Ajuste por clases de respuesta sobre la encuesta real. El peso de diseno es
@@ -225,8 +225,8 @@ ee_mano <- function(col) {
 }
 c(a_mano = ee_mano("w_sin"), survey = unname(est("w_sin")["ee"]),
   diferencia = unname(abs(ee_mano("w_sin") - est("w_sin")["ee"])))
-#>       a_mano       survey   diferencia 
-#> 5.342515e-01 5.342515e-01 4.329870e-15 
+#>       a_mano       survey   diferencia
+#> 5.342515e-01 5.342515e-01 4.329870e-15
 
 cat("\n###BLOQUE-R9###\n")
 # Y ahora la segunda columna de la simulacion del modulo 1: que pasa cuando
@@ -240,8 +240,8 @@ round(100 * ifelse(abs(MEC[, "sesgo_sin"]) < 2 * MEC[, "ee_sin"], NA,
 #> MAR       -78377.9     338.1  715.1
 #> MAR fino -141526.9  -26069.8  837.2
 #> MNAR      -33435.6  -33815.7  504.1
-#>     MCAR      MAR MAR fino     MNAR 
-#>       NA    100.4     81.6     -1.1 
+#>     MCAR      MAR MAR fino     MNAR
+#>       NA    100.4     81.6     -1.1
 
 cat("\n###BLOQUE-R10###\n")
 # Calibrar contra totales externos: el panel de "respondientes profesionales"
@@ -265,8 +265,8 @@ pr$age3cat <- colapsos[["{1}{2,3}{4}"]][pr$age4cat]
 #> {1,2}{3}{4} 0.6152 0.245 0.1398  0.3091
 #> {1}{2,3}{4} 0.3182 0.542 0.1398  0.0344
 #> {1}{2}{3,4} 0.3182 0.297 0.3848  0.2228
-#>      1      2      3 
-#> 0.3061 0.5198 0.1741 
+#>      1      2      3
+#> 0.3061 0.5198 0.1741
 
 cat("\n###BLOQUE-R11###\n")
 # Post-estratificacion a las 18 celdas genero x edad x educacion. El panel no
@@ -289,10 +289,10 @@ c(peso_min = min(w), peso_max = max(w), razon = max(w) / min(w),
 # Que tan lejos estaba el panel de la poblacion, margen a margen.
 rbind(encuesta = prop.table(table(pr$edu3cat)),
       acs = prop.table(tapply(acs$count, acs$edu3cat, sum)))
-#> dif_max_vs_survey        suma_pesos         total_acs 
-#>      4.802132e-10      2.376812e+08      2.376812e+08 
-#>       peso_min       peso_max          razon             cv           kish 
-#>  54562.3151515 401464.0285714      7.3578994      0.6319579      1.3992046 
+#> dif_max_vs_survey        suma_pesos         total_acs
+#>      4.802132e-10      2.376812e+08      2.376812e+08
+#>       peso_min       peso_max          razon             cv           kish
+#>  54562.3151515 401464.0285714      7.3578994      0.6319579      1.3992046
 #>                  1         2         3
 #> encuesta 0.2142263 0.4180532 0.3677205
 #> acs      0.4286772 0.3115742 0.2597487
@@ -316,8 +316,8 @@ round(t(sapply(paste0("freq_q", 1:5), function(v) {
     raking = as.numeric(svymean(f, dis_rk)),
     ee_sin = sd(pr[[v]]) / sqrt(nrow(pr)), ee_post = as.numeric(SE(svymean(f, dis_ps))))
 })), 4)
-#>   cv_postestratificado              cv_raking dif_maxima_entre_pesos 
-#>              0.6319579              0.5404357         170701.9223452 
+#>   cv_postestratificado              cv_raking dif_maxima_entre_pesos
+#>              0.6319579              0.5404357         170701.9223452
 #>         sin_peso   post raking ee_sin ee_post
 #> freq_q1   3.6127 3.6396 3.6868 0.1306  0.1431
 #> freq_q2   8.0017 7.8974 7.9189 0.1892  0.2222
@@ -338,14 +338,14 @@ round(coef(mod), 4)
 imp_media <- im$education; imp_media[falta] <- mean(im$education[!falta])
 imp_reg <- im$education; imp_reg[falta] <- predict(mod, im[falta, ])
 round(rbind(media = imp_media[falta], regresion = imp_reg[falta]), 4)
-#>    person       age    gender education     crime violcrime 
-#>         0         0         0         3         2         4 
+#>    person       age    gender education     crime violcrime
+#>         0         0         0         3         2         4
 #>   person age gender education
 #> 2      2  45      F        NA
 #> 4      4  21      F        NA
 #> 6      6  41      F        NA
-#>     (Intercept)             age factor(gender)M 
-#>          9.7002          0.0521          2.0275 
+#>     (Intercept)             age factor(gender)M
+#>          9.7002          0.0521          2.0275
 #>              [,1]    [,2]    [,3]
 #> media     12.7059 12.7059 12.7059
 #> regresion 12.0428 10.7934 11.8346
@@ -410,12 +410,12 @@ suppressMessages(library(mitools))
 comb <- MIcombine(as.list(qs), as.list(us))
 c(coef = as.numeric(coef(comb)), var = as.numeric(vcov(comb)),
   dif = abs(as.numeric(vcov(comb)) - T_))
-#>                 Q          dentro_U           entre_B           total_T 
-#>       12.28234736        0.38619025        0.02145037        0.41193070 
-#>       ee_correcto ee_si_se_ignora_B               fmi 
-#>        0.64181828        0.62144207        0.06248733 
-#>       coef        var        dif 
-#> 12.2823474  0.4119307  0.0000000 
+#>                 Q          dentro_U           entre_B           total_T
+#>       12.28234736        0.38619025        0.02145037        0.41193070
+#>       ee_correcto ee_si_se_ignora_B               fmi
+#>        0.64181828        0.62144207        0.06248733
+#>       coef        var        dif
+#> 12.2823474  0.4119307  0.0000000
 
 cat("\n###BLOQUE-R17###\n")
 # Y la prueba de que importa: 2000 replicas midiendo si el intervalo del 95%
@@ -443,10 +443,10 @@ for (b in seq_len(M)) {
 }
 round(colMeans(cub), 4)
 c(ee_monte_carlo = sqrt(0.95 * 0.05 / M))
-#> completos     unica  multiple 
-#>    0.9265    0.8715    0.9115 
-#> ee_monte_carlo 
-#>    0.004873397 
+#> completos     unica  multiple
+#>    0.9265    0.8715    0.9115
+#> ee_monte_carlo
+#>    0.004873397
 
 cat("\n###BLOQUE-R18###\n")
 # Diagnostico: no basta la tasa global. El R-indicator mide cuanto VARIA la
@@ -459,10 +459,10 @@ c(tasa_global = p_bar, sd_propension = s_p, R_indicator = 1 - 2 * s_p,
   correlacion_con_el_tamano = cor(miL$popteach, p_esc))
 # Dos encuestas con la misma tasa global pueden tener R muy distintos: la que
 # reparte la no respuesta por igual es mucho menos peligrosa.
-#>               tasa_global             sd_propension               R_indicator 
-#>                0.39808917                0.26334172                0.47331655 
-#>                  tasa_min                  tasa_max correlacion_con_el_tamano 
-#>                0.06666667                1.00000000               -0.25405547 
+#>               tasa_global             sd_propension               R_indicator
+#>                0.39808917                0.26334172                0.47331655
+#>                  tasa_min                  tasa_max correlacion_con_el_tamano
+#>                0.06666667                1.00000000               -0.25405547
 
 cat("\n###BLOQUE-R19###\n")
 # IA · Afirmacion 1: "con una muestra suficientemente grande el sesgo de no
@@ -492,8 +492,8 @@ round(c(sin_ajustar = as.numeric(est("w_sin")["estimacion"]),
 #>                   MCAR      MAR  MAR fino     MNAR
 #> sesgo_sin_ajuste 139.8 -78377.9 -141526.9 -33435.6
 #> sesgo_con_ajuste -46.6    338.1  -26069.8 -33815.7
-#>       sin_ajustar          ajustado verdad_aproximada 
-#>           34.6330           34.3677           35.7348 
+#>       sin_ajustar          ajustado verdad_aproximada
+#>           34.6330           34.3677           35.7348
 
 cat("\n###BLOQUE-R21###\n")
 # IA · Afirmacion 3: "con una tasa de respuesta del 80% no hay que preocuparse
@@ -524,8 +524,8 @@ round(rbind(
   telefono = c(mean(tl$int), weighted.mean(tl$int, tl$postwt),
                min(tl$postwt), max(tl$postwt), max(tl$postwt) / min(tl$postwt))
 ), 4)
-#>   n_online n_telefono 
-#>        983       1838 
+#>   n_online n_telefono
+#>        983       1838
 #>          College Grad Grad School MISSING No College Some College
 #> online         0.2452      0.1699  0.0010     0.1231       0.4608
 #> telefono       0.1632      0.2024  0.0082     0.2612       0.3651
@@ -546,8 +546,8 @@ round(c(faltantes = sum(f2), completos = mean(te2$preprmin, na.rm = TRUE),
         imputado = mean(imp, na.rm = TRUE),
         ee_completos = sd(te2$preprmin, na.rm = TRUE) / sqrt(sum(!f2)),
         ee_imputado = sd(imp, na.rm = TRUE) / sqrt(sum(!is.na(imp)))), 4)
-#>    faltantes    completos     imputado ee_completos  ee_imputado 
-#>      24.0000     177.8916     178.1154       6.6021       6.1886 
+#>    faltantes    completos     imputado ee_completos  ee_imputado
+#>      24.0000     177.8916     178.1154       6.6021       6.1886
 
 cat("\n###BLOQUE-R24###\n")
 # EJERCICIO 3 · Hot-deck sobre la Survey of Youth in Custody: la variable
@@ -564,8 +564,8 @@ for (i in which(is.na(sy$lw))) {
 }
 round(rbind(completos = prop.table(table(sy$lw)),
             imputado = prop.table(table(sy$lw_imp))), 4)
-#>         n faltantes 
-#>      2621        47 
+#>         n faltantes
+#>      2621        47
 #>                1      2      3      4      5      6      7      8
 #> completos 0.4992 0.0548 0.3061 0.0936 0.0268 0.0023 0.0155 0.0016
 #> imputado  0.4983 0.0542 0.3071 0.0946 0.0267 0.0023 0.0153 0.0015
@@ -583,7 +583,7 @@ oa <- !is.na(teL$assist)
 disa <- svydesign(id = ~school, weights = ~w_a, fpc = ~fpc, data = teL[oa, ])
 round(c(ajustado = as.numeric(svymean(~assist, disa)),
         dos_fases = R_ * mean(aR) + (1 - R_) * mean(aNR)), 4)
-#>        media_R       media_NR          razon          sesgo sesgo_relativo 
-#>     55.1337449    152.3076923      2.7625131    -58.4900512     -0.5147694 
-#>  ajustado dos_fases 
-#>   51.3946  113.6238 
+#>        media_R       media_NR          razon          sesgo sesgo_relativo
+#>     55.1337449    152.3076923      2.7625131    -58.4900512     -0.5147694
+#>  ajustado dos_fases
+#>   51.3946  113.6238

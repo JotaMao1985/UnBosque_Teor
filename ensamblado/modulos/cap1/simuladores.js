@@ -542,7 +542,7 @@
               'muestra y se puede reducir pagando más unidades.',
             efecto: 'varianza', nAyuda: true, donde: 'Capítulos 2 a 7',
             ejemplo: 'con $n = 300$ sobre <code>agpop</code>, el error estándar de la media es ' +
-              'de unos 24 000 acres; con $n = 1\\,200$ se parte por la mitad.',
+              'de unos 24 500 acres; con $n = 1\\,200$ se parte por la mitad.',
             hijos: [
               {
                 etiqueta: 'Varianza de diseño',
@@ -610,7 +610,7 @@
                     resumen: 'La unidad contesta la encuesta pero deja preguntas en blanco. Se ' +
                       'trata con imputación, y la trampa está en la varianza después de imputar.',
                     efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 8',
-                    ejemplo: 'los 19 condados de <code>agpop</code> con <code>acres92 = −99</code>.'
+                    ejemplo: 'los 19 condados de <code>agpop</code> con <code>acres92 = -99</code>.'
                   }
                 ]
               },
@@ -698,13 +698,13 @@
       {
         tipo: 'opcion',
         modulo: 2,
-        pregunta: 'En <code>agpop</code>, 19 condados tienen <code>acres92 = −99</code>, que es el código de faltante de Lohr. ¿Qué pasa si no se hace nada?',
+        pregunta: 'En <code>agpop</code>, 19 condados tienen <code>acres92 = -99</code>, que es el código de faltante de Lohr. ¿Qué pasa si no se hace nada?',
         pista: 'R no sabe que −99 significa «no sé». ¿Qué hace <code>mean()</code> con ese valor?',
         opciones: [
           { texto: 'R lo promedia como si fuera una superficie de −99 acres, y la media baja: 306 677 en vez de 308 582.', correcta: true,
             retro: 'Correcto. Son 1 905 acres, un 0,6 %. Pequeño aquí, pero es un error de procesamiento: silencioso, sistemático y con la dirección siempre igual.' },
           { texto: 'R lo trata como <code>NA</code> y lo excluye del promedio.', correcta: false,
-            retro: 'No: <code>−99</code> es un número perfectamente válido para R. Solo un ser humano sabe que en este archivo significa «no se midió».' },
+            retro: 'No: <code>-99</code> es un número perfectamente válido para R. Solo un ser humano sabe que en este archivo significa «no se midió».' },
           { texto: 'Da error al calcular la media.', correcta: false,
             retro: 'Ojalá. Los errores que dan error se arreglan; los que no, se publican.' },
           { texto: 'La media sube, porque −99 es un valor extremo.', correcta: false,
@@ -738,7 +738,7 @@
           { texto: 'La telefónica es probabilística, así que reproduce el censo.', correcta: false,
             retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a móviles y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
           { texto: 'El panel online se parece más al censo porque es más reciente.', correcta: false,
-            retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,7 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
+            retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,6 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
           { texto: 'No se pueden comparar porque tienen tamaños distintos.', correcta: false,
             retro: 'Se comparan porcentajes, no conteos: para eso están en porcentaje. El tamaño no entra en esta comparación.' }
         ]

@@ -29,6 +29,8 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 | `genera_cap3.R` | `salidas/cap3_datos.json` | razón, regresión, diferencia, sesgo simulado, dominios, GREG, mediana |
 | `genera_soluciones.R` | consola | soluciones de los ejercicios guiados del cap. 2 |
 | `verifica_bloques.py` | consola | contrasta cada cifra `#>` de un capítulo con la salida real |
+| `anota_salidas.py` | reescribe la cadena | anota en cada grupo `#>` la salida real de SUS sentencias; aborta si no puede colocarla (ver el docstring: los dos estilos de anotación) |
+| `pruebas/prueba_anotador.py` | consola | regresión del anotador; la primera prueba es que no duplique una cadena intercalada |
 
 ## Convenciones
 

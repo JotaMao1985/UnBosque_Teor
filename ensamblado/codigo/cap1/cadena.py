@@ -274,11 +274,11 @@ resumen = pd.DataFrame({"N": N_h,
                         "media": mu_h.round().astype(int),
                         "sd": reg.std().round().astype(int)}).rename_axis(None)
 print(resumen.sort_values("media", ascending=False).to_string())
-#>       N   media      sd
-#> W   422  723344  835639
-#> NC 1054  325951  271303
-#> S  1382  199140  243956
-#> NE  220   90619   79365
+#>        N   media      sd
+#> W    422  723344  835639
+#> NC  1054  325951  271303
+#> S   1382  199140  243956
+#> NE   220   90619   79365
 
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
 # dentro del paquete TeachingSampling, que no existe para Python; aqui se lee el

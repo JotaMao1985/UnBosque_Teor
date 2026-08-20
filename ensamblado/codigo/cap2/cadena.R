@@ -254,8 +254,8 @@ cat("\n###BLOQUE-R17###\n")
 N_ml <- 1000
 n_test <- 200
 round(c(pi_k = n_test / N_ml, pi_kl = n_test * (n_test - 1) / (N_ml * (N_ml - 1))), 6)
-#>     pi_k    pi_kl
-#>  0.20000  0.03984
+#>    pi_k   pi_kl
+#> 0.20000 0.03984
 
 # En validacion cruzada de K partes cada fila cae en test exactamente una vez:
 # pi_k = 1 para todas. Lo aleatorio no es SI entra, sino EN QUE pliegue.

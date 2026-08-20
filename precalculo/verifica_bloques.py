@@ -155,8 +155,36 @@ TEXTO_RE = re.compile(r'<(p|li|h4)\b[^>]*>(.*?)</\1>', re.S)
 # que no casa con el 528609.8 de la salida y producía un falso positivo.
 # El signo entra en la captura: sin el, «$t = -4,73$» se comparaba como +4,73
 # contra un universo que solo tiene -4,734, y salia como cifra sin respaldo.
+#
+# UN SOLO DECIMAL TAMBIÉN CUENTA. Hasta la fase 6 esta expresión exigía
+# `\d+,\d{2,}` —dos decimales o más—, y con eso el porcentaje de un decimal, que
+# es justo como el material escribe los porcentajes en prosa, no llegaba nunca a
+# la comprobación. La frase «se llevan 5,9 puntos (61,6 % frente a 67,6 %)»
+# devolvía CERO cifras, y así se publicó un 67,6 % que era 67,5 %. No falló
+# `casa()` —contrastado, habría dicho que no—: falló la extracción, que es peor,
+# porque el informe salía en verde. Eran 126 cifras en los ocho capítulos.
 CIFRA_PROSA_RE = re.compile(
-    r'(?<![\w.,])(-?(?:\d{1,3}(?:[\u2009\u00a0 ]\d{3})+(?:,\d+)?|\d+,\d{2,}))(?![\w])')
+    r'(?<![\w.,])(-?(?:\d{1,3}(?:[\u2009\u00a0 ]\d{3})+(?:,\d+)?|\d+,\d+))(?![\w])')
+
+# Los conjuntos de LaTeX son ruido, no cifras: `$\{1,2,3\}$` y `$\{4,5\}$` —los
+# estratos de los caps. 2 y 4— se leerían como los decimales «1,2» y «4,5» en
+# cuanto la expresión de arriba admitió un decimal. Se vacían antes de buscar.
+# Repasadas las catorce apariciones de `\{...\}` en los ocho capítulos: todas son
+# conjuntos de índices ({0,1}, {k,l}, {1,\dots,N}) y ninguna encierra un
+# resultado que haya que contrastar.
+CONJUNTO_LATEX_RE = re.compile(r'\\\{[^{}]*\\\}')
+
+# Las etiquetas de particion del cap. 8 —`{1}{2,3}{4}`— con llaves desnudas: un
+# grupo que solo contiene digitos, comas y espacios nombra un conjunto, nunca es
+# el resultado de una cuenta. Sin esto, `{2,3}` se lee como el decimal 2,3.
+# NO se pueden borrar todas las llaves: `\underbrace{27 \times 2,50}` encierra
+# una cifra que si hay que contrastar.
+PARTICION_RE = re.compile(r'\{[\d,\s]+\}')
+
+# Los colores del CSS que viven dentro del JS —`rgb(255,102,0)`— se leerian como
+# «255,102». Es el unico ruido con forma de cifra española que traen los
+# simuladores; todo lo demas que hay ahi dentro es texto que el estudiante lee.
+COLOR_CSS_RE = re.compile(r'\b(?:rgba?|hsla?)\([^)]*\)')
 
 # El material escribe muchas cifras DENTRO de LaTeX: $-1{,}10$, $306\,677$,
 # $92{,}65\%$. Hasta la fase 5 el verificador de prosa no las ve\u00eda \u2014la coma iba
@@ -164,7 +192,12 @@ CIFRA_PROSA_RE = re.compile(
 # mirarlas. Se normalizan antes de buscar: llaves de agrupaci\u00f3n de la coma y del
 # punto, espacio fino de LaTeX, y el signo menos tipogr\u00e1fico.
 def normaliza_latex(texto):
+    # El orden importa: la coma decimal de LaTeX va PRIMERO, porque `{,}` es un
+    # grupo de llaves que PARTICION_RE se llevaria por delante, dejando 92 65.
     texto = texto.replace('{,}', ',').replace('{.}', '.')
+    texto = CONJUNTO_LATEX_RE.sub(' ', texto)
+    texto = PARTICION_RE.sub(' ', texto)
+    texto = COLOR_CSS_RE.sub(' ', texto)
     texto = texto.replace('\\,', '\u2009').replace('\\;', ' ').replace('\\ ', ' ')
     texto = texto.replace('\u2212', '-')
     return texto
@@ -196,6 +229,40 @@ def casa(valor, decimales, universo):
     return any(abs(u - valor) <= tol for u in universo)
 
 
+# Los literales de cadena del JS. Un simulador guarda ahi el enunciado de sus
+# preguntas, las opciones, la retroalimentacion y los rotulos de sus graficos:
+# texto que el estudiante lee igual que un parrafo, y que hasta la fase 6 nadie
+# contrastaba —`cifras_de_prosa()` borraba el <script> entero antes de mirar—.
+# Asi se publico un «2,4 millones» del Literary Digest dentro de un simulador
+# del cap. 2, con el informe en verde.
+#
+# Se cogen TODOS los literales en vez de una lista de campos (`retro`, `pista`,
+# `pregunta`…): una lista se queda corta en cuanto alguien añade un campo nuevo,
+# y ese fallo es silencioso. El ruido que entra a cambio es unicamente el color
+# CSS, que COLOR_CSS_RE ya neutraliza.
+LITERAL_JS_RE = re.compile(
+    r"'((?:[^'\\\n]|\\.)*)'"      # 'cadena', con \' escapado
+    r'|"((?:[^"\\\n]|\\.)*)"'     # "cadena"
+    r'|`((?:[^`\\]|\\.)*)`',       # `plantilla`, que si puede ocupar varias lineas
+    re.S)
+INTERPOLACION_RE = re.compile(r'\$\{[^{}]*\}')
+
+
+def textos_de_simuladores(html):
+    """El texto que el estudiante lee dentro de los simuladores."""
+    fuera = []
+    for guion in re.findall(r'<script>(.*?)</script>', html, flags=re.S):
+        for m in LITERAL_JS_RE.finditer(guion):
+            crudo = next(g for g in m.groups() if g is not None)
+            # Deshacer los escapes del JS antes de leerlo como texto: si no,
+            # `\\,` (el espacio fino de LaTeX) no llega a normaliza_latex.
+            texto = (crudo.replace('\\\\', '\\').replace("\\'", "'")
+                          .replace('\\"', '"').replace('\\n', ' '))
+            texto = INTERPOLACION_RE.sub(' ', texto)
+            fuera.append(texto)
+    return fuera
+
+
 def cifras_de_prosa(html):
     """Devuelve [(texto_cifra, contexto)] de todo lo que el estudiante lee."""
     cuerpo = re.sub(r'<script>.*?</script>', ' ', html, flags=re.S)
@@ -203,8 +270,18 @@ def cifras_de_prosa(html):
     # con un párrafo lleno de cifras.
     cuerpo = re.sub(r'<style[^>]*>.*?</style>', ' ', cuerpo, flags=re.S)
     cuerpo = re.sub(r'<pre[^>]*>.*?</pre>', ' ', cuerpo, flags=re.S)
+    simuladores = textos_de_simuladores(html)
+    # Guarda contra el fallo silencioso, igual que en extrae(): si el capitulo
+    # trae <script> y no sale de el ni una cadena, el marcado cambio y hay que
+    # arreglar LITERAL_JS_RE, no dar el capitulo por verificado.
+    if '<script>' in html and not simuladores:
+        raise SystemExit(
+            "ABORTA: el capitulo tiene <script> pero no se extrajo ni una "
+            "cadena de los simuladores. El marcado cambio: arregla "
+            "LITERAL_JS_RE antes de fiarte de este verificador.")
+
     fuera = []
-    for _, trozo in TEXTO_RE.findall(cuerpo):
+    for trozo in [t for _, t in TEXTO_RE.findall(cuerpo)] + simuladores:
         texto = html_mod.unescape(re.sub(r'<[^>]+>', ' ', trozo))
         texto = normaliza_latex(texto)
         texto = re.sub(r'\s+', ' ', texto).strip()
