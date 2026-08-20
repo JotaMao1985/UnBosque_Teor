@@ -3449,7 +3449,8 @@
           varias partes.</p>
       </div>
 
-      <p>4 500 es una muestra grande. El problema no es ese. El problema es que quien decidía entrar en la muestra era
+      <p>Cuatro mil quinientas respuestas son una muestra grande. El problema no es ese. El problema es que quien
+        decidía entrar en la muestra era
         <em>la propia encuestada</em>, y que devolver 127 preguntas abiertas exige una motivación que no está repartida
         al azar entre las mujeres de Estados Unidos. Hite no se equivocó al recoger esas voces ni al publicarlas: se
         equivocó al ponerles un porcentaje y atribuirlo a todas las mujeres.</p>
@@ -3690,8 +3691,8 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
 
       <p>Concretemos con el <em>Literary Digest</em>. Su <strong>población objetivo</strong> eran los votantes de
         1936. Su <strong>marco</strong> —la lista de la que salieron los nombres— fueron los registros de
-        propietarios de teléfono y automóvil. Su <strong>muestra</strong>, los 2 266 566 que devolvieron la papeleta
-        de los 10 000 000 enviadas. Tres conjuntos encajados y distintos, y el desastre nació exactamente en las dos
+        propietarios de teléfono y automóvil. Su <strong>muestra</strong>, las 2 266 566 papeletas devueltas de las
+        10 000 000 enviadas. Tres conjuntos encajados y distintos, y el desastre nació exactamente en las dos
         brechas: entre la población y el marco, y entre el marco y quien contestó.</p>
 
       <div class="definition">
@@ -3780,11 +3781,11 @@ print(agpop[["county", "state", "acres92", "region"]].head(3).to_string(index=Fa
 
       <h3>Un error de procesamiento que viene de fábrica</h3>
 
-      <p>Los archivos de Lohr codifican el dato faltante como <code>−99</code>. No es una superficie negativa: es un
+      <p>Los archivos de Lohr codifican el dato faltante como <code>-99</code>. No es una superficie negativa: es un
         <em>no valor</em> disfrazado de número, y ninguna función de R protesta al promediarlo.</p>
 
       <div class="code-tabs">
-        <div class="code-tabs-nav" role="tablist" aria-label="El código de faltante -99">
+        <div class="code-tabs-nav" role="tablist" aria-label="El código del dato faltante -99">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
@@ -3831,9 +3832,9 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         <p><strong>La convención de este material.</strong> Se trabaja con el <strong>marco completo de Lohr,
           $N = 3\,078$</strong>, sin excluir nada, que es lo que hace el texto guía. Conviene saber exactamente lo que
           eso cuesta: la media poblacional que se usa aquí es <strong>306 677</strong> acres, y la de los 3 059
-          condados con dato válido sería 308 582 —1 905 acres, un 0,6 %, por debajo—. Todo lo demás del curso es exacto
-          para esa población; lo único que no es, es la superficie sembrada media de verdad. Los 19 códigos
-          <code>−99</code> son un caso de <em>no respuesta de ítem</em>, y se tratan en el capítulo 8.</p>
+          condados con dato válido sería 308 582, es decir, 1 905 acres —un 0,6 %— por encima. Todo lo demás del curso
+          es exacto para esa población; lo único que no lo es, es la superficie sembrada media de verdad. Los 19 códigos
+          <code>-99</code> son un caso de <em>no respuesta de ítem</em>, y se tratan en el capítulo 8.</p>
       </div>
 
       <div class="references">
@@ -3869,7 +3870,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         </div>
       </div>
 
-      <p>«Representativa» es una palabra que suena a garantía y no lo es. Una muestra de 2,4 millones de personas puede
+      <p>«Representativa» es una palabra que suena a garantía y no lo es. Una muestra de 2,3 millones de personas puede
         ser espectacularmente poco representativa, y una de mil puede bastar. Lo que separa a una de otra no es el
         tamaño ni el parecido aparente con la población: es <strong>cómo se eligió</strong>.</p>
 
@@ -4145,7 +4146,7 @@ print(pd.Series({"edad_telefonica": tel["age"].mean(),
             <span class="rotulo">La idea que se lleva</span>
             La ponderación arregla lo que mides, no lo que te falta. Antes de aceptar una estimación ponderada, pregunta
             siempre por qué variables se calibró y cuáles quedaron fuera. Es el mecanismo completo del capítulo 4
-            (post-estratificación) y del 8 (ponderación por no respuesta).
+            (postestratificación) y del 8 (ponderación por no respuesta).
           </p>
         </div>
       </details>
@@ -4195,7 +4196,7 @@ print(pd.DataFrame(
 
       <div class="note">
         <p><strong>Lee la tabla despacio.</strong> Sin pesos, las dos encuestas se llevan 5,9 puntos (61,6 % frente a
-          67,6 %). Con pesos se llevan 0,9 (64,8 % frente a 65,6 %)… en la estimación puntual. Pero ponderar movió a la
+          67,5 %). Con pesos se llevan 0,9 (64,8 % frente a 65,6 %)… en la estimación puntual. Pero ponderar movió a la
           telefónica <em>hacia arriba</em> y al panel <em>hacia abajo</em>: cada una en la dirección de su propia
           desviación demográfica. Calibrar por sexo, edad y raza corrige lo que se midió; no toca lo que hizo que una
           persona contestara y otra no. La estimación ponderada de la encuesta telefónica, 64,8 %, es la que da título
@@ -4378,9 +4379,9 @@ print((pd.Series({
             y nada dentro de los datos te dice a qué distancia quedó.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
-            No sesga que falte gente: sesga que falte de manera <strong>desigual</strong>. Por eso las agencias vigilan
-            las tasas por subgrupo y no solo la global, y por eso el capítulo 8 construye clases de respuesta antes de
-            ponderar nada.
+            No sesga que falte gente: sesga que falte de manera <strong>desigual</strong>. De ahí que el capítulo 8
+            empiece por construir clases de respuesta: sin partir la población en grupos, no hay forma de saber si lo
+            que falta se reparte parejo o se concentra en un sitio.
           </p>
         </div>
       </details>
@@ -4574,10 +4575,10 @@ print((pd.Series({
             Casi todas añaden algo —un marco temporal, un umbral concreto, una escala en vez de un sí/no—, y todas
             preguntan una cosa sola. Ese es el patrón: una pregunta mala suele serlo por vaguedad o por acumulación, y
             las dos se arreglan concretando y separando, no recortando.</p>
-          <p><strong>Y fíjate en lo que falta.</strong> Aquí no hay ni un porcentaje, a diferencia del resto del
-            capítulo. Es deliberado y forma parte de la lección: el efecto de una redacción concreta sobre una
-            respuesta concreta no se puede leer de estos datos. Ponerle una cifra sería inventarla, que es justo el
-            error que el módulo enseña a no cometer.</p>
+          <p><strong>Los defectos vienen en grupo.</strong> Ninguno de los tres ítems tiene un solo problema: cada uno
+            arrastra tres a la vez, y esa es la situación normal fuera del aula. Importa porque arreglar uno y dejar
+            los otros dos no salva el ítem: una pregunta con marco temporal impecable sigue sin servir si además es
+            sugestiva. Por eso el ejercicio pide marcarlos <em>todos</em> antes de enseñar la reformulación.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
             El sesgo de medición se combate con vocabulario, no con estadística: pregunta sugestiva, doble cañón,
@@ -4712,10 +4713,11 @@ print((pd.Series({
         <div class="lectura-guiada-cuerpo">
           <p><strong>Qué mueves.</strong> Un solo deslizador que importa: el sesgo, expresado como porcentaje de la
             media poblacional. El otro solo elige qué barra se detalla abajo.</p>
-          <p><strong>Qué se ve.</strong> Con el sesgo en cero, las barras del primer gráfico caen hasta desaparecer al
-            llegar al censo: sin sesgo, mirar a todo el mundo da la respuesta exacta. Sube el deslizador un poco —basta
-            un porcentaje pequeño— y la caída se para en seco a media altura. La última barra ya no es cero, y no lo
-            será nunca: ahí $n = N$, la varianza vale exactamente cero y lo único que sobrevive es el sesgo.</p>
+          <p><strong>Dónde se para la caída, y por qué eso es un número que puedes leer.</strong> La altura a la que
+            las barras dejan de bajar <em>es</em> el sesgo, medido en acres, en las mismas unidades que la superficie
+            que se quiere estimar. Eso convierte una palabra abstracta en algo comparable: pon el deslizador en un
+            sesgo que te parezca pequeño y mira cuántos acres son en realidad. Prueba también a moverlo despacio y
+            fíjate en <em>a partir de qué tamaño</em> deja de notarse el cambio de $n$.</p>
           <p><strong>El segundo gráfico es el que cambia cómo se lee un conjunto de datos grande.</strong> Dice qué
             fracción del error cuadrático medio la pone el sesgo, y sube hacia el 100 % conforme crece $n$. Lo que hay que leer ahí es un
             umbral: pasado cierto tamaño, casi todo tu error dejó de ser muestreo, y recoger más datos ya no compra
@@ -4973,11 +4975,11 @@ resumen = pd.DataFrame({"N": N_h,
                         "media": mu_h.round().astype(int),
                         "sd": reg.std().round().astype(int)}).rename_axis(None)
 print(resumen.sort_values("media", ascending=False).to_string())
-#&gt;       N   media      sd
-#&gt; W   422  723344  835639
-#&gt; NC 1054  325951  271303
-#&gt; S  1382  199140  243956
-#&gt; NE  220   90619   79365
+#&gt;        N   media      sd
+#&gt; W    422  723344  835639
+#&gt; NC  1054  325951  271303
+#&gt; S   1382  199140  243956
+#&gt; NE   220   90619   79365
 
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
 # dentro del paquete TeachingSampling, que no existe para Python; aqui se lee el
@@ -5018,17 +5020,17 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
             sino bastante a su derecha. En una población así, «el condado medio» no existe —hay muchos pequeños y unos
             pocos enormes que tiran de la media—, y una muestra que por azar recoja o no recoja uno de los grandes dará
             resultados muy distintos.</p>
-          <p><strong>Y lo que el gráfico te está escondiendo.</strong> La cola está recortada en el percentil 99 para
-            que se vea algo; sin recorte, todo lo demás se aplastaría contra el eje. Es decir, la asimetría real es
-            <em>peor</em> que la que estás viendo. Cuando cambies a regiones verás la otra mitad del problema: las
-            cuatro medias se separan muchísimo entre sí, y la media global —la única que se estimaría sin estratificar—
-            queda lejos de las dos extremas.</p>
+          <p><strong>Y lo que estás viendo es la versión suave.</strong> El recorte de la cola que anuncia la
+            introducción no es cosmético: significa que la asimetría real es <em>peor</em> que la dibujada. Cambia
+            ahora a regiones y aparece la otra mitad del problema: las cuatro medias se separan muchísimo entre sí, y
+            la media global —la única que se estimaría sin estratificar— queda lejos de las dos extremas. Un solo
+            número no describe a esta población, y ese es el hueco por el que entra el capítulo 4.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
-            Esta forma no es un detalle descriptivo: es la razón de ser de medio curso. Su asimetría hace que con $n$
-            pequeño la media muestral no sea normal (capítulo 2), que estratificar por tamaño gane muchísimo
-            (capítulo 4) y que las probabilidades proporcionales al tamaño sean la respuesta natural (capítulo 6). Mira
-            el histograma antes de elegir el diseño, no después.
+            El histograma se mira <em>antes</em> de elegir el diseño, no después de que salgan los resultados raros.
+            La tarjeta de abajo pone nombre a las tres consecuencias que tiene esta forma concreta; lo transferible es
+            el hábito: ante una población nueva, la primera pregunta no es «¿de qué tamaño la muestro?», sino «¿qué
+            forma tiene?».
           </p>
         </div>
       </details>
@@ -5199,7 +5201,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
       <div class="quiz" data-quiz="cap1">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 1</h4>
         <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
-          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+          también las incorrectas: leerlas cuando ya has acertado enseña igual.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
         <div class="quiz-resumen" role="status" hidden></div>
@@ -5213,8 +5215,9 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
         <p class="text-sm" style="margin-bottom:0.5rem;">Los cinco son encuestas reales. Para cada una hay que
           identificar la población objetivo, el marco muestral, la unidad de muestreo y la de observación, y las
-          fuentes de error. Cuando hay números, las cifras de la solución salen de
-          <code>ensamblado/codigo/cap1/cadena.R</code>, que se ejecuta de verdad.</p>
+          fuentes de error. Cuando hay números, las cifras de la solución salen de ejecutar de verdad
+          <code>ensamblado/codigo/cap1/cadena.R</code> y <code>cadena.py</code>: cada solución trae las dos
+          versiones, y las dos publican la misma cifra.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>El artículo «What Readers Say About
@@ -5577,7 +5580,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
               </div>
             </div>
             <p style="margin-bottom:0;">Los libros prestados no están en el estante, así que tienen $\pi_k = 0$: es no
-              cobertura pura. Y no son libros cualquiera —son los más nuevos y los más solicitados—, así que su tasa
+              cobertura pura. Y no son libros cualesquiera —son los más nuevos y los más solicitados—, así que su tasa
               de necesidad de reencuadernación difiere sistemáticamente. Nótese además el hueco vacío: si el
               bibliotecario encuentra un hueco y pasa a la siguiente ubicación sin anotar nada, está descartando en
               silencio justo a las unidades que faltan. Registrar el hueco como «libro prestado, no observado» convierte
@@ -8149,7 +8152,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
               'muestra y se puede reducir pagando más unidades.',
             efecto: 'varianza', nAyuda: true, donde: 'Capítulos 2 a 7',
             ejemplo: 'con $n = 300$ sobre <code>agpop</code>, el error estándar de la media es ' +
-              'de unos 24 000 acres; con $n = 1\\,200$ se parte por la mitad.',
+              'de unos 24 500 acres; con $n = 1\\,200$ se parte por la mitad.',
             hijos: [
               {
                 etiqueta: 'Varianza de diseño',
@@ -8217,7 +8220,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
                     resumen: 'La unidad contesta la encuesta pero deja preguntas en blanco. Se ' +
                       'trata con imputación, y la trampa está en la varianza después de imputar.',
                     efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 8',
-                    ejemplo: 'los 19 condados de <code>agpop</code> con <code>acres92 = −99</code>.'
+                    ejemplo: 'los 19 condados de <code>agpop</code> con <code>acres92 = -99</code>.'
                   }
                 ]
               },
@@ -8305,13 +8308,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
       {
         tipo: 'opcion',
         modulo: 2,
-        pregunta: 'En <code>agpop</code>, 19 condados tienen <code>acres92 = −99</code>, que es el código de faltante de Lohr. ¿Qué pasa si no se hace nada?',
+        pregunta: 'En <code>agpop</code>, 19 condados tienen <code>acres92 = -99</code>, que es el código de faltante de Lohr. ¿Qué pasa si no se hace nada?',
         pista: 'R no sabe que −99 significa «no sé». ¿Qué hace <code>mean()</code> con ese valor?',
         opciones: [
           { texto: 'R lo promedia como si fuera una superficie de −99 acres, y la media baja: 306 677 en vez de 308 582.', correcta: true,
             retro: 'Correcto. Son 1 905 acres, un 0,6 %. Pequeño aquí, pero es un error de procesamiento: silencioso, sistemático y con la dirección siempre igual.' },
           { texto: 'R lo trata como <code>NA</code> y lo excluye del promedio.', correcta: false,
-            retro: 'No: <code>−99</code> es un número perfectamente válido para R. Solo un ser humano sabe que en este archivo significa «no se midió».' },
+            retro: 'No: <code>-99</code> es un número perfectamente válido para R. Solo un ser humano sabe que en este archivo significa «no se midió».' },
           { texto: 'Da error al calcular la media.', correcta: false,
             retro: 'Ojalá. Los errores que dan error se arreglan; los que no, se publican.' },
           { texto: 'La media sube, porque −99 es un valor extremo.', correcta: false,
@@ -8345,7 +8348,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           { texto: 'La telefónica es probabilística, así que reproduce el censo.', correcta: false,
             retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a móviles y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
           { texto: 'El panel online se parece más al censo porque es más reciente.', correcta: false,
-            retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,7 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
+            retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,6 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
           { texto: 'No se pueden comparar porque tienen tamaños distintos.', correcta: false,
             retro: 'Se comparan porcentajes, no conteos: para eso están en porcentaje. El tamaño no entra en esta comparación.' }
         ]
