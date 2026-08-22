@@ -1,0 +1,73 @@
+---
+title: "Untitled"
+author: "Javier Mauricio Sierra"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+tel    <- read.csv("CSV data sets for SDA 3e/intelltel.csv")
+online <- read.csv("CSV data sets for SDA 3e/intellonline.csv")
+pesos  <- read.csv("CSV data sets for SDA 3e/intellwts.csv")
+
+# Las dos encuestas se calibraron al censo de 2010 sobre las mismas 8 celdas
+# de sexo x edad x raza. Eso permite RECUPERAR el censo desde los pesos, y por
+# dos caminos independientes que tienen que coincidir.
+censo_tel    <- pesos$tel_n    * pesos$tel_wgt
+censo_online <- pesos$online_n * pesos$online_wgt
+c(suma_tel = sum(censo_tel), suma_online = sum(censo_online),
+  discrepancia_maxima = max(abs(censo_tel - censo_online)))
+#>            suma_tel         suma_online discrepancia_maxima
+#>             750.124             749.792               0.280
+```
+```{r}
+censo_tel
+```
+
+```{r}
+censo_online
+```
+
+
+```{r}
+pesos
+```
+
+```{r}
+# La composicion demografica de cada muestra frente a la del censo.
+comp <- data.frame(
+  celda  = paste(pesos$sex, pesos$agegroup, pesos$race),
+  censo  = round(100 * censo_tel / sum(censo_tel), 1),
+  telef  = round(100 * pesos$tel_n / sum(pesos$tel_n), 1),
+  online = round(100 * pesos$online_n / sum(pesos$online_n), 1))
+comp$sesgo_online <- comp$online - comp$censo
+print(comp, row.names = FALSE)
+#>                  celda censo telef online sesgo_online
+#>  Female Young Nonwhite   7.6   2.6   11.8          4.2
+#>     Female Young White  18.1   6.2   31.7         13.6
+#>    Female Old Nonwhite   7.6   6.1    1.4         -6.2
+#>       Female Old White  18.1  47.8   13.7         -4.4
+#>    Male Young Nonwhite   7.2   1.5    8.2          1.0
+#>       Male Young White  17.1   5.1   25.8          8.7
+#>      Male Old Nonwhite   7.2   4.8    0.8         -6.4
+#>         Male Old White  17.1  26.0    6.4        -10.7
+
+# La edad media resume el desastre en un numero.
+c(edad_telefonica = mean(tel$age), edad_online = mean(online$age))
+#> edad_telefonica     edad_online
+#>        60.74864        33.71414
+```
+```{r}
+tel$int
+```
+
+
+```{r}
+agree_tel    <- as.integer(tel$int    %in% c(1, 2))
+agree_tel
+```
+
