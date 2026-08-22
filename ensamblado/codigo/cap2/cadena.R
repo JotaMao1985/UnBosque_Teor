@@ -110,6 +110,88 @@ round(cbind(esperanzas, t = sum(y), sesgo_expansion = esperanzas[, 2] - sum(y)),
 #> Estratificado  150    162.9167 150         12.9167
 #> Desigual       150    165.7500 150         15.7500
 
+cat("\n###BLOQUE-R6B###\n")
+# A tamano fijo, cada fila de la matriz Delta_kl = pi_kl - pi_k*pi_l suma cero.
+# Esa identidad es la que colapsa el doble sumatorio en la forma de
+# Sen-Yates-Grundy: sin tamano fijo no suma cero y no hay tal forma.
+delta <- function(ps, pis) inclusion2(ps) - outer(pis, pis)
+round(rbind(MAS           = rowSums(delta(p_mas, pi_mas)),
+            Estratificado = rowSums(delta(p_est, pi_est)),
+            Desigual      = rowSums(delta(p_des, pi_des))), 12)
+#>               [,1] [,2] [,3] [,4] [,5]
+#> MAS              0    0    0    0    0
+#> Estratificado    0    0    0    0    0
+#> Desigual         0    0    0    0    0
+
+# La varianza, par por par: cada par no ordenado {k,l} aporta
+# (-Delta_kl) * (y_k/pi_k - y_l/pi_l)^2, y nada mas. La suma de la columna
+# es la varianza entera del estimador HT bajo ese diseno.
+pares <- combn(N, 2)
+aportes <- function(ps, pis) {
+  D <- delta(ps, pis)
+  d <- y / pis
+  apply(pares, 2, function(p) -D[p[1], p[2]] * (d[p[1]] - d[p[2]])^2)
+}
+tab <- cbind(MAS = aportes(p_mas, pi_mas),
+             Est = aportes(p_est, pi_est),
+             Des = aportes(p_des, pi_des))
+rownames(tab) <- apply(pares, 2, function(p) paste0("{", p[1], ",", p[2], "}"))
+round(rbind(tab, TOTAL = colSums(tab)), 3)
+#>            MAS Est     Des
+#> {1,2}    6.000  16   8.426
+#> {1,3}   63.375 169  32.807
+#> {1,4}  135.375   0  85.480
+#> {1,5}  726.000   0 209.140
+#> {2,3}   30.375  81   8.073
+#> {2,4}   84.375   0  40.438
+#> {2,5}  600.000   0 134.751
+#> {3,4}   13.500   0  13.500
+#> {3,5}  360.375   0 100.838
+#> {4,5}  234.375 625  36.884
+#> TOTAL 2253.750 891 670.337
+
+# Y esto es lo que pasa cuando la identidad NO se cumple. Diseno Bernoulli con
+# pi_k = 0,4 para las cinco unidades: las 32 muestras posibles, incluida la
+# vacia. Ahi Delta_kl = 0 fuera de la diagonal, asi que la forma SYG da CERO
+# mientras la varianza de verdad es 8553. La formula no avisa: solo miente.
+sub <- expand.grid(rep(list(c(FALSE, TRUE)), N))
+p_ber <- apply(sub, 1, function(s) prod(ifelse(s, 0.4, 0.6)))
+t_ber <- apply(sub, 1, function(s) sum(y[s]) / 0.4)
+c(muestras = nrow(sub), E_HT = sum(p_ber * t_ber),
+  V_real = sum(p_ber * (t_ber - sum(y))^2), V_SYG = 0)
+#> muestras     E_HT   V_real    V_SYG
+#>       32      150     8553        0
+
+cat("\n###BLOQUE-R6C###\n")
+# Primer factor, el del diseno: en el MAS los pares {1,5} y {2,5} -el condado
+# mas chico junto al mas grande- se llevan casi seis de cada diez unidades de
+# varianza. Estratificar los vuelve pares entre estratos, con Delta_kl = 0.
+caros <- c("{1,5}", "{2,5}")
+round(rbind(aporte_de_los_dos    = colSums(tab[caros, ]),
+            porcentaje_del_total = 100 * colSums(tab[caros, ]) / colSums(tab)), 2)
+#>                          MAS Est    Des
+#> aporte_de_los_dos    1326.00   0 343.89
+#> porcentaje_del_total   58.84   0  51.30
+
+# Segundo factor, el de la poblacion: cuanto difieren entre si los valores
+# expandidos y_k/pi_k. Subir pi_5 los achata, y el rango cae de 110 a 62.
+expandidos <- rbind(MAS = y / pi_mas, Estratificado = y / pi_est, Desigual = y / pi_des)
+colnames(expandidos) <- paste0("U", 1:N)
+round(cbind(expandidos, rango = apply(expandidos, 1, max) - apply(expandidos, 1, min)), 2)
+#>                  U1    U2   U3   U4     U5  rango
+#> MAS           35.00 45.00 67.5 82.5 145.00 110.00
+#> Estratificado 42.00 54.00 81.0 66.0 116.00  74.00
+#> Desigual      43.08 55.38 67.5 82.5 105.45  62.38
+
+# Condicion de Sen-Yates-Grundy: Delta_kl <= 0 para todo par k != l. Se cumple
+# en los tres disenos, y es lo que impide que el estimador salga negativo.
+fuera_diagonal <- function(ps, pis) max(delta(ps, pis)[row(diag(N)) != col(diag(N))])
+round(c(MAS = fuera_diagonal(p_mas, pi_mas),
+        Est = fuera_diagonal(p_est, pi_est),
+        Des = fuera_diagonal(p_des, pi_des)), 6)
+#>      MAS      Est      Des
+#> -0.06000  0.00000 -0.05375
+
 cat("\n###BLOQUE-R7###\n")
 # Varianza de HT por dos caminos: recorriendo el espacio de muestras y por la
 # forma de Sen-Yates-Grundy. Si no coinciden, una de las dos esta mal.

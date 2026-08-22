@@ -7321,16 +7321,16 @@ round(c(media_muestral_y = mean(deadtrees$field),
       filas: [
         { concepto: 'Variable auxiliar', aqui: 'x_k', lohr: 'x_i', gutierrez: 'x_k', r: 'agsrs$acres87' },
         { concepto: 'Total auxiliar conocido', aqui: 't_x', lohr: 't_x', gutierrez: 't_x', r: 'sum(agpop$acres87)' },
-        { concepto: 'Razón poblacional', aqui: 'B = t_y / t_x', lohr: 'B', gutierrez: 'R', r: 'svyratio()' },
-        { concepto: 'Estimador de razón', aqui: '\\hat{B} = \\bar{y}/\\bar{x}', lohr: '\\hat{B}', gutierrez: '\\hat{R}', r: 'coef(svyratio())' },
+        { concepto: 'Razón poblacional', aqui: 'B = t_y / t_x', lohr: 'B', gutierrez: 'B = t_y/t_z', r: 'svyratio()' },
+        { concepto: 'Estimador de razón', aqui: '\\hat{B} = \\bar{y}/\\bar{x}', lohr: '\\hat{B}', gutierrez: '\\hat{B}, \\hat{B}_\\pi', r: 'coef(svyratio())' },
         { concepto: 'Total por razón', aqui: '\\hat{t}_r = \\hat{B}\\, t_x', lohr: '\\hat{t}_{yr}', gutierrez: '\\hat{t}_{y,r}', r: 'predict(svyratio(), t_x)' },
         { concepto: 'Residuo de la razón', aqui: 'e_k = y_k - \\hat{B} x_k', lohr: 'e_i', gutierrez: 'e_k', r: 'y - B*x' },
-        { concepto: 'Estimador de regresión', aqui: '\\hat{t}_{\\text{reg}}', lohr: '\\hat{t}_{y\\text{reg}}', gutierrez: '\\hat{t}_{y,\\text{reg}}', r: 'calibrate()' },
-        { concepto: 'Estimador de diferencia', aqui: '\\hat{t}_d', lohr: '\\hat{t}_{yd}', gutierrez: '\\hat{t}_{y,d}', r: 'a mano' },
-        { concepto: 'Estimador GREG', aqui: '\\hat{t}_{\\text{GREG}}', lohr: '—', gutierrez: '\\hat{t}_{y,\\text{GREG}}', r: 'calibrate()' },
-        { concepto: 'Factor de ajuste de pesos', aqui: 'g_k', lohr: 'g_i', gutierrez: 'g_k', r: 'weights(dis_cal)/weights(dis)' },
+        { concepto: 'Estimador de regresión', aqui: '\\hat{t}_{\\text{reg}}', lohr: '\\hat{t}_{y\\text{reg}}', gutierrez: '\\hat{t}_{y,greg}', r: 'calibrate()' },
+        { concepto: 'Estimador de diferencia', aqui: '\\hat{t}_d', lohr: '\\hat{\\bar{y}}_{\\text{diff}}', gutierrez: '—', r: 'a mano' },
+        { concepto: 'Estimador GREG', aqui: '\\hat{t}_{\\text{GREG}}', lohr: '\\hat{t}_{y\\text{GREG}}', gutierrez: '\\hat{t}_{y,greg}', r: 'calibrate()' },
+        { concepto: 'Factor de ajuste de pesos', aqui: 'g_k', lohr: 'g_i', gutierrez: 'g_{ks}', r: 'weights(dis_cal)/weights(dis)' },
         { concepto: 'Dominio', aqui: 'U_d', lohr: '\\mathcal{U}_d', gutierrez: 'U_d', r: 'svyby()' },
-        { concepto: 'Función de distribución', aqui: '\\hat{F}(t)', lohr: '\\hat{F}(y)', gutierrez: '\\hat{F}_y(t)', r: 'svyquantile()' }
+        { concepto: 'Función de distribución', aqui: '\\hat{F}(t)', lohr: '\\hat{F}(y)', gutierrez: '\\widehat{F}(y)', r: 'svyquantile()' }
       ]
     };
 

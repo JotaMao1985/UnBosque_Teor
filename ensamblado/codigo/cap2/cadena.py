@@ -66,6 +66,45 @@ print("E(N * y_barra) =", round(float(p_des @ t_exp), 4), " frente al total", in
 #> E(t_HT)        = 150.0
 #> E(N * y_barra) = 165.75  frente al total 150
 
+print("\n###BLOQUE-P3B###\n")
+# A tamano fijo cada fila de Delta_kl = pi_kl - pi_k*pi_l suma cero, y esa
+# identidad es la que produce la forma de Sen-Yates-Grundy.
+pi_mas, pi_est = inclusion1(p_mas), inclusion1(p_est)
+pares = list(combinations(range(N), 2))
+
+def delta(ps, pis):
+    return inclusion2(ps) - np.outer(pis, pis)
+
+print("filas de Delta (MAS) =", np.round(delta(p_mas, pi_mas).sum(1), 12) + 0.0)
+print("filas de Delta (Est) =", np.round(delta(p_est, pi_est).sum(1), 12) + 0.0)
+#> filas de Delta (MAS) = [0. 0. 0. 0. 0.]
+#> filas de Delta (Est) = [0. 0. 0. 0. 0.]
+
+# La varianza par por par: cada par no ordenado aporta (-Delta_kl) por la
+# diferencia al cuadrado de los valores expandidos, y nada mas.
+def aportes(ps, pis):
+    D, d = delta(ps, pis), y / pis
+    return np.array([-D[k, l] * (d[k] - d[l]) ** 2 for k, l in pares]) + 0.0
+
+tab = pd.DataFrame({"MAS": aportes(p_mas, pi_mas),
+                    "Est": aportes(p_est, pi_est),
+                    "Des": aportes(p_des, pi_des)},
+                   index=[f"{{{k+1},{l+1}}}" for k, l in pares])
+tab.loc["TOTAL"] = tab.sum()
+print(tab.round(3).to_string())
+#>             MAS    Est      Des
+#> {1,2}     6.000   16.0    8.426
+#> {1,3}    63.375  169.0   32.807
+#> {1,4}   135.375    0.0   85.480
+#> {1,5}   726.000    0.0  209.140
+#> {2,3}    30.375   81.0    8.073
+#> {2,4}    84.375    0.0   40.438
+#> {2,5}   600.000    0.0  134.751
+#> {3,4}    13.500    0.0   13.500
+#> {3,5}   360.375    0.0  100.838
+#> {4,5}   234.375  625.0   36.884
+#> TOTAL  2253.750  891.0  670.337
+
 print("\n###BLOQUE-P4###\n")
 from scipy.stats import t as t_dist
 

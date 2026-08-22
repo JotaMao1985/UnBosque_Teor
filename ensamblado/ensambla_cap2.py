@@ -118,7 +118,7 @@ def main():
       modules: [
         { id: 1, title: "El diseño muestral p(s)", shortTitle: "Diseño p(s)", duration: "15 min" },
         { id: 2, title: "Probabilidades de inclusión", shortTitle: "π_k y π_kl", duration: "15 min" },
-        { id: 3, title: "El estimador de Horvitz–Thompson", shortTitle: "Horvitz–Thompson", duration: "20 min" },
+        { id: 3, title: "El estimador de Horvitz–Thompson", shortTitle: "Horvitz–Thompson", duration: "30 min" },
         { id: 4, title: "Insesgadez de diseño y representatividad", shortTitle: "Insesgadez", duration: "12 min" },
         { id: 5, title: "El MAS como caso particular", shortTitle: "MAS", duration: "25 min" },
         { id: 6, title: "Intervalos de confianza", shortTitle: "Intervalos", duration: "18 min" },

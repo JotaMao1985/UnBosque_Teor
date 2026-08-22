@@ -1947,6 +1947,176 @@ otro capítulo sigue pasando. Es lo que dejó vivo el «2,4 millones» del cap. 
 
 ---
 
+### T7.1 — Sen–Yates–Grundy: de dónde sale, cómo se lee y qué cambia (2026-08-21)
+
+**Lo que había.** Una caja `.definition` de siete líneas en el módulo 3 del capítulo 2: la fórmula,
+la palabra «tamaño fijo» como hipótesis suelta y una frase de interpretación. Javier lo señaló al
+leerlo: *«no es claro de dónde proviene la fórmula ni cómo se interpreta y qué impacto tiene»*. Las
+tres cosas eran ciertas.
+
+**Lo que hay ahora**, en el mismo módulo y en este orden:
+
+1. **De dónde sale.** Una caja `.formula` con la identidad de la que cuelga todo — a tamaño fijo
+   cada fila de $\Delta$ suma cero —, derivada en dos líneas de $\sum_{l \neq k}\pi_{kl} =
+   (n-1)\pi_k$, que ya estaba comprobada en el módulo 2. Se lee como **ley de conservación**: los
+   puestos del acompañante son $n-1$ y no hay más, así que las unidades compiten por entrar. Detrás,
+   una `.derivacion` de cuatro pasos que va de la forma SYG a la varianza (ese sentido es más
+   corto). Usa dos cosas y solo dos: que $\Delta$ es simétrica y que sus filas suman cero; el paso 3
+   marca dónde entra el tamaño fijo y ningún otro lo necesita.
+2. **Cómo se interpreta.** La definición trae ahora **las dos formas**: el doble sumatorio con el
+   $-\tfrac12$, y la suma sobre pares $k<l$ —sin medio y sin signo— con `\underbrace` separando el
+   factor que pone el diseño, $\pi_k\pi_l - \pi_{kl}$, del que pone la población,
+   $(y_k/\pi_k - y_l/\pi_l)^2$. Dos párrafos leen un factor cada uno, incluido el caso de aporte
+   negativo y el límite $\pi_k \propto y_k$ que da varianza cero.
+3. **Qué impacto tiene.** Las **dos palancas de diseño**, con las cifras de los cinco condados:
+   estratificar mueve el primer factor (los pares $\{1,5\}$ y $\{2,5\}$ se llevan el **58,8 %** de
+   la varianza del MAS y el estratificado los anula, pagando el encarecimiento de los pares de
+   dentro del estrato: $2\,253{,}75 \to 891$); las probabilidades desiguales mueven el segundo
+   (el rango de los $y_k/\pi_k$ cae de $110$ a $62{,}38$ y con él la columna entera:
+   $2\,253{,}75 \to 670{,}34$). Son los capítulos 4 y 6 explicados con la misma fórmula.
+4. **Cuándo miente.** Una `.warning` con el contraejemplo ejecutado: diseño Bernoulli con
+   $\pi_k = 0{,}4$, donde $\Delta_{kl} = 0$ fuera de la diagonal, la expresión SYG devuelve **cero**
+   y la varianza real es **8 553**. No da error: da un número, y está mal.
+5. **El estimador, y el software.** Una `.note` al final del módulo con $\hat{V}_{SYG}$, la
+   condición $\pi_{kl} \leq \pi_k\pi_l$ que impide que salga negativo —cosa que el estimador HT no
+   garantiza— y la opción `svydesign(..., pps = ..., variance = "YG")` de `survey` 4.5, que pide
+   justamente ese estimador. Enlaza con el capítulo 6.
+
+**Piezas nuevas.** Simulador `syg-pares` (tabla de los diez pares con sus dos factores y su
+porcentaje de $V$, gráfico de aportes con el par caro en naranja, y gráfico de los valores
+expandidos con la línea $t/n$ = el ideal $\pi_k \propto y_k$); bloques `R6B`, `R6C` y `P3B` en las
+cadenas ejecutables. El simulador **no calcula nada nuevo**: reordena `pi_k` y `pi_kl` de
+`DATOS_CAP2` en la suma sobre pares, así que `genera_cap2.R` no se tocó. La duración declarada del
+módulo 3 pasa de 20 a 30 min.
+
+**El error que apareció al verificar en el navegador.** El JSON trae `pi_kl` redondeado a ocho
+decimales, así que el $\Delta_{kl}$ de un par entre estratos —cero exacto— llega como $-5\cdot
+10^{-9}$: la tabla pintaba «−0,00» y el conteo de pares que no aportan decía «0 de 10» en un diseño
+que tiene seis. Corregido con tolerancia `1e-6`, documentada en el propio simulador; el menor freno
+real de los tres diseños es 0,054, mil veces mayor. Es la misma clase de trampa que el README de
+`precalculo/` ya tenía anotada para los cuantiles.
+
+**Verificación.** `verifica_bloques.py` sobre el capítulo 2: **495 de 495** cifras `#>` contra
+salida real y **109 cifras de prosa respaldadas, 0 sin respaldo**. `anota_salidas.py --check` pasa
+en las dos cadenas. `node --check` sobre el motor. Reensamblado byte a byte idéntico (regla de oro):
+las correcciones están en las fuentes, no solo en el publicado. En el navegador: 0 errores de
+consola, 0 `.katex-error`, ningún `$…$` sin procesar, los tres diseños del simulador reproducen
+exactamente la tabla de R, y ninguna caja nueva desborda más que las que ya había en el capítulo.
+
+**Sin publicar a `gh-pages`: pendiente del visto bueno de Javier.**
+
+**Queda abierto.** No se añadió al glosario `marco-pi` la fila de $\Delta_{kl}$: haría falta
+confirmar contra los libros cómo la escriben Lohr y Gutiérrez, y no se hizo. Es una línea cuando se
+tengan los dos textos delante.
+
+---
+
+### T7.2 — La fila de $\Delta_{kl}$ en el glosario, y el $\pi_{ij}$ que no era (2026-08-21)
+
+**Lo pedido.** Añadir al glosario `marco-pi` del capítulo 2 la fila de $\Delta_{kl}$, que T7.1 dejó
+fuera por no tener los libros verificados delante.
+
+**Cómo se verificó, esta vez sí.** Contra las fuentes, no de memoria:
+
+- **Lohr.** El EPUB del repositorio (`_OceanofPDF.com_Sampling_-_Lohr_Sharon_L.epub`, ISBN
+  9780367279509, © 2022 — la **3.ª ed.**, la que cita la bibliografía del curso) da texto limpio,
+  a diferencia del PDF, que es un escaneo de otra edición con la numeración corrida. Su ecuación
+  (6.20) escribe la varianza HT con $\pi_{ik} - \pi_i\pi_k$ **escrito entero, sin símbolo**, y la
+  (6.21) da la forma SYG como $\tfrac{1}{2}\sum\sum(\pi_i\pi_k - \pi_{ik})(\cdot)^2$: signo fuera y
+  factores al revés. Su lista de símbolos del frontmatter **no tiene ninguna entrada** $\Delta$.
+- **Gutiérrez.** El libro en línea (`psirusteam.github.io/EstrategiasDeMuestreo`, caps. 4 y 6)
+  define $\Delta_{kl} = \pi_{kl} - \pi_k\pi_l$ con $\Delta_{kk} = \pi_k(1-\pi_k)$, escribe la SYG
+  como $-\tfrac{1}{2}\sum\sum_U \Delta_{kl}(\cdot)^2$ y su estimador como
+  $-\tfrac{1}{2}\sum\sum_S \tfrac{\Delta_{kl}}{\pi_{kl}}(\cdot)^2$ — las tres, letra por letra, las
+  del material—, y enuncia la condición $\Delta_{kl} < 0\ \forall k \neq l$ «para que la estimación
+  de la varianza no sea negativa», que es la que afirma la nota del módulo 3.
+
+**Lo que se escribió.** Una fila, *Covarianza de los indicadores*: aquí
+$\Delta_{kl} = \pi_{kl} - \pi_k\pi_l$, Lohr $\pi_{ik} - \pi_i\pi_k$, Gutiérrez $\Delta_{kl}$, en R
+«—». Va justo después de $\pi_{kl}$. Y la `nota` del glosario avisa del cambio de signo, que es
+donde de verdad tropieza quien compara el capítulo con el libro.
+
+**El hallazgo colateral.** El glosario decía que Lohr escribe $\pi_{ij}$. No es lo que registra su
+propia lista de símbolos, que da $\pi_{ik}$; en el cuerpo del capítulo 6 aparece 80 veces frente a
+6 de $\pi_{ij}$, y esas 6 están todas en enunciados de ejercicios. Corregido a $\pi_{ik}$ **en los
+capítulos 2 y 6**, que llevaban la misma fila: arreglar solo el 2 habría dejado los dos capítulos
+contradiciéndose. Es la primera vez que la tabla de notación se contrasta contra la fuente en lugar
+de contra la nota de investigación
+(`ObsidianVault/research/research-marco-pi-lohr-gutierrez.md`); **los otros seis glosarios no se han
+revisado así** y conviene hacerlo.
+
+**Verificación.** `verifica_bloques.py --prosa`: cap. 2 495/495 y 109 de prosa, cap. 6 315/315 y 53
+de prosa, 0 sin respaldo en ambos. `node --check` en los dos motores. Los **ocho** capítulos vuelven
+a salir byte a byte idénticos de sus ensambladores. En el navegador, la fila y la nota renderizan
+sin `.katex-error` y la tabla mide lo mismo con la fila nueva que sin ella (774 px en escritorio,
+sin desbordar en móvil).
+
+**Punto ciego, anotado.** El «6.21» de la nota es un número de ecuación y `--prosa` no lo captura
+(su expresión de cifras no lo ve), así que ninguna herramienta lo protege: se verificó a mano contra
+el EPUB y **depende de la edición** —el PDF escaneado numera esa misma fórmula como 6.13—, por eso
+la nota dice «de la 3.ª ed.».
+
+**Sin publicar a `gh-pages`: pendiente del visto bueno de Javier.**
+
+---
+
+### T7.3 — Auditoría de los seis glosarios restantes contra las fuentes (2026-08-22)
+
+T7.2 encontró que la tabla de notación se había escrito de memoria. Esta tarea la contrasta entera:
+**73 filas, ~150 celdas** de los capítulos 1, 3, 4, 5, 7 y 8.
+
+**Corpus.** Se armó uno buscable de las dos fuentes, en `scratchpad/`:
+
+- **Lohr 3.ª ed.** desde el EPUB (ISBN 9780367279509), con el MathML linealizado y las caligráficas
+  marcadas. Su **lista oficial de símbolos** del frontmatter es el árbitro: lo que no está ahí, no es
+  notación suya. *El PDF del repositorio es la 2.ª edición* —tiene «Ratio and Regression» como
+  capítulo 3, frente al 4 de la 3.ª— y por eso no sirve para citar numeración.
+- **Gutiérrez**, los 15 capítulos de `psirusteam.github.io/EstrategiasDeMuestreo`, que traen LaTeX
+  crudo en el HTML.
+
+**27 celdas corregidas.** Las de fondo:
+
+| Cap | Fila | Columna | Decía | Dice la fuente |
+|---|---|---|---|---|
+| 3 | Razón poblacional | Gutiérrez | $R$ | $B=t_y/t_z$ (§8.2) |
+| 3 | Estimador de razón | Gutiérrez | $\hat R$ | $\hat B$, $\hat B_\pi$ |
+| 3 | Estimador GREG | Lohr | «—» | $\hat t_{y\text{GREG}}$ (ec. 11.24) |
+| 3 | Est. de regresión y GREG | Gutiérrez | dos símbolos | $\hat t_{y,greg}$ para los dos |
+| 3 | Estimador de diferencia | Lohr | $\hat t_{yd}$ | $\hat{\bar y}_{\text{diff}}$ ($\hat t_{yd}$ es su total de **dominio**) |
+| 3 | Factor de ajuste | Gutiérrez | $g_k$ | $g_{ks}$ |
+| 5 | $\pi$ de dos etapas | Lohr | $\pi_{ij}$ | $\pi_{j\mid i}\pi_i$ (ec. 6.31) |
+| 5 | Correlación intraclase | Gutiérrez | $\rho_y$ | $\rho$ |
+| 7 | deff solo por pesos | Lohr | $\text{deff}_{Kish}$ | $1+CV_w^2$, «weighting design effect» (ec. 7.12, Kish **1992**) |
+| 7 | Grados de libertad | Gutiérrez | $n_I-H$ | $N-H$ (§5.2.3) |
+| 7 | Post-estratificación | Lohr | $w_i^{post}$ | $w_i^{*}$ |
+| 8 | Tasa de respuesta | Lohr | $M_R/M$ | $N_R/N$ (usa $N_R$, nunca $M_R$) |
+
+Las tres peores no eran símbolos mal escritos sino **discrepancias inventadas**: las filas de la
+razón afirmaban que Gutiérrez usa $R$ donde escribe $B$, igual que Lohr y que el material. Una tabla
+cuyo trabajo es evitar confusiones estaba fabricando una.
+
+**Nueve celdas pasan a «—» porque el libro no trata el concepto**, y eso también es información:
+Gutiérrez no desarrolla no respuesta ni imputación con notación propia (sus $\delta_k$ y $q_k$ son
+las dummy de post-estrato y las ponderaciones de calibración, otra cosa), no cubre el jackknife
+—cero apariciones en los 15 capítulos— y no usa $n_{eff}$. **Ninguno de los dos libros da fórmula
+para las reglas de Rubin**: esa notación es del material. La nota del capítulo 8 lo dice ahora en vez
+de dejar los guiones sin explicar.
+
+**Un fallo de renderizado que ningún verificador podía ver.** Tres celdas mezclaban texto y `$…$`
+(`'estrato $h$'`, `'psu $i$'`, `'ssu $j$'`). El componente envuelve todo en `$…$`, así que salía
+`$estrato $h$$` y el estudiante leía literalmente **«estrato h$$»** en los capítulos 4 y 5. KaTeX
+no protesta —deja los `$$` como texto—, así que `--prosa` y `node --check` daban verde. Reescritas
+como `\text{estrato } h`. **Regla nueva: en el glosario, las celdas van en LaTeX puro; el texto va
+dentro de `\text{}`, nunca con `$` a mano.**
+
+**Verificación.** Los ocho capítulos: `--prosa` sin discrepancias (2 355 cifras de código y 621 de
+prosa), `node --check` limpio, y los ocho vuelven a salir byte a byte idénticos de sus ensambladores.
+En el navegador, los ocho glosarios sin `.katex-error` y sin un solo `$` suelto.
+
+**Sin publicar a `gh-pages`: pendiente del visto bueno de Javier.**
+
+---
+
 ## Protocolo de verificación de cada capítulo
 
 Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
@@ -1990,10 +2160,10 @@ Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
 |---|---:|---:|---:|
 | Capítulos en el formato nuevo | 0 | **8** ✅ | 8 |
 | Módulos | 37 (formato viejo) | **88** ✅ | ~88 |
-| Simuladores | 0 | **65** (+8 tablas-ranking) ✅ | ~59 |
+| Simuladores | 0 | **66** (+8 tablas-ranking) ✅ | ~59 |
 | Preguntas de autoevaluación | 0 | **88** ✅ | ~64 |
 | Ejercicios guiados | 0 | **33** ✅ | ~26 |
-| Bloques de código verificados | 0 | **183** (2 035 cifras + 364 de prosa) | — |
+| Bloques de código verificados | 0 | **202** (2 355 cifras + 621 de prosa) | — |
 | Semanas del cronograma cubiertas | 9 / 16 | **16 / 16** ✅ | 16 / 16 |
 
 Los totales los cuenta `precalculo/cuenta_sitio.py` sobre los archivos publicados, no se escriben

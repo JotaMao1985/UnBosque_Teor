@@ -605,14 +605,14 @@
         'estratificado. El choque más traicionero es $S^2_h$: Lohr y este material usan el ' +
         'divisor $N_h - 1$, y Gutiérrez escribe $S^2_{y,U_h}$ para lo mismo.',
       filas: [
-        { concepto: 'Estrato h', aqui: 'U_h', lohr: 'estrato $h$', gutierrez: 'U_h', r: 'region' },
+        { concepto: 'Estrato h', aqui: 'U_h', lohr: '\\text{estrato } h', gutierrez: 'U_h', r: 'region' },
         { concepto: 'Número de estratos', aqui: 'H', lohr: 'H', gutierrez: 'H', r: 'nlevels()' },
         { concepto: 'Tamaño del estrato', aqui: 'N_h', lohr: 'N_h', gutierrez: 'N_h', r: 'table(agpop$region)' },
         { concepto: 'Muestra del estrato', aqui: 'n_h', lohr: 'n_h', gutierrez: 'n_h', r: 'table(agstrat$region)' },
         { concepto: 'Peso del estrato', aqui: 'W_h = N_h/N', lohr: 'N_h/N', gutierrez: 'W_h', r: 'Nh/N' },
         { concepto: 'Media del estrato', aqui: '\\bar{y}_h', lohr: '\\bar{y}_h', gutierrez: '\\bar{y}_{s_h}', r: 'tapply(y, region, mean)' },
         { concepto: 'Varianza del estrato', aqui: 'S^2_{y,h}', lohr: 'S_h^2', gutierrez: 'S^2_{y,U_h}', r: 'tapply(y, region, var)' },
-        { concepto: 'Estimador estratificado', aqui: '\\bar{y}_{\\text{str}} = \\sum W_h \\bar{y}_h', lohr: '\\bar{y}_{\\text{str}}', gutierrez: '\\hat{t}_\\pi / N', r: 'svymean()' },
+        { concepto: 'Estimador estratificado', aqui: '\\bar{y}_{\\text{str}} = \\sum W_h \\bar{y}_h', lohr: '\\bar{y}_{\\text{str}}', gutierrez: '\\hat{\\bar{y}}_{U,\\pi}', r: 'svymean()' },
         { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k = n_h/N_h', lohr: 'n_h/N_h', gutierrez: '\\pi_k', r: 'nh/Nh' },
         { concepto: 'Peso de diseño', aqui: 'w_k = N_h/n_h', lohr: 'w_i', gutierrez: '1/\\pi_k', r: 'weights=~strwt' },
         { concepto: 'Efecto de diseño', aqui: '\\text{deff}', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'deff=TRUE en svymean' },

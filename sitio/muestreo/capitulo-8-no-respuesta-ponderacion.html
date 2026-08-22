@@ -8273,33 +8273,37 @@ round(c(ajustado = as.numeric(svymean(~assist, disa)),
     // ================================================================
     GLOSARIOS['norespuesta'] = {
       titulo: 'Glosario de notación · no respuesta, ponderación e imputación',
-      nota: 'Lohr escribe la no respuesta en términos de <em>respondientes</em> y <em>no respondientes</em>; ' +
-        'Gutiérrez, en términos de la <em>propensión de respuesta</em> como segunda fase de un diseño. ' +
-        'Son la misma cosa: el conjunto de respondientes es una segunda muestra, con su propio diseño ' +
-        'desconocido, dentro de la muestra que sí se eligió.',
+      nota: 'Lohr escribe la no respuesta en términos de <em>respondientes</em> y <em>no respondientes</em>: ' +
+        'el conjunto de respondientes es una segunda muestra, con su propio diseño desconocido, dentro de ' +
+        'la muestra que sí se eligió. Los guiones de la columna de Gutiérrez no son un olvido: su libro ' +
+        'no desarrolla la no respuesta ni la imputación con notación propia —las menciona al pasar en el ' +
+        'capítulo de muestreo en dos fases—, y sus símbolos $\\delta_k$ y $q_k$ significan aquí otra cosa ' +
+        '(las variables dummy de post-estrato y las ponderaciones de la distancia de calibración). ' +
+        'Las reglas de Rubin tampoco aparecen con fórmula en ninguno de los dos libros: la notación de ' +
+        'esas tres filas es la de este material.',
       filas: [
-        { concepto: 'Indicador de respuesta', aqui: 'R_k', lohr: 'R_i', gutierrez: '\\delta_k', r: 'is.na(y)' },
-        { concepto: 'Propensión a responder', aqui: '\\phi_k', lohr: '\\phi_i', gutierrez: 'q_k',
+        { concepto: 'Indicador de respuesta', aqui: 'R_k', lohr: 'R_i', gutierrez: '—', r: 'is.na(y)' },
+        { concepto: 'Propensión a responder', aqui: '\\phi_k', lohr: '\\phi_i', gutierrez: '—',
           r: 'glm(R ~ x, family = binomial)' },
-        { concepto: 'Tasa de respuesta', aqui: 'R', lohr: 'M_R/M', gutierrez: '\\bar q', r: 'mean(R)' },
+        { concepto: 'Tasa de respuesta', aqui: 'R', lohr: 'N_R/N', gutierrez: '—', r: 'mean(R)' },
         { concepto: 'Media de los respondientes', aqui: '\\bar y_R', lohr: '\\bar y_R', gutierrez: '\\bar y_r',
           r: 'mean(y, na.rm = TRUE)' },
-        { concepto: 'Clase de ajuste', aqui: 'c', lohr: '\\text{clase } c', gutierrez: 'U_g',
+        { concepto: 'Clase de ajuste', aqui: 'c', lohr: '\\text{weighting class}', gutierrez: 'U_g',
           r: 'cut(x, cortes)' },
         { concepto: 'Peso de diseño', aqui: 'd_k = 1/\\pi_k', lohr: '1/\\pi_i', gutierrez: 'd_k',
           r: 'weights(design)' },
         { concepto: 'Peso ajustado por no respuesta', aqui: 'w_k = d_k/\\hat\\phi_c', lohr: 'w_i',
-          gutierrez: 'd_k/\\hat q_k', r: 'd / phi[clase]' },
+          gutierrez: '—', r: 'd / phi[clase]' },
         { concepto: 'Peso calibrado', aqui: 'w_k^{\\text{cal}}', lohr: 'w_i^{*}', gutierrez: 'w_k',
           r: 'postStratify(), rake(), calibrate()' },
         { concepto: 'Sesgo de no respuesta', aqui: '(1-R)(\\bar y_R - \\bar y_{NR})',
           lohr: '\\text{sesgo}(\\bar y_R)', gutierrez: '\\text{Sesgo}', r: '(1 - R) * (yR - yNR)' },
-        { concepto: 'Valor imputado', aqui: '\\tilde y_k', lohr: '\\tilde y_i', gutierrez: '\\hat y_k',
+        { concepto: 'Valor imputado', aqui: '\\tilde y_k', lohr: '—', gutierrez: '—',
           r: 'y[falta] <- ...' },
-        { concepto: 'Varianza entre imputaciones', aqui: 'B', lohr: 'B', gutierrez: 'B_m',
+        { concepto: 'Varianza entre imputaciones', aqui: 'B', lohr: '—', gutierrez: '—',
           r: 'var(sapply(imps, mean))' },
-        { concepto: 'Varianza total de Rubin', aqui: 'T = \\bar U + (1+1/m)B', lohr: 'T',
-          gutierrez: 'V_{\\text{tot}}', r: 'vcov(MIcombine(...))' }
+        { concepto: 'Varianza total de Rubin', aqui: 'T = \\bar U + (1+1/m)B', lohr: '—',
+          gutierrez: '—', r: 'vcov(MIcombine(...))' }
       ]
     };
 

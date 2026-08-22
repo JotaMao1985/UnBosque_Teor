@@ -134,6 +134,119 @@
     };
 
     // ---------------------------------------------------------------
+    // M3 · La varianza par por par: la forma de Sen-Yates-Grundy
+    //
+    // No calcula nada nuevo: reordena pi_k y pi_kl, que ya viajan en
+    // DATOS_CAP2, en la suma sobre pares que es la forma SYG. La suma
+    // de la columna «aporte» tiene que dar la varianza del diseño.
+    // ---------------------------------------------------------------
+    SIMULADORES['syg-pares'] = function (raiz) {
+      const params = { diseno: 'mas' };
+      const marco = raiz.querySelector('.syg-pares-marco');
+      const lienzos = raiz.querySelectorAll('canvas');
+      const N = EM.N;
+      const PARES = [];
+      for (let k = 0; k < N; k++) {
+        for (let l = k + 1; l < N; l++) PARES.push([k, l]);
+      }
+      const ETIQ_PARES = PARES.map(([k, l]) => `{${k + 1},${l + 1}}`);
+      const ETIQ_U = EM.y.map((_, k) => 'U' + (k + 1));
+      const IDEAL = EM.total / EM.n;   // valor expandido si se pudiera π_k ∝ y_k
+
+      // Cada par aporta (π_k π_l − π_kl) · (y_k/π_k − y_l/π_l)².
+      //
+      // El JSON trae π_kl redondeado a ocho decimales, así que el Δ_kl de un
+      // par entre estratos —que vale cero exacto— llega como −5·10⁻⁹ y se
+      // pintaba «−0,00». La comparación con cero va con tolerancia: el menor
+      // freno de verdad de los tres diseños es 0,054, mil veces mayor.
+      const CASI_CERO = 1e-6;
+      function descompone(d) {
+        const expandidos = EM.y.map((v, k) => v / d.pi_k[k]);
+        const filas = PARES.map(([k, l]) => {
+          let freno = d.pi_k[k] * d.pi_k[l] - d.pi_kl[k][l];
+          if (Math.abs(freno) < CASI_CERO) freno = 0;
+          const dif2 = Math.pow(expandidos[k] - expandidos[l], 2);
+          return { k: k, l: l, freno: freno, dif2: dif2, aporte: freno * dif2 };
+        });
+        return { expandidos: expandidos, filas: filas,
+                 total: filas.reduce((a, f) => a + f.aporte, 0) };
+      }
+
+      function tabla(desc) {
+        const maximo = Math.max(...desc.filas.map(f => f.aporte));
+        let html = '<table style="font-size:0.82rem; margin:0.5rem 0;"><caption class="sr-only">' +
+          'Aporte de cada par a la varianza del estimador de Horvitz-Thompson</caption><thead><tr>' +
+          '<th scope="col">par {k,l}</th><th scope="col">π<sub>kl</sub></th>' +
+          '<th scope="col">π<sub>k</sub>π<sub>l</sub> − π<sub>kl</sub></th>' +
+          '<th scope="col">(y<sub>k</sub>/π<sub>k</sub> − y<sub>l</sub>/π<sub>l</sub>)²</th>' +
+          '<th scope="col">aporte</th><th scope="col">% de V</th></tr></thead><tbody>';
+        desc.filas.forEach((f, i) => {
+          const cero = f.aporte === 0;
+          const caro = !cero && f.aporte === maximo;
+          const estilo = cero
+            ? 'background:rgba(1,40,32,0.07); color:#475569;'
+            : caro ? 'background:rgba(255,102,0,0.14); font-weight:700;' : '';
+          html += `<tr style="${estilo}"><th scope="row">${ETIQ_PARES[i]}</th>` +
+            `<td style="text-align:right;">${fmtNum(EM.disenos[params.diseno].pi_kl[f.k][f.l], 4)}</td>` +
+            `<td style="text-align:right;">${fmtNum(f.freno, 4)}</td>` +
+            `<td style="text-align:right;">${fmtNum(f.dif2, 1)}</td>` +
+            `<td style="text-align:right;">${fmtNum(f.aporte, 2)}</td>` +
+            `<td style="text-align:right;">${fmtNum(100 * f.aporte / desc.total, 1)} %</td></tr>`;
+        });
+        html += `<tr style="border-top:2px solid #012820; font-weight:700;">` +
+          `<th scope="row">V(t̂<sub>π</sub>)</th><td></td><td></td><td></td>` +
+          `<td style="text-align:right;">${fmtNum(desc.total, 2)}</td>` +
+          `<td style="text-align:right;">100,0 %</td></tr>`;
+        return html + '</tbody></table>' +
+          '<p style="font-size:0.78rem; color:#475569; margin:0.25rem 0 0;">' +
+          'En <strong>naranja</strong>, el par más caro. En <strong>gris</strong>, los pares que no aportan nada ' +
+          'porque el diseño los trata como independientes (Δ<sub>kl</sub> = 0).</p>';
+      }
+
+      let desc = descompone(EM.disenos[params.diseno]);
+      const gAporte = crearGraficoBarras(lienzos[0], ETIQ_PARES, desc.filas.map(f => f.aporte), {
+        etiqueta: 'aporte a V(t̂π)', color: COLORES_GRAFICO.primario,
+        tituloX: 'Par de unidades {k, l}', min: 0, max: 800
+      });
+      const gExp = crearGraficoBarras(lienzos[1], ETIQ_U, desc.expandidos, {
+        etiqueta: 'y_k / π_k', color: COLORES_GRAFICO.terciario, tituloX: 'Unidad',
+        min: 0, max: 160, lineas: [{ valor: IDEAL, etiqueta: 't/n: el ideal π_k ∝ y_k' }]
+      });
+
+      function pintar() {
+        const d = EM.disenos[params.diseno];
+        desc = descompone(d);
+        marco.innerHTML = tabla(desc);
+
+        const maximo = Math.max(...desc.filas.map(f => f.aporte));
+        gAporte.data.datasets[0].data = desc.filas.map(f => f.aporte);
+        gAporte.data.datasets[0].backgroundColor = desc.filas.map(f =>
+          f.aporte === maximo ? COLORES_GRAFICO.secundario : COLORES_GRAFICO.primario);
+        gAporte.options.scales.y.suggestedMax = Math.max(maximo * 1.15, 100);
+        gAporte.update('none');
+
+        gExp.data.datasets[0].data = desc.expandidos;
+        gExp.update('none');
+
+        const rango = Math.max(...desc.expandidos) - Math.min(...desc.expandidos);
+        const caro = desc.filas.reduce((a, b) => (b.aporte > a.aporte ? b : a));
+        const nulos = desc.filas.filter(f => f.aporte === 0).length;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'V(t̂π) =', valor: fmtNum(desc.total, 2) },
+          { etiqueta: 'par más caro:', valor: `{${caro.k + 1},${caro.l + 1}} con ` +
+              `${fmtNum(100 * caro.aporte / desc.total, 1)} % de V` },
+          { etiqueta: 'pares que no aportan:', valor: `${nulos} de ${PARES.length}` },
+          { etiqueta: 'rango de y_k/π_k:', valor: fmtNum(rango, 2) }
+        ]);
+      }
+
+      crearSelector(raiz.querySelector('.simulador-controles'),
+        { clave: 'diseno', etiqueta: 'Diseño', opciones: OPCIONES_DISENO }, params, pintar);
+      pintar();
+      return [gAporte, gExp];
+    };
+
+    // ---------------------------------------------------------------
     // M3 · Horvitz-Thompson frente al estimador de expansión
     // ---------------------------------------------------------------
     SIMULADORES['ht-vs-expansion'] = function (raiz) {
@@ -519,13 +632,20 @@
     GLOSARIOS['marco-pi'] = {
       titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
       nota: 'Los tres libros dicen lo mismo. Cuando una fórmula de la bibliografía no cuadre con ' +
-        'la del capítulo, es casi siempre esta tabla y no un error de fondo.',
+        'la del capítulo, es casi siempre esta tabla y no un error de fondo. Ojo con ' +
+        '$\\Delta_{kl}$: Lohr no le pone símbolo —escribe la resta entera cada vez— y además ' +
+        'presenta la forma de Sen–Yates–Grundy (ecuación 6.21 de la 3.ª ed.) como ' +
+        '$+\\tfrac{1}{2}\\sum\\sum_U (\\pi_i\\pi_k - \\pi_{ik})(\\cdot)^2$, con el signo fuera y los ' +
+        'dos factores al revés. Es exactamente la misma cantidad que ' +
+        '$-\\tfrac{1}{2}\\sum\\sum_U \\Delta_{kl}(\\cdot)^2$, que es como la escriben este material y ' +
+        'Gutiérrez.',
       filas: [
         { concepto: 'Población finita de N unidades', aqui: 'U = \\{1,\\dots,N\\}', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
         { concepto: 'Muestra seleccionada', aqui: 's', lohr: '\\mathcal{S}', gutierrez: 's', r: 'el data.frame de la muestra' },
         { concepto: 'Diseño muestral', aqui: 'p(s)', lohr: 'P(\\mathcal{S})', gutierrez: 'p(s)', r: 'svydesign(...)' },
         { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k', lohr: '\\pi_i', gutierrez: '\\pi_k', r: 'probs = ~pi' },
-        { concepto: 'De segundo orden', aqui: '\\pi_{kl}', lohr: '\\pi_{ij}', gutierrez: '\\pi_{kl}', r: '—' },
+        { concepto: 'De segundo orden', aqui: '\\pi_{kl}', lohr: '\\pi_{ik}', gutierrez: '\\pi_{kl}', r: '—' },
+        { concepto: 'Covarianza de los indicadores', aqui: '\\Delta_{kl} = \\pi_{kl} - \\pi_k\\pi_l', lohr: '\\pi_{ik} - \\pi_i\\pi_k', gutierrez: '\\Delta_{kl}', r: '—' },
         { concepto: 'Peso de diseño', aqui: 'd_k = 1/\\pi_k', lohr: 'w_i', gutierrez: 'd_k', r: 'weights = ~w' },
         { concepto: 'Total poblacional', aqui: 't', lohr: 't', gutierrez: 't_y', r: 'svytotal()' },
         { concepto: 'Media poblacional', aqui: '\\bar{y}_U', lohr: '\\bar{y}_{\\mathcal{U}}', gutierrez: '\\bar{y}_U', r: 'svymean()' },
