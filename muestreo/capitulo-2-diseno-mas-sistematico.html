@@ -3925,17 +3925,296 @@ print("pi_kl fila 1 =", np.round(inclusion2(p_des)[0], 4))
           de forma independiente. Si $\Delta_{kl} = 0$ para todo par, el doble sumatorio se queda solo con la diagonal.</p>
       </div>
 
+      <p>Esa expresión es correcta y no supone nada, pero es <strong>muda</strong>. Bajo el diseño desigual son
+        veinticinco sumandos, unos positivos y otros negativos, que se cancelan entre sí hasta dar 670,34. Se puede
+        evaluar, pero no se puede <em>leer</em>: no dice si esa varianza es grande, ni de qué parte de la población
+        sale, ni —lo único que de verdad le sirve a quien diseña— qué habría que cambiar para bajarla. La forma de
+        Sen–Yates–Grundy contesta las tres preguntas, y sale entera de una sola observación sobre los diseños de
+        tamaño fijo.</p>
+
+      <div class="formula">
+        <h4>La identidad de la que todo cuelga: a tamaño fijo, cada fila de $\Delta$ suma cero</h4>
+        <p>En el módulo 2 se comprobó que un diseño de tamaño fijo cumple $\sum_{l \neq k} \pi_{kl} = (n-1)\pi_k$.
+          Añadiendo la diagonal, que vale $\pi_{kk} = \pi_k$, la fila entera de $\pi_{kl}$ suma $n\pi_k$. Y la fila
+          entera de $\pi_k\pi_l$ suma $\pi_k \sum_{l \in U} \pi_l = \pi_k\, n$, porque $\sum_U \pi_l = n$. Restando:</p>
+        $$\sum_{l \in U} \Delta_{kl} \;=\; n\pi_k - \pi_k\, n \;=\; 0 \qquad \text{para cada } k \in U$$
+        <p style="margin-bottom:0;">Es una <strong>ley de conservación</strong>. El tamaño fijo obliga a que las
+          desviaciones de una fila se compensen: si el diseño hace más probable que $k$ salga acompañada de $l$, tiene
+          que hacerlo <em>menos</em> probable con alguna otra, porque los puestos del acompañante son $n-1$ y no hay
+          más. Y como el término diagonal $\Delta_{kk} = \pi_k(1 - \pi_k)$ es positivo, el resto de la fila suma
+          negativo: $\sum_{l \neq k} \Delta_{kl} = -\pi_k(1-\pi_k)$. Esa es la razón de fondo de que en un diseño de
+          tamaño fijo las unidades <strong>compitan</strong> entre sí por entrar.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-syg">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver de dónde sale la forma de Sen–Yates–Grundy</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-syg" hidden>
+          <p>Solo para que quepan las cuentas, se abrevia el valor expandido como
+            $\check{y}_k = y_k/\pi_k$. Se parte de la expresión de Sen–Yates–Grundy y se llega a la varianza, no al
+            revés: es más corto.</p>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Se abre el cuadrado, $(\check{y}_k - \check{y}_l)^2 = \check{y}_k^2 + \check{y}_l^2 -
+                2\check{y}_k\check{y}_l$, y se parte en tres sumatorios:</p>
+              $$-\frac{1}{2}\sum_{k \in U}\sum_{l \neq k} \Delta_{kl}(\check{y}_k - \check{y}_l)^2 =
+                -\frac{1}{2}\left[\sum_{k}\sum_{l \neq k}\Delta_{kl}\check{y}_k^2 +
+                \sum_{k}\sum_{l \neq k}\Delta_{kl}\check{y}_l^2 -
+                2\sum_{k}\sum_{l \neq k}\Delta_{kl}\check{y}_k\check{y}_l\right]$$
+            </li>
+            <li>
+              <p>Los dos primeros sumatorios son <strong>el mismo número</strong>: $\Delta_{kl} = \Delta_{lk}$, así
+                que intercambiar los nombres de los índices convierte uno en el otro. Se juntan:</p>
+              $$\sum_{k}\sum_{l \neq k}\Delta_{kl}\check{y}_k^2 + \sum_{k}\sum_{l \neq k}\Delta_{kl}\check{y}_l^2
+                = 2\sum_{k \in U} \check{y}_k^2 \sum_{l \neq k} \Delta_{kl}$$
+            </li>
+            <li>
+              <p><strong>Aquí, y solo aquí, entra el tamaño fijo.</strong> Por la identidad de la caja anterior la
+                fila completa suma cero, luego la fila sin la diagonal suma $-\Delta_{kk}$:</p>
+              $$2\sum_{k \in U} \check{y}_k^2 \sum_{l \neq k}\Delta_{kl} = -2\sum_{k \in U} \Delta_{kk}\,\check{y}_k^2$$
+            </li>
+            <li>
+              <p>Se sustituye, el $-\tfrac12$ cancela los dos factores $-2$ y quedan la diagonal y el resto de la
+                matriz por separado, que es exactamente el doble sumatorio completo:</p>
+              $$= \sum_{k \in U}\Delta_{kk}\,\check{y}_k^2 + \sum_{k}\sum_{l \neq k}\Delta_{kl}\check{y}_k\check{y}_l
+                = \sum_{k \in U}\sum_{l \in U} \Delta_{kl}\,\check{y}_k\,\check{y}_l = V(\hat{t}_\pi)$$
+            </li>
+          </ol>
+          <p class="derivacion-resultado">Las dos expresiones son <strong>el mismo número</strong>, no una
+            aproximación de la otra. En la cuenta se usaron dos cosas y nada más: que $\Delta$ es simétrica y que sus
+            filas suman cero. Lo segundo es tamaño fijo. De los $y_k$ no se supuso <em>nada</em> —ni normalidad, ni
+            independencia, ni siquiera que sean positivos—, y por eso el resultado no tiene letra pequeña.</p>
+        </div>
+      </div>
+
       <div class="definition">
         <h4><i class="fas fa-equals mr-2" aria-hidden="true"></i>Forma de Sen–Yates–Grundy</h4>
-        <p>Si el diseño es de <strong>tamaño fijo</strong>, la varianza admite una forma equivalente y más legible:</p>
+        <p>Si el diseño es de <strong>tamaño fijo</strong>, la varianza del estimador de Horvitz–Thompson se puede
+          escribir así:</p>
         $$V_{SYG}(\hat{t}_\pi) = -\frac{1}{2}\sum_{k \in U}\sum_{l \neq k} (\pi_{kl} - \pi_k \pi_l)
           \left(\frac{y_k}{\pi_k} - \frac{y_l}{\pi_l}\right)^{2}$$
-        <p style="margin-bottom:0;">Dice algo que la primera forma esconde: la varianza depende de cuánto
-          <strong>difieren entre sí</strong> los valores expandidos $y_k/\pi_k$. Si se pudiera elegir $\pi_k \propto
-          y_k$, todos los $y_k/\pi_k$ serían iguales y la varianza sería <strong>cero</strong>. No se puede —$y_k$ es
-          justo lo que no se conoce—, pero es el principio que justifica el diseño $\pi$PT del capítulo 6: usar una
-          auxiliar $x_k$ parecida a $y_k$.</p>
+        <p>El doble sumatorio recorre cada par dos veces —como $(k,l)$ y como $(l,k)$—, y de ahí sale el $\tfrac{1}{2}$.
+          Recorriendo cada par <strong>una sola vez</strong> desaparecen el medio y el signo, y queda la versión que
+          conviene tener en la cabeza:</p>
+        $$V_{SYG}(\hat{t}_\pi) = \sum_{k \,&lt;\, l} \underbrace{(\pi_k \pi_l - \pi_{kl})}_{\text{lo pone el diseño}}
+          \; \underbrace{\left(\frac{y_k}{\pi_k} - \frac{y_l}{\pi_l}\right)^{2}}_{\text{lo pone la población}}$$
+        <p style="margin-bottom:0;">La varianza es una suma sobre los $\binom{N}{2}$ <strong>pares</strong> de la
+          población, y cada par aporta el producto de dos cosas que se pueden pensar por separado: cuánto
+          <em>estorba</em> el diseño que esas dos unidades salgan juntas, y cuánto <strong>difieren</strong> sus
+          valores expandidos.</p>
       </div>
+
+      <p><strong>El primer factor, $\pi_k\pi_l - \pi_{kl}$, es una decisión del diseño.</strong> Es positivo cuando el
+        diseño desalienta que $k$ y $l$ salgan juntas, y llega a su máximo posible, $\pi_k\pi_l$, cuando el par es
+        directamente imposible ($\pi_{kl} = 0$). Vale cero cuando el diseño las trata como independientes. Y puede ser
+        <strong>negativo</strong> —ese par entonces <em>resta</em> varianza— cuando el diseño las saca juntas más a
+        menudo de lo que lo haría el azar. Ahora bien, la ley de conservación de arriba pone un límite: como las filas
+        de $\Delta$ suman cero, un diseño de tamaño fijo <strong>no puede favorecer todos los pares a la vez</strong>.
+        Solo puede escoger a cuáles les cobra y a cuáles no.</p>
+
+      <p><strong>El segundo factor, $(y_k/\pi_k - y_l/\pi_l)^2$, mide cuánto se pisan los dos valores
+        expandidos.</strong> Aquí está el caso límite que vale la pena recordar: si se pudiera elegir
+        $\pi_k \propto y_k$, <em>todos</em> los $y_k/\pi_k$ serían el mismo número —concretamente $t/n$—, cada
+        diferencia sería cero y la varianza sería <strong>exactamente cero</strong>, con cualquier muestra que
+        saliera. No se puede, porque $y_k$ es justo lo que no se conoce; pero ese caso imposible es el principio
+        entero del diseño $\pi$PT del capítulo 6, que lo persigue con una auxiliar $x_k$ que se le parezca.</p>
+
+      <p>De ahí sale la única receta de diseño que da esta fórmula, y tiene dos palancas: <strong>bajar
+        $\pi_k\pi_l - \pi_{kl}$ donde los valores expandidos difieran mucho, y pagarlo subiéndolo donde se
+        parezcan</strong>. Las dos palancas son dos capítulos de este curso, y en los cinco condados se las puede ver
+        funcionando por separado.</p>
+
+      <div class="simulador" data-simulador="syg-pares">
+        <h4><i class="fas fa-table-cells" aria-hidden="true"></i> La varianza, par por par</h4>
+        <p class="simulador-intro">Los diez pares de la población de cinco condados y lo que cada uno le aporta a
+          $V(\hat{t}_\pi)$. Cambia de diseño y mira qué se mueve. El <strong>estratificado</strong> pone en cero los
+          seis pares que cruzan estratos —entre ellos los dos más caros del MAS— y a cambio encarece los cuatro que
+          quedan dentro de un estrato. El <strong>desigual</strong> no anula ningún par: achata los valores
+          expandidos hacia la línea $t/n$ y con eso baja la columna entera.</p>
+        <div class="simulador-controles"></div>
+        <div class="syg-pares-marco" style="overflow-x:auto;"></div>
+        <p class="grafico-etiqueta">Aporte de cada par a la varianza</p>
+        <div class="grafico-wrapper" style="height:230px;">
+          <canvas aria-label="Aporte de cada par de unidades a la varianza del estimador" role="img"></canvas>
+        </div>
+        <p class="grafico-etiqueta">Valores expandidos \(y_k/\pi_k\)</p>
+        <div class="grafico-wrapper" style="height:190px;">
+          <canvas aria-label="Valores expandidos de cada unidad bajo el diseño elegido" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La varianza descompuesta par por par">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># A tamano fijo, cada fila de la matriz Delta_kl = pi_kl - pi_k*pi_l suma cero.
+# Esa identidad es la que colapsa el doble sumatorio en la forma de
+# Sen-Yates-Grundy: sin tamano fijo no suma cero y no hay tal forma.
+delta &lt;- function(ps, pis) inclusion2(ps) - outer(pis, pis)
+round(rbind(MAS           = rowSums(delta(p_mas, pi_mas)),
+            Estratificado = rowSums(delta(p_est, pi_est)),
+            Desigual      = rowSums(delta(p_des, pi_des))), 12)
+#&gt;               [,1] [,2] [,3] [,4] [,5]
+#&gt; MAS              0    0    0    0    0
+#&gt; Estratificado    0    0    0    0    0
+#&gt; Desigual         0    0    0    0    0
+
+# La varianza, par por par: cada par no ordenado {k,l} aporta
+# (-Delta_kl) * (y_k/pi_k - y_l/pi_l)^2, y nada mas. La suma de la columna
+# es la varianza entera del estimador HT bajo ese diseno.
+pares &lt;- combn(N, 2)
+aportes &lt;- function(ps, pis) {
+  D &lt;- delta(ps, pis)
+  d &lt;- y / pis
+  apply(pares, 2, function(p) -D[p[1], p[2]] * (d[p[1]] - d[p[2]])^2)
+}
+tab &lt;- cbind(MAS = aportes(p_mas, pi_mas),
+             Est = aportes(p_est, pi_est),
+             Des = aportes(p_des, pi_des))
+rownames(tab) &lt;- apply(pares, 2, function(p) paste0("{", p[1], ",", p[2], "}"))
+round(rbind(tab, TOTAL = colSums(tab)), 3)
+#&gt;            MAS Est     Des
+#&gt; {1,2}    6.000  16   8.426
+#&gt; {1,3}   63.375 169  32.807
+#&gt; {1,4}  135.375   0  85.480
+#&gt; {1,5}  726.000   0 209.140
+#&gt; {2,3}   30.375  81   8.073
+#&gt; {2,4}   84.375   0  40.438
+#&gt; {2,5}  600.000   0 134.751
+#&gt; {3,4}   13.500   0  13.500
+#&gt; {3,5}  360.375   0 100.838
+#&gt; {4,5}  234.375 625  36.884
+#&gt; TOTAL 2253.750 891 670.337
+
+# Y esto es lo que pasa cuando la identidad NO se cumple. Diseno Bernoulli con
+# pi_k = 0,4 para las cinco unidades: las 32 muestras posibles, incluida la
+# vacia. Ahi Delta_kl = 0 fuera de la diagonal, asi que la forma SYG da CERO
+# mientras la varianza de verdad es 8553. La formula no avisa: solo miente.
+sub &lt;- expand.grid(rep(list(c(FALSE, TRUE)), N))
+p_ber &lt;- apply(sub, 1, function(s) prod(ifelse(s, 0.4, 0.6)))
+t_ber &lt;- apply(sub, 1, function(s) sum(y[s]) / 0.4)
+c(muestras = nrow(sub), E_HT = sum(p_ber * t_ber),
+  V_real = sum(p_ber * (t_ber - sum(y))^2), V_SYG = 0)
+#&gt; muestras     E_HT   V_real    V_SYG
+#&gt;       32      150     8553        0</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># A tamano fijo cada fila de Delta_kl = pi_kl - pi_k*pi_l suma cero, y esa
+# identidad es la que produce la forma de Sen-Yates-Grundy.
+pi_mas, pi_est = inclusion1(p_mas), inclusion1(p_est)
+pares = list(combinations(range(N), 2))
+
+def delta(ps, pis):
+    return inclusion2(ps) - np.outer(pis, pis)
+
+print("filas de Delta (MAS) =", np.round(delta(p_mas, pi_mas).sum(1), 12) + 0.0)
+print("filas de Delta (Est) =", np.round(delta(p_est, pi_est).sum(1), 12) + 0.0)
+#&gt; filas de Delta (MAS) = [0. 0. 0. 0. 0.]
+#&gt; filas de Delta (Est) = [0. 0. 0. 0. 0.]
+
+# La varianza par por par: cada par no ordenado aporta (-Delta_kl) por la
+# diferencia al cuadrado de los valores expandidos, y nada mas.
+def aportes(ps, pis):
+    D, d = delta(ps, pis), y / pis
+    return np.array([-D[k, l] * (d[k] - d[l]) ** 2 for k, l in pares]) + 0.0
+
+tab = pd.DataFrame({"MAS": aportes(p_mas, pi_mas),
+                    "Est": aportes(p_est, pi_est),
+                    "Des": aportes(p_des, pi_des)},
+                   index=[f"{{{k+1},{l+1}}}" for k, l in pares])
+tab.loc["TOTAL"] = tab.sum()
+print(tab.round(3).to_string())
+#&gt;             MAS    Est      Des
+#&gt; {1,2}     6.000   16.0    8.426
+#&gt; {1,3}    63.375  169.0   32.807
+#&gt; {1,4}   135.375    0.0   85.480
+#&gt; {1,5}   726.000    0.0  209.140
+#&gt; {2,3}    30.375   81.0    8.073
+#&gt; {2,4}    84.375    0.0   40.438
+#&gt; {2,5}   600.000    0.0  134.751
+#&gt; {3,4}    13.500    0.0   13.500
+#&gt; {3,5}   360.375    0.0  100.838
+#&gt; {4,5}   234.375  625.0   36.884
+#&gt; TOTAL  2253.750  891.0  670.337</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <h4><i class="fas fa-triangle-exclamation mr-2" aria-hidden="true"></i>Sin tamaño fijo la fórmula no protesta:
+          miente</h4>
+        <p>Toda la forma cuelga de $\sum_{l \in U}\Delta_{kl} = 0$, y esa identidad exige tamaño fijo. El
+          <strong>diseño Bernoulli</strong> del módulo 8 —cada unidad entra o no con probabilidad $0{,}4$, con
+          independencia de las demás— no lo tiene: su tamaño de muestra es aleatorio y hasta puede salir la muestra
+          vacía. Ahí $\pi_{kl} = \pi_k\pi_l$ para todo par, luego $\Delta_{kl} = 0$ fuera de la diagonal y la
+          expresión de Sen–Yates–Grundy da <strong>cero</strong>. La varianza de verdad es <strong>8 553</strong>,
+          como lo comprueba el último trozo del bloque de arriba.</p>
+        <p style="margin-bottom:0;">Esto es peor que un error: la fórmula no lanza ningún aviso, devuelve un número
+          con toda naturalidad, y ese número está mal. Antes de usar Sen–Yates–Grundy hay <strong>una</strong> cosa
+          que verificar, y es que $n_s$ sea constante en todo el soporte del diseño.</p>
+      </div>
+
+      <div class="diagram">
+        <p style="margin:0;"><strong>Las dos palancas, con las cifras de los cinco condados.</strong></p>
+        <p style="margin-top:0.7rem;"><strong>1 · Estratificar mueve el primer factor.</strong> En el MAS los pares
+          $\{1,5\}$ y $\{2,5\}$ —el condado más pequeño junto al más grande— aportan $726 + 600 = 1\,326$, el
+          <strong>58,8 %</strong> de toda la varianza. El diseño estratificado deja al condado 5 en un estrato y al 1
+          y al 2 en el otro, así que esos dos pares pasan a cruzar estratos, su $\Delta_{kl}$ vale exactamente $0$ y
+          su aporte se anula. El precio está a la vista en la tabla: los pares de dentro del estrato 1 se encarecen
+          —$\{1,3\}$ pasa de $63{,}4$ a $169$— porque ahora son imposibles y su $\Delta_{kl}$ cae hasta
+          $-\pi_k\pi_l$. Pero son pares de condados <em>parecidos</em>, y encarecer un par parecido cuesta poco: el
+          saldo es $2\,253{,}75 \to 891$.</p>
+        <p style="margin-bottom:0;"><strong>2 · Las probabilidades desiguales mueven el segundo factor.</strong> El
+          diseño C no pone ningún par en cero: sube $\pi_5$ de $0{,}40$ a $0{,}55$ y con eso baja el valor expandido
+          del condado 5 de $145$ a $105{,}45$. El rango de los $y_k/\pi_k$ pasa de $110$ a $62{,}38$, cada diferencia
+          al cuadrado se achica y baja la columna entera: $2\,253{,}75 \to 670{,}34$.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los dos factores del aporte de cada par">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># Primer factor, el del diseno: en el MAS los pares {1,5} y {2,5} -el condado
+# mas chico junto al mas grande- se llevan casi seis de cada diez unidades de
+# varianza. Estratificar los vuelve pares entre estratos, con Delta_kl = 0.
+caros &lt;- c("{1,5}", "{2,5}")
+round(rbind(aporte_de_los_dos    = colSums(tab[caros, ]),
+            porcentaje_del_total = 100 * colSums(tab[caros, ]) / colSums(tab)), 2)
+#&gt;                          MAS Est    Des
+#&gt; aporte_de_los_dos    1326.00   0 343.89
+#&gt; porcentaje_del_total   58.84   0  51.30
+
+# Segundo factor, el de la poblacion: cuanto difieren entre si los valores
+# expandidos y_k/pi_k. Subir pi_5 los achata, y el rango cae de 110 a 62.
+expandidos &lt;- rbind(MAS = y / pi_mas, Estratificado = y / pi_est, Desigual = y / pi_des)
+colnames(expandidos) &lt;- paste0("U", 1:N)
+round(cbind(expandidos, rango = apply(expandidos, 1, max) - apply(expandidos, 1, min)), 2)
+#&gt;                  U1    U2   U3   U4     U5  rango
+#&gt; MAS           35.00 45.00 67.5 82.5 145.00 110.00
+#&gt; Estratificado 42.00 54.00 81.0 66.0 116.00  74.00
+#&gt; Desigual      43.08 55.38 67.5 82.5 105.45  62.38
+
+# Condicion de Sen-Yates-Grundy: Delta_kl &lt;= 0 para todo par k != l. Se cumple
+# en los tres disenos, y es lo que impide que el estimador salga negativo.
+fuera_diagonal &lt;- function(ps, pis) max(delta(ps, pis)[row(diag(N)) != col(diag(N))])
+round(c(MAS = fuera_diagonal(p_mas, pi_mas),
+        Est = fuera_diagonal(p_est, pi_est),
+        Des = fuera_diagonal(p_des, pi_des)), 6)
+#&gt;      MAS      Est      Des
+#&gt; -0.06000  0.00000 -0.05375</code></pre>
+        </div>
+      </div>
+
+      <p>Los dos capítulos que vienen después son, literalmente, esas dos palancas: el <strong>capítulo 4</strong>
+        estratifica y el <strong>capítulo 6</strong> elige $\pi_k \propto x_k$. Se suelen presentar como dos técnicas
+        distintas, y de hecho lo son; pero Sen–Yates–Grundy las explica a las dos con la misma fórmula y con los
+        mismos dos factores, y por eso vale la pena haberla derivado una vez.</p>
 
       <div class="simulador" data-simulador="ht-vs-expansion">
         <h4><i class="fas fa-scale-unbalanced" aria-hidden="true"></i> Horvitz–Thompson frente a la media muestral</h4>
@@ -4011,6 +4290,25 @@ print("E(N * y_barra) =", round(float(p_des @ t_exp), 4), " frente al total", in
           \frac{y_k}{\pi_k}\, \frac{y_l}{\pi_l}$$
         <p style="margin-bottom:0;">Y aquí hace falta $\pi_{kl} &gt; 0$ para todo par, no solo $\pi_k &gt; 0$. Cuando
           algún $\pi_{kl}$ es cero —muestreo sistemático, módulo 9— este estimador simplemente no existe.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>El estimador de Sen–Yates–Grundy, y por qué el software lo prefiere.</strong> La forma SYG también
+          tiene su versión muestral, con la misma receta: se recorren los pares <em>observados</em> y cada uno se
+          divide entre su $\pi_{kl}$.</p>
+        $$\hat{V}_{SYG}(\hat{t}_\pi) = -\frac{1}{2}\sum_{k \in s}\sum_{\substack{l \in s \\ l \neq k}}
+          \frac{\pi_{kl} - \pi_k \pi_l}{\pi_{kl}}\left(\frac{y_k}{\pi_k} - \frac{y_l}{\pi_l}\right)^{2}$$
+        <p>Tiene sobre el $\hat{V}$ de arriba una ventaja que no es cosmética: <strong>no puede salir
+          negativo</strong> siempre que $\pi_{kl} \leq \pi_k\pi_l$ para todo par $k \neq l$ —la llamada
+          <em>condición de Sen–Yates–Grundy</em>—, porque entonces cada sumando es un número no negativo multiplicado
+          por un cuadrado. El estimador de Horvitz–Thompson no ofrece esa garantía: con probabilidades desiguales
+          puede devolver una varianza estimada negativa, y una varianza negativa no hay forma de reportarla. Los tres
+          diseños de este capítulo cumplen la condición, como se comprobó arriba: el mayor $\Delta_{kl}$ fuera de la
+          diagonal es $0$ —el estratificado, en los pares que cruzan estratos— y en los otros dos es negativo.</p>
+        <p style="margin-bottom:0;">Por eso <code>survey</code> ofrece, para diseños de probabilidades desiguales sin
+          reemplazo, la opción <code>svydesign(..., pps = ..., variance = "YG")</code>, que pide justamente este
+          estimador en lugar del de Horvitz–Thompson. En el capítulo 6, cuando se trabaje con $\pi$PT de verdad, esa
+          opción deja de ser un detalle de documentación.</p>
       </div>
     </div>
   </template>
@@ -5299,7 +5597,7 @@ signif(rbind(original = comparar(pob, 6, n6),
       modules: [
         { id: 1, title: "El diseño muestral p(s)", shortTitle: "Diseño p(s)", duration: "15 min" },
         { id: 2, title: "Probabilidades de inclusión", shortTitle: "π_k y π_kl", duration: "15 min" },
-        { id: 3, title: "El estimador de Horvitz–Thompson", shortTitle: "Horvitz–Thompson", duration: "20 min" },
+        { id: 3, title: "El estimador de Horvitz–Thompson", shortTitle: "Horvitz–Thompson", duration: "30 min" },
         { id: 4, title: "Insesgadez de diseño y representatividad", shortTitle: "Insesgadez", duration: "12 min" },
         { id: 5, title: "El MAS como caso particular", shortTitle: "MAS", duration: "25 min" },
         { id: 6, title: "Intervalos de confianza", shortTitle: "Intervalos", duration: "18 min" },
@@ -7414,6 +7712,119 @@ signif(rbind(original = comparar(pob, 6, n6),
     };
 
     // ---------------------------------------------------------------
+    // M3 · La varianza par por par: la forma de Sen-Yates-Grundy
+    //
+    // No calcula nada nuevo: reordena pi_k y pi_kl, que ya viajan en
+    // DATOS_CAP2, en la suma sobre pares que es la forma SYG. La suma
+    // de la columna «aporte» tiene que dar la varianza del diseño.
+    // ---------------------------------------------------------------
+    SIMULADORES['syg-pares'] = function (raiz) {
+      const params = { diseno: 'mas' };
+      const marco = raiz.querySelector('.syg-pares-marco');
+      const lienzos = raiz.querySelectorAll('canvas');
+      const N = EM.N;
+      const PARES = [];
+      for (let k = 0; k < N; k++) {
+        for (let l = k + 1; l < N; l++) PARES.push([k, l]);
+      }
+      const ETIQ_PARES = PARES.map(([k, l]) => `{${k + 1},${l + 1}}`);
+      const ETIQ_U = EM.y.map((_, k) => 'U' + (k + 1));
+      const IDEAL = EM.total / EM.n;   // valor expandido si se pudiera π_k ∝ y_k
+
+      // Cada par aporta (π_k π_l − π_kl) · (y_k/π_k − y_l/π_l)².
+      //
+      // El JSON trae π_kl redondeado a ocho decimales, así que el Δ_kl de un
+      // par entre estratos —que vale cero exacto— llega como −5·10⁻⁹ y se
+      // pintaba «−0,00». La comparación con cero va con tolerancia: el menor
+      // freno de verdad de los tres diseños es 0,054, mil veces mayor.
+      const CASI_CERO = 1e-6;
+      function descompone(d) {
+        const expandidos = EM.y.map((v, k) => v / d.pi_k[k]);
+        const filas = PARES.map(([k, l]) => {
+          let freno = d.pi_k[k] * d.pi_k[l] - d.pi_kl[k][l];
+          if (Math.abs(freno) < CASI_CERO) freno = 0;
+          const dif2 = Math.pow(expandidos[k] - expandidos[l], 2);
+          return { k: k, l: l, freno: freno, dif2: dif2, aporte: freno * dif2 };
+        });
+        return { expandidos: expandidos, filas: filas,
+                 total: filas.reduce((a, f) => a + f.aporte, 0) };
+      }
+
+      function tabla(desc) {
+        const maximo = Math.max(...desc.filas.map(f => f.aporte));
+        let html = '<table style="font-size:0.82rem; margin:0.5rem 0;"><caption class="sr-only">' +
+          'Aporte de cada par a la varianza del estimador de Horvitz-Thompson</caption><thead><tr>' +
+          '<th scope="col">par {k,l}</th><th scope="col">π<sub>kl</sub></th>' +
+          '<th scope="col">π<sub>k</sub>π<sub>l</sub> − π<sub>kl</sub></th>' +
+          '<th scope="col">(y<sub>k</sub>/π<sub>k</sub> − y<sub>l</sub>/π<sub>l</sub>)²</th>' +
+          '<th scope="col">aporte</th><th scope="col">% de V</th></tr></thead><tbody>';
+        desc.filas.forEach((f, i) => {
+          const cero = f.aporte === 0;
+          const caro = !cero && f.aporte === maximo;
+          const estilo = cero
+            ? 'background:rgba(1,40,32,0.07); color:#475569;'
+            : caro ? 'background:rgba(255,102,0,0.14); font-weight:700;' : '';
+          html += `<tr style="${estilo}"><th scope="row">${ETIQ_PARES[i]}</th>` +
+            `<td style="text-align:right;">${fmtNum(EM.disenos[params.diseno].pi_kl[f.k][f.l], 4)}</td>` +
+            `<td style="text-align:right;">${fmtNum(f.freno, 4)}</td>` +
+            `<td style="text-align:right;">${fmtNum(f.dif2, 1)}</td>` +
+            `<td style="text-align:right;">${fmtNum(f.aporte, 2)}</td>` +
+            `<td style="text-align:right;">${fmtNum(100 * f.aporte / desc.total, 1)} %</td></tr>`;
+        });
+        html += `<tr style="border-top:2px solid #012820; font-weight:700;">` +
+          `<th scope="row">V(t̂<sub>π</sub>)</th><td></td><td></td><td></td>` +
+          `<td style="text-align:right;">${fmtNum(desc.total, 2)}</td>` +
+          `<td style="text-align:right;">100,0 %</td></tr>`;
+        return html + '</tbody></table>' +
+          '<p style="font-size:0.78rem; color:#475569; margin:0.25rem 0 0;">' +
+          'En <strong>naranja</strong>, el par más caro. En <strong>gris</strong>, los pares que no aportan nada ' +
+          'porque el diseño los trata como independientes (Δ<sub>kl</sub> = 0).</p>';
+      }
+
+      let desc = descompone(EM.disenos[params.diseno]);
+      const gAporte = crearGraficoBarras(lienzos[0], ETIQ_PARES, desc.filas.map(f => f.aporte), {
+        etiqueta: 'aporte a V(t̂π)', color: COLORES_GRAFICO.primario,
+        tituloX: 'Par de unidades {k, l}', min: 0, max: 800
+      });
+      const gExp = crearGraficoBarras(lienzos[1], ETIQ_U, desc.expandidos, {
+        etiqueta: 'y_k / π_k', color: COLORES_GRAFICO.terciario, tituloX: 'Unidad',
+        min: 0, max: 160, lineas: [{ valor: IDEAL, etiqueta: 't/n: el ideal π_k ∝ y_k' }]
+      });
+
+      function pintar() {
+        const d = EM.disenos[params.diseno];
+        desc = descompone(d);
+        marco.innerHTML = tabla(desc);
+
+        const maximo = Math.max(...desc.filas.map(f => f.aporte));
+        gAporte.data.datasets[0].data = desc.filas.map(f => f.aporte);
+        gAporte.data.datasets[0].backgroundColor = desc.filas.map(f =>
+          f.aporte === maximo ? COLORES_GRAFICO.secundario : COLORES_GRAFICO.primario);
+        gAporte.options.scales.y.suggestedMax = Math.max(maximo * 1.15, 100);
+        gAporte.update('none');
+
+        gExp.data.datasets[0].data = desc.expandidos;
+        gExp.update('none');
+
+        const rango = Math.max(...desc.expandidos) - Math.min(...desc.expandidos);
+        const caro = desc.filas.reduce((a, b) => (b.aporte > a.aporte ? b : a));
+        const nulos = desc.filas.filter(f => f.aporte === 0).length;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'V(t̂π) =', valor: fmtNum(desc.total, 2) },
+          { etiqueta: 'par más caro:', valor: `{${caro.k + 1},${caro.l + 1}} con ` +
+              `${fmtNum(100 * caro.aporte / desc.total, 1)} % de V` },
+          { etiqueta: 'pares que no aportan:', valor: `${nulos} de ${PARES.length}` },
+          { etiqueta: 'rango de y_k/π_k:', valor: fmtNum(rango, 2) }
+        ]);
+      }
+
+      crearSelector(raiz.querySelector('.simulador-controles'),
+        { clave: 'diseno', etiqueta: 'Diseño', opciones: OPCIONES_DISENO }, params, pintar);
+      pintar();
+      return [gAporte, gExp];
+    };
+
+    // ---------------------------------------------------------------
     // M3 · Horvitz-Thompson frente al estimador de expansión
     // ---------------------------------------------------------------
     SIMULADORES['ht-vs-expansion'] = function (raiz) {
@@ -7799,13 +8210,20 @@ signif(rbind(original = comparar(pob, 6, n6),
     GLOSARIOS['marco-pi'] = {
       titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
       nota: 'Los tres libros dicen lo mismo. Cuando una fórmula de la bibliografía no cuadre con ' +
-        'la del capítulo, es casi siempre esta tabla y no un error de fondo.',
+        'la del capítulo, es casi siempre esta tabla y no un error de fondo. Ojo con ' +
+        '$\\Delta_{kl}$: Lohr no le pone símbolo —escribe la resta entera cada vez— y además ' +
+        'presenta la forma de Sen–Yates–Grundy (ecuación 6.21 de la 3.ª ed.) como ' +
+        '$+\\tfrac{1}{2}\\sum\\sum_U (\\pi_i\\pi_k - \\pi_{ik})(\\cdot)^2$, con el signo fuera y los ' +
+        'dos factores al revés. Es exactamente la misma cantidad que ' +
+        '$-\\tfrac{1}{2}\\sum\\sum_U \\Delta_{kl}(\\cdot)^2$, que es como la escriben este material y ' +
+        'Gutiérrez.',
       filas: [
         { concepto: 'Población finita de N unidades', aqui: 'U = \\{1,\\dots,N\\}', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
         { concepto: 'Muestra seleccionada', aqui: 's', lohr: '\\mathcal{S}', gutierrez: 's', r: 'el data.frame de la muestra' },
         { concepto: 'Diseño muestral', aqui: 'p(s)', lohr: 'P(\\mathcal{S})', gutierrez: 'p(s)', r: 'svydesign(...)' },
         { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k', lohr: '\\pi_i', gutierrez: '\\pi_k', r: 'probs = ~pi' },
-        { concepto: 'De segundo orden', aqui: '\\pi_{kl}', lohr: '\\pi_{ij}', gutierrez: '\\pi_{kl}', r: '—' },
+        { concepto: 'De segundo orden', aqui: '\\pi_{kl}', lohr: '\\pi_{ik}', gutierrez: '\\pi_{kl}', r: '—' },
+        { concepto: 'Covarianza de los indicadores', aqui: '\\Delta_{kl} = \\pi_{kl} - \\pi_k\\pi_l', lohr: '\\pi_{ik} - \\pi_i\\pi_k', gutierrez: '\\Delta_{kl}', r: '—' },
         { concepto: 'Peso de diseño', aqui: 'd_k = 1/\\pi_k', lohr: 'w_i', gutierrez: 'd_k', r: 'weights = ~w' },
         { concepto: 'Total poblacional', aqui: 't', lohr: 't', gutierrez: 't_y', r: 'svytotal()' },
         { concepto: 'Media poblacional', aqui: '\\bar{y}_U', lohr: '\\bar{y}_{\\mathcal{U}}', gutierrez: '\\bar{y}_U', r: 'svymean()' },
