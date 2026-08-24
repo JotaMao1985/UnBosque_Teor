@@ -397,6 +397,7 @@ Se heredan de Series de Tiempo: `.quiz`, `.ejercicio-guiado`, `.derivacion`, `.c
 | `.arbol-error` ✅ | Árbol plegable del error total: cada hoja dice si sesga o solo dispersa, si aumentar $n$ la reduce y en qué capítulo se trata. **Hecho en la fase 2**; en la plantilla y en el cap. 2, y usado en el módulo 7 del cap. 1 | cap. 1, y de nuevo en el 8 |
 | `.diagrama-diseno` | Esquema recorrible de un diseño complejo (población → estratos → UPM → USM → pesos) | caps. 4, 5, 6, 7 (ampliado al 4 el 2026-07-27) |
 | `.rubrica` ✅ | Rúbrica analítica recorrible por criterio: cada uno con sus cuatro niveles, su rango de puntos y lo que hay que **ver** en el trabajo, más la franja de condiciones que anulan la entrega. **Hecha en la fase 5**; en la plantilla y en los caps. 1–7 (CSS + motor), con su única instancia en el módulo 8 del cap. 8 | cap. 8 |
+| `texto` en `.quiz` ✅ | Quinto tipo de pregunta de la autoevaluación: **respuesta abierta con autocorrección guiada**. El estudiante escribe, y solo entonces se le revelan la respuesta modelo y una lista de tres puntos que se marca él. No corrige texto —no se puede—: impone el orden honesto. **Hecho el 2026-08-23**; en la plantilla (con demostración) y en los ocho capítulos (CSS + motor) | su primer uso son los 4 ítems abiertos del simulacro del Taller 1 |
 
 **Regla de retropropagación (heredada, no negociable):** un componente nuevo no está terminado
 hasta que está en la plantilla **y** en todos los capítulos anteriores que lo necesiten. Si el
@@ -2116,6 +2117,62 @@ En el navegador, los ocho glosarios sin `.katex-error` y sin un solo `$` suelto.
 **Sin publicar a `gh-pages`: pendiente del visto bueno de Javier.**
 
 ---
+
+---
+
+### T7.4 — El quinto tipo de pregunta: respuesta abierta (2026-08-23)
+
+Sale de una necesidad del Taller 1 y se queda en el material. El simulacro del Parcial 1 (T4.1 del
+`PLAN_Taller_Corte1.md`) necesita **cuatro preguntas abiertas**, porque el parcial se juega buena
+parte de la nota en ellas y un simulacro de solo opción múltiple entrena la mitad del examen. El
+motor entendía cuatro tipos: `opcion`, `multiple`, `numerica` y `grafico`.
+
+**Qué NO hace: corregir texto libre.** No se puede, y fingirlo sería peor que no tenerlo. Lo que
+hace es imponer el orden honesto, que es donde está el valor didáctico: el estudiante escribe su
+respuesta —al menos 12 palabras, o el botón no revela nada— y **solo entonces** aparecen la
+respuesta modelo y una lista de tres puntos concretos que se marca él. Marcar los tres cuenta como
+acierto; con menos, la pregunta queda resuelta pero no acertada, y su módulo aparece en el resumen
+de «qué repasar», que es exactamente donde tiene que aparecer.
+
+**Un detalle que no es cosmético.** `cerrar()` encabezaba la retroalimentación con «Correcto» o
+«No es esa». En una pregunta que corrige el propio estudiante, el motor no ha comprobado nada, así
+que atribuirse ese juicio sería justo lo que el componente intenta evitar. Ahora dice «Los tres
+puntos» o «Anotado».
+
+**Por qué entra en los ocho capítulos si ninguno lo usa.** Por dos razones que no son de estilo:
+cada `ensambla_capN.py` construye su capítulo **desde la plantilla**, así que en cuanto la
+plantilla lo lleva, los ocho publicados dejan de reproducirse byte a byte si no lo llevan también;
+y el protocolo de verificación compara el conjunto de selectores CSS de cada capítulo contra el de
+la plantilla, y una clase que esté en una y no en los otros convierte esa comprobación en ruido.
+
+**Piezas.** `ensamblado/componentes/quiz_texto.{css,js}` y `ensamblado/retropropaga_quiz_texto.py`,
+que hace cinco inserciones sobre anclas comprobadas como **únicas en los nueve archivos**: el CSS,
+la función del motor, la entrada de `NOMBRE_TIPO`, la rama en `renderAutoevaluacion` y el
+encabezado de `cerrar()`. Es idempotente y aborta si un ancla no aparece exactamente una vez.
+
+**Verificación.** Los ocho capítulos vuelven a salir **byte a byte** de sus ensambladores —se
+comprobó dos veces, antes y después de reescribir un texto—; `node --check` limpio en los nueve;
+`verifica_bloques.py --todos --prosa` en verde (2 355 cifras de bloque, 0 discrepancias, 0 cifras
+de prosa sin respaldo) y las tres pruebas de regresión pasan. En el navegador, sobre la plantilla:
+el guardia funciona —con la caja vacía o con seis palabras no revela nada y **no cuenta como
+intento**—, con 28 palabras revela modelo y lista, marcar 2 de 3 deja el tercero en ámbar y el
+marcador avanza, y reiniciar el quiz limpia la caja y vuelve a ocultar la modelo.
+
+Además se montó el **banco real del simulacro** sobre el motor de la plantilla, sin esperar a que
+exista la página: los 30 ítems se pintan, los cuatro abiertos funcionan, los tres gráficos traen
+sus datos (16 clases el histograma, 97 + 3 intervalos la cobertura, 34 puntos cada curva de
+márgenes), 47 expresiones de KaTeX renderizadas, 0 `.katex-error` y 0 errores de consola.
+
+**Una trampa del entorno, otra vez.** La pane del navegador estaba oculta y el documento medía
+**0 de ancho**: los canvas salen de 0 px y cualquier geometría directa miente. Se midió con el
+truco ya anotado —clonar dentro de un contenedor absoluto de 812 px— y ahí la caja de texto ocupa
+778 px, nada desborda y las tres clases nuevas dan sus colores. La primera lectura del punto en
+ámbar salió con los colores base y **era un fallo de mi medición, no del CSS**: repetida sobre el
+banco real, los dos puntos marcados salen verdes y el tercero ámbar, como debe.
+
+**Sin publicar a `gh-pages`: pendiente del visto bueno de Javier.** Los ocho capítulos de `main`
+llevan ahora este componente y los de `gh-pages` no; la diferencia es inerte —CSS y una función que
+ningún capítulo llama— pero está ahí hasta que se publique.
 
 ## Protocolo de verificación de cada capítulo
 

@@ -1,0 +1,81 @@
+    /* ------------------------------------------------------------------
+       Autoevaluación: pregunta de respuesta abierta (tipo 'texto')
+
+       Nace en el simulacro del Taller 1. Un parcial se juega la mitad de la
+       nota en preguntas abiertas, y un simulacro que solo tenga opción
+       múltiple entrena la mitad del examen. El texto libre no se puede
+       autocorregir de verdad, así que lo que hace el componente es forzar el
+       orden honesto: primero te comprometes con una respuesta escrita, y solo
+       entonces aparece la respuesta modelo y la lista de lo que tenía que
+       llevar, que el estudiante se marca.
+       ------------------------------------------------------------------ */
+    .quiz-abierta { margin-top: 0.25rem; }
+
+    .quiz-abierta textarea {
+      font-family: inherit;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #1e293b;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.25);
+      border-radius: 0.5rem;
+      padding: 0.65rem 0.8rem;
+      width: 100%;
+      min-height: 6.5rem;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    .quiz-abierta textarea:focus-visible { outline: 2px solid #FF6600; outline-offset: 1px; }
+    .quiz-abierta textarea:disabled { background: #f8fafc; color: #475569; }
+
+    /* Contador de palabras: la única señal antes de comprometerse */
+    .quiz-abierta .quiz-cuenta {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin: 0.35rem 0 0.55rem 0;
+    }
+
+    /* La respuesta modelo, oculta hasta que el estudiante ha escrito la suya */
+    .quiz-modelo {
+      margin-top: 0.85rem;
+      padding: 0.8rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #012820;
+      color: #334155;
+    }
+
+    .quiz-modelo[hidden] { display: none; }
+    .quiz-modelo h6 {
+      margin: 0 0 0.45rem 0;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #012820;
+    }
+
+    /* La lista de comprobación: el estudiante se corrige punto por punto.
+       Reutiliza .quiz-opcion y .quiz-casilla para que marcar aquí se vea y se
+       comporte igual que marcar en una pregunta de varias respuestas. */
+    .quiz-comprobacion { margin-top: 0.85rem; }
+    .quiz-comprobacion[hidden] { display: none; }
+    .quiz-comprobacion > p {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #92400e;
+      margin: 0 0 0.5rem 0;
+    }
+
+    /* Punto que el estudiante reconoce que NO cubrió: ni acierto ni error,
+       es lo que tiene que repasar. Se pinta en ámbar, no en rojo. */
+    .quiz-opcion.pendiente {
+      background: #fffbeb;
+      border-color: #fbbf24;
+      color: #78350f;
+    }
