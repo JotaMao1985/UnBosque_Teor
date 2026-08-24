@@ -2186,6 +2186,25 @@ de su simulacro se habrían reportado sin respaldo** aunque salgan de un precál
 informe con decenas de falsos positivos es indistinguible del informe que nadie mira—. La expresión
 acepta ahora las dos formas. Los ocho capítulos siguen dando 0 cifras sin respaldo.
 
+---
+
+### T7.6 — El sitio publica una página que no es un capítulo (2026-08-23)
+
+El recurso de práctica del Taller 1 —`sitio/muestreo/taller-1-preparacion-parcial-1.html`, seis
+módulos y treinta preguntas— se ensambla desde la misma plantilla que los ocho capítulos, con
+`ensamblado/ensambla_taller1.py`. Dos consecuencias para el material, y por eso está anotado aquí:
+
+- **`cuenta_sitio.py` globaba solo `capitulo-*.html`.** Ahora incluye también `taller-*.html`, con
+  su etiqueta propia. Sin eso, los totales del README volverían a ser cifras escritas a mano en
+  cuanto el sitio publicara algo que no fuera un capítulo. El sitio son ahora **9 páginas: 94
+  módulos, 118 preguntas, 224 bloques de código**.
+- **El conjunto de selectores CSS de la página nueva es idéntico al de la plantilla, 198 contra
+  198.** Es la comprobación del paso 5 del protocolo, y confirma que retropropagar el tipo `texto`
+  a los ocho capítulos (T7.4) era necesario y no exceso de celo: si la plantilla hubiera quedado
+  con clases que los capítulos no tienen, esta comparación habría dejado de servir para todos.
+
+El plan operativo del recurso es `PLAN_Taller_Corte1.md`, donde está el informe completo (T4.3).
+
 ## Protocolo de verificación de cada capítulo
 
 Es material que llega a estudiantes. Antes de dar un capítulo por terminado:

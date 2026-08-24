@@ -36,10 +36,24 @@ COMPONENTES = [
 ]
 
 
+def etiqueta_de(nombre):
+    """cap. 3 · taller 1 · el nombre a secas si aparece algo que no es ninguno."""
+    m = re.match(r"capitulo-(\d+)", nombre)
+    if m:
+        return f"cap. {m.group(1)}"
+    m = re.match(r"taller-(\d+)", nombre)
+    if m:
+        return f"taller {m.group(1)}"
+    return nombre[:10]
+
+
 def main():
-    caps = sorted(SITIO.glob("capitulo-*.html"))
+    # El recurso de práctica del Taller 1 no es un capítulo pero sí es una
+    # página publicada con módulos, preguntas y bloques de código: si no se
+    # contara, el total del README volvería a ser una cifra escrita a mano.
+    caps = sorted(SITIO.glob("capitulo-*.html")) + sorted(SITIO.glob("taller-*.html"))
     anchos = [10] + [len(n) for n, _ in CAMPOS] + [len(n) for n, _ in COMPONENTES]
-    cab = ["capítulo"] + [n for n, _ in CAMPOS] + [n for n, _ in COMPONENTES]
+    cab = ["página"] + [n for n, _ in CAMPOS] + [n for n, _ in COMPONENTES]
     print("  ".join(c.rjust(a) for c, a in zip(cab, anchos)))
     totales = [0] * (len(CAMPOS) + len(COMPONENTES))
     for cap in caps:
@@ -50,12 +64,11 @@ def main():
         marcado = "".join(re.findall(r"<template id=\"module-.*?</template>", h, re.S))
         vals = [f(h) for _, f in CAMPOS] + [marcado.count(m) for _, m in COMPONENTES]
         totales = [t + v for t, v in zip(totales, vals)]
-        etiqueta = re.match(r"capitulo-(\d+)", cap.name).group(1)
         print("  ".join(x.rjust(a) for x, a in
-                        zip([f"cap. {etiqueta}"] + [str(v) for v in vals], anchos)))
+                        zip([etiqueta_de(cap.name)] + [str(v) for v in vals], anchos)))
     print("  ".join(x.rjust(a) for x, a in
                     zip(["TOTAL"] + [str(t) for t in totales], anchos)))
-    print(f"\n{len(caps)} capítulos · "
+    print(f"\n{len(caps)} páginas · "
           f"{sum(c.stat().st_size for c in caps) / 1024:.0f} KB publicados")
 
 

@@ -175,5 +175,10 @@
     "1,50": "(1 - 0,40) x 2,5 = 1,50 horas: la parte que aporta el no respondiente en el ejercicio de dos fases",
     "2,50": "1/0,40 = 2,50: el factor de ajuste cuando la propension estimada es 80/200",
     "39,9": "valor equivocado de un distractor: nace de leer el deff de Kish 1,399 como un 39,9 % de sesgo corregido, y la retro explica por que no lo es"
+  },
+  "taller-1-preparacion-parcial-1.html": {
+    "500 000": "marco hipotético del ítem S1-3: «un marco incompleto con 5 000 registros sigue siéndolo con 500 000». No es un dato, es el contrafactual del argumento",
+    "2,3": "calificación media inventada del comedor en el ítem S2-2. El escenario lo plantea la pregunta; lo que se evalúa es la dirección del sesgo, no la cifra",
+    "6 000": "personas abordadas en el contrafactual del ítem S3-1: «con 6 000 el defecto sería idéntico». Refuerza que el tamaño no arregla la falta de p(s)"
   }
 }

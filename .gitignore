@@ -50,9 +50,12 @@ precalculo/.tmp_verifica/
 # 2026): antes regalaria las explicaciones de lo que la entrega califica. Como
 # `precalculo/` y `ensamblado/` estan en la lista blanca, sus ficheros entrarian
 # solos al repositorio publico, asi que se excluyen a mano hasta entonces.
-# QUITAR ESTAS CINCO LINEAS AL PUBLICAR (T4.3).
+# QUITAR ESTAS SIETE LINEAS AL PUBLICAR (T4.3), y ejecutar entonces
+# `python3 ensamblado/ensambla_taller1.py --con-indice`.
 ensamblado/modulos/taller1/
 ensamblado/codigo/taller1/
+ensamblado/ensambla_taller1.py
+sitio/muestreo/taller-1-preparacion-parcial-1.html
 precalculo/genera_taller1_recurso.R
 precalculo/salidas/taller1_recurso_datos.json
 precalculo/pruebas/prueba_banco_taller1.py
