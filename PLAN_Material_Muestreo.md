@@ -2174,6 +2174,18 @@ banco real, los dos puntos marcados salen verdes y el tercero ámbar, como debe.
 llevan ahora este componente y los de `gh-pages` no; la diferencia es inerte —CSS y una función que
 ningún capítulo llama— pero está ahí hasta que se publique.
 
+---
+
+### T7.5 — El universo de cifras del verificador incluye ahora `DATOS_TALLER1` (2026-08-23)
+
+Una línea, pero desactivaba una comprobación entera. `verifica_bloques.py --prosa` contrasta cada
+cifra que el estudiante lee contra el «universo» de números del capítulo: los de sus bloques de
+código y los del JSON incrustado, que buscaba con `const DATOS_CAP\d+`. El recurso de práctica del
+Taller 1 incrusta los suyos en `DATOS_TALLER1`, así que **todas las cifras de la retroalimentación
+de su simulacro se habrían reportado sin respaldo** aunque salgan de un precálculo ejecutado —y el
+informe con decenas de falsos positivos es indistinguible del informe que nadie mira—. La expresión
+acepta ahora las dos formas. Los ocho capítulos siguen dando 0 cifras sin respaldo.
+
 ## Protocolo de verificación de cada capítulo
 
 Es material que llega a estudiantes. Antes de dar un capítulo por terminado:

@@ -50,8 +50,9 @@ precalculo/.tmp_verifica/
 # 2026): antes regalaria las explicaciones de lo que la entrega califica. Como
 # `precalculo/` y `ensamblado/` estan en la lista blanca, sus ficheros entrarian
 # solos al repositorio publico, asi que se excluyen a mano hasta entonces.
-# QUITAR ESTAS CUATRO LINEAS AL PUBLICAR (T4.3).
+# QUITAR ESTAS CINCO LINEAS AL PUBLICAR (T4.3).
 ensamblado/modulos/taller1/
+ensamblado/codigo/taller1/
 precalculo/genera_taller1_recurso.R
 precalculo/salidas/taller1_recurso_datos.json
 precalculo/pruebas/prueba_banco_taller1.py

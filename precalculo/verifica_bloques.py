@@ -209,7 +209,11 @@ def numeros_del_universo(html):
     universo = set()
     for _, cuerpo in BLOQUE_RE.findall(html):
         universo.update(NUM_RE.findall(html_mod.unescape(cuerpo)))
-    m = re.search(r'const DATOS_CAP\d+ = (\{.*?\});\n', html, re.S)
+    # TALLER1 ademas de CAPn: el recurso de practica del Taller 1 incrusta sus
+    # cifras en DATOS_TALLER1, y sin esta alternativa toda cifra que solo viva
+    # ahi -las de la retroalimentacion del simulacro- se reportaria sin
+    # respaldo aunque salga del precalculo.
+    m = re.search(r'const DATOS_(?:CAP\d+|TALLER1) = (\{.*?\});\n', html, re.S)
     if m:
         universo.update(NUM_RE.findall(m.group(1)))
     return sorted({float(x) for x in universo if x not in ('-', '.')},)
