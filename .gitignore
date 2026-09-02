@@ -59,3 +59,30 @@ sitio/muestreo/taller-1-preparacion-parcial-1.html
 precalculo/genera_taller1_recurso.R
 precalculo/salidas/taller1_recurso_datos.json
 precalculo/pruebas/prueba_banco_taller1.py
+
+# El plan del preparcial lleva la tabla de especificaciones del Parcial 1.
+# QUITAR ESTA LINEA DESPUES DEL 3 DE SEPTIEMBRE DE 2026.
+PLAN_Preparcial_Corte1.md
+
+# El preparcial del Corte I no entra al repositorio publico hasta que se
+# publique la pagina (P3.1): hasta entonces, la tabla de especificaciones y el
+# banco de items estarian a la vista en `main`, que es publico, sin que exista
+# todavia el instrumento. Mismo procedimiento que se uso con el Taller 1.
+# QUITAR ESTE BLOQUE AL PUBLICAR (P3.1).
+precalculo/inventario_items.py
+precalculo/tabla_especificaciones.json
+precalculo/verifica_tabla.py
+precalculo/verifica_poblacion_nueva.py
+precalculo/_bancos.py
+precalculo/extrae_items.py
+precalculo/salidas/items_corte1.json
+precalculo/salidas/items_todos.json
+precalculo/pruebas/prueba_bancos.py
+precalculo/rubrica_items.md
+precalculo/genera_preparcial.R
+precalculo/salidas/inventario_items.json
+precalculo/salidas/preparcial_datos.json
+precalculo/pruebas/prueba_banco_preparcial.py
+ensamblado/ensambla_preparcial.py
+ensamblado/modulos/preparcial/
+sitio/muestreo/preparcial-corte-1.html

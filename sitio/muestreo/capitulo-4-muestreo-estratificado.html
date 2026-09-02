@@ -6537,6 +6537,45 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
     // ================================================================
     const AUTOEVALUACIONES = {};
     const LETRAS = ['a', 'b', 'c', 'd', 'e'];
+    // ================================================================
+    // Barajado estable de las opciones de la autoevaluación
+    //
+    // El orden sale de un hash del enunciado, no del reloj: la misma pregunta
+    // da siempre el mismo orden. Recargar no reordena —así nadie puede tirar de
+    // nuevo hasta que le salga fácil— y la retroalimentación por opción sigue
+    // pudiendo citarse por su letra. Lo que deja de ocurrir es que la correcta
+    // sea siempre la (a), que era el caso en los 72 ítems del material.
+    // ================================================================
+    function semillaDeTexto(texto) {           // FNV-1a de 32 bits
+      let h = 2166136261;
+      for (let i = 0; i < texto.length; i++) {
+        h ^= texto.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function azarEstable(semilla) {            // mulberry32
+      let a = semilla >>> 0;
+      return function () {
+        a = (a + 0x6D2B79F5) >>> 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function barajaEstable(opciones, clave) {  // Fisher-Yates con semilla fija
+      if (!Array.isArray(opciones) || opciones.length < 2) return opciones || [];
+      const r = azarEstable(semillaDeTexto(clave || ''));
+      const out = opciones.slice();
+      for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(r() * (i + 1));
+        const tmp = out[i]; out[i] = out[j]; out[j] = tmp;
+      }
+      return out;
+    }
+
     const NOMBRE_TIPO = {
       opcion: 'Opción múltiple',
       multiple: 'Varias respuestas',
@@ -6657,6 +6696,10 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
 
       preguntas.forEach((p, i) => {
         const tipo = p.tipo || 'opcion';
+        // Se baraja UNA vez y se usa en todas partes: el render y sus
+        // callbacks tienen que indexar el mismo array o `correcta` apuntaría
+        // a otro botón.
+        const opcs = barajaEstable(p.opciones, p.pregunta);
         const bloque = document.createElement('div');
         bloque.className = 'quiz-pregunta';
 
@@ -6744,7 +6787,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
           lista.setAttribute('aria-label', `Opciones de la pregunta ${i + 1}`);
           const marcadas = new Set();
 
-          const botones = p.opciones.map((op, j) => {
+          const botones = opcs.map((op, j) => {
             const b = document.createElement('button');
             b.type = 'button';
             b.className = 'quiz-opcion';
@@ -6774,7 +6817,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
               return;
             }
             estado[i].intentos++;
-            const correctas = new Set(p.opciones.map((o, j) => o.correcta ? j : -1).filter(j => j >= 0));
+            const correctas = new Set(opcs.map((o, j) => o.correcta ? j : -1).filter(j => j >= 0));
             const exacto = marcadas.size === correctas.size &&
               [...marcadas].every(j => correctas.has(j));
             if (exacto) {
@@ -6789,7 +6832,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
               // Respaldo para las preguntas de seleccion multiple, que no
               // declaran `retroAcierto`: se junta la retroalimentacion de las
               // opciones correctas, que ya estaba escrita y no se mostraba.
-              cerrar(i, bloque, true, p.retroAcierto || p.opciones
+              cerrar(i, bloque, true, p.retroAcierto || opcs
                 .filter(o => o.correcta).map(o => o.retro).filter(Boolean).join(' '));
             } else if (estado[i].intentos === 1) {
               const bien = [...marcadas].filter(j => correctas.has(j)).length;
@@ -6826,7 +6869,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
           lista.setAttribute('role', 'group');
           lista.setAttribute('aria-label', `Opciones de la pregunta ${i + 1}`);
 
-          const botones = p.opciones.map((op, j) => {
+          const botones = opcs.map((op, j) => {
             const b = document.createElement('button');
             b.type = 'button';
             b.className = 'quiz-opcion';
@@ -6835,7 +6878,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
               if (estado[i].resuelta) return;
               estado[i].intentos++;
               if (op.correcta) {
-                botones.forEach((x, k) => { x.disabled = true; if (p.opciones[k].correcta) x.classList.add('correcta'); });
+                botones.forEach((x, k) => { x.disabled = true; if (opcs[k].correcta) x.classList.add('correcta'); });
                 cerrar(i, bloque, true, op.retro);
               } else if (estado[i].intentos === 1) {
                 // Primer fallo: se descarta esa opción, se da la pista y se reintenta
@@ -6843,7 +6886,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
                 b.classList.add('incorrecta');
                 mostrarPista(i, bloque);
               } else {
-                botones.forEach((x, k) => { x.disabled = true; if (p.opciones[k].correcta) x.classList.add('correcta'); });
+                botones.forEach((x, k) => { x.disabled = true; if (opcs[k].correcta) x.classList.add('correcta'); });
                 b.classList.add('incorrecta');
                 cerrar(i, bloque, false, op.retro);
               }
