@@ -211,7 +211,13 @@ n0_pr <- z^2 * p_cr * (1 - p_cr) / e_cr^2
 n_pr  <- ceiling(n0_pr / (1 + n0_pr / N_cr))
 n_pr_sinfpc <- ceiling(n0_pr)
 # El techo: con p = 0,5 (el peor caso) el n0 sube a esto.
-n0_peor <- ceiling(z^2 * 0.25 / e_cr^2)
+# n0 con p = 0,5 (el peor caso). Se guardan las DOS cifras y no solo el techo:
+# el capitulo 2 publica «el celebre n_0 = 1 067», que es el valor exacto, y la
+# retro del simulacro citaba 1 068 -que es su redondeo hacia arriba, o sea n-.
+# Un estudiante con los dos documentos abiertos veia una contradiccion donde
+# solo habia dos cosas distintas con el mismo nombre.
+n0_peor_exacto <- z^2 * 0.25 / e_cr^2
+n0_peor <- ceiling(n0_peor_exacto)
 
 n_entero_p <- function(z_, p_, e_, N_) {
   n0 <- z_^2 * p_ * (1 - p_) / e_^2
@@ -228,7 +234,7 @@ D$tamano <- list(
   n0Media = n0_med, nMedia = n_med, nMediaSinFpc = n_med_sinfpc,
   crimes = list(N = N_cr, p = p_cr, arrestos = sum(cr$arrest), margen = e_cr,
                 n0 = n0_pr, n = n_pr, nSinFpc = n_pr_sinfpc,
-                n0Peor = n0_peor, nN100 = n_pr_N100)
+                n0Peor = n0_peor, n0PeorExacto = n0_peor_exacto, nN100 = n_pr_N100)
 )
 
 cat("\n5. TAMANO DE MUESTRA\n")

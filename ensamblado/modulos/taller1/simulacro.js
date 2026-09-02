@@ -90,7 +90,7 @@
         pregunta: 'La oficina de análisis tiene el archivo de los <strong>5 000 delitos registrados</strong> por la policía el año pasado y quiere estimar qué proporción de los delitos <strong>cometidos</strong> en la ciudad terminó en arresto. ¿Qué separa aquí el marco de la población objetivo?',
         pista: '¿Qué hace falta para que un delito llegue a estar en ese archivo?',
         opciones: [
-          { texto: 'Un delito solo entra al archivo si alguien lo denuncia y la policía lo registra; los que nunca se denuncian no están en el marco.', correcta: true,
+          { texto: 'Un delito solo entra al archivo si alguien lo denuncia y la policía lo registra.', correcta: true,
             retro: 'Exacto. El marco cubre los delitos <em>registrados</em>, no los cometidos, y la diferencia no es aleatoria: los tipos de delito que menos se denuncian quedan sistemáticamente fuera. Es un problema de cobertura, y ningún tamaño de muestra lo arregla.' },
           { texto: 'Nada: 5 000 delitos son suficientes para representar a todos los delitos de la ciudad.', correcta: false,
             retro: 'El número de registros no dice nada sobre qué población representan. Un marco incompleto con 5 000 registros sigue siendo un marco incompleto con 500 000.' },
@@ -115,7 +115,7 @@
           { texto: 'La pregunta sobre horas de estudio induce a exagerar.', correcta: false },
           { texto: 'La misma persona aparece dos veces en el listado, con dos correos.', correcta: true }
         ],
-        retroAcierto: 'Las tres de marco: la lista que llega tarde, el directorio que solo cubre las líneas fijas y el listado con duplicados son los tres defectos clásicos del marco —subcobertura, subcobertura y sobrecobertura—. El 20 % que no contesta sí estaba en el marco (es no respuesta) y la pregunta mal redactada mide mal a quien sí llegó (es medición).',
+        retroAcierto: 'Las tres de marco: la lista que llega tarde, el directorio que solo cubre las líneas fijas y el listado con duplicados son los tres defectos clásicos del marco —subcobertura, subcobertura y duplicación —que le da a esa persona el doble de probabilidad de entrar——. El 20 % que no contesta sí estaba en el marco (es no respuesta) y la pregunta mal redactada mide mal a quien sí llegó (es medición).',
         retroFallo: 'Un defecto es de marco cuando decide <em>quién puede salir sorteado</em>. Con ese criterio: la fecha de corte y el directorio de fijos dejan gente fuera, y el duplicado le da a alguien dos oportunidades. En cambio, quien no contesta ya había sido seleccionado, y la pregunta que induce a exagerar afecta a la respuesta, no a la selección.'
       },
 
@@ -164,7 +164,7 @@
         pregunta: 'Se deja un código QR en la salida del comedor universitario para calificar el servicio de 1 a 5. Contestan 640 personas y la media sale 2,3. ¿Qué se puede decir de esa cifra como estimación de la satisfacción media de quien come allí?',
         pista: '¿Quién se toma la molestia de sacar el celular y escanear un código para calificar un almuerzo?',
         opciones: [
-          { texto: 'Es una muestra autoseleccionada y lo más probable es que <strong>subestime</strong> la satisfacción media, porque quien tuvo una mala experiencia tiene más motivo para responder.', correcta: true,
+          { texto: 'Es una muestra autoseleccionada, y lo más probable es que <strong>subestime</strong> la satisfacción media.', correcta: true,
             retro: 'Correcto, y fíjate en que la respuesta tiene dos partes: nombrar el mecanismo (autoselección) y <em>dar la dirección</em>. La dirección es la mitad que casi nadie escribe y la que el parcial pregunta.' },
           { texto: 'Con 640 respuestas la muestra ya es grande, así que la estimación es fiable.', correcta: false,
             retro: 'El tamaño no compra insesgadez. Si el mecanismo de respuesta favorece a los descontentos, 640 respuestas dan una estimación mala con un error estándar pequeño: precisión alrededor del número equivocado.' },
@@ -183,7 +183,7 @@
         pregunta: 'Para estimar la estatura media de los adultos de una ciudad, el marco se arma con las fichas de los socios de un gimnasio. ¿Cuál es el problema y en qué se diferencia de la no respuesta?',
         pista: 'Pregúntate quién <em>no podía</em> salir en la muestra, hiciera lo que hiciera.',
         opciones: [
-          { texto: 'Es <strong>no cobertura</strong>: quien no es socio tiene probabilidad cero de entrar. La no respuesta afecta a gente que sí estaba en el marco y fue seleccionada.', correcta: true,
+          { texto: 'Es <strong>no cobertura</strong>: quien no es socio tiene probabilidad cero de entrar.', correcta: true,
             retro: 'Eso es. La distinción operativa es esa: en la no cobertura la unidad nunca pudo ser sorteada ($\\pi_k = 0$); en la no respuesta fue sorteada y no contestó. Se diagnostican distinto y se corrigen distinto.' },
           { texto: 'Es no respuesta, porque falta la mayor parte de la ciudad.', correcta: false,
             retro: 'Faltar no es lo mismo que no responder. A quien no es socio nunca se le preguntó nada, porque nunca estuvo en la lista de la que se sorteó.' },
@@ -245,7 +245,7 @@
           ], { tituloX: 'Estatura (cm)', tituloY: 'Proporción', xMin: 135, xMax: 205 });
         },
         opciones: [
-          { texto: 'La distribución de los respondientes está desplazada a la derecha porque se ha adelgazado la parte baja; la media sube y seguiría subiendo igual aunque respondieran más personas del mismo modo.', correcta: true,
+          { texto: 'La distribución de los respondientes está desplazada a la derecha, y la media seguiría subiendo aunque respondieran más.', correcta: true,
             retro: 'Exacto. El mecanismo no elimina a nadie al azar: se lleva por delante a dos de cada tres mujeres, que son las que ocupan la parte baja del eje. El desplazamiento de la media es el sesgo, y depende del mecanismo, no del número de respuestas.' },
           { texto: 'Las dos distribuciones están centradas en el mismo sitio; solo cambia la altura porque hay menos respondientes.', correcta: false,
             retro: 'Las alturas son proporciones, precisamente para que el tamaño no confunda: las dos series suman 1. Lo que cambia es la <em>forma</em>, y con ella la posición de la media.' },
@@ -264,8 +264,8 @@
         pregunta: 'Una estimación tiene un sesgo de 3,5 cm y un error estándar de 0,3 cm. El error cuadrático medio es $\\text{ECM} = \\text{sesgo}^2 + V$. ¿Qué implica eso para la estrategia de mejora?',
         pista: 'Compara $3{,}5^2$ con $0{,}3^2$ antes de decidir dónde conviene gastar el presupuesto.',
         opciones: [
-          { texto: 'El sesgo aporta $12{,}25$ al ECM y la varianza $0{,}09$: casi todo el error es sesgo, así que hay que arreglar el mecanismo de selección, no aumentar $n$.', correcta: true,
-            retro: 'Correcto, y es el cálculo que ordena las prioridades de una encuesta real. Multiplicar $n$ por cuatro bajaría la varianza a $0{,}0225$ y el ECM pasaría de 12,34 a 12,27: dinero tirado.' },
+          { texto: 'Casi todo el error es sesgo: hay que arreglar la selección, no aumentar $n$.', correcta: true,
+            retro: 'Correcto: el sesgo aporta $3{,}5^2 = 12{,}25$ al ECM y la varianza $0{,}3^2 = 0{,}09$, así que el 99 % del error es sesgo. Es el cálculo que ordena las prioridades de una encuesta real. Multiplicar $n$ por cuatro bajaría la varianza a $0{,}0225$ y el ECM pasaría de 12,34 a 12,27: dinero tirado.' },
           { texto: 'Como el error estándar es pequeño, la estimación es buena.', correcta: false,
             retro: 'Un error estándar pequeño solo dice que las muestras se parecen entre sí. Si todas se parecen alrededor de un número equivocado, la estimación es precisa y falsa a la vez.' },
           { texto: 'Hay que aumentar $n$ hasta que el error estándar baje por debajo del sesgo.', correcta: false,
@@ -301,7 +301,7 @@
         pregunta: 'A un encuestador se le pide que consiga 30 hombres y 30 mujeres en la calle, eligiendo él a quién abordar hasta completar las cuotas. ¿Por qué este diseño <strong>no</strong> permite calcular un error estándar?',
         pista: '¿Se puede escribir, para cada muestra posible, con qué probabilidad habría salido?',
         opciones: [
-          { texto: 'Porque no existe una $p(s)$ conocida: la probabilidad de que una persona concreta entre depende de a quién decida abordar el encuestador, y nadie la conoce.', correcta: true,
+          { texto: 'Porque no existe una $p(s)$ conocida: la fija el encuestador sobre la marcha.', correcta: true,
             retro: 'Eso es. El error estándar es una esperanza <em>respecto de $p(s)$</em>: sin $p(s)$ no hay nada respecto de lo cual tomar esperanzas. Las cuotas garantizan la composición por sexo, no la probabilidad de selección.' },
           { texto: 'Porque 60 personas son pocas.', correcta: false,
             retro: 'El tamaño no es el defecto. Con 6 000 personas abordadas a criterio del encuestador seguiría sin haber $p(s)$, y seguiría sin poder calcularse un error estándar.' },
@@ -362,7 +362,7 @@
         pregunta: 'Tu intervalo al 95 % para la estatura media es $[167{,}48;\\ 170{,}40]$. ¿Cuál de estas afirmaciones es correcta?',
         pista: '¿Qué es aleatorio en el problema: la media poblacional o el intervalo?',
         opciones: [
-          { texto: 'Si se repitiera todo el procedimiento muchas veces, el 95 % de los intervalos construidos así contendría la media poblacional.', correcta: true,
+          { texto: 'Si se repitiera el muestreo muchas veces, el 95 % de los intervalos contendría la media.', correcta: true,
             retro: 'Esa es la afirmación correcta, y fíjate en dónde está el 95 %: en el <em>procedimiento</em>, no en este intervalo. Este ya salió; contiene la media o no la contiene, y aquí no hay probabilidad que valga.' },
           { texto: 'Hay un 95 % de probabilidad de que la media poblacional esté entre 167,48 y 170,40.', correcta: false,
             retro: 'Esta es la trampa clásica, y es la respuesta que da casi todo el mundo. La media poblacional es una constante fija, no una variable aleatoria: no tiene una probabilidad de estar en ningún sitio. Lo aleatorio es el intervalo, que cambia con cada muestra.' },
@@ -381,7 +381,7 @@
         pregunta: 'Tu muestra de 200 personas trajo 96 mujeres y 104 hombres, cuando la población tiene exactamente 1 000 de cada. ¿Qué significa que $\\bar{y}$ sea <strong>insesgado</strong> pese a ese desajuste?',
         pista: 'La insesgadez es una propiedad de la esperanza sobre todas las muestras posibles, no de la muestra que salió.',
         opciones: [
-          { texto: 'Que el promedio de $\\bar{y}$ sobre todas las muestras posibles es la media poblacional; sobre <em>esta</em> muestra no dice nada.', correcta: true,
+          { texto: 'Que el promedio de $\\bar{y}$ sobre todas las muestras posibles es la media poblacional.', correcta: true,
             retro: 'Correcto. La insesgadez no promete que tu muestra se parezca a la población: promete que el procedimiento no se desvía sistemáticamente. Las muestras con 96 mujeres se compensan con las que traen 104.' },
           { texto: 'Que la muestra reproduce la composición de la población, con una diferencia despreciable.', correcta: false,
             retro: 'Esa es la idea de «muestra representativa», y es justo la que el capítulo 2 desmonta. La insesgadez no dice nada sobre el parecido entre muestra y población; de hecho vale también para muestras muy desequilibradas.' },
@@ -415,7 +415,7 @@
         semana: 3,
         ancla: { cap: 2, modulo: 6, titulo: 'Intervalos de confianza', lohr: '2.3' },
         alto: 240,
-        descripcionGrafico: 'Cien intervalos de confianza al 95 % construidos con cien muestras aleatorias simples de n = 50, y la recta horizontal de la media poblacional; los que no la cruzan aparecen destacados',
+        descripcionGrafico: 'Cien intervalos de confianza al 95 % construidos con cien muestras aleatorias simples de n = 50, y la recta horizontal de la media poblacional; unos pocos, destacados en naranja, quedan enteros por encima o por debajo de ella sin llegar a cruzarla, y hay que contarlos aparecen destacados',
         pregunta: 'Cada segmento vertical es un intervalo al 95 % construido con una muestra distinta de $n = 50$; la línea horizontal es la media poblacional verdadera. ¿Qué muestra el gráfico?',
         pista: 'Cuenta cuántos segmentos no tocan la línea, y pregúntate de qué es propiedad el «95 %».',
         dibujar: canvas => {
@@ -432,15 +432,15 @@
             };
           };
           return crearGraficoXY(canvas, [
-            seg(d => d.cubre, `Cubren la media (${COB.cubren})`, '#012820'),
-            seg(d => !d.cubre, `No la cubren (${COB.fallan})`, '#FF6600'),
+            seg(d => d.cubre, 'Cubren la media', '#012820'),
+            seg(d => !d.cubre, 'No la cubren', '#FF6600'),
             { type: 'line', label: 'Media poblacional', borderColor: '#6B7280',
               borderDash: [6, 4], borderWidth: 2, pointRadius: 0, fill: false,
               data: [{ x: 1, y: COB.mediaPoblacional }, { x: COB.reps, y: COB.mediaPoblacional }] }
           ], { tituloX: 'Réplica', tituloY: 'Estatura media (cm)', xMin: 0, xMax: COB.reps + 1 });
         },
         opciones: [
-          { texto: 'Que el 95 % es una propiedad del procedimiento: casi todos los intervalos cruzan la línea y unos pocos no, y de un intervalo suelto no se sabe en cuál de los dos grupos cayó.', correcta: true,
+          { texto: 'Que el 95 % es una propiedad del procedimiento, no de un intervalo suelto.', correcta: true,
             retro: 'Eso es lo que hay que leer aquí. De estas cien réplicas, ' + DT.cobertura.cubren + ' cubren la media y ' + DT.cobertura.fallan + ' no; con el nivel al 95 % se esperaban unas cinco fallas y salieron ' + DT.cobertura.fallan + ', que es la variación normal de contar cien veces. Cuando trabajas con datos reales solo tienes <em>uno</em> de estos segmentos y no sabes cuál.' },
           { texto: 'Que los intervalos que fallan están mal calculados.', correcta: false,
             retro: 'Están calculados exactamente igual que los demás, con la misma fórmula y el mismo nivel. Fallan porque su muestra salió lejos por azar: que un 5 % falle no es un defecto del método, es su definición.' },
@@ -494,7 +494,7 @@
         respuesta: 730,
         tolerancia: 0.5,
         retroAcierto: 'Correcto: $n_0 = 3{,}8416 \\times 0{,}2766 \\times 0{,}7234/0{,}03^2 = 854{,}1$, y corrigiendo, $854{,}1/(1 + 854{,}1/5000) = 729{,}5 \\to 730$. Aquí la muestra es casi el 15 % del archivo, así que el fpc se nota: ahorra 125 casos.',
-        retroFallo: 'Son 730 delitos. Los tres tropiezos habituales: quedarse en $n_0 = 855$ sin corregir; escribir el margen como 3 en vez de 0,03, lo que da un $n$ ridículo; y usar $p = 0{,}5$ por costumbre —el peor caso—, que da $n_0 = 1\\,068$ y una muestra innecesariamente grande cuando ya se tiene un piloto.'
+        retroFallo: 'Son 730 delitos. Los tres tropiezos habituales: quedarse en $n = 855$ —el $n_0 = 854{,}1$ redondeado— sin aplicar la corrección; escribir el margen como 3 en vez de 0,03, lo que da un $n$ ridículo; y usar $p = 0{,}5$ por costumbre —el peor caso—, que da $n_0 = 1\\,067{,}1$ —el célebre 1 067 del capítulo 2— y una muestra innecesariamente grande cuando ya se tiene un piloto.'
       },
 
       {
@@ -505,8 +505,8 @@
         pregunta: 'Ese mismo cálculo, pero sobre un archivo <strong>100 veces más grande</strong> (500 000 delitos en vez de 5 000), con el mismo margen y el mismo $p$. ¿Qué le pasa al tamaño de muestra necesario?',
         pista: 'Mira la fórmula corregida: $n = n_0/(1 + n_0/N)$. ¿Qué le pasa a $n_0/N$ cuando $N$ se dispara?',
         opciones: [
-          { texto: 'Sube muy poco —de 730 a 853— porque $n$ se acerca a su techo $n_0 = 854$ y ya no puede crecer más.', correcta: true,
-            retro: 'Correcto, y es de los resultados más contraintuitivos del curso: lo que fija el tamaño de muestra es la <em>precisión</em> que se quiere, no el tamaño de la población. Con $N$ enorme, $n_0/N \\to 0$ y $n \\to n_0$.' },
+          { texto: 'Sube muy poco, porque $n$ se acerca a su techo y ya no puede crecer más.', correcta: true,
+            retro: 'Correcto: sube de 730 a 853, nada más, con una población cien veces mayor. Es de los resultados más contraintuitivos del curso: lo que fija el tamaño de muestra es la <em>precisión</em> que se quiere, no el tamaño de la población. Con $N$ enorme, $n_0/N \\to 0$ y $n \\to n_0$.' },
           { texto: 'Se multiplica por 100, igual que la población.', correcta: false,
             retro: 'Esa es la intuición del «hay que encuestar al 1 %», y es falsa. Si fuera cierta, una encuesta nacional necesitaría muestras de cientos de miles: en la práctica se hacen con 1 000 o 2 000 personas.' },
           { texto: 'Se multiplica por 10, que es $\\sqrt{100}$.', correcta: false,
@@ -524,7 +524,7 @@
         pregunta: 'En un muestreo sistemático con salto $k$ sobre un marco de $N = nk$ unidades, ¿por qué no existe un estimador insesgado de la varianza?',
         pista: '¿Cuántas muestras distintas puede producir el diseño? ¿Y cuántas parejas de unidades pueden coincidir en una de ellas?',
         opciones: [
-          { texto: 'Porque solo hay $k$ muestras posibles y dos unidades que no estén separadas por un múltiplo de $k$ nunca coinciden: su $\\pi_{kl}$ vale 0, y la varianza necesita esas parejas.', correcta: true,
+          { texto: 'Porque dos unidades que no estén separadas por un múltiplo de $k$ tienen $\\pi_{kl} = 0$.', correcta: true,
             retro: 'Exacto. Todas las fórmulas de varianza de diseño se apoyan en las probabilidades de segundo orden, y cuando algunas valen cero no hay forma de estimar los términos que les corresponden. Se estima <em>como si</em> fuera MAS, y eso es un supuesto, no un resultado.' },
           { texto: 'Porque el estimador de la media es sesgado en el sistemático.', correcta: false,
             retro: 'No lo es: con $N = nk$ todas las unidades tienen $\\pi_k = 1/k$, así que la media muestral es insesgada. Lo que falla es la <em>varianza</em>, no la esperanza.' },
@@ -543,8 +543,8 @@
         pregunta: 'El marco de las 2 000 personas se <strong>ordena por estatura</strong> y se toma un sistemático con $k = 10$ ($n = 200$). Comparado con un MAS del mismo tamaño, ¿qué ocurre con la varianza de la media muestral?',
         pista: 'Si la lista está ordenada por la variable de interés, ¿en qué se parece cada muestra sistemática a la población?',
         opciones: [
-          { texto: 'Baja muchísimo: cada muestra recorre todo el rango de estaturas, así que se parece a un estratificado y su varianza es una fracción de la del MAS.', correcta: true,
-            retro: 'Correcto. Recorriendo el espacio de muestras entero —solo hay 10— la varianza real del sistemático ordenado resulta ser el 1,9 % de la del MAS. Ordenar el marco por algo relacionado con $y$ es lo mejor que le puede pasar a un sistemático.' },
+          { texto: 'Baja muchísimo: cada muestra recorre todo el rango de estaturas.', correcta: true,
+            retro: 'Correcto. Recorriendo el espacio de muestras entero —solo hay 10— la varianza real del sistemático ordenado resulta ser el 1,9 % de la del MAS. Ordenar el marco por algo relacionado con $y$ es lo mejor que le puede pasar a un sistemático: cada muestra queda repartida por todo el rango, que es lo que hace un estratificado, y por eso se habla de <em>estratificación implícita</em>.' },
           { texto: 'Es exactamente igual a la del MAS: en los dos casos $\\pi_k = 0{,}1$.', correcta: false,
             retro: 'Que las $\\pi_k$ coincidan no obliga a que las varianzas coincidan: la varianza depende también de las de segundo orden, y ahí los dos diseños no se parecen en nada. Es el error de tratar el sistemático como si fuera MAS.' },
           { texto: 'Sube, porque el sistemático siempre es peor que el MAS.', correcta: false,
@@ -597,8 +597,8 @@
           ], { tituloX: 'Tamaño de muestra n', tituloY: 'Margen de error (cm)', xMin: 0, xMax: 2000 });
         },
         opciones: [
-          { texto: 'Las dos caen deprisa al principio y muy despacio después; la del fpc llega a cero en $n = N$, y la otra no, porque ignora que a esas alturas ya se ha visto a casi todo el mundo.', correcta: true,
-            retro: 'Correcto, y las dos lecturas importan. La caída con forma de $1/\\sqrt{n}$ significa que para partir el margen por la mitad hay que <em>cuadruplicar</em> la muestra: de $n = 100$ a $n = 400$. Y el fpc solo se nota cuando la fracción de muestreo es apreciable: en $n = 100$ las dos curvas casi coinciden (2,13 frente a 2,19 cm).' },
+          { texto: 'Las dos caen deprisa al principio y despacio después, pero solo la del fpc llega a cero en $n = N$.', correcta: true,
+            retro: 'Correcto, y las dos lecturas importan. La caída con forma de $1/\\sqrt{n}$ significa que para partir el margen por la mitad hay que <em>cuadruplicar</em> la muestra: de $n = 100$ a $n = 400$ —exacto sin corrección; con fpc la mejora es algo mayor—. Y la curva con fpc llega a <strong>cero</strong> en $n = N$, porque ahí ya no se estima nada: se ha censado. El fpc solo se nota cuando la fracción de muestreo es apreciable: en $n = 100$ las dos curvas casi coinciden (2,13 frente a 2,19 cm).' },
           { texto: 'El margen baja proporcionalmente a $n$: con el doble de muestra, la mitad de margen.', correcta: false,
             retro: 'Si fuera así las curvas serían rectas. Bajan como $1/\\sqrt{n}$: duplicar $n$ divide el margen por $\\sqrt{2} = 1{,}41$, no por 2.' },
           { texto: 'Ignorar el fpc hace que el margen parezca más pequeño de lo que es.', correcta: false,
