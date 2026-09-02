@@ -8571,8 +8571,8 @@ signif(rbind(original = comparar(pob, 6, n6),
           { texto: 'Que el diseño sea de tamaño de muestra fijo.', correcta: false },
           { texto: 'Que la variable $y$ tenga distribución aproximadamente normal.', correcta: false }
         ],
-        retroAcierto: 'Las dos primeras. Nada más: ni tamaño fijo, ni normalidad, ni independencia. Esa generalidad es lo que convierte al HT en el estimador de referencia de todo el curso.',
-        retroFallo: 'Solo hacen falta las dos primeras. El tamaño fijo se necesita para la <em>forma de Sen–Yates–Grundy de la varianza</em>, no para la insesgadez; y la normalidad no aparece por ningún lado, porque los $y_k$ son constantes.'
+        retroAcierto: 'Solo que $\pi_k > 0$ para toda unidad y que las $\pi_k$ sean conocidas. Nada más: ni tamaño fijo, ni normalidad, ni independencia. Esa generalidad es lo que convierte al HT en el estimador de referencia de todo el curso.',
+        retroFallo: 'Solo hacen falta $\pi_k > 0$ y que las $\pi_k$ sean conocidas. El tamaño fijo se necesita para la <em>forma de Sen–Yates–Grundy de la varianza</em>, no para la insesgadez; y la normalidad no aparece por ningún lado, porque los $y_k$ son constantes.'
       },
       {
         tipo: 'opcion',
@@ -8685,8 +8685,8 @@ signif(rbind(original = comparar(pob, 6, n6),
           { texto: 'Si la lista está ordenada por una variable relacionada con $y$, suele ser más preciso que el MAS.', correcta: true },
           { texto: 'Es siempre más preciso que el MAS, porque recorre toda la lista.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. El sistemático es un diseño de dos caras: sobre <code>agpop</code> ordenado por <code>acres87</code> el DEFF es 0,073, y con un orden cíclico patológico sube a 218,9.',
-        retroFallo: 'Las tres primeras son ciertas; la cuarta no. Todo depende del orden del marco: el mismo diseño puede tener DEFF 0,073 o 218,9 sobre la misma población.'
+        retroAcierto: 'Todas menos la del «siempre más preciso». El sistemático es un diseño de dos caras: sobre <code>agpop</code> ordenado por <code>acres87</code> el DEFF es 0,073, y con un orden cíclico patológico sube a 218,9.',
+        retroFallo: 'Las otras tres son ciertas; la del «siempre más preciso» no. Todo depende del orden del marco: el mismo diseño puede tener DEFF 0,073 o 218,9 sobre la misma población.'
       },
       {
         tipo: 'opcion',
