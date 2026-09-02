@@ -1,0 +1,98 @@
+  <template id="module-QUE_LLEVAR">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Cierre</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Qué llevar al parcial
+          <span class="text-gray-400 font-normal text-2xl">/ What to bring</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Media página para la víspera: lo que el formulario no
+              le va a resolver y las decisiones que el parcial le va a pedir tomar con una cifra en la mano.</p>
+          </div>
+        </div>
+      </div>
+
+      <p><strong>90 minutos, con formulario y calculadora.</strong> Con las fórmulas encima de la mesa, el examen no
+        puede preguntar cuál es la fórmula: pregunta <em>cuál de ellas</em> y <em>qué dice el número que sale</em>.
+        Estas son las decisiones que no están en ningún formulario.</p>
+
+      <h3>Seis decisiones que el formulario no toma por usted</h3>
+
+      <table>
+        <caption class="sr-only">Decisiones que el parcial exige tomar y qué mirar para tomarlas</caption>
+        <thead>
+          <tr><th scope="col">La decisión</th><th scope="col">Qué hay que mirar para tomarla</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>¿Va fpc o no va?</strong></td>
+            <td>La fracción de muestreo $f = n/N$. Con $f$ pequeño da igual; con $f$ apreciable, omitirla
+              <strong>infla</strong> el error estándar y usted promete menos precisión de la que tiene. Y al
+              revés: ponerla donde el muestreo fue con reemplazo la <strong>subestima</strong>, que es el
+              error caro.</td>
+          </tr>
+          <tr>
+            <td><strong>¿Este marco alcanza a la población que quiero estudiar?</strong></td>
+            <td>Quién tiene $\pi_k = 0$. Si alguien no puede salir en la muestra por más veces que se
+              repita el sorteo, no está subrepresentado: <strong>está fuera</strong>, y ningún tamaño de
+              muestra lo arregla.</td>
+          </tr>
+          <tr>
+            <td><strong>¿El sesgo sube o baja la estimación?</strong></td>
+            <td>Hacia qué lado está lo que falta. La dirección no se adivina: se argumenta comparando la
+              media de quien queda dentro con la de quien queda fuera.</td>
+          </tr>
+          <tr>
+            <td><strong>¿Puedo usar la fórmula del MAS aquí?</strong></td>
+            <td>Cómo está <strong>ordenado el marco</strong>. Sobre una muestra sistemática esa fórmula
+              puede errar en las dos direcciones. Si el orden se parece a lo que usted mide, el diseño
+              estratifica sin decirlo y la fórmula <strong>declara más varianza de la real</strong>: usted
+              promete menos precisión de la que tiene. Si hay una periodicidad que casa con el salto,
+              declara <strong>mucha menos</strong>, y ése es el error caro — un intervalo estrechísimo
+              alrededor de un número equivocado, sin ninguna señal de alarma.</td>
+          </tr>
+          <tr>
+            <td><strong>¿Los pesos están bien?</strong></td>
+            <td>Que $\sum d_k$ dé $N$ <strong>en un diseño de igual probabilidad</strong> —MAS, o
+              sistemático con $N = nk$—. Es la comprobación de diez segundos que caza casi todos los
+              errores de ponderación, y no está en ningún formulario. Con $\pi_k$ desiguales la suma solo
+              <em>estima</em> $N$ y no tiene por qué dar $N$ exacto: ahí lo que se comprueba es que cada
+              $d_k = 1/\pi_k$.</td>
+          </tr>
+          <tr>
+            <td><strong>¿Qué NO prueba este resultado?</strong></td>
+            <td>Un intervalo que cubre no demuestra que el método sea bueno, y uno que no cubre no
+              demuestra que esté mal: el 95 % es una promesa sobre el <em>procedimiento repetido</em>, no
+              sobre su muestra.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Lo que más se cobró aquí</h3>
+      <p>Si va a repasar una sola cosa, que sea esta lista — son los sitios donde el cálculo sale sin dar
+        error y aun así está mal:</p>
+      <ul>
+        <li>La <strong>media muestral</strong> multiplicada por $n$ en vez de por $N$ — el tamaño de la
+          muestra donde iba el de la población.</li>
+        <li>La <strong>fpc olvidada</strong> cuando $f$ no es despreciable, o puesta donde el muestreo fue
+          con reemplazo.</li>
+        <li>El <strong>tamaño de muestra</strong> redondeado hacia abajo, o calculado sin la corrección
+          $n_0/(1 + n_0/N)$.</li>
+        <li>La <strong>varianza de un sistemático</strong> estimada con la fórmula del MAS, sin decir que
+          es una aproximación y sin mirar el orden del marco.</li>
+        <li>El <strong>código de dato faltante</strong> promediado como si fuera un dato.</li>
+        <li>La <strong>población muestreada</strong> confundida con la objetivo, o con los
+          respondientes.</li>
+      </ul>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>La víspera no es para aprender nada nuevo.</strong> Si el diagnóstico le
+          marcó un objetivo en rojo, relea <em>ese</em> módulo del capítulo y rehaga <em>esas</em> preguntas. Un
+          repaso de los ocho capítulos la noche antes de un parcial que evalúa dos es tiempo mal gastado.</p>
+      </div>
+    </div>
+  </template>

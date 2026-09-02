@@ -1,0 +1,802 @@
+{
+  "generado_por": "precalculo/inventario_items.py",
+  "fuentes": {
+    "cap1": "sitio/muestreo/capitulo-1-encuestas-sesgos.html",
+    "cap2": "sitio/muestreo/capitulo-2-diseno-mas-sistematico.html",
+    "simulacro": "ensamblado/modulos/taller1/simulacro.js"
+  },
+  "modulos": {
+    "cap1": [
+      {
+        "id": 1,
+        "titulo": "Una controversia de muestreo"
+      },
+      {
+        "id": 2,
+        "titulo": "Marco conceptual"
+      },
+      {
+        "id": 3,
+        "titulo": "Requisitos de una buena muestra"
+      },
+      {
+        "id": 4,
+        "titulo": "Sesgo de selección"
+      },
+      {
+        "id": 5,
+        "titulo": "Sesgo de medición"
+      },
+      {
+        "id": 6,
+        "titulo": "Diseño de cuestionarios"
+      },
+      {
+        "id": 7,
+        "titulo": "El error total de encuesta"
+      },
+      {
+        "id": 8,
+        "titulo": "Las poblaciones del curso"
+      },
+      {
+        "id": 9,
+        "titulo": "Sesgo de muestreo en ciencia de datos e IA"
+      },
+      {
+        "id": 10,
+        "titulo": "Autoevaluación y ejercicios guiados"
+      }
+    ],
+    "cap2": [
+      {
+        "id": 1,
+        "titulo": "El diseño muestral p(s)"
+      },
+      {
+        "id": 2,
+        "titulo": "Probabilidades de inclusión"
+      },
+      {
+        "id": 3,
+        "titulo": "El estimador de Horvitz–Thompson"
+      },
+      {
+        "id": 4,
+        "titulo": "Insesgadez de diseño y representatividad"
+      },
+      {
+        "id": 5,
+        "titulo": "El MAS como caso particular"
+      },
+      {
+        "id": 6,
+        "titulo": "Intervalos de confianza"
+      },
+      {
+        "id": 7,
+        "titulo": "Determinación del tamaño de muestra"
+      },
+      {
+        "id": 8,
+        "titulo": "Diseño Bernoulli y muestreo con reemplazo"
+      },
+      {
+        "id": 9,
+        "titulo": "Muestreo sistemático"
+      },
+      {
+        "id": 10,
+        "titulo": "Teoría de aleatorización"
+      },
+      {
+        "id": 11,
+        "titulo": "Autoevaluación y ejercicios guiados"
+      }
+    ]
+  },
+  "modulos_de_contenido": [
+    "1.1",
+    "1.2",
+    "1.3",
+    "1.4",
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "2.1",
+    "2.2",
+    "2.3",
+    "2.4",
+    "2.5",
+    "2.6",
+    "2.7",
+    "2.8",
+    "2.9",
+    "2.10"
+  ],
+  "items": [
+    {
+      "fuente": "cap1",
+      "i": 0,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 1,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "el sondeo del literary digest recogió más de 2,3 millones de papeletas y falló por 19 puntos. ¿qué habría arreglado el problema?"
+    },
+    {
+      "fuente": "cap1",
+      "i": 1,
+      "tipo": "numerica",
+      "cap": 1,
+      "modulo": 1,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "el sondeo estimó un 42,92 % de apoyo a roosevelt y el resultado real fue 62,24 % (base de dos candidatos). ¿cuánto vale el sesgo, en puntos porcentuales? usa dos decimales y el signo."
+    },
+    {
+      "fuente": "cap1",
+      "i": 2,
+      "tipo": "multiple",
+      "cap": 1,
+      "modulo": 2,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "un investigador quiere estudiar a los estudiantes de un programa y usa la lista de matrícula del semestre pasado. marca todo lo que sea cierto."
+    },
+    {
+      "fuente": "cap1",
+      "i": 3,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 2,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "en agpop , 19 condados tienen acres92 = -99 , que es el código de faltante de lohr. ¿qué pasa si no se hace nada?"
+    },
+    {
+      "fuente": "cap1",
+      "i": 4,
+      "tipo": "grafico",
+      "cap": 1,
+      "modulo": 4,
+      "dimension": "grafico",
+      "dimension_deducida": true,
+      "enunciado": "las barras grises son el censo de 2010. ¿qué se puede afirmar de las dos encuestas?"
+    },
+    {
+      "fuente": "cap1",
+      "i": 5,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 4,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "en el simulador de no respuesta, poner las cuatro regiones al 10 % y ponerlas todas al 60 % dan el mismo sesgo: cero. ¿por qué?"
+    },
+    {
+      "fuente": "cap1",
+      "i": 6,
+      "tipo": "numerica",
+      "cap": 1,
+      "modulo": 4,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "una encuesta obtiene respuesta del 30 % de la muestra. entre los que responden, el 80 % declara usar el servicio; entre los que no responden, lo usa el 40 %. ¿cuál es el porcentaje real en la población? da un decimal."
+    },
+    {
+      "fuente": "cap1",
+      "i": 7,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 6,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "«¿está usted satisfecho con el precio y la calidad del servicio?» ¿qué defecto tiene y qué error produce?"
+    },
+    {
+      "fuente": "cap1",
+      "i": 8,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 7,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "sobre agpop , un procedimiento con un sesgo del 5 % de la media se aplica a un censo ($n = n = 3\\,078$). ¿cuál es su raíz del error cuadrático medio?"
+    },
+    {
+      "fuente": "cap1",
+      "i": 9,
+      "tipo": "multiple",
+      "cap": 1,
+      "modulo": 7,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "marca todo lo que sea error ajeno al muestreo."
+    },
+    {
+      "fuente": "cap1",
+      "i": 10,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 9,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "un modelo se entrena con reseñas escritas por usuarios que decidieron escribirlas y se despliega sobre todos los compradores. ¿a qué se parece eso?"
+    },
+    {
+      "fuente": "cap2",
+      "i": 0,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 1,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "un investigador entrevista a los primeros 400 clientes que entran a una tienda un martes. ¿por qué esto no permite calcular un error estándar?"
+    },
+    {
+      "fuente": "cap2",
+      "i": 1,
+      "tipo": "numerica",
+      "cap": 2,
+      "modulo": 2,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "en el diseño c (probabilidades desiguales) la unidad 5 tiene $\\pi_5 = 0{,}55$. ¿cuánto vale su peso de diseño $d_5 = 1/\\pi_5$? da cuatro decimales."
+    },
+    {
+      "fuente": "cap2",
+      "i": 2,
+      "tipo": "multiple",
+      "cap": 2,
+      "modulo": 3,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "marca todo lo que hace falta para que $\\hat{t}_\\pi$ sea insesgado por diseño."
+    },
+    {
+      "fuente": "cap2",
+      "i": 3,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 4,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "bajo el diseño c, $e(n\\bar{y}) = 165{,}75$ mientras que el total verdadero es 150. ¿qué explica ese sesgo de $+15{,}75$?"
+    },
+    {
+      "fuente": "cap2",
+      "i": 4,
+      "tipo": "grafico",
+      "cap": 2,
+      "modulo": 5,
+      "dimension": "grafico",
+      "dimension_deducida": true,
+      "enunciado": "las dos distribuciones vienen de la misma población. ¿qué se puede afirmar?"
+    },
+    {
+      "fuente": "cap2",
+      "i": 5,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 5,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "en un mas sin reemplazo con $n = 100$ y $n = 20$, ¿cuánto vale $\\pi_{kl}$ para dos unidades distintas?"
+    },
+    {
+      "fuente": "cap2",
+      "i": 6,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 6,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "un analista calcula el intervalo del 95 % para agsrs y olvida declarar el fpc . ¿qué le pasa a su intervalo?"
+    },
+    {
+      "fuente": "cap2",
+      "i": 7,
+      "tipo": "numerica",
+      "cap": 2,
+      "modulo": 7,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "para estimar una proporción con margen de error $0{,}03$ y 95 % de confianza, sin información previa sobre $p$: ¿cuánto vale $n_0$ (antes del fpc)? redondea al entero."
+    },
+    {
+      "fuente": "cap2",
+      "i": 8,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 8,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "en el diseño bernoulli con $\\pi = 0{,}02$ sobre agpop , el estimador de hájek tiene un cv de 0,170 frente a 0,208 del de horvitz–thompson. ¿por qué gana hájek si es el estimador sesgado ?"
+    },
+    {
+      "fuente": "cap2",
+      "i": 9,
+      "tipo": "multiple",
+      "cap": 2,
+      "modulo": 9,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "sobre el muestreo sistemático 1 en $k$, marca todo lo que es cierto."
+    },
+    {
+      "fuente": "cap2",
+      "i": 10,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 10,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "en una validación cruzada de $k$ partes, ¿cuánto vale $\\pi_k$ para una fila cualquiera del conjunto de datos?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 0,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 2,
+      "semana": 1,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "la universidad quiere estimar cuántas horas a la semana estudia fuera de clase un estudiante de pregrado . envía el cuestionario a los correos institucionales de los matriculados en el semestre en curso. ¿cuál es la población muestreada ?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 1,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 2,
+      "semana": 1,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "una encuesta de salud selecciona hogares de un listado catastral y mide la estatura de cada persona que vive en el hogar seleccionado. ¿cuál es la unidad de muestreo y cuál la de observación?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 2,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 4,
+      "semana": 1,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "la oficina de análisis tiene el archivo de los 5 000 delitos registrados por la policía el año pasado y quiere estimar qué proporción de los delitos cometidos en la ciudad terminó en arresto. ¿qué separa aquí el marco de la población objetivo?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 3,
+      "tipo": "multiple",
+      "cap": 1,
+      "modulo": 2,
+      "semana": 1,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "marca todos los problemas que son de marco —de quién puede llegar a estar en la muestra— y no de medición ni de no respuesta."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 4,
+      "tipo": "texto",
+      "cap": 1,
+      "modulo": 2,
+      "semana": 1,
+      "dimension": "interpretacion",
+      "dimension_deducida": true,
+      "enunciado": "en tres frases, para la encuesta de horas de estudio de la pregunta 1: define la población objetivo , el marco y la unidad , y nombra una unidad que esté en el marco pero no en la población objetivo."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 5,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 5,
+      "semana": 2,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "el cuestionario pregunta «¿cuántas horas a la semana estudias fuera de clase?» y los estudiantes tienden a redondear hacia arriba. ¿cómo se clasifica esto y en qué dirección va?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 6,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 4,
+      "semana": 2,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "se deja un código qr en la salida del comedor universitario para calificar el servicio de 1 a 5. contestan 640 personas y la media sale 2,3. ¿qué se puede decir de esa cifra como estimación de la satisfacción media de quien come allí?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 7,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 7,
+      "semana": 2,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "para estimar la estatura media de los adultos de una ciudad, el marco se arma con las fichas de los socios de un gimnasio. ¿cuál es el problema y en qué se diferencia de la no respuesta?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 8,
+      "tipo": "numerica",
+      "cap": 1,
+      "modulo": 7,
+      "semana": 2,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "un marco de 2 000 personas tiene estatura media 168,616 cm . se envía el cuestionario a todas y contestan 1 300: los 1 000 hombres, con media 175,153 cm , y 300 mujeres, con media 162,207 cm . si se estima la media del marco con la media de los respondientes, ¿cuánto vale el sesgo , en cm?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 9,
+      "tipo": "multiple",
+      "cap": 1,
+      "modulo": 9,
+      "semana": 2,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "marca todo lo que no se arregla aumentando el tamaño de la muestra."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 10,
+      "tipo": "grafico",
+      "cap": 1,
+      "modulo": 4,
+      "semana": 2,
+      "dimension": "grafico",
+      "dimension_deducida": true,
+      "enunciado": "las dos curvas son la distribución de la estatura en el marco completo y en el conjunto de respondientes del mecanismo de la pregunta anterior. ¿qué se puede afirmar?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 11,
+      "tipo": "opcion",
+      "cap": 1,
+      "modulo": 7,
+      "semana": 2,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "una estimación tiene un sesgo de 3,5 cm y un error estándar de 0,3 cm. el error cuadrático medio es $\\text{ecm} = \\text{sesgo}^2 + v$. ¿qué implica eso para la estrategia de mejora?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 12,
+      "tipo": "texto",
+      "cap": 1,
+      "modulo": 9,
+      "semana": 2,
+      "dimension": "interpretacion",
+      "dimension_deducida": true,
+      "enunciado": "explícale a alguien sin formación estadística, en 60–80 palabras, por qué una encuesta con 50 000 respuestas voluntarias puede ser peor que una aleatoria de 500 ."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 13,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 1,
+      "semana": 3,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "a un encuestador se le pide que consiga 30 hombres y 30 mujeres en la calle, eligiendo él a quién abordar hasta completar las cuotas. ¿por qué este diseño no permite calcular un error estándar?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 14,
+      "tipo": "numerica",
+      "cap": 2,
+      "modulo": 5,
+      "semana": 3,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "de una población de n = 2 000 personas se toma un mas sin reemplazo de n = 200 . en la muestra, la estatura media es 168,94 cm y la desviación típica muestral es $s = 11{,}0743$ cm. ¿cuál es el error estándar de la media muestral? da cuatro decimales."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 15,
+      "tipo": "numerica",
+      "cap": 2,
+      "modulo": 6,
+      "semana": 3,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "con esa misma muestra ($\\bar{y} = 168{,}94$ cm, error estándar 0,7429 cm), construye el intervalo de confianza al 95 % para la estatura media de la población. ¿cuál es su límite superior ? da dos decimales."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 16,
+      "tipo": "numerica",
+      "cap": 2,
+      "modulo": 5,
+      "semana": 3,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "con los mismos datos ($n = 200$, $n = 2\\,000$): ¿en qué porcentaje se equivoca el error estándar de quien olvida la corrección por población finita? da dos decimales."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 17,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 6,
+      "semana": 3,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "tu intervalo al 95 % para la estatura media es $[167{,}48;\\ 170{,}40]$. ¿cuál de estas afirmaciones es correcta?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 18,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 4,
+      "semana": 3,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "tu muestra de 200 personas trajo 96 mujeres y 104 hombres, cuando la población tiene exactamente 1 000 de cada. ¿qué significa que $\\bar{y}$ sea insesgado pese a ese desajuste?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 19,
+      "tipo": "multiple",
+      "cap": 2,
+      "modulo": 8,
+      "semana": 3,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "se mantiene $n = 200$ y $n = 2\\,000$, pero se pasa de mas sin reemplazo a mas con reemplazo. marca todo lo que cambia."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 20,
+      "tipo": "grafico",
+      "cap": 2,
+      "modulo": 6,
+      "semana": 3,
+      "dimension": "grafico",
+      "dimension_deducida": true,
+      "enunciado": "cada segmento vertical es un intervalo al 95 % construido con una muestra distinta de $n = 50$; la línea horizontal es la media poblacional verdadera. ¿qué muestra el gráfico?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 21,
+      "tipo": "texto",
+      "cap": 2,
+      "modulo": 6,
+      "semana": 3,
+      "dimension": "interpretacion",
+      "dimension_deducida": true,
+      "enunciado": "un compañero escribe en su informe: «mi intervalo es $[167{,}48;\\ 170{,}40]$, así que hay un 95 % de probabilidad de que la media de la población esté ahí dentro». corrígelo en dos frases: qué está mal y cómo se dice bien."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 22,
+      "tipo": "numerica",
+      "cap": 2,
+      "modulo": 7,
+      "semana": 4,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "se quiere estimar la estatura media de una población de n = 2 000 personas con un margen de error de 1,5 cm al 95 %. un estudio previo da $s = 11{,}1581$ cm. ¿qué tamaño de muestra hace falta, aplicando la corrección por población finita? redondea hacia arriba."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 23,
+      "tipo": "numerica",
+      "cap": 2,
+      "modulo": 7,
+      "semana": 4,
+      "dimension": "procedimiento",
+      "dimension_deducida": true,
+      "enunciado": "de los 5 000 delitos del archivo, un piloto estima que la proporción con arresto ronda $p = 0{,}2766$. se quiere estimar esa proporción con un margen de 3 puntos porcentuales al 95 %. ¿qué tamaño de muestra hace falta, con corrección por población finita? redondea hacia arriba."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 24,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 7,
+      "semana": 4,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "ese mismo cálculo, pero sobre un archivo 100 veces más grande (500 000 delitos en vez de 5 000), con el mismo margen y el mismo $p$. ¿qué le pasa al tamaño de muestra necesario?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 25,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 9,
+      "semana": 4,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "en un muestreo sistemático con salto $k$ sobre un marco de $n = nk$ unidades, ¿por qué no existe un estimador insesgado de la varianza?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 26,
+      "tipo": "opcion",
+      "cap": 2,
+      "modulo": 9,
+      "semana": 4,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "el marco de las 2 000 personas se ordena por estatura y se toma un sistemático con $k = 10$ ($n = 200$). comparado con un mas del mismo tamaño, ¿qué ocurre con la varianza de la media muestral?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 27,
+      "tipo": "multiple",
+      "cap": 2,
+      "modulo": 9,
+      "semana": 4,
+      "dimension": "concepto",
+      "dimension_deducida": true,
+      "enunciado": "muestreo sistemático con arranque aleatorio, $n = 2\\,000$, $k = 10$, $n = 200$. marca todo lo que es cierto."
+    },
+    {
+      "fuente": "simulacro",
+      "i": 28,
+      "tipo": "grafico",
+      "cap": 2,
+      "modulo": 7,
+      "semana": 4,
+      "dimension": "grafico",
+      "dimension_deducida": true,
+      "enunciado": "las dos curvas dan el margen de error al 95 % en función de $n$, sobre la misma población de $n = 2\\,000$: una con corrección por población finita y otra sin ella. ¿qué se puede afirmar?"
+    },
+    {
+      "fuente": "simulacro",
+      "i": 29,
+      "tipo": "texto",
+      "cap": 2,
+      "modulo": 9,
+      "semana": 4,
+      "dimension": "interpretacion",
+      "dimension_deducida": true,
+      "enunciado": "el marco de las 2 000 personas está ordenado alternando mujer, hombre, mujer, hombre… y se toma un sistemático con salto $k = 10$. explica en 4–6 frases qué les pasa a las 10 muestras posibles, y por qué el error estándar calculado con la fórmula del mas mentiría ."
+    }
+  ],
+  "cobertura": {
+    "1.1": {
+      "quiz": 2,
+      "simulacro": 0,
+      "total": 2
+    },
+    "1.2": {
+      "quiz": 2,
+      "simulacro": 4,
+      "total": 6
+    },
+    "1.3": {
+      "quiz": 0,
+      "simulacro": 0,
+      "total": 0
+    },
+    "1.4": {
+      "quiz": 3,
+      "simulacro": 3,
+      "total": 6
+    },
+    "1.5": {
+      "quiz": 0,
+      "simulacro": 1,
+      "total": 1
+    },
+    "1.6": {
+      "quiz": 1,
+      "simulacro": 0,
+      "total": 1
+    },
+    "1.7": {
+      "quiz": 2,
+      "simulacro": 3,
+      "total": 5
+    },
+    "1.8": {
+      "quiz": 0,
+      "simulacro": 0,
+      "total": 0
+    },
+    "1.9": {
+      "quiz": 1,
+      "simulacro": 2,
+      "total": 3
+    },
+    "1.10": {
+      "quiz": 0,
+      "simulacro": 0,
+      "total": 0
+    },
+    "2.1": {
+      "quiz": 1,
+      "simulacro": 1,
+      "total": 2
+    },
+    "2.2": {
+      "quiz": 1,
+      "simulacro": 0,
+      "total": 1
+    },
+    "2.3": {
+      "quiz": 1,
+      "simulacro": 0,
+      "total": 1
+    },
+    "2.4": {
+      "quiz": 1,
+      "simulacro": 1,
+      "total": 2
+    },
+    "2.5": {
+      "quiz": 2,
+      "simulacro": 2,
+      "total": 4
+    },
+    "2.6": {
+      "quiz": 1,
+      "simulacro": 4,
+      "total": 5
+    },
+    "2.7": {
+      "quiz": 1,
+      "simulacro": 4,
+      "total": 5
+    },
+    "2.8": {
+      "quiz": 1,
+      "simulacro": 1,
+      "total": 2
+    },
+    "2.9": {
+      "quiz": 1,
+      "simulacro": 4,
+      "total": 5
+    },
+    "2.10": {
+      "quiz": 1,
+      "simulacro": 0,
+      "total": 1
+    },
+    "2.11": {
+      "quiz": 0,
+      "simulacro": 0,
+      "total": 0
+    }
+  },
+  "por_tipo": {
+    "opcion": 25,
+    "numerica": 10,
+    "multiple": 8,
+    "grafico": 5,
+    "texto": 4
+  },
+  "por_dimension": {
+    "concepto": 33,
+    "procedimiento": 10,
+    "grafico": 5,
+    "interpretacion": 4
+  },
+  "huerfanos": [
+    "1.3",
+    "1.8"
+  ],
+  "con_un_solo_item": [
+    "1.5",
+    "1.6",
+    "2.2",
+    "2.3",
+    "2.10"
+  ]
+}

@@ -1,0 +1,93 @@
+  <template id="module-COMO_USAR">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Antes de empezar</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Cómo usar esto
+          <span class="text-gray-400 font-normal text-2xl">/ How to use this</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Que sepa, antes del parcial y no después, en cuál de
+              los seis objetivos del corte está flojo — y en qué módulo del material está lo que le falta.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Esto <strong>no tiene nota y se puede repetir sin límite</strong>. Su producto no es un puntaje: es
+        saber <em>qué releer</em>. Al terminar cada semana, el resumen le nombra los módulos que le costaron, y el
+        <strong>mapa de repaso</strong> del final lleva cada una de las treinta preguntas a su módulo del capítulo 1
+        o 2 y a su sección de Lohr. Un «24 de 30» no le sirve a nadie para estudiar esta noche; un «me costaron las
+        tres del módulo 2.6» sí.</p>
+
+      <div class="note">
+        <p><strong>Copiar aquí no tiene sentido.</strong> No hay nada que entregar y nadie califica: el que copia se
+          queda sin lo único que este instrumento produce. Y por lo mismo, responder al azar para «terminarlo» sale
+          más caro que dejarlo a medias: la lista de lo que hay que repasar saldrá equivocada.</p>
+      </div>
+
+      <h3>Qué NO es</h3>
+      <p><strong>No es el parcial.</strong> Ninguna de estas preguntas va a aparecer en el examen: esto está
+        publicado y lo publicado se quema. Lo que sí comparten es la <strong>tabla de especificaciones</strong> de
+        aquí abajo — los mismos objetivos, con los mismos pesos —, así que las preguntas del parcial serán de la
+        misma familia, no las mismas.</p>
+      <p><strong>No es un capítulo.</strong> No enseña nada nuevo. Todo lo que se pregunta está en los capítulos 1
+        y 2 publicados, y cada pregunta le dice dónde.</p>
+
+      <h3>Las condiciones del parcial</h3>
+      <div class="definition">
+        <p><strong>Jueves 3 de septiembre, 90 minutos. Se permiten formulario y calculadora.</strong></p>
+        <p style="margin-bottom:0;">Eso cambia lo que hay que estudiar, y conviene decirlo claro: si las fórmulas
+          están sobre la mesa, <strong>recordarlas no vale puntos</strong>. Lo que se evalúa es <em>elegir</em> la
+          que corresponde al diseño que le describen, ponerle los números correctos y <em>decir qué significa el
+          resultado</em>. Un formulario no le dice si esa población tiene fpc, ni si el marco alcanza a quien usted
+          quiere estudiar, ni hacia dónde se mueve el sesgo. Estudie decisiones, no fórmulas.</p>
+      </div>
+
+      <h3>La tabla de especificaciones</h3>
+      <p>Estos son los seis objetivos del Corte I y lo que pesa cada uno en el parcial.</p>
+
+      ⟦TABLA_ESPECIFICACIONES⟧
+
+      <p>La columna «módulos» remite a los capítulos publicados: <a href="capitulo-1-encuestas-sesgos.html">1 ·
+        Encuestas, sesgos y error total</a> y <a href="capitulo-2-diseno-mas-sistematico.html">2 · Diseño muestral,
+        MAS y sistemático</a>.</p>
+
+      <div class="warning">
+        <p><strong>Estas treinta preguntas NO reparten como el parcial, y conviene saberlo antes de empezar.</strong>
+          Están ordenadas por semana, no por objetivo, y la cobertura sale desigual:</p>
+        <ul style="margin-bottom:0;">
+          <li><strong>O3, el marco π, pesa el 23 % del parcial y aquí son 2 de 30 preguntas (6,7 %).</strong> Es la
+            distancia más grande de la tabla, y en la dirección que más cuesta: $p(s)$, las probabilidades de
+            inclusión, Horvitz–Thompson y la insesgadez de diseño casi no se ensayan aquí. Si esta noche va a
+            repasar una sola cosa, que sean los <a href="capitulo-2-diseno-mas-sistematico.html">módulos 1 a 4 y 10
+            del capítulo 2</a>, y sus once preguntas de autoevaluación.</li>
+          <li><strong>O2, los sesgos, pesa el 20 % y aquí son 9 de 30 (30 %).</strong> Va sobrado: si le salen bien,
+            no invierta más tiempo ahí.</li>
+          <li>O1, O4, O5 y O6 quedan razonablemente cerca de su peso.</li>
+        </ul>
+      </div>
+
+      <h3>Cuánto dura y cómo repartirlo</h3>
+      <p>Las treinta preguntas son <strong>una hora larga</strong>, y no hace falta hacerlas de una sentada: están
+        separadas en cuatro módulos, uno por semana del corte. Después vienen los diez errores de cálculo y el mapa
+        de repaso, que se leen, no se responden.</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Las respuestas no viajan a ninguna parte.</strong> Todo esto corre en su
+          navegador y nadie ve lo que responde. Si cierra la pestaña, se pierde: el diagnóstico se calcula en el
+          momento y no queda guardado.</p>
+      </div>
+
+      <h3>Sobre qué datos</h3>
+      <p>Los ejercicios nuevos corren sobre <strong><code>baseball</code></strong>, una de las poblaciones oficiales
+        del libro de Lohr: los <strong>797 jugadores</strong> de las 30 plantillas de la MLB en 2004, con su salario.
+        Se eligió por dos razones. La primera es que <strong>no aparece en ningún capítulo</strong>, así que aquí
+        reconocer no puede sustituir a razonar. La segunda importa más: es la <strong>población completa</strong>, no
+        una muestra. Eso permite hacer algo que con un archivo de muestra solo se puede afirmar — <em>medir</em> el
+        sesgo de un marco incompleto, <em>contar</em> cuántos intervalos cubren de verdad y <em>calcular exacta</em>
+        la varianza de un diseño sistemático recorriendo entero su espacio de muestras.</p>
+    </div>
+  </template>

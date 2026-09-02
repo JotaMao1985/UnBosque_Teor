@@ -1,0 +1,412 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 5 · Diez errores que el código no delata               -->
+  <!-- ============================================================ -->
+  <template id="module-5">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 5</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Diez errores que el código no
+          delata <span class="text-gray-400 font-normal text-2xl">/ Ten errors your output won't catch</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer diez resultados que corren sin error, dan
+              cifras creíbles y están mal — y saber, en cada uno, qué mirar para detectarlo y cuánto cuesta no
+              hacerlo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este módulo iba a llamarse «los diez errores que comete la IA». <strong>No se llama así porque no habría sido
+        cierto.</strong> Antes de escribir el taller se le pasaron a un asistente seis de sus ítems —dirección del
+        sesgo, tratamiento de los faltantes, el techo del tamaño de muestra, la varianza de un sistemático— con la
+        idea de que ahí fallaría. Los resolvió <strong>los seis</strong>, y algunos mejor que la respuesta media de un
+        estudiante de quinto semestre. En uno de ellos avisó por su cuenta de un código de dato faltante que nadie le
+        había señalado.</p>
+
+      <p>Así que el problema no es que la máquina se equivoque a menudo. Es que <strong>cuando se equivoca, el
+        resultado no se distingue del correcto</strong>: el código corre, no hay mensaje de error, las cifras tienen
+        el orden de magnitud esperado y el informe se lee bien. Y eso vale igual si el código lo escribió un
+        asistente, un compañero, una respuesta de internet o usted mismo a las once de la noche.</p>
+
+      <p>Los diez que siguen se eligieron por eso: todos <em>corren</em>. Cada uno trae el código con el error, la
+        salida <strong>real</strong> de ejecutarlo, la versión correcta y —porque aquí se trabaja sobre una población
+        completa, con el parámetro verdadero a la vista— <strong>cuánto cuesta exactamente</strong> el error. Cuatro
+        de ellos son los que estaban plantados en la Parte D del taller.</p>
+
+      <div class="note">
+        <p><strong>Cómo se lee este módulo.</strong> No memorice los diez. Quédese con la <em>pregunta</em> que caza a
+          cada uno —«¿por qué multiplico aquí?», «¿sobre qué población queda definida esta media?»— porque esa
+          pregunta sirve para errores que este módulo no contiene.</p>
+      </div>
+
+      <h3>Las poblaciones</h3>
+
+      <p>Dos archivos de Lohr que no ha usado el resto del curso. <code>htpop</code> son <strong>2 000</strong>
+        personas con su estatura y su sexo: es la población <em>completa</em>, así que la media verdadera —168,62 cm—
+        se conoce y cada error se puede medir en vez de describirse. <code>htsrs</code> es la muestra aleatoria
+        simple de <strong>200</strong> que Lohr extrae de ella. Y <code>crimes</code> son 5 000 delitos registrados,
+        con una variable binaria que dice si hubo arresto.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las poblaciones del módulo">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R1⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P1⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>1 · El total expandido con $n$ en vez de con $N$</h3>
+
+      <p>El estimador del total es $\hat t = N\bar y$: cada persona de la muestra representa a $N/n$ personas de la
+        población. Escribir $n\bar y$ devuelve la suma de la propia muestra, que no estima nada. Aquí da
+        <strong>33 788</strong> cuando el total verdadero es <strong>337 232</strong>: exactamente
+        <strong>10</strong> veces menos, que es $N/n$.</p>
+
+      <p>Lo que lo hace invisible es que 33 788 <em>parece</em> un número: no es negativo, no es infinito, no rompe
+        nada. La pregunta que lo caza: <strong>¿por qué multiplico por esto y no por lo otro?</strong> Si la respuesta
+        no es «porque cada unidad observada representa a tantas», el factor está mal.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El total expandido con n">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R2⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P2⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>2 · El error estándar sin la corrección por población finita</h3>
+
+      <p>Sin reemplazo, la varianza lleva el factor $(1 - n/N)$. Con $n/N = 0{,}1$ el fpc vale 0,9 y omitirlo lleva el
+        error estándar de <strong>0,7429</strong> a <strong>0,7831</strong>: un <strong>5,41 %</strong> de más.</p>
+
+      <p>Fíjese en la <em>dirección</em>, porque es la parte que casi nadie recuerda: olvidar el fpc <strong>infla</strong>
+        el error estándar. Quien lo olvida se declara menos preciso de lo que es, no más. Es un error conservador
+        —lo cual no lo convierte en aceptable: un intervalo más ancho de lo debido también es un intervalo mal
+        calculado—.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El error estándar sin fpc">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R3⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P3⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>La doble vía.</strong> En la pestaña de R el error estándar se calcula dos veces: con la fórmula a
+          mano y con <code>svydesign(fpc = )</code> de <code>survey</code>, y salen idénticos hasta el último decimal.
+          Ese contraste es el hábito que conviene llevarse: una varianza calculada por un solo camino no está
+          verificada. En Python no hay equivalente directo, así que el contraste vive en la pestaña de R.</p>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>3 · <code>qnorm(0.95)</code> en un intervalo bilateral del 95 %</h3>
+
+      <p>Un intervalo de dos colas al 95 % deja 2,5 % en cada extremo: el cuantil es $z_{0{,}975} = 1{,}96$, no
+        $z_{0{,}95} = 1{,}645$. El error estrecha el intervalo un <strong>16,08 %</strong> —de 2,912 cm de ancho a
+        2,444— y su cobertura real cae al <strong>90 %</strong>.</p>
+
+      <p>Es de los más difíciles de ver, porque el resultado <em>mejora</em>: un intervalo más estrecho se lee como
+        más precisión. La pregunta que lo caza: <strong>¿cuánta probabilidad estoy dejando fuera, y en cuántas
+        colas?</strong></p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El cuantil de una cola">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R4⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P4⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>4 · La desviación típica en el lugar del error estándar</h3>
+
+      <p>$s$ mide cuánto varían las <em>personas</em>; el error estándar, cuánto varía la <em>media</em> de muestra a
+        muestra. Confundirlos da un intervalo <strong>14,9</strong> veces más ancho: de 147,23 a 190,65 cm, cuando el
+        correcto va de 167,48 a 170,40.</p>
+
+      <p>Este es el único de los diez que <strong>sí</strong> se ve, y por eso vale la pena tenerlo aquí: un intervalo
+        para la estatura media que va de 147 a 191 cm es absurdo a simple vista. El error de verdad no es escribir
+        <code>s</code> donde iba <code>ee</code>: es <strong>no mirar el resultado</strong>.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Desviación típica frente a error estándar">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P5⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>5 · La varianza de una proporción, con dos atajos que se compensan</h3>
+
+      <p>Para una proporción, Lohr escribe $\hat V(\hat p) = (1 - n/N)\,\hat p(1-\hat p)/(n-1)$. Hay dos atajos
+        habituales: olvidar el fpc y dividir entre $n$ en vez de entre $n-1$. Por separado valen
+        <strong>+1,02 %</strong> y <strong>−0,50 %</strong>; <strong>juntos, +0,51 %</strong>.</p>
+
+      <p>Y ahí está la trampa: <strong>se compensan parcialmente</strong>. El resultado combinado se aleja menos del
+        correcto que uno solo de los dos errores, así que nada delata que hay dos. Con $n$ grande la diferencia es
+        pequeña; con $n$ pequeño, el $n-1$ pesa y deja de serlo.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La varianza de una proporción">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P6⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>6 · El tamaño de muestra sin corregir, y redondeado hacia abajo</h3>
+
+      <p>$n_0$ es el tamaño que haría falta con población infinita; con $N$ finito se corrige. Los dos errores a la
+        vez —quedarse en $n_0$ y redondear hacia abajo— dan <strong>212</strong> personas donde bastan
+        <strong>193</strong>: <strong>19</strong> encuestas de más, pagadas y realizadas para nada.</p>
+
+      <p>El redondeo va <strong>siempre hacia arriba</strong>, y no por convención: quedarse corto incumple el margen
+        de error prometido, que es justo lo que se estaba comprando con el tamaño de muestra.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El tamaño de muestra sin corregir">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R7⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P7⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>7 · La varianza de un sistemático calculada como si fuera un MAS</h3>
+
+      <p>Es el peor de los diez, con diferencia. El marco alterna mujer, hombre, mujer, hombre… y el salto $k = 10$ es
+        par, así que toda muestra cae sobre el mismo sexo: cinco muestras de solo mujeres y cinco de solo hombres. Las
+        diez medias posibles van de <strong>161,62</strong> a <strong>175,73</strong> cm y <em>ninguna</em> se acerca
+        a los 168,62 de la población.</p>
+
+      <p>Dentro de cada muestra, en cambio, las estaturas son homogéneas. Y como la fórmula del MAS solo mira la
+        dispersión <em>interna</em>, declara un error estándar de <strong>0,61</strong> cm cuando el real es
+        <strong>6,56</strong>: una varianza <strong>117</strong> veces optimista. El investigador ve un intervalo
+        estrechísimo alrededor de un número equivocado, y nada en su salida se lo advierte.</p>
+
+      <p>Aquí se puede comparar con la verdad porque el diseño solo tiene <strong>10</strong> muestras posibles y se
+        recorren enteras. Con datos reales no se puede: por eso la varianza del sistemático <em>no es estimable</em>
+        sin supuestos, y por eso decir «lo trato como un MAS» es un supuesto, no un resultado.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La varianza del sistemático">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P8⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>8 · El promedio de los promedios</h3>
+
+      <p>La proporción de arrestos por tipo de delito, promediada sin pesos, trata igual al tipo con
+        <strong>6</strong> casos que al de <strong>1 016</strong>. Sobre los <strong>17</strong> tipos del archivo da
+        <strong>0,2883</strong> frente al <strong>0,2766</strong> verdadero: <strong>1,17</strong> puntos
+        porcentuales de sesgo, en un cálculo que cabe en una línea y que nadie revisa.</p>
+
+      <p>Es el mismo error que hace que una media de respondientes no sea la media del marco, y por eso conviene
+        reconocerlo en las dos formas. La pregunta que lo caza: <strong>¿todos los grupos que estoy promediando
+        pesan lo mismo en la población?</strong> Casi nunca.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El promedio de los promedios">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R9⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P9⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>9 · <code>na.rm = TRUE</code> cambia la población sin decirlo</h3>
+
+      <p>El formulario tenía un mínimo y no registró la estatura de quien mide menos de 155 cm:
+        <strong>178</strong> personas, el <strong>8,9 %</strong> del marco. Con <code>na.rm = TRUE</code> la media
+        sale, no hay aviso, y vale <strong>170,40</strong> cm en vez de 168,62: <strong>1,78</strong> cm de sesgo.</p>
+
+      <p>Lo importante no es el número: es que esa media <em>ya no estima lo que se creía</em>. Estima la estatura
+        media de quien mide 155 o más, que es otra población. Es la distinción del primer módulo del curso
+        —población objetivo frente a población muestreada— reapareciendo dentro de un argumento de función.</p>
+
+      <p>La corrección no es «quitar el <code>na.rm</code>» para que dé <code>NA</code>. Es
+        <strong>declarar</strong> sobre qué población queda definida la estimación, y decidir a la vista de eso si
+        sirve.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="na.rm cambia la población">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R10⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P10⟧</code></pre>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>10 · El mismo diseño en dos lenguajes no es el mismo diseño</h3>
+
+      <p><code>sample()</code> de R muestrea <strong>sin</strong> reemplazo por defecto.
+        <code>np.random.choice</code> de Python, <strong>con</strong> reemplazo. Quien traduce su código de un
+        lenguaje al otro cambia el diseño sin tocar una sola idea, y no hay error ni aviso.</p>
+
+      <p>Se nota en dos sitios, si se mira: aparecen personas repetidas —donde sin reemplazo hay
+        <strong>200</strong> distintas, con reemplazo se esperan <strong>190,37</strong>— y la varianza sube, porque
+        se pierde el fpc. La pregunta que lo caza: <strong>¿cuántas unidades distintas tengo de verdad?</strong> Una
+        línea, <code>length(unique(...))</code>, y se acabó la duda.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Con reemplazo o sin él">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R11⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P11⟧</code></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p><strong>Este es el único bloque del módulo cuyas dos pestañas dan cifras distintas, y es a propósito.</strong>
+          R sortea 11 repeticiones y Python 9, con errores estándar también distintos, porque
+          <strong>una semilla no es portable entre lenguajes</strong>: <code>set.seed(2026)</code> y
+          <code>default_rng(2026)</code> no producen la misma secuencia. Lo que sí coincide es lo que no depende del
+          sorteo: las 190,37 personas distintas esperadas. Si alguna vez ve que «los mismos» resultados no le salen
+          al cambiar de lenguaje, empiece por aquí antes de buscar un error de fórmula.</p>
+      </div>
+
+      <!-- ---------------------------------------------------------- -->
+      <h3>Los diez, en una tabla</h3>
+
+      <p>Para repasar antes del parcial. La columna que importa es la última: no el nombre del error, sino
+        <strong>qué preguntarle a un resultado</strong> para descubrirlo.</p>
+
+      <table>
+        <caption class="sr-only">Los diez errores, su coste y la pregunta que los detecta</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">El error</th>
+            <th scope="col">Cuánto cuesta aquí</th>
+            <th scope="col">La pregunta que lo caza</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td><td>Total con $n$ en vez de $N$</td>
+            <td>10 veces menos</td>
+            <td>¿Por qué multiplico por este factor?</td>
+          </tr>
+          <tr>
+            <td>2</td><td>Error estándar sin fpc</td>
+            <td>5,41 % de más</td>
+            <td>¿Hay reemplazo? ¿Qué fracción de la población estoy viendo?</td>
+          </tr>
+          <tr>
+            <td>3</td><td>Cuantil de una cola en un IC bilateral</td>
+            <td>Cobertura del 90 %, no del 95</td>
+            <td>¿Cuánta probabilidad dejo fuera, y en cuántas colas?</td>
+          </tr>
+          <tr>
+            <td>4</td><td>$s$ en el lugar del error estándar</td>
+            <td>Intervalo 14,9 veces más ancho</td>
+            <td>¿Esto varía por persona o por muestra?</td>
+          </tr>
+          <tr>
+            <td>5</td><td>Varianza de proporción: sin fpc y entre $n$</td>
+            <td>+0,51 %, con dos errores dentro</td>
+            <td>¿Estoy usando la fórmula del libro o una parecida?</td>
+          </tr>
+          <tr>
+            <td>6</td><td>$n$ sin corregir y redondeado hacia abajo</td>
+            <td>19 encuestas de más</td>
+            <td>¿Corregí por $N$? ¿Hacia dónde redondeé?</td>
+          </tr>
+          <tr>
+            <td>7</td><td>Varianza del sistemático como si fuera MAS</td>
+            <td>117 veces optimista</td>
+            <td>¿Cuántas muestras distintas puede dar este diseño?</td>
+          </tr>
+          <tr>
+            <td>8</td><td>Promedio de promedios</td>
+            <td>1,17 puntos de sesgo</td>
+            <td>¿Todos los grupos pesan lo mismo en la población?</td>
+          </tr>
+          <tr>
+            <td>9</td><td><code>na.rm = TRUE</code> sin declararlo</td>
+            <td>1,78 cm, y otra población</td>
+            <td>¿Sobre qué población queda definida esta estimación?</td>
+          </tr>
+          <tr>
+            <td>10</td><td>Con reemplazo sin querer</td>
+            <td>Unidades repetidas y más varianza</td>
+            <td>¿Cuántas unidades distintas tengo de verdad?</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <p><strong>Lo que este módulo no le pide.</strong> No le pide desconfiar de la IA: le pide
+          <strong>verificar</strong>, que es otra cosa y se aplica igual a su propio código. Las nueve preguntas de la
+          última columna se contestan en un minuto y no requieren saber quién escribió el resultado. Esa es la
+          diferencia entre usar una herramienta y firmarla.</p>
+      </div>
+    </div>
+  </template>

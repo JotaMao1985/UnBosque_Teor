@@ -1,0 +1,307 @@
+{
+  "_": "Tabla de especificaciones del Parcial 1 — Corte I, Muestreo Estadístico (20939) 2026-II.",
+  "__": "Los pesos son DEL PARCIAL. El preparcial reparte sus ítems en la misma proporción para que el ensayo se parezca al examen. Aprobada por Javier el 2026-08-30 (Checkpoint A). La comprueba precalculo/verifica_tabla.py contra el inventario contado, no contra este texto.",
+  "___": "Dimensiones: concepto · procedimiento · interpretacion · grafico. Tipos del motor: opcion · multiple · numerica · texto · grafico.",
+  "fecha": "2026-08-30",
+  "parcial": "2026-09-03",
+  "objetivos": [
+    {
+      "id": "O1",
+      "peso": 15,
+      "titulo": "Distinguir población objetivo, muestreada y marco; unidad y variable de interés",
+      "modulos": [
+        "1.2",
+        "1.3",
+        "1.8"
+      ]
+    },
+    {
+      "id": "O2",
+      "peso": 20,
+      "titulo": "Reconocer el sesgo, decir su dirección y situarlo en el error total",
+      "modulos": [
+        "1.1",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7",
+        "1.9"
+      ]
+    },
+    {
+      "id": "O3",
+      "peso": 23,
+      "titulo": "Manejar el marco π: p(s), π_k, π_kl, Horvitz–Thompson e insesgadez de diseño",
+      "modulos": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4",
+        "2.10"
+      ]
+    },
+    {
+      "id": "O4",
+      "peso": 20,
+      "titulo": "Estimar por MAS con su error estándar, fpc e intervalo, y saber qué no prueba",
+      "modulos": [
+        "2.5",
+        "2.6"
+      ]
+    },
+    {
+      "id": "O5",
+      "peso": 7,
+      "titulo": "Determinar el tamaño de muestra y leer su sensibilidad",
+      "modulos": [
+        "2.7"
+      ]
+    },
+    {
+      "id": "O6",
+      "peso": 15,
+      "titulo": "Decidir entre sistemático, Bernoulli y con reemplazo, y estimar su varianza",
+      "modulos": [
+        "2.8",
+        "2.9"
+      ]
+    }
+  ],
+  "items_nuevos": [
+    {
+      "id": "P01",
+      "objetivo": "O1",
+      "modulo": "1.3",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Cuatro encuestas descritas; cuál cumple los requisitos de una buena muestra y en qué requisito exacto falla cada una de las otras tres."
+    },
+    {
+      "id": "P02",
+      "objetivo": "O1",
+      "modulo": "1.3",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Un marco deja fuera a un grupo entero, con π_k = 0. Qué deja de poder afirmarse: no es que el estimador empeore, es que la población muestreada ya no es la objetivo."
+    },
+    {
+      "id": "P03",
+      "objetivo": "O1",
+      "modulo": "1.8",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Sobre la población del preparcial: unidades del marco, unidades de la población objetivo y fracción de no cobertura."
+    },
+    {
+      "id": "P04",
+      "objetivo": "O1",
+      "modulo": "1.8",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "Dos histogramas de la misma variable —marco y población objetivo—: qué subpoblación falta y hacia dónde mueve la media."
+    },
+    {
+      "id": "P05",
+      "objetivo": "O2",
+      "modulo": "1.1",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Un caso descrito: situar su error en el árbol del error total y decir si aumentar n lo reduce."
+    },
+    {
+      "id": "P06",
+      "objetivo": "O2",
+      "modulo": "1.6",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Dos redacciones de la misma pregunta con sus porcentajes reales: qué componente del error es el efecto del enunciado, y si sesga o solo dispersa."
+    },
+    {
+      "id": "P07",
+      "objetivo": "O3",
+      "modulo": "2.1",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "El espacio de muestras de un diseño p(s) dibujado con su probabilidad: deducir π_k de una unidad sumando las barras que la contienen."
+    },
+    {
+      "id": "P08",
+      "objetivo": "O3",
+      "modulo": "2.2",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Del mismo diseño: π_kl de un par de unidades y comprobación de que Σ π_k = E(n)."
+    },
+    {
+      "id": "P09",
+      "objetivo": "O3",
+      "modulo": "2.2",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Un diseño con Σ π_k = n pero π_k desiguales: por qué eso no lo hace MAS y qué se rompe si se estima con la media muestral."
+    },
+    {
+      "id": "P10",
+      "objetivo": "O3",
+      "modulo": "2.3",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Calcular t̂_HT sobre una muestra pequeña con π_k desiguales dados."
+    },
+    {
+      "id": "P11",
+      "objetivo": "O3",
+      "modulo": "2.3",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "t̂_HT frente a la media muestral expandida sobre esa misma muestra: cuál es insesgado y por qué la diferencia no es un error de cálculo."
+    },
+    {
+      "id": "P12",
+      "objetivo": "O3",
+      "modulo": "2.3",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "Distribución de los dos estimadores sobre todas las muestras del diseño: cuál está centrado en t."
+    },
+    {
+      "id": "P13",
+      "objetivo": "O3",
+      "modulo": "2.4",
+      "dimension": "concepto",
+      "tipo": "multiple",
+      "pregunta": "Qué garantiza exactamente la insesgadez de diseño y qué NO garantiza sobre la muestra que te tocó."
+    },
+    {
+      "id": "P14",
+      "objetivo": "O3",
+      "modulo": "2.10",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Teoría de aleatorización: qué es aleatorio en la inferencia de diseño, qué no lo es, y sobre qué se toma la esperanza."
+    },
+    {
+      "id": "P15",
+      "objetivo": "O4",
+      "modulo": "2.5",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "MAS sobre la población del preparcial: el peso d_k de una unidad y la comprobación que caza un peso mal puesto — Σ d_k sobre la muestra tiene que devolver N, y aquí no lo devuelve."
+    },
+    {
+      "id": "P16",
+      "objetivo": "O4",
+      "modulo": "2.5",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Dos salidas de svymean, con fpc y sin fpc, sobre la misma muestra: cuál corresponde al diseño y qué se afirma de más al omitirla."
+    },
+    {
+      "id": "P17",
+      "objetivo": "O4",
+      "modulo": "2.6",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Construir el intervalo al 95 % con la salida dada y decidir si cubre el valor poblacional, que aquí se conoce."
+    },
+    {
+      "id": "P18",
+      "objetivo": "O4",
+      "modulo": "2.6",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "Los intervalos al 90, 95 y 99 % de la misma muestra sobre el valor poblacional: qué se paga por subir la confianza y cuál de los tres no cubre."
+    },
+    {
+      "id": "P19",
+      "objetivo": "O5",
+      "modulo": "2.7",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "El problema inverso: con un n máximo impuesto por el presupuesto, qué margen de error se puede prometer al 95 %."
+    },
+    {
+      "id": "P20",
+      "objetivo": "O6",
+      "modulo": "2.8",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "Distribución del tamaño de muestra en un diseño Bernoulli sobre réplicas: dónde cae E(n) y por qué el tamaño aleatorio se paga en varianza."
+    },
+    {
+      "id": "P21",
+      "objetivo": "O6",
+      "modulo": "2.8",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "MAS con reemplazo frente a sin reemplazo: qué le pasa a la varianza y por qué la fpc desaparece."
+    },
+    {
+      "id": "P22",
+      "objetivo": "O6",
+      "modulo": "2.9",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "Dos curvas de la razon entre la varianza REAL de un sistematico y la que declararia la formula del MAS, sobre 21 saltos (k = 20 a 40) y bajo dos ordenes del MISMO marco: como llega el fichero, y ordenado por salario. Cual curva es cual, y por que el 0,605 que da el orden del fichero en k = 26 NO es evidencia de que ese orden ayude."
+    },
+    {
+      "id": "P23",
+      "objetivo": "O1",
+      "modulo": "1.8",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Cuatro archivos de una misma poblacion: el censo completo, un MAS de 100, el marco con no cobertura y los respondientes. Con cual se puede MEDIR el sesgo del marco y con cuales solo estimarlo, y que deja de poder afirmarse cuando solo se tiene la muestra."
+    },
+    {
+      "id": "P24",
+      "objetivo": "O3",
+      "modulo": "2.1",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Dos disenos distintos sobre las mismas cinco unidades tienen los mismos pi_k pero distintos p(s). Que es igual entre los dos -el estimador y su esperanza- y que es distinto -su varianza-, y por que el marco pi necesita dos ordenes de probabilidad y no uno."
+    },
+    {
+      "id": "P25",
+      "objetivo": "O3",
+      "modulo": "2.2",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "En un diseno Bernoulli el tamano de muestra es ALEATORIO. Calcular suma de pi_k y decir por que aqui esa suma es E(n) y no n, a diferencia del MAS."
+    },
+    {
+      "id": "P26",
+      "objetivo": "O3",
+      "modulo": "2.3",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Una unidad del diseno tiene pi_k muy pequeno y por tanto un peso enorme. Que le hace eso al estimador de Horvitz-Thompson: sigue siendo insesgado, y sin embargo la muestra que la incluye y la que no dan estimaciones muy distintas."
+    },
+    {
+      "id": "P27",
+      "objetivo": "O4",
+      "modulo": "2.5",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Estimar la PROPORCION de lanzadores con el MAS de n = 100 y su error estandar con fpc. El valor verdadero se conoce -0,47177- asi que se puede decir si el intervalo cubre."
+    },
+    {
+      "id": "P28",
+      "objetivo": "O4",
+      "modulo": "2.6",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "La distribucion de la media muestral con n = 25, 100 y 400 sobre esta poblacion asimetrica, con la media poblacional marcada: como se estrecha y como tarda en volverse simetrica. Por que la cobertura real del intervalo del 95 % a n = 100 es 93,6 % y no 95 %."
+    },
+    {
+      "id": "P29",
+      "objetivo": "O6",
+      "modulo": "2.9",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Calcular la varianza REAL de un sistematico recorriendo sus k muestras posibles, que es el unico camino cuando pi_kl = 0 impide estimarla desde una sola muestra."
+    }
+  ],
+  "____": "Calibración de los ítems numéricos (Javier, 2026-08-30): en el Parcial 1 se permiten fórmulas y calculadora, así que ningún ítem numérico puede tener su dificultad en recordar la fórmula. La dificultad está en ELEGIRLA, en montarla sobre los datos correctos y en la comprobación que delata el montaje mal hecho.",
+  "_____": "P22 se rehizo el 2026-08-30 despues de que la auditoria refutara su explicacion. La primera version afirmaba que el sistematico sale mejor porque el orden por equipo estratifica implicitamente; era falso -el 0,605 de k=26 es el extremo bajo de una banda de ruido de mediana 1,009-. La pregunta ahora es la que ese error ensena: un solo k no es evidencia, y lo que distingue un efecto real del ruido es que no dependa de k. El orden por salario da mediana 0,092 en los 21 saltos y no cruza 1 ni una vez.",
+  "______": "Los pesos se movieron el 2026-09-02: 3 puntos de O5 a O3 (Javier). O5 -una formula con su correccion y su regla de redondeo- cobraba 10 puntos por modulo y O3 -el marco pi, que es el aparato formal del curso entero- cobraba 4. Con el peso movido, la proporcion obliga a 29 items nuevos en vez de 22: los siete anadidos (P23-P29) llenan los huecos que la auditoria nombro -nadie estimaba una proporcion, O6 no tenia ni un item de procedimiento pese a que su titulo dice 'y estimar su varianza', y el modulo 1.8 no se evaluaba de verdad-."
+}

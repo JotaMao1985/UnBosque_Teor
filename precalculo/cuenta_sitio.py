@@ -44,6 +44,9 @@ def etiqueta_de(nombre):
     m = re.match(r"taller-(\d+)", nombre)
     if m:
         return f"taller {m.group(1)}"
+    m = re.match(r"preparcial-corte-(\d+)", nombre)
+    if m:
+        return f"preparcial {m.group(1)}"
     return nombre[:10]
 
 
@@ -51,7 +54,18 @@ def main():
     # El recurso de práctica del Taller 1 no es un capítulo pero sí es una
     # página publicada con módulos, preguntas y bloques de código: si no se
     # contara, el total del README volvería a ser una cifra escrita a mano.
-    caps = sorted(SITIO.glob("capitulo-*.html")) + sorted(SITIO.glob("taller-*.html"))
+    caps = (sorted(SITIO.glob("capitulo-*.html")) + sorted(SITIO.glob("taller-*.html"))
+            + sorted(SITIO.glob("preparcial-*.html")))
+    # Solo lo que de verdad se publica. Un archivo que sigue en disco pero esta
+    # en el .gitignore -como el recurso del Taller 1, absorbido por el
+    # preparcial y retirado como pagina propia- no llega a gh-pages, y contarlo
+    # devolveria al README las cifras a mano que este guion existe para evitar.
+    import subprocess
+    ignorados = subprocess.run(["git", "check-ignore"] + [str(c) for c in caps],
+                               capture_output=True, text=True).stdout.splitlines()
+    # splitlines(), no split(): la ruta del proyecto lleva espacios («Trabajo
+    # 2026»), y partir por espacios deja fragmentos que no casan con nada.
+    caps = [c for c in caps if str(c) not in ignorados]
     anchos = [10] + [len(n) for n, _ in CAMPOS] + [len(n) for n, _ in COMPONENTES]
     cab = ["página"] + [n for n, _ in CAMPOS] + [n for n, _ in COMPONENTES]
     print("  ".join(c.rjust(a) for c, a in zip(cab, anchos)))

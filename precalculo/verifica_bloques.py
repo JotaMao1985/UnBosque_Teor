@@ -209,12 +209,15 @@ def numeros_del_universo(html):
     universo = set()
     for _, cuerpo in BLOQUE_RE.findall(html):
         universo.update(NUM_RE.findall(html_mod.unescape(cuerpo)))
-    # TALLER1 ademas de CAPn: el recurso de practica del Taller 1 incrusta sus
-    # cifras en DATOS_TALLER1, y sin esta alternativa toda cifra que solo viva
-    # ahi -las de la retroalimentacion del simulacro- se reportaria sin
-    # respaldo aunque salga del precalculo.
-    m = re.search(r'const DATOS_(?:CAP\d+|TALLER1) = (\{.*?\});\n', html, re.S)
-    if m:
+    # TALLER1 y PREPARCIAL ademas de CAPn: las paginas que no son capitulos
+    # incrustan sus cifras en otros nombres, y sin estas alternativas toda cifra
+    # que solo viva ahi -las de la retroalimentacion del simulacro- se
+    # reportaria sin respaldo aunque salga del precalculo.
+    #
+    # Y con finditer, no con search: el preparcial incrusta DOS JSON -el suyo y
+    # el del simulacro que absorbe- y `search` se quedaba con el primero,
+    # dejando fuera del universo la mitad de las cifras de la pagina.
+    for m in re.finditer(r'const DATOS_(?:CAP\d+|TALLER1|PREPARCIAL) = (\{.*?\});\n', html, re.S):
         universo.update(NUM_RE.findall(m.group(1)))
     return sorted({float(x) for x in universo if x not in ('-', '.')},)
 
