@@ -615,8 +615,8 @@
           { texto: 'Los conglomerados son el ingrediente caro: cuadruplican la varianza.', correcta: true },
           { texto: 'El deff siempre crece al añadir componentes del diseño.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es la idea que hay que desterrar: un deff de 7 no es un bloque monolítico, es una suma de fuerzas que empujan en direcciones distintas — y solo descomponiéndolo se sabe dónde intervenir (módulo 8).',
-        retroFallo: 'Son las tres primeras. La cuarta es falsa y es la lección del módulo: los estratos reducen la varianza — es su trabajo desde el capítulo 4 — mientras pesos y conglomerados la aumentan.'
+        retroAcierto: 'Todas menos la del deff que siempre crece, que es la idea que hay que desterrar: un deff de 7 no es un bloque monolítico, es una suma de fuerzas que empujan en direcciones distintas — y solo descomponiéndolo se sabe dónde intervenir (módulo 8).',
+        retroFallo: 'Son las tres que describen la descomposición. La del deff que siempre crece es falsa y es la lección del módulo: los estratos reducen la varianza — es su trabajo desde el capítulo 4 — mientras pesos y conglomerados la aumentan.'
       },
       {
         tipo: 'opcion',
@@ -725,8 +725,8 @@
           { texto: 'La media se desplaza 0,057, es decir, el recorte introduce sesgo.', correcta: true },
           { texto: 'Recortar pesos es siempre recomendable cuando la razón máx/mín supera 40.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es la receta de cocina que el módulo desmonta: en NHANES la varianza la ponen los conglomerados, no los pesos, así que aplanar pesos ataca el ingrediente equivocado. Antes de recortar, descomponer el deff.',
-        retroFallo: 'Son las tres primeras. La cuarta convierte en regla mecánica lo que es una decisión que depende de la DESCOMPOSICIÓN del deff: si el Kish es pequeño frente al deff total, el recorte no es la herramienta.'
+        retroAcierto: 'Todas menos la de la regla máx/mín > 40, que es la receta de cocina que el módulo desmonta: en NHANES la varianza la ponen los conglomerados, no los pesos, así que aplanar pesos ataca el ingrediente equivocado. Antes de recortar, descomponer el deff.',
+        retroFallo: 'Son las tres que describen lo que pasó al recortar. La de la regla máx/mín > 40 convierte en regla mecánica lo que es una decisión que depende de la DESCOMPOSICIÓN del deff: si el Kish es pequeño frente al deff total, el recorte no es la herramienta.'
       },
       {
         tipo: 'opcion',

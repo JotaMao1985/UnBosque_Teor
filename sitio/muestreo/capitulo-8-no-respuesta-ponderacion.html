@@ -8644,8 +8644,8 @@ round(c(ajustado = as.numeric(svymean(~assist, disa)),
           { texto: 'Si la propensión varía DENTRO de las clases, el ajuste corrige solo en parte.', correcta: true },
           { texto: 'Con MCAR el ajuste es imprescindible para no sesgar.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es falsa: bajo MCAR la media de los respondientes ya es insesgada y el ajuste no aporta nada — solo desiguala los pesos y añade varianza. Ajustar «por si acaso» tiene precio.',
-        retroFallo: 'Son las tres primeras. La cuarta describe justo lo contrario: MCAR es el único caso en que no hay nada que corregir, y ajustar solo cuesta varianza.'
+        retroAcierto: 'Todas menos la de MCAR. Esa es falsa: bajo MCAR la media de los respondientes ya es insesgada y el ajuste no aporta nada — solo desiguala los pesos y añade varianza. Ajustar «por si acaso» tiene precio.',
+        retroFallo: 'Son las tres que no hablan de MCAR. La de MCAR describe justo lo contrario: es el único caso en que no hay nada que corregir, y ajustar solo cuesta varianza.'
       },
       {
         tipo: 'numerica',
@@ -8726,8 +8726,8 @@ round(c(ajustado = as.numeric(svymean(~assist, disa)),
           { texto: 'El hot-deck no puede producir valores que ninguna unidad tenga.', correcta: true },
           { texto: 'Cualquiera de los tres corrige el sesgo si el mecanismo es MNAR.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es falsa por la misma razón que en el ajuste de pesos: la imputación se apoya en un modelo con las variables observadas, y si lo que falta depende del valor que falta, ningún modelo construido sobre lo observado lo ve.',
-        retroFallo: 'Son las tres primeras. La cuarta repite el error del módulo 3 en el terreno de la imputación: MNAR no se arregla con técnica, se arregla con datos de los ausentes.'
+        retroAcierto: 'Todas menos la de MNAR. Esa es falsa por la misma razón que en el ajuste de pesos: la imputación se apoya en un modelo con las variables observadas, y si lo que falta depende del valor que falta, ningún modelo construido sobre lo observado lo ve.',
+        retroFallo: 'Son las tres que describen una propiedad de cada técnica. La de MNAR repite el error del módulo 3 en el terreno de la imputación: MNAR no se arregla con técnica, se arregla con datos de los ausentes.'
       },
       {
         tipo: 'grafico',

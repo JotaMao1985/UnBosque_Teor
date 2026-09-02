@@ -678,7 +678,7 @@
           { texto: 'Si el objetivo fueran comparaciones entre regiones, convendría la asignación igual.', correcta: true }
         ],
         retroAcierto: 'Las tres verdaderas dibujan el conflicto real del diseño: óptimo global, subgrupos pobres, y la asignación depende del objetivo. Sesgo no hay nunca: 5 entrevistas con peso 44 son pocas, pero son insesgadas.',
-        retroFallo: 'Son la primera, la segunda y la cuarta. La tercera es falsa: ninguna asignación con $n_h \\geq 1$ y pesos correctos sesga el estimador — asignar mal cuesta varianza (global o por subgrupo), no validez.'
+        retroFallo: 'Son todas menos la del estimador sesgado. Esa es falsa: ninguna asignación con $n_h \\geq 1$ y pesos correctos sesga el estimador — asignar mal cuesta varianza (global o por subgrupo), no validez.'
       },
       {
         tipo: 'opcion',
@@ -776,8 +776,8 @@
           { texto: 'Haber fijado los $n_h$ antes de sortear.', correcta: false },
           { texto: 'Celdas con suficientes observaciones (la regla práctica pide $n_h \\geq 20$ o fusionar).', correcta: true }
         ],
-        retroAcierto: 'Las tres verdaderas son el contrato completo. La tercera es justo lo que la postestratificación NO pide — su razón de existir es llegar tarde al diseño y aun así cobrar parte de la ganancia.',
-        retroFallo: 'Son la primera, la segunda y la cuarta. Fijar los $n_h$ antes es el estratificado de diseño; la postestratificación existe para cuando eso ya no fue posible, y el precio de decidir tarde fue 17 513 contra 16 380 de ee.'
+        retroAcierto: 'Las tres verdaderas son el contrato completo. Fijar los $n_h$ antes de sortear es justo lo que la postestratificación NO pide — su razón de existir es llegar tarde al diseño y aun así cobrar parte de la ganancia.',
+        retroFallo: 'Son todas menos la de fijar los $n_h$ antes de sortear. Eso es el estratificado de diseño; la postestratificación existe para cuando eso ya no fue posible, y el precio de decidir tarde fue 17 513 contra 16 380 de ee.'
       },
       {
         tipo: 'opcion',

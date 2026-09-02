@@ -559,8 +559,8 @@
           { texto: 'Con más nidadas, la media ingenua converge a la razón.', correcta: false },
           { texto: 'Si el volumen no dependiera del tamaño de la nidada, las dos casi coincidirían — como pasa con la longitud.', correcta: true }
         ],
-        retroAcierto: 'Las tres verdaderas juntas son el módulo entero: parámetros distintos, brecha estable, y la correlación y–M como interruptor. La tercera es el espejismo del «n grande salva», que no salva parámetros equivocados.',
-        retroFallo: 'Son la primera, la segunda y la cuarta. La tercera es exactamente lo que NO pasa: cada estimador converge a SU parámetro, y la brecha entre parámetros no es asunto del tamaño muestral.'
+        retroAcierto: 'Las tres verdaderas juntas son el módulo entero: parámetros distintos, brecha estable, y la correlación y–M como interruptor. La de la convergencia con más nidadas es el espejismo del «n grande salva», que no salva parámetros equivocados.',
+        retroFallo: 'Son todas menos la de la convergencia con más nidadas. Eso es exactamente lo que NO pasa: cada estimador converge a SU parámetro, y la brecha entre parámetros no es asunto del tamaño muestral.'
       },
       {
         tipo: 'grafico',
@@ -643,7 +643,7 @@
           { texto: 'Se necesitan al menos 2 UPM por estrato para poder estimar la varianza.', correcta: true }
         ],
         retroAcierto: 'Las tres verdaderas. La falsa es la ilusión a evitar: deff ≈ 16 sigue siendo caro — los estratos recortan la parte entre-regiones, pero dentro de cada región los estados siguen siendo bloques homogéneos.',
-        retroFallo: 'Son la primera, la segunda y la cuarta. La tercera exagera: el combinado recorta la varianza casi a la mitad, no la elimina — la ICC dentro de las regiones sigue cobrando.'
+        retroFallo: 'Son todas menos la de eliminar el efecto de conglomerado. Esa exagera: el combinado recorta la varianza casi a la mitad, no la elimina — la ICC dentro de las regiones sigue cobrando.'
       },
       {
         tipo: 'opcion',

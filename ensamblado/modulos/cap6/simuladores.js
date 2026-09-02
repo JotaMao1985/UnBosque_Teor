@@ -677,8 +677,8 @@
           { texto: 'El πPT sistemático no tiene estimador insesgado de varianza: muchas π_kl valen 0.', correcta: true },
           { texto: 'πPT garantiza menor varianza que el MAS siempre que la correlación con el tamaño sea positiva.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es la superstición que el módulo desmonta: correlación positiva no basta — hace falta casi-proporcionalidad, y con 0,46 el πPT pierde (deff 1,25).',
-        retroFallo: 'Son las tres primeras. La cuarta es falsa y es la lección cara del módulo: el πPT es una apuesta a la proporcionalidad, y con correlación 0,46 la apuesta se pierde (deff 1,25 frente al MAS).'
+        retroAcierto: 'Todas menos la de la garantía por correlación positiva, que es la superstición que el módulo desmonta: correlación positiva no basta — hace falta casi-proporcionalidad, y con 0,46 el πPT pierde (deff 1,25).',
+        retroFallo: 'Son las tres que no prometen garantías. La de la correlación positiva es falsa y es la lección cara del módulo: el πPT es una apuesta a la proporcionalidad, y con correlación 0,46 la apuesta se pierde (deff 1,25 frente al MAS).'
       },
       {
         tipo: 'numerica',
@@ -763,8 +763,8 @@
           { texto: 'Con cualquier ψ conocida y positiva, el estimador sigue siendo insesgado.', correcta: true },
           { texto: 'Si un dataset se recolectó sin registrar las ψ, basta ponderar después para recuperar la insesgadez.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es el pecado original del capítulo 1: sin ψ conocida no hay pesos válidos que aplicar — la ponderación posterior (cap. 8) es una reparación aproximada, nunca una garantía.',
-        retroFallo: 'Son las tres primeras. La cuarta es falsa: los pesos de importancia son 1/ψ, y una ψ que nadie anotó no se puede invertir. Esa es la frontera entre una muestra probabilística y un dataset de conveniencia.'
+        retroAcierto: 'Todas menos la del dataset sin ψ registradas, que es el pecado original del capítulo 1: sin ψ conocida no hay pesos válidos que aplicar — la ponderación posterior (cap. 8) es una reparación aproximada, nunca una garantía.',
+        retroFallo: 'Son las tres que hablan de una ψ conocida. La del dataset sin ψ es falsa: los pesos de importancia son 1/ψ, y una ψ que nadie anotó no se puede invertir. Esa es la frontera entre una muestra probabilística y un dataset de conveniencia.'
       },
       {
         tipo: 'grafico',

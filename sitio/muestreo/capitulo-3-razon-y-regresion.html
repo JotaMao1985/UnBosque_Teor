@@ -7701,8 +7701,8 @@ round(c(media_muestral_y = mean(deadtrees$field),
           { texto: 'Existe aunque el muestreo sea aleatorio simple y perfectamente ejecutado.', correcta: true },
           { texto: 'Se puede eliminar usando <code>survey</code> en vez de la fórmula a mano.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. El sesgo es una propiedad del <em>estimador</em>, no del software ni del diseño: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas.',
-        retroFallo: 'Son las tres primeras. Lo que no es cierto es lo último: <code>survey</code> calcula el mismo estimador, con el mismo sesgo. Lo que hace pequeño al sesgo es $n$, y a cambio se acepta porque el error cuadrático medio baja muchísimo.'
+        retroAcierto: 'Todas menos la de <code>survey</code>. El sesgo es una propiedad del <em>estimador</em>, no del software ni del diseño: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas.',
+        retroFallo: 'Son las tres que no mencionan el software. Lo que no es cierto es que <code>survey</code> elimine el sesgo: calcula el mismo estimador, con el mismo sesgo. Lo que hace pequeño al sesgo es $n$, y a cambio se acepta porque el error cuadrático medio baja muchísimo.'
       },
       {
         tipo: 'opcion',
@@ -7773,8 +7773,8 @@ round(c(media_muestral_y = mean(deadtrees$field),
           { texto: 'Añadir intercepto al modelo da el estimador de regresión.', correcta: true },
           { texto: '$v_k = x_k^2$ da el estimador de expansión.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras, y las tres se comprueban en el bloque de R del módulo: con $v_k = x_k$ la pendiente sale 0,98656524, que es $\\hat{B}$ hasta la última cifra.',
-        retroFallo: 'Son las tres primeras. Con $v_k = x_k^2$ sale la media de las razones individuales $\\frac{1}{n}\\sum y_k/x_k$, que es otro estimador —consistente, pero distinto— y desde luego no el de expansión.'
+        retroAcierto: 'Todas menos la de $v_k = x_k^2$, y las tres verdaderas se comprueban en el bloque de R del módulo: con $v_k = x_k$ la pendiente sale 0,98656524, que es $\\hat{B}$ hasta la última cifra.',
+        retroFallo: 'Son las tres que no usan $v_k = x_k^2$. Con esa elección sale la media de las razones individuales $\\frac{1}{n}\\sum y_k/x_k$, que es otro estimador —consistente, pero distinto— y desde luego no el de expansión.'
       },
       {
         tipo: 'opcion',

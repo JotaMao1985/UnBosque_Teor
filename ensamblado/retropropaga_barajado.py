@@ -33,9 +33,17 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
+# La pagina del Taller 1 entra aqui aunque se regenere desde la plantilla con
+# `ensambla_taller1.py`: el 2026-09-02 se quedo fuera de esta lista, y como
+# nadie la reensamblo despues del barajado, siguio pintando las opciones en
+# orden de declaracion mientras las otras nueve ya barajaban. Es la pagina con
+# la que los estudiantes preparan el Parcial 1, asi que era justo la peor donde
+# fallar. Si esta en la lista, un `retropropaga` la alcanza aunque nadie la
+# reensamble.
 ARCHIVOS = [RAIZ / "plantilla" / "plantilla-capitulo-muestreo.html"] + sorted(
     (RAIZ / "sitio" / "muestreo").glob("capitulo-*.html")) + [
-    RAIZ / "sitio" / "muestreo" / "preparcial-corte-1.html"]
+    RAIZ / "sitio" / "muestreo" / "preparcial-corte-1.html",
+    RAIZ / "sitio" / "muestreo" / "taller-1-preparacion-parcial-1.html"]
 
 AYUDANTES = '''    // ================================================================
     // Barajado estable de las opciones de la autoevaluación
@@ -122,6 +130,13 @@ def main():
     fallos = []
     for f in ARCHIVOS:
         if not f.exists():
+            # La pagina del Taller 1 quedo retirada por D1 -absorbida por el
+            # preparcial- y esta en el .gitignore, asi que en un clon limpio no
+            # existe. Se queda en la lista como red por si alguien la
+            # reensambla, pero su ausencia no es un fallo.
+            if "taller-1" in f.name:
+                print(f"  {f.name:<42} no esta (retirada por D1)")
+                continue
             fallos.append(f"{f.name}: no existe")
             continue
         t = f.read_text(encoding="utf-8")

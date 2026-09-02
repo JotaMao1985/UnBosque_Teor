@@ -8598,8 +8598,8 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           { texto: 'La lista puede contener a personas que ya no pertenecen a la población.', correcta: true },
           { texto: 'El problema se resuelve tomando una muestra más grande de la lista.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es el reflejo que este capítulo existe para desactivar: un marco incompleto no mejora porque se muestree más de él.',
-        retroFallo: 'Son las tres primeras. El marco puede fallar por defecto (falta gente de la población) y por exceso (sobra gente que ya no pertenece), y ninguna de las dos cosas depende de $n$.'
+        retroAcierto: 'Todas menos la de la muestra más grande, que es el reflejo que este capítulo existe para desactivar: un marco incompleto no mejora porque se muestree más de él.',
+        retroFallo: 'Son las tres que describen un desajuste entre el marco y la población. El marco puede fallar por defecto (falta gente de la población) y por exceso (sobra gente que ya no pertenece), y ninguna de las dos cosas depende de $n$.'
       },
       {
         tipo: 'opcion',
@@ -8718,8 +8718,8 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           { texto: 'Que la pregunta tenga doble negación.', correcta: true },
           { texto: 'Que la media muestral cambie de una muestra a otra.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras. La cuarta es la definición misma del error de muestreo, y es la única del curso que se estima de la propia muestra y se reduce pagando más unidades.',
-        retroFallo: 'Son las tres primeras. La variación de una muestra a otra es error de muestreo: inevitable, cuantificable y controlable. Las otras tres no cumplen ninguna de las tres cosas.'
+        retroAcierto: 'Todas menos la de la media que cambia de una muestra a otra: esa es la definición misma del error de muestreo, y es la única del curso que se estima de la propia muestra y se reduce pagando más unidades.',
+        retroFallo: 'Son las tres que no se reducen pagando más unidades. La variación de una muestra a otra es error de muestreo: inevitable, cuantificable y controlable. Las otras tres no cumplen ninguna de las tres cosas.'
       },
       {
         tipo: 'opcion',
