@@ -385,6 +385,64 @@ stopifnot(abs(sum(hs$gender == "F") - 100) < citadas$sdMujeresEnMuestra)
 stopifnot(curva$conFpc[curva$n == N_ht] == 0)
 
 # =============================================================================
+# 7b. LOS DISTRACTORES DE LAS NUMERICAS QUE VIAJAN A BRIGHTSPACE
+#
+# Mismo motivo que en `genera_preparcial.R`: la Biblioteca de Preguntas de D2L
+# no importa respuesta numerica, asi que una `numerica` solo viaja convertida
+# en opcion multiple y hacen falta resultados equivocados. Se calculan aqui y
+# no en el exportador, porque un distractor tecleado a mano es una cifra a mano.
+#
+# Cada uno es el resultado de un error concreto y nombrado, y `correcto` lo
+# comprueba el exportador contra la respuesta del item para no pegarle a un
+# item los distractores de otro.
+# =============================================================================
+D$distractores <- list(
+
+  # S2-4 - el sesgo de no respuesta, en centimetros.
+  sesgoNoRespuesta = list(
+    correcto = sesgo,
+    opciones = list(
+      list(valor = mean(c(mean(hombres), mean(muj_resp))) - media_ht,
+           error = "promediar las dos medias sin ponderar por 1 000 y 300; la media de los respondientes es una media ponderada, y sin los pesos el sesgo sale casi nulo"),
+      list(valor = -sesgo,
+           error = "restar al reves, la media del marco menos la de los respondientes"),
+      list(valor = media_ht - media_noresp,
+           error = "restar la media de los NO respondientes en vez de la de los respondientes")
+    )
+  ),
+
+  # S3-3 - el limite superior del IC al 95 % para la estatura media.
+  icSuperiorEstatura = list(
+    correcto = ic_hi,
+    opciones = list(
+      list(valor = ybar + qnorm(0.95) * se_fpc,
+           error = "usar $z = 1{,}64$, que es el del 90 % y no el del 95 %"),
+      list(valor = ybar + z * s_hs,
+           error = "multiplicar por la desviacion tipica muestral en vez de por el error estandar, que da un intervalo absurdamente ancho"),
+      list(valor = ic_lo,
+           error = "dar el limite <em>inferior</em> del mismo intervalo")
+    )
+  )
+)
+
+for (nm in names(D$distractores)) {
+  b <- D$distractores[[nm]]
+  vs <- sapply(b$opciones, function(o) o$valor)
+  stopifnot(all(abs(vs - b$correcto) > 1e-9))
+  stopifnot(!any(duplicated(round(vs, 9))))
+  stopifnot(all(nzchar(sapply(b$opciones, function(o) o$error))))
+}
+
+cat("\n7b. DISTRACTORES DE LAS NUMERICAS\n")
+for (nm in names(D$distractores)) {
+  b <- D$distractores[[nm]]
+  cat(sprintf("   %-20s correcto %-12s  distractores: %s\n", nm,
+              format(b$correcto, digits = 8),
+              paste(sapply(b$opciones, function(o) format(o$valor, digits = 8)),
+                    collapse = ", ")))
+}
+
+# =============================================================================
 # 8. Salida
 # =============================================================================
 escribe_json(D, "taller1_recurso_datos")

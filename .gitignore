@@ -62,3 +62,9 @@ PLAN_Preparcial_Corte1.md
 # fuente de verdad de cada item.
 precalculo/salidas/items_corte1.json
 precalculo/salidas/items_todos.json
+
+
+# Paquetes QTI para la Biblioteca de Preguntas de Brightspace: los regenera
+# `python3 precalculo/exporta_brightspace.py --sonda` desde los mismos bancos,
+# y son ZIP con PNG dentro. El guion si se versiona; su salida no.
+precalculo/salidas/brightspace/

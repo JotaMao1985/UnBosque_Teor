@@ -1,0 +1,163 @@
+    /* ================================================================
+       Diagnóstico por objetivo (componente propio del preparcial)
+
+       El termómetro que convierte un puntaje en una ruta de estudio.
+       Una fila por objetivo del Corte I, con lo que pesa en el parcial,
+       cuántas preguntas de esta página le corresponden, cuántas se han
+       acertado — y, debajo, los módulos exactos donde se falló, con el
+       enlace puesto.
+
+       No se colorea por «nota». Se colorea por lo que hay que hacer:
+       gris = todavía sin datos, rojo = ahí es donde hay que ir,
+       naranja = a medio camino, verde = no gastes más tiempo aquí.
+       ================================================================ */
+    .diagnostico {
+      margin: 1.75rem 0;
+    }
+
+    .diagnostico-global {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem 1.25rem;
+      padding: 0.85rem 1.1rem;
+      margin-bottom: 1.25rem;
+      background: #012820;
+      color: white;
+      border-radius: 0.75rem;
+    }
+
+    .diagnostico-global strong {
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .diagnostico-global span {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .diagnostico-fila {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .diagnostico-cabecera {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.6rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .diagnostico-id {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: white;
+      background: #012820;
+      border-radius: 0.35rem;
+      padding: 0.12rem 0.45rem;
+    }
+
+    .diagnostico-titulo {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 0.95rem;
+      flex: 1 1 14rem;
+    }
+
+    .diagnostico-peso {
+      font-size: 0.78rem;
+      color: #6B7280;
+      white-space: nowrap;
+    }
+
+    .diagnostico-cifras {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .diagnostico-barra {
+      height: 0.5rem;
+      border-radius: 0.25rem;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .diagnostico-barra-relleno {
+      height: 100%;
+      border-radius: 0.25rem;
+      transition: width 0.3s ease;
+    }
+
+    .diagnostico-estado {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: #374151;
+    }
+
+    .diagnostico-fila[data-nivel="flojo"] .diagnostico-barra-relleno { background: #DC2626; }
+    .diagnostico-fila[data-nivel="medio"] .diagnostico-barra-relleno { background: #FF6600; }
+    .diagnostico-fila[data-nivel="solido"] .diagnostico-barra-relleno { background: #012820; }
+    .diagnostico-fila[data-nivel="vacio"] .diagnostico-barra-relleno { background: #94a3b8; }
+
+    .diagnostico-fila[data-nivel="flojo"] .diagnostico-cifras { color: #DC2626; }
+    .diagnostico-fila[data-nivel="medio"] .diagnostico-cifras { color: #c2410c; }
+    .diagnostico-fila[data-nivel="solido"] .diagnostico-cifras { color: #012820; }
+    .diagnostico-fila[data-nivel="vacio"] .diagnostico-cifras { color: #6B7280; }
+
+    .diagnostico-repasar {
+      margin: 0.6rem 0 0;
+      padding: 0.6rem 0.85rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.4rem;
+      list-style: none;
+    }
+
+    .diagnostico-repasar li {
+      font-size: 0.85rem;
+      color: #374151;
+      margin: 0.2rem 0;
+    }
+
+    .diagnostico-repasar a {
+      color: #012820;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .diagnostico-empezar {
+      margin-top: 1.25rem;
+      padding: 0.9rem 1.1rem;
+      border-radius: 0.75rem;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+    }
+
+    .diagnostico-empezar p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #7c2d12;
+    }
+
+    .diagnostico-vacio {
+      padding: 1.1rem;
+      border: 1px dashed #cbd5e1;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 0.92rem;
+    }
+
+    .diagnostico-vacio p:last-child { margin-bottom: 0; }

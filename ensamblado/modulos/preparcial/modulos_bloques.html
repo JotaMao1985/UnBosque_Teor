@@ -1,0 +1,186 @@
+  <!-- ============================================================ -->
+  <!-- BLOQUE A · Conceptos                                         -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Bloque A</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Conceptos
+          <span class="text-gray-400 font-normal text-2xl">/ Concepts</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprobar que las definiciones están puestas donde
+              hay que usarlas, no memorizadas: qué garantiza la insesgadez de diseño, qué es aleatorio en este
+              curso y qué separa dos diseños con las mismas probabilidades de inclusión.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Ninguna de estas seis preguntas se contesta recitando. Todas describen una situación y piden
+        <strong>decidir</strong>: cuál de cuatro encuestas cumple los requisitos, dónde cae un error en el árbol del
+        error total, qué comparten dos diseños y qué no. Con el formulario sobre la mesa en el parcial, esto es
+        exactamente lo que va a valer puntos.</p>
+
+      <div class="quiz" data-quiz="preparcial-b1">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Bloque A · seis preguntas</h4>
+        <p class="text-sm" style="margin-bottom:0;">Cada opción trae su propia retroalimentación, también las
+          incorrectas: leerlas cuando acierta también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Si falla una, la retroalimentación le dice el módulo.</strong> Y si falla
+          dos del mismo capítulo, no siga: vuelva al capítulo antes de seguir con los otros bloques. Encadenar
+          preguntas sobre una definición que no está puesta produce la sensación de haber estudiado mucho.</p>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- BLOQUE B · Procedimientos                                    -->
+  <!-- ============================================================ -->
+  <template id="module-2">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Bloque B</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Procedimientos
+          <span class="text-gray-400 font-normal text-2xl">/ Procedures</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ejecutar los nueve cálculos del corte sobre datos que
+              no ha visto, y hacer en cada uno la comprobación que delata el montaje mal hecho.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>En el parcial se permiten <strong>formulario y calculadora</strong>, así que ninguna de estas nueve tiene su
+        dificultad en recordar una fórmula: la tiene en <strong>elegir cuál</strong> corresponde al diseño, montarla
+        sobre los datos correctos y comprobar el resultado. Las comprobaciones que aparecen aquí —que
+        $\sum_{k \in s} d_k$ devuelva $N$, que $\sum_U \pi_k$ dé $E(n)$, que el margen despejado devuelva el $n$ del
+        que salió— son las mismas que le van a salvar un ejercicio el jueves.</p>
+
+      <p>Cada respuesta se compara con una tolerancia, así que redondee con tranquilidad; lo que no perdona es
+        equivocarse de fórmula.</p>
+
+      <div class="quiz" data-quiz="preparcial-b2">
+        <h4><i class="fas fa-calculator" aria-hidden="true"></i> Bloque B · nueve preguntas numéricas</h4>
+        <p class="text-sm" style="margin-bottom:0;">Escriba el número con coma o con punto decimal, como prefiera.
+          Al fallar, la retroalimentación nombra el resultado que sale con cada error frecuente: si el suyo
+          coincide con uno de ellos, ya sabe qué repasar.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- BLOQUE C · Interpretación                                    -->
+  <!-- ============================================================ -->
+  <template id="module-3">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Bloque C</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Interpretación
+          <span class="text-gray-400 font-normal text-2xl">/ What a result does not prove</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Decir qué se puede afirmar a partir de un resultado
+              ya calculado — y, sobre todo, qué <em>no</em>.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Aquí no hay nada que calcular: los números vienen dados y lo que se pregunta es qué significan. Dos salidas
+        que difieren en la corrección por población finita, dos estimadores que no coinciden sobre la misma muestra,
+        cuatro archivos de la misma población de los que solo algunos permiten <em>medir</em> un sesgo.</p>
+
+      <p>Es la dimensión que menos se ensaya en el material —era el 7,7 % de lo evaluado— y la que más se parece a
+        la última parte de un ejercicio de parcial, esa en la que hay que escribir una frase con el resultado en la
+        mano. En varias de estas preguntas <strong>la respuesta intuitiva es la incorrecta</strong>, y esa es la
+        idea.</p>
+
+      <div class="quiz" data-quiz="preparcial-b3">
+        <h4><i class="fas fa-comment-dots" aria-hidden="true"></i> Bloque C · siete preguntas</h4>
+        <p class="text-sm" style="margin-bottom:0;">Lea también la retroalimentación de las opciones que descartó:
+          en este bloque casi todas son defendibles a primera vista, y saber por qué fallan es el ejercicio.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- BLOQUE D · Análisis gráfico                                  -->
+  <!-- ============================================================ -->
+  <template id="module-4">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Bloque D</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Análisis gráfico
+          <span class="text-gray-400 font-normal text-2xl">/ Reading the picture</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Leer un gráfico sin que nadie le diga antes qué
+              mirar: dónde se separan dos distribuciones, qué barra hay que sumar, cuál de dos curvas es cuál.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Siete gráficos, y en ninguno la respuesta está escrita en el enunciado. Uno pide deducir una probabilidad de
+        inclusión sumando barras; otro, decidir cuál de dos estimadores está centrado; otro, distinguir un efecto
+        real del ruido comparando dos curvas sobre veintiún saltos. En el parcial esto aparece como una salida de R
+        que hay que comentar.</p>
+
+      <div class="quiz" data-quiz="preparcial-b4">
+        <h4><i class="fas fa-chart-column" aria-hidden="true"></i> Bloque D · siete preguntas con gráfico</h4>
+        <p class="text-sm" style="margin-bottom:0;">Cada gráfico lleva además una descripción en texto, bajo el
+          título de la pregunta: dice lo mismo que se ve, para quien no pueda verlo.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Mire el gráfico antes de leer las opciones.</strong> Dígase en voz alta
+          qué ve —«esta curva está a la derecha de la otra», «esta serie no cruza nunca el 1»— y solo entonces lea
+          las cuatro. Leer primero las opciones convierte el ejercicio en buscar cuál encaja, que es otra cosa y más
+          fácil de lo que el parcial va a pedir.</p>
+      </div>
+    </div>
+  </template>

@@ -1,0 +1,66 @@
+  <!-- ============================================================ -->
+  <!-- Tu diagnóstico                                               -->
+  <!-- ============================================================ -->
+  <template id="module-1">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>El producto de esta página</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tu diagnóstico
+          <span class="text-gray-400 font-normal text-2xl">/ Your diagnosis</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Convertir lo que ha respondido en una lista de
+              qué releer, ordenada por lo que le va a costar en el parcial.</p>
+          </div>
+        </div>
+      </div>
+
+      <p><strong>Un «38 de 59» no le sirve a nadie para estudiar esta noche.</strong> Lo que sirve es saber que
+        de las trece preguntas del marco π lleva cuatro, y que las dos que falló son del módulo donde se enseña
+        Horvitz–Thompson. Eso es lo que hay debajo: sus respuestas repartidas por los <strong>seis objetivos</strong>
+        del Corte I, cada uno con lo que pesa en el parcial y con el enlace al módulo exacto del material.</p>
+
+      <p>Se calcula cada vez que abre este módulo, así que puede ir y volver: responda un bloque, vuelva aquí,
+        vea qué cambió.</p>
+
+      <div class="diagnostico" data-diagnostico></div>
+
+      <h3>Cómo leerlo</h3>
+      <p>Los colores no son una nota, son una instrucción:</p>
+      <ul>
+        <li><strong>Rojo</strong> — menos de tres de cada cinco. Ahí es donde hay que ir, y los módulos están
+          enlazados justo debajo de la barra.</li>
+        <li><strong>Naranja</strong> — a medio camino. Un repaso corto del módulo que falló, no el capítulo
+          entero.</li>
+        <li><strong>Verde</strong> — por encima del 80 %. No invierta más tiempo ahí, por tentador que sea seguir
+          practicando lo que ya sale.</li>
+        <li><strong>Gris</strong> — sin datos. No es que vaya mal: es que todavía no ha respondido nada de ese
+          objetivo, y sobre eso el diagnóstico no puede decirle nada.</li>
+      </ul>
+
+      <p>Y la línea del final no señala el porcentaje más bajo, sino <strong>el que más caro sale</strong>: lo que
+        falla multiplicado por lo que pesa. Un 50 % en un objetivo que vale el 23 % del parcial cuesta más que un
+        30 % en uno que vale el 7 %.</p>
+
+      <p><strong>En la lista de módulos aparece también lo que acertó al segundo intento.</strong> Cuenta como
+        acierto en la barra —lo acertó— pero no se calla: en el parcial no hay segundo intento ni pista, así que un
+        módulo donde necesitó las dos oportunidades es un módulo que todavía no está firme.</p>
+
+      <div class="note">
+        <p><strong>El diagnóstico recuerda aunque el bloque se borre.</strong> Al cambiar de módulo, cada quiz se
+          repinta en blanco — es como funciona toda la página —, pero lo que usted ya respondió sigue contado aquí.
+          Si quiere volver a empezar de verdad en un bloque, use su botón <em>Reiniciar</em>: eso sí borra sus
+          respuestas de este diagnóstico.</p>
+      </div>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Si recarga la página, se pierde.</strong> Nada de esto viaja a ningún
+          sitio ni queda guardado: vive en el navegador mientras la pestaña siga abierta. Si el diagnóstico le
+          señala tres módulos, apúntelos antes de cerrar.</p>
+      </div>
+    </div>
+  </template>

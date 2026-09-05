@@ -42,6 +42,8 @@ DESTINO = RAIZ / "sitio" / "muestreo" / "preparcial-corte-1.html"
 INDICE = RAIZ / "sitio" / "muestreo" / "index.html"
 MODULOS_DIR = RAIZ / "ensamblado" / "modulos"
 CODIGO = RAIZ / "ensamblado" / "codigo" / "taller1"
+COMPONENTES = RAIZ / "ensamblado" / "componentes"
+BANCO_NUEVO = MODULOS_DIR / "preparcial" / "banco.js"
 SALIDAS = RAIZ / "precalculo" / "salidas"
 TABLA = RAIZ / "precalculo" / "tabla_especificaciones.json"
 
@@ -61,6 +63,21 @@ MODULOS = [
     dict(fuente="preparcial/modulo_como_usar.html", indice=0,
          banner="Cómo usar esto y la tabla de especificaciones",
          title="Cómo usar esto", short="Cómo usar", dur="8 min"),
+    dict(fuente="preparcial/modulos_bloques.html", indice=0, bloque=1,
+         banner="Bloque A · Conceptos",
+         title="Bloque A · Conceptos", short="A · Conceptos", dur="15 min"),
+    dict(fuente="preparcial/modulos_bloques.html", indice=1, bloque=2,
+         banner="Bloque B · Procedimientos",
+         title="Bloque B · Procedimientos", short="B · Procedimientos", dur="35 min"),
+    dict(fuente="preparcial/modulos_bloques.html", indice=2, bloque=3,
+         banner="Bloque C · Interpretación",
+         title="Bloque C · Interpretación", short="C · Interpretación", dur="20 min"),
+    dict(fuente="preparcial/modulos_bloques.html", indice=3, bloque=4,
+         banner="Bloque D · Análisis gráfico",
+         title="Bloque D · Análisis gráfico", short="D · Análisis gráfico", dur="25 min"),
+    dict(fuente="preparcial/modulo_diagnostico.html", indice=0,
+         banner="Tu diagnóstico",
+         title="Tu diagnóstico", short="Tu diagnóstico", dur="5 min"),
     dict(fuente="taller1/modulos_semanas.html", indice=0, semana=1,
          banner="Simulacro · Semana 1 · Población, marco y unidades",
          title="Simulacro · Semana 1 · Población, marco y unidades", short="Semana 1", dur="15 min"),
@@ -93,6 +110,24 @@ TEMPLATE_RE = re.compile(r'  <template id="[^"]+">.*?\n  </template>\n', re.S)
 
 def aborta(msg):
     sys.exit(f"ABORTA: {msg}")
+
+
+def inserta_antes(html, ancla, nuevo, que):
+    """Mete `nuevo` justo antes del ancla, comprobando que el ancla es única.
+
+    Misma mecánica que los `retropropaga_*.py`, y por el mismo motivo: un
+    `replace` sobre un ancla que aparece dos veces coloca el componente en el
+    sitio equivocado sin dar error.
+    """
+    if html.count(ancla) != 1:
+        aborta(f"el ancla de {que} aparece {html.count(ancla)} veces, esperaba 1")
+    return html.replace(ancla, nuevo + ancla, 1)
+
+
+def inserta_despues(html, ancla, nuevo, que):
+    if html.count(ancla) != 1:
+        aborta(f"el ancla de {que} aparece {html.count(ancla)} veces, esperaba 1")
+    return html.replace(ancla, ancla + nuevo, 1)
 
 
 def corta(texto, inicio, fin, que):
@@ -278,6 +313,110 @@ def remapea_modulo_del_banco(banco):
     return nuevo
 
 
+def objetivos_para_el_diagnostico():
+    """Los seis objetivos, como dato para el termómetro del módulo de diagnóstico.
+
+    Sale de `tabla_especificaciones.json`, que es donde ya vive el reparto: el
+    diagnóstico no puede tener su propia lista de objetivos, porque el día que
+    Javier mueva un peso —lo hizo el 2026-09-02— las dos dejarían de coincidir y
+    la página le diría al estudiante que estudie según una tabla que no es la
+    que publica dos módulos más arriba.
+    """
+    d = json.loads(TABLA.read_text(encoding="utf-8"))
+    objetivos = [{"id": o["id"], "titulo": o["titulo"], "peso": o["peso"],
+                  "modulos": o["modulos"]} for o in d["objetivos"]]
+    return (
+        "\n    // ================================================================\n"
+        "    // Los objetivos del Corte I y los módulos que los enseñan, para el\n"
+        "    // diagnóstico. Generado desde precalculo/tabla_especificaciones.json.\n"
+        "    // ================================================================\n"
+        "    const OBJETIVOS_CORTE1 = %s;\n\n"
+        "    const CAPITULOS_HREF = %s;\n"
+        % (json.dumps(objetivos, ensure_ascii=False, separators=(",", ":")),
+           json.dumps({str(k): v for k, v in CAPITULOS.items()}, ensure_ascii=False))
+    )
+
+
+def remapea_modulo_del_banco_nuevo(banco):
+    """Igual que el del simulacro, pero por `bloque` en vez de por semana.
+
+    Los 29 ítems nuevos guardan en `modulo` el número de su bloque, 1 a 4, que
+    es lo que vale mientras el fichero se mire solo. En la página los bloques
+    ocupan los módulos que les toque según la tabla MODULOS, y el motor usa
+    `modulo` para decir «te costaron preguntas de estos módulos». Sin remapear,
+    el bloque A mandaría a repasar «Cómo usar esto».
+    """
+    donde = {m["bloque"]: n for n, m in enumerate(MODULOS, start=1) if "bloque" in m}
+    if sorted(donde) != [1, 2, 3, 4]:
+        aborta(f"la tabla MODULOS declara los bloques {sorted(donde)}, esperaba 1-4")
+    nuevo, cuantos = re.subn(
+        r"modulo: \d+,\n        bloque: (\d+),",
+        lambda m: f"modulo: {donde[int(m.group(1))]},\n        bloque: {m.group(1)},",
+        banco)
+    if cuantos != 29:
+        aborta(f"el remapeo tocó {cuantos} ítems del banco nuevo, esperaba 29. Si el banco "
+               "cambió de formato, arréglalo antes de publicar: sin remapear, el resumen de "
+               "cada bloque manda al estudiante a un módulo que no es.")
+    return nuevo
+
+
+def reparto_por_objetivo(bancos):
+    """Cuántos ítems toca cada objetivo, contados sobre los bancos que se publican.
+
+    Existe porque el módulo de apertura llevaba escrito a mano «O3 son 2 de 30
+    (6,7 %)», y esa frase dejó de ser cierta en cuanto entraron los 29 ítems
+    nuevos. Una cifra a mano sobre algo que cambia es el modo de fallo que este
+    proyecto persigue, y estaba en la página que el estudiante abre primero.
+    """
+    d = json.loads(TABLA.read_text(encoding="utf-8"))
+    de_modulo = {m: o["id"] for o in d["objetivos"] for m in o["modulos"]}
+    cuenta = {o["id"]: 0 for o in d["objetivos"]}
+    total = 0
+    for banco in bancos:
+        for cap, mod in re.findall(r"ancla: \{ cap: (\d+), modulo: (\d+),", banco):
+            clave = f"{cap}.{mod}"
+            if clave not in de_modulo:
+                aborta(f"el módulo {clave} de un ítem no está en ningún objetivo de la tabla")
+            cuenta[de_modulo[clave]] += 1
+            total += 1
+    # El porcentaje va REDONDEADO A ENTERO a propósito. El material escribe los
+    # decimales con coma, y una cifra con coma decimal entra en el verificador de
+    # prosa, que exige respaldo en el precálculo: este cociente no vive ahí —lo
+    # calcula el ensamblador— así que saldría como cifra sin respaldo. Con un
+    # entero la comparación con el peso sigue siendo la que el estudiante
+    # necesita, y no hay que abrirle una excepción al verificador.
+    filas = []
+    for o in d["objetivos"]:
+        n = cuenta[o["id"]]
+        pct = 100 * n / total
+        desvio = pct - o["peso"]
+        marca = "" if abs(desvio) <= 5 else (
+            " · algo por encima de su peso" if desvio > 0 else " · algo por debajo de su peso")
+        filas.append(
+            f'          <tr>\n'
+            f'            <td><strong>{o["id"]}</strong></td>\n'
+            f'            <td>{o["titulo"]}</td>\n'
+            f'            <td style="text-align:right;">{o["peso"]} %</td>\n'
+            f'            <td style="text-align:right;">{n} de {total}'
+            f' ({pct:.0f} %){marca}</td>\n'
+            f'          </tr>')
+    return (
+        '      <table>\n'
+        '        <caption class="sr-only">Cuánto pesa cada objetivo en el Parcial 1 y cuántas '
+        'preguntas de este preparcial le corresponden</caption>\n'
+        '        <thead>\n'
+        '          <tr>\n'
+        '            <th scope="col">#</th>\n'
+        '            <th scope="col">Objetivo</th>\n'
+        '            <th scope="col" style="text-align:right;">Peso en el parcial</th>\n'
+        '            <th scope="col" style="text-align:right;">Preguntas aquí</th>\n'
+        '          </tr>\n'
+        '        </thead>\n'
+        '        <tbody>\n' + "\n".join(filas) + '\n'
+        '        </tbody>\n'
+        '      </table>')
+
+
 def course_data():
     filas = ",\n".join(
         f'        {{ id: {n}, title: "{m["title"]}", shortTitle: "{m["short"]}", '
@@ -290,10 +429,44 @@ def course_data():
             '    };\n')
 
 
-def tarjeta_en_indice():
+DESC_TARJETA = (
+    "Cincuenta y nueve preguntas autocorregidas sobre los capítulos 1 y 2: cuatro bloques nuevos "
+    "—conceptos, procedimientos, interpretación y análisis gráfico— sobre una población que no "
+    "aparece en ningún capítulo, más el simulacro del parcial repartido por las cuatro semanas "
+    "del corte. Retroalimentación en cada opción —también en las correctas— y respuestas "
+    "abiertas que se corrigen contra una lista de comprobación. Trae la tabla de "
+    "especificaciones del Parcial 1, con lo que pesa cada objetivo y cuántas preguntas de aquí "
+    "le tocan; los diez errores de cálculo que corren sin dar error; y el mapa que lleva cada "
+    "pregunta del simulacro a su módulo del capítulo y a su sección de Lohr. Sin nota y "
+    "repetible.")
+
+
+def tarjeta_en_indice(n_preguntas):
+    """Escribe la tarjeta del índice, o REFRESCA la que ya está.
+
+    La primera versión salía en cuanto encontraba la tarjeta, y por eso el
+    índice siguió anunciando «8 módulos · 30 preguntas» después de que la página
+    pasara a 12 y 59. Una cuenta escrita a mano sobre algo que cambió, otra vez,
+    y en la puerta de entrada del sitio.
+    """
     html = INDICE.read_text(encoding="utf-8")
     if DESTINO.name in html:
-        print(f"  {INDICE.name}: ya tiene la tarjeta, no toco nada")
+        meta = re.compile(r'(<span class="chapter-card__modules">'
+                          r'<i class="fas fa-list-ul" aria-hidden="true"></i> )[^<]*(</span>)')
+        desc = re.compile(r'(<p class="chapter-card__desc">)(?:(?!</p>).)*?(</p>)', re.S)
+        i = html.find(f'href="{DESTINO.name}"')
+        j = html.find("</a>", i)
+        trozo = html[i:j]
+        nuevo_trozo = meta.sub(
+            rf"\g<1>{len(MODULOS)} módulos · {n_preguntas} preguntas\g<2>", trozo, count=1)
+        nuevo_trozo = desc.sub(rf"\g<1>{DESC_TARJETA}\g<2>", nuevo_trozo, count=1)
+        if nuevo_trozo == trozo:
+            print(f"  {INDICE.name}: la tarjeta ya estaba al día")
+            return
+        INDICE.write_text(html[:i] + nuevo_trozo + html[j:], encoding="utf-8")
+        INDICE.chmod(0o644)
+        print(f"  {INDICE.name}: tarjeta refrescada "
+              f"({len(MODULOS)} módulos · {n_preguntas} preguntas)")
         return
     ancla = '        </a>\n\n      </div>\n    </section>'
     if html.count(ancla) != 1:
@@ -309,14 +482,9 @@ def tarjeta_en_indice():
           <div class="chapter-card__body">
             <p class="chapter-card__kicker">Corte I · autodiagnóstico sin nota</p>
             <h3 class="chapter-card__title">Preparcial del Corte I</h3>
-            <p class="chapter-card__desc">Treinta preguntas autocorregidas sobre los capítulos 1 y 2, repartidas
-              por las cuatro semanas del corte, con retroalimentación en cada opción —también en las correctas— y
-              respuestas abiertas que se corrigen contra una lista de comprobación. Trae la tabla de
-              especificaciones del Parcial 1, con lo que pesa cada objetivo y el aviso de dónde este simulacro se
-              queda corto; los diez errores de cálculo que corren sin dar error; y el mapa que lleva cada pregunta a
-              su módulo del capítulo y a su sección de Lohr. Sin nota y repetible.</p>
+            <p class="chapter-card__desc">{DESC_TARJETA}</p>
             <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> {len(MODULOS)} módulos · 30 preguntas</span>
+              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> {len(MODULOS)} módulos · {n_preguntas} preguntas</span>
               <span class="chapter-card__go">Diagnosticarme <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
             </div>
           </div>
@@ -369,13 +537,34 @@ def main():
             aborta(f"no encuentro en la plantilla el texto:\n{viejo[:110]}...")
         html = html.replace(viejo, nuevo, 1)
 
+    # ------------------------------------------------------------ diagnóstico
+    # El componente vive SOLO aquí: ningún capítulo tiene objetivos que
+    # diagnosticar, así que no hay retropropagador y no se toca la plantilla.
+    html = inserta_antes(html, "  </style>\n</head>",
+                         (COMPONENTES / "diagnostico.css").read_text(encoding="utf-8"),
+                         "el CSS del diagnóstico")
+    html = inserta_antes(html,
+                         "    // ================================================================\n"
+                         "    // Autoevaluación (v2)",
+                         (COMPONENTES / "diagnostico.js").read_text(encoding="utf-8"),
+                         "el motor del diagnóstico")
+    # El orden de estas dos llamadas importa y no es cosmético: `vigilarQuizzes`
+    # registra lo que haya en pantalla ANTES de que `iniciarDiagnosticos` pinte,
+    # para que abrir el módulo de diagnóstico no muestre un dato viejo.
+    html = inserta_despues(html, "        iniciarAutoevaluaciones();\n",
+                           "        vigilarQuizzes();\n        iniciarDiagnosticos();\n",
+                           "las llamadas del diagnóstico en loadModule")
+
     # ---------------------------------------------------------------- módulos
     banco_taller = remapea_modulo_del_banco(
         (MODULOS_DIR / "taller1" / "simulacro.js").read_text(encoding="utf-8"))
+    banco_nuevo = remapea_modulo_del_banco_nuevo(BANCO_NUEVO.read_text(encoding="utf-8"))
     modulos = modulos_ensamblados()
     modulos = modulos.replace("      ⟦MAPA⟧", mapa_de_repaso(banco_taller))
     modulos = modulos.replace("      ⟦TABLA_ESPECIFICACIONES⟧", tabla_especificaciones())
-    for marcador in ("⟦MAPA⟧", "⟦TABLA_ESPECIFICACIONES⟧"):
+    modulos = modulos.replace("      ⟦REPARTO⟧",
+                              reparto_por_objetivo([banco_nuevo, banco_taller]))
+    for marcador in ("⟦MAPA⟧", "⟦TABLA_ESPECIFICACIONES⟧", "⟦REPARTO⟧"):
         if marcador in modulos:
             aborta(f"el marcador {marcador} quedó sin sustituir")
 
@@ -395,13 +584,14 @@ def main():
     // ================================================================
     // Datos del instrumento. Ninguna cifra se escribió a mano: si hay que
     // cambiar algo se vuelve a correr el precálculo y se vuelve a ensamblar.
-    //   DATOS_PREPARCIAL — precalculo/genera_preparcial.R (los ítems nuevos)
+    //   DATOS_PREPARCIAL — precalculo/genera_preparcial.R (los 29 ítems nuevos)
     //   DATOS_TALLER1    — precalculo/genera_taller1_recurso.R (el simulacro)
     // ================================================================
     const DATOS_PREPARCIAL = %s;
 
     const DATOS_TALLER1 = %s;
-""" % (carga("preparcial_datos.json"), carga("taller1_recurso_datos.json"))
+%s""" % (carga("preparcial_datos.json"), carga("taller1_recurso_datos.json"),
+         objetivos_para_el_diagnostico())
 
     antes, despues = corta(
         html,
@@ -416,7 +606,7 @@ def main():
         "    // ================================================================\n    // Simuladores de demostración",
         "  </script>\n\n</body>",
         "los simuladores de demostración")
-    html = antes + banco_taller + "\n" + despues
+    html = antes + banco_nuevo + "\n" + banco_taller + "\n" + despues
 
     # ---------------------------------------------------------------- código
     codigo = {}
@@ -452,7 +642,7 @@ def main():
         DESTINO.name, len(html), n_tpl, n_preg, n_cod))
 
     if con_indice:
-        tarjeta_en_indice()
+        tarjeta_en_indice(n_preg)
     else:
         print("  (sin tocar el índice: pásale --con-indice al publicar)")
 

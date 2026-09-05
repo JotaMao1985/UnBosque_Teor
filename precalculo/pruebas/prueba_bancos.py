@@ -176,8 +176,12 @@ def baraja(banco):
     siempre la primera» sería una falsa alarma. En una que no baraja, ese orden
     ES el que ve, y entonces sí es un defecto.
     """
-    ruta = (B.SITIO / "taller-1-preparacion-parcial-1.html" if banco == "simulacro"
-            else B.CAPITULOS.get(banco))
+    if banco == "simulacro":
+        ruta = B.SITIO / "taller-1-preparacion-parcial-1.html"
+    elif banco == "preparcial":
+        ruta = B.SITIO / "preparcial-corte-1.html"
+    else:
+        ruta = B.CAPITULOS.get(banco)
     return bool(ruta and ruta.exists() and "barajaEstable" in ruta.read_text(encoding="utf-8"))
 
 
@@ -262,12 +266,12 @@ def main():
             fallos.append(f"{p['banco']}[{p['i']}]: mismo enunciado que [{vistos[clave]}]")
         vistos[clave] = p["i"]
 
-    print(f"{len(items)} ítems revisados en {len(claves) + 1} bancos.\n")
+    print(f"{len(items)} ítems revisados en {len(claves) + 2} bancos.\n")
 
     print("¿En qué POSICIÓN cae la opción correcta, en la fuente?")
     tot = {}
     tot_n = 0
-    for banco in list(claves) + ["simulacro"]:
+    for banco in list(claves) + ["simulacro", "preparcial"]:
         n, cuenta = posicion_de_la_correcta(items, banco)
         if not n:
             continue
@@ -283,7 +287,7 @@ def main():
             aviso = "  ← la página no baraja"
         print(f"  {banco:10s} n={n:2d}   {detalle}{aviso}")
     if tot_n:
-        sin_barajar = [b for b in list(claves) + ["simulacro"] if not baraja(b)]
+        sin_barajar = [b for b in list(claves) + ["simulacro", "preparcial"] if not baraja(b)]
         print(f"  (orden de la fuente; al azar serían {tot_n / 4:.1f} en cada posición)")
         if sin_barajar:
             pendientes = [f"{p['banco']}[{p['i']}]" for p in items
@@ -295,7 +299,7 @@ def main():
 
     print("La correcta, ¿es la opción más larga? (defecto de banco, no de ítem)")
     tot_n = tot_larga = 0
-    for banco in list(claves) + ["simulacro"]:
+    for banco in list(claves) + ["simulacro", "preparcial"]:
         r = pista_de_longitud(items, banco)
         if not r:
             continue

@@ -41,6 +41,11 @@ CORTE_I = ("cap1", "cap2")
 SIMULACRO = RAIZ / "ensamblado" / "modulos" / "taller1" / "simulacro.js"
 DATOS_SIMULACRO = RAIZ / "precalculo" / "salidas" / "taller1_recurso_datos.json"
 
+# El banco de los 29 ítems nuevos del preparcial. Vive en su fuente, igual que
+# el simulacro: mirarlo en el HTML ensamblado sería auditar la copia.
+PREPARCIAL = RAIZ / "ensamblado" / "modulos" / "preparcial" / "banco.js"
+DATOS_PREPARCIAL = RAIZ / "precalculo" / "salidas" / "preparcial_datos.json"
+
 
 class Fallo(Exception):
     pass
@@ -193,6 +198,23 @@ def banco_simulacro(vuelca):
         + vuelca
     )
     return corre_node(guion, str(DATOS_SIMULACRO))
+
+
+def banco_preparcial(vuelca):
+    """Ejecuta BANCO_PREPARCIAL sobre el JSON real del precálculo."""
+    if not PREPARCIAL.exists() or not DATOS_PREPARCIAL.exists():
+        raise Fallo(f"falta el banco o su JSON: {PREPARCIAL} / {DATOS_PREPARCIAL}")
+    guion = (
+        paleta() + "\n"
+        "const fs = require('fs');\n"
+        "const DATOS_PREPARCIAL = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));\n"
+        "const AUTOEVALUACIONES = {};\n"
+        + ayudantes(CAPITULOS['cap1'])
+        + PREPARCIAL.read_text(encoding="utf-8")
+        + "\nconst BANCO = BANCO_PREPARCIAL;\n"
+        + vuelca
+    )
+    return corre_node(guion, str(DATOS_PREPARCIAL))
 
 
 def modulos(clave, ruta=None):

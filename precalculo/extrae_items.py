@@ -40,7 +40,7 @@ SALIDAS = B.RAIZ / "precalculo" / "salidas"
 # un defecto auditable, así que se transcriben las dos.
 CONOCIDOS = """tipo modulo ancla dimension pregunta pista opciones respuesta
 tolerancia retroAcierto retroFallo respuestaModelo comprobacion
-descripcionGrafico dibujar alto semana unidad""".split()
+descripcionGrafico dibujar alto semana unidad bloque""".split()
 
 VUELCA = """
 const CONOCIDOS = new Set(%s);
@@ -103,6 +103,14 @@ def recoge(claves):
         p["banco"] = "simulacro"
         p["fuente"] = str(B.SIMULACRO.relative_to(B.RAIZ))
         p["modulo_titulo"] = None  # en el simulacro `modulo` es la semana
+        items.append(p)
+    crudos = B.banco_preparcial(VUELCA)
+    if not crudos:
+        raise B.Fallo("preparcial: el banco carga pero devuelve 0 ítems")
+    for p in crudos:
+        p["banco"] = "preparcial"
+        p["fuente"] = str(B.PREPARCIAL.relative_to(B.RAIZ))
+        p["modulo_titulo"] = None  # en el preparcial `modulo` es el bloque
         items.append(p)
     return items
 

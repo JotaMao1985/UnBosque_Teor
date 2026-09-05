@@ -83,7 +83,11 @@ process.stdout.write(JSON.stringify(BANCO.map(p => {
     for f in PAGINAS:
         try:
             if "preparcial" in f.name:
+                # La página del preparcial lleva DOS bancos: el simulacro
+                # absorbido y los 29 ítems nuevos. Cargar solo el primero dejaba
+                # fuera del recuento a los 19 de respuesta única del segundo.
                 items += _bancos.banco_simulacro(vuelca)
+                items += _bancos.banco_preparcial(vuelca)
             else:
                 items += _bancos.banco_capitulo(f"cap{f.name.split('-')[1]}", vuelca, f)
         except Exception as e:                      # noqa: BLE001

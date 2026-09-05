@@ -7,7 +7,7 @@ Docente: Javier Mauricio Sierra.
 
 | Curso | Sitio | Estado |
 |---|---|---|
-| Muestreo Estadístico (20939) | [`/muestreo/`](https://jotamao1985.github.io/UnBosque_Teor/muestreo/) | **completo** — los 8 capítulos, 88 módulos, 65 simuladores |
+| Muestreo Estadístico (20939) | [`/muestreo/`](https://jotamao1985.github.io/UnBosque_Teor/muestreo/) | **completo** — los 8 capítulos (88 módulos, 66 simuladores) y el preparcial del Corte I (13 módulos, 59 preguntas) |
 | Series de Tiempo | [sitio propio](https://jotamao1985.github.io/Series-de-Tiempo_Un_Bosque/) | vive todavía en su repositorio; la portada lo enlaza |
 
 ## Cómo está organizado
