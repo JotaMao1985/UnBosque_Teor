@@ -123,7 +123,7 @@ def main():
       modules: [
         { id: 1, title: "Variables auxiliares", shortTitle: "Auxiliares", duration: "15 min" },
         { id: 2, title: "El estimador de razón", shortTitle: "Razón", duration: "25 min" },
-        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "18 min" },
+        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "22 min" },
         { id: 4, title: "Sesgo y error cuadrático medio", shortTitle: "Sesgo y ECM", duration: "22 min" },
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "12 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "20 min" },

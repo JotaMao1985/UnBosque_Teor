@@ -2247,6 +2247,64 @@ revisión de contenido de Javier sigue siendo un checkpoint y no un trámite.
 `436fbf2`. Comprobado sobre la página en vivo —no sobre el disco—: el texto viejo ya no está, el
 rango 37–86 sí, 27 fórmulas de KaTeX, 0 `.katex-error` y consola limpia.
 
+### T7.8 — El módulo 3 del cap. 3 juzgaba a la razón sin rivales en la sala (2026-09-10)
+
+Javier señaló que el módulo 3 del capítulo 3 —«¿Cuándo gana la razón?»— pregunta y contesta por los
+escenarios en los que la razón es mejor **sin haber mostrado antes las alternativas**. Es cierto y es
+un defecto de orden, no de contenido: el capítulo construye la regresión en el módulo 6 y la
+diferencia en el módulo 7, tres y cuatro módulos más tarde.
+
+**Qué chirriaba, en concreto.**
+
+- La caja «La razón conviene cuando…» daba tres condiciones y **ninguna salida**: el estudiante que
+  contesta «no» a alguna se queda sin saber qué hacer.
+- El simulador se titulaba «Recta por el origen frente a recta con intercepto» y traía un
+  interruptor de **regresión** encendido por defecto: comparaba contra un estimador que el capítulo
+  todavía no ha presentado, y otro (`y = x`, la diferencia) apagado y sin nombre.
+- La caja de aviso decía que para los cerezos la razón es *mala* y ahí se detenía. La pregunta
+  natural —«¿y entonces qué uso?»— quedaba sin respuesta hasta el módulo 12.
+- La regla $r > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$ estaba escrita sin decir **contra quién**
+  se compara, que es la expansión.
+
+**Cómo quedó.** El módulo abre ahora poniendo las **cuatro rectas sobre la mesa** en una tabla
+—expansión (horizontal, no mira $x$), razón (por el origen), regresión (libre) y diferencia
+(pendiente 1)— con una columna que dice dónde se construye cada una, para que el adelanto sea un
+mapa y no un destripe: la tabla habla de la **forma de la recta**, no de fórmulas ni de varianzas,
+que siguen viviendo en los módulos 2, 6 y 7. Detrás va una nota con el eje del capítulo entero
+—*cada supuesto que se añade es un parámetro que ya no hay que estimar; uno cierto se cobra en
+precisión, uno falso deja un estimador que apunta mal y cuyo error estándar no se entera*—, después
+el mecanismo de la razón que ya estaba ($s_e$ frente a $s_y$, bloque R4) y, en lugar de la caja de
+tres condiciones, una caja **«Cuál pide cada nube»** con las cuatro entradas y su condición. Se
+añade una nota con la quinta salida, que no es un estimador: gastar la auxiliar en el **diseño**
+—estratificar por $x$ (cap. 4) o PPT (cap. 6)— en vez de en la estimación. El aviso de los cerezos
+termina ahora diciendo qué se usa en su lugar: la regresión del módulo 6, o cambiar la auxiliar por
+$\text{diámetro}^2$; y de paso se corrige ahí «el volumen crece con el cubo del diámetro» por «con
+el cuadrado del diámetro por la altura», que es lo que ya decían el módulo 12 y la retroalimentación
+del quiz —el capítulo se contradecía a sí mismo en tres sitios—.
+
+**El simulador, con la cuarta recta.** `nube-razon-regresion` tenía tres interruptores y ahora tiene
+cuatro: se le añadió la **horizontal $y = \bar{y}$**, que es exactamente la recta que ajusta el
+estimador de expansión. Es la que cierra el argumento visual: se ve que ignora la nube entera. La
+lectura del simulador publica también $\bar{y}$, y el título pasa a «Las cuatro rectas sobre la
+misma nube». El alto del lienzo sube de 290 a 330 px porque la leyenda tiene una entrada más.
+
+**Verificado.** Ni una cifra nueva: las que cita el módulo —344 552, 31 657, 90,8 %, $-2\,548$,
+$-36{,}9$, $R^2 = 0{,}935$— ya estaban y salen de los bloques R4, R5 y S2. `verifica_bloques.py
+--prosa` sobre el capítulo: **151 de 151** cifras de bloques y **87 respaldadas · 0 sin respaldo**.
+`ensambla_cap3.py` reproduce el archivo **byte a byte** en la segunda pasada (mismo SHA-256). En el
+navegador: los doce módulos suman **274 fórmulas de KaTeX y 0 `.katex-error`**, la consola está
+limpia, los cuatro interruptores encienden y apagan sus rectas, y al cambiar a `cherry` el gráfico y
+la lectura pasan a $\hat{B} = 2{,}2773$, $b_0 = -36{,}943$, $b_1 = 5{,}0659$ y el veredicto «la
+razón es adecuada: no».
+
+**Lo que este arreglo enseña.** El verificador vigila las cifras y el ensamblador vigila la
+estructura; **el orden de exposición no lo vigila nadie**. Un módulo puede estar en verde y aun así
+pedirle al estudiante que compare contra algo que todavía no ha visto. Es el mismo tipo de defecto
+que T7.7 —la metáfora rota de la moneda— y otra vez lo encontró Javier leyendo.
+
+**Pendiente:** el visto bueno de Javier antes de publicar a `gh-pages`. El módulo 3 pasa de 18 a
+22 min en `courseData`.
+
 ---
 
 ## Protocolo de verificación de cada capítulo

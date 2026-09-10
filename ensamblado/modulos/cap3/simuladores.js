@@ -19,7 +19,9 @@
     const recta = (a, b, x0, x1) => [{ x: x0, y: a + b * x0 }, { x: x1, y: a + b * x1 }];
 
     // ---------------------------------------------------------------
-    // M3 · La nube (x, y): recta por el origen frente a recta con intercepto
+    // M3 · La nube (x, y): las cuatro rectas del capítulo sobre los mismos
+    //      puntos. La horizontal es la expansión, que no usa x: sin ella el
+    //      simulador comparaba la razón solo contra rivales aún no vistos.
     // ---------------------------------------------------------------
     const NUBES = {
       agsrs: { d: () => AG, etiqueta: 'agpop · acres92 ~ acres87 (n = 300)',
@@ -33,7 +35,8 @@
     };
 
     SIMULADORES['nube-razon-regresion'] = function (raiz) {
-      const params = { cual: 'agsrs', razon: true, regresion: true, diferencia: false };
+      const params = { cual: 'agsrs', expansion: true, razon: true, regresion: true,
+                       diferencia: false };
       const g = crearGraficoXY(raiz.querySelector('canvas'), [], { tituloX: '', tituloY: '' });
 
       function pintar() {
@@ -55,6 +58,11 @@
         const series = [{ type: 'scatter', label: 'unidades de la muestra',
                           data: puntosXY(xs, ys), backgroundColor: 'rgba(1,40,32,0.45)',
                           pointRadius: 3 }];
+        if (params.expansion) {
+          series.push({ type: 'line', label: `expansión:  y = ȳ = ${fmtNum(media(ys), 2)}`,
+            data: recta(media(ys), 0, 0, xMax), borderColor: COLORES_GRAFICO.primario,
+            borderWidth: 2, borderDash: [10, 5], pointRadius: 0, fill: false });
+        }
         if (params.razon) {
           series.push({ type: 'line', label: `razón:  y = ${fmtNum(B, 4)}·x`,
             data: recta(0, B, 0, xMax), borderColor: COLORES_GRAFICO.secundario,
@@ -88,6 +96,7 @@
         // relación con el rango de y, la recta por el origen pierde.
         const relIntercepto = Math.abs(b0) / (Math.max(...ys) - Math.min(...ys));
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'ȳ (la recta de la expansión) =', valor: fmtNum(my, 2) },
           { etiqueta: 'B̂ = ȳ/x̄ =', valor: fmtNum(B, 4) },
           { etiqueta: 'intercepto b₀ =', valor: fmtNum(b0, 3) },
           { etiqueta: 'pendiente b₁ =', valor: fmtNum(b1, 4) },
@@ -102,6 +111,7 @@
         opciones: Object.keys(NUBES).map(k => ({ valor: k, texto: NUBES[k].etiqueta }))
       }, params, pintar);
       crearInterruptores(raiz.querySelector('.simulador-controles'), [
+        { clave: 'expansion', etiqueta: 'Recta horizontal y = ȳ (expansión)' },
         { clave: 'razon', etiqueta: 'Recta por el origen (razón)' },
         { clave: 'regresion', etiqueta: 'Recta con intercepto (regresión)' },
         { clave: 'diferencia', etiqueta: 'Recta y = x (diferencia)' }

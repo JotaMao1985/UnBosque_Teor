@@ -3762,15 +3762,68 @@ signif(abs(ee_mano - ee_razon) / ee_mano, 3)      # discrepancia relativa
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Saber mirar una nube de puntos y decidir si la recta
-              tiene que pasar por el origen o no. Es la decisión de todo el capítulo.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Poner sobre la mesa las cuatro rectas que compiten
+              por la misma nube y saber mirarla para decidir cuál pide. Es la decisión de todo el capítulo.</p>
           </div>
         </div>
       </div>
 
-      <p>El error estándar de $\hat{t}_r$ depende de $s_e$, la desviación de los <strong>residuos</strong> respecto de
-        la recta por el origen, no de $s_y$. Todo se reduce entonces a una pregunta: ¿cuánto más pequeños son los
-        residuos que los propios datos?</p>
+      <p>«¿Cuándo gana la razón?» es media pregunta mientras no se diga <strong>contra quién</strong>. Los
+        estimadores de este capítulo son todos la misma idea —ajustar una recta a la nube $(x_k, y_k)$ y apoyarse en
+        ella para llevar el total conocido $t_x$ hasta el desconocido $t_y$— y lo único que los separa es
+        <strong>cuánta libertad se le concede a esa recta</strong>. Son cuatro, y conviene tenerlas las cuatro
+        delante antes de juzgar ninguna, aunque dos no se construyan hasta los módulos 6 y 7:</p>
+
+      <table>
+        <caption class="sr-only">Las cuatro rectas que compiten por la misma nube</caption>
+        <thead>
+          <tr>
+            <th scope="col">Estimador</th>
+            <th scope="col">La recta que traza</th>
+            <th scope="col">Lo que da por supuesto</th>
+            <th scope="col">Dónde se construye</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Expansión</strong> $N\bar{y}$</td>
+            <td>horizontal: $y = \bar{y}$</td>
+            <td>nada — no mira $x$</td>
+            <td>capítulo 2</td>
+          </tr>
+          <tr>
+            <td><strong>Razón</strong> $\hat{B}\,t_x$</td>
+            <td>por el origen, con pendiente estimada $\hat{B}$</td>
+            <td>si $x_k$ es cero, $y_k$ también</td>
+            <td>módulo 2</td>
+          </tr>
+          <tr>
+            <td><strong>Regresión</strong> $\hat{t}_{\text{reg}}$</td>
+            <td>libre: intercepto y pendiente estimados</td>
+            <td>relación lineal, no necesariamente por el origen</td>
+            <td>módulo 6</td>
+          </tr>
+          <tr>
+            <td><strong>Diferencia</strong> $\hat{t}_d$</td>
+            <td>pendiente fijada en 1, sin estimar</td>
+            <td>$x$ e $y$ miden lo mismo en las mismas unidades</td>
+            <td>módulo 7</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <p><strong>La tabla no ordena por calidad, sino por atrevimiento.</strong> Cada supuesto que se añade es un
+          parámetro que ya no hay que estimar de la muestra: la expansión no supone nada sobre $x$ y no gana nada;
+          la diferencia lo supone todo —la pendiente entera— y no estima ni un coeficiente. Un supuesto cierto se
+          cobra en precisión; uno falso deja un estimador que apunta al sitio equivocado <em>y cuyo error estándar
+          no se entera de ello</em>. Por eso la elección se hace mirando la nube, no la fórmula.</p>
+      </div>
+
+      <p>La razón es la segunda de la lista, y vale la pena ver de dónde sale exactamente lo que gana. El error
+        estándar de $\hat{t}_r$ depende de $s_e$, la desviación de los <strong>residuos</strong> respecto de la recta
+        por el origen, no de $s_y$. Todo se reduce entonces a una pregunta: ¿cuánto más pequeños son los residuos que
+        los propios datos?</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="De dónde sale la ganancia">
@@ -3802,39 +3855,65 @@ print(pd.Series({
       </div>
 
       <p>La desviación pasa de 344 552 a 31 657: una reducción del <strong>90,8 %</strong>, que en varianza es un
-        factor de 110. Esa es toda la historia. Y el requisito para que ocurra es exigente:</p>
+        factor de 110. Esa es toda la historia — y el requisito para que ocurra es exigente, porque esos residuos se
+        miden contra una recta obligada a pasar por el origen. Cuál de las cuatro pide cada conjunto de datos se
+        decide así:</p>
 
       <div class="definition">
-        <h4>La razón conviene cuando…</h4>
+        <h4>Cuál pide cada nube</h4>
         <ul style="margin-bottom:0;">
-          <li>la relación entre $y$ y $x$ es <strong>aproximadamente lineal y pasa por el origen</strong>: si $x_k$
-            es cero, $y_k$ tiende a ser cero;</li>
-          <li>la <strong>dispersión crece con $x$</strong> (las unidades grandes varían más en términos absolutos),
-            que es justo el modelo de varianza que la razón supone;</li>
-          <li>y la correlación es alta. Como regla, la razón bate a la expansión cuando
-            $r > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$.</li>
+          <li><strong>La razón</strong>, cuando se cumplen las tres condiciones a la vez: la relación entre $y$ y $x$
+            es <strong>aproximadamente lineal y pasa por el origen</strong>; la <strong>dispersión crece con
+            $x$</strong> (las unidades grandes varían más en términos absolutos), que es justo el modelo de varianza
+            que la razón supone; y la correlación es alta. Frente a la expansión, la regla es que la razón gana
+            cuando $r > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$.</li>
+          <li><strong>La regresión</strong> (módulo 6), cuando la nube es lineal pero <strong>el intercepto no es
+            despreciable</strong>, o cuando la dispersión no crece con $x$ sino que se mantiene constante. Estima el
+            intercepto en vez de imponerlo; lo que paga a cambio es un parámetro más ajustado con la misma
+            muestra.</li>
+          <li><strong>La diferencia</strong> (módulo 7), cuando $x$ e $y$ son <strong>la misma variable medida dos
+            veces</strong>: dos censos de la misma superficie, el conteo por fotografía y el conteo en campo de las
+            mismas parcelas. Ahí la pendiente no se estima —se sabe que vale 1—, y el estimador sale además
+            insesgado.</li>
+          <li><strong>La expansión</strong>, cuando la correlación no llega al umbral de la primera línea: la
+            auxiliar no paga lo que cuesta, y estimar con ella una pendiente solo añade ruido.</li>
         </ul>
       </div>
 
+      <div class="note">
+        <p><strong>Hay una quinta salida, y no es un estimador.</strong> Si la razón no conviene, la alternativa no
+          tiene por qué ser otra fórmula: la información auxiliar también se puede gastar en el
+          <strong>diseño</strong> en lugar de en la estimación —estratificar por el tamaño de $x$ (capítulo 4), o
+          dar a cada unidad una probabilidad de selección proporcional a $x$ (capítulo 6)—. Se decide antes de salir
+          a campo, no supone nada sobre la forma de la nube y se combina sin estorbo con cualquiera de los cuatro
+          estimadores de la tabla.</p>
+      </div>
+
       <div class="simulador" data-simulador="nube-razon-regresion">
-        <h4><i class="fas fa-chart-line" aria-hidden="true"></i> Recta por el origen frente a recta con intercepto</h4>
-        <p class="simulador-intro">Cuatro conjuntos de datos reales. Empieza por <code>agsrs</code>: el intercepto es
-          $-2\,548$ sobre un rango de más de un millón de acres, prácticamente cero, y las dos rectas se superponen.
-          Pasa después a <code>cherry</code>: ahí el intercepto ajustado es $-36{,}9$ sobre un rango de 70, y la recta
-          por el origen se despega de la nube en los dos extremos. En <code>deadtrees</code>, activa además la recta
-          $y = x$ y mira lo cerca que queda.</p>
+        <h4><i class="fas fa-chart-line" aria-hidden="true"></i> Las cuatro rectas sobre la misma nube</h4>
+        <p class="simulador-intro">Los cuatro interruptores son las cuatro filas de la tabla. Empieza por
+          <code>agsrs</code>: la horizontal de la expansión ignora la nube entera —por eso pierde—, mientras que la
+          recta por el origen y la de intercepto libre se superponen, porque el intercepto es $-2\,548$ sobre un
+          rango de más de un millón de acres, prácticamente cero. Pasa después a <code>cherry</code>: ahí el
+          intercepto ajustado es $-36{,}9$ sobre un rango de 70, la recta por el origen se despega de la nube en los
+          dos extremos y la de regresión la sigue. En <code>deadtrees</code>, activa además la recta $y = x$ y mira
+          lo cerca que queda: ese es el terreno del estimador de diferencia.</p>
         <div class="simulador-controles"></div>
-        <div class="grafico-wrapper" style="height:290px;">
-          <canvas aria-label="Nube de puntos con la recta por el origen y la recta con intercepto" role="img"></canvas>
+        <div class="grafico-wrapper" style="height:330px;">
+          <canvas aria-label="Nube de puntos con la recta horizontal de la expansión, la recta por el origen, la recta con intercepto y la recta y = x" role="img"></canvas>
         </div>
         <div class="simulador-lectura"></div>
       </div>
 
       <div class="warning">
         <p><strong>Correlación alta no es lo mismo que recta por el origen.</strong> Los cerezos tienen
-          $R^2 = 0{,}935$ y la razón es <em>mala</em> para ellos: el volumen crece con el cubo del diámetro, así que
-          la relación lineal que se ajusta bien en el rango observado no se prolonga hasta el origen. Confundir las
-          dos cosas es el error más frecuente del capítulo, y el simulador está para desactivarlo.</p>
+          $R^2 = 0{,}935$ y la razón es <em>mala</em> para ellos: el volumen crece con el cuadrado del diámetro por
+          la altura, así que la relación lineal que se ajusta bien en el rango observado no se prolonga hasta el
+          origen. Confundir las dos cosas es el error más frecuente del capítulo, y el simulador está para
+          desactivarlo. <strong>Y lo que se usa en su lugar no es la expansión</strong> —tirar la auxiliar sería
+          desperdiciarla—: es la regresión del módulo 6, que estima ese intercepto en vez de imponer que sea cero, o
+          bien un cambio de auxiliar por $\text{diámetro}^2$, que sí crece de forma aproximadamente proporcional al
+          volumen y devuelve el problema al terreno de la razón.</p>
       </div>
 
       <div class="references">
@@ -3842,6 +3921,9 @@ print(pd.Series({
         <ul style="margin-bottom:0;">
           <li>Lohr, <strong>sección 3.1.1</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — cuándo usar el
             estimador de razón, con la regla sobre las correlaciones y los coeficientes de variación.</li>
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.3</strong> (3.ª ed.) — la regresión y la
+            diferencia, que aquí solo se anuncian para poder comparar; los módulos 6 y 7 las construyen y el 7 pone
+            los cuatro estimadores en una misma tabla.</li>
         </ul>
       </div>
     </div>
@@ -5016,7 +5098,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
       modules: [
         { id: 1, title: "Variables auxiliares", shortTitle: "Auxiliares", duration: "15 min" },
         { id: 2, title: "El estimador de razón", shortTitle: "Razón", duration: "25 min" },
-        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "18 min" },
+        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "22 min" },
         { id: 4, title: "Sesgo y error cuadrático medio", shortTitle: "Sesgo y ECM", duration: "22 min" },
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "12 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "20 min" },
@@ -7232,7 +7314,9 @@ round(c(media_muestral_y = mean(deadtrees$field),
     const recta = (a, b, x0, x1) => [{ x: x0, y: a + b * x0 }, { x: x1, y: a + b * x1 }];
 
     // ---------------------------------------------------------------
-    // M3 · La nube (x, y): recta por el origen frente a recta con intercepto
+    // M3 · La nube (x, y): las cuatro rectas del capítulo sobre los mismos
+    //      puntos. La horizontal es la expansión, que no usa x: sin ella el
+    //      simulador comparaba la razón solo contra rivales aún no vistos.
     // ---------------------------------------------------------------
     const NUBES = {
       agsrs: { d: () => AG, etiqueta: 'agpop · acres92 ~ acres87 (n = 300)',
@@ -7246,7 +7330,8 @@ round(c(media_muestral_y = mean(deadtrees$field),
     };
 
     SIMULADORES['nube-razon-regresion'] = function (raiz) {
-      const params = { cual: 'agsrs', razon: true, regresion: true, diferencia: false };
+      const params = { cual: 'agsrs', expansion: true, razon: true, regresion: true,
+                       diferencia: false };
       const g = crearGraficoXY(raiz.querySelector('canvas'), [], { tituloX: '', tituloY: '' });
 
       function pintar() {
@@ -7268,6 +7353,11 @@ round(c(media_muestral_y = mean(deadtrees$field),
         const series = [{ type: 'scatter', label: 'unidades de la muestra',
                           data: puntosXY(xs, ys), backgroundColor: 'rgba(1,40,32,0.45)',
                           pointRadius: 3 }];
+        if (params.expansion) {
+          series.push({ type: 'line', label: `expansión:  y = ȳ = ${fmtNum(media(ys), 2)}`,
+            data: recta(media(ys), 0, 0, xMax), borderColor: COLORES_GRAFICO.primario,
+            borderWidth: 2, borderDash: [10, 5], pointRadius: 0, fill: false });
+        }
         if (params.razon) {
           series.push({ type: 'line', label: `razón:  y = ${fmtNum(B, 4)}·x`,
             data: recta(0, B, 0, xMax), borderColor: COLORES_GRAFICO.secundario,
@@ -7301,6 +7391,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
         // relación con el rango de y, la recta por el origen pierde.
         const relIntercepto = Math.abs(b0) / (Math.max(...ys) - Math.min(...ys));
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'ȳ (la recta de la expansión) =', valor: fmtNum(my, 2) },
           { etiqueta: 'B̂ = ȳ/x̄ =', valor: fmtNum(B, 4) },
           { etiqueta: 'intercepto b₀ =', valor: fmtNum(b0, 3) },
           { etiqueta: 'pendiente b₁ =', valor: fmtNum(b1, 4) },
@@ -7315,6 +7406,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
         opciones: Object.keys(NUBES).map(k => ({ valor: k, texto: NUBES[k].etiqueta }))
       }, params, pintar);
       crearInterruptores(raiz.querySelector('.simulador-controles'), [
+        { clave: 'expansion', etiqueta: 'Recta horizontal y = ȳ (expansión)' },
         { clave: 'razon', etiqueta: 'Recta por el origen (razón)' },
         { clave: 'regresion', etiqueta: 'Recta con intercepto (regresión)' },
         { clave: 'diferencia', etiqueta: 'Recta y = x (diferencia)' }
