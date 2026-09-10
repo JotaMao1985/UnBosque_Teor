@@ -2302,8 +2302,14 @@ estructura; **el orden de exposición no lo vigila nadie**. Un módulo puede est
 pedirle al estudiante que compare contra algo que todavía no ha visto. Es el mismo tipo de defecto
 que T7.7 —la metáfora rota de la moneda— y otra vez lo encontró Javier leyendo.
 
-**Pendiente:** el visto bueno de Javier antes de publicar a `gh-pages`. El módulo 3 pasa de 18 a
-22 min en `courseData`.
+**Publicado el 2026-09-10** con el visto bueno de Javier: `main` en `4cc851f`, `gh-pages` en
+`4d273b1`. Antes de publicar, `verifica_bloques.py --todos --prosa` sobre las nueve páginas: **0
+cifras sin respaldo en total**. Comprobado sobre la página en vivo —no sobre el disco—: la tabla de
+las cuatro rectas con sus 4 filas, el simulador titulado «Las cuatro rectas sobre la misma nube» con
+sus **4 interruptores** y la serie de la expansión en $\bar{y} = 297\,897{,}05$, la caja «Cuál pide
+cada nube», la quinta salida, «cuadrado del diámetro por la altura» donde antes decía «cubo», **274
+fórmulas de KaTeX, 0 `.katex-error`** y consola limpia. El módulo 3 pasa de 18 a 22 min en
+`courseData`.
 
 ---
 
