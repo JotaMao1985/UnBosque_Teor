@@ -2453,6 +2453,57 @@ calculada**: son el pegamento entre cifras correctas. No hay herramienta que los
 que siga la cuenta con lápiz. Es el argumento más concreto que ha dado este proyecto a favor de que
 la revisión de contenido siga siendo un checkpoint humano.
 
+### T7.9 — Auditoría de orden del capítulo 1 (2026-09-10)
+
+Después de T7.8, Javier pidió revisar si los demás capítulos tienen el mismo defecto de orden —juzgar
+o comparar contra material que el lector todavía no ha visto—, empezando por el 1. Leídos los diez
+módulos, los siete simuladores, las lecturas guiadas, las once preguntas y los cinco ejercicios.
+
+**El capítulo 1 es, de hecho, el modelo de lo que faltaba en el 3.** Señaliza cada adelanto: «la
+fórmula del sesgo de no respuesta —que se monta en el módulo 4 y se formaliza en el capítulo 8—», «el
+módulo 7 lo cuantifica», «es el objeto que se construye en el capítulo 2». El quiz solo pregunta por
+módulos ya vistos (1, 2, 4, 6, 7 y 9) y los cinco ejercicios guiados miran hacia atrás. Los módulos
+1, 2, 3, 5, 6, 8 y 9 están limpios. Aparecieron tres huecos, y solo el primero es de verdad.
+
+**1 · Los pesos y la calibración entraban sin presentarse (módulo 4).** Es el defecto de T7.8 en su
+versión «herramienta». El módulo dice que las dos encuestas «se calibraron al censo de 2010 sobre
+ocho celdas», enseguida «recuperar el censo desde los pesos», después una tabla titulada «la
+estimación con y sin pesos» — y de ahí saca la conclusión central del módulo, que ponderar no arregla
+el sesgo de selección. **El cuerpo del texto no decía en ningún punto qué es un peso.** La única
+explicación vivía dentro del `<details>` de la lectura guiada —lectura opcional— y explicaba lo que un
+peso *promete*, no lo que *es*. Tampoco se nombraba la alternativa. Ahora hay una caja
+`.definition` antes del primer bloque —peso: a cuántas unidades de la población representa cada
+unidad observada; calibrar: retocar esos pesos hasta reproducir totales conocidos; de dónde salen,
+capítulo 2; cómo se calibran, capítulos 4 y 7— y la nota «Lee la tabla despacio» cierra con la salida
+que sí funciona: una muestra probabilística, aunque sea pequeña, como referencia.
+
+**2 · La varianza del MAS se usaba sin decir de dónde sale (módulo 7).** El módulo abre con «una
+muestra aleatoria de 1 000 personas falla, típicamente, por 1,5» —cifra que el bloque R8 calcula
+treinta líneas más abajo— y el paso 4 de la derivación escribe $V = (1-n/N)S^2/n$ sin puntero. Era el
+único adelanto del capítulo sin señalizar. Añadidas las dos cláusulas.
+
+**3 · $\pi_k$ en el enunciado del ejercicio 4 (módulo 10).** La tabla de notación del módulo 2 dice
+explícitamente que las probabilidades de inclusión llegan en el capítulo 2, y el enunciado las pedía
+por su símbolo; la solución sí lo señalizaba. Ahora el enunciado las nombra al usarlas.
+
+**Y una observación de estructura, resuelta con un puntero y no moviendo módulos.** `agpop` se
+presenta en el módulo 2, se usa en los simuladores del 4 y del 7 —los dos apoyados en lo asimétrica
+que es— y su forma se estudia en el módulo 8, sin que el 2 lo anunciara. El módulo 2 dice ahora que
+ahí se presenta «solo lo justo» y que la forma se mira en el 8, antes de elegir diseño.
+
+**Verificado.** Ni una cifra nueva —las cuatro ediciones son prosa—. `verifica_bloques.py --prosa`
+sobre el capítulo: **303 de 303** cifras de bloques y **69 respaldadas · 0 sin respaldo**.
+`ensambla_cap1.py` reproduce el archivo **byte a byte** en la segunda pasada. En el navegador: los
+diez módulos suman **125 fórmulas de KaTeX y 0 `.katex-error`**, la fórmula nueva del panel de
+derivación renderiza, y la consola está limpia.
+
+**Lo que enseña la auditoría.** El defecto de T7.8 tiene dos formas y conviene buscar las dos: *(a)*
+comparar contra un rival que aún no se ha presentado —lo del capítulo 3— y *(b)* juzgar una
+herramienta que aún no se ha explicado —lo del módulo 4 de este—. La segunda es más difícil de ver,
+porque el texto suena fluido: usa la palabra con naturalidad y el lector supone que se la perdió.
+
+**Pendiente:** el visto bueno de Javier antes de publicar, y su decisión sobre auditar el capítulo 2.
+
 ---
 
 ## Protocolo de verificación de cada capítulo

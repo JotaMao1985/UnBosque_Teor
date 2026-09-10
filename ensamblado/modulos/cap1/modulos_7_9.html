@@ -22,7 +22,8 @@
 
       <p>Pongamos las dos encuestas de este capítulo una al lado de la otra. El <em>Literary Digest</em> recogió
         <strong>2 266 566</strong> papeletas y falló por <strong>19,3 puntos</strong>. Una muestra aleatoria de
-        <strong>1 000</strong> personas falla, típicamente, por 1,5. Midiendo el error de las dos con la misma vara,
+        <strong>1 000</strong> personas falla, típicamente, por 1,5 —la cifra sale del cálculo que cierra este
+        módulo—. Midiendo el error de las dos con la misma vara,
         el Digest es <strong>12,6 veces peor</strong> que una muestra dos mil veces más pequeña.</p>
 
       <p>Explicar cómo es eso posible exige separar las dos maneras de equivocarse —desviarse siempre hacia el mismo
@@ -62,7 +63,8 @@
             </li>
             <li>
               <p style="margin-bottom:0;">La consecuencia práctica está en el papel de $n$. Bajo muestreo aleatorio
-                simple, $V = (1 - n/N)\,S^2/n$, que tiende a cero cuando $n \to N$. El sesgo $B$ no contiene $n$ por
+                simple la varianza vale $V = (1 - n/N)\,S^2/n$ —es la fórmula que el capítulo 2 construye desde el
+                diseño; aquí se usa solo para mirar dónde aparece $n$— y tiende a cero cuando $n \to N$. El sesgo $B$ no contiene $n$ por
                 ningún lado: es una propiedad del <em>procedimiento</em>, no del tamaño. Un censo hace $V = 0$ y deja
                 $B$ intacto.</p>
             </li>
