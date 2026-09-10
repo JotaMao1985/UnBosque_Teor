@@ -21,8 +21,9 @@
 
       <p>Dejemos los cinco condados de juguete y vayamos a los datos con los que trabaja de verdad este curso.
         <code>agsrs</code> es una muestra aleatoria simple de <strong>300 de los 3 078 condados</strong> de Estados
-        Unidos, sorteada por Lohr. La superficie sembrada media en esos 300 es <strong>297 897 acres</strong>. El
-        total estimado, multiplicando por 3 078, sale <strong>916 927 110</strong> acres.</p>
+        Unidos, sorteada por Lohr. La superficie sembrada media en esos 300 es <strong>297 897,05 acres</strong>. El
+        total estimado, multiplicando por 3 078, sale <strong>916 927 110</strong> acres — y los decimales de esa
+        media no son pedantería: redondearla a 297 897 antes de multiplicar mueve el total 144 acres.</p>
 
       <p>Ahora bien: ese 916 927 110 salió de <em>una</em> muestra. Si Lohr hubiera sorteado otras 300, habría salido
         otro número. La pregunta operativa —la que hay que responder para publicar cualquier cosa— es
@@ -304,10 +305,22 @@
         mucho el <strong>5 %</strong> de esa media. ¿Cuántos condados hay que visitar?</p>
 
       <p>La respuesta —que el bloque de código de más abajo calcula— es <strong>1 506</strong>. Y si uno se conforma
-        con un 10 % de error, basta con <strong>595</strong>; con un 20 %, con <strong>174</strong>. Fíjate en la
-        forma de esa serie: <strong>relajar el error a la mitad divide el tamaño por cuatro</strong>. Esa es la
-        tiranía de la raíz cuadrada, y es lo que hace que las encuestas grandes sean tan caras: la precisión se paga
-        al cuadrado.</p>
+        con un 10 % de error, basta con <strong>595</strong>; con un 20 %, con <strong>174</strong>.</p>
+
+      <p>La ley que hay detrás es $n_0 \propto 1/e^{2}$: <strong>relajar el error a la mitad divide entre cuatro el
+        tamaño necesario</strong>. Esa es la tiranía de la raíz cuadrada, y es lo que hace que las encuestas grandes
+        sean tan caras: la precisión se paga al cuadrado. Pero mira la serie de arriba antes de fiarte de la regla,
+        porque <strong>no se divide entre cuatro</strong>: de 1 506 a 595 no hay ni un factor tres, y de 595 a 174
+        tampoco se llega a cuatro.</p>
+
+      <p>Lo que se interpone es el <strong>fpc</strong>. La ley del cuatro gobierna $n_0$, el tamaño que haría falta
+        con población infinita; el $n$ que se acaba usando es ese $n_0$ ya corregido, y la corrección aprieta tanto
+        más cuanto mayor sea $n$ frente a $N$. Aquí aprieta mucho, porque <strong>1 506 es casi la mitad de los
+        3 078 condados del marco</strong>: pedir un 5 % de error obliga a visitar tantos que la población deja de
+        parecerse a una infinita. El bloque de abajo lo enseña para el caso del 10 %, donde $n_0$ vale
+        <strong>736,67</strong> y el $n$ que se usa es <strong>595</strong>. La regla del cuatro sirve para
+        presupuestar mientras la muestra sea pequeña frente al marco; en cuanto deja de serlo, el fpc devuelve parte
+        del ahorro.</p>
 
       <p>La cuenta se hace al revés que de costumbre: se fija la precisión que se quiere y se despeja $n$.</p>
 
@@ -332,8 +345,9 @@
         <h4><i class="fas fa-calculator" aria-hidden="true"></i> Calculadora de tamaño de muestra</h4>
         <p class="simulador-intro">La curva de $n$ frente al margen de error, con el punto elegido marcado. Mueve el
           margen y verás la relación que más cuesta aceptar en la práctica: la precisión mejora como $1/\sqrt{n}$, así
-          que <strong>partir el error por dos cuesta cuadruplicar la muestra</strong>. El deslizador de $N$ muestra
-          cuándo importa el fpc: con $N$ grande, $n$ deja de depender de $N$.</p>
+          que <strong>partir el error por dos cuesta cuadruplicar $n_0$</strong>. El deslizador de $N$ muestra cuánto
+          de esa cuadruplicación devuelve el fpc: con $N$ grande, $n$ deja de depender de $N$ y la regla se cumple
+          entera; con un marco pequeño frente a la muestra, no.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:240px;">
           <canvas aria-label="Tamaño de muestra necesario en función del margen de error" role="img"></canvas>

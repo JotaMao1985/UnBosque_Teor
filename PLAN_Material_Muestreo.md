@@ -2318,7 +2318,7 @@ fórmulas de KaTeX, 0 `.katex-error`** y consola limpia. El módulo 3 pasa de 18
 Javier pidió revisar los otros diez módulos del capítulo 2 buscando defectos de la misma familia que
 el de la moneda (T7.7): los que **pasan todas las herramientas** y aun así confunden. Leídos los once
 módulos y la autoevaluación entera, contrastada cada cifra contra `cap2_datos.json`. Salieron
-**seis principales y tres menores**. Se arreglan por partes; esta es la primera.
+**seis principales y tres menores**. Se arreglaron por partes: T7.8 los dos primeros, T7.9 los siete restantes.
 
 **El inventario, para que la sesión que siga no tenga que volver a buscarlos.**
 
@@ -2326,13 +2326,13 @@ módulos y la autoevaluación entera, contrastada cada cifra contra `cap2_datos.
 |:--:|:--:|---|:--:|
 | 1 | 11 (quiz) | La pista de la pregunta 1 manda a la **definición 2.2**, que no existe | ✅ T7.8 |
 | 2 | 9 | El intervalo del sistemático se llamaba $k$, y $k$ es el índice de unidad: $\pi_k = 1/k$ | ✅ T7.8 |
-| 3 | 7 | «relajar el error a la mitad divide el tamaño por cuatro» sobre 1 506 / 595 / 174, cuyos factores son **2,53 y 3,42** | ⏳ |
-| 4 | 3 | $27 \times 2{,}50 + 58 \times 1{,}82 = 67{,}5 + 105{,}5 = 172{,}95$ no cierra por ningún lado | ⏳ |
-| 5 | 5 | «multiplicando por 3 078» da 916 926 966, no los 916 927 110 que anuncia | ⏳ |
-| 6 | 11 | Promete «Diez preguntas» dos veces y la autoevaluación tiene **once** | ⏳ |
-| m1 | 3 | «$\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—»: contar muestras solo da $\pi$ si son equiprobables, y bajo el diseño C no lo son | ⏳ |
-| m2 | 3 | Cita «el Bernoulli del módulo 8 —con probabilidad 0,4—» y el módulo 8 usa 0,02/0,05/0,10/0,20 | ⏳ |
-| m3 | 4 | «el módulo anterior **terminó** con 172,95», que aparece al principio del 3 | ⏳ |
+| 3 | 7 | «relajar el error a la mitad divide el tamaño por cuatro» sobre 1 506 / 595 / 174, cuyos factores son **2,53 y 3,42** | ✅ T7.9 |
+| 4 | 3 | $27 \times 2{,}50 + 58 \times 1{,}82 = 67{,}5 + 105{,}5 = 172{,}95$ no cierra por ningún lado | ✅ T7.9 |
+| 5 | 5 | «multiplicando por 3 078» da 916 926 966, no los 916 927 110 que anuncia | ✅ T7.9 |
+| 6 | 11 | Promete «Diez preguntas» dos veces y la autoevaluación tiene **once** | ✅ T7.9 |
+| m1 | 3 | «$\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—»: contar muestras solo da $\pi$ si son equiprobables, y bajo el diseño C no lo son | ✅ T7.9 |
+| m2 | 3 | Cita «el Bernoulli del módulo 8 —con probabilidad 0,4—» y el módulo 8 usa 0,02/0,05/0,10/0,20 | ✅ T7.9 |
+| m3 | 4 | «el módulo anterior **terminó** con 172,95», que aparece al principio del 3 | ✅ T7.9 |
 
 #### 1 · La definición 2.2 no existía, y la pista mandaba a buscarla
 
@@ -2385,6 +2385,73 @@ es una edición local; arreglar quien las citaba, no. Ninguna herramienta del re
 referencias con destinos, así que una referencia rota no cuesta nada dejarla y no avisa nunca. Vale
 la pena mirar si los otros siete capítulos tienen referencias por número —el cap. 2 era el único que
 numeraba definiciones, así que probablemente no, pero eso hay que contarlo, no suponerlo.
+
+---
+
+### T7.9 — La segunda parte: las tres cadenas que no cerraban, y cuatro más (2026-09-10)
+
+Los siete hallazgos que T7.8 dejó pendientes. Tres de ellos son **la misma enfermedad que la moneda
+de T7.7**: una cuenta que se le pide seguir al estudiante y que no cierra. Ninguna la ve
+`verifica_bloques.py`, porque cada cifra por separado sí tiene respaldo; lo que falla es el paso
+entre ellas.
+
+#### Las tres cadenas rotas
+
+**Módulo 3 · $27 \times 2{,}50 + 58 \times 1{,}82 = 67{,}5 + 105{,}5 = 172{,}95$.** Ni un eslabón
+aguanta: $58 \times 1{,}82 = 105{,}56$, y $67{,}5 + 105{,}5 = 173{,}0$. El 172,95 correcto sale de
+dividir, no de multiplicar por los pesos redondeados. Peor: el mismo capítulo escribe **105,45** en
+la caja de las dos palancas, o sea que la misma cantidad aparecía con dos valores a cuatro pantallas
+de distancia. Ahora el display divide —$\frac{27}{0{,}40} + \frac{58}{0{,}55} = 67{,}50 + 105{,}45
+= 172{,}95$, que cierra exacto— y una línea al pie dice por qué: los pesos son para pensar, la cuenta
+se hace con las $\pi$.
+
+**Módulo 5 · «multiplicando por 3 078».** $297\,897 \times 3\,078 = 916\,926\,966$, y el texto
+anunciaba **916 927 110**. Aquí el texto *invitaba explícitamente* a multiplicar. La media pasa a
+citarse como **297 897,05**, con lo que la multiplicación cierra, y se dice lo que cuesta redondear
+antes: 144 acres.
+
+**Módulo 7 · «relajar el error a la mitad divide el tamaño por cuatro».** Dicho justo después de dar
+la serie **1 506 / 595 / 174**, cuyos factores reales son 2,53 y 3,42. La regla gobierna $n_0$, no el
+$n$ corregido, y aquí la diferencia es enorme porque **1 506 es casi la mitad del marco**: pedir un
+5 % de error obliga a visitar tanta población que deja de parecerse a una infinita. Se reescribió en
+tres párrafos —la ley donde vale, el aviso de que la serie no la cumple, y el fpc como explicación—
+y se corrigió también el texto del simulador, que repetía la misma afirmación.
+
+**Y una restricción que forzó la redacción:** los $n_0$ del 5 % y del 20 % (2 946,7 y 184,2)
+**no están en el universo de cifras** —`R12` solo calcula el caso del 10 %—, así que citarlos habría
+metido dos cifras sin respaldo. El texto los describe sin nombrarlos («de 1 506 a 595 no hay ni un
+factor tres») y cita solo el **736,67** que sí sale del bloque. Escribir «184» habría colado, porque
+la expresión de prosa no mira enteros sueltos; usar ese agujero para meter una cifra a mano habría
+sido justo lo que el verificador existe para impedir.
+
+#### Los otros cuatro
+
+- **Módulo 3 · contar muestras ya no da $\pi$.** «$\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—»
+  traslada al diseño C la receta que el módulo 2 enseñó para el MAS, y ahí solo funciona porque las
+  diez son equiprobables. Se cambió por la lectura de frecuencia y se añadió un aviso con la prueba
+  de que la diferencia importa: **el condado 1 también está en cuatro de las diez parejas y su
+  $\pi_1$ es 0,325**, no 0,4.
+- **Módulo 11 · prometía «Diez preguntas» y hay once** (el módulo 5 lleva dos). Dicho en el objetivo
+  y en la caja del quiz. Corregido en los dos, y comprobado **contra el DOM**, no contra la fuente:
+  la página renderiza 11 `.quiz-pregunta`.
+- **Módulo 3 · el Bernoulli «del módulo 8 —con probabilidad 0,4—»**, y el módulo 8 usa 0,02, 0,05,
+  0,10 y 0,20. El 0,4 es el de los cinco condados de juguete; ahora lo dice.
+- **Módulo 4 · «el módulo anterior terminó con 172,95»**, que aparece al principio del módulo 3.
+  Ahora «abrió».
+
+**Verificado.** Byte a byte en la segunda pasada · **495 de 495** cifras de bloques · **108
+respaldadas · 0 sin respaldo** —bajan de 109 porque la cifra que desapareció es el `105,5` que no
+cuadraba— · `extrae_items.py --corte1` en 81 ítems · `prueba_bancos.py` sin fallos mecánicos ·
+`prueba_barajado.py` 4 de 4. En el navegador, módulo a módulo: **0 `.katex-error`** en los cuatro
+tocados (144, 51, 34 y 86 fórmulas), consola limpia, y el display del módulo 3 leído ya renderizado:
+`t̂ = 27/0,40 + 58/0,55 = 67,50 + 105,45 = 172,95`.
+
+**Lo que deja el capítulo entero.** De los nueve defectos, **cinco eran cadenas o recuentos**: una
+cuenta que no cierra, una regla que su propia serie contradice, un «diez» que son once. Todos
+sobrevivieron a un verificador que comprueba cifra por cifra, porque **ninguno es una cifra mal
+calculada**: son el pegamento entre cifras correctas. No hay herramienta que los cace; solo alguien
+que siga la cuenta con lápiz. Es el argumento más concreto que ha dado este proyecto a favor de que
+la revisión de contenido siga siendo un checkpoint humano.
 
 ---
 

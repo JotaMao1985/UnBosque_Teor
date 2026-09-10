@@ -3933,14 +3933,25 @@ print("pi_kl fila 1 =", np.round(inclusion2(p_des)[0], 4))
 
       <p>La pregunta correcta es: <strong>¿a cuántos condados representa cada uno de los observados?</strong> Y la
         respuesta ya está calculada en el módulo anterior. Bajo el diseño desigual, el condado 3 entra con
-        $\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—, así que cuando sale tiene que hablar por sí mismo
-        <em>y</em> por las veces que no salió: <strong>por $1/0{,}40 = 2{,}5$ condados</strong>. El condado 5, más
-        favorecido por el diseño, tiene $\pi_5 = 0{,}55$ y habla solo por $1/0{,}55 = 1{,}82$. Cada uno aporta su
-        valor multiplicado por lo que representa:</p>
+        $\pi_3 = 0{,}40$ —de cada diez repeticiones del sorteo, entra en cuatro—, así que cuando sale tiene que
+        hablar por sí mismo <em>y</em> por las veces que no salió: <strong>por $1/0{,}40 = 2{,}5$ condados</strong>.
+        El condado 5, más favorecido por el diseño, tiene $\pi_5 = 0{,}55$ y habla solo por $1/0{,}55 = 1{,}82$.
+        Cada uno aporta su valor dividido entre su probabilidad de haber sido observado:</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Y aquí ya no vale contar muestras.</strong> En el módulo 2, $\pi_1 = 0{,}4$
+          salía de mirar la lista: el condado 1 está en cuatro de las diez parejas. Esa cuenta funcionaba porque en el
+          MAS las diez son <em>igual de probables</em>. Bajo el diseño C no lo son, así que hay que sumar sus $p(s)$,
+          no contarlas. La prueba de que la diferencia importa: el condado 1 sigue estando en cuatro de las diez
+          parejas y su $\pi_1$ ya no es $0{,}4$, sino <strong>$0{,}325$</strong>.</p>
+      </div>
 
       <div class="diagram">
-        <p style="margin:0;">$\hat{t} = \underbrace{27 \times 2{,}50}_{\text{condado 3}} \;+\;
-        \underbrace{58 \times 1{,}82}_{\text{condado 5}} \;=\; 67{,}5 + 105{,}5 \;=\; 172{,}95$</p>
+        <p style="margin:0;">$\hat{t} = \underbrace{\dfrac{27}{0{,}40}}_{\text{condado 3}} \;+\;
+        \underbrace{\dfrac{58}{0{,}55}}_{\text{condado 5}} \;=\; 67{,}50 + 105{,}45 \;=\; 172{,}95$</p>
+        <p class="text-sm" style="margin:0.5rem 0 0;">Se divide entre $\pi_k$ en vez de multiplicar por los pesos
+          redondeados de arriba: $1/0{,}55$ no es exactamente $1{,}82$, y arrastrar ese redondeo hasta el final desplazaría
+          el resultado. Los pesos son para pensar; la cuenta se hace con las $\pi$.</p>
         <p style="margin-bottom:0; margin-top:0.6rem;">El total verdadero es <strong>150</strong>, así que
           <em>esta</em> muestra se pasa en un 15 %. <strong>Y está bien que así sea.</strong> Ninguna muestra de dos
           condados puede acertar siempre: lo que el módulo demuestra a continuación es que, promediando sobre las
@@ -4230,8 +4241,8 @@ print(tab.round(3).to_string())
         <h4><i class="fas fa-triangle-exclamation mr-2" aria-hidden="true"></i>Sin tamaño fijo la fórmula no protesta:
           miente</h4>
         <p>Toda la forma cuelga de $\sum_{l \in U}\Delta_{kl} = 0$, y esa identidad exige tamaño fijo. El
-          <strong>diseño Bernoulli</strong> del módulo 8 —cada unidad entra o no con probabilidad $0{,}4$, con
-          independencia de las demás— no lo tiene: su tamaño de muestra es aleatorio y hasta puede salir la muestra
+          <strong>diseño Bernoulli</strong> que presenta el módulo 8 —aquí, sobre estos cinco condados, con cada
+          unidad entrando o no con probabilidad $0{,}4$ e independientemente de las demás— no lo tiene: su tamaño de muestra es aleatorio y hasta puede salir la muestra
           vacía. Ahí $\pi_{kl} = \pi_k\pi_l$ para todo par, luego $\Delta_{kl} = 0$ fuera de la diagonal y la
           expresión de Sen–Yates–Grundy da <strong>cero</strong>. La varianza de verdad es <strong>8 553</strong>,
           como lo comprueba el último trozo del bloque de arriba.</p>
@@ -4415,7 +4426,7 @@ print("E(N * y_barra) =", round(float(p_des @ t_exp), 4), " frente al total", in
         </div>
       </div>
 
-      <p>El módulo anterior terminó con una muestra que daba 172,95 cuando el total era 150. Si una muestra concreta
+      <p>El módulo anterior abrió con una muestra que daba 172,95 cuando el total era 150. Si una muestra concreta
         falla por un 15 %, <strong>¿en qué sentido es «bueno» el estimador?</strong> La respuesta se ve entera en la
         población de cinco condados, porque ahí sí se pueden mirar <em>todas</em> las muestras a la vez.</p>
 
@@ -4538,8 +4549,9 @@ round(rbind(
 
       <p>Dejemos los cinco condados de juguete y vayamos a los datos con los que trabaja de verdad este curso.
         <code>agsrs</code> es una muestra aleatoria simple de <strong>300 de los 3 078 condados</strong> de Estados
-        Unidos, sorteada por Lohr. La superficie sembrada media en esos 300 es <strong>297 897 acres</strong>. El
-        total estimado, multiplicando por 3 078, sale <strong>916 927 110</strong> acres.</p>
+        Unidos, sorteada por Lohr. La superficie sembrada media en esos 300 es <strong>297 897,05 acres</strong>. El
+        total estimado, multiplicando por 3 078, sale <strong>916 927 110</strong> acres — y los decimales de esa
+        media no son pedantería: redondearla a 297 897 antes de multiplicar mueve el total 144 acres.</p>
 
       <p>Ahora bien: ese 916 927 110 salió de <em>una</em> muestra. Si Lohr hubiera sorteado otras 300, habría salido
         otro número. La pregunta operativa —la que hay que responder para publicar cualquier cosa— es
@@ -4872,10 +4884,22 @@ round(c(ee_con_fpc = ee_mano, ee_sin_fpc = ee_sin_fpc,
         mucho el <strong>5 %</strong> de esa media. ¿Cuántos condados hay que visitar?</p>
 
       <p>La respuesta —que el bloque de código de más abajo calcula— es <strong>1 506</strong>. Y si uno se conforma
-        con un 10 % de error, basta con <strong>595</strong>; con un 20 %, con <strong>174</strong>. Fíjate en la
-        forma de esa serie: <strong>relajar el error a la mitad divide el tamaño por cuatro</strong>. Esa es la
-        tiranía de la raíz cuadrada, y es lo que hace que las encuestas grandes sean tan caras: la precisión se paga
-        al cuadrado.</p>
+        con un 10 % de error, basta con <strong>595</strong>; con un 20 %, con <strong>174</strong>.</p>
+
+      <p>La ley que hay detrás es $n_0 \propto 1/e^{2}$: <strong>relajar el error a la mitad divide entre cuatro el
+        tamaño necesario</strong>. Esa es la tiranía de la raíz cuadrada, y es lo que hace que las encuestas grandes
+        sean tan caras: la precisión se paga al cuadrado. Pero mira la serie de arriba antes de fiarte de la regla,
+        porque <strong>no se divide entre cuatro</strong>: de 1 506 a 595 no hay ni un factor tres, y de 595 a 174
+        tampoco se llega a cuatro.</p>
+
+      <p>Lo que se interpone es el <strong>fpc</strong>. La ley del cuatro gobierna $n_0$, el tamaño que haría falta
+        con población infinita; el $n$ que se acaba usando es ese $n_0$ ya corregido, y la corrección aprieta tanto
+        más cuanto mayor sea $n$ frente a $N$. Aquí aprieta mucho, porque <strong>1 506 es casi la mitad de los
+        3 078 condados del marco</strong>: pedir un 5 % de error obliga a visitar tantos que la población deja de
+        parecerse a una infinita. El bloque de abajo lo enseña para el caso del 10 %, donde $n_0$ vale
+        <strong>736,67</strong> y el $n$ que se usa es <strong>595</strong>. La regla del cuatro sirve para
+        presupuestar mientras la muestra sea pequeña frente al marco; en cuanto deja de serlo, el fpc devuelve parte
+        del ahorro.</p>
 
       <p>La cuenta se hace al revés que de costumbre: se fija la precisión que se quiere y se despeja $n$.</p>
 
@@ -4900,8 +4924,9 @@ round(c(ee_con_fpc = ee_mano, ee_sin_fpc = ee_sin_fpc,
         <h4><i class="fas fa-calculator" aria-hidden="true"></i> Calculadora de tamaño de muestra</h4>
         <p class="simulador-intro">La curva de $n$ frente al margen de error, con el punto elegido marcado. Mueve el
           margen y verás la relación que más cuesta aceptar en la práctica: la precisión mejora como $1/\sqrt{n}$, así
-          que <strong>partir el error por dos cuesta cuadruplicar la muestra</strong>. El deslizador de $N$ muestra
-          cuándo importa el fpc: con $N$ grande, $n$ deja de depender de $N$.</p>
+          que <strong>partir el error por dos cuesta cuadruplicar $n_0$</strong>. El deslizador de $N$ muestra cuánto
+          de esa cuadruplicación devuelve el fpc: con $N$ grande, $n$ deja de depender de $N$ y la regla se cumple
+          entera; con un marco pequeño frente a la muestra, no.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:240px;">
           <canvas aria-label="Tamaño de muestra necesario en función del margen de error" role="img"></canvas>
@@ -5457,7 +5482,7 @@ table(pliegue)
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Comprobar que el marco $\pi$ quedó en pie: diez
+            <p class="text-gray-600 text-sm" style="margin:0;">Comprobar que el marco $\pi$ quedó en pie: once
               preguntas sobre los diez módulos y cuatro ejercicios con datos reales.</p>
           </div>
         </div>
@@ -5469,7 +5494,7 @@ table(pliegue)
 
       <div class="quiz" data-quiz="cap2">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 2</h4>
-        <p class="text-sm" style="margin-bottom:0;">Diez preguntas. Cada opción trae su propia retroalimentación,
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
           también las incorrectas: leerlas cuando aciertas también enseña.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>

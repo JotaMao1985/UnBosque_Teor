@@ -333,14 +333,25 @@
 
       <p>La pregunta correcta es: <strong>¿a cuántos condados representa cada uno de los observados?</strong> Y la
         respuesta ya está calculada en el módulo anterior. Bajo el diseño desigual, el condado 3 entra con
-        $\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—, así que cuando sale tiene que hablar por sí mismo
-        <em>y</em> por las veces que no salió: <strong>por $1/0{,}40 = 2{,}5$ condados</strong>. El condado 5, más
-        favorecido por el diseño, tiene $\pi_5 = 0{,}55$ y habla solo por $1/0{,}55 = 1{,}82$. Cada uno aporta su
-        valor multiplicado por lo que representa:</p>
+        $\pi_3 = 0{,}40$ —de cada diez repeticiones del sorteo, entra en cuatro—, así que cuando sale tiene que
+        hablar por sí mismo <em>y</em> por las veces que no salió: <strong>por $1/0{,}40 = 2{,}5$ condados</strong>.
+        El condado 5, más favorecido por el diseño, tiene $\pi_5 = 0{,}55$ y habla solo por $1/0{,}55 = 1{,}82$.
+        Cada uno aporta su valor dividido entre su probabilidad de haber sido observado:</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Y aquí ya no vale contar muestras.</strong> En el módulo 2, $\pi_1 = 0{,}4$
+          salía de mirar la lista: el condado 1 está en cuatro de las diez parejas. Esa cuenta funcionaba porque en el
+          MAS las diez son <em>igual de probables</em>. Bajo el diseño C no lo son, así que hay que sumar sus $p(s)$,
+          no contarlas. La prueba de que la diferencia importa: el condado 1 sigue estando en cuatro de las diez
+          parejas y su $\pi_1$ ya no es $0{,}4$, sino <strong>$0{,}325$</strong>.</p>
+      </div>
 
       <div class="diagram">
-        <p style="margin:0;">$\hat{t} = \underbrace{27 \times 2{,}50}_{\text{condado 3}} \;+\;
-        \underbrace{58 \times 1{,}82}_{\text{condado 5}} \;=\; 67{,}5 + 105{,}5 \;=\; 172{,}95$</p>
+        <p style="margin:0;">$\hat{t} = \underbrace{\dfrac{27}{0{,}40}}_{\text{condado 3}} \;+\;
+        \underbrace{\dfrac{58}{0{,}55}}_{\text{condado 5}} \;=\; 67{,}50 + 105{,}45 \;=\; 172{,}95$</p>
+        <p class="text-sm" style="margin:0.5rem 0 0;">Se divide entre $\pi_k$ en vez de multiplicar por los pesos
+          redondeados de arriba: $1/0{,}55$ no es exactamente $1{,}82$, y arrastrar ese redondeo hasta el final desplazaría
+          el resultado. Los pesos son para pensar; la cuenta se hace con las $\pi$.</p>
         <p style="margin-bottom:0; margin-top:0.6rem;">El total verdadero es <strong>150</strong>, así que
           <em>esta</em> muestra se pasa en un 15 %. <strong>Y está bien que así sea.</strong> Ninguna muestra de dos
           condados puede acertar siempre: lo que el módulo demuestra a continuación es que, promediando sobre las
@@ -545,8 +556,8 @@
         <h4><i class="fas fa-triangle-exclamation mr-2" aria-hidden="true"></i>Sin tamaño fijo la fórmula no protesta:
           miente</h4>
         <p>Toda la forma cuelga de $\sum_{l \in U}\Delta_{kl} = 0$, y esa identidad exige tamaño fijo. El
-          <strong>diseño Bernoulli</strong> del módulo 8 —cada unidad entra o no con probabilidad $0{,}4$, con
-          independencia de las demás— no lo tiene: su tamaño de muestra es aleatorio y hasta puede salir la muestra
+          <strong>diseño Bernoulli</strong> que presenta el módulo 8 —aquí, sobre estos cinco condados, con cada
+          unidad entrando o no con probabilidad $0{,}4$ e independientemente de las demás— no lo tiene: su tamaño de muestra es aleatorio y hasta puede salir la muestra
           vacía. Ahí $\pi_{kl} = \pi_k\pi_l$ para todo par, luego $\Delta_{kl} = 0$ fuera de la diagonal y la
           expresión de Sen–Yates–Grundy da <strong>cero</strong>. La varianza de verdad es <strong>8 553</strong>,
           como lo comprueba el último trozo del bloque de arriba.</p>
@@ -669,7 +680,7 @@
         </div>
       </div>
 
-      <p>El módulo anterior terminó con una muestra que daba 172,95 cuando el total era 150. Si una muestra concreta
+      <p>El módulo anterior abrió con una muestra que daba 172,95 cuando el total era 150. Si una muestra concreta
         falla por un 15 %, <strong>¿en qué sentido es «bueno» el estimador?</strong> La respuesta se ve entera en la
         población de cinco condados, porque ahí sí se pueden mirar <em>todas</em> las muestras a la vez.</p>
 
