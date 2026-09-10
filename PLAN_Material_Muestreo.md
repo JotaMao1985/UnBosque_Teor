@@ -2205,6 +2205,46 @@ módulos y treinta preguntas— se ensambla desde la misma plantilla que los och
 
 El plan operativo del recurso es `PLAN_Taller_Corte1.md`, donde está el informe completo (T4.3).
 
+### T7.7 — La moneda del módulo 8 del cap. 2, que no era una moneda (2026-09-10)
+
+Javier señaló que la entrada del módulo 8 del capítulo 2 —«Sobre los 3 078 condados, lanzar una
+moneda con $\pi = 0{,}02$ para cada uno…»— no se entendía. Tenía razón, y el defecto es de los que
+no protesta: todas las cifras estaban respaldadas y el capítulo pasaba el verificador en verde.
+
+**Qué fallaba, que era la metáfora y no el dato.** Una moneda sale cara la mitad de las veces; decir
+que se lanza «con $\pi = 0{,}02$» rompe la imagen justo donde el lector la necesita, y le deja la
+tarea de reconciliar «moneda» con un 2 %. Encima el párrafo no decía **para qué** sirve la moneda
+—que la decisión sea local: que no haga falta saber nada del resto de la lista—, ni **de dónde sale
+el 61,6** —es $N\pi$, y sin esa multiplicación el número parece caído del cielo—, ni que 61,6 es un
+tamaño que **ninguna muestra puede tener**, porque los condados entran enteros.
+
+**Y una incoherencia interna.** El párrafo decía que «una realización cualquiera puede traer 50 o
+75»; el simulador que está ocho líneas más abajo dice que los tamaños van **de 37 a 86** sobre cinco
+mil réplicas. El texto de entrada estrechaba a ojo la variabilidad que el módulo entero existe para
+enseñar. Ahora las dos cifras son las del simulador.
+
+**Cómo quedó.** Tres párrafos donde había dos: el cupo que no se puede repartir sobre una lista que
+todavía no existe · la moneda **cargada**, un lanzamiento por condado y cada uno ajeno a los demás ·
+el tamaño que se cuenta al final, con $N\pi$ escrito, la desviación de 7,7 y el rango 37–86. El
+cierre ahora nombra la moneda de cambio —las decisiones son **independientes**— que es justo lo que
+la Definición 2.8 formaliza como $\Delta_{kl} = 0$ y lo que el párrafo siguiente usa para anular los
+términos cruzados de la varianza. Antes el texto prometía «las cuentas más simples del capítulo» sin
+decir a cambio de qué.
+
+**Verificado.** Ni una cifra nueva escrita a mano: las cuatro que quedan en el texto —3 078, 0,02,
+61,6 y 7,7— salen de `bernoulli.pi02` del `cap2_datos.json`, y 37 y 86 son los extremos de
+`histTamano`, los mismos que ya citaba el simulador. `ensambla_cap2.py` reproduce el capítulo **byte
+a byte** en la segunda pasada; `verifica_bloques.py --prosa` sigue en **495 de 495** cifras de
+bloques y **109 respaldadas · 0 sin respaldo**, el mismo recuento que antes del cambio. En el
+navegador, sobre HTTP: 27 fórmulas de KaTeX, **0 `.katex-error`** y consola limpia.
+
+**Lo que este arreglo enseña sobre las herramientas.** `--prosa` comprueba que cada cifra tenga un
+número detrás; no comprueba que la frase que la rodea se entienda. Una metáfora rota pasa todos los
+controles del repositorio. Esta clase de defecto solo la encuentra alguien leyendo, y por eso la
+revisión de contenido de Javier sigue siendo un checkpoint y no un trámite.
+
+---
+
 ## Protocolo de verificación de cada capítulo
 
 Es material que llega a estudiantes. Antes de dar un capítulo por terminado:

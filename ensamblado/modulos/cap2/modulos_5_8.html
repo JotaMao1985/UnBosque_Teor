@@ -394,13 +394,23 @@
 
       <p>Todos los diseños vistos hasta aquí fijan el tamaño de antemano: «sortea 300 condados». Pero hay
         situaciones en las que eso no se puede hacer. Un auditor que revisa transacciones <em>según van llegando</em>
-        no sabe cuántas habrá; un servidor que decide si registrar cada petición tampoco. En esos casos solo cabe
-        decidir unidad por unidad, con una moneda.</p>
+        no sabe cuántas habrá; un servidor que decide si registrar cada petición tampoco. No se puede repartir un
+        cupo de 300 sobre una lista que todavía no existe: solo cabe decidir unidad por unidad, en el momento y sin
+        consultar lo que se decidió antes ni lo que vendrá después.</p>
 
-      <p>Sobre los 3 078 condados, lanzar una moneda con $\pi = 0{,}02$ para cada uno da en promedio
-        <strong>61,6 condados</strong>… pero solo en promedio: la desviación típica del tamaño obtenido es de
-        <strong>7,7 condados</strong>, así que una realización cualquiera puede traer 50 o 75. Ese tamaño aleatorio
-        es el precio, y a cambio se obtiene el diseño con las cuentas más simples del capítulo.</p>
+      <p>Esa decisión es una moneda, con una salvedad que conviene no pasar por alto: <strong>no es
+        equilibrada</strong>. No sale «entra» la mitad de las veces, sino la fracción que uno decida, y esa fracción
+        es $\pi$. Cargarla para que salga «entra» dos veces de cada cien es escribir $\pi = 0{,}02$. Se lanza
+        <strong>una vez por condado</strong> —3 078 lanzamientos, cada uno ajeno a los demás— y la muestra es,
+        sencillamente, el conjunto de los condados en los que salió «entra».</p>
+
+      <p>Nadie ha elegido cuántos son. El tamaño <strong>se cuenta al final</strong>, y por eso cambia en cada
+        repetición: vale $N\pi$ solo <em>en promedio</em> —los 3 078 condados por 0,02 dan <strong>61,6</strong>, una
+        media que ninguna muestra concreta puede alcanzar, porque los condados entran enteros—. Su desviación típica
+        es de <strong>7,7 condados</strong>, y en las cinco mil réplicas del simulador de más abajo los tamaños
+        observados van de 37 a 86. Ese es el precio del diseño: no se puede prometer de antemano a cuántas unidades
+        habrá que ir. Lo que se compra a cambio es que las decisiones sean <strong>independientes</strong> entre sí,
+        y de ahí salen las cuentas más simples del capítulo.</p>
 
       <div class="definition">
         <h4><i class="fas fa-coins mr-2" aria-hidden="true"></i>Definición 2.8: diseño Bernoulli</h4>
