@@ -3808,7 +3808,9 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
       <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: los 3 078 condados agrícolas de Estados
         Unidos en el censo agrícola de 1992. Tiene una propiedad que ninguna población real tiene en el trabajo diario
         y que la hace insustituible para aprender: <strong>está entera</strong>, así que cualquier estimación se puede
-        comparar con la verdad.</p>
+        comparar con la verdad. Aquí se presenta solo lo justo para trabajar con ella; su <em>forma</em> —muy
+        asimétrica, y esa asimetría condiciona todos los diseños del curso— se mira en el módulo 8, que es donde
+        conviene mirarla: antes de elegir el diseño, no después de que salgan resultados raros.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La población agpop">
@@ -4078,6 +4080,19 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         entrevistas. La <strong>encuesta 2</strong> reclutó a 983 voluntarios en Mechanical Turk pagando 0,25 dólares.
         Las dos se calibraron después al censo de 2010 sobre las mismas ocho celdas de sexo, edad y raza.</p>
 
+      <div class="definition">
+        <h4>Dos palabras que todavía no se han dicho: peso y calibración</h4>
+        <p>Un <strong>peso</strong> dice a cuántas unidades de la población representa cada unidad observada. Si una
+          celda demográfica quedó poco presente en la muestra, cada persona de esa celda tiene que cargar con más
+          gente, y la estimación deja de ser el promedio de las respuestas para ser el promedio
+          <em>ponderado</em> por lo que cada respuesta representa.</p>
+        <p style="margin-bottom:0;"><strong>Calibrar</strong> es retocar esos pesos hasta que la muestra reproduzca
+          unos totales que se conocen por otra vía: aquí, cuánta gente de cada sexo, edad y raza dice el censo de
+          2010 que hay. De dónde salen los pesos cuando el diseño es probabilístico se construye en el capítulo 2;
+          cómo se calibran, en el capítulo 4 y en el 7. Para este módulo basta con saber qué prometen, porque lo que
+          se va a comprobar es <strong>hasta dónde llega esa promesa</strong>.</p>
+      </div>
+
       <p>Que las dos se calibren a las mismas celdas tiene una ventaja inesperada: permite <strong>recuperar el
         censo</strong> desde los pesos, y por dos caminos independientes que tienen que coincidir.</p>
 
@@ -4282,6 +4297,12 @@ print(pd.DataFrame(
           desviación demográfica. Calibrar por sexo, edad y raza corrige lo que se midió; no toca lo que hizo que una
           persona contestara y otra no. La estimación ponderada de la encuesta telefónica, 64,8 %, es la que da título
           al artículo original: «el 65 % de los estadounidenses cree que está por encima de la media».</p>
+        <p style="margin-bottom:0;"><strong>¿Y entonces qué se hace?</strong> No ponderar más fino: por muchas
+          variables que se añadan, la calibración solo corrige aquello que se midió en las dos partes, y lo que hizo
+          contestar a una persona y callar a otra no está entre lo medido. La salida que sí funciona es cara:
+          conseguir una muestra <em>probabilística</em>, aunque sea pequeña, y usarla como referencia para medir
+          cuánto se desvía la grande. El módulo 9 vuelve sobre esto, con datos de entrenamiento en vez de
+          encuestas.</p>
       </div>
 
       <h3>La no respuesta tiene fórmula</h3>
@@ -4711,7 +4732,8 @@ print((pd.Series({
 
       <p>Pongamos las dos encuestas de este capítulo una al lado de la otra. El <em>Literary Digest</em> recogió
         <strong>2 266 566</strong> papeletas y falló por <strong>19,3 puntos</strong>. Una muestra aleatoria de
-        <strong>1 000</strong> personas falla, típicamente, por 1,5. Midiendo el error de las dos con la misma vara,
+        <strong>1 000</strong> personas falla, típicamente, por 1,5 —la cifra sale del cálculo que cierra este
+        módulo—. Midiendo el error de las dos con la misma vara,
         el Digest es <strong>12,6 veces peor</strong> que una muestra dos mil veces más pequeña.</p>
 
       <p>Explicar cómo es eso posible exige separar las dos maneras de equivocarse —desviarse siempre hacia el mismo
@@ -4751,7 +4773,8 @@ print((pd.Series({
             </li>
             <li>
               <p style="margin-bottom:0;">La consecuencia práctica está en el papel de $n$. Bajo muestreo aleatorio
-                simple, $V = (1 - n/N)\,S^2/n$, que tiende a cero cuando $n \to N$. El sesgo $B$ no contiene $n$ por
+                simple la varianza vale $V = (1 - n/N)\,S^2/n$ —es la fórmula que el capítulo 2 construye desde el
+                diseño; aquí se usa solo para mirar dónde aparece $n$— y tiende a cero cuando $n \to N$. El sesgo $B$ no contiene $n$ por
                 ningún lado: es una propiedad del <em>procedimiento</em>, no del tamaño. Un censo hace $V = 0$ y deja
                 $B$ intacto.</p>
             </li>
@@ -5525,8 +5548,9 @@ print(pd.Series({"citaciones": citaciones, "quedan": quedan,
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>En una ciudad hay <strong>14
             arquitectos</strong> y se quiere una muestra de 8. Se llama por orden del directorio telefónico hasta
-            conseguir 8 entrevistas. Calcula las probabilidades de inclusión suponiendo que todos aceptan, comprueba
-            cuánto suman y decide si el diseño sirve.</p>
+            conseguir 8 entrevistas. Calcula la <strong>probabilidad de inclusión</strong> $\pi_k$ de cada arquitecto
+            —la probabilidad de que la unidad $k$ acabe en la muestra, que es el objeto que el capítulo 2 formaliza—
+            suponiendo que todos aceptan, comprueba cuánto suman y decide si el diseño sirve.</p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
