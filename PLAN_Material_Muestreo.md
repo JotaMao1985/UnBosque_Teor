@@ -2227,7 +2227,7 @@ enseñar. Ahora las dos cifras son las del simulador.
 todavía no existe · la moneda **cargada**, un lanzamiento por condado y cada uno ajeno a los demás ·
 el tamaño que se cuenta al final, con $N\pi$ escrito, la desviación de 7,7 y el rango 37–86. El
 cierre ahora nombra la moneda de cambio —las decisiones son **independientes**— que es justo lo que
-la Definición 2.7 formaliza como $\Delta_{kl} = 0$ (era la 2.8 hasta la renumeración de T7.8) y lo que el párrafo siguiente usa para anular los
+la Definición 2.7 formaliza como $\Delta_{kl} = 0$ (era la 2.8 hasta la renumeración de T7.9) y lo que el párrafo siguiente usa para anular los
 términos cruzados de la varianza. Antes el texto prometía «las cuentas más simples del capítulo» sin
 decir a cambio de qué.
 
@@ -2313,26 +2313,38 @@ fórmulas de KaTeX, 0 `.katex-error`** y consola limpia. El módulo 3 pasa de 18
 
 ---
 
-### T7.8 — Revisión del cap. 2 completo, y la primera parte de lo hallado (2026-09-10)
+> **Nota de numeración (2026-09-10).** T7.9, T7.10 y T7.11 se renumeraron este mismo día. Dos
+> sesiones trabajaron en paralelo sobre el mismo árbol de trabajo y ninguna vio a la otra: las dos
+> escribieron aquí y las dos usaron las etiquetas **T7.8 y T7.9**. Se conservó el orden del documento
+> y se corrió la numeración hacia arriba; el T7.8 del capítulo 3 se quedó como estaba, así que sus
+> referencias internas siguen siendo válidas. Los **mensajes de commit de esa tarde citan los números
+> viejos** y no coinciden con estos encabezados.
+>
+> **Y la lección operativa, que es la que importa.** Un `git add -A` en un árbol compartido se lleva
+> el trabajo de la otra sesión dentro del commit propio. Aquí pasó: `88c75b2` arrastró la nota de una
+> tarea ajena, y el capítulo 1 entero se quedó sin commitear hasta `64fc6aa` porque su autor terminó
+> después. Antes de commitear, mirar `git status` y no dar por hecho que todo lo modificado es de uno.
+
+### T7.9 — Revisión del cap. 2 completo, y la primera parte de lo hallado (2026-09-10)
 
 Javier pidió revisar los otros diez módulos del capítulo 2 buscando defectos de la misma familia que
 el de la moneda (T7.7): los que **pasan todas las herramientas** y aun así confunden. Leídos los once
 módulos y la autoevaluación entera, contrastada cada cifra contra `cap2_datos.json`. Salieron
-**seis principales y tres menores**. Se arreglaron por partes: T7.8 los dos primeros, T7.9 los siete restantes.
+**seis principales y tres menores**. Se arreglaron por partes: T7.9 los dos primeros, T7.10 los siete restantes.
 
 **El inventario, para que la sesión que siga no tenga que volver a buscarlos.**
 
 | # | Módulo | Qué pasa | Estado |
 |:--:|:--:|---|:--:|
-| 1 | 11 (quiz) | La pista de la pregunta 1 manda a la **definición 2.2**, que no existe | ✅ T7.8 |
-| 2 | 9 | El intervalo del sistemático se llamaba $k$, y $k$ es el índice de unidad: $\pi_k = 1/k$ | ✅ T7.8 |
-| 3 | 7 | «relajar el error a la mitad divide el tamaño por cuatro» sobre 1 506 / 595 / 174, cuyos factores son **2,53 y 3,42** | ✅ T7.9 |
-| 4 | 3 | $27 \times 2{,}50 + 58 \times 1{,}82 = 67{,}5 + 105{,}5 = 172{,}95$ no cierra por ningún lado | ✅ T7.9 |
-| 5 | 5 | «multiplicando por 3 078» da 916 926 966, no los 916 927 110 que anuncia | ✅ T7.9 |
-| 6 | 11 | Promete «Diez preguntas» dos veces y la autoevaluación tiene **once** | ✅ T7.9 |
-| m1 | 3 | «$\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—»: contar muestras solo da $\pi$ si son equiprobables, y bajo el diseño C no lo son | ✅ T7.9 |
-| m2 | 3 | Cita «el Bernoulli del módulo 8 —con probabilidad 0,4—» y el módulo 8 usa 0,02/0,05/0,10/0,20 | ✅ T7.9 |
-| m3 | 4 | «el módulo anterior **terminó** con 172,95», que aparece al principio del 3 | ✅ T7.9 |
+| 1 | 11 (quiz) | La pista de la pregunta 1 manda a la **definición 2.2**, que no existe | ✅ T7.9 |
+| 2 | 9 | El intervalo del sistemático se llamaba $k$, y $k$ es el índice de unidad: $\pi_k = 1/k$ | ✅ T7.9 |
+| 3 | 7 | «relajar el error a la mitad divide el tamaño por cuatro» sobre 1 506 / 595 / 174, cuyos factores son **2,53 y 3,42** | ✅ T7.10 |
+| 4 | 3 | $27 \times 2{,}50 + 58 \times 1{,}82 = 67{,}5 + 105{,}5 = 172{,}95$ no cierra por ningún lado | ✅ T7.10 |
+| 5 | 5 | «multiplicando por 3 078» da 916 926 966, no los 916 927 110 que anuncia | ✅ T7.10 |
+| 6 | 11 | Promete «Diez preguntas» dos veces y la autoevaluación tiene **once** | ✅ T7.10 |
+| m1 | 3 | «$\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—»: contar muestras solo da $\pi$ si son equiprobables, y bajo el diseño C no lo son | ✅ T7.10 |
+| m2 | 3 | Cita «el Bernoulli del módulo 8 —con probabilidad 0,4—» y el módulo 8 usa 0,02/0,05/0,10/0,20 | ✅ T7.10 |
+| m3 | 4 | «el módulo anterior **terminó** con 172,95», que aparece al principio del 3 | ✅ T7.10 |
 
 #### 1 · La definición 2.2 no existía, y la pista mandaba a buscarla
 
@@ -2388,9 +2400,9 @@ numeraba definiciones, así que probablemente no, pero eso hay que contarlo, no 
 
 ---
 
-### T7.9 — La segunda parte: las tres cadenas que no cerraban, y cuatro más (2026-09-10)
+### T7.10 — La segunda parte: las tres cadenas que no cerraban, y cuatro más (2026-09-10)
 
-Los siete hallazgos que T7.8 dejó pendientes. Tres de ellos son **la misma enfermedad que la moneda
+Los siete hallazgos que T7.9 dejó pendientes. Tres de ellos son **la misma enfermedad que la moneda
 de T7.7**: una cuenta que se le pide seguir al estudiante y que no cierra. Ninguna la ve
 `verifica_bloques.py`, porque cada cifra por separado sí tiene respaldo; lo que falla es el paso
 entre ellas.
@@ -2453,7 +2465,7 @@ calculada**: son el pegamento entre cifras correctas. No hay herramienta que los
 que siga la cuenta con lápiz. Es el argumento más concreto que ha dado este proyecto a favor de que
 la revisión de contenido siga siendo un checkpoint humano.
 
-### T7.9 — Auditoría de orden del capítulo 1 (2026-09-10)
+### T7.11 — Auditoría de orden del capítulo 1 (2026-09-10)
 
 Después de T7.8, Javier pidió revisar si los demás capítulos tienen el mismo defecto de orden —juzgar
 o comparar contra material que el lector todavía no ha visto—, empezando por el 1. Leídos los diez
