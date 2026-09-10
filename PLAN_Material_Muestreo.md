@@ -2227,7 +2227,7 @@ enseñar. Ahora las dos cifras son las del simulador.
 todavía no existe · la moneda **cargada**, un lanzamiento por condado y cada uno ajeno a los demás ·
 el tamaño que se cuenta al final, con $N\pi$ escrito, la desviación de 7,7 y el rango 37–86. El
 cierre ahora nombra la moneda de cambio —las decisiones son **independientes**— que es justo lo que
-la Definición 2.8 formaliza como $\Delta_{kl} = 0$ y lo que el párrafo siguiente usa para anular los
+la Definición 2.7 formaliza como $\Delta_{kl} = 0$ (era la 2.8 hasta la renumeración de T7.8) y lo que el párrafo siguiente usa para anular los
 términos cruzados de la varianza. Antes el texto prometía «las cuentas más simples del capítulo» sin
 decir a cambio de qué.
 
@@ -2310,6 +2310,81 @@ sus **4 interruptores** y la serie de la expansión en $\bar{y} = 297\,897{,}05$
 cada nube», la quinta salida, «cuadrado del diámetro por la altura» donde antes decía «cubo», **274
 fórmulas de KaTeX, 0 `.katex-error`** y consola limpia. El módulo 3 pasa de 18 a 22 min en
 `courseData`.
+
+---
+
+### T7.8 — Revisión del cap. 2 completo, y la primera parte de lo hallado (2026-09-10)
+
+Javier pidió revisar los otros diez módulos del capítulo 2 buscando defectos de la misma familia que
+el de la moneda (T7.7): los que **pasan todas las herramientas** y aun así confunden. Leídos los once
+módulos y la autoevaluación entera, contrastada cada cifra contra `cap2_datos.json`. Salieron
+**seis principales y tres menores**. Se arreglan por partes; esta es la primera.
+
+**El inventario, para que la sesión que siga no tenga que volver a buscarlos.**
+
+| # | Módulo | Qué pasa | Estado |
+|:--:|:--:|---|:--:|
+| 1 | 11 (quiz) | La pista de la pregunta 1 manda a la **definición 2.2**, que no existe | ✅ T7.8 |
+| 2 | 9 | El intervalo del sistemático se llamaba $k$, y $k$ es el índice de unidad: $\pi_k = 1/k$ | ✅ T7.8 |
+| 3 | 7 | «relajar el error a la mitad divide el tamaño por cuatro» sobre 1 506 / 595 / 174, cuyos factores son **2,53 y 3,42** | ⏳ |
+| 4 | 3 | $27 \times 2{,}50 + 58 \times 1{,}82 = 67{,}5 + 105{,}5 = 172{,}95$ no cierra por ningún lado | ⏳ |
+| 5 | 5 | «multiplicando por 3 078» da 916 926 966, no los 916 927 110 que anuncia | ⏳ |
+| 6 | 11 | Promete «Diez preguntas» dos veces y la autoevaluación tiene **once** | ⏳ |
+| m1 | 3 | «$\pi_3 = 0{,}40$ —sale en 4 de cada 10 muestras—»: contar muestras solo da $\pi$ si son equiprobables, y bajo el diseño C no lo son | ⏳ |
+| m2 | 3 | Cita «el Bernoulli del módulo 8 —con probabilidad 0,4—» y el módulo 8 usa 0,02/0,05/0,10/0,20 | ⏳ |
+| m3 | 4 | «el módulo anterior **terminó** con 172,95», que aparece al principio del 3 | ⏳ |
+
+#### 1 · La definición 2.2 no existía, y la pista mandaba a buscarla
+
+`git log -S` lo explica: en la **Fase 4.5** (`332b88b`) las antiguas «2.1 población y muestra» y
+«2.2 diseño muestral» se fusionaron en la actual «2.1: población, muestra y diseño». La fusión no
+renumeró el resto —el capítulo iba 2.1 → 2.3 → … → 2.10— y, peor, **dejó viva la pista** que citaba
+la 2.2. El estudiante que falla la primera pregunta pide ayuda y la ayuda lo manda al vacío.
+
+**Se renumeró todo** (2.3→2.2 … 2.10→2.9) en vez de solo arreglar la pista, porque el radio de
+impacto resultó ser nulo: un `grep` sobre todo el repositorio —capítulos, taller, preparcial, bancos,
+planes— encontró **una sola referencia por número en toda la prosa del material**, y era justo la
+pista rota. Los encabezados llevan su título, así que reemplazarlos completos es inequívoco y no
+depende del orden. Las secciones (2.5.1, 2.9.1…) numeran **módulos**, no definiciones, y no se
+tocaron.
+
+La pista apunta ahora a la **2.1**, que es la que define $p(s)$ —exactamente el objeto que la pista
+pregunta—. Comprobado en el navegador fallando la pregunta a propósito: sale «Vuelve a la definición
+2.1».
+
+#### 2 · El intervalo del sistemático se llamaba como el índice de unidad
+
+La Definición 2.9 (antes 2.10) importaba de Lohr la letra $k$ para el intervalo de salto, y este
+material indexa unidades con $k$ en todos los capítulos. El choque no era estético; producía esto:
+
+```
+π_k = 1/k,    π_kl = 1/k  si k y l caen en el mismo arranque
+```
+
+donde el subíndice y el denominador son objetos distintos y $k$ cambia de significado a mitad de
+frase. Lohr puede escribirlo así **porque indexa sus unidades con $i$**; aquí no.
+
+El intervalo pasa a ser $a$ —la letra de Särndal, Swensson y Wretman, que es la notación que el
+módulo 1 declara como la del curso— y se añadió una nota corta explicando el porqué, para quien
+venga leyendo a Lohr en paralelo y se pregunte por la discrepancia. Se comprobó antes que la letra
+$a$ estaba libre en todo el capítulo. Cambiado en los once sitios donde aparecía: la definición, el
+bloque de $p(s_r)$ y las $\pi$, la caja de la varianza inestimable, la nota de conglomerados, los
+dos textos de simulador, la fórmula de varios arranques ($a' = ma$), el ejercicio guiado 4 y el
+enunciado de la pregunta 9 de la autoevaluación. Los $\pi_k$, $\pi_{kl}$, $y_k$ y $d_k$ no se
+tocaron: ésos sí son índices de unidad.
+
+**Verificado.** El capítulo vuelve a salir **byte a byte** en la segunda pasada; `verifica_bloques.py
+--prosa` sigue en **495 de 495** cifras de bloques y **109 respaldadas · 0 sin respaldo**;
+`extrae_items.py --corte1` sigue contando 81 ítems y `prueba_bancos.py --corte1` sale sin fallos
+mecánicos. En el navegador: **45 fórmulas de KaTeX, 0 `.katex-error`**, consola limpia, y la pista
+recorrida de verdad.
+
+**Lo que esta tarea añade a lo que enseñaba T7.7.** El defecto no lo introdujo quien escribió el
+módulo: lo introdujo una **refactorización incompleta** tres fases atrás. Fusionar dos definiciones
+es una edición local; arreglar quien las citaba, no. Ninguna herramienta del repositorio cruza
+referencias con destinos, así que una referencia rota no cuesta nada dejarla y no avisa nunca. Vale
+la pena mirar si los otros siete capítulos tienen referencias por número —el cap. 2 era el único que
+numeraba definiciones, así que probablemente no, pero eso hay que contarlo, no suponerlo.
 
 ---
 

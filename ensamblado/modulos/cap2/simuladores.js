@@ -664,7 +664,7 @@
         tipo: 'opcion',
         modulo: 1,
         pregunta: 'Un investigador entrevista a los primeros 400 clientes que entran a una tienda un martes. ¿Por qué esto <strong>no</strong> permite calcular un error estándar?',
-        pista: 'Vuelve a la definición 2.2: ¿qué objeto hace falta para poder tomar esperanzas?',
+        pista: 'Vuelve a la definición 2.1: ¿qué objeto hace falta para poder tomar esperanzas?',
         opciones: [
           { texto: 'Porque no existe una $p(s)$ conocida: no se puede decir con qué probabilidad habría salido cada muestra posible.', correcta: true,
             retro: 'Exacto. Sin $p(s)$ no hay respecto de qué tomar la esperanza, así que ni insesgadez ni varianza de diseño están definidas. Todo el capítulo cuelga de ahí.' },
@@ -803,7 +803,7 @@
       {
         tipo: 'multiple',
         modulo: 9,
-        pregunta: 'Sobre el muestreo sistemático 1 en $k$, marca <strong>todo</strong> lo que es cierto.',
+        pregunta: 'Sobre el muestreo sistemático 1 en $a$, marca <strong>todo</strong> lo que es cierto.',
         pista: 'Son tres. Piensa por separado en la estimación puntual, en la varianza y en el papel del orden de la lista.',
         opciones: [
           { texto: 'Sus $\\pi_k$ valen $n/N$, igual que en el MAS, así que $N\\bar{y}$ sigue siendo insesgado.', correcta: true },

@@ -132,7 +132,7 @@
       </div>
 
       <div class="definition">
-        <h4><i class="fas fa-ruler mr-2" aria-hidden="true"></i>Definición 2.3: tamaño de muestra fijo y aleatorio</h4>
+        <h4><i class="fas fa-ruler mr-2" aria-hidden="true"></i>Definición 2.2: tamaño de muestra fijo y aleatorio</h4>
         <p style="margin-bottom:0;">Un diseño es de <strong>tamaño fijo</strong> si todas las muestras de su soporte
           tienen el mismo número de unidades, es decir si $n_s = n$ para toda $s \in Q$. Los tres diseños de arriba lo
           son. El <strong>diseño Bernoulli</strong> del módulo 8 no lo es: allí $n_s$ es una variable aleatoria, y
@@ -187,7 +187,7 @@
         dos, el diseño entero queda resumido en dos tablitas — en vez de una tabla de $\binom{3078}{300}$ filas.</p>
 
       <div class="definition">
-        <h4><i class="fas fa-percent mr-2" aria-hidden="true"></i>Definición 2.4: probabilidades de inclusión</h4>
+        <h4><i class="fas fa-percent mr-2" aria-hidden="true"></i>Definición 2.3: probabilidades de inclusión</h4>
         <p>La <strong>probabilidad de inclusión de primer orden</strong> de la unidad $k$ es la probabilidad de que $k$
           acabe en la muestra:</p>
         $$\pi_k = P(k \in s) = \sum_{s \ni k} p(s)$$
@@ -352,7 +352,7 @@
         probabilidad de haber sido observado. La fórmula solo pone símbolos a la cuenta que acabas de hacer.</p>
 
       <div class="definition">
-        <h4><i class="fas fa-scale-balanced mr-2" aria-hidden="true"></i>Definición 2.5: estimador de Horvitz–Thompson</h4>
+        <h4><i class="fas fa-scale-balanced mr-2" aria-hidden="true"></i>Definición 2.4: estimador de Horvitz–Thompson</h4>
         <p>Para un diseño con $\pi_k &gt; 0$ para toda $k \in U$, el <strong>estimador de Horvitz–Thompson</strong> del
           total poblacional $t = \sum_{k \in U} y_k$ es</p>
         $$\hat{t}_\pi = \sum_{k \in s} \frac{y_k}{\pi_k} = \sum_{k \in s} d_k\, y_k, \qquad d_k = \frac{1}{\pi_k}$$
@@ -684,7 +684,7 @@
         curso.</p>
 
       <div class="definition">
-        <h4><i class="fas fa-bullseye mr-2" aria-hidden="true"></i>Definición 2.6: insesgadez de diseño</h4>
+        <h4><i class="fas fa-bullseye mr-2" aria-hidden="true"></i>Definición 2.5: insesgadez de diseño</h4>
         <p>Un estimador $\hat{\theta}$ es <strong>insesgado por diseño</strong> (<em>design-unbiased</em>) para
           $\theta$ si</p>
         $$E_p(\hat{\theta}) = \sum_{s \in Q} p(s)\, \hat{\theta}(s) = \theta$$
