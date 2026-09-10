@@ -2243,6 +2243,10 @@ número detrás; no comprueba que la frase que la rodea se entienda. Una metáfo
 controles del repositorio. Esta clase de defecto solo la encuentra alguien leyendo, y por eso la
 revisión de contenido de Javier sigue siendo un checkpoint y no un trámite.
 
+**Publicado el 2026-09-10** con el visto bueno de Javier: `main` en `51d0597`, `gh-pages` en
+`436fbf2`. Comprobado sobre la página en vivo —no sobre el disco—: el texto viejo ya no está, el
+rango 37–86 sí, 27 fórmulas de KaTeX, 0 `.katex-error` y consola limpia.
+
 ---
 
 ## Protocolo de verificación de cada capítulo
