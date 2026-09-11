@@ -2653,7 +2653,31 @@ y el duodécimo sobrevivió un día publicado. *(b)* El hallazgo 5 de T7.12 —�
 respaldo; lo que no cierra es el paso entre ellas. Al reescribir un módulo, las frases que se dejan
 intactas también hay que releerlas con lápiz, no solo las nuevas.
 
-**Pendiente:** el visto bueno de Javier antes de publicar.
+**Publicado el 2026-09-11** con el visto bueno de Javier: `main` en `887fb06`, `gh-pages` en `11fb05c`.
+Con el mismo push salieron los dos arreglos del capítulo 3 que otra sesión había subido a `main` sin
+publicar —`ca28df6` y `727e1a1`, los de T7.12 y T7.14—; Javier aprobó publicarlos juntos sabiendo que
+viajaban. **No** salió `7e521dc` (T7.15), que llegó a `main` mientras se preparaba la publicación: la
+guarda de antes del push lo detectó, y se publicó exactamente el árbol de `sitio/` en `887fb06` con
+`git subtree split --prefix sitio 887fb06` y un `push` del commit resultante. Como el split es
+determinista, el próximo `subtree push` desde `HEAD` sigue siendo un avance rápido y llevará `7e521dc`
+cuando se apruebe. Comprobado sobre la página en vivo: los dos capítulos servidos son **byte a byte**
+los de `887fb06` (`cmp`), la Definición 2.10 está, el «$k$ muestras» no, «182 veces menor» sale las dos
+veces de `887fb06` y la frase nueva de `7e521dc` no aparece.
+
+**Tres trampas de esta publicación, para la próxima.**
+
+- *Publicar lo aprobado cuando `main` se ha movido.* `git subtree push` publica `sitio/` de `HEAD`, no
+  lo que se revisó, y con varias sesiones en el mismo repositorio entre la aprobación y el push puede
+  entrar un commit ajeno. La guarda es comparar `HEAD` con el commit aprobado justo antes de publicar.
+  Si se movió: `git subtree split --prefix sitio <aprobado>`, comprobar que el árbol del resultado es
+  `<aprobado>:sitio` y que `gh-pages` es su antecesor, y `git push origin <sha>:refs/heads/gh-pages`.
+  Nunca un commit hecho a mano en `gh-pages`: rompería el `subtree push` siguiente.
+- *El SHA del split llegó con un retorno de carro* al capturarlo con `$(…)`, y el primer push murió con
+  `invalid refspec '.-pages'`, sin publicar nada. Se normaliza con `git rev-parse --verify <sha>^{commit}`.
+- *En zsh, `echo "$pagina" | grep` miente.* El `echo` de zsh interpreta las barras invertidas y se corta
+  en el primer `\c` del LaTeX (`\cdot`, `\check`), así que `grep` solo ve la cabecera y todo cuenta
+  cero, también lo que ya estaba publicado antes. La comprobación en vivo se hace descargando a archivo,
+  y la prueba fuerte es `cmp` contra `<commit>:sitio/…`.
 
 ---
 
@@ -2731,6 +2755,10 @@ T7.13.
 **Lo que deja el capítulo.** El defecto más hondo no estaba en la prosa sino en la frontera entre la
 derivación y el código: el verificador comprueba que las cifras de la prosa salgan del código, pero no
 que la fórmula que se enseña sea la que el código ejecuta. Aquí no lo era, y la prosa lo afirmaba.
+
+**Publicado el 2026-09-11** junto con el capítulo 2 (ver T7.13), con el visto bueno de Javier:
+`gh-pages` en `11fb05c`, que es exactamente `sitio/` de `887fb06` y lleva `ca28df6` y `727e1a1`.
+T7.15 (`7e521dc`) quedó fuera y sigue sin publicar.
 
 ---
 
