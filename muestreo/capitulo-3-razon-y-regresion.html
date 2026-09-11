@@ -3622,7 +3622,9 @@ round(c(N = N, n = n, t_x = t_x, t_y = t_y,
 
       <p>La idea es sencilla y vale la pena decirla en palabras: <em>en la muestra, la superficie de 1992 fue el
         98,66 % de la de 1987; si esa proporción se mantiene en toda la población, el total de 1992 debería ser el
-        98,66 % del total conocido de 1987</em>.</p>
+        98,66 % del total conocido de 1987</em>. Si haces esa cuenta a mano te saldrán unas decenas de miles de
+        acres más que en la nota de abajo: el porcentaje está redondeado a dos decimales, y sobre 963 millones cada
+        decimal pesa. El código usa $\hat{B}$ entero.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El estimador de razón frente al de expansión">
@@ -3703,10 +3705,19 @@ print(pd.Series({"B": B, "t_razon": t_razon, "s_e": s_e, "ee": ee}).round(4).to_
               $$V(\hat{t}_r) \approx V\!\left(\sum_{k \in s} \frac{e_k}{\pi_k}\right)$$
             </li>
             <li>
-              <p style="margin-bottom:0;">Bajo MAS, esa varianza es la de siempre pero con $e_k$ en lugar de $y_k$, y
-                al estimarla se sustituye $B$ por $\hat{B}$:</p>
+              <p>Bajo MAS, esa varianza es la de siempre pero con $e_k$ en lugar de $y_k$, y al estimarla se
+                sustituye $B$ por $\hat{B}$:</p>
               $$\widehat{V}(\hat{t}_r) = N^2\left(1 - \frac{n}{N}\right)\frac{s_e^2}{n},
                 \qquad s_e^2 = \frac{1}{n-1}\sum_{k \in s}\big(y_k - \hat{B}x_k\big)^2$$
+            </li>
+            <li>
+              <p>Y un detalle que cambia la cifra. El factor $t_x/\hat{t}_{x,\pi}$ que el paso 3 sustituyó por 1
+                para <em>derivar</em> la varianza, al <em>estimarla</em> se puede conservar, porque la muestra lo da.
+                Es lo que hacen <code>svyratio</code> y el bloque de abajo:</p>
+              $$\widehat{V}(\hat{t}_r) = \left(\frac{t_x}{\hat{t}_{x,\pi}}\right)^{2}
+                N^2\left(1 - \frac{n}{N}\right)\frac{s_e^2}{n}$$
+              <p style="margin-bottom:0;">Aquí ese factor vale 1,0366 —es el $g$ del módulo 10—, y el error estándar
+                que publica este material es el de esta segunda forma: con la primera saldría algo menor.</p>
             </li>
           </ol>
         </div>
@@ -3732,8 +3743,9 @@ signif(abs(ee_mano - ee_razon) / ee_mano, 3)      # discrepancia relativa
       </div>
 
       <p>Las dos vías dan la misma cifra hasta el último bit: la discrepancia relativa es $1{,}68 \times 10^{-16}$, que
-        es la precisión de la aritmética de la máquina. La fórmula de la derivación y lo que hace
-        <code>svyratio</code> son literalmente lo mismo.</p>
+        es la precisión de la aritmética de la máquina. El bloque y <code>svyratio</code> son
+        literalmente lo mismo: los dos usan la segunda forma del último paso de la derivación, la que conserva
+        $t_x/\hat{t}_{x,\pi}$.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -3855,7 +3867,9 @@ print(pd.Series({
       </div>
 
       <p>La desviación pasa de 344 552 a 31 657: una reducción del <strong>90,8 %</strong>, que en varianza es un
-        factor de 110. Esa es toda la historia — y el requisito para que ocurra es exigente, porque esos residuos se
+        factor de más de cien. (Entre los dos estimadores del total queda en 110, algo menos que el cuadrado de
+        estas dos desviaciones, porque el error estándar de la razón lleva además el factor
+        $t_x/\hat{t}_{x,\pi}$ del módulo 2.) Esa es toda la historia — y el requisito para que ocurra es exigente, porque esos residuos se
         miden contra una recta obligada a pasar por el origen. Cuál de las cuatro pide cada conjunto de datos se
         decide así:</p>
 
@@ -3994,10 +4008,15 @@ print(pd.Series({
 
       <div class="note">
         <p><strong>La cifra que resuelve el dilema.</strong> Con $n = 300$, el sesgo del estimador de razón vale unos
-          $-39\,000$ acres y su error estándar 7,11 millones: el sesgo es <strong>182 veces menor</strong> que la
+          $-39\,000$ acres y su error estándar <strong>verdadero</strong> —el de las 200 000 réplicas— 7,11
+          millones: el sesgo es <strong>182 veces menor</strong> que la
           variabilidad. Elevado al cuadrado dentro del ECM, su contribución relativa es de $3{,}0 \times 10^{-5}$.
           Cambiar un estimador insesgado por otro que reduce el error estándar diez veces a cambio de eso no es un
           compromiso: es una ganga.</p>
+        <p style="margin-bottom:0;">Y no confundas esos 7,11 millones con los 5,54 del módulo 2. Aquéllos son la
+          <em>estimación</em> de este mismo error estándar hecha con la sola muestra <code>agsrs</code>, y en esta
+          muestra concreta se queda corta en más de una quinta parte. Un error estándar estimado también tiene su
+          propio error.</p>
       </div>
 
       <h3>Qué se desprecia exactamente</h3>
@@ -4052,7 +4071,8 @@ print(pd.Series({
       </div>
 
       <p>Muchos parámetros que parecen medias son en realidad razones. Merece la pena tener el catálogo a mano,
-        porque todos heredan lo del módulo 4: <strong>son sesgados y su varianza sale de linealizar</strong>.</p>
+        porque los que de verdad lo son heredan lo del módulo 4: <strong>son sesgados y su varianza sale de
+        linealizar</strong>. Y el catálogo sirve justamente para separarlos de los que solo lo parecen.</p>
 
       <div class="space-y-4">
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4125,8 +4145,8 @@ print(pd.Series({
         </div>
       </div>
 
-      <p>La razón obliga a que la recta pase por el origen: supone que un condado con cero granjas en 1987 tuvo
-        cero acres en 1992. Con los datos de <code>agsrs</code> esa recta no es la que mejor ajusta la nube: el
+      <p>La razón obliga a que la recta pase por el origen: supone que un condado sin un solo acre sembrado en 1987
+        tampoco lo tuvo en 1992. Con los datos de <code>agsrs</code> esa recta no es la que mejor ajusta la nube: el
         ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto de <strong>−2 548</strong> acres.
         Ese intercepto no nulo es la señal de que hay un estimador mejor esperando.</p>
 
@@ -4379,8 +4399,8 @@ round(por_mano, 4)
         <h4><i class="fas fa-object-group" aria-hidden="true"></i> Dominios sobre <code>agsrs</code></h4>
         <p class="simulador-intro">Con las cuatro regiones se puede comparar la estimación con la verdad, porque
           <code>agpop</code> es un censo. Mira el Oeste: solo 39 de los 300 condados de la muestra cayeron ahí, la
-          estimación se queda un 17 % por debajo del valor real y su coeficiente de variación es del 13 % —cuatro
-          veces peor que el de la media global—. Es el problema de fondo de los dominios pequeños, y lo que motiva
+          estimación se queda un 17 % por debajo del valor real y su coeficiente de variación es del 13 % —el
+          doble que el de la media global, y en varianza cuatro veces más—. Es el problema de fondo de los dominios pequeños, y lo que motiva
           la estimación en áreas pequeñas.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:250px;">
@@ -4669,9 +4689,11 @@ print(pd.DataFrame({
               <p style="margin-bottom:0;">Ahí está el puente. <strong>Calibrar es exigirle a los pesos que
                 reproduzcan totales conocidos</strong>, y el GREG es la solución de ese problema con una función de
                 distancia cuadrática. El capítulo 7 retoma esto para la postestratificación y el <em>raking</em>, y
-                el capítulo 8 lo usa para ajustar por no respuesta. En este capítulo, con una sola auxiliar, el
-                factor común es $g = t_x / \hat{t}_{x,\pi} = 1{,}036637$: cada peso del muestreo aleatorio simple
-                pasa de 10,26 a 10,635895.</p>
+                el capítulo 8 lo usa para ajustar por no respuesta. En el caso de la razón —una sola auxiliar, sin
+                intercepto y con $v_k = x_k$— todos los $g_k$ valen lo mismo,
+                $g = t_x / \hat{t}_{x,\pi} = 1{,}036637$: cada peso del muestreo aleatorio simple pasa de 10,26 a
+                10,635895. En la regresión del módulo 6, que calibra a $N$ y a $t_x$ a la vez, cada unidad recibe su
+                propio $g_k$, y por eso allí se notaba que se separaran de 1.</p>
             </li>
           </ol>
         </div>
@@ -4799,8 +4821,11 @@ print(pd.DataFrame({
         <p class="simulador-intro">La escalera verde es $\hat{F}$ construida con los 300 de la muestra; la gris, la
           $F$ real de los 3 078 condados. Mueve el nivel $p$: donde la línea naranja corta la escalera verde está el
           cuantil estimado. Fíjate en que la escalera verde va <strong>por debajo</strong> de la gris en casi todo el
-          rango: esta muestra concreta salió con condados algo más grandes de la cuenta, y por eso todos sus
-          cuantiles sobrestiman.</p>
+          rango: el grueso de esta muestra salió algo más arriba de la cuenta, y por eso sus cuantiles sobrestiman.
+          Y sin embargo su <strong>media</strong> se queda por debajo de la real, como se vio en el módulo 2: a la
+          muestra no le tocó ninguno de los condados más grandes del país, que pesan mucho en la media y nada en la
+          mediana. Sobrestimar la una y subestimar la otra a la vez no es una contradicción; es la razón de que
+          existan las dos.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:280px;">
           <canvas aria-label="Función de distribución estimada y real, con el cuantil seleccionado" role="img"></canvas>
@@ -4846,7 +4871,7 @@ print(pd.DataFrame({
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre los once módulos y cuatro
+            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre diez de los once módulos y cuatro
               ejercicios con los datos de Lohr, resueltos en R.</p>
           </div>
         </div>
@@ -4898,8 +4923,7 @@ print(pd.DataFrame({
           </div>
           <div class="ejercicio-panel solucion" id="cap3-e1-sol" hidden>
             <p><strong>Razón: 1 930 836 granjas con EE 8 208. Expansión: 1 843 907 con EE 67 908. El total real es
-              1 925 300, y la razón se queda a un 0,29 % de él con un error estándar <em>68 veces</em> menor en
-              varianza.</strong></p>
+              1 925 300, y la razón se queda a un 0,29 % de él con una varianza <em>68 veces</em> menor.</strong></p>
             <pre><code class="language-r"># Ejercicio 1 - El total de GRANJAS con la auxiliar farms87.
 tx_f &lt;- sum(agpop$farms87)
 Bf &lt;- mean(agsrs$farms92) / mean(agsrs$farms87)
