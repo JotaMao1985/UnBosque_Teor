@@ -91,10 +91,17 @@
                 = \frac{\sum_{k \in s} y_k}{\sum_{k \in s} x_k} = \frac{\bar{y}}{\bar{x}} = \hat{B}$$
             </li>
             <li>
-              <p style="margin-bottom:0;">Con $v_k = 1$ —varianza constante— no se cancela nada y queda la pendiente
-                de la regresión sin intercepto. Y añadiendo el intercepto al modelo se obtiene $b_1$, la pendiente
-                ordinaria. Los tres estimadores del capítulo son <strong>tres supuestos distintos sobre
-                $v_k$</strong>, y nada más.</p>
+              <p>Con $v_k = 1$ —varianza constante— no se cancela nada y queda la pendiente de mínimos cuadrados
+                ordinarios <strong>sin intercepto</strong>, que no es ninguno de los estimadores del capítulo.</p>
+            </li>
+            <li>
+              <p style="margin-bottom:0;">Los otros dos no salen de tocar $v_k$. La <strong>regresión</strong> del
+                módulo 6 cambia la forma de la recta, no la dispersión: le añade un intercepto,
+                $y_k = \beta_0 + \beta_1 x_k + \varepsilon_k$, y su pendiente es $b_1$. La
+                <strong>diferencia</strong> del módulo 7 no estima nada: fija $\beta = 1$ de antemano. El modelo
+                $\xi$ tiene, por tanto, dos palancas independientes —<strong>qué recta</strong> (por el origen, con
+                intercepto o con pendiente conocida) y <strong>cómo crece la dispersión</strong> ($v_k$)—, y la razón
+                es la única que necesita la segunda: es la recta por el origen <em>con</em> $v_k = x_k$.</p>
             </li>
           </ol>
         </div>

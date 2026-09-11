@@ -494,7 +494,7 @@
         pista: 'Dos cosas distintas: cómo se comporta con $n$, y cómo se compara con el error estándar.',
         opciones: [
           { texto: 'Es de orden $1/n$: se hace despreciable al crecer la muestra.', correcta: true },
-          { texto: 'Con $n = 300$ es unas mil veces menor que el error estándar.', correcta: true },
+          { texto: 'Con $n = 300$ es 182 veces menor que el error estándar.', correcta: true },
           { texto: 'Existe aunque el muestreo sea aleatorio simple y perfectamente ejecutado.', correcta: true },
           { texto: 'Se puede eliminar usando <code>survey</code> en vez de la fórmula a mano.', correcta: false }
         ],
@@ -556,7 +556,7 @@
           { texto: 'El estimador de diferencia.', correcta: false,
             retro: 'La diferencia es $\\beta = 1$, que es el otro punto notable de la curva.' },
           { texto: 'Un estimador sesgado.', correcta: false,
-            retro: 'El de expansión es <em>insesgado</em>: es el único de los cuatro que lo es exactamente. Lo que le pasa es que su error estándar es diez veces mayor.' }
+            retro: 'El de expansión es <em>insesgado</em>, y exactamente, igual que el de diferencia: los que llevan un sesgo pequeño son el de razón y el de regresión. Lo que le pasa es que su error estándar es diez veces mayor.' }
         ]
       },
       {

@@ -389,11 +389,14 @@
       <p>El estimador de razón <strong>es sesgado</strong>. No es un defecto de implementación: es una consecuencia
         matemática de que $\hat{B}$ sea un cociente de dos variables aleatorias, y la esperanza de un cociente no es
         el cociente de las esperanzas. El capítulo 1 dejó la herramienta para decidir qué hacer con eso: el error
-        cuadrático medio, $\text{ECM} = B^2 + V$.</p>
+        cuadrático medio, $\text{ECM} = \text{Sesgo}^2 + V$.</p>
 
       <div class="formula">
-        $$B(\hat{t}_r) \;\approx\; \frac{N(1 - n/N)}{n}\cdot\frac{B\,S_x^2 - S_{xy}}{\bar{x}_U}
+        $$\text{Sesgo}(\hat{t}_r) \;\approx\; \frac{N(1 - n/N)}{n}\cdot\frac{B\,S_x^2 - S_{xy}}{\bar{x}_U}
           \;=\; \frac{1}{n}\times(\text{algo que no depende de } n)$$
+        <p style="margin-bottom:0;">En el capítulo 1 el sesgo se escribía $B(\hat\theta)$, por <em>bias</em>. Aquí
+          no se puede: desde el módulo 2, $B$ es la razón poblacional $t_y/t_x$, y en esta misma fórmula aparece
+          dentro del numerador. Por eso el sesgo va con todas sus letras.</p>
       </div>
 
       <p>El sesgo es de <strong>orden $1/n$</strong>, mientras que el error estándar es de orden $1/\sqrt{n}$. Eso

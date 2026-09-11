@@ -2525,6 +2525,80 @@ publicación.
 
 ---
 
+### T7.12 — Revisión del cap. 3, y la primera parte de lo hallado (2026-09-11)
+
+Javier pidió pasar por el capítulo 3 la misma lectura que por el 2 (T7.9–T7.10): los defectos que
+**pasan todas las herramientas** y aun así confunden. Leídos los doce módulos, la autoevaluación y los
+cuatro ejercicios, con cada cifra contrastada contra `cap3_datos.json`. El orden del módulo 3 ya lo
+había arreglado T7.8 y no se volvió a contar. Salieron **nueve principales y cinco menores**; se
+arreglan por partes y esta es la primera.
+
+| # | Dónde | Qué pasa | Estado |
+|:--:|:--:|---|:--:|
+| 1 | quiz, mód. 4 | Marca como correcta «el sesgo es **unas mil veces** menor que el error estándar»; el módulo dice 182 y los datos, 182,4 | ✅ T7.12 |
+| 2 | quiz, mód. 10 | La retro dice que la expansión es «el único de los cuatro» exactamente insesgado; la diferencia también lo es (mód. 7, ej. 4) | ✅ T7.12 |
+| 3 | 4 | $B$ es sesgo y razón en la misma fórmula: $\text{ECM} = B^2 + V$ y $B(\hat t_r) \approx \ldots (B\,S_x^2 - S_{xy})/\bar x_U$ | ✅ T7.12 |
+| 4 | 9 | «Los tres estimadores del capítulo son tres supuestos distintos sobre $v_k$, y nada más» | ✅ T7.12 |
+| 5 | 3 | «en varianza es un factor de 110» tras dar 344 552 y 31 657, cuyo cociente al cuadrado es 118,5 | ⏳ |
+| 6 | 8 | CV del 13 % «cuatro veces peor» que el global (6,34 %): son 2,04; 4,18 solo en varianza | ⏳ |
+| 7 | 6 | «un condado con cero **granjas** en 1987»: la auxiliar es `acres87` | ⏳ |
+| 8 | 2 y 4 | El EE de la razón con $n = 300$ vale 5,54 M y 7,11 M sin decir que uno es el estimado y otro el verdadero | ⏳ |
+| 9 | 12 | «Once preguntas sobre los once módulos»: el 5 no tiene ninguna y el 10 tiene dos | ⏳ |
+| m1 | 11 / ej. 1 | «condados más grandes» frente a «más pequeños»: los dos ciertos —los cinco cuantiles sobrestiman y la media no—, sin reconciliar | ⏳ |
+| m2 | 10 | «con una sola auxiliar, el factor $g$ es común»: solo en la razón; la regresión del mód. 6 tiene $g_k$ distintos | ⏳ |
+| m3 | 5 | «todos… son sesgados», y el propio catálogo incluye la proporción y la media con $N$ conocido | ⏳ |
+| m4 | ej. 1 | «un error estándar 68 veces menor en varianza»: 68 en varianza, 8,3 en error estándar | ⏳ |
+| m5 | 2 | el 98,66 % de $t_x$ da 950 553 989, no 950 520 496 | ⏳ |
+
+**Descartado tras comprobarlo.** La pista del ejercicio 3 manda a «la tabla del capítulo 1» a mirar
+la desviación típica del Oeste. Parecía una referencia al vacío, pero la tabla existe: es la salida
+por región de un bloque del capítulo 1, en R y en Python, con 835 639 y 79 365.
+
+#### 1 y 2 · La autoevaluación contradecía al capítulo
+
+La opción del módulo 4 pasa a «182 veces menor», la cifra del propio módulo. La retro del módulo 10
+dice ahora que la expansión es exactamente insesgada **igual que la diferencia**, y que los que llevan
+un sesgo pequeño son la razón y la regresión. Las dos se editaron en la fuente del banco y se
+comprobaron en la página servida: la opción renderizada en el DOM y la retro en el HTML.
+
+#### 3 · La $B$ del sesgo
+
+El capítulo 1 escribe el sesgo como $B(\hat\theta)$, y el módulo 2 de este define $B = t_y/t_x$. En el
+módulo 4 las dos convivían dentro de una fórmula: la $B$ de fuera era el sesgo y la de dentro, la
+razón. Ahora el sesgo va como $\text{Sesgo}(\cdot)$ —en el ECM y en la aproximación de orden $1/n$—,
+con una nota que explica por qué aquí no se puede usar la letra del capítulo 1. Solo había esos dos
+usos; el glosario ya definía $B$ como la razón.
+
+#### 4 · El módulo 9 contradecía su propia autoevaluación
+
+La derivación sacaba razón ($v_k = x_k$), regresión **sin** intercepto ($v_k = 1$) y regresión con
+intercepto, y concluía «tres supuestos distintos sobre $v_k$, y nada más». Pero la segunda no es
+ningún estimador del capítulo, pasar a la tercera cambia la recta y no la dispersión, y la diferencia
+no sale de ningún $v_k$. La pregunta de los $v_k$ del módulo 10 lo dice bien —la diferencia sale de
+fijar $\beta = 1$ y la regresión de añadir intercepto—, así que el texto contradecía su propia
+autoevaluación. Ahora el paso 3 se queda en la regresión sin intercepto, y un paso 4 nuevo explica
+que el modelo $\xi$ tiene **dos palancas independientes** —qué recta y cómo crece la dispersión— y
+que la razón es la única que necesita la segunda.
+
+**Verificado.** Byte a byte en la segunda pasada · **151 de 151** cifras de bloques · **87
+respaldadas · 0 sin respaldo** · `prueba_barajado.py` 4 de 4. En el navegador, sobre HTTP: **282
+fórmulas de KaTeX y 0 `.katex-error`** en los doce módulos (274 antes; las ocho nuevas son las de la
+nota y el paso 4), consola limpia, la autoevaluación con sus 11 preguntas.
+
+**Dos fallos que no son de aquí.** `prueba_bancos.py` sobre **todos** los bancos —hasta ahora se
+corría con `--corte1`— da dos fallos mecánicos, los dos en capítulos que esta tarea no toca:
+`cap7[6]` (tolerancia 25 sobre una respuesta de 39, más del 50 %) y `cap8[9]` (un gráfico sin
+`descripcionGrafico`, nada para quien no ve el canvas). Quedan anotados para cuando se revisen.
+
+**Lo que confirma esta revisión.** Los dos defectos más graves estaban otra vez en la
+autoevaluación, como la «definición 2.2» del capítulo 2: las preguntas se escriben aparte, se van
+separando del texto y ninguna herramienta las contrasta con él, porque «mil» y «el único» no son
+cifras con decimales. Y la $B$ es el segundo choque de notación en dos días, después de la $k$ del
+sistemático: cuando un símbolo se importa de otro capítulo o de otro libro, nadie comprueba que esté
+libre en el de destino.
+
+---
+
 ## Protocolo de verificación de cada capítulo
 
 Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
