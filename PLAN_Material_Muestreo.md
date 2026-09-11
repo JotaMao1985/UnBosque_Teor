@@ -2514,6 +2514,13 @@ comparar contra un rival que aún no se ha presentado —lo del capítulo 3— y
 herramienta que aún no se ha explicado —lo del módulo 4 de este—. La segunda es más difícil de ver,
 porque el texto suena fluido: usa la palabra con naturalidad y el lector supone que se la perdió.
 
+**Publicado el 2026-09-11** con el visto bueno de Javier: el trabajo quedó asegurado en `64fc6aa` —la
+sesión que lo hizo terminó sin commitearlo— y sale en `gh-pages` en `a60ef9a`. Comprobado sobre la
+página en vivo y no sobre el disco: los diez módulos suman **125 fórmulas de KaTeX y 0
+`.katex-error`**, la consola está limpia, y la caja de peso y calibración aparece **antes del primer
+bloque de código** del módulo 4, que era el sentido del arreglo. El capítulo 2 no retrocedió con esta
+publicación.
+
 **Pendiente:** el visto bueno de Javier antes de publicar, y su decisión sobre auditar el capítulo 2.
 
 ---
