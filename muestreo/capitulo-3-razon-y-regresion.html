@@ -3953,11 +3953,14 @@ print(pd.Series({
       <p>El estimador de razón <strong>es sesgado</strong>. No es un defecto de implementación: es una consecuencia
         matemática de que $\hat{B}$ sea un cociente de dos variables aleatorias, y la esperanza de un cociente no es
         el cociente de las esperanzas. El capítulo 1 dejó la herramienta para decidir qué hacer con eso: el error
-        cuadrático medio, $\text{ECM} = B^2 + V$.</p>
+        cuadrático medio, $\text{ECM} = \text{Sesgo}^2 + V$.</p>
 
       <div class="formula">
-        $$B(\hat{t}_r) \;\approx\; \frac{N(1 - n/N)}{n}\cdot\frac{B\,S_x^2 - S_{xy}}{\bar{x}_U}
+        $$\text{Sesgo}(\hat{t}_r) \;\approx\; \frac{N(1 - n/N)}{n}\cdot\frac{B\,S_x^2 - S_{xy}}{\bar{x}_U}
           \;=\; \frac{1}{n}\times(\text{algo que no depende de } n)$$
+        <p style="margin-bottom:0;">En el capítulo 1 el sesgo se escribía $B(\hat\theta)$, por <em>bias</em>. Aquí
+          no se puede: desde el módulo 2, $B$ es la razón poblacional $t_y/t_x$, y en esta misma fórmula aparece
+          dentro del numerador. Por eso el sesgo va con todas sus letras.</p>
       </div>
 
       <p>El sesgo es de <strong>orden $1/n$</strong>, mientras que el error estándar es de orden $1/\sqrt{n}$. Eso
@@ -4498,10 +4501,17 @@ round(por_mano, 4)
                 = \frac{\sum_{k \in s} y_k}{\sum_{k \in s} x_k} = \frac{\bar{y}}{\bar{x}} = \hat{B}$$
             </li>
             <li>
-              <p style="margin-bottom:0;">Con $v_k = 1$ —varianza constante— no se cancela nada y queda la pendiente
-                de la regresión sin intercepto. Y añadiendo el intercepto al modelo se obtiene $b_1$, la pendiente
-                ordinaria. Los tres estimadores del capítulo son <strong>tres supuestos distintos sobre
-                $v_k$</strong>, y nada más.</p>
+              <p>Con $v_k = 1$ —varianza constante— no se cancela nada y queda la pendiente de mínimos cuadrados
+                ordinarios <strong>sin intercepto</strong>, que no es ninguno de los estimadores del capítulo.</p>
+            </li>
+            <li>
+              <p style="margin-bottom:0;">Los otros dos no salen de tocar $v_k$. La <strong>regresión</strong> del
+                módulo 6 cambia la forma de la recta, no la dispersión: le añade un intercepto,
+                $y_k = \beta_0 + \beta_1 x_k + \varepsilon_k$, y su pendiente es $b_1$. La
+                <strong>diferencia</strong> del módulo 7 no estima nada: fija $\beta = 1$ de antemano. El modelo
+                $\xi$ tiene, por tanto, dos palancas independientes —<strong>qué recta</strong> (por el origen, con
+                intercepto o con pendiente conocida) y <strong>cómo crece la dispersión</strong> ($v_k$)—, y la razón
+                es la única que necesita la segunda: es la recta por el origen <em>con</em> $v_k = x_k$.</p>
             </li>
           </ol>
         </div>
@@ -7789,7 +7799,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
         pista: 'Dos cosas distintas: cómo se comporta con $n$, y cómo se compara con el error estándar.',
         opciones: [
           { texto: 'Es de orden $1/n$: se hace despreciable al crecer la muestra.', correcta: true },
-          { texto: 'Con $n = 300$ es unas mil veces menor que el error estándar.', correcta: true },
+          { texto: 'Con $n = 300$ es 182 veces menor que el error estándar.', correcta: true },
           { texto: 'Existe aunque el muestreo sea aleatorio simple y perfectamente ejecutado.', correcta: true },
           { texto: 'Se puede eliminar usando <code>survey</code> en vez de la fórmula a mano.', correcta: false }
         ],
@@ -7851,7 +7861,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
           { texto: 'El estimador de diferencia.', correcta: false,
             retro: 'La diferencia es $\\beta = 1$, que es el otro punto notable de la curva.' },
           { texto: 'Un estimador sesgado.', correcta: false,
-            retro: 'El de expansión es <em>insesgado</em>: es el único de los cuatro que lo es exactamente. Lo que le pasa es que su error estándar es diez veces mayor.' }
+            retro: 'El de expansión es <em>insesgado</em>, y exactamente, igual que el de diferencia: los que llevan un sesgo pequeño son el de razón y el de regresión. Lo que le pasa es que su error estándar es diez veces mayor.' }
         ]
       },
       {
