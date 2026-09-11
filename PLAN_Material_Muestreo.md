@@ -2521,7 +2521,7 @@ página en vivo y no sobre el disco: los diez módulos suman **125 fórmulas de 
 bloque de código** del módulo 4, que era el sentido del arreglo. El capítulo 2 no retrocedió con esta
 publicación.
 
-**Pendiente:** el visto bueno de Javier antes de publicar, y su decisión sobre auditar el capítulo 2.
+**La auditoría del capítulo 2** la pidió Javier el 2026-09-11: está en T7.13.
 
 ---
 
@@ -2597,6 +2597,63 @@ separando del texto y ninguna herramienta las contrasta con él, porque «mil» 
 cifras con decimales. Y la $B$ es el segundo choque de notación en dos días, después de la $k$ del
 sistemático: cuando un símbolo se importa de otro capítulo o de otro libro, nadie comprueba que esté
 libre en el de destino.
+
+### T7.13 — Auditoría de orden del capítulo 2 (2026-09-11)
+
+Tras T7.11, Javier pidió seguir con el capítulo 2 y **parar ahí**. T7.9 y T7.10 ya lo habían revisado
+buscando otra familia de defectos —cadenas que no cierran, referencias rotas—; esta pasada le aplica la
+lente de orden: juzgar o comparar contra algo que el lector todavía no ha visto. Leídos los once
+módulos, el quiz y los cuatro ejercicios, sobre las fuentes con los arreglos de T7.10 ya dentro.
+
+**El capítulo 2 sale todavía mejor que el 1.** El módulo 1 hace exactamente lo que le faltaba al
+módulo 3 del capítulo 3: pone los tres diseños A, B y C sobre la mesa desde el principio, «cada uno
+germen de un capítulo posterior». HT y la expansión se comparan solo cuando los dos están presentados;
+el módulo 4 nombra la inferencia basada en modelos y remite al 10; Hájek se define antes de enfrentarlo
+con HT. Tres hallazgos.
+
+**1 · El DEFF se usaba sin haberlo definido (módulo 9).** Toda la tesis del módulo —el sistemático
+puede ser el mejor o el peor diseño según el orden de la lista— se argumentaba con valores de DEFF
+(9,81; 4,74; 0,75; 0,073; 218,9), y el capítulo nunca decía qué es. Solo un inciso («diez veces peor
+que un MAS del mismo tamaño») y una fila de notación sin definición. Lo arrastraban también el ejercicio
+4 del módulo 11, la retro de la pregunta 9 y las lecturas de dos simuladores. Ahora hay una
+**Definición 2.10: efecto de diseño (DEFF)** donde aparece por primera vez —el cociente frente al MAS
+del mismo $n$, la lectura (menos de 1 gana, más de 1 pierde, un DEFF de 2 pide el doble de unidades) y
+los punteros a los capítulos 4, 5 y 7—. Antes de numerarla se comprobó con `grep` que ninguna fuente
+del repositorio citaba una «definición 2.10».
+
+**2 · Los pesos se dibujaban en el módulo 2 y se presentaban en el 3.** El simulador `matriz-pikl`
+trae un gráfico «Pesos $d_k = 1/\pi_k$» que su introducción no mencionaba, y la pregunta del quiz
+asignada al módulo 2 pide «su peso de diseño $d_5$»: quien la fallaba era enviado por el resumen a
+repasar un módulo que no lo explica. La introducción presenta ahora ese gráfico como adelanto del
+módulo 3, con el nombre y la lectura del peso.
+
+**3 · Un resto del cambio de letra de T7.9 (módulo 9).** T7.9 pasó el intervalo del sistemático de $k$
+a $a$ «en los once sitios donde aparecía»; quedaba un duodécimo: «porque solo hay **$k$ muestras**»,
+publicado. Corregido, en el mismo párrafo que abre la definición del DEFF.
+
+**Queda para el capítulo 7, sin tocar porque Javier pidió parar en el 2:** su módulo 3 dice «el
+efecto de diseño ya apareció en los capítulos 4 y 5». Ahora aparece —y se define— en el 2.
+
+**Verificado.** Ni una cifra nueva: `verifica_bloques.py --prosa` sigue en **495 de 495** cifras de
+bloques y **108 respaldadas · 0 sin respaldo**, el mismo recuento que dejó T7.10. `ensambla_cap2.py`
+reproduce el archivo **byte a byte** en la segunda pasada. En el navegador: **569 fórmulas de KaTeX y 0
+`.katex-error`** en los once módulos, la fórmula de la Definición 2.10 renderiza, el párrafo del
+sistemático lleva ya $a$, la frase del peso de diseño sale en el módulo 2, los dos simuladores del
+módulo 9 cargan y la consola está limpia.
+
+**Convivencia.** Durante esta tarea otra sesión estuvo revisando el capítulo 3 (T7.12), con archivos
+suyos sin commitear. No se tocaron: al commitear hay que añadir solo las dos fuentes del capítulo 2, su
+HTML y este plan — nunca `git add -A`.
+
+**Lo que enseña.** Dos cosas, y la segunda es un fallo propio. *(a)* Un renombrado se cierra con un
+`grep` de la forma vieja, no contando los sitios que se cambiaron: «once sitios» era una cuenta a mano,
+y el duodécimo sobrevivió un día publicado. *(b)* El hallazgo 5 de T7.12 —«en varianza es un factor de
+110» tras dar 344 552 y 31 657, cuyo cociente al cuadrado es 118,5— está en una frase que T7.8
+**conservó tal cual** al reescribir el módulo 3 del capítulo 3. Pasaba `--prosa` porque cada cifra tiene
+respaldo; lo que no cierra es el paso entre ellas. Al reescribir un módulo, las frases que se dejan
+intactas también hay que releerlas con lápiz, no solo las nuevas.
+
+**Pendiente:** el visto bueno de Javier antes de publicar.
 
 ---
 

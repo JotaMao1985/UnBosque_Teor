@@ -3786,7 +3786,10 @@ print(pd.DataFrame({"muestra": [f"{a+1},{b+1}" for a, b in muestras],
         <p class="simulador-intro">La matriz completa de segundo orden para cada diseño. La diagonal es $\pi_k$. Mira
           el diseño <strong>estratificado</strong>: los pares dentro de un mismo estrato tienen
           $\boldsymbol{\pi_{kl} = 0}$, porque esas dos unidades no pueden salir juntas nunca. Esa casilla en cero es el
-          motivo de que en el módulo 9 la varianza del muestreo sistemático no se pueda estimar sin sesgo.</p>
+          motivo de que en el módulo 9 la varianza del muestreo sistemático no se pueda estimar sin sesgo. Debajo van
+          las $\pi_k$ y sus inversos, $d_k = 1/\pi_k$: ese segundo gráfico es un adelanto del módulo 3, donde el
+          inverso recibe su nombre —<strong>peso de diseño</strong>— y su lectura: a cuántas unidades de la población
+          representa cada una cuando sale.</p>
         <div class="simulador-controles"></div>
         <div class="matriz-pikl-marco" style="overflow-x:auto;"></div>
         <p class="grafico-etiqueta">Probabilidades de inclusión \(\pi_k\)</p>
@@ -5223,8 +5226,21 @@ print(f"CV teorico de t_HT = {np.sqrt(v_ht) / pob.sum():.4f}")
 
       <h3>2.9.1 El caso patológico: cuando el orden tiene un ciclo</h3>
 
-      <p>La varianza sí se puede calcular <em>si se conoce la población</em>, porque solo hay $k$ muestras: basta
-        promediar. Y al hacerlo aparece el comportamiento que hace del sistemático un diseño de dos caras.</p>
+      <p>La varianza sí se puede calcular <em>si se conoce la población</em>, porque solo hay $a$ muestras: basta
+        promediar. Pero un número suelto no dice si es mucho o poco; para eso hay que ponerlo al lado de la varianza
+        del MAS del mismo tamaño. Ese cociente tiene nombre propio, y a partir de aquí se usa en todo el curso:</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-scale-unbalanced mr-2" aria-hidden="true"></i>Definición 2.10: efecto de diseño (DEFF)</h4>
+        $$\text{DEFF} = \frac{V_{\text{diseño}}(\hat{\theta})}{V_{\text{MAS}}(\hat{\theta})}
+          \qquad \text{con el mismo tamaño de muestra } n$$
+        <p style="margin-bottom:0;">Si es <strong>menor que 1</strong>, el diseño gana al MAS; si es <strong>mayor
+          que 1</strong>, pierde. Y se traduce en tamaño: un DEFF de 2 significa que hace falta el doble de unidades
+          para lograr la misma precisión que con un MAS. Aquí compara el sistemático con el MAS; los capítulos 4 y 5
+          lo usan para el estratificado y los conglomerados, y el capítulo 7 lo estudia a fondo.</p>
+      </div>
+
+      <p>Y al calcularlo aparece el comportamiento que hace del sistemático un diseño de dos caras.</p>
 
       <div class="simulador" data-simulador="sistematico-periodico">
         <h4><i class="fas fa-wave-square" aria-hidden="true"></i> Sistemático sobre una lista con periodicidad</h4>
