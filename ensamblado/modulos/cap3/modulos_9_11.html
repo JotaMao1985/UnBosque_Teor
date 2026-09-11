@@ -219,9 +219,11 @@
               <p style="margin-bottom:0;">Ahí está el puente. <strong>Calibrar es exigirle a los pesos que
                 reproduzcan totales conocidos</strong>, y el GREG es la solución de ese problema con una función de
                 distancia cuadrática. El capítulo 7 retoma esto para la postestratificación y el <em>raking</em>, y
-                el capítulo 8 lo usa para ajustar por no respuesta. En este capítulo, con una sola auxiliar, el
-                factor común es $g = t_x / \hat{t}_{x,\pi} = 1{,}036637$: cada peso del muestreo aleatorio simple
-                pasa de 10,26 a 10,635895.</p>
+                el capítulo 8 lo usa para ajustar por no respuesta. En el caso de la razón —una sola auxiliar, sin
+                intercepto y con $v_k = x_k$— todos los $g_k$ valen lo mismo,
+                $g = t_x / \hat{t}_{x,\pi} = 1{,}036637$: cada peso del muestreo aleatorio simple pasa de 10,26 a
+                10,635895. En la regresión del módulo 6, que calibra a $N$ y a $t_x$ a la vez, cada unidad recibe su
+                propio $g_k$, y por eso allí se notaba que se separaran de 1.</p>
             </li>
           </ol>
         </div>
@@ -309,8 +311,11 @@
         <p class="simulador-intro">La escalera verde es $\hat{F}$ construida con los 300 de la muestra; la gris, la
           $F$ real de los 3 078 condados. Mueve el nivel $p$: donde la línea naranja corta la escalera verde está el
           cuantil estimado. Fíjate en que la escalera verde va <strong>por debajo</strong> de la gris en casi todo el
-          rango: esta muestra concreta salió con condados algo más grandes de la cuenta, y por eso todos sus
-          cuantiles sobrestiman.</p>
+          rango: el grueso de esta muestra salió algo más arriba de la cuenta, y por eso sus cuantiles sobrestiman.
+          Y sin embargo su <strong>media</strong> se queda por debajo de la real, como se vio en el módulo 2: a la
+          muestra no le tocó ninguno de los condados más grandes del país, que pesan mucho en la media y nada en la
+          mediana. Sobrestimar la una y subestimar la otra a la vez no es una contradicción; es la razón de que
+          existan las dos.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:280px;">
           <canvas aria-label="Función de distribución estimada y real, con el cuantil seleccionado" role="img"></canvas>

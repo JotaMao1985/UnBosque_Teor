@@ -118,7 +118,9 @@
 
       <p>La idea es sencilla y vale la pena decirla en palabras: <em>en la muestra, la superficie de 1992 fue el
         98,66 % de la de 1987; si esa proporción se mantiene en toda la población, el total de 1992 debería ser el
-        98,66 % del total conocido de 1987</em>.</p>
+        98,66 % del total conocido de 1987</em>. Si haces esa cuenta a mano te saldrán unas decenas de miles de
+        acres más que en la nota de abajo: el porcentaje está redondeado a dos decimales, y sobre 963 millones cada
+        decimal pesa. El código usa $\hat{B}$ entero.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El estimador de razón frente al de expansión">
@@ -165,10 +167,19 @@
               $$V(\hat{t}_r) \approx V\!\left(\sum_{k \in s} \frac{e_k}{\pi_k}\right)$$
             </li>
             <li>
-              <p style="margin-bottom:0;">Bajo MAS, esa varianza es la de siempre pero con $e_k$ en lugar de $y_k$, y
-                al estimarla se sustituye $B$ por $\hat{B}$:</p>
+              <p>Bajo MAS, esa varianza es la de siempre pero con $e_k$ en lugar de $y_k$, y al estimarla se
+                sustituye $B$ por $\hat{B}$:</p>
               $$\widehat{V}(\hat{t}_r) = N^2\left(1 - \frac{n}{N}\right)\frac{s_e^2}{n},
                 \qquad s_e^2 = \frac{1}{n-1}\sum_{k \in s}\big(y_k - \hat{B}x_k\big)^2$$
+            </li>
+            <li>
+              <p>Y un detalle que cambia la cifra. El factor $t_x/\hat{t}_{x,\pi}$ que el paso 3 sustituyó por 1
+                para <em>derivar</em> la varianza, al <em>estimarla</em> se puede conservar, porque la muestra lo da.
+                Es lo que hacen <code>svyratio</code> y el bloque de abajo:</p>
+              $$\widehat{V}(\hat{t}_r) = \left(\frac{t_x}{\hat{t}_{x,\pi}}\right)^{2}
+                N^2\left(1 - \frac{n}{N}\right)\frac{s_e^2}{n}$$
+              <p style="margin-bottom:0;">Aquí ese factor vale 1,0366 —es el $g$ del módulo 10—, y el error estándar
+                que publica este material es el de esta segunda forma: con la primera saldría algo menor.</p>
             </li>
           </ol>
         </div>
@@ -184,8 +195,9 @@
       </div>
 
       <p>Las dos vías dan la misma cifra hasta el último bit: la discrepancia relativa es $1{,}68 \times 10^{-16}$, que
-        es la precisión de la aritmética de la máquina. La fórmula de la derivación y lo que hace
-        <code>svyratio</code> son literalmente lo mismo.</p>
+        es la precisión de la aritmética de la máquina. El bloque y <code>svyratio</code> son
+        literalmente lo mismo: los dos usan la segunda forma del último paso de la derivación, la que conserva
+        $t_x/\hat{t}_{x,\pi}$.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -291,7 +303,9 @@
       </div>
 
       <p>La desviación pasa de 344 552 a 31 657: una reducción del <strong>90,8 %</strong>, que en varianza es un
-        factor de 110. Esa es toda la historia — y el requisito para que ocurra es exigente, porque esos residuos se
+        factor de más de cien. (Entre los dos estimadores del total queda en 110, algo menos que el cuadrado de
+        estas dos desviaciones, porque el error estándar de la razón lleva además el factor
+        $t_x/\hat{t}_{x,\pi}$ del módulo 2.) Esa es toda la historia — y el requisito para que ocurra es exigente, porque esos residuos se
         miden contra una recta obligada a pasar por el origen. Cuál de las cuatro pide cada conjunto de datos se
         decide así:</p>
 
@@ -430,10 +444,15 @@
 
       <div class="note">
         <p><strong>La cifra que resuelve el dilema.</strong> Con $n = 300$, el sesgo del estimador de razón vale unos
-          $-39\,000$ acres y su error estándar 7,11 millones: el sesgo es <strong>182 veces menor</strong> que la
+          $-39\,000$ acres y su error estándar <strong>verdadero</strong> —el de las 200 000 réplicas— 7,11
+          millones: el sesgo es <strong>182 veces menor</strong> que la
           variabilidad. Elevado al cuadrado dentro del ECM, su contribución relativa es de $3{,}0 \times 10^{-5}$.
           Cambiar un estimador insesgado por otro que reduce el error estándar diez veces a cambio de eso no es un
           compromiso: es una ganga.</p>
+        <p style="margin-bottom:0;">Y no confundas esos 7,11 millones con los 5,54 del módulo 2. Aquéllos son la
+          <em>estimación</em> de este mismo error estándar hecha con la sola muestra <code>agsrs</code>, y en esta
+          muestra concreta se queda corta en más de una quinta parte. Un error estándar estimado también tiene su
+          propio error.</p>
       </div>
 
       <h3>Qué se desprecia exactamente</h3>

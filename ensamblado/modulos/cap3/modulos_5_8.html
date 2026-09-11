@@ -21,7 +21,8 @@
       </div>
 
       <p>Muchos parámetros que parecen medias son en realidad razones. Merece la pena tener el catálogo a mano,
-        porque todos heredan lo del módulo 4: <strong>son sesgados y su varianza sale de linealizar</strong>.</p>
+        porque los que de verdad lo son heredan lo del módulo 4: <strong>son sesgados y su varianza sale de
+        linealizar</strong>. Y el catálogo sirve justamente para separarlos de los que solo lo parecen.</p>
 
       <div class="space-y-4">
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -94,8 +95,8 @@
         </div>
       </div>
 
-      <p>La razón obliga a que la recta pase por el origen: supone que un condado con cero granjas en 1987 tuvo
-        cero acres en 1992. Con los datos de <code>agsrs</code> esa recta no es la que mejor ajusta la nube: el
+      <p>La razón obliga a que la recta pase por el origen: supone que un condado sin un solo acre sembrado en 1987
+        tampoco lo tuvo en 1992. Con los datos de <code>agsrs</code> esa recta no es la que mejor ajusta la nube: el
         ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto de <strong>−2 548</strong> acres.
         Ese intercepto no nulo es la señal de que hay un estimador mejor esperando.</p>
 
@@ -293,8 +294,8 @@
         <h4><i class="fas fa-object-group" aria-hidden="true"></i> Dominios sobre <code>agsrs</code></h4>
         <p class="simulador-intro">Con las cuatro regiones se puede comparar la estimación con la verdad, porque
           <code>agpop</code> es un censo. Mira el Oeste: solo 39 de los 300 condados de la muestra cayeron ahí, la
-          estimación se queda un 17 % por debajo del valor real y su coeficiente de variación es del 13 % —cuatro
-          veces peor que el de la media global—. Es el problema de fondo de los dominios pequeños, y lo que motiva
+          estimación se queda un 17 % por debajo del valor real y su coeficiente de variación es del 13 % —el
+          doble que el de la media global, y en varianza cuatro veces más—. Es el problema de fondo de los dominios pequeños, y lo que motiva
           la estimación en áreas pequeñas.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:250px;">

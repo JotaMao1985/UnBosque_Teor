@@ -2531,7 +2531,7 @@ Javier pidió pasar por el capítulo 3 la misma lectura que por el 2 (T7.9–T7.
 **pasan todas las herramientas** y aun así confunden. Leídos los doce módulos, la autoevaluación y los
 cuatro ejercicios, con cada cifra contrastada contra `cap3_datos.json`. El orden del módulo 3 ya lo
 había arreglado T7.8 y no se volvió a contar. Salieron **nueve principales y cinco menores**; se
-arreglan por partes y esta es la primera.
+arreglaron por partes: T7.12 los cuatro primeros y T7.14 el resto, más un décimo que apareció por el camino.
 
 | # | Dónde | Qué pasa | Estado |
 |:--:|:--:|---|:--:|
@@ -2539,16 +2539,17 @@ arreglan por partes y esta es la primera.
 | 2 | quiz, mód. 10 | La retro dice que la expansión es «el único de los cuatro» exactamente insesgado; la diferencia también lo es (mód. 7, ej. 4) | ✅ T7.12 |
 | 3 | 4 | $B$ es sesgo y razón en la misma fórmula: $\text{ECM} = B^2 + V$ y $B(\hat t_r) \approx \ldots (B\,S_x^2 - S_{xy})/\bar x_U$ | ✅ T7.12 |
 | 4 | 9 | «Los tres estimadores del capítulo son tres supuestos distintos sobre $v_k$, y nada más» | ✅ T7.12 |
-| 5 | 3 | «en varianza es un factor de 110» tras dar 344 552 y 31 657, cuyo cociente al cuadrado es 118,5 | ⏳ |
-| 6 | 8 | CV del 13 % «cuatro veces peor» que el global (6,34 %): son 2,04; 4,18 solo en varianza | ⏳ |
-| 7 | 6 | «un condado con cero **granjas** en 1987»: la auxiliar es `acres87` | ⏳ |
-| 8 | 2 y 4 | El EE de la razón con $n = 300$ vale 5,54 M y 7,11 M sin decir que uno es el estimado y otro el verdadero | ⏳ |
-| 9 | 12 | «Once preguntas sobre los once módulos»: el 5 no tiene ninguna y el 10 tiene dos | ⏳ |
-| m1 | 11 / ej. 1 | «condados más grandes» frente a «más pequeños»: los dos ciertos —los cinco cuantiles sobrestiman y la media no—, sin reconciliar | ⏳ |
-| m2 | 10 | «con una sola auxiliar, el factor $g$ es común»: solo en la razón; la regresión del mód. 6 tiene $g_k$ distintos | ⏳ |
-| m3 | 5 | «todos… son sesgados», y el propio catálogo incluye la proporción y la media con $N$ conocido | ⏳ |
-| m4 | ej. 1 | «un error estándar 68 veces menor en varianza»: 68 en varianza, 8,3 en error estándar | ⏳ |
-| m5 | 2 | el 98,66 % de $t_x$ da 950 553 989, no 950 520 496 | ⏳ |
+| 5 | 3 | «en varianza es un factor de 110» tras dar 344 552 y 31 657, cuyo cociente al cuadrado es 118,5 | ✅ T7.14 |
+| 6 | 8 | CV del 13 % «cuatro veces peor» que el global (6,34 %): son 2,04; 4,18 solo en varianza | ✅ T7.14 |
+| 7 | 6 | «un condado con cero **granjas** en 1987»: la auxiliar es `acres87` | ✅ T7.14 |
+| 8 | 2 y 4 | El EE de la razón con $n = 300$ vale 5,54 M y 7,11 M sin decir que uno es el estimado y otro el verdadero | ✅ T7.14 |
+| 9 | 12 | «Once preguntas sobre los once módulos»: el 5 no tiene ninguna y el 10 tiene dos | ✅ T7.14 |
+| 10 | 2 | La derivación del EE de la razón terminaba en una fórmula que da 5 344 567, y el capítulo publica 5 540 376 como si fueran «literalmente lo mismo» —hallado al arreglar el 5— | ✅ T7.14 |
+| m1 | 11 / ej. 1 | «condados más grandes» frente a «más pequeños»: los dos ciertos —los cinco cuantiles sobrestiman y la media no—, sin reconciliar | ✅ T7.14 |
+| m2 | 10 | «con una sola auxiliar, el factor $g$ es común»: solo en la razón; la regresión del mód. 6 tiene $g_k$ distintos | ✅ T7.14 |
+| m3 | 5 | «todos… son sesgados», y el propio catálogo incluye la proporción y la media con $N$ conocido | ✅ T7.14 |
+| m4 | ej. 1 | «un error estándar 68 veces menor en varianza»: 68 en varianza, 8,3 en error estándar | ✅ T7.14 |
+| m5 | 2 | el 98,66 % de $t_x$ da 950 553 989, no 950 520 496 | ✅ T7.14 |
 
 **Descartado tras comprobarlo.** La pista del ejercicio 3 manda a «la tabla del capítulo 1» a mirar
 la desviación típica del Oeste. Parecía una referencia al vacío, pero la tabla existe: es la salida
@@ -2596,6 +2597,83 @@ separando del texto y ninguna herramienta las contrasta con él, porque «mil» 
 cifras con decimales. Y la $B$ es el segundo choque de notación en dos días, después de la $k$ del
 sistemático: cuando un símbolo se importa de otro capítulo o de otro libro, nadie comprueba que esté
 libre en el de destino.
+
+---
+
+### T7.14 — La segunda parte del cap. 3, y un décimo defecto debajo del quinto (2026-09-11)
+
+> **Por qué T7.14 y no T7.13.** Mientras se hacía esta tarea, otra sesión escribió aquí su T7.13 —la
+> auditoría de orden del capítulo 2— sin commitear. La comprobación que abre cada commit abortó al ver
+> el plan modificado, en vez de pisarlo, y esta nota toma el número siguiente para no repetir el choque
+> de T7.8 y T7.9.
+
+Los cinco principales y los cinco menores que T7.12 dejó pendientes. Al preparar el del «factor de
+110» apareció un décimo, y resultó ser su causa.
+
+#### 10 · La derivación y el código calculaban dos cosas distintas
+
+La derivación del error estándar de $\hat t_r$ (módulo 2) sustituye $t_x/\hat t_{x,\pi}$ por 1 en el paso
+3 y termina en $\widehat V = N^2(1-f)\,s_e^2/n$, que con `agsrs` da **5 344 567**. El bloque R3 —y
+`svyratio`— **conservan** ese factor al estimar, $(t_x/\hat t_{x,\pi})^2 N^2(1-f)\,s_e^2/n$, y dan
+**5 540 376**, que es la cifra que publica todo el capítulo. La frase de después afirmaba que «la
+fórmula de la derivación y lo que hace `svyratio` son literalmente lo mismo»: lo eran el bloque y
+`svyratio`, no la derivación. El factor es $\bar x_U/\bar x = 1{,}0366$ —el $g$ del módulo 10—.
+
+Ahora la derivación tiene un quinto paso con la forma que usa el código, y explica por qué lo que se
+descartó para *derivar* se puede conservar al *estimar*: la muestra lo da. La frase de después dice
+qué es exactamente lo que coincide.
+
+#### 5 · El «factor de 110» era ese mismo factor
+
+$(s_y/s_e)^2 = 118{,}46$ y $(\text{EE}_{\text{exp}}/\text{EE}_r)^2 = 110{,}23$, y el cociente entre los
+dos es exactamente $(\bar x_U/\bar x)^2$. El texto elevaba al cuadrado las dos desviaciones y anunciaba
+el número de los estimadores. Ahora dice «más de cien» para las desviaciones —el 118 no está en el
+universo de cifras y no se escribe a mano— y aclara que entre los dos estimadores del total queda en
+110 por el factor del módulo 2.
+
+#### Los otros ocho
+
+- **6 · Módulo 8.** «Cuatro veces peor» pasa a «el doble que el de la media global, y en varianza
+  cuatro veces más»: 2,04 en CV, 4,18 en varianza.
+- **7 · Módulo 6.** «Cero granjas en 1987» pasa a «sin un solo acre sembrado en 1987»: la auxiliar es
+  `acres87`.
+- **8 · Módulo 4.** Los 7,11 millones se presentan como el error estándar **verdadero** —el de las
+  200 000 réplicas—, y un párrafo nuevo dice que los 5,54 del módulo 2 son su **estimación** con la
+  sola muestra `agsrs`, que en esta muestra se queda corta en más de una quinta parte.
+- **9 · Módulo 12.** «Once preguntas sobre diez de los once módulos». La alternativa —escribir una
+  pregunta propia del módulo 5, el catálogo de razones— queda a decisión de Javier.
+- **m1 · Módulo 11.** Se reconcilian media y mediana: el grueso de la muestra salió algo más arriba y
+  por eso sus cuantiles sobrestiman, pero no le tocó ninguno de los condados más grandes del país
+  —su máximo es 2 234 262 acres y el del censo, 7 229 585—, y por eso su media se queda por debajo.
+- **m2 · Módulo 10.** El $g$ común vale solo para la razón; en la regresión del módulo 6, que calibra a
+  $N$ y a $t_x$, cada unidad recibe su propio $g_k$.
+- **m3 · Módulo 5.** «Todos… son sesgados» pasa a «los que de verdad son razones», y el catálogo queda
+  como lo que es: la manera de separarlos de los que solo lo parecen.
+- **m4 · Ejercicio 1.** «Un error estándar 68 veces menor en varianza» pasa a «una varianza 68 veces
+  menor».
+- **m5 · Módulo 2.** Se avisa de que la cuenta a mano con el 98,66 % redondeado sale unas decenas de
+  miles de acres por encima, y de que el código usa $\hat B$ entero.
+
+**Verificado.** Byte a byte en la segunda pasada · **151 de 151** cifras de bloques · **88
+respaldadas · 0 sin respaldo** (una más que antes: el 1,0366 nuevo, que el verificador casa con el $g$
+del precálculo). En el navegador, sobre HTTP: **293 fórmulas de KaTeX y 0 `.katex-error`**, la
+derivación del módulo 2 con sus cinco pasos, los trece textos nuevos presentes y los nueve viejos
+ausentes, y la consola limpia.
+
+**Otra vez dos sesiones en el mismo árbol.** A las 11:38 otra sesión modificó el capítulo 2 —la
+Definición 2.10 del efecto de diseño y el puntero al peso de diseño que describe su T7.13— y a las
+11:40 escribió esa T7.13 aquí. Nada de eso entra en este commit. Para el capítulo 3 bastó con añadir
+los archivos a mano; para el plan, que tenía los dos trabajos en el mismo archivo, la versión del
+commit se construyó desde `HEAD` con solo los cambios de esta tarea y se cargó en el índice con
+`git update-index`. La T7.13 ajena se queda en el árbol, sin commitear, para quien la escribió.
+
+**Y una corrección a T7.9.** Aquella tarea dijo haber cambiado la $k$ del intervalo «en los once sitios
+donde aparecía»; quedaba un duodécimo —«solo hay $k$ muestras», en el 2.9.1—, que encontró y corrigió
+T7.13.
+
+**Lo que deja el capítulo.** El defecto más hondo no estaba en la prosa sino en la frontera entre la
+derivación y el código: el verificador comprueba que las cifras de la prosa salgan del código, pero no
+que la fórmula que se enseña sea la que el código ejecuta. Aquí no lo era, y la prosa lo afirmaba.
 
 ---
 
