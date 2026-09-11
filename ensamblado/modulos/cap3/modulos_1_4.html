@@ -122,6 +122,28 @@
         acres más que en la nota de abajo: el porcentaje está redondeado a dos decimales, y sobre 963 millones cada
         decimal pesa. El código usa $\hat{B}$ entero.</p>
 
+      <div class="note">
+        <p><strong>Qué hace el bloque de abajo, y con qué.</strong> Calcula el mismo total dos veces sobre la misma
+          muestra —sin la auxiliar y con ella— para poder ponerlos uno al lado del otro. Lo hace con
+          <code>survey</code>, el paquete que el capítulo 2 presentó en su módulo 5, y aquí aparecen cuatro piezas que
+          conviene conocer antes de leerlo:</p>
+        <ul style="margin-bottom:0.5rem;">
+          <li><code>svydesign(id = ~1, fpc = rep(N, n), data = agsrs)</code> <strong>declara el diseño</strong>:
+            <code>id = ~1</code> dice que no hay conglomerados —cada fila es una unidad sorteada— y <code>fpc</code>
+            da el tamaño de la población, del que el paquete saca la corrección por población finita y los pesos
+            $N/n$. Se guarda en <code>dis</code> y sirve para todo el capítulo.</li>
+          <li><code>svytotal(~acres92, dis)</code> <strong>estima un total</strong> con esos pesos: es el estimador de
+            expansión $N\bar{y}$, con su error estándar.</li>
+          <li><code>svyratio(~acres92, ~acres87, dis)</code> <strong>estima la razón</strong> $\hat{B}$ —no el
+            total— y su error estándar. El diseño no sabe cuánto vale $t_x$, así que el bloque multiplica a mano la
+            razón y su error estándar por $t_x$: así queda a la vista que $\hat{t}_r = \hat{B}\,t_x$.</li>
+          <li><code>coef()</code> y <code>SE()</code> <strong>sacan</strong> de esos objetos la estimación y su error
+            estándar; <code>as.numeric()</code> les quita el nombre para poder operar con ellos.</li>
+        </ul>
+        <p style="margin-bottom:0;">La pestaña Python hace la parte de la razón sin ninguna función de encuestas,
+          término a término: es la misma fórmula, escrita a mano.</p>
+      </div>
+
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El estimador de razón frente al de expansión">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
@@ -136,10 +158,19 @@
       </div>
 
       <div class="note">
-        <p><strong>El total real es 943 951 718.</strong> La expansión da 916 927 110 —un 2,86 % por debajo— con un
-          error estándar de 58,2 millones. La razón da 950 520 496 —un 0,70 % por encima— con un error estándar de
-          5,54 millones: <strong>diez veces más pequeño</strong>. La información auxiliar no cambió ni un dato de la
-          muestra; solo cambió cómo se usan.</p>
+        <p><strong>Lo que dice la salida.</strong> Son cinco números en dos parejas: <code>expansion</code> y
+          <code>ee_expansion</code> son el total sin la auxiliar y su error estándar; <code>razon</code> y
+          <code>ee_razon</code>, el total con ella y el suyo; y en medio, <code>B</code>, la razón muestral 0,9866
+          —el 98,66 % de la frase de arriba—. Tres conclusiones:</p>
+        <ol style="margin-bottom:0;">
+          <li>Las dos estimaciones caen a los lados del total real, <strong>943 951 718</strong>: la expansión da
+            916 927 110, un 2,86 % por debajo; la razón, 950 520 496, un 0,70 % por encima. Ese total solo se conoce porque <code>agpop</code> es
+            un censo; en una encuesta de verdad esta comparación no se puede hacer.</li>
+          <li>Lo que sí se ve con la muestra sola es el error estándar: 58,2 millones la expansión y 5,54 millones la
+            razón, <strong>diez veces más pequeño</strong>. Esa es la conclusión que se puede sacar de verdad: con la
+            misma muestra, la auxiliar compra diez veces más precisión.</li>
+          <li>La información auxiliar no cambió ni un dato de la muestra; solo cambió cómo se usan.</li>
+        </ol>
       </div>
 
       <div class="derivacion">
@@ -185,6 +216,10 @@
         </div>
       </div>
 
+      <p>El bloque que sigue es la <strong>comprobación de la derivación</strong>: calcula a mano, con los residuos
+        $e_k$, el error estándar de la última fórmula y lo pone al lado del que devolvió <code>svyratio</code> en el
+        bloque anterior. Si la derivación está bien, las dos cifras tienen que salir iguales.</p>
+
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El error estándar por las dos vías">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
@@ -197,7 +232,9 @@
       <p>Las dos vías dan la misma cifra hasta el último bit: la discrepancia relativa es $1{,}68 \times 10^{-16}$, que
         es la precisión de la aritmética de la máquina. El bloque y <code>svyratio</code> son
         literalmente lo mismo: los dos usan la segunda forma del último paso de la derivación, la que conserva
-        $t_x/\hat{t}_{x,\pi}$.</p>
+        $t_x/\hat{t}_{x,\pi}$. La conclusión práctica: <code>svyratio</code> no hace nada que no quepa en las tres
+        líneas de arriba; lo que aporta es no equivocarse con los pesos cuando el diseño deje de ser un MAS, que es
+        lo que empieza a pasar en el capítulo 4.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>

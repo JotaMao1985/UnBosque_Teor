@@ -2734,6 +2734,64 @@ que la fórmula que se enseña sea la que el código ejecuta. Aquí no lo era, y
 
 ---
 
+### T7.15 — `survey` sin presentar en el cap. 3: propósito y conclusiones del código del módulo 2 (2026-09-11)
+
+Javier señaló que la primera ventana de código del módulo 3 del capítulo 3 «se siente fuera de lugar»:
+usa `survey` sin que el capítulo lo haya contado. Validado, con un matiz y un problema más serio.
+
+**El matiz.** `survey` no es nuevo: lo presenta el capítulo 2 en su módulo 5, con una frase. Lo que nunca
+se había explicado son las piezas que usa el capítulo 3: `svyratio` no aparece en todo el capítulo 2,
+`svytotal` solo dentro de la solución de un ejercicio del módulo 11, y el capítulo 3 las estrena en R2
+(módulo 2) con un comentario de una línea y ninguna frase de prosa; `as.numeric(SE(obj)[1])` no lo
+contaba nadie.
+
+**El problema más serio, que queda abierto.** La ventana del módulo 3 no necesita `survey` para lo que el
+texto pregunta —¿cuánto más pequeños son los residuos que los datos?—: esa respuesta son sus tres
+primeras cifras. `survey` entra solo para `veces_mas_eficiente`, que ya compara los dos estimadores del
+total y arrastra el factor $\bar x_U/\bar x$: por eso da **110,2327** y no el cuadrado de las dos
+desviaciones que la misma ventana imprime. La pestaña Python, con la misma etiqueta, calcula ese
+cuadrado y da **118,4578**; muestra además campos distintos, y su comentario («la reducción es
+exactamente lo que se gana en error estándar») es falso por ese mismo factor: las desviaciones bajan
+10,88 veces y el error estándar del total, 10,50. La ventana depende además de `exp_sv` y `ee_razon`
+(R2) y de `s_e` (R3). El verificador no lo ve porque las dos cifras salen de verdad de la ejecución; no
+comprueba que dos pestañas calculen lo mismo, y ese paralelismo solo se auditó en el capítulo 1.
+
+**Lo decidido.** Se propusieron tres salidas: igualar las dos pestañas sin `survey` (1), sacar la ventana
+del módulo 3 y llevar el cálculo al módulo 2 (2), o presentar `survey` en el módulo 2, que es donde
+nace el problema (3). Javier eligió la **3**, pidiendo además aclarar el propósito del código y las
+conclusiones que se sacan de ejecutarlo. **La ventana del módulo 3 no se tocó**: su desajuste entre
+pestañas sigue pendiente de las opciones 1 o 2.
+
+**Lo hecho, todo en el módulo 2.**
+
+- **Antes de R2**, una nota «Qué hace el bloque de abajo, y con qué»: el propósito —el mismo total dos
+  veces, sin y con la auxiliar— y una viñeta por pieza: `svydesign` (qué dicen `id = ~1` y `fpc`, de
+  dónde salen la corrección y los pesos $N/n$, y que `dis` sirve para todo el capítulo), `svytotal` (el
+  estimador de expansión), `svyratio` (la razón, no el total: el bloque multiplica a mano por $t_x$ porque
+  el diseño no lo conoce) y `coef()`/`SE()`/`as.numeric()`. Cierra diciendo que la pestaña Python hace la
+  parte de la razón sin funciones de encuestas.
+- **Después de R2**, la nota que ya daba las cifras pasa a «Lo que dice la salida»: qué es cada uno de los
+  cinco números y tres conclusiones —las dos estimaciones a los lados del total real, que solo se conoce
+  porque `agpop` es un censo; el error estándar diez veces menor, que es la conclusión que sí se puede
+  sacar con la muestra sola; y que la auxiliar no cambió ni un dato—.
+- **Antes de R3**, su propósito: es la comprobación de la derivación, y si está bien las dos cifras tienen
+  que salir iguales. **Después**, la conclusión práctica: `svyratio` no hace nada que no quepa en tres
+  líneas; lo que aporta es no equivocarse con los pesos cuando el diseño deje de ser un MAS, desde el
+  capítulo 4.
+
+**Verificado.** Byte a byte en la segunda pasada · **151 de 151** cifras de bloques · **88 respaldadas ·
+0 sin respaldo**. En el navegador, sobre HTTP: **300 fórmulas de KaTeX y 0 `.katex-error`**, la nota de
+propósito antes de R2 y la de conclusiones después, sus 4 viñetas y sus 3 conclusiones, y la consola
+limpia.
+
+**Un aviso que dio el recuento, y que conviene conocer.** La primera versión de la nota de conclusiones
+dejó fuera las cifras de los dos totales, y el recuento de cifras distintas de la prosa bajó de 88 a 87.
+No es un fallo del verificador —la cifra que se pierde no puede estar sin respaldo—, pero el número de
+cifras distintas funciona como alarma: si baja en una reescritura, algo concreto se ha ido del texto. Se
+volvieron a poner, porque una conclusión sobre una salida tiene que citar lo que sale.
+
+---
+
 ## Protocolo de verificación de cada capítulo
 
 Es material que llega a estudiantes. Antes de dar un capítulo por terminado:
