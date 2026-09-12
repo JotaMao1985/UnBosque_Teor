@@ -2941,9 +2941,14 @@ anotarla falló: la cadena de Python del script llevaba formato y `\text{MSW}` s
 rellenar. El script escribe al final, así que el plan no se tocó; la lección es no usar cadenas con
 formato para texto que lleva llaves de LaTeX.
 
-**Pendiente:** el visto bueno de Javier para publicar. Sigue sin hacerse la frase del capítulo 7 que
-apuntó T7.13 —«el efecto de diseño ya apareció en los capítulos 4 y 5»—, que ahora debería nombrar
-también al 2.
+**Publicado el 2026-09-12** con el visto bueno de Javier: `main` en `b233220`, `gh-pages` en
+`4920e58`. Esta vez el push salió limpio —lo único pendiente en `sitio/` era el capítulo 5— y la guarda
+previa confirmó que `main` seguía en el commit aprobado. Comprobado sobre la página en vivo: el
+capítulo servido es **byte a byte** el de `b233220` (`cmp` contra `HEAD:sitio`), con el código
+renombrado (`K <- nrow(agpop)`, sin rastro del `NI` viejo) y la MSW remitiendo a la SSW del capítulo 4.
+
+**Pendiente:** sigue sin hacerse la frase del capítulo 7 que apuntó T7.13 —«el efecto de diseño ya
+apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2.
 
 ---
 
