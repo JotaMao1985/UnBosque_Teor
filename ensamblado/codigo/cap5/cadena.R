@@ -7,17 +7,22 @@ cat("\n###BLOQUE-R1###\n")
 # Un estado es un CONGLOMERADO natural: si el presupuesto obliga a visitar
 # pocos estados, la muestra son estados enteros, no condados sueltos.
 agpop <- read.csv("CSV data sets for SDA 3e/agpop.csv")
-N <- nrow(agpop)
-NI <- length(unique(agpop$state))
-c(condados = N, estados = NI, rango_Mi = range(table(agpop$state)))
+# Notacion del capitulo: N cuenta CONGLOMERADOS (los 50 estados) y K las
+# unidades (los 3078 condados). Es al reves que en los capitulos 2-4, y el
+# modulo 2 lo advierte; el codigo usa la misma convencion que el texto.
+K <- nrow(agpop)
+N <- length(unique(agpop$state))
+c(condados = K, estados = N, rango_Mi = range(table(agpop$state)))
 #>  condados   estados rango_Mi1 rango_Mi2
 #>      3078        50         3       254
 
 # La pregunta clave: cuanto se parecen los condados DEL MISMO estado?
 # La ICC ajustada de Lohr compara la varianza dentro con la total:
 #   R_a = 1 - MSW / S^2.  Cerca de 0: conglomerar casi gratis. Cerca de 1: carisimo.
+# La MSW es la suma de cuadrados DENTRO de los conglomerados, dividida entre
+# sus grados de libertad, que son K - N.
 MSW <- sum(tapply(agpop$acres92, agpop$state,
-                  function(y) sum((y - mean(y))^2))) / (N - NI)
+                  function(y) sum((y - mean(y))^2))) / (K - N)
 Ra <- 1 - MSW / var(agpop$acres92)
 round(c(MSW = MSW, S2 = var(agpop$acres92), Ra = Ra), 4)
 #>          MSW           S2           Ra
@@ -209,7 +214,7 @@ cat("\n###BLOQUE-R13###\n")
 # razones por region con los pesos W_h del capitulo 4.
 set.seed(2026)
 regiones <- c("NC", "NE", "S", "W")
-Wh <- as.numeric(table(agpop$region)[regiones]) / N
+Wh <- as.numeric(table(agpop$region)[regiones]) / nrow(agpop)
 medias_h <- numeric(4); n_total <- 0
 for (h in 1:4) {
   candidatos <- unique(agpop$state[agpop$region == regiones[h]])

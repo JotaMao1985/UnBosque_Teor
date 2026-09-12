@@ -3509,8 +3509,9 @@
       </div>
 
       <p>Un dato que asusta y que este módulo explica: observar <strong>371</strong> condados repartidos en 6
-        estados enteros produce un error estándar <strong>treinta veces</strong> mayor —en varianza— que observar
-        369 condados sueltos por todo el país. Casi la misma cantidad de datos, treinta veces menos información.
+        estados enteros produce una <strong>varianza treinta veces</strong> mayor que observar 369 condados sueltos
+        por todo el país —el error estándar, que es su raíz, se multiplica por cinco y medio—. Casi la misma
+        cantidad de datos, treinta veces menos información.
         Y aun así, las encuestas por conglomerados son la norma, no la excepción.</p>
 
       <p>El capítulo 4 partió la población en grupos para meter <em>todos</em> los grupos en la muestra, con cuota
@@ -3542,17 +3543,22 @@
 # Un estado es un CONGLOMERADO natural: si el presupuesto obliga a visitar
 # pocos estados, la muestra son estados enteros, no condados sueltos.
 agpop &lt;- read.csv("CSV data sets for SDA 3e/agpop.csv")
-N &lt;- nrow(agpop)
-NI &lt;- length(unique(agpop$state))
-c(condados = N, estados = NI, rango_Mi = range(table(agpop$state)))
+# Notacion del capitulo: N cuenta CONGLOMERADOS (los 50 estados) y K las
+# unidades (los 3078 condados). Es al reves que en los capitulos 2-4, y el
+# modulo 2 lo advierte; el codigo usa la misma convencion que el texto.
+K &lt;- nrow(agpop)
+N &lt;- length(unique(agpop$state))
+c(condados = K, estados = N, rango_Mi = range(table(agpop$state)))
 #&gt;  condados   estados rango_Mi1 rango_Mi2
 #&gt;      3078        50         3       254
 
 # La pregunta clave: cuanto se parecen los condados DEL MISMO estado?
 # La ICC ajustada de Lohr compara la varianza dentro con la total:
 #   R_a = 1 - MSW / S^2.  Cerca de 0: conglomerar casi gratis. Cerca de 1: carisimo.
+# La MSW es la suma de cuadrados DENTRO de los conglomerados, dividida entre
+# sus grados de libertad, que son K - N.
 MSW &lt;- sum(tapply(agpop$acres92, agpop$state,
-                  function(y) sum((y - mean(y))^2))) / (N - NI)
+                  function(y) sum((y - mean(y))^2))) / (K - N)
 Ra &lt;- 1 - MSW / var(agpop$acres92)
 round(c(MSW = MSW, S2 = var(agpop$acres92), Ra = Ra), 4)
 #&gt;          MSW           S2           Ra
@@ -3889,6 +3895,10 @@ round(sqrt((1 - 20 / 400) * var(gpa$gpa) / 20), 4)
         $$R_a = 1 - \frac{\text{MSW}}{S^2}
         \qquad\qquad
         \text{deff} \approx 1 + (\bar{M} - 1)\,\rho$$
+        <p>La <strong>MSW</strong> es la variabilidad de <em>dentro</em> de los conglomerados por grado de
+          libertad: la suma de cuadrados dentro —la SSW del capítulo 4, módulo 7— dividida entre $K - N$. Si los
+          conglomerados son internamente homogéneos, esa MSW se queda pequeña frente a $S^2$ y $R_a$ se acerca
+          a 1; si no se parecen en nada, MSW $\approx S^2$ y $R_a$ cae a cero.</p>
         <p style="margin-bottom:0;">La segunda fórmula, de Kish, es la más citada de la estadística de encuestas:
           con conglomerados de tamaño medio $\bar{M}$, cada punto de ICC multiplica el exceso de varianza por
           $\bar{M} - 1$. Basta $\rho = 0{,}05$ con aulas de 25 para que deff $\approx 2{,}2$ — la mitad de la
@@ -4495,7 +4505,7 @@ round(sqrt(c1 * (1 - c(0.05, 0.2, 0.5, 0.8)) / (c2 * c(0.05, 0.2, 0.5, 0.8))), 1
 # razones por region con los pesos W_h del capitulo 4.
 set.seed(2026)
 regiones &lt;- c("NC", "NE", "S", "W")
-Wh &lt;- as.numeric(table(agpop$region)[regiones]) / N
+Wh &lt;- as.numeric(table(agpop$region)[regiones]) / nrow(agpop)
 medias_h &lt;- numeric(4); n_total &lt;- 0
 for (h in 1:4) {
   candidatos &lt;- unique(agpop$state[agpop$region == regiones[h]])
@@ -4535,8 +4545,9 @@ round(c(estimacion = sum(Wh * medias_h), condados = n_total), 1)
       <div class="warning">
         <p><strong>El requisito técnico: al menos 2 UPM por estrato.</strong> Con una sola UPM sorteada en un
           estrato no hay con qué estimar la varianza de ese estrato — es el problema del sistemático del
-          capítulo 2 en miniatura. La opción <code>survey.lonely.psu</code> que este material fija desde el
-          capítulo 1 existe exactamente para ese caso, y el capítulo 7 lo encontrará en encuestas reales.</p>
+          capítulo 2 en miniatura. La opción <code>survey.lonely.psu</code>, que las cadenas de código de
+          este material fijan en su cabecera —fuera de los bloques que se publican—, existe exactamente para ese
+          caso, y el capítulo 7 lo encontrará en encuestas reales.</p>
       </div>
 
       <div class="references">
