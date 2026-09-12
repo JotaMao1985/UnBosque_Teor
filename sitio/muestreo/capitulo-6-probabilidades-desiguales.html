@@ -3909,6 +3909,17 @@ c(intentos_promedio = round(1 / mean(acepta), 3),
         </div>
       </div>
 
+      <div class="definition">
+        <h4>Dos familias de probabilidades, y no son la misma</h4>
+        <p style="margin-bottom:0;">Hasta aquí el capítulo ha trabajado con $\psi_i$: la probabilidad de que la
+          unidad $i$ salga en <strong>una extracción</strong>, y que suman 1 sobre toda la población. Desde este
+          módulo entra $\pi_k$: la probabilidad de que la unidad $k$ acabe <strong>en la muestra</strong>, y que
+          suman $n$ —es la del capítulo 2—. Con reemplazo se razona con $\psi$ y se divide entre $\psi$; sin
+          reemplazo, con $\pi$ y entre $\pi$. Confundirlas arruina los pesos y las varianzas, y es el error más
+          común del capítulo: el glosario del módulo 11 las pone lado a lado con las notaciones de Lohr y
+          Gutiérrez.</p>
+      </div>
+
       <p>Las mismas cuatro tiendas, ahora <strong>dos sin reemplazo</strong>. Seis muestras posibles, un reparto de
         probabilidad, unas $\pi_k$ que suman 2 y el estimador de siempre: el resultado es una varianza de
         <strong>15 026</strong>… que es <em>peor</em> que los 7 124 del Hansen–Hurwitz con reemplazo del módulo 2.
@@ -3923,7 +3934,7 @@ c(intentos_promedio = round(1 / mean(acepta), 3),
         <p class="formula-titulo">El π-estimador, sin cambios</p>
         $$\hat{t}_\pi = \sum_{k \in s} \frac{y_k}{\pi_k}, \qquad E(\hat{t}_\pi) = t
         \quad \text{para cualquier } p(s) \text{ con } \pi_k > 0\ \forall k$$
-        <p style="margin-bottom:0;">La demostración es la del capítulo 2, módulo 4, con indicadoras $I_k$ — no
+        <p style="margin-bottom:0;">La demostración es la del capítulo 2, módulo 3, con indicadoras $I_k$ — no
           depende de cómo se repartan las π. Lo que sí cambia con el diseño es la <strong>varianza</strong>, y ese
           es el tema real de este capítulo: elegir $p(s)$ para que $y_k/\pi_k$ quede lo más constante posible.</p>
       </div>
@@ -4093,8 +4104,8 @@ statepps$state[pi_st &gt;= 1 - 1e-12]
         <h4>Inclusión forzosa</h4>
         <p style="margin-bottom:0;">Si $n\,x_k/\sum x > 1$, la unidad $k$ entra <strong>siempre</strong>:
           $\pi_k = 1$, no aporta varianza, y las demás π se reescalan para que $\sum \pi_k = n$ se conserve. Es la
-          respuesta estándar a las unidades gigantes — el mismo instinto del estrato de «grandes contribuyentes»
-          del capítulo 4, ahora dentro del formalismo π. <code>sampling::inclusionprobabilities()</code> lo hace
+          respuesta estándar a las unidades gigantes — el mismo instinto del estrato censado del capítulo 4
+          —el que entra entero y por eso no aporta varianza—, ahora dentro del formalismo π. <code>sampling::inclusionprobabilities()</code> lo hace
           con un truncamiento iterativo (el ayudante <code>probInclusionPPT</code> de este material, igual).</p>
       </div>
 

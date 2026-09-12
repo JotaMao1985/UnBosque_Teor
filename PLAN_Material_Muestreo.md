@@ -3061,6 +3061,53 @@ los cuatro textos viejos y con la consola limpia. El primer `cmp` del capítulo 
 Pages seguía construyendo; se repitió hasta cuadrar, que es el comportamiento normal del primer medio
 minuto.
 
+### T7.20 — Auditoría de orden del capítulo 6 (2026-09-12)
+
+Leídos los once módulos, los diez simuladores, las once preguntas y los cuatro ejercicios. **El
+capítulo 6 está bien ordenado**: el módulo 4 se apoya explícitamente en el marco π del capítulo 2, el 7
+remite al 2 para Sen–Yates–Grundy, el 9 junta el capítulo 5 con éste y el 10 traduce el capítulo entero
+a la IA. Tres hallazgos.
+
+**1 · Las dos familias de probabilidades no se contrastaban hasta el último módulo.** El capítulo usa
+$\psi_i$ desde el módulo 1 y $\pi_k$ desde el 4, y declara que confundirlas es «el error número uno»…
+en el módulo 11, que es donde vive el glosario. Entre medias, el único sitio donde aparecían juntas era
+un inciso de paso del módulo 4. Lo llamativo: **la explicación ya estaba escrita** en la nota del
+propio glosario —$\psi$ es de una extracción y suman 1; $\pi$ es de estar en la muestra y suman $n$—,
+solo que en el sitio equivocado. Ahora hay una caja al principio del módulo 4, donde $\pi$ entra en
+escena tras tres módulos de $\psi$. **El glosario no se movió**: los capítulos 7 y 8 lo colocan igual,
+en su módulo de autoevaluación, así que es una convención del tramo final y no un descuido de éste.
+
+**2 · Un puntero desviado por un módulo.** El módulo 4 decía «la demostración es la del capítulo 2,
+módulo 4, con indicadoras $I_k$»; está en el **módulo 3** —el panel plegable `der-ht-insesgado`—, y el
+propio capítulo 6 lo cita bien en el módulo 7.
+
+**3 · Un ejemplo que el capítulo 4 no tiene.** El módulo 5 comparaba la inclusión forzosa con «el mismo
+instinto del estrato de *grandes contribuyentes* del capítulo 4». Ese estrato no aparece en el capítulo
+4; lo que sí está es el **estrato censado** ($n_h = N_h$), que no aporta varianza porque entra entero —
+que es justo el paralelismo buscado.
+
+**Verificado.** Byte a byte en la segunda pasada · **315 de 315** cifras de bloques y **53 respaldadas ·
+0 sin respaldo**, los mismos recuentos que antes · en el navegador, **221 fórmulas de KaTeX y 0
+`.katex-error`** en los once módulos, consola limpia y la caja nueva renderizando sus nueve fórmulas ·
+y el `grep` de cierre sobre el **HTML compilado** confirma que las dos formas viejas quedaron en cero.
+
+**Comprobado y correcto, para no volver a mirarlo:** las cifras de apertura (14 248 y las 10,8 veces
+salen de R1; 7 124 de R2; los «15 026» son los 15 025,67 del bloque), el peso autoponderado
+$32{,}35 = 647/(5\cdot 4)$, la desviación 2,414 del tamaño de muestra de Poisson, los 963 006 contra
+557 287 **y** que estén de verdad en el módulo 10 como dice el ejercicio 1, el 62,5 % del tramo de D en
+el método acumulativo, y el reparto del quiz (once preguntas, los diez módulos cubiertos).
+
+**Un apunte de calibración, con un fallo propio.** Mientras se auditaba este capítulo, otra sesión
+revisó el 4 (T7.18) y encontró seis defectos más, el primero de ellos que el deff de estratificar por
+región se publica como **0,82** en tres módulos y **0,7512** en el octavo, para el mismo diseño. T7.16
+—la auditoría de orden de ese capítulo, hecha esa misma mañana— tuvo las dos cifras delante al arreglar
+precisamente el deff y no las reconcilió. La lección: **la lente de orden no sustituye a la de cifras**,
+y conviene pasar las dos sobre el mismo capítulo antes de darlo por revisado.
+
+**Pendiente:** el visto bueno de Javier para publicar. Sigue sin hacerse la frase del capítulo 7 que
+apuntó T7.13 —«el efecto de diseño ya apareció en los capítulos 4 y 5»—, que ahora debería nombrar
+también al 2.
+
 ---
 
 ## Protocolo de verificación de cada capítulo
