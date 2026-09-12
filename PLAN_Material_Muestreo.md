@@ -2885,6 +2885,66 @@ es el estado normal durante el primer medio minuto; se repitió hasta que el `cm
 **Pendiente:** sigue sin hacerse la frase del capítulo 7 que apuntó T7.13 —«el efecto de diseño ya
 apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2.
 
+### T7.17 — Auditoría de orden del capítulo 5 (2026-09-12)
+
+Leídos los once módulos, los ocho simuladores, las once preguntas y los cuatro ejercicios. **El
+capítulo 5 señaliza bien**: el módulo 1 avisa de que la ICC llega en el 4, el 3 remite al 4 antes de
+pedirle al lector que mueva $\rho$, el 5 se apoya en el estimador de razón del capítulo 3 y el 6 en el
+99,2 % que el 7 desmenuza. El defecto de orden clásico no está. Cuatro hallazgos, y el segundo es el
+que importa.
+
+**1 · La frase que abre el capítulo mezclaba las dos escalas.** «Observar 371 condados en 6 estados
+enteros produce un **error estándar treinta veces mayor —en varianza—**»: el deff es 30 en varianza, y
+en error estándar son unas cinco veces y media. El propio módulo lo dice bien treinta líneas más abajo
+(«varianza-a-varianza… valen lo que unas 12 de un MAS»); era el gancho el que estaba mal.
+
+**2 · El código contradecía la notación del capítulo, en la letra que el capítulo declara como su
+trampa.** El módulo 2 fija $N$ = conglomerados y $K = \sum M_i$ = unidades, con un aviso titulado «$N$
+cambió de significado y no va a avisar». Y el primer bloque de código hacía `N <- nrow(agpop)` (3 078
+condados) y `NI <- length(unique(agpop$state))` (50 estados): exactamente al revés. Peor: **la pestaña
+de Python del mismo capítulo ya usaba la convención buena** (`N, n, M = 100, 5, 4`), así que las dos
+pestañas se contradecían. Renombrado en `cadena.R` —`K` las unidades, `N` los conglomerados—, con un
+comentario que lo dice, y las salidas publicadas no cambian una coma porque las etiquetas de los
+`c(...)` son explícitas.
+
+**3 · La MSW aparecía sin definir.** El módulo 4 introducía $R_a = 1 - \text{MSW}/S^2$ y del símbolo
+solo decía «la variabilidad de dentro»; no estaba en el glosario. Ahora se define donde se usa: la SSW
+del capítulo 4 (módulo 7) dividida entre sus grados de libertad, $K - N$ — que es justo lo que el
+código enseña tras el renombrado.
+
+**4 · Una opción que el lector no puede ver.** El módulo 9 remitía a «la opción `survey.lonely.psu` que
+este material fija desde el capítulo 1»: cierto, pero vive en la cabecera de las cadenas, que no se
+publica en ningún bloque. Ahora se dice de dónde sale.
+
+**El fallo propio, que es la lección de la tarea.** Renombré a `K` **sin comprobar que la letra
+estuviera libre** —justo el paso que T7.9 sí hizo antes de mover el intervalo del sistemático a la
+`a`—. `K` ya estaba tomada: el bloque de `algebra` la redefine como sus 299 estudiantes, y el bloque
+del módulo 9 la usaba 130 líneas después para los pesos de estrato. Resultado: una estimación de
+3 423 299 donde el capítulo publica 332 542,6. **Lo cazó `verifica_bloques.py` en la primera pasada**,
+que es exactamente para lo que existe. Se arregló calculando el peso con `nrow(agpop)` explícito, lo
+que de paso elimina una dependencia a distancia entre bloques — algo que el protocolo ya pedía y que
+nadie estaba comprobando.
+
+**Verificado.** `ensambla_cap5.py` reproduce el archivo **byte a byte** en la segunda pasada;
+`verifica_bloques.py --prosa`: **163 de 163** cifras de bloques y **55 respaldadas · 0 sin respaldo**,
+los mismos recuentos que antes de tocar nada. En el navegador: **184 fórmulas de KaTeX y 0
+`.katex-error`** en los once módulos, consola limpia, y los cuatro cambios visibles en su módulo.
+
+**Comprobado y correcto, para que no se vuelva a mirar:** el 2,73 de la pregunta del módulo 4 frente al
+2,72 del texto (son $\bar{M} = 24{,}92$ y $m = 25$; la tolerancia de 0,02 acepta las dos); «once
+preguntas sobre los diez módulos», que aquí sí cuadra (once preguntas cubren los diez módulos, con dos
+del módulo 1); los tres diseños de la tabla comparativa, los tres presentados; y las cuentas del
+módulo 8 y del ejercicio 4 ($m^* = 9{,}5$, $n^* = 58$, castigo del 49 %).
+
+**El trabajo quedó asegurado en `13fe782`** antes de escribir esta entrada, porque el primer intento de
+anotarla falló: la cadena de Python del script llevaba formato y `\text{MSW}` se leyó como un hueco a
+rellenar. El script escribe al final, así que el plan no se tocó; la lección es no usar cadenas con
+formato para texto que lleva llaves de LaTeX.
+
+**Pendiente:** el visto bueno de Javier para publicar. Sigue sin hacerse la frase del capítulo 7 que
+apuntó T7.13 —«el efecto de diseño ya apareció en los capítulos 4 y 5»—, que ahora debería nombrar
+también al 2.
+
 ---
 
 ## Protocolo de verificación de cada capítulo
