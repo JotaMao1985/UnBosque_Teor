@@ -9182,7 +9182,7 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
         semana: 2,
         ancla: { cap: 1, modulo: 4, titulo: 'Sesgo de selección', lohr: '1.3–1.4' },
         alto: 220,
-        descripcionGrafico: 'Distribución de la estatura en el marco completo de 2 000 personas y en el conjunto de 1 300 respondientes, en proporción, con las dos medias marcadas',
+        descripcionGrafico: 'Distribución de la estatura en el marco completo de 2 000 personas y en el conjunto de 1 300 respondientes, las dos en proporción, con las dos medias marcadas con rectas verticales. Entre 140 y 170 cm las barras de los respondientes son más bajas que las del marco, y de 170 cm en adelante son más altas; la recta de la media de los respondientes queda a la derecha de la del marco.',
         pregunta: 'Las dos curvas son la distribución de la estatura en el <strong>marco completo</strong> y en el conjunto de <strong>respondientes</strong> del mecanismo de la pregunta anterior. ¿Qué se puede afirmar?',
         pista: 'Compara dónde están las dos rectas verticales y qué parte de la distribución se ha adelgazado.',
         dibujar: canvas => {
@@ -9366,7 +9366,7 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
         semana: 3,
         ancla: { cap: 2, modulo: 6, titulo: 'Intervalos de confianza', lohr: '2.3' },
         alto: 240,
-        descripcionGrafico: 'Cien intervalos de confianza al 95 % construidos con cien muestras aleatorias simples de n = 50, y la recta horizontal de la media poblacional; tres de ellos, destacados en naranja, quedan enteros por encima o por debajo de la recta sin llegar a tocarla: dos arriba y uno abajo',
+        descripcionGrafico: 'Cien intervalos de confianza al 95 % construidos con cien muestras aleatorias simples de n = 50, y la recta horizontal de la media poblacional; tres de ellos, destacados en naranja, quedan enteros por encima o por debajo de la recta sin llegar a tocarla: dos arriba y uno abajo.',
         pregunta: 'Cada segmento vertical es un intervalo al 95 % construido con una muestra distinta de $n = 50$; la línea horizontal es la media poblacional verdadera. ¿Qué muestra el gráfico?',
         pista: 'Cuenta cuántos segmentos no tocan la línea, y pregúntate de qué es propiedad el «95 %».',
         dibujar: canvas => {
@@ -9529,7 +9529,7 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
         semana: 4,
         ancla: { cap: 2, modulo: 7, titulo: 'Determinación del tamaño de muestra', lohr: '2.4–2.5' },
         alto: 220,
-        descripcionGrafico: 'Margen de error al 95 % para la estatura media en función del tamaño de muestra, con y sin corrección por población finita, sobre una población de 2 000 personas',
+        descripcionGrafico: 'Margen de error al 95 % para la estatura media en función del tamaño de muestra, con y sin corrección por población finita, sobre una población de 2 000 personas. La curva sin corrección es naranja y discontinua y la de con corrección verde y continua; las dos arrancan casi juntas en n = 25, en 4,37 y 4,35 cm, pasan por 2,2 y 2,1 cm en n = 100 y por 0,98 y 0,85 cm en n = 500, y en n = 2 000 la naranja se queda en 0,49 cm mientras la verde llega a 0.',
         pregunta: 'Las dos curvas dan el margen de error al 95 % en función de $n$, sobre la misma población de $N = 2\\,000$: una con corrección por población finita y otra sin ella. ¿Qué se puede afirmar?',
         pista: 'Fíjate en los extremos: qué pasa en $n$ pequeño, y qué pasa cuando $n$ se acerca a 2 000.',
         dibujar: canvas => {
