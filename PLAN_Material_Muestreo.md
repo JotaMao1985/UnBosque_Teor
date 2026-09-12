@@ -3398,3 +3398,40 @@ segunda pasada** · `prueba_banco_taller1.py` **5 de 5** · `prueba_bancos.py` *
 también con `--corte1` · Brightspace **sin fallos de contenido**, con las tres descripciones ya como `alt`
 en `questiondb.xml` · y las cifras de las dos descripciones nuevas contrastadas una a una contra
 `taller1_recurso_datos.json`, las 9 correctas tras el arreglo del 4,4.
+
+---
+
+### T7.24 — Publicado todo lo pendiente, y un gráfico en blanco que salió al comprobarlo (2026-09-12)
+
+Javier dijo «publícalos todos». Al ir a hacerlo, el panorama había cambiado: **otra sesión ya había publicado
+los capítulos 7 y 8** (`6dc077a` en `gh-pages`), y también el 6 (`bfa8369`), de modo que lo único que seguía
+sin salir era el `preparcial-corte-1.html` de T7.22 y T7.23. Se publicó eso:
+`gh-pages` de `b261ada` a **`72021ad`**, que es exactamente `sitio/` de `1d5380a`.
+
+**Comprobado antes de publicar.** Reensamblados los nueve, byte a byte en la segunda pasada y sin deriva
+respecto de lo commiteado · bancos sin fallos mecánicos, también con `--corte1` · taller1 5 de 5 · barajado
+4 de 4 · Brightspace sin fallos de contenido · bloques y prosa **sin una sola cifra sin respaldo** en las
+nueve páginas. Revisado además el cambio ajeno que iba a salir con el mío: el del capítulo 6 (la caja
+$\psi$ frente a $\pi$, la referencia corregida al módulo 3 del capítulo 2 y el puntero al estrato censado)
+y el del simulacro (tres `descripcionGrafico` con las cifras que el gráfico enseña).
+
+**Comprobado después.** Las **diez** páginas servidas son byte a byte las de `HEAD` (`cmp`). En el navegador,
+sobre la página en vivo: capítulo 6 con 221 fórmulas de KaTeX y 0 errores, la caja nueva presente y los dos
+textos viejos fuera; preparcial con 160 fórmulas, 0 errores y las diez descripciones de gráfico en su
+`canvas`, ninguna con la cola rota.
+
+**El hallazgo: el gráfico del módulo 9 del preparcial no se dibuja.** Al recorrer los trece módulos aparece
+un `Uncaught TypeError: Cannot read properties of null (reading 'x')`, siempre en el módulo 9. El `canvas`
+de la pregunta «Cien intervalos de confianza al 95 %» tiene el tamaño correcto (702 × 218) y **ni un píxel
+pintado**: el estudiante ve el enunciado, las cuatro opciones y un hueco. Los otros nueve gráficos del
+preparcial se dibujan bien. **Es anterior a lo de hoy**: se reprodujo igual sobre la página tal como estaba
+en `30f8936`, antes de los dos commits del simulacro. Queda sin arreglar, y conviene no tocarlo mientras la
+otra sesión siga en `taller1/simulacro.js`.
+
+**Una trampa de método, para la próxima.** La primera medición dijo que **los diez** gráficos tenían
+`width = 0` y que ninguno se dibujaba — en el capítulo 8 también—. Era falso: el panel del navegador estaba
+oculto y sin ancho de composición, así que `document.body` medía **0** y con él todo lo demás. El control que
+lo delató es medir el `body`: si mide cero, ninguna medida de layout de esa pasada vale. Con
+`resize_window` a 1280 × 900 el `body` pasó a 1270 y nueve de los diez gráficos resultaron correctos. La
+lección: antes de declarar un defecto de dibujo, comprobar que la página tiene ancho, y contrastar contra un
+elemento que se sepa sano.
