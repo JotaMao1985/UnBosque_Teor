@@ -3564,7 +3564,7 @@ data.frame(
       <div class="note">
         <p><strong>Dos condiciones para poder estratificar.</strong> Primera: el marco tiene que traer la variable de
           estratificación <em>para todas las unidades</em> (aquí, la región de cada condado). Segunda: los tamaños
-          $N_h$ tienen que conocerse. Ninguna de las dos es gratis; cuando el marco no trae nada útil, el capítulo 10
+          $N_h$ tienen que conocerse. Ninguna de las dos es gratis; cuando el marco no trae nada útil, el módulo 10 de este capítulo
           enseña el plan B (postestratificar).</p>
       </div>
 
@@ -3715,8 +3715,10 @@ sum(agstrat$strwt)
       <p>Sobre los cinco condados del capítulo 2 el diseño se puede <strong>enumerar completo</strong>: estratos
         $\{1,2,3\}$ con $n_A = 2$ y $\{4,5\}$ con $n_B = 1$ dan $3 \times 2 = 6$ muestras posibles, cada una con
         probabilidad $1/6$. La varianza exacta por enumeración y la de la fórmula clásica coinciden hasta el último
-        decimal — el precálculo del capítulo lo comprueba y guarda las seis muestras, que puedes ver en el simulador
-        del módulo 7 del capítulo 2 cambiando el diseño a «estratificado».</p>
+        decimal — el precálculo del capítulo lo comprueba y guarda las seis muestras. Cuidado con confundirlas con las
+        seis del simulador del módulo 1 del capítulo 2: allí el diseño B estratifica estos mismos cinco condados
+        tomando <em>una</em> unidad de cada estrato ($n = 2$), y aquí se toman dos del primero y una del segundo
+        ($n = 3$). Las dos versiones dan seis muestras, y no son las mismas seis.</p>
 
       <div class="note">
         <p><strong>Insesgadez sin condiciones.</strong> $E(\bar{y}_{\text{str}}) = \sum_h W_h \, E(\bar{y}_h) =
@@ -3938,8 +3940,8 @@ svymean(~menor200k, dis)
 
       <p>Con 300 condados que repartir entre las cuatro regiones, tres repartos razonables dan tres resultados muy
         distintos. Repartir <em>a partes iguales</em> (75 y 75 y 75 y 75) deja una varianza de 402 millones;
-        repartir <em>en proporción al tamaño</em> de cada región (103, 21, 135 y 41) la baja a 446… que es
-        <strong>peor</strong>. Y el reparto de Neyman —86, 5, 102 y 107— la deja en 331. Ese 5 en el Nordeste
+        repartir <em>en proporción al tamaño</em> de cada región (103, 21, 135 y 41) la sube a 446… que es
+        <strong>peor</strong>. Y el reparto de Neyman —86, 5, 102 y 107— la deja en 299. Ese 5 en el Nordeste
         sorprende: es la región con menos variabilidad, y por eso casi no hace falta mirarla.</p>
 
       <div class="definition">
@@ -4037,6 +4039,11 @@ print("suma =", int(tabla["redondeado"].sum()))
         </div>
       </div>
 
+      <p>La tabla trae una fila de <strong>deff</strong>, que es la vara de comparar diseños fijada en la
+        Definición 2.10 del capítulo 2: la varianza del diseño dividida entre la del MAS del mismo $n$ —aquí, el de
+        estos mismos 300 condados—. Menos de 1, el diseño le gana al MAS; más de 1, pierde. El módulo 8 la retoma
+        para medirla sobre las dos muestras reales del material y traducirla a entrevistas.</p>
+
       <p>Hay dos sorpresas en esa tabla, y las dos enseñan algo:</p>
       <ul class="list-disc pl-6 space-y-2">
         <li><strong>Neyman vacía el Nordeste y llena el Oeste.</strong> Al Nordeste (220 condados, la desviación más
@@ -4110,7 +4117,7 @@ print("suma =", int(tabla["redondeado"].sum()))
 
       <p>Con presupuesto de 3 000 unidades y un costo por entrevista que va de 6 en el Nordeste a 18 en el Oeste,
         el reparto óptimo visita <strong>265</strong> condados y consigue una varianza de 358 millones. El reparto
-        proporcional, con el mismo dinero, visita <strong>303</strong> —más muestra— y se queda en 441 millones:
+        proporcional, con el mismo dinero, compra <strong>más</strong> entrevistas y aun así se queda con más varianza:
         <strong>peor resultado con más entrevistas</strong>. Es la lección del módulo: cuando las entrevistas no
         cuestan lo mismo, maximizar el número de entrevistas deja de ser el objetivo.</p>
 
@@ -4155,9 +4162,9 @@ round(c(n_total = sum(nh_opt), costo_total = sum(ch * nh_opt),
       </div>
 
       <p>Léelo con calma, porque el resultado es contraintuitivo: con 3 000 pesos de presupuesto, el óptimo compra
-        <strong>menos entrevistas</strong> (265 en vez de las ~301 que compraría la proporcional al mismo costo) y
+        <strong>menos entrevistas</strong> (265, menos de las que compraría la proporcional con ese mismo dinero) y
         aun así consigue <strong>menos varianza</strong> — error estándar 18 916 frente a 21 124 de la proporcional
-        con $n = 300$. Compra entrevistas <em>mejor situadas</em>: mantiene las del Sur y las del Oeste que más
+        con $n = 300$, que cuesta casi ese mismo presupuesto. Compra entrevistas <em>mejor situadas</em>: mantiene las del Sur y las del Oeste que más
         varianza recortan y deja de pagar entrevistas baratas que aportaban poco.</p>
 
       <div class="simulador" data-simulador="presupuesto">
@@ -4452,9 +4459,11 @@ round(c(R2_entre = SSB / SST, dentro = SSW / SST), 4)
       </div>
 
       <p>Sobre los mismos 300 condados, el MAS del capítulo 2 dio un error estándar de <strong>18 898</strong>
-        acres y el estratificado del módulo 3, <strong>16 380</strong>. ¿Cómo se resume esa mejora en un solo
-        número comparable entre diseños? Dividiendo una varianza entre la otra. Este material va a comparar diseños
-        durante cinco capítulos más, así que conviene fijar ya esa vara de medir. La propuso Kish:</p>
+        acres y el estratificado del módulo 3, <strong>16 380</strong>. La vara para resumir esa mejora en un solo
+        número ya está fijada desde el capítulo 2 —el <strong>deff</strong> de la Definición 2.10, la varianza del
+        diseño dividida entre la del MAS del mismo $n$—, y este capítulo lleva cuatro módulos midiendo con ella. Lo
+        que falta es calcularla sobre datos reales y traducirla a la moneda que todo el mundo entiende. La vara la
+        propuso Kish:</p>
 
       <div class="definition">
         <h4>Efecto de diseño (deff) y tamaño de muestra efectivo</h4>
@@ -4973,7 +4982,7 @@ print(f"prueba estratificada:    {y_prueba_estr.mean():.4f}")
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre los once módulos y cuatro
+            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas repartidas por los módulos del capítulo y cuatro
               ejercicios de diseño resueltos con el código real del capítulo.</p>
           </div>
         </div>
@@ -8052,7 +8061,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
           { texto: 'Que el resultado es el mismo de Neyman, porque los costos se cancelan.', correcta: false,
             retro: 'Se cancelan solo si todos los $c_h$ son iguales — ese es exactamente el caso particular que es Neyman.' },
           { texto: 'Que con presupuesto fijo siempre conviene comprar el máximo número de entrevistas.', correcta: false,
-            retro: 'El módulo mostró lo contrario: el óptimo compró 265 entrevistas pudiendo comprar ~301 baratas, y ganó. Las entrevistas no valen lo mismo: valen lo que recortan de varianza.' }
+            retro: 'El módulo mostró lo contrario: el óptimo compró 265 entrevistas pudiendo comprar más entrevistas baratas, y ganó. Las entrevistas no valen lo mismo: valen lo que recortan de varianza.' }
         ]
       },
       {

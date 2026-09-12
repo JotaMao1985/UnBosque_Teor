@@ -25,8 +25,8 @@
 
       <p>Con 300 condados que repartir entre las cuatro regiones, tres repartos razonables dan tres resultados muy
         distintos. Repartir <em>a partes iguales</em> (75 y 75 y 75 y 75) deja una varianza de 402 millones;
-        repartir <em>en proporción al tamaño</em> de cada región (103, 21, 135 y 41) la baja a 446… que es
-        <strong>peor</strong>. Y el reparto de Neyman —86, 5, 102 y 107— la deja en 331. Ese 5 en el Nordeste
+        repartir <em>en proporción al tamaño</em> de cada región (103, 21, 135 y 41) la sube a 446… que es
+        <strong>peor</strong>. Y el reparto de Neyman —86, 5, 102 y 107— la deja en 299. Ese 5 en el Nordeste
         sorprende: es la región con menos variabilidad, y por eso casi no hace falta mirarla.</p>
 
       <div class="definition">
@@ -85,6 +85,11 @@
           <pre><code class="language-python">⟦P2⟧</code></pre>
         </div>
       </div>
+
+      <p>La tabla trae una fila de <strong>deff</strong>, que es la vara de comparar diseños fijada en la
+        Definición 2.10 del capítulo 2: la varianza del diseño dividida entre la del MAS del mismo $n$ —aquí, el de
+        estos mismos 300 condados—. Menos de 1, el diseño le gana al MAS; más de 1, pierde. El módulo 8 la retoma
+        para medirla sobre las dos muestras reales del material y traducirla a entrevistas.</p>
 
       <p>Hay dos sorpresas en esa tabla, y las dos enseñan algo:</p>
       <ul class="list-disc pl-6 space-y-2">
@@ -159,7 +164,7 @@
 
       <p>Con presupuesto de 3 000 unidades y un costo por entrevista que va de 6 en el Nordeste a 18 en el Oeste,
         el reparto óptimo visita <strong>265</strong> condados y consigue una varianza de 358 millones. El reparto
-        proporcional, con el mismo dinero, visita <strong>303</strong> —más muestra— y se queda en 441 millones:
+        proporcional, con el mismo dinero, compra <strong>más</strong> entrevistas y aun así se queda con más varianza:
         <strong>peor resultado con más entrevistas</strong>. Es la lección del módulo: cuando las entrevistas no
         cuestan lo mismo, maximizar el número de entrevistas deja de ser el objetivo.</p>
 
@@ -187,9 +192,9 @@
       </div>
 
       <p>Léelo con calma, porque el resultado es contraintuitivo: con 3 000 pesos de presupuesto, el óptimo compra
-        <strong>menos entrevistas</strong> (265 en vez de las ~301 que compraría la proporcional al mismo costo) y
+        <strong>menos entrevistas</strong> (265, menos de las que compraría la proporcional con ese mismo dinero) y
         aun así consigue <strong>menos varianza</strong> — error estándar 18 916 frente a 21 124 de la proporcional
-        con $n = 300$. Compra entrevistas <em>mejor situadas</em>: mantiene las del Sur y las del Oeste que más
+        con $n = 300$, que cuesta casi ese mismo presupuesto. Compra entrevistas <em>mejor situadas</em>: mantiene las del Sur y las del Oeste que más
         varianza recortan y deja de pagar entrevistas baratas que aportaban poco.</p>
 
       <div class="simulador" data-simulador="presupuesto">

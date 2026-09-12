@@ -2818,6 +2818,61 @@ No es un fallo del verificador —la cifra que se pierde no puede estar sin resp
 cifras distintas funciona como alarma: si baja en una reescritura, algo concreto se ha ido del texto. Se
 volvieron a poner, porque una conclusión sobre una salida tiene que citar lo que sale.
 
+### T7.16 — Auditoría de orden del capítulo 4 (2026-09-12)
+
+Javier pidió seguir con el capítulo 4, saltando el 3 —que llevan otras sesiones—. Leídos los doce
+módulos, los ocho simuladores, las once preguntas y los cuatro ejercicios. **Seis hallazgos**: tres de
+la lente de orden y tres de cifras que aparecieron de paso.
+
+**1 · El deff se usaba desde el módulo 4 y se definía en el 8.** Es el defecto de T7.13, más marcado.
+El módulo 4 compara asignaciones con «deff 0,74 contra 0,82»; el módulo 6 decide su pregunta central
+—¿con qué variable estratificar?— con una tabla que **solo** tiene deff (0,54 / 0,82 / 0,99 / 1,00) y
+un simulador cuyo eje vertical es el deff; el módulo 7 lo usa para la identidad ANOVA. Y el 8 lo
+definía por fin abriendo con «conviene fijar ya esa vara de medir», como si fuera su estreno. Desde
+T7.13 había además una segunda definición: el capítulo 2 ya lo define (Definición 2.10). Ahora el
+módulo 4 presenta la vara en su primera aparición, con puntero a esa definición, y el módulo 8 deja de
+fijarla para hacer lo suyo: medirla sobre las dos muestras reales y traducirla a entrevistas.
+
+**2 · «El capítulo 10 enseña el plan B» (módulo 1).** No existe: el material tiene ocho capítulos y la
+postestratificación es el **módulo 10 de este mismo capítulo**. Un `grep` sobre los ocho capítulos
+confirma que era la única referencia a un capítulo inexistente en todo el material.
+
+**3 · El puntero al simulador del capítulo 2 fallaba dos veces (módulo 2).** Mandaba «al simulador del
+módulo 7 del capítulo 2», que es la calculadora de tamaño de muestra y no tiene selector de diseño; el
+que lo tiene es `espacio-muestras`, del módulo 1. Y las seis muestras **no son las mismas**: este
+capítulo enumera con $n_A = 2$ y $n_B = 1$ —lo confirma `genera_cap4.R`, $n = 3$—, mientras que el
+diseño B del capítulo 2 toma una unidad por estrato, $n = 2$. Las dos versiones dan seis muestras, y
+por eso el error era invisible. El texto lo dice ahora explícitamente en vez de mandar a ningún lado.
+
+**4, 5 y 6 · Tres cifras de la familia de T7.10.** *(a)* «El reparto de Neyman la deja en **331**
+millones»: la varianza real es **299,0** —su error estándar es 17 290,78 y su deff 0,551, cifras que el
+propio capítulo publica dos módulos después—. *(b)* En la misma frase, «repartir en proporción al
+tamaño **la baja** a 446» decía lo contrario de lo que pasa: 446 es más que los 402 que acababa de dar.
+*(c)* El módulo 5 daba **303** y **~301** para la misma cantidad, a treinta líneas de distancia, y con
+ellas «441 millones»; ninguna de las tres sale de `cadena.R` ni de `cap4_datos.json`. Se reescribió sin
+inventar cifras: la comparación que queda es la que sí está calculada (18 916 frente a 21 124, con la
+proporcional de $n = 300$, que cuesta casi el mismo presupuesto). *(d)* «Once preguntas sobre los once
+módulos»: el módulo 1 no tiene ninguna y el 2 tiene dos.
+
+**Por qué `--prosa` no ve ninguna de esas tres.** `CIFRA_PROSA_RE` solo mira cifras con separador de
+miles o decimales; «402 millones», «331», «303» y «441» son enteros sueltos y pasan de largo. Es un
+hueco real del verificador —las varianzas y los tamaños de muestra se escriben así en todo el
+material—, y vale la pena decidir en otra tarea si se cierra (por ejemplo, mirando los enteros
+seguidos de «millones» o de «entrevistas»).
+
+**Y la trampa de T7.9, otra vez.** Tras cambiar los textos, el `grep` de control sobre el HTML
+**publicado** —no sobre las fuentes que edité— encontró un **séptimo** sitio: la retroalimentación de
+una pregunta del quiz repetía el «~301» inventado. Un arreglo se cierra con un `grep` de la forma
+vieja, nunca con la cuenta de los sitios que uno tocó.
+
+**Verificado.** `ensambla_cap4.py` reproduce el archivo **byte a byte** en la segunda pasada;
+`verifica_bloques.py --prosa`: **246 de 246** cifras de bloques y **66 respaldadas · 0 sin respaldo**,
+el mismo recuento que antes. En el navegador, los doce módulos suman **191 fórmulas de KaTeX y 0
+`.katex-error`**, la consola está limpia y los seis textos nuevos se ven en su módulo.
+
+**Pendiente:** el visto bueno de Javier para publicar. Sigue pendiente de T7.13 la frase del capítulo 7
+(«el efecto de diseño ya apareció en los capítulos 4 y 5»), que ahora debería nombrar también al 2.
+
 ---
 
 ## Protocolo de verificación de cada capítulo

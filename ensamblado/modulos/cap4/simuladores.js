@@ -693,7 +693,7 @@
           { texto: 'Que el resultado es el mismo de Neyman, porque los costos se cancelan.', correcta: false,
             retro: 'Se cancelan solo si todos los $c_h$ son iguales — ese es exactamente el caso particular que es Neyman.' },
           { texto: 'Que con presupuesto fijo siempre conviene comprar el máximo número de entrevistas.', correcta: false,
-            retro: 'El módulo mostró lo contrario: el óptimo compró 265 entrevistas pudiendo comprar ~301 baratas, y ganó. Las entrevistas no valen lo mismo: valen lo que recortan de varianza.' }
+            retro: 'El módulo mostró lo contrario: el óptimo compró 265 entrevistas pudiendo comprar más entrevistas baratas, y ganó. Las entrevistas no valen lo mismo: valen lo que recortan de varianza.' }
         ]
       },
       {
