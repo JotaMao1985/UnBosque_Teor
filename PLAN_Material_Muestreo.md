@@ -3312,3 +3312,37 @@ porque en la salida real viven dentro de `4.54e-06`.
 **Pendiente que salió de paso.** `ensamblado/modulos/taller1/simulacro.js` tiene una `descripcionGrafico`
 con la cola rota: «… y hay que contarlos aparecen destacados». No es del material de los capítulos y no se
 tocó aquí.
+
+### T7.22 — La descripción del gráfico de cobertura del simulacro, con la cola rota (2026-09-12)
+
+Cierra el pendiente que T7.21 dejó anotado. El ítem de gráfico del simulacro —semana 3, anclado al módulo
+6 del cap. 2, «Intervalos de confianza»— tenía la `descripcionGrafico` acabada en dos oraciones empalmadas
+sin gramática: «… sin llegar a cruzarla, **y hay que contarlos aparecen destacados**». No es una errata
+cosmética: esa cadena es lo que la plantilla pone como `aria-label` del `canvas` y lo que
+`exporta_brightspace.py` usa de `alt`, así que quien no ve el lienzo oía exactamente eso.
+
+Debajo del empalme había dos defectos, y el segundo es el que importa:
+
+- **«sin llegar a cruzarla» describe el gesto equivocado.** Un intervalo que falla no es que roce la recta
+  sin cruzarla: es que queda **entero a un lado**. Ahora dice «sin llegar a tocarla».
+- **«unos pocos» no es una cuenta.** La `pista` manda «cuenta cuántos segmentos no tocan la línea», y quien
+  ve el gráfico los cuenta: son **tres**. La descripción se los negaba, que es justo lo que el `alt` está
+  para evitar.
+
+Contrastado con `DT.cobertura` de `taller1_recurso_datos.json`: de las **100 réplicas, 97 cubren** la media
+de 168,616 cm y **3 no** —las réplicas 8 y 44 enteras por encima de la recta, la 29 entera por debajo—, que
+es lo que pinta el `dibujar` al partir `iv` por `d.cubre`. La cifra ya vivía en la retro del ítem («97
+cubren la media y 3 no»); lo que faltaba era que también la tuviera quien no ve el gráfico. La cola quedó
+así: «tres de ellos, destacados en naranja, quedan enteros por encima o por debajo de la recta sin llegar a
+tocarla: dos arriba y uno abajo».
+
+Lo que la descripción **no** dice, a propósito: que el 95 % es una propiedad del procedimiento y no de un
+intervalo suelto. Esa es la lectura que el ítem evalúa —es su opción correcta— y va en la retro, no en el
+`alt`. La descripción entrega lo que ve quien mira el lienzo, cuántos hay y de qué color, no la conclusión.
+
+**Verificado.** Reensamblado `preparcial-corte-1.html` —la página que absorbió el recurso del Taller 1 (D1),
+478 444 caracteres, 13 módulos, 59 preguntas—, **byte a byte idéntico en la segunda pasada** y con una sola
+línea de diferencia contra el publicado · `prueba_banco_taller1.py` **5 de 5** · `prueba_bancos.py` **sin
+fallos mecánicos**, también con `--corte1` · Brightspace **sin fallos de contenido** y la descripción nueva
+ya como `alt` en `questiondb.xml` · y el `dibujar` ejecutado contra el JSON real devuelve **97 segmentos
+verdes y 3 naranjas, 2 arriba y 1 abajo**, que es lo que la descripción promete.
