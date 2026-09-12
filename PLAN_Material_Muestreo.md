@@ -3346,3 +3346,55 @@ línea de diferencia contra el publicado · `prueba_banco_taller1.py` **5 de 5**
 fallos mecánicos**, también con `--corte1` · Brightspace **sin fallos de contenido** y la descripción nueva
 ya como `alt` en `questiondb.xml` · y el `dibujar` ejecutado contra el JSON real devuelve **97 segmentos
 verdes y 3 naranjas, 2 arriba y 1 abajo**, que es lo que la descripción promete.
+
+### T7.23 — Los otros dos gráficos del simulacro: descripciones que no dejaban responder (2026-09-12)
+
+Arreglada la cola rota de T7.22, Javier mandó revisar las **otras dos** `descripcionGrafico` del simulacro
+—son tres en total, una por semana 2, 3 y 4—. Las dos tenían el mismo defecto de fondo, que es más grave
+que el empalme de ayer: **describían el montaje del gráfico y ningún dato**, así que quien depende del
+`aria-label` no podía responder. Y en los dos casos la `pista` del propio ítem pide justo lo que faltaba.
+
+**El de la semana 2 (sesgo de selección, ancla cap. 1 mód. 4).** Decía «…en proporción, **con las dos
+medias marcadas**», y ahí se cortaba. Su pista manda «compara dónde están las dos rectas verticales y qué
+parte de la distribución se ha adelgazado»: ninguna de las dos cosas estaba escrita, y sin ellas la opción
+correcta («desplazada a la derecha») y el distractor B («centradas en el mismo sitio») son cara o cruz.
+Contra `DT.histogramas`: las **6 barras entre 140 y 170 cm** son más bajas en los respondientes —la de
+157,5 cae de 0,1455 a 0,0946, la mayor diferencia— y las **8 de 170 en adelante** son más altas; la media
+de respondientes (172,165) queda a la derecha de la del marco (168,616).
+
+> **Lo que la descripción NO dice, y es deliberado: cuánto.** El ítem numérico que vive **dos posiciones
+> antes** pide exactamente ese sesgo, 3,5494 cm. Escribir «3,5 cm a la derecha» en el `alt` regalaría su
+> respuesta. Y tampoco haría falta: sobre un eje de 135 a 205 cm, esas dos rectas están separadas un 5 %
+> del ancho, así que **quien ve el gráfico tampoco lee la cifra**. La descripción da lo que es legible,
+> no lo que está en el JSON.
+
+**El de la semana 4 (tamaño de muestra, ancla cap. 2 mód. 7).** Este era el grave: las **cuatro** opciones
+se deciden mirando la curva —si son rectas, cuál va por encima, si el margen vale cero en $n = 500$— y la
+descripción no daba ni un punto. Peor: las retros de los distractores refutan con cosas que el estudiante
+ciego no tiene («la curva naranja va siempre por encima», «en $n = 500$ es ≈ 0,85 cm»). Verificado sobre
+las 34 filas de `DT.curvaMargen`: `sinFpc ≥ conFpc` en **las 34**, y en $n = 2\,000$ vale `conFpc = 0`
+exacto contra `sinFpc = 0,489`.
+
+Se describió **por hitos y no en prosa evaluativa**, como la del cap. 8 (T7.21): las dos curvas con su
+color y su trazo, y los pares (sin fpc, con fpc) en $n = 25$, 100, 500 y 2 000. Así el estudiante conserva
+el trabajo que el ítem evalúa —decidir si eso «baja proporcionalmente a $n$» y si 0,85 «es cero»— en vez
+de recibir la opción correcta redactada.
+
+**Un cuarto arreglo, que salió de verificar el tercero.** La primera redacción decía «las dos arrancan en
+$n = 25$ **rozando 4,4 cm**». Es falso para una de las dos: 4,3739 redondea a 4,4, pero **4,3465 redondea
+a 4,3**. Quedó «casi juntas en $n = 25$, en **4,37 y 4,35 cm**», que es exacto y dice lo mismo. Lo cazó un
+verificador de un solo uso que contrasta cada cifra de las tres descripciones contra el JSON; de paso
+confirmó que **ninguna de las tres cita la respuesta de ninguna de las seis numéricas** (3,5494 · 0,7429 ·
+170,4 · 5,41 · 193 · 730). Las tres cierran ahora con punto, como las del cap. 8 y las del preparcial.
+
+**Queda dicho, y no se toca aquí.** Aun con la mejor descripción, el ítem de la semana 4 **sigue siendo de
+puro leer el gráfico**: sus cuatro opciones son afirmaciones sobre el dibujo, así que una descripción
+completa lo vuelve fácil para todos por igual. Eso es paridad de acceso, no un defecto del `alt`: si
+alguna vez se quiere que discrimine más, lo que hay que mover son **las opciones** —pedir, por ejemplo, el
+$n$ que parte el margen por la mitad—, no la descripción.
+
+**Verificado.** Reensamblado `preparcial-corte-1.html` (478 969 caracteres), **byte a byte idéntico en la
+segunda pasada** · `prueba_banco_taller1.py` **5 de 5** · `prueba_bancos.py` **sin fallos mecánicos**,
+también con `--corte1` · Brightspace **sin fallos de contenido**, con las tres descripciones ya como `alt`
+en `questiondb.xml` · y las cifras de las dos descripciones nuevas contrastadas una a una contra
+`taller1_recurso_datos.json`, las 9 correctas tras el arreglo del 4,4.
