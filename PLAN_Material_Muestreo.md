@@ -3049,6 +3049,18 @@ del comando que falla, no del que encuentra basura de ayer y la usa sin dudar. E
 defecto que este proyecto lleva tres días encontrando en el material: el verificador comprueba las
 cifras, no que la fórmula sea la que el código ejecuta.
 
+**Publicado el 2026-09-12** con el visto bueno de Javier: `main` en `0464cca`, `gh-pages` en `1f38acb`.
+Javier pidió publicar los capítulos 4 y 5, y el 5 **no hizo falta**: la otra sesión lo había subido a
+las 09:01 y `gh-pages` ya lo servía, así que el push solo movió el 4. Antes de publicar se
+reensamblaron las nueve páginas y ninguna cambió un byte —el disco era la salida real de sus fuentes—.
+Comprobado sobre lo servido, no sobre el disco: los capítulos 4 y 5 en vivo son **byte a byte** los de
+`HEAD` (`cmp` contra `git show HEAD:sitio/...`), y en el 4, con el navegador, **195 fórmulas de KaTeX y
+0 `.katex-error`**, el aviso de las dos escalas del módulo 8, el puntero al capítulo 6 del módulo 5, el
+«más que duplica» del 6, las 401 entrevistas del ejercicio 2 y el pie nuevo de la tabla, sin rastro de
+los cuatro textos viejos y con la consola limpia. El primer `cmp` del capítulo 4 salió distinto porque
+Pages seguía construyendo; se repitió hasta cuadrar, que es el comportamiento normal del primer medio
+minuto.
+
 ---
 
 ## Protocolo de verificación de cada capítulo
