@@ -3145,3 +3145,64 @@ encabezado de cada capítulo (`~n S`) es el objetivo, y suele incluir alguno má
       del plan. Para excluir la carpeta entera basta quitar la línea
       `!/CSV data sets for SDA 3e/` del `.gitignore`; para excluir solo el pesado, añadir
       `CSV data sets for SDA 3e/vius.csv`.
+
+---
+
+### T7.19 — La ventana del módulo 3 del cap. 3: dos pestañas que decían lo mismo y calculaban cosas distintas (2026-09-12)
+
+Cerrado lo que T7.15 dejó abierto. Javier pidió empezar por aquí.
+
+**El defecto.** La ventana llevaba una etiqueta única —«De dónde sale la ganancia»— sobre dos pestañas que
+no calculaban lo mismo. El campo `veces_mas_eficiente` valía **110,2327** en R (el cociente al cuadrado de
+los errores estándar de los dos estimadores, sacado de `survey`) y **118,4578** en Python (el cuadrado del
+cociente de las dos desviaciones, a mano). Además la pestaña Python afirmaba que «la reduccion es
+exactamente lo que se gana en error estandar», que es falso: las desviaciones bajan 10,88 veces y el error
+estándar del total, 10,50. Y R necesitaba `exp_sv` y `ee_razon` del R2 —es decir, `survey`— para una
+pregunta que el texto plantea sin él.
+
+**Lo decidido.** De las dos salidas que quedaban abiertas se tomó la **1** (igualar las dos pestañas sin
+`survey`), que bien hecha entrega también lo que buscaba la 2: la ventana ya no usa funciones de encuestas,
+así que no hay razón para sacarla del módulo 3. La clave es que el error estándar de la expansión bajo MAS
+se escribe a mano, $N\sqrt{1-n/N}\,s_y/\sqrt{n}$, y **coincide con `SE(exp_sv)` hasta el último bit**
+(discrepancia relativa $1{,}28\times10^{-16}$, comprobado).
+
+**Las dos cifras no eran un error: son dos cosas distintas, y ahora el bloque enseña las dos.** De la
+identidad
+
+$$\frac{ee_{\text{expansión}}}{ee_{\text{razón}}} = \frac{\hat{t}_{x,\pi}}{t_x}\cdot\frac{s_y}{s_e}$$
+
+sale que el factor entre estimadores es el factor entre desviaciones multiplicado por
+$(\hat{t}_{x,\pi}/t_x)^2$. Así que las dos pestañas imprimen ahora **seis** cifras iguales, en tres parejas
+que se leen de izquierda a derecha: `sd_y` y `sd_residuos` (344 552 y 31 657), `reduccion_pct` y
+`factor_desviaciones` (90,8121 y 118,4578), y `correccion_tx` y `factor_estimadores` (0,9306 y 110,2327).
+El 0,9306 es el inverso del cuadrado del 1,0366 que el módulo 2 llama el $g$ del módulo 10, y el producto
+de las dos columnas anteriores da la tercera de forma exacta. La lectura pedagógica que antes no estaba:
+**anunciar el cuadrado de las desviaciones como la ganancia del estimador se pasa de optimista**, porque la
+muestra subestimó el total de la auxiliar y el error estándar de la razón se corrige al alza por ello.
+
+**Lo hecho.**
+
+- `ensamblado/codigo/cap3/cadena.R`, bloque **R4**: fuera `SE(exp_sv)` y `ee_razon`; dentro `sd_y`,
+  `ee_expansion` a mano y los seis campos. El único rastro de `survey` es un comentario que dice que la
+  fórmula a mano reproduce `SE(exp_sv)` del R2 —una comprobación cruzada, no una llamada—.
+- `ensamblado/codigo/cap3/cadena.py`, bloque **P2**: los mismos seis campos con los mismos nombres, y el
+  comentario falso sustituido por la explicación del factor.
+- `ensamblado/modulos/cap3/modulos_1_4.html`, módulo 3: una nota de **propósito** antes de la ventana
+  («Qué hace el bloque de abajo, y con qué», con las dos fórmulas del MAS que compara y la advertencia de
+  que las dos pestañas calculan lo mismo) y una de **conclusiones** después («Lo que dice la salida», con
+  las tres parejas y tres conclusiones). Desaparece el paréntesis que antes intentaba explicar el desajuste
+  con el texto solo, porque ahora el desajuste está en la salida.
+
+**Verificado.** Byte a byte en la segunda pasada, y reensamblar las nueve páginas no movió ninguna otra ·
+**155 de 155** cifras de bloques (eran 151: cuatro nuevas, dos por pestaña) · prosa **91 respaldadas · 0 sin
+respaldo** (eran 88: las tres nuevas son 118,4578, 110,2327 y 0,9306, todas salidas reales) · bancos y
+barajado sin cambio, con los dos fallos mecánicos de siempre (`cap7[6]`, `cap8[9]`). En el navegador, sobre
+HTTP: **305 fórmulas de KaTeX y 0 `.katex-error`** en los doce módulos, las dos notas nuevas presentes, los
+dos textos viejos («factor de más de cien», «queda en 110») fuera, ninguna llamada a `survey` en el bloque
+de R, y la consola limpia.
+
+**La trampa, para la próxima.** El verificador de bloques contrasta cada cifra anunciada contra la salida
+real **de su propio bloque**. Dos pestañas pueden por tanto contradecirse y pasar las dos: las cifras son
+verdaderas, lo falso es la etiqueta que las presenta como la misma cosa. Ese paralelismo entre pestañas solo
+se ha auditado a mano, y solo en el capítulo 1 y ahora aquí. Queda como candidato a herramienta: comparar
+los nombres de campo de los bloques R y Python que comparten una misma `code-tabs`.

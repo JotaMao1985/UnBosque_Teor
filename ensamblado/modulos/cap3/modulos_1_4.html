@@ -326,6 +326,16 @@
         por el origen, no de $s_y$. Todo se reduce entonces a una pregunta: ¿cuánto más pequeños son los residuos que
         los propios datos?</p>
 
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Qué hace el bloque de abajo, y con qué.</strong> Contesta esa pregunta y
+          la lleva hasta el final, en seis cifras y <strong>sin ninguna función de encuestas</strong>: las dos
+          desviaciones y su reducción, el factor que esa reducción promete en varianza, y el que de verdad separa a
+          los dos estimadores del total. Los dos errores estándar que compara son los del MAS del capítulo 2: el de
+          la expansión es $N\sqrt{1-n/N}\,s_y/\sqrt{n}$, y el de la razón es ese mismo con $s_e$ en lugar de $s_y$
+          y con $t_x/\bar{x}$ en lugar de $N$ —el <code>ee_mano</code> que el módulo 2 escribió a mano y comprobó
+          contra <code>svyratio</code>—. Las dos pestañas calculan las mismas seis cifras.</p>
+      </div>
+
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="De dónde sale la ganancia">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
@@ -339,12 +349,30 @@
         </div>
       </div>
 
-      <p>La desviación pasa de 344 552 a 31 657: una reducción del <strong>90,8 %</strong>, que en varianza es un
-        factor de más de cien. (Entre los dos estimadores del total queda en 110, algo menos que el cuadrado de
-        estas dos desviaciones, porque el error estándar de la razón lleva además el factor
-        $t_x/\hat{t}_{x,\pi}$ del módulo 2.) Esa es toda la historia — y el requisito para que ocurra es exigente, porque esos residuos se
-        miden contra una recta obligada a pasar por el origen. Cuál de las cuatro pide cada conjunto de datos se
-        decide así:</p>
+      <div class="note">
+        <p><strong>Lo que dice la salida.</strong> Seis cifras en tres parejas, y se leen de izquierda a derecha. La
+          desviación pasa de 344 552 a 31 657: una reducción del <strong>90,8 %</strong>. Elevada al cuadrado, esa
+          reducción promete un factor de <strong>118,4578</strong> en varianza. Y el factor que de verdad separa a
+          los dos estimadores del total es <strong>110,2327</strong>. Tres conclusiones:</p>
+        <ol style="margin-bottom:0;">
+          <li>La ganancia es real y es grande: con la misma muestra, la razón tiene una varianza
+            <strong>110 veces</strong> menor que la expansión. En error estándar eso son diez veces, que es justo lo
+            que se vio en el módulo 2 —58,2 millones frente a 5,54—.</li>
+          <li><strong>El 118 y el 110 no se contradicen; la tercera pareja dice por qué.</strong>
+            <code>correccion_tx</code> es $(\hat{t}_{x,\pi}/t_x)^2 = 0{,}9306$, el inverso del cuadrado de aquel
+            1,0366 del módulo 2, y multiplicar las dos columnas anteriores da la tercera: 118,4578 por 0,9306
+            —con los decimales que la salida no imprime— son los 110,2327 de la derecha. La igualdad es exacta,
+            no aproximada: sale de la propia definición de los dos errores estándar. Lo que
+            ocurre es que la muestra <em>subestimó</em> el total de la auxiliar, el error estándar de la razón se
+            corrige al alza por ello, y ahí se queda parte de la ganancia. Anunciar el cuadrado de las dos
+            desviaciones como la ganancia del estimador es pasarse de optimista.</li>
+          <li>Ninguna de las seis cifras necesita el total real: todas salen de la muestra sola. Esta sí es una
+            conclusión que se puede sacar en una encuesta de verdad.</li>
+        </ol>
+      </div>
+
+      <p>Esa es toda la historia — y el requisito para que ocurra es exigente, porque esos residuos se miden contra
+        una recta obligada a pasar por el origen. Cuál de las cuatro pide cada conjunto de datos se decide así:</p>
 
       <div class="definition">
         <h4>Cuál pide cada nube</h4>

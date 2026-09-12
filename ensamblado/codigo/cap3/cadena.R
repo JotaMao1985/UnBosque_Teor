@@ -47,12 +47,23 @@ round(c(s_e = s_e, ee_a_mano = ee_mano, ee_survey = ee_razon), 4)
 signif(abs(ee_mano - ee_razon) / ee_mano, 3)      # discrepancia relativa
 #> [1] 0.000000000000000168
 cat("\n###BLOQUE-R4###\n")
-# De donde sale la ganancia: la desviacion de los residuos frente a la de y.
-round(c(sd_y = sd(agsrs$acres92), sd_residuos = s_e,
-        reduccion_pct = 100 * (1 - s_e / sd(agsrs$acres92)),
-        veces_mas_eficiente = (as.numeric(SE(exp_sv)[1]) / ee_razon)^2), 4)
-#>                sd_y         sd_residuos       reduccion_pct veces_mas_eficiente
-#>         344551.8948          31657.2182             90.8121            110.2327
+# De donde sale la ganancia, sin funciones de encuestas: los dos errores
+# estandar son los del MAS del capitulo 2, uno construido con s_y y el otro con
+# s_e, asi que su cociente se escribe termino a termino.
+sd_y <- sd(agsrs$acres92)
+ee_expansion <- N * sqrt(1 - n / N) * sd_y / sqrt(n)   # = SE(exp_sv) del R2
+# Y el de la razon es el ee_mano del bloque anterior. Ojo al ultimo par de
+# cifras: el factor entre los dos ESTIMADORES no es el cuadrado de la reduccion
+# de desviaciones, porque ee_mano lleva ademas t_x / media(x) donde este lleva N.
+round(c(sd_y = sd_y, sd_residuos = s_e,
+        reduccion_pct = 100 * (1 - s_e / sd_y),
+        factor_desviaciones = (sd_y / s_e)^2,
+        correccion_tx = (N * mean(agsrs$acres87) / t_x)^2,
+        factor_estimadores = (ee_expansion / ee_mano)^2), 4)
+#>                sd_y         sd_residuos       reduccion_pct factor_desviaciones
+#>         344551.8948          31657.2182             90.8121            118.4578
+#>       correccion_tx  factor_estimadores
+#>              0.9306            110.2327
 cat("\n###BLOQUE-R5###\n")
 # Estimador de regresion: no obliga a que la recta pase por el origen.
 b1 <- cov(agsrs$acres87, agsrs$acres92) / var(agsrs$acres87)

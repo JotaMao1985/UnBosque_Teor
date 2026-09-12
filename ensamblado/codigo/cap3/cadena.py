@@ -28,17 +28,25 @@ print(pd.Series({"B": B, "t_razon": t_razon, "s_e": s_e, "ee": ee}).round(4).to_
 
 print("\n###BLOQUE-P2###\n")
 # Por que gana: la razon no estima la variabilidad de y, sino la de los
-# residuos. La reduccion es exactamente lo que se gana en error estandar.
+# residuos. Pero esa reduccion NO es todo lo que se gana en error estandar: el
+# error estandar de la razon lleva t_x / media(x) donde el de la expansion lleva
+# N, y ese factor se come parte de la ganancia. Las mismas seis cifras que R.
+sd_y = y.std(ddof=1)
+ee_expansion = N * np.sqrt(1 - n / N) * sd_y / np.sqrt(n)
 print(pd.Series({
-    "sd_y": y.std(ddof=1),
+    "sd_y": sd_y,
     "sd_residuos": s_e,
-    "razon_de_desviaciones": s_e / y.std(ddof=1),
-    "veces_mas_eficiente": (y.std(ddof=1) / s_e) ** 2
+    "reduccion_pct": 100 * (1 - s_e / sd_y),
+    "factor_desviaciones": (sd_y / s_e) ** 2,
+    "correccion_tx": (N * x.mean() / tx) ** 2,
+    "factor_estimadores": (ee_expansion / ee) ** 2
 }).round(4).to_string())
-#> sd_y                    344 551.8948
-#> sd_residuos              31 657.2182
-#> razon_de_desviaciones         0.0919
-#> veces_mas_eficiente         118.4578
+#> sd_y                  344 551.8948
+#> sd_residuos            31 657.2182
+#> reduccion_pct              90.8121
+#> factor_desviaciones       118.4578
+#> correccion_tx               0.9306
+#> factor_estimadores        110.2327
 
 print("\n###BLOQUE-P3###\n")
 # El GREG escalar. Una sola linea de aritmetica; lo unico que cambia entre los
