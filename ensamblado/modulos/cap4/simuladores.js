@@ -529,7 +529,9 @@
           'marco, no con entrevistas. El óptimo con costos usa 265 entrevistas —no 300— y aun así ' +
           'le gana a la proporcional: compra información donde es barata. Fuera de esta tabla queda ' +
           'la postestratificación (módulo 10), que es la única que se puede decidir después de ' +
-          'muestrear: su ee estimado con agsrs fue 17 513, entre la proporcional y Neyman.'
+          'muestrear. No entra aquí porque su cifra —ee 17 513— está estimada con agsrs y esta tabla es ' +
+          'exacta; puestas de frente parecería ganarle a la proporcional, y no puede: es ese mismo ' +
+          'diseño con los n_h al azar en vez de fijados.'
       };
     };
 

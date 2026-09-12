@@ -88,8 +88,9 @@
 
       <p>La tabla trae una fila de <strong>deff</strong>, que es la vara de comparar diseños fijada en la
         Definición 2.10 del capítulo 2: la varianza del diseño dividida entre la del MAS del mismo $n$ —aquí, el de
-        estos mismos 300 condados—. Menos de 1, el diseño le gana al MAS; más de 1, pierde. El módulo 8 la retoma
-        para medirla sobre las dos muestras reales del material y traducirla a entrevistas.</p>
+        estos mismos 300 condados—. Menos de 1, el diseño le gana al MAS; más de 1, pierde. Estos deff son <strong>exactos</strong>: numerador y denominador
+        salen de <code>agpop</code> entera. El módulo 8 vuelve sobre la misma vara midiéndola con las dos muestras
+        reales, le sale otro número, y allí se explica por qué.</p>
 
       <p>Hay dos sorpresas en esa tabla, y las dos enseñan algo:</p>
       <ul class="list-disc pl-6 space-y-2">
@@ -215,7 +216,7 @@
         <p><strong>El óptimo puede pedir imposibles.</strong> Nada en la fórmula impide que salga $n_h > N_h$ (más
           entrevistas que unidades tiene el estrato) o $n_h < 2$ (con una sola unidad no hay con qué estimar
           $s^2_h$). En la práctica se truncan esos estratos y se re-optimiza el resto — el mismo truncamiento
-          iterativo que el simulador de la portada del material le aplica a las π del πPT. Y las $n_h$ salen con
+          iterativo con el que el capítulo 6 construye las $\pi$ del πPT. Y las $n_h$ salen con
           decimales: se redondean, y la pérdida por redondear es despreciable.</p>
       </div>
 
@@ -267,7 +268,8 @@
       <p>La tabla ordena las lecciones sola:</p>
       <ul class="list-disc pl-6 space-y-2">
         <li><strong>Cuartiles de <code>acres87</code>: deff 0,54.</strong> La superficie de 1987 predice la de 1992
-          mejor que la geografía; estratificar por ella casi duplica la ganancia de la región. Es la misma variable
+          mejor que la geografía; estratificar por ella <strong>más que duplica</strong> la ganancia de la región: el deff
+          pasa de 0,82 a 0,54, así que lo que se ahorra en varianza sube del 18 % al 46 %. Es la misma variable
           auxiliar que el capítulo 3 usaba para el estimador de razón, entrando ahora por el diseño.</li>
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>

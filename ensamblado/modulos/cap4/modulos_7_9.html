@@ -170,8 +170,28 @@
 
       <p>deff estimado 0,75: <strong>las 300 entrevistas de <code>agstrat</code> rinden como 399 de un MAS</strong>.
         Estratificar por región regaló el equivalente a 99 entrevistas — un tercio del presupuesto — a cambio de
-        conocer una columna que el marco ya traía. La tabla siguiente ordena todo lo que el capítulo ha medido;
-        pulsa las cabeceras para reordenarla:</p>
+        conocer una columna que el marco ya traía.</p>
+
+      <div class="warning">
+        <p><strong>Este 0,75 no es el 0,82 de los módulos 4, 6 y 7, y la diferencia enseña algo.</strong> Son el mismo
+          diseño —la asignación de <code>agstrat</code>, 103/21/135/41, es la proporcional— y miden la misma
+          cantidad, pero no se calculan con los mismos datos:</p>
+        <ul style="margin-bottom:0.5rem;">
+          <li>El <strong>0,82 es exacto</strong>: numerador y denominador salen de <code>agpop</code> entera, que es
+            un censo. Ahí el MAS de 300 tiene un error estándar verdadero de <strong>23 294</strong>.</li>
+          <li>El <strong>0,75 es estimado</strong> con las dos muestras concretas: divide $16\,380^2$ entre
+            $18\,898^2$, y esos dos números salieron de <em>estas</em> 300 unidades y de <em>aquellas</em> 300.</li>
+        </ul>
+        <p style="margin-bottom:0;">Mira el denominador: el MAS verdadero tiene error estándar 23 294 y
+          <code>agsrs</code> lo estima en 18 898, casi un quinto por debajo. No es un fallo de la muestra: a
+          <code>agsrs</code> no le tocó ninguno de los condados gigantes, y sin ellos la población parece menos
+          variable de lo que es —el capítulo 3 encuentra lo mismo en su módulo 11—. <strong>Para comparar diseños se
+          cita el exacto</strong>: con él, las 300 entrevistas estratificadas rinden como $300/0{,}8224 = 365$ de un
+          MAS, no como 399. El estimado es lo único que hay cuando solo se tiene la muestra, y conviene recordar que
+          trae su propio ruido.</p>
+      </div>
+
+      <p>La tabla siguiente ordena todo lo que el capítulo ha medido; pulsa las cabeceras para reordenarla:</p>
 
       <div class="tabla-ranking" data-ranking="disenos">
         <p class="tabla-ranking-titulo">Todos los diseños del capítulo, sobre la misma población</p>

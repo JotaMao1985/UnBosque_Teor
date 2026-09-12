@@ -200,7 +200,8 @@ round(c(ee_mas = ee_srs, ee_estratificado = ee_str,
 #>       18898.4344       16379.8727           0.7512
 
 # deff = 0.75: las 300 entrevistas estratificadas rinden como
-# 300 / 0.75 = 400 entrevistas de un MAS. Cien entrevistas gratis.
+# 300 / 0.7512 = 399 entrevistas de un MAS: casi cien gratis. Ojo con
+# redondear el deff a 0.75 antes de dividir, que da 400; la buena es la de abajo.
 round(300 / (ee_str / ee_srs)^2, 0)
 #> [1] 399
 
