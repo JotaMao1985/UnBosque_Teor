@@ -2818,6 +2818,9 @@ No es un fallo del verificador —la cifra que se pierde no puede estar sin resp
 cifras distintas funciona como alarma: si baja en una reescritura, algo concreto se ha ido del texto. Se
 volvieron a poner, porque una conclusión sobre una salida tiene que citar lo que sale.
 
+**Publicado el 2026-09-12** junto con el capítulo 4 (ver T7.16), con el visto bueno de Javier:
+`gh-pages` en `48d2af3`, que es exactamente `sitio/` de `d88246d`.
+
 ### T7.16 — Auditoría de orden del capítulo 4 (2026-09-12)
 
 Javier pidió seguir con el capítulo 4, saltando el 3 —que llevan otras sesiones—. Leídos los doce
@@ -2870,8 +2873,17 @@ vieja, nunca con la cuenta de los sitios que uno tocó.
 el mismo recuento que antes. En el navegador, los doce módulos suman **191 fórmulas de KaTeX y 0
 `.katex-error`**, la consola está limpia y los seis textos nuevos se ven en su módulo.
 
-**Pendiente:** el visto bueno de Javier para publicar. Sigue pendiente de T7.13 la frase del capítulo 7
-(«el efecto de diseño ya apareció en los capítulos 4 y 5»), que ahora debería nombrar también al 2.
+**Publicado el 2026-09-12** con el visto bueno de Javier: `main` en `d88246d`, `gh-pages` en
+`48d2af3`. El push arrastró `7e521dc` (T7.15) —el tercer arreglo del capítulo 3, que llevaba un día en
+`main` sin publicar—, y Javier lo aprobó sabiéndolo: esta vez no se podía separar como en T7.13, porque
+el trabajo del capítulo 4 va **encima** de él en la historia. Comprobado sobre la página en vivo: los
+capítulos 3 y 4 servidos son **byte a byte** los de `d88246d` (`cmp` contra `HEAD:sitio`), y en el 4
+están la Definición 2.10 citada, el «módulo 10 de este capítulo» y los 299 millones de Neyman, sin
+rastro del «~301». El primer intento de comprobación pilló el build de Pages todavía en `building`, que
+es el estado normal durante el primer medio minuto; se repitió hasta que el `cmp` cuadró.
+
+**Pendiente:** sigue sin hacerse la frase del capítulo 7 que apuntó T7.13 —«el efecto de diseño ya
+apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2.
 
 ---
 
