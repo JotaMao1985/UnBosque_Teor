@@ -4041,8 +4041,9 @@ print("suma =", int(tabla["redondeado"].sum()))
 
       <p>La tabla trae una fila de <strong>deff</strong>, que es la vara de comparar diseños fijada en la
         Definición 2.10 del capítulo 2: la varianza del diseño dividida entre la del MAS del mismo $n$ —aquí, el de
-        estos mismos 300 condados—. Menos de 1, el diseño le gana al MAS; más de 1, pierde. El módulo 8 la retoma
-        para medirla sobre las dos muestras reales del material y traducirla a entrevistas.</p>
+        estos mismos 300 condados—. Menos de 1, el diseño le gana al MAS; más de 1, pierde. Estos deff son <strong>exactos</strong>: numerador y denominador
+        salen de <code>agpop</code> entera. El módulo 8 vuelve sobre la misma vara midiéndola con las dos muestras
+        reales, le sale otro número, y allí se explica por qué.</p>
 
       <p>Hay dos sorpresas en esa tabla, y las dos enseñan algo:</p>
       <ul class="list-disc pl-6 space-y-2">
@@ -4185,7 +4186,7 @@ round(c(n_total = sum(nh_opt), costo_total = sum(ch * nh_opt),
         <p><strong>El óptimo puede pedir imposibles.</strong> Nada en la fórmula impide que salga $n_h > N_h$ (más
           entrevistas que unidades tiene el estrato) o $n_h < 2$ (con una sola unidad no hay con qué estimar
           $s^2_h$). En la práctica se truncan esos estratos y se re-optimiza el resto — el mismo truncamiento
-          iterativo que el simulador de la portada del material le aplica a las π del πPT. Y las $n_h$ salen con
+          iterativo con el que el capítulo 6 construye las $\pi$ del πPT. Y las $n_h$ salen con
           decimales: se redondean, y la pérdida por redondear es despreciable.</p>
       </div>
 
@@ -4260,7 +4261,8 @@ round(rbind(ee = sqrt(opciones), deff = opciones / V_mas), 4)
       <p>La tabla ordena las lecciones sola:</p>
       <ul class="list-disc pl-6 space-y-2">
         <li><strong>Cuartiles de <code>acres87</code>: deff 0,54.</strong> La superficie de 1987 predice la de 1992
-          mejor que la geografía; estratificar por ella casi duplica la ganancia de la región. Es la misma variable
+          mejor que la geografía; estratificar por ella <strong>más que duplica</strong> la ganancia de la región: el deff
+          pasa de 0,82 a 0,54, así que lo que se ahorra en varianza sube del 18 % al 46 %. Es la misma variable
           auxiliar que el capítulo 3 usaba para el estimador de razón, entrando ahora por el diseño.</li>
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
@@ -4495,7 +4497,8 @@ round(c(ee_mas = ee_srs, ee_estratificado = ee_str,
 #&gt;       18898.4344       16379.8727           0.7512
 
 # deff = 0.75: las 300 entrevistas estratificadas rinden como
-# 300 / 0.75 = 400 entrevistas de un MAS. Cien entrevistas gratis.
+# 300 / 0.7512 = 399 entrevistas de un MAS: casi cien gratis. Ojo con
+# redondear el deff a 0.75 antes de dividir, que da 400; la buena es la de abajo.
 round(300 / (ee_str / ee_srs)^2, 0)
 #&gt; [1] 399</code></pre>
         </div>
@@ -4503,8 +4506,28 @@ round(300 / (ee_str / ee_srs)^2, 0)
 
       <p>deff estimado 0,75: <strong>las 300 entrevistas de <code>agstrat</code> rinden como 399 de un MAS</strong>.
         Estratificar por región regaló el equivalente a 99 entrevistas — un tercio del presupuesto — a cambio de
-        conocer una columna que el marco ya traía. La tabla siguiente ordena todo lo que el capítulo ha medido;
-        pulsa las cabeceras para reordenarla:</p>
+        conocer una columna que el marco ya traía.</p>
+
+      <div class="warning">
+        <p><strong>Este 0,75 no es el 0,82 de los módulos 4, 6 y 7, y la diferencia enseña algo.</strong> Son el mismo
+          diseño —la asignación de <code>agstrat</code>, 103/21/135/41, es la proporcional— y miden la misma
+          cantidad, pero no se calculan con los mismos datos:</p>
+        <ul style="margin-bottom:0.5rem;">
+          <li>El <strong>0,82 es exacto</strong>: numerador y denominador salen de <code>agpop</code> entera, que es
+            un censo. Ahí el MAS de 300 tiene un error estándar verdadero de <strong>23 294</strong>.</li>
+          <li>El <strong>0,75 es estimado</strong> con las dos muestras concretas: divide $16\,380^2$ entre
+            $18\,898^2$, y esos dos números salieron de <em>estas</em> 300 unidades y de <em>aquellas</em> 300.</li>
+        </ul>
+        <p style="margin-bottom:0;">Mira el denominador: el MAS verdadero tiene error estándar 23 294 y
+          <code>agsrs</code> lo estima en 18 898, casi un quinto por debajo. No es un fallo de la muestra: a
+          <code>agsrs</code> no le tocó ninguno de los condados gigantes, y sin ellos la población parece menos
+          variable de lo que es —el capítulo 3 encuentra lo mismo en su módulo 11—. <strong>Para comparar diseños se
+          cita el exacto</strong>: con él, las 300 entrevistas estratificadas rinden como $300/0{,}8224 = 365$ de un
+          MAS, no como 399. El estimado es lo único que hay cuando solo se tiene la muestra, y conviene recordar que
+          trae su propio ruido.</p>
+      </div>
+
+      <p>La tabla siguiente ordena todo lo que el capítulo ha medido; pulsa las cabeceras para reordenarla:</p>
 
       <div class="tabla-ranking" data-ranking="disenos">
         <p class="tabla-ranking-titulo">Todos los diseños del capítulo, sobre la misma población</p>
@@ -5068,7 +5091,9 @@ round(c(ee_prop = sqrt(V_asig(n_prop4)), ee_neyman = sqrt(V_asig(n_ney4)),
 #&gt;      ee_prop    ee_neyman ganancia_pct
 #&gt;     17924.66     14566.48        18.74</code></pre>
             <p>Neyman: 115/7/136/142 frente a 137/29/180/55 de la proporcional; error estándar 14 566 contra 17 925 —
-              un <strong>18,7 %</strong> menos con el mismo presupuesto. Compara con el 18,1 % que ganaba en
+              un <strong>18,7 %</strong> menos. Con un matiz que conviene ver: al redondear, la proporcional suma
+              <strong>401</strong> entrevistas y Neyman 400, así que la comparación le regala una entrevista a la
+              proporcional; con 400 exactas la ventaja de Neyman sería algo mayor. Compara con el 18,1 % que ganaba en
               $n = 300$: la ventaja relativa de Neyman es estable con el tamaño, porque depende de la estructura de
               la población, no de $n$.</p>
           </details>
@@ -7897,7 +7922,9 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
           'marco, no con entrevistas. El óptimo con costos usa 265 entrevistas —no 300— y aun así ' +
           'le gana a la proporcional: compra información donde es barata. Fuera de esta tabla queda ' +
           'la postestratificación (módulo 10), que es la única que se puede decidir después de ' +
-          'muestrear: su ee estimado con agsrs fue 17 513, entre la proporcional y Neyman.'
+          'muestrear. No entra aquí porque su cifra —ee 17 513— está estimada con agsrs y esta tabla es ' +
+          'exacta; puestas de frente parecería ganarle a la proporcional, y no puede: es ese mismo ' +
+          'diseño con los n_h al azar en vez de fijados.'
       };
     };
 
