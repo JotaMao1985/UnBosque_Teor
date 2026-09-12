@@ -2653,7 +2653,31 @@ y el duodécimo sobrevivió un día publicado. *(b)* El hallazgo 5 de T7.12 —�
 respaldo; lo que no cierra es el paso entre ellas. Al reescribir un módulo, las frases que se dejan
 intactas también hay que releerlas con lápiz, no solo las nuevas.
 
-**Pendiente:** el visto bueno de Javier antes de publicar.
+**Publicado el 2026-09-11** con el visto bueno de Javier: `main` en `887fb06`, `gh-pages` en `11fb05c`.
+Con el mismo push salieron los dos arreglos del capítulo 3 que otra sesión había subido a `main` sin
+publicar —`ca28df6` y `727e1a1`, los de T7.12 y T7.14—; Javier aprobó publicarlos juntos sabiendo que
+viajaban. **No** salió `7e521dc` (T7.15), que llegó a `main` mientras se preparaba la publicación: la
+guarda de antes del push lo detectó, y se publicó exactamente el árbol de `sitio/` en `887fb06` con
+`git subtree split --prefix sitio 887fb06` y un `push` del commit resultante. Como el split es
+determinista, el próximo `subtree push` desde `HEAD` sigue siendo un avance rápido y llevará `7e521dc`
+cuando se apruebe. Comprobado sobre la página en vivo: los dos capítulos servidos son **byte a byte**
+los de `887fb06` (`cmp`), la Definición 2.10 está, el «$k$ muestras» no, «182 veces menor» sale las dos
+veces de `887fb06` y la frase nueva de `7e521dc` no aparece.
+
+**Tres trampas de esta publicación, para la próxima.**
+
+- *Publicar lo aprobado cuando `main` se ha movido.* `git subtree push` publica `sitio/` de `HEAD`, no
+  lo que se revisó, y con varias sesiones en el mismo repositorio entre la aprobación y el push puede
+  entrar un commit ajeno. La guarda es comparar `HEAD` con el commit aprobado justo antes de publicar.
+  Si se movió: `git subtree split --prefix sitio <aprobado>`, comprobar que el árbol del resultado es
+  `<aprobado>:sitio` y que `gh-pages` es su antecesor, y `git push origin <sha>:refs/heads/gh-pages`.
+  Nunca un commit hecho a mano en `gh-pages`: rompería el `subtree push` siguiente.
+- *El SHA del split llegó con un retorno de carro* al capturarlo con `$(…)`, y el primer push murió con
+  `invalid refspec '.-pages'`, sin publicar nada. Se normaliza con `git rev-parse --verify <sha>^{commit}`.
+- *En zsh, `echo "$pagina" | grep` miente.* El `echo` de zsh interpreta las barras invertidas y se corta
+  en el primer `\c` del LaTeX (`\cdot`, `\check`), así que `grep` solo ve la cabecera y todo cuenta
+  cero, también lo que ya estaba publicado antes. La comprobación en vivo se hace descargando a archivo,
+  y la prueba fuerte es `cmp` contra `<commit>:sitio/…`.
 
 ---
 
@@ -2732,6 +2756,10 @@ T7.13.
 derivación y el código: el verificador comprueba que las cifras de la prosa salgan del código, pero no
 que la fórmula que se enseña sea la que el código ejecuta. Aquí no lo era, y la prosa lo afirmaba.
 
+**Publicado el 2026-09-11** junto con el capítulo 2 (ver T7.13), con el visto bueno de Javier:
+`gh-pages` en `11fb05c`, que es exactamente `sitio/` de `887fb06` y lleva `ca28df6` y `727e1a1`.
+T7.15 (`7e521dc`) quedó fuera y sigue sin publicar.
+
 ---
 
 ### T7.15 — `survey` sin presentar en el cap. 3: propósito y conclusiones del código del módulo 2 (2026-09-11)
@@ -2789,6 +2817,237 @@ dejó fuera las cifras de los dos totales, y el recuento de cifras distintas de 
 No es un fallo del verificador —la cifra que se pierde no puede estar sin respaldo—, pero el número de
 cifras distintas funciona como alarma: si baja en una reescritura, algo concreto se ha ido del texto. Se
 volvieron a poner, porque una conclusión sobre una salida tiene que citar lo que sale.
+
+**Publicado el 2026-09-12** junto con el capítulo 4 (ver T7.16), con el visto bueno de Javier:
+`gh-pages` en `48d2af3`, que es exactamente `sitio/` de `d88246d`.
+
+### T7.16 — Auditoría de orden del capítulo 4 (2026-09-12)
+
+Javier pidió seguir con el capítulo 4, saltando el 3 —que llevan otras sesiones—. Leídos los doce
+módulos, los ocho simuladores, las once preguntas y los cuatro ejercicios. **Seis hallazgos**: tres de
+la lente de orden y tres de cifras que aparecieron de paso.
+
+**1 · El deff se usaba desde el módulo 4 y se definía en el 8.** Es el defecto de T7.13, más marcado.
+El módulo 4 compara asignaciones con «deff 0,74 contra 0,82»; el módulo 6 decide su pregunta central
+—¿con qué variable estratificar?— con una tabla que **solo** tiene deff (0,54 / 0,82 / 0,99 / 1,00) y
+un simulador cuyo eje vertical es el deff; el módulo 7 lo usa para la identidad ANOVA. Y el 8 lo
+definía por fin abriendo con «conviene fijar ya esa vara de medir», como si fuera su estreno. Desde
+T7.13 había además una segunda definición: el capítulo 2 ya lo define (Definición 2.10). Ahora el
+módulo 4 presenta la vara en su primera aparición, con puntero a esa definición, y el módulo 8 deja de
+fijarla para hacer lo suyo: medirla sobre las dos muestras reales y traducirla a entrevistas.
+
+**2 · «El capítulo 10 enseña el plan B» (módulo 1).** No existe: el material tiene ocho capítulos y la
+postestratificación es el **módulo 10 de este mismo capítulo**. Un `grep` sobre los ocho capítulos
+confirma que era la única referencia a un capítulo inexistente en todo el material.
+
+**3 · El puntero al simulador del capítulo 2 fallaba dos veces (módulo 2).** Mandaba «al simulador del
+módulo 7 del capítulo 2», que es la calculadora de tamaño de muestra y no tiene selector de diseño; el
+que lo tiene es `espacio-muestras`, del módulo 1. Y las seis muestras **no son las mismas**: este
+capítulo enumera con $n_A = 2$ y $n_B = 1$ —lo confirma `genera_cap4.R`, $n = 3$—, mientras que el
+diseño B del capítulo 2 toma una unidad por estrato, $n = 2$. Las dos versiones dan seis muestras, y
+por eso el error era invisible. El texto lo dice ahora explícitamente en vez de mandar a ningún lado.
+
+**4, 5 y 6 · Tres cifras de la familia de T7.10.** *(a)* «El reparto de Neyman la deja en **331**
+millones»: la varianza real es **299,0** —su error estándar es 17 290,78 y su deff 0,551, cifras que el
+propio capítulo publica dos módulos después—. *(b)* En la misma frase, «repartir en proporción al
+tamaño **la baja** a 446» decía lo contrario de lo que pasa: 446 es más que los 402 que acababa de dar.
+*(c)* El módulo 5 daba **303** y **~301** para la misma cantidad, a treinta líneas de distancia, y con
+ellas «441 millones»; ninguna de las tres sale de `cadena.R` ni de `cap4_datos.json`. Se reescribió sin
+inventar cifras: la comparación que queda es la que sí está calculada (18 916 frente a 21 124, con la
+proporcional de $n = 300$, que cuesta casi el mismo presupuesto). *(d)* «Once preguntas sobre los once
+módulos»: el módulo 1 no tiene ninguna y el 2 tiene dos.
+
+**Por qué `--prosa` no ve ninguna de esas tres.** `CIFRA_PROSA_RE` solo mira cifras con separador de
+miles o decimales; «402 millones», «331», «303» y «441» son enteros sueltos y pasan de largo. Es un
+hueco real del verificador —las varianzas y los tamaños de muestra se escriben así en todo el
+material—, y vale la pena decidir en otra tarea si se cierra (por ejemplo, mirando los enteros
+seguidos de «millones» o de «entrevistas»).
+
+**Y la trampa de T7.9, otra vez.** Tras cambiar los textos, el `grep` de control sobre el HTML
+**publicado** —no sobre las fuentes que edité— encontró un **séptimo** sitio: la retroalimentación de
+una pregunta del quiz repetía el «~301» inventado. Un arreglo se cierra con un `grep` de la forma
+vieja, nunca con la cuenta de los sitios que uno tocó.
+
+**Verificado.** `ensambla_cap4.py` reproduce el archivo **byte a byte** en la segunda pasada;
+`verifica_bloques.py --prosa`: **246 de 246** cifras de bloques y **66 respaldadas · 0 sin respaldo**,
+el mismo recuento que antes. En el navegador, los doce módulos suman **191 fórmulas de KaTeX y 0
+`.katex-error`**, la consola está limpia y los seis textos nuevos se ven en su módulo.
+
+**Publicado el 2026-09-12** con el visto bueno de Javier: `main` en `d88246d`, `gh-pages` en
+`48d2af3`. El push arrastró `7e521dc` (T7.15) —el tercer arreglo del capítulo 3, que llevaba un día en
+`main` sin publicar—, y Javier lo aprobó sabiéndolo: esta vez no se podía separar como en T7.13, porque
+el trabajo del capítulo 4 va **encima** de él en la historia. Comprobado sobre la página en vivo: los
+capítulos 3 y 4 servidos son **byte a byte** los de `d88246d` (`cmp` contra `HEAD:sitio`), y en el 4
+están la Definición 2.10 citada, el «módulo 10 de este capítulo» y los 299 millones de Neyman, sin
+rastro del «~301». El primer intento de comprobación pilló el build de Pages todavía en `building`, que
+es el estado normal durante el primer medio minuto; se repitió hasta que el `cmp` cuadró.
+
+**Pendiente:** sigue sin hacerse la frase del capítulo 7 que apuntó T7.13 —«el efecto de diseño ya
+apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2.
+
+### T7.17 — Auditoría de orden del capítulo 5 (2026-09-12)
+
+Leídos los once módulos, los ocho simuladores, las once preguntas y los cuatro ejercicios. **El
+capítulo 5 señaliza bien**: el módulo 1 avisa de que la ICC llega en el 4, el 3 remite al 4 antes de
+pedirle al lector que mueva $\rho$, el 5 se apoya en el estimador de razón del capítulo 3 y el 6 en el
+99,2 % que el 7 desmenuza. El defecto de orden clásico no está. Cuatro hallazgos, y el segundo es el
+que importa.
+
+**1 · La frase que abre el capítulo mezclaba las dos escalas.** «Observar 371 condados en 6 estados
+enteros produce un **error estándar treinta veces mayor —en varianza—**»: el deff es 30 en varianza, y
+en error estándar son unas cinco veces y media. El propio módulo lo dice bien treinta líneas más abajo
+(«varianza-a-varianza… valen lo que unas 12 de un MAS»); era el gancho el que estaba mal.
+
+**2 · El código contradecía la notación del capítulo, en la letra que el capítulo declara como su
+trampa.** El módulo 2 fija $N$ = conglomerados y $K = \sum M_i$ = unidades, con un aviso titulado «$N$
+cambió de significado y no va a avisar». Y el primer bloque de código hacía `N <- nrow(agpop)` (3 078
+condados) y `NI <- length(unique(agpop$state))` (50 estados): exactamente al revés. Peor: **la pestaña
+de Python del mismo capítulo ya usaba la convención buena** (`N, n, M = 100, 5, 4`), así que las dos
+pestañas se contradecían. Renombrado en `cadena.R` —`K` las unidades, `N` los conglomerados—, con un
+comentario que lo dice, y las salidas publicadas no cambian una coma porque las etiquetas de los
+`c(...)` son explícitas.
+
+**3 · La MSW aparecía sin definir.** El módulo 4 introducía $R_a = 1 - \text{MSW}/S^2$ y del símbolo
+solo decía «la variabilidad de dentro»; no estaba en el glosario. Ahora se define donde se usa: la SSW
+del capítulo 4 (módulo 7) dividida entre sus grados de libertad, $K - N$ — que es justo lo que el
+código enseña tras el renombrado.
+
+**4 · Una opción que el lector no puede ver.** El módulo 9 remitía a «la opción `survey.lonely.psu` que
+este material fija desde el capítulo 1»: cierto, pero vive en la cabecera de las cadenas, que no se
+publica en ningún bloque. Ahora se dice de dónde sale.
+
+**El fallo propio, que es la lección de la tarea.** Renombré a `K` **sin comprobar que la letra
+estuviera libre** —justo el paso que T7.9 sí hizo antes de mover el intervalo del sistemático a la
+`a`—. `K` ya estaba tomada: el bloque de `algebra` la redefine como sus 299 estudiantes, y el bloque
+del módulo 9 la usaba 130 líneas después para los pesos de estrato. Resultado: una estimación de
+3 423 299 donde el capítulo publica 332 542,6. **Lo cazó `verifica_bloques.py` en la primera pasada**,
+que es exactamente para lo que existe. Se arregló calculando el peso con `nrow(agpop)` explícito, lo
+que de paso elimina una dependencia a distancia entre bloques — algo que el protocolo ya pedía y que
+nadie estaba comprobando.
+
+**Verificado.** `ensambla_cap5.py` reproduce el archivo **byte a byte** en la segunda pasada;
+`verifica_bloques.py --prosa`: **163 de 163** cifras de bloques y **55 respaldadas · 0 sin respaldo**,
+los mismos recuentos que antes de tocar nada. En el navegador: **184 fórmulas de KaTeX y 0
+`.katex-error`** en los once módulos, consola limpia, y los cuatro cambios visibles en su módulo.
+
+**Comprobado y correcto, para que no se vuelva a mirar:** el 2,73 de la pregunta del módulo 4 frente al
+2,72 del texto (son $\bar{M} = 24{,}92$ y $m = 25$; la tolerancia de 0,02 acepta las dos); «once
+preguntas sobre los diez módulos», que aquí sí cuadra (once preguntas cubren los diez módulos, con dos
+del módulo 1); los tres diseños de la tabla comparativa, los tres presentados; y las cuentas del
+módulo 8 y del ejercicio 4 ($m^* = 9{,}5$, $n^* = 58$, castigo del 49 %).
+
+**El trabajo quedó asegurado en `13fe782`** antes de escribir esta entrada, porque el primer intento de
+anotarla falló: la cadena de Python del script llevaba formato y `\text{MSW}` se leyó como un hueco a
+rellenar. El script escribe al final, así que el plan no se tocó; la lección es no usar cadenas con
+formato para texto que lleva llaves de LaTeX.
+
+**Publicado el 2026-09-12** con el visto bueno de Javier: `main` en `b233220`, `gh-pages` en
+`4920e58`. Esta vez el push salió limpio —lo único pendiente en `sitio/` era el capítulo 5— y la guarda
+previa confirmó que `main` seguía en el commit aprobado. Comprobado sobre la página en vivo: el
+capítulo servido es **byte a byte** el de `b233220` (`cmp` contra `HEAD:sitio`), con el código
+renombrado (`K <- nrow(agpop)`, sin rastro del `NI` viejo) y la MSW remitiendo a la SSW del capítulo 4.
+
+**Pendiente:** sigue sin hacerse la frase del capítulo 7 que apuntó T7.13 —«el efecto de diseño ya
+apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2.
+
+---
+
+### T7.18 — Revisión del cap. 4: el deff medido en dos escalas, y cinco más (2026-09-12)
+
+Javier pidió pasar por el capítulo 4 la misma lente que por el 2 y el 3. T7.16 lo había auditado esa
+misma mañana y arreglado seis cosas; ésas no se recontaron. Leídos los doce módulos, la autoevaluación
+y los cuatro ejercicios, con cada cifra contrastada. **Seis defectos**, arreglados de una vez a petición
+de Javier —«arréglalos juntos»— porque los dos primeros son el mismo problema y separarlos dejaba la
+contradicción a medias.
+
+| # | Dónde | Qué pasa |
+|:--:|:--:|---|
+| 1 | 4, 6, 7 y 8 | El deff de estratificar por región vale **0,82** en tres módulos y **0,7512** en el 8, para el mismo diseño, sin reconciliar |
+| 2 | tabla comparativa | Su pie mete el ee **estimado** de la postestratificación (17 513) en una tabla **exacta**, y con eso la coloca por delante del estratificado proporcional, que es imposible |
+| 3 | 8 (bloque R10) | El comentario dice «300 / 0.75 = 400… Cien entrevistas gratis» y su propia salida imprime **399** |
+| 4 | 5 | «El simulador de la portada del material» no existe: la portada no tiene simuladores |
+| 5 | ej. 2 | El reparto proporcional suma **401** entrevistas y Neyman 400, y el texto los compara «con el mismo presupuesto» |
+| 6 | 6 | «Casi duplica la ganancia de la región»: la multiplica por **2,6** |
+
+#### 1 y 2 · Una vara, dos escalas
+
+El capítulo mide el deff de dos maneras y nunca dice cuál está citando:
+
+- **Exacta** (módulos 4, 6, 7 y la tabla): numerador y denominador salen de `agpop` entera. El MAS de
+  300 tiene ahí un error estándar verdadero de **23 294**, y el estratificado proporcional, 21 124 →
+  deff **0,8224**.
+- **Estimada** (módulo 8): $16\,380^2 / 18\,898^2 =$ **0,7512**, con los dos números salidos de las dos
+  muestras concretas.
+
+La brecha está sobre todo en el denominador: `agsrs` estima el error estándar del MAS en 18 898 cuando
+el verdadero es 23 294, casi un quinto por debajo, **porque no le tocó ninguno de los condados
+gigantes** — exactamente el hecho que T7.14 documentó en el módulo 11 del capítulo 3. Ahora el módulo 8
+lleva un aviso que nombra las dos escalas y dice cuál se cita para comparar diseños (con la exacta, las
+300 entrevistas rinden como $300/0{,}8224 = 365$, no como 399), y el módulo 4 avisa de que sus deff son
+exactos y de que el 8 obtendrá otro número.
+
+**Y la mezcla invertía un orden.** La tabla comparativa declara en su descripción que sus varianzas son
+exactas, y su pie metía la postestratificación con «su ee estimado con `agsrs` fue 17 513, entre la
+proporcional y Neyman». Frente a los exactos —21 124 y 17 291— parecía **ganarle al estratificado
+proporcional**, y no puede: la postestratificación es ese mismo estimador con los $n_h$ al azar en vez
+de fijados, así que paga una prima, nunca la cobra. El pie dice ahora por qué no entra en la tabla. El
+módulo 10 no tenía el problema: allí las tres cifras que compara (18 898, 17 513, 16 380) son las tres
+estimadas.
+
+#### Los otros cuatro
+
+- **3 · El comentario contra su salida.** `cadena.R` decía «300 / 0.75 = 400 entrevistas de un MAS. Cien
+  entrevistas gratis» tres líneas antes de imprimir **399**; la prosa y la autoevaluación dicen 399 y 99.
+  El comentario explica ahora que redondear el deff a 0,75 antes de dividir es lo que produce el 400.
+- **4 · La referencia al vacío.** El módulo 5 mandaba «al simulador de la portada del material» para ver
+  el truncamiento iterativo de las $\pi$; la portada no tiene simuladores y ese truncamiento vive en el
+  **capítulo 6**. Es el tercer puntero roto del capítulo —T7.16 arregló el «capítulo 10» y el del
+  simulador del capítulo 2—.
+- **5 · Las 401 entrevistas.** En el ejercicio 2, `round(400 * N_h / N)` da 137+29+180+55 = **401**,
+  mientras Neyman suma 400 exactos. La solución concluía «un 18,7 % menos con el mismo presupuesto». Se
+  dice ahora que el redondeo le regala una entrevista a la proporcional y que con 400 exactas la ventaja
+  sería algo mayor.
+- **6 · «Casi duplica».** Con deff 0,82 → 0,54, lo ahorrado en varianza pasa del 18 % al 46 %: por 2,6,
+  no por 2.
+
+**Una observación que no se arregló.** El **módulo 1 sigue sin ninguna pregunta** en la autoevaluación y
+el 2 tiene dos, así que el resumen final nunca podrá recomendar repasar el primero. Desde T7.16 el texto
+ya no promete lo contrario, de modo que es un hueco de cobertura y no una afirmación falsa.
+
+**Descartado tras comprobarlo.** La nota del módulo 3 dice que el intervalo usa la normal ($\pm 1{,}96$)
+y `survey` documenta la $t$; pero `confint.svystat` usa la normal, y la salida lo confirma:
+$32\,104 = 1{,}95996 \times 16\,380$.
+
+**Verificado.** Byte a byte en la segunda pasada · **246 de 246** cifras de bloques · **68 respaldadas ·
+0 sin respaldo** (dos más que antes: el 23 294 y el 0,8224, los dos salidos del bloque R6). En el
+navegador: **195 fórmulas de KaTeX y 0 `.katex-error`** en los doce módulos, los ocho textos nuevos
+presentes y los cuatro viejos ausentes, la tabla comparativa con sus cinco diseños y su pie nuevo, y la
+consola limpia.
+
+#### El accidente del commit `cfc4e2d`, que hay que leer entero
+
+El commit que cierra esta tarea **borró 161 líneas del plan**: las notas T7.16 y T7.17 de la otra
+sesión. Se restauran en el commit siguiente, con esta nota dentro. Cómo pasó, paso a paso, porque el
+fallo no está donde parece:
+
+1. El guion que prepara el plan **abortó**, y abortó **bien**: la otra sesión ya había escrito una
+   T7.17 (auditoría del capítulo 5) y la comprobación `assert "### T7.17" not in s` lo detectó. Por eso
+   esta nota es la T7.18.
+2. Pero el comando seguía con `&&` **después** del bloque de Python, y `python3 - <<'PY'` devolvió
+   error… que `&&` sí respeta. El que no protestó fue el paso siguiente: `git hash-object -w` encontró
+   en el scratchpad un `plan_commit.md` **de la tarea anterior** —T7.15, de ayer— y lo hasheó tan
+   contento. `git update-index` lo metió al índice, y el commit salió con el plan revertido.
+3. El árbol de trabajo se salvó porque el guion murió **antes** de escribirlo: por eso la versión buena
+   seguía en disco y la restauración fue posible sin tocar la historia.
+
+**Las dos lecciones.** La primera: un nombre de archivo reutilizado entre tareas en un directorio
+temporal es una mina; el artefacto de una tarea vieja tiene el mismo nombre y no caduca. Se usa un
+nombre único por tarea, o se borra al terminar. La segunda, más general: **cuando un paso construye un
+artefacto y otro lo consume, el consumidor tiene que comprobar que el artefacto es de esta ejecución**
+—que existe, que es reciente, que contiene lo que debía—; encadenar con `&&` no basta, porque protege
+del comando que falla, no del que encuentra basura de ayer y la usa sin dudar. Es, en pequeño, el mismo
+defecto que este proyecto lleva tres días encontrando en el material: el verificador comprueba las
+cifras, no que la fórmula sea la que el código ejecuta.
 
 ---
 
