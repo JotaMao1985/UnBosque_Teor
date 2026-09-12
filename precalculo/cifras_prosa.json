@@ -138,7 +138,10 @@
     "4,5": "1,96 x 0,02274 = 4,457 puntos: margen del 95 % con pesos (sin ellos, 1,96 x 0,00947 = 1,86, el 1,9 de la misma frase)",
     "231,8": "111,0 + 120,8 = 231,8 millones: el total ponderado de adultos de NHANES",
     "5 405": "5 406 - 1: el valor equivocado que sale de aplicar n-1 en vez de PSU menos estratos; distractor",
-    "3,35": "mantisa de 3,35e-03, el segundo error maximo del IPFP; el bloque del modulo 6 imprime la serie entera"
+    "3,35": "mantisa de 3,35e-03, el segundo error maximo del IPFP; el bloque del modulo 6 imprime la serie entera",
+    "4,54": "mantisa de 4,54e-06, el tercer error maximo del IPFP; misma serie del bloque del modulo 6",
+    "6,15": "mantisa de 6,15e-09, el cuarto error maximo del IPFP; misma serie del bloque del modulo 6",
+    "8,33": "mantisa de 8,33e-12, el quinto error maximo del IPFP; misma serie del bloque del modulo 6"
   },
   "capitulo-8-no-respuesta-ponderacion.html": {
     "1,83": "brecha ybar_R - ybar_NR = 34,632996 - 36,463462 = -1,830466; el texto la cita en valor absoluto y el bloque R4 la imprime con signo (dif = -1,830)",

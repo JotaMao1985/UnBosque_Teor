@@ -7956,12 +7956,12 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       {
         tipo: 'numerica',
         modulo: 6,
-        pregunta: 'En el IPFP del módulo 6, el error máximo pasa de $1{,}3\\times10^{-1}$ a $3{,}35\\times10^{-3}$ en la primera iteración. ¿Aproximadamente por qué factor se divide el error en cada paso? Entero.',
-        pista: 'Divide un error entre el siguiente: 0,13 / 0,00335, y comprueba con el paso siguiente (3,35e−3 / 4,54e−6).',
-        respuesta: 39,
+        pregunta: 'En el IPFP del módulo 6 el error máximo cae así: $1{,}3\\times10^{-1}$, $3{,}35\\times10^{-3}$, $4{,}54\\times10^{-6}$, $6{,}15\\times10^{-9}$, $8{,}33\\times10^{-12}$. De la segunda iteración en adelante, el cociente entre un error y el siguiente es constante: ese es el ritmo del algoritmo. ¿Cuánto vale? Entero.',
+        pista: 'Divide $3{,}35\\times10^{-3}$ entre $4{,}54\\times10^{-6}$, y compruébalo con el par siguiente: tiene que salir lo mismo. El primer cociente, el que arranca en $0{,}13$, no cuenta.',
+        respuesta: 738,
         tolerancia: 25,
-        retroAcierto: 'Del orden de 40 por iteración: es convergencia geométrica. Por eso 3 iteraciones bastan para cualquier publicación y 8 llevan el error al límite de la precisión de la máquina ($10^{-16}$).',
-        retroFallo: '0,13/0,00335 ≈ 39, y 3,35e−3/4,54e−6 ≈ 738 — el ritmo se acelera. Lo importante no es el número exacto sino el tipo de convergencia: geométrica, así que unas pocas iteraciones bastan siempre.'
+        retroAcierto: 'Y los dos pares siguientes vuelven a dar 738: eso es convergencia geométrica, el error se divide por una constante en cada paso. Por eso 3 iteraciones bastan para cualquier publicación y 6 dejan el error en $2\\times10^{-16}$, que es el suelo de la máquina: de ahí ya no baja por mucho que se itere.',
+        retroFallo: 'El primer paso engaña: $0{,}13 / 3{,}35\\times10^{-3} \\approx 39$, y eso no es el ritmo del algoritmo sino lo que cuesta salir de una tabla de partida cualquiera. El ritmo propio aparece en la segunda iteración y ya no se mueve: 738, 738, 738.'
       },
       {
         tipo: 'grafico',

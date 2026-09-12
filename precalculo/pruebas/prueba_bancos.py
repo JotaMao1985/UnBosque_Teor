@@ -137,7 +137,13 @@ def revisa(p, ids_modulo):
     # Con `barajaEstable` en la plantilla y los ocho capítulos, una retro que
     # nombra posiciones no es un detalle de estilo: señala una opción que ya no
     # está donde dice. Es fallo, no aviso.
-    if baraja(p["banco"]) and nombra_posiciones(p) \
+    #
+    # Pero solo donde hay opciones que barajar. Un `numerica` o un `texto` no
+    # tiene ninguna, así que su «la segunda iteración» o su «la primera unidad»
+    # no pueden apuntar a un botón movido: nombran algo del problema. Antes esos
+    # ítems caían aquí y se apagaban a mano en POSICIONALES_REVISADAS, que es el
+    # sitio donde no deben acumularse falsos positivos.
+    if p["opciones"] and baraja(p["banco"]) and nombra_posiciones(p) \
             and (p["banco"], p["i"]) not in POSICIONALES_REVISADAS:
         f.append(f"{d}: la retroalimentación nombra posiciones y la página baraja"
                  f" — señalaría una opción que no está ahí")
@@ -156,9 +162,12 @@ ORDINAL = re.compile(
 # opciones y por eso sobreviven al barajado. Se listan una a una, con lo que
 # nombran, porque una lista de excepciones sin motivo se convierte en el sitio
 # donde se esconden los defectos de verdad.
+#
+# Solo entran ítems CON opciones: desde el 2026-09-12 los que no tienen ninguna
+# no llegan a la comprobación, y por eso salió de aquí `cap5[3]` («la primera
+# unidad del conglomerado»), que era un `numerica` sin un solo botón que mover.
 POSICIONALES_REVISADAS = {
     ("cap3", 8): "«hasta la última cifra» — un dígito",
-    ("cap5", 3): "«la primera unidad del conglomerado» — una unidad",
     ("cap5", 6): "«la PRIMERA etapa» — una etapa del diseño",
     ("cap6", 8): "«PPT en la primera etapa» — una etapa",
     ("cap7", 1): "«la primera comprobación que se hace» — un hábito",

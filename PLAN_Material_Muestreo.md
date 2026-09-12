@@ -3253,3 +3253,62 @@ real **de su propio bloque**. Dos pestañas pueden por tanto contradecirse y pas
 verdaderas, lo falso es la etiqueta que las presenta como la misma cosa. Ese paralelismo entre pestañas solo
 se ha auditado a mano, y solo en el capítulo 1 y ahora aquí. Queda como candidato a herramienta: comparar
 los nombres de campo de los bloques R y Python que comparten una misma `code-tabs`.
+
+---
+
+### T7.21 — Los dos fallos mecánicos de los bancos, y el falso positivo que los acompañaba (2026-09-12)
+
+Javier pidió cerrar los dos fallos que `prueba_bancos.py` llevaba tiempo señalando. Eran de naturaleza
+distinta: uno era un ítem equivocado, el otro un hueco de accesibilidad.
+
+*(Nota de orden: la otra sesión insertó su T7.20 delante de la T7.19 de esta, así que en el archivo las
+dos últimas etiquetas van al revés. Se deja como está para no tocar texto ajeno.)*
+
+**`cap7[6]` — la tolerancia ancha tapaba un ítem sencillamente mal.** Preguntaba «¿por qué factor se divide
+el error en cada paso?» del IPFP, daba por buena la respuesta **39** y aceptaba cualquier cosa entre 14 y 64.
+La traza real del módulo 6 es `1.30e-01 3.35e-03 4.54e-06 6.15e-09 8.33e-12 1.12e-14`, y sus cocientes son
+**38,78 · 738,36 · 738,30 · 738,31 · 746,82**. Es decir: 39 es el primer paso, el transitorio de salir de
+una tabla de partida cualquiera, y el ritmo propio del algoritmo es **738**, constante. De ahí salían cuatro
+errores encadenados:
+
+- la respuesta correcta no era la que el ítem pedía;
+- la `pista` mandaba calcular `3,35e−3 / 4,54e−6`, que da 738 y **la tolerancia rechazaba**;
+- el `retroAcierto` decía «del orden de 40 por iteración: es convergencia geométrica», dos afirmaciones que
+  no encajan entre sí;
+- y añadía que «8 iteraciones llevan el error a $10^{-16}$». Ejecutado con nueve iteraciones, el error toca
+  el suelo de la máquina, $2{,}01\times10^{-16}$, en la **sexta**, y ahí se queda: iterar más no baja nada.
+  El `retroFallo`, por su parte, decía que «el ritmo se acelera», y no se acelera: se estabiliza.
+
+El ítem se reescribió entero: enuncia la serie, avisa de que el cociente es constante **de la segunda
+iteración en adelante**, pide ese cociente (`respuesta: 738`, `tolerancia: 25`, un 3,4 %), y las dos
+retroalimentaciones explican por qué 39 es la trampa y qué significa que el ritmo sea constante.
+
+**`cap8[9]` — un gráfico sin descripción.** El ítem de cobertura del módulo 6 pintaba tres barras y no tenía
+`descripcionGrafico`, que es lo que la plantilla pone como `aria-label` del `canvas` y lo que el exportador
+de Brightspace usa de `alt`. Como la pregunta exige comparar las tres barras entre sí y con la recta del
+95 %, quien no ve el lienzo no tenía nada. Se escribió la descripción con las tres alturas (0,9265 · 0,8715 ·
+0,9115), el rango del eje y la recta rotulada, sin adelantar la lectura, que es lo que el ítem evalúa.
+
+**Y un tercer arreglo que apareció al arreglar el primero: un falso positivo de la propia prueba.** Al
+reescribir `cap7[6]`, su retro pasó a decir «aparece en la segunda iteración» y la prueba lo marcó por
+«nombra posiciones y la página baraja». Pero `cap7[6]` es `numerica`: **no tiene ni una opción que barajar**,
+así que un ordinal suyo no puede apuntar a un botón movido. La comprobación se restringió a los ítems que
+sí tienen opciones. Con eso sobraba también la excepción de `cap5[3]` —«la primera unidad del
+conglomerado», otro `numerica`—, que se quitó de `POSICIONALES_REVISADAS` con su motivo escrito. Auditado:
+en todo el material solo esos dos ítems sin opciones casan con el patrón, y ninguno habla de opciones.
+
+**Verificado.** Reensamblados los nueve, byte a byte en la segunda pasada, y solo cambian el 7 y el 8 ·
+`prueba_bancos.py` **sin fallos mecánicos** por primera vez, también con `--corte1` · barajado 4 de 4 ·
+Brightspace sin fallos de contenido · bloques **224 de 224** (cap. 7) y **458 de 458** (cap. 8) · prosa
+**0 sin respaldo** en las nueve páginas. En el navegador: en el capítulo 7 la respuesta 738 se acepta con su
+retro nueva y el 39 se rechaza con una pista que ahora **lleva a la respuesta correcta**; en el capítulo 8 la
+descripción llega al `canvas` como `aria-label` con `role="img"`; 144 fórmulas de KaTeX y 0 errores en los
+once módulos del 8, consola limpia en los dos.
+
+**Tres entradas nuevas en `cifras_prosa.json`** (4,54 · 6,15 · 8,33): son las mantisas de la serie del IPFP
+que el enunciado ahora cita, hermanas de la de 3,35 que ya estaba, y el verificador no las deriva solo
+porque en la salida real viven dentro de `4.54e-06`.
+
+**Pendiente que salió de paso.** `ensamblado/modulos/taller1/simulacro.js` tiene una `descripcionGrafico`
+con la cola rota: «… y hay que contarlos aparecen destacados». No es del material de los capítulos y no se
+tocó aquí.
