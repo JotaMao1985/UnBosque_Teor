@@ -8732,6 +8732,7 @@ round(c(ajustado = as.numeric(svymean(~assist, disa)),
       {
         tipo: 'grafico',
         modulo: 6,
+        descripcionGrafico: 'Tres barras con la cobertura empírica del intervalo nominal del 95 %, sobre un eje que va de 0,80 a 1, y una línea horizontal en 0,95 rotulada «nominal 95 %». «Datos completos» llega a 0,9265 y es la más alta de las tres, aunque se queda por debajo de la línea; «imputación única» es la más corta, 0,8715; «imputación múltiple» sube a 0,9115, entre las otras dos y todavía por debajo de la línea.',
         pregunta: 'El gráfico muestra la cobertura empírica del intervalo nominal del 95 % en tres escenarios, con 2 000 réplicas y un error de Monte Carlo de ±0,49 puntos. ¿Cuál es la lectura correcta?',
         pista: 'La referencia no es el 95 %: es la barra de datos completos.',
         dibujar: function (canvas) {
