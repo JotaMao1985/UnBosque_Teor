@@ -3104,7 +3104,15 @@ región se publica como **0,82** en tres módulos y **0,7512** en el octavo, par
 precisamente el deff y no las reconcilió. La lección: **la lente de orden no sustituye a la de cifras**,
 y conviene pasar las dos sobre el mismo capítulo antes de darlo por revisado.
 
-**Pendiente:** el visto bueno de Javier para publicar. Sigue sin hacerse la frase del capítulo 7 que
+**Publicado el 2026-09-12** en `gh-pages` `bfa8369`. No lo publicó esta sesión: cuando Javier
+dio el visto bueno, otra sesión ya lo había sacado junto con su propio trabajo (lo registra T7.24), y
+`sitio/` coincidía con lo publicado. Comprobado igualmente sobre la página en vivo: es **byte a byte** la de
+`HEAD` (`cmp`), con la caja $\psi$ frente a $\pi$, el puntero al módulo 3 del capítulo 2 y el estrato
+censado en su sitio. **Lección de convivencia:** con varias sesiones publicando, «pendiente de publicar» en
+una entrada no significa «sin publicar» en el repositorio; antes de publicar hay que mirar `sitio/` contra
+`gh-pages`, no la propia nota.
+
+**Pendiente:** sigue sin hacerse la frase del capítulo 7 que
 apuntó T7.13 —«el efecto de diseño ya apareció en los capítulos 4 y 5»—, que ahora debería nombrar
 también al 2.
 
