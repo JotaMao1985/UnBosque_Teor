@@ -424,20 +424,37 @@
           const seg = (filtro, etiqueta, color) => {
             const datos = [];
             iv.forEach((d, i) => {
-              if (filtro(d)) datos.push({ x: i + 1, y: d.lo }, { x: i + 1, y: d.hi }, null);
+              // El hueco que separa un segmento del siguiente tiene que llevar su
+              // x: con la escala lineal, Chart.js ordena los puntos por `.x` antes
+              // de dibujar, y un `null` desnudo no la tiene. Ponerlo rompia el
+              // grafico entero con "Cannot read properties of null (reading 'x')".
+              if (filtro(d)) datos.push({ x: i + 1, y: d.lo }, { x: i + 1, y: d.hi },
+                                        { x: i + 1, y: null });
             });
             return {
               type: 'line', label: etiqueta, data: datos, spanGaps: false,
               borderColor: color, borderWidth: 1.6, pointRadius: 0, fill: false
             };
           };
-          return crearGraficoXY(canvas, [
+          const g = crearGraficoXY(canvas, [
             seg(d => d.cubre, 'Cubren la media', '#012820'),
             seg(d => !d.cubre, 'No la cubren', '#FF6600'),
             { type: 'line', label: 'Media poblacional', borderColor: '#6B7280',
               borderDash: [6, 4], borderWidth: 2, pointRadius: 0, fill: false,
               data: [{ x: 1, y: COB.mediaPoblacional }, { x: COB.reps, y: COB.mediaPoblacional }] }
           ], { tituloX: 'Réplica', tituloY: 'Estatura media (cm)', xMin: 0, xMax: COB.reps + 1 });
+          // El eje y de crearGraficoXY arranca en cero, y aqui eso aplastaba los
+          // cien intervalos —todos entre 162 y 175 cm— en una franja de nueve
+          // pixeles: imposible contar cuales no tocan la recta, que es justo lo
+          // que la pregunta pide. Se encuadra en el entorno de los datos.
+          const lo = Math.min(...iv.map(d => d.lo));
+          const hi = Math.max(...iv.map(d => d.hi));
+          const margen = (hi - lo) * 0.06;
+          g.options.scales.y.beginAtZero = false;
+          g.options.scales.y.min = lo - margen;
+          g.options.scales.y.max = hi + margen;
+          g.update('none');
+          return g;
         },
         opciones: [
           { texto: 'Que el 95 % es una propiedad del procedimiento, no de un intervalo suelto.', correcta: true,

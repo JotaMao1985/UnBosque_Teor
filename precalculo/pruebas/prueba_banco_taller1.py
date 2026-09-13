@@ -31,6 +31,9 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _bancos as B
+
 RAIZ = Path(__file__).resolve().parent.parent.parent
 BANCO = RAIZ / "ensamblado" / "modulos" / "taller1" / "simulacro.js"
 DATOS = RAIZ / "precalculo" / "salidas" / "taller1_recurso_datos.json"
@@ -57,24 +60,18 @@ RESPUESTAS = {
 
 # El arnés: carga el JSON, define los ayudantes de gráfico como dobles que
 # registran lo que se les pasa, ejecuta el banco y vuelca todo como JSON.
+# El doble es CHART.JS, no los ayudantes — la misma decisión que `_bancos.py`
+# explica en su cabecera. Doblar `crearGraficoXY` por un muñeco que devuelve
+# `{destroy(){}}` rompe todo `dibujar` que post-procese el objeto devuelto
+# (`g.options.scales.y.min`, `g.data.datasets[0].backgroundColor`,
+# `g.update('none')`), y los declara rotos estando sanos. Pasó el 2026-09-13 con
+# el gráfico de los cien intervalos. Con el doble de Chart, los ayudantes reales
+# del capítulo 1 corren de verdad y el objeto devuelto tiene `data` y `options`.
 ARNES = r"""
 const fs = require('fs');
 const DATOS_TALLER1 = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const AUTOEVALUACIONES = {};
-const registro = [];
-
-// Dobles de los ayudantes del motor. No dibujan: anotan los puntos que reciben,
-// que es lo que hay que poder revisar sin navegador.
-function crearGraficoXY(canvas, datasets, opciones = {}) {
-  registro.push({ datasets, opciones });
-  return { destroy() {} };
-}
-function serieHistograma(hist, etiqueta, color, escala = 1) {
-  return { label: etiqueta, data: hist.centros.map((c, i) => ({ x: c * escala, y: hist.conteo[i] })) };
-}
-function serieVertical(x, alto, etiqueta, color) {
-  return { label: etiqueta, data: [{ x, y: 0 }, { x, y: alto }] };
-}
+AYUDANTES_AQUI
 
 BANCO_AQUI
 
@@ -118,7 +115,9 @@ def busca(datos, ruta):
 
 def carga_banco():
     """Ejecuta el banco con node y devuelve los 30 ítems ya evaluados."""
-    guion = ARNES.replace("BANCO_AQUI", BANCO.read_text(encoding="utf-8"))
+    guion = (ARNES
+             .replace("AYUDANTES_AQUI", B.paleta() + "\n" + B.ayudantes(B.CAPITULOS["cap1"]))
+             .replace("BANCO_AQUI", BANCO.read_text(encoding="utf-8")))
     with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
         f.write(guion)
         ruta = f.name
@@ -220,17 +219,40 @@ def prueba_graficos(items, _datos):
         llamadas = p.get("grafico") or []
         if len(llamadas) != 1:
             raise Fallo(f"ítem {p['i']}: `dibujar` hizo {len(llamadas)} gráficos, debe hacer 1")
-        for ds in llamadas[0]["datasets"]:
+        for ds in llamadas[0]["data"]["datasets"]:
             puntos = [q for q in ds["data"] if q is not None]
             if not puntos:
                 raise Fallo(f"ítem {p['i']}, serie «{ds.get('label')}»: sin un solo punto")
+            # El hueco que separa un segmento del siguiente se escribe
+            # `{x, y: null}`, nunca `null` a secas: en una serie de puntos {x, y}
+            # sobre escala lineal, Chart.js ordena por `.x` antes de dibujar y un
+            # `null` desnudo no la tiene — revienta el gráfico ENTERO con
+            # "Cannot read properties of null (reading 'x')" y deja el lienzo en
+            # blanco. Pasó con los cien intervalos del módulo 9 y nadie lo vio
+            # porque la prueba filtraba los nulos antes de mirarlos.
+            if any(isinstance(q, dict) and "x" in q for q in puntos) \
+                    and any(q is None for q in ds["data"]):
+                raise Fallo(
+                    f"ítem {p['i']}, serie «{ds.get('label')}»: un `null` desnudo entre puntos "
+                    "{x, y}. Con la escala lineal eso rompe el gráfico entero: "
+                    "escribe el hueco como {x, y: null}"
+                )
             for q in puntos:
-                if not isinstance(q.get("x"), (int, float)) or not isinstance(q.get("y"), (int, float)):
+                if not isinstance(q.get("x"), (int, float)):
+                    raise Fallo(
+                        f"ítem {p['i']}, serie «{ds.get('label')}»: punto sin x numérica {q}. "
+                        "Si es un hueco entre segmentos, escríbelo {x, y: null}, no `null` a secas"
+                    )
+                if q.get("y") is None:
+                    continue
+                if not isinstance(q.get("y"), (int, float)):
                     raise Fallo(
                         f"ítem {p['i']}, serie «{ds.get('label')}»: punto no numérico {q}. "
                         "Casi seguro es un data.frame de R leído como objeto de columnas: "
                         "jsonlite los escribe como array de FILAS"
                     )
+            if all(q.get("y") is None for q in puntos):
+                raise Fallo(f"ítem {p['i']}, serie «{ds.get('label')}»: solo huecos, ningún valor")
         if not p.get("descripcionGrafico"):
             raise Fallo(f"ítem {p['i']}: gráfico sin descripcionGrafico (accesibilidad)")
 

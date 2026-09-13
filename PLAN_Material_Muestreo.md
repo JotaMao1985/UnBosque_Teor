@@ -3435,3 +3435,62 @@ lo delató es medir el `body`: si mide cero, ninguna medida de layout de esa pas
 `resize_window` a 1280 × 900 el `body` pasó a 1270 y nueve de los diez gráficos resultaron correctos. La
 lección: antes de declarar un defecto de dibujo, comprobar que la página tiene ancho, y contrastar contra un
 elemento que se sepa sano.
+
+---
+
+### T7.25 — El gráfico del módulo 9 del preparcial: dos defectos, y la prueba que los dejaba pasar (2026-09-13)
+
+El hallazgo de T7.24, arreglado. Resultó tener **dos** defectos encadenados, y descubrir el segundo solo fue
+posible después de arreglar el primero.
+
+**Defecto 1: un `null` desnudo reventaba el gráfico entero.** La serie de los cien intervalos separa un
+segmento del siguiente empujando un hueco en los datos, y lo escribía como `null` a secas entre puntos
+`{x, y}`. Con la escala lineal, Chart.js ordena los puntos por `.x` antes de dibujar, y un `null` no la
+tiene: `Cannot read properties of null (reading 'x')`, lienzo en blanco. Reproducido en aislamiento sobre
+la propia página, con las dos variantes una al lado de la otra:
+
+| hueco | resultado |
+|---|---|
+| `null` | lanza `Cannot read properties of null (reading 'x')`, no pinta |
+| `{ x: i + 1, y: null }` | dibuja, y los segmentos siguen separados |
+
+Es el **único** sitio de todo el material que empujaba un `null` desnudo, y el único que usa `spanGaps`.
+
+**Defecto 2, escondido debajo: el eje aplastaba el gráfico hasta hacerlo inútil.** Con el primero arreglado
+el gráfico ya se dibujaba, pero `crearGraficoXY` pone `beginAtZero: true` en el eje y, y aquí los cien
+intervalos viven entre **162,42 y 174,67 cm**: el eje iba de 0 a 180 y los datos ocupaban **9 píxeles de
+139**. La pregunta pide contar cuántos segmentos no tocan la recta, y en 9 píxeles no se cuenta nada. Se
+encuadra ahora en el entorno de los datos, con un 6 % de margen, calculado de los propios intervalos para
+que siga siendo cierto si cambia el precálculo. Medido antes y después: los tres segmentos naranjas pasan
+de **8–9 px** de alto a **102–115 px**, y los píxeles útiles del eje de **9** a **124**.
+
+Comprobado que el arreglo no arrastra a nadie: de los diez gráficos del preparcial, **solo este** tenía el
+problema del encuadre —los otros nueve grafican magnitudes que arrancan cerca de cero, así que
+`beginAtZero` no les cuesta nada—. Por eso el arreglo es local al ítem y no toca la plantilla.
+
+**Defecto 3, en la propia prueba: `prueba_banco_taller1.py` no podía ver ninguno de los dos.** Su arnés
+doblaba los **ayudantes** (`crearGraficoXY` devolvía `{destroy(){}}`), que es exactamente el diseño que
+`_bancos.py` abandonó y documentó en su cabecera: todo `dibujar` que post-procese el objeto devuelto se
+declara roto estando sano. Al añadir el encuadre, el arnés murió con
+`Cannot read properties of undefined (reading 'scales')`. Se alineó con `_bancos.py`: **el doble es
+Chart.js**, y los ayudantes reales del capítulo 1 corren de verdad. Y como `prueba_graficos` filtraba los
+nulos *antes* de mirarlos, el `null` desnudo le pasaba por delante sin verlo; ahora hay una regla explícita:
+
+> en una serie de puntos `{x, y}`, un `null` desnudo es fallo; el hueco se escribe `{x, y: null}`.
+
+**Comprobada la prueba contra el defecto que debía cazar.** Reintroducido el `null` desnudo, la prueba
+falla con «ítem 20, serie «Cubren la media»: un `null` desnudo entre puntos {x, y}» y código de salida 1;
+restaurado el arreglo, 5 de 5. Una prueba nueva que no se ve fallar no sirve de nada.
+
+**Verificado.** Reensamblados los nueve, byte a byte en la segunda pasada y sin deriva · taller1 **5 de 5** ·
+bancos sin fallos mecánicos, también con `--corte1` · barajado 4 de 4 · Brightspace sin fallos ·
+`node --check` sobre `simulacro.js` · bloques y prosa **0 sin respaldo** en las nueve páginas. En el
+navegador, con viewport de 1280 × 900: los **diez** gráficos del preparcial se dibujan, **cero errores de
+consola** en un recorrido de los trece módulos, y el del módulo 9 muestra tres segmentos naranjas separados
+—réplicas 8 y 44 por encima de la media, 29 por debajo—, que es exactamente lo que dice su
+`descripcionGrafico`.
+
+**Pendiente que salió de paso.** El preparcial tiene **dos cifras de prosa sin respaldo** —«la media sale
+2,3» y «6 000 personas abordadas»—, las dos retóricas dentro de enunciados. Vienen de antes de hoy
+(comprobado sobre la página de `39188c8`) y no se tocaron: entrar en `cifras_prosa.json` es un acto de
+revisión, y esta tarea no era esa.
