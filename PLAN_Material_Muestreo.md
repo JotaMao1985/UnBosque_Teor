@@ -3494,3 +3494,10 @@ consola** en un recorrido de los trece módulos, y el del módulo 9 muestra tres
 2,3» y «6 000 personas abordadas»—, las dos retóricas dentro de enunciados. Vienen de antes de hoy
 (comprobado sobre la página de `39188c8`) y no se tocaron: entrar en `cifras_prosa.json` es un acto de
 revisión, y esta tarea no era esa.
+
+**Publicado el 2026-09-13** con el visto bueno de Javier: `gh-pages` de `72021ad` a **`ea90cba`**, que es
+exactamente `sitio/` de `7666c9d`, y `gh-pages` vuelve a coincidir con `main` sin una diferencia. Las diez
+páginas servidas son byte a byte las de `HEAD`. Comprobado sobre la página en vivo, con viewport de
+1280 × 900: los **diez** gráficos se dibujan, **cero errores de consola** en los trece módulos, y el del
+módulo 9 tiene el eje en [161,7 · 175,4] con sus tres segmentos naranjas de 115, 102 y 115 píxeles de alto.
+Se cuentan a ojo, que es lo que la pregunta pide.
