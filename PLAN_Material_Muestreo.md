@@ -3564,3 +3564,41 @@ las ocho páginas del material pasaron `verifica_bloques.py --todos --prosa` con
 de bloques y **632 respaldadas · 0 sin respaldo**; `cuenta_sitio.py` da **9 páginas · 3 307 KB**.
 Comprobado sobre la página en vivo: es **byte a byte** la de `65cf043` (`cmp`, a los ~20 s del push), las
 dos frases nuevas están, la vieja no aparece, y el build de Pages es `built` en **`4bd7065`**.
+
+### T7.27 — La frase del M10 del capítulo 4 sobre qué varianza calcula `survey` (2026-09-14)
+
+> **Esta entrada la escribe la sesión del Taller 2 del Corte 2**, que es donde nació el hallazgo
+> (R16 de `PLAN_Taller_Corte2.md`). Queda aquí porque toca el material y porque T7.26 dejó escrito
+> que «las modificaciones sin commitear del capítulo 4 se quedaron en el árbol de trabajo»: eran
+> estas, y ya no están sin commitear.
+
+**Lo que decía el módulo 10.** En la caja «Dos errores estándar para el mismo estimador»:
+`survey` reporta 17 513 y la fórmula condicional del texto da 17 635, «y `survey` usa una
+linealización que se acerca a la **segunda**» —la incondicional—.
+
+**Es al revés, y se comprobó ejecutándolo.** `survey` lineariza los residuos con los $n_h$ que
+**salieron**, así que su cifra es una forma de la **condicional**; la incondicional añade además un
+término de segundo orden. Sobre una muestra de 150 con cuatro postestratos: `survey` 181 949,
+condicional 182 852, incondicional 191 128 —a medio punto porcentual de la primera y a cinco de la
+segunda—, coherente con el propio ejemplo del módulo, donde las dos cifras se llevan 0,7 %.
+
+**La frase, ahora.** «…y `survey` lineariza los residuos con los $n_h$ que salieron, de modo que su
+cifra es una forma de la *primera*, no de la segunda, que además añade un término de segundo
+orden.» Al lado queda un **comentario HTML** que registra por qué, para que no vuelva.
+
+**Lo que NO se tocó, y es deliberado:** la etiqueta que el material le da a su propia fórmula. No se
+pudo verificar con qué la calculó, y con estratos grandes las dos formas quedan a menos de un punto.
+Lohr 2.ª ed. §4.7 no zanja la etiqueta: solo trae la aproximación de la asignación proporcional.
+
+**Por qué importaba tener fecha.** La **lectura señalada** del Taller 2 —que sale el viernes 25—
+manda a este módulo para los ítems E1 y E2, y la regla de forma 6 de ese taller depende de esto.
+Un estudiante que leyera lo publicado leería exactamente lo que su taller contradice.
+
+**Verificado antes de publicar:** `ensambla_cap4.py` reproduce la página **byte a byte** (mismo md5
+antes y después de reensamblar, así que la corrección no se pierde en el próximo ensamblado);
+`verifica_bloques.py --prosa` sobre el capítulo 4 da **246 de 246** cifras de bloques y **68 de
+prosa, 0 sin respaldo**; `cuenta_sitio.py` **9 páginas · 3 307 KB**; permisos `644`.
+
+**Publicado el 2026-09-14** con el visto bueno de Javier: `main` de `4507a8b` a **`8a5cb04`** y
+`gh-pages` de `4bd7065` a **`4e91972`**. Comprobado en vivo: la página servida por Pages ya trae la
+frase nueva —`curl` con cache-buster hasta verla— y devuelve 200.
