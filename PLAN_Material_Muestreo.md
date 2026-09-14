@@ -3555,5 +3555,12 @@ es hacerlo. Y al ir a arreglar la frase apuntada apareció, en el mismo módulo,
 lista de lecturas: cuando se corrige una referencia conviene mirar **todas** las del módulo, no solo la
 señalada.
 
-**Pendiente:** el visto bueno de Javier para publicar. Antes del push hay que comparar `sitio/` contra
-`origin/gh-pages` —la lección de T7.20— y no fiarse de esta nota.
+**Publicado el 2026-09-13** con el visto bueno de Javier: `gh-pages` de `ea90cba` a **`4bd7065`**, que es
+exactamente `sitio/` de `65cf043` —el árbol publicado y `HEAD:sitio` no tienen una sola diferencia—. La
+guarda de antes del push encontró `HEAD`, `origin/main` y el commit aprobado en el mismo sitio, así que
+bastó el `subtree push` del README y nada ajeno viajó: las modificaciones sin commitear del capítulo 4 se
+quedaron en el árbol de trabajo, porque `subtree` publica historia, no árbol de trabajo. Antes del push,
+las ocho páginas del material pasaron `verifica_bloques.py --todos --prosa` con **2 359 de 2 359** cifras
+de bloques y **632 respaldadas · 0 sin respaldo**; `cuenta_sitio.py` da **9 páginas · 3 307 KB**.
+Comprobado sobre la página en vivo: es **byte a byte** la de `65cf043` (`cmp`, a los ~20 s del push), las
+dos frases nuevas están, la vieja no aparece, y el build de Pages es `built` en **`4bd7065`**.
