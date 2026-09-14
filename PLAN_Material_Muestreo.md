@@ -2883,7 +2883,7 @@ rastro del «~301». El primer intento de comprobación pilló el build de Pages
 es el estado normal durante el primer medio minuto; se repitió hasta que el `cmp` cuadró.
 
 **Pendiente:** sigue sin hacerse la frase del capítulo 7 que apuntó T7.13 —«el efecto de diseño ya
-apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2.
+apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2. **Hecha en T7.26.**
 
 ### T7.17 — Auditoría de orden del capítulo 5 (2026-09-12)
 
@@ -2948,7 +2948,7 @@ capítulo servido es **byte a byte** el de `b233220` (`cmp` contra `HEAD:sitio`)
 renombrado (`K <- nrow(agpop)`, sin rastro del `NI` viejo) y la MSW remitiendo a la SSW del capítulo 4.
 
 **Pendiente:** sigue sin hacerse la frase del capítulo 7 que apuntó T7.13 —«el efecto de diseño ya
-apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2.
+apareció en los capítulos 4 y 5»—, que ahora debería nombrar también al 2. **Hecha en T7.26.**
 
 ---
 
@@ -3114,7 +3114,7 @@ una entrada no significa «sin publicar» en el repositorio; antes de publicar h
 
 **Pendiente:** sigue sin hacerse la frase del capítulo 7 que
 apuntó T7.13 —«el efecto de diseño ya apareció en los capítulos 4 y 5»—, que ahora debería nombrar
-también al 2.
+también al 2. **Hecha en T7.26.**
 
 ---
 
@@ -3509,3 +3509,51 @@ páginas servidas son byte a byte las de `HEAD`. Comprobado sobre la página en 
 1280 × 900: los **diez** gráficos se dibujan, **cero errores de consola** en los trece módulos, y el del
 módulo 9 tiene el eje en [161,7 · 175,4] con sus tres segmentos naranjas de 115, 102 y 115 píxeles de alto.
 Se cuentan a ojo, que es lo que la pregunta pide.
+
+---
+
+### T7.26 — La frase del capítulo 7 que T7.13 dejó apuntada (2026-09-13)
+
+Javier pidió aplicar el encargo que T7.13 dejó escrito el 2026-09-11 y que T7.16, T7.17 y T7.20
+arrastraron sin hacer: el módulo 3 del capítulo 7 abría con «el **efecto de diseño** ya apareció en los
+capítulos 4 y 5 midiendo una cosa cada vez». Desde T7.13 el deff también aparece —y por primera vez se
+**define**— en el capítulo 2, en la **Definición 2.10**. La frase mandaba al lector a buscar la vara donde
+solo se usa, y callaba el sitio donde está construida.
+
+**La frase, ahora.** «El **efecto de diseño** no es nuevo: el capítulo 2 lo definió —Definición 2.10, la
+varianza del diseño dividida entre la del MAS del mismo $n$— y los capítulos 4 y 5 lo usaron midiendo una
+cosa cada vez: lo que gana estratificar, lo que cuesta conglomerar. Aquí mide el diseño entero: […] con
+los tres ingredientes actuando a la vez.» Los dos usos quedan nombrados por lo que miden, y el cierre
+enlaza con el objetivo del módulo, que es descomponer el deff en sus tres fuentes.
+
+**Y el mismo defecto, dos párrafos más abajo.** El «Para ampliar este módulo» remitía a «cap. 5, módulo 4
+(ICC y deff) y cap. 4, módulo 3 (la ganancia del estratificado)». El capítulo 2 no estaba, y el módulo 3
+del capítulo 4 es *Pesos y estimación*: el deff del estratificado vive en su módulo 8, que se titula
+justamente «El efecto de diseño». Quien seguía el puntero aterrizaba donde el deff no se nombra. Ahora la
+lista va en orden de capítulo y cada entrada apunta al módulo donde el deff es el asunto: cap. 2, módulo 9
+(Definición 2.10), cap. 4, módulo 8, cap. 5, módulo 4.
+
+**Una observación de notación, sin tocar nada.** El capítulo 2 escribe **DEFF** y los capítulos 4, 5 y 7
+escriben **deff**; la frase nueva cruza los dos sin uniformarlos, igual que ya hacía el módulo 8 del
+capítulo 4 («el **deff** de la Definición 2.10»). Unificar la grafía es una decisión de estilo de todo el
+material, no de esta tarea.
+
+**Verificado.** Ni una cifra nueva: `verifica_bloques.py --prosa` sobre el capítulo da **224 de 224**
+cifras de bloques y **49 respaldadas · 0 sin respaldo**. `ensambla_cap7.py` reproduce el archivo **byte a
+byte** en la segunda pasada. En el navegador, sobre el HTML compilado: el párrafo nuevo sale entero, su
+`$n$` renderiza como KaTeX —**0 dólares sueltos** en el texto—, la fórmula del deff y el tamaño efectivo
+sigue dibujándose y hay **0 `.katex-error`** en la página. La lista de referencias muestra las tres
+entradas nuevas.
+
+**Convivencia.** Otra sesión tenía `ensamblado/modulos/cap4/modulos_10_12.html` y su HTML modificados sin
+commitear. No se tocaron: al commitear se añadieron solo las dos rutas del capítulo 7 y este plan.
+
+**Lo que enseña.** Un puntero hacia atrás envejece cuando se añade material *antes* de él: T7.13 creó la
+Definición 2.10 en el capítulo 2 y con ello dejó desactualizada una frase del 7 que nadie había tocado.
+El encargo quedó escrito, se repitió en tres entradas y sobrevivió cinco tareas sin hacerse — anotarlo no
+es hacerlo. Y al ir a arreglar la frase apuntada apareció, en el mismo módulo, el mismo defecto en la
+lista de lecturas: cuando se corrige una referencia conviene mirar **todas** las del módulo, no solo la
+señalada.
+
+**Pendiente:** el visto bueno de Javier para publicar. Antes del push hay que comparar `sitio/` contra
+`origin/gh-pages` —la lección de T7.20— y no fiarse de esta nota.
