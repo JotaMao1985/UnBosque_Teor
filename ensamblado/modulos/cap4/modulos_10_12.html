@@ -75,12 +75,19 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <!-- Corregido el 2026-09-13 (R16 del Taller 2): esta frase decía que survey «usa una
+           linealización que se acerca a la» incondicional. Es al revés: survey pondera los residuos
+           con los n_h observados, que es la forma condicional. Comprobado sobre una muestra de 150
+           con cuatro postestratos —survey queda a medio punto porcentual de la condicional y a
+           cinco de la incondicional— y es coherente con el propio ejemplo de aquí arriba, donde las
+           dos cifras se llevan 0,7 %. La regla de forma 6 del Taller 2 depende de esto. -->
       <div class="warning">
         <p><strong>Dos errores estándar para el mismo estimador.</strong> <code>survey</code> reporta 17 513 y la
           fórmula condicional del texto da 17 635. No es un bug de nadie: la varianza se puede calcular
           <em>condicional</em> a los $n_h$ observados (la recomendación clásica de Lohr) o <em>incondicional</em>,
-          promediando sobre lo que pudo salir, y <code>survey</code> usa una linealización que se acerca a la
-          segunda. Con $n_h$ grandes la diferencia es cosmética (aquí, 0,7 %); con celdas chicas puede no serlo, y
+          promediando sobre lo que pudo salir, y <code>survey</code> lineariza los residuos con los $n_h$ que
+          salieron, de modo que su cifra es una forma de la <em>primera</em>, no de la segunda, que
+          además añade un término de segundo orden. Con $n_h$ grandes la diferencia es cosmética (aquí, 0,7 %); con celdas chicas puede no serlo, y
           el capítulo 7 vuelve sobre esto. El protocolo del material —toda varianza por dos vías— existe para que
           estas discrepancias se encuentren y se expliquen, no para esconderlas.</p>
       </div>
