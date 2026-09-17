@@ -3827,7 +3827,7 @@ respaldo** (eran 68). La primera pasada dejó una sin respaldo: la prosa decía 
 salida es −515 394,3; el verificador captura el signo, y se reescribió con él. En el navegador, M4, M6 y
 M7: **0 `.katex-error`**, **0 `$` sueltos** fuera del código y consola limpia.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con las otras dos tareas de la fase 1: ver el final de T7.32.
 
 ### T7.31 — El número de estratos y el R² que no era el de la variable (cap. 4, 2026-09-17)
 
@@ -3870,7 +3870,7 @@ que la ganancia se agotara pronto, y eso a su vez explicaba una supuesta prácti
 reales. **Una cifra mal etiquetada no se queda quieta: fabrica la teoría que la justifica.** El
 barrido que la desmentía llevaba publicado en el JSON del propio capítulo desde julio.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con las otras dos tareas de la fase 1: ver el final de T7.32.
 
 ### T7.32 — Las once citas a Lohr del capítulo 4, una a una (2026-09-17)
 
@@ -3911,7 +3911,30 @@ veces: sale la pista y después la retro nueva completa, con 0 `.katex-error` y 
 fallaban eran las de las secciones que **cambiaron de sitio entre ediciones**, que es justo donde
 mirar cuando un material cita dos numeraciones a la vez.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier: la fase 1 entera (T7.30, T7.31 y T7.32),
+`main` en **`1428cad`** y `gh-pages` en **`a705523`**. Comprobado sobre lo servido, no sobre el disco:
+la página en vivo es **byte a byte** la de `1428cad` (`cmp` contra `git show`), con la frase «casi
+nunca lo hace peor que el MAS» y sin la vieja, y con las citas §3.6 y §7.4.
+
+**Cómo se publicó, porque no fue el `subtree push` de siempre.** En `main` había, además de la fase 1,
+trabajo de **otras dos sesiones que toca el sitio** y que no tiene visto bueno para publicar: la
+auditoría del capítulo 8 (`ff07796`) y una corrección del capítulo 3 (`7f9da4e`). Un
+`git subtree push` de `HEAD` los habría publicado los dos, más la fase 2 del capítulo 4, que tampoco
+estaba aprobada. Procedimiento usado, que deja publicado **exactamente** lo aprobado:
+
+1. `git worktree add --detach <tmp> 1428cad` — un árbol aparte, para no mover archivos bajo las
+   sesiones que trabajan en el directorio compartido;
+2. en ese árbol, el capítulo 8 se devuelve a la versión **servida** hoy
+   (`git show origin/gh-pages:muestreo/capitulo-8-...`), en un commit auxiliar que **no entra en
+   `main`**;
+3. `git subtree split --prefix sitio HEAD` → `a705523`, comprobado que `d8d7986` es su ancestro
+   (avance rápido) y que su único cambio frente a `gh-pages` es el capítulo 4;
+4. `git push origin a705523:gh-pages`, y el árbol temporal se retira.
+
+Comprobado después: los capítulos 3 y 8 servidos siguen teniendo su tamaño anterior, así que no se
+publicó nada ajeno.
+
+**Pendiente:** publicar la fase 2 (T7.33, T7.34 y T7.35), que sigue en `main` sin subir.
 
 ### T7.33 — Cuánto cuesta de verdad decidir tarde: la prima de la postestratificación (2026-09-17)
 
