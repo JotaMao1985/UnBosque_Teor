@@ -3934,7 +3934,7 @@ estaba aprobada. Procedimiento usado, que deja publicado **exactamente** lo apro
 Comprobado después: los capítulos 3 y 8 servidos siguen teniendo su tamaño anterior, así que no se
 publicó nada ajeno.
 
-**Pendiente:** publicar la fase 2 (T7.33, T7.34 y T7.35), que sigue en `main` sin subir.
+**La fase 2 se publicó el 2026-09-17**: ver el final de T7.37.
 
 ### T7.33 — Cuánto cuesta de verdad decidir tarde: la prima de la postestratificación (2026-09-17)
 
@@ -3973,8 +3973,9 @@ dirección contraria: allí se comparaban un exacto y un estimado; aquí, dos es
 distintos. La regla que sale de las dos: **un efecto se mide sobre la población, o con la misma
 muestra; nunca cruzando muestras.**
 
-**Pendiente:** el visto bueno de Javier para publicar; y la clave E1 (ii) y el mérito de P21 del
-Taller 2, que siguen pidiendo la frase vieja y los decide Javier con esa sesión.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con el resto de la fase 2: ver
+el final de T7.37. **Sigue pendiente** la clave E1 (ii) y el mérito de P21 del Taller 2, que
+siguen pidiendo la frase vieja y los decide Javier con esa sesión.
 
 ### T7.34 — La fórmula que Lohr sí publica para la postestratificación (2026-09-17)
 
@@ -4003,7 +4004,7 @@ y la pista estaba a la vista: el libro publica una cifra para este mismo ejemplo
 tenía. **Cuando la fuente trae el número del caso que uno está usando, calcularlo es la manera más
 barata de comprobar que se la está citando bien.**
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con el resto de la fase 2: ver el final de T7.37.
 
 ---
 
@@ -4097,7 +4098,7 @@ con un argumento medio bueno —el mecanismo era cierto, la conclusión no— y 
 mecanismo sonaba convincente. **Cuando la justificación de una etiqueta es «porque usa X al
 calcular», hay que preguntar qué promedia la fórmula, no qué usa.**
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con el resto de la fase 2: ver el final de T7.37.
 
 ---
 
@@ -4186,4 +4187,12 @@ recetas, y son la misma con distinta información sobre $N_h$. Lo que las cose n
 más, sino **la cifra intermedia que la receta escondía**: en cuanto $\hat N_h$ está impreso al lado
 de $N_h$, el peso deja de ser una fórmula que memorizar y pasa a ser una corrección que se lee.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier: la fase 2 entera (T7.33, T7.34 —la del
+cap. 4—, T7.35 y T7.37), commit `70169c3` de `main` → gh-pages `f122297`. Solo cambió el capítulo 4;
+los capítulos 3 y 8, que `main` lleva tocados por otras sesiones sin aprobación, quedaron en la
+versión servida (comprobado en vivo: sus md5 no se movieron). El procedimiento del árbol aparte de
+T7.32, con un cambio: esta vez el `git subtree split` **no** daba avance rápido, porque el commit
+auxiliar de la publicación anterior no es ancestro de `main`. Se conservó su árbol exacto y se
+colgó de `a705523` con `git commit-tree`, así que gh-pages avanzó en línea recta sin reescribir
+historia. Verificado en vivo: el capítulo 4 servido es byte a byte el del commit aprobado
+(md5 `ff04601de94f3ac18e3082ed164665c1`).
