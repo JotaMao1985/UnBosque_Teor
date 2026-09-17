@@ -96,9 +96,21 @@
       </div>
 
       <p>La razón obliga a que la recta pase por el origen: supone que un condado sin un solo acre sembrado en 1987
-        tampoco lo tuvo en 1992. Con los datos de <code>agsrs</code> esa recta no es la que mejor ajusta la nube: el
-        ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto de <strong>−2 548</strong> acres.
-        Ese intercepto no nulo es la señal de que hay un estimador mejor esperando.</p>
+        tampoco lo tuvo en 1992. Antes de construir un estimador que suelte esa restricción conviene preguntarse si
+        <code>agsrs</code> la pide — y eso no se decide a ojo: se ajusta la recta libre y se
+        <strong>contrasta su intercepto</strong>.</p>
+
+      <p>La respuesta es que no la pide. El ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto
+        de <strong>−2 548</strong> acres, pero ese intercepto viene con un error estándar de <strong>2 425</strong>:
+        $t = -1{,}05$ y <strong>p = 0,294</strong>. Sobre estos datos el intercepto <strong>no se distingue de
+        cero</strong>, y la recta por el origen es defendible. Por eso el módulo 7 va a encontrar a los tres
+        estimadores con auxiliar empatados en la práctica: no es casualidad de esta muestra, es que aquí no hay
+        intercepto que recuperar.</p>
+
+      <p>¿Para qué entonces el estimador de regresión? Porque el origen <em>no siempre</em> se puede suponer, y no
+        hace falta salir del capítulo para verlo: en <code>cherry</code> —los 31 cerezos del ejercicio 2 del módulo
+        12— el mismo contraste da un intercepto de −36,94 con <strong>p = 7,6 · 10⁻¹²</strong>. Ahí el estimador de
+        razón es el equivocado, y hace falta el que viene ahora.</p>
 
       <div class="definition">
         <h4>El estimador de regresión</h4>
@@ -117,6 +129,29 @@
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r">⟦R5⟧</code></pre>
         </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El criterio, y su letra pequeña.</strong> Ajustar la recta libre y mirar el p-valor del
+          intercepto es el modo estándar de elegir entre razón y regresión: si no es significativo, la recta pasa
+          por el origen y se prefiere la razón, que estima un parámetro menos; si lo es, se paga ese parámetro y se
+          usa la regresión. Tres cosas que el contraste no dice solo:</p>
+        <ul style="margin-bottom:0;">
+          <li><strong>Lleva el diseño dentro.</strong> El contraste de <code>lm()</code> supone observaciones
+            independientes e idénticamente distribuidas, que no es lo que produce un diseño muestral. Por eso el
+            bloque lo repite con <code>svyglm()</code> sobre el objeto de diseño. Aquí las dos vías coinciden en la
+            conclusión —p = 0,294 y p = 0,338—, pero el error estándar de diseño sale <em>mayor</em>, 2 654 contra
+            2 425, porque la dispersión crece con $x$ y el estimador de diseño no supone lo contrario. En un diseño
+            complejo esa diferencia deja de ser cosmética y el único contraste válido es el segundo.</li>
+          <li><strong>No rechazar no es demostrar.</strong> «p = 0,294» dice que estos datos no permiten distinguir
+            el intercepto de cero, no que el intercepto valga cero. Con $n$ pequeño casi nada se rechaza, y ahí el
+            criterio no decide nada: deciden la nube y lo que se sepa del fenómeno, que es el argumento del módulo
+            3.</li>
+          <li><strong>La pendiente estimada también se paga.</strong> $b_1 = s_{xy}/s_x^2$ es un estimador
+            <em>sesgado</em> de la pendiente —si se conociera la $S_x^2$ poblacional, $s_{xy}/S_x^2$ sería
+            insesgado—, así que la ventaja teórica de la regresión se cobra en un parámetro más ajustado con la
+            misma muestra. El módulo 7 pone las tres varianzas una al lado de la otra.</li>
+        </ul>
       </div>
 
       <div class="note">
@@ -144,6 +179,9 @@
             regresión y su varianza.</li>
           <li>Lumley, T. <em>Complex Surveys: A Guide to Analysis Using R</em> — el capítulo sobre
             <code>calibrate()</code>, que explica el estimador de varianza que usa el paquete.</li>
+          <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.2.3</strong>
+            (pp. 229–232) — el criterio del intercepto para elegir entre razón y regresión, con dos ejemplos
+            resueltos. Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
         </ul>
       </div>
     </div>

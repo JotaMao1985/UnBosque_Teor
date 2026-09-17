@@ -126,7 +126,7 @@ def main():
         { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "22 min" },
         { id: 4, title: "Sesgo y error cuadrático medio", shortTitle: "Sesgo y ECM", duration: "22 min" },
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "12 min" },
-        { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "20 min" },
+        { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
         { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "18 min" },
         { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "20 min" },
         { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },

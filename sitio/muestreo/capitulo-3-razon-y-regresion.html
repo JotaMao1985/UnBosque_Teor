@@ -4230,9 +4230,21 @@ print(pd.Series({
       </div>
 
       <p>La razón obliga a que la recta pase por el origen: supone que un condado sin un solo acre sembrado en 1987
-        tampoco lo tuvo en 1992. Con los datos de <code>agsrs</code> esa recta no es la que mejor ajusta la nube: el
-        ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto de <strong>−2 548</strong> acres.
-        Ese intercepto no nulo es la señal de que hay un estimador mejor esperando.</p>
+        tampoco lo tuvo en 1992. Antes de construir un estimador que suelte esa restricción conviene preguntarse si
+        <code>agsrs</code> la pide — y eso no se decide a ojo: se ajusta la recta libre y se
+        <strong>contrasta su intercepto</strong>.</p>
+
+      <p>La respuesta es que no la pide. El ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto
+        de <strong>−2 548</strong> acres, pero ese intercepto viene con un error estándar de <strong>2 425</strong>:
+        $t = -1{,}05$ y <strong>p = 0,294</strong>. Sobre estos datos el intercepto <strong>no se distingue de
+        cero</strong>, y la recta por el origen es defendible. Por eso el módulo 7 va a encontrar a los tres
+        estimadores con auxiliar empatados en la práctica: no es casualidad de esta muestra, es que aquí no hay
+        intercepto que recuperar.</p>
+
+      <p>¿Para qué entonces el estimador de regresión? Porque el origen <em>no siempre</em> se puede suponer, y no
+        hace falta salir del capítulo para verlo: en <code>cherry</code> —los 31 cerezos del ejercicio 2 del módulo
+        12— el mismo contraste da un intercepto de −36,94 con <strong>p = 7,6 · 10⁻¹²</strong>. Ahí el estimador de
+        razón es el equivocado, y hace falta el que viene ahora.</p>
 
       <div class="definition">
         <h4>El estimador de regresión</h4>
@@ -4249,7 +4261,20 @@ print(pd.Series({
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Estimador de regresion: no obliga a que la recta pase por el origen.
+          <pre><code class="language-r"># Antes de soltar el origen conviene preguntar si hace falta. Se ajusta la recta
+# libre y se CONTRASTA su intercepto: si no se distingue de cero, la recta por el
+# origen -y con ella el estimador de razon- es defendible sobre estos datos.
+# Dos vias, porque el contraste de lm() supone observaciones iid y aqui hay un
+# diseno muestral detras: svyglm lo repite sobre el objeto de diseno.
+ajuste    &lt;- lm(acres92 ~ acres87, data = agsrs)
+ajuste_sv &lt;- svyglm(acres92 ~ acres87, design = dis)
+round(rbind(mco    = summary(ajuste)$coefficients[1, ],
+            diseno = summary(ajuste_sv)$coefficients[1, ]), 4)
+#&gt;         Estimate Std. Error t value Pr(&gt;|t|)
+#&gt; mco    -2548.117   2424.954 -1.0508   0.2942
+#&gt; diseno -2548.117   2653.927 -0.9601   0.3378
+
+# Estimador de regresion: no obliga a que la recta pase por el origen.
 b1 &lt;- cov(agsrs$acres87, agsrs$acres92) / var(agsrs$acres87)
 b0 &lt;- mean(agsrs$acres92) - b1 * mean(agsrs$acres87)
 t_regresion &lt;- N * (mean(agsrs$acres92) + b1 * (t_x / N - mean(agsrs$acres87)))
@@ -4266,6 +4291,29 @@ round(c(b0 = b0, b1 = b1, regresion_a_mano = t_regresion,
 #&gt;        ee_survey
 #&gt;   5593972.160808</code></pre>
         </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El criterio, y su letra pequeña.</strong> Ajustar la recta libre y mirar el p-valor del
+          intercepto es el modo estándar de elegir entre razón y regresión: si no es significativo, la recta pasa
+          por el origen y se prefiere la razón, que estima un parámetro menos; si lo es, se paga ese parámetro y se
+          usa la regresión. Tres cosas que el contraste no dice solo:</p>
+        <ul style="margin-bottom:0;">
+          <li><strong>Lleva el diseño dentro.</strong> El contraste de <code>lm()</code> supone observaciones
+            independientes e idénticamente distribuidas, que no es lo que produce un diseño muestral. Por eso el
+            bloque lo repite con <code>svyglm()</code> sobre el objeto de diseño. Aquí las dos vías coinciden en la
+            conclusión —p = 0,294 y p = 0,338—, pero el error estándar de diseño sale <em>mayor</em>, 2 654 contra
+            2 425, porque la dispersión crece con $x$ y el estimador de diseño no supone lo contrario. En un diseño
+            complejo esa diferencia deja de ser cosmética y el único contraste válido es el segundo.</li>
+          <li><strong>No rechazar no es demostrar.</strong> «p = 0,294» dice que estos datos no permiten distinguir
+            el intercepto de cero, no que el intercepto valga cero. Con $n$ pequeño casi nada se rechaza, y ahí el
+            criterio no decide nada: deciden la nube y lo que se sepa del fenómeno, que es el argumento del módulo
+            3.</li>
+          <li><strong>La pendiente estimada también se paga.</strong> $b_1 = s_{xy}/s_x^2$ es un estimador
+            <em>sesgado</em> de la pendiente —si se conociera la $S_x^2$ poblacional, $s_{xy}/S_x^2$ sería
+            insesgado—, así que la ventaja teórica de la regresión se cobra en un parámetro más ajustado con la
+            misma muestra. El módulo 7 pone las tres varianzas una al lado de la otra.</li>
+        </ul>
       </div>
 
       <div class="note">
@@ -4293,6 +4341,9 @@ round(c(b0 = b0, b1 = b1, regresion_a_mano = t_regresion,
             regresión y su varianza.</li>
           <li>Lumley, T. <em>Complex Surveys: A Guide to Analysis Using R</em> — el capítulo sobre
             <code>calibrate()</code>, que explica el estimador de varianza que usa el paquete.</li>
+          <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.2.3</strong>
+            (pp. 229–232) — el criterio del intercepto para elegir entre razón y regresión, con dos ejemplos
+            resueltos. Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
         </ul>
       </div>
     </div>
@@ -5060,7 +5111,16 @@ round(c(B_razon = mean(cherry$volume) / mean(cherry$diameter),
         intercepto = as.numeric(coef(ajuste)[1]), pendiente = as.numeric(coef(ajuste)[2]),
         r2 = summary(ajuste)$r.squared), 4)
 #&gt;    B_razon intercepto  pendiente         r2
-#&gt;     2.2773   -36.9435     5.0659     0.9353</code></pre>
+#&gt;     2.2773   -36.9435     5.0659     0.9353
+# El contraste sobre el intercepto -el criterio del modulo 6- aqui no deja lugar
+# a dudas, al reves que en agsrs: la recta NO pasa por el origen.
+options(scipen = 0)    # el p-valor es tan pequeno que con el scipen del bloque
+                       # R1 saldria como 0,000000000007621
+signif(summary(ajuste)$coefficients, 4)
+#&gt;             Estimate Std. Error t value  Pr(&gt;|t|)
+#&gt; (Intercept)  -36.940     3.3650  -10.98 7.621e-12
+#&gt; diameter       5.066     0.2474   20.48 8.644e-19
+options(scipen = 999)  # se restaura para los totales de nueve cifras</code></pre>
             <p>El estimador de razón supondría $\hat{B} = 2{,}2773$ pies cúbicos por pulgada de diámetro, constante.
               Pero la recta ajustada tiene pendiente 5,07 y arranca en −36,9: en el rango observado las dos rectas
               se cruzan, y fuera de él se separan sin remedio. Aplicar la razón sobrestimaría el volumen de los
@@ -5219,7 +5279,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
         { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "22 min" },
         { id: 4, title: "Sesgo y error cuadrático medio", shortTitle: "Sesgo y ECM", duration: "22 min" },
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "12 min" },
-        { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "20 min" },
+        { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
         { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "18 min" },
         { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "20 min" },
         { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },

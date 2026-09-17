@@ -3981,3 +3981,55 @@ tenía. **Cuando la fuente trae el número del caso que uno está usando, calcul
 barata de comprobar que se la está citando bien.**
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.34 — El intercepto que el capítulo 3 leía como señal y era ruido (cap. 3, 2026-09-17)
+
+Primera tarea del plan de mejora del capítulo 3 con Portela & Villeta, cap. 7 (§7.1–§7.2), que vive
+en `PLAN_Cap3_PortelaVilleta.md`, fuera del control de versiones. Cierra su fase 1 a medias: queda
+la T1.2, la regla del módulo 3.
+
+**El defecto.** El módulo 6 abría diciendo que sobre `agsrs` «el ajuste libre da una pendiente de
+0,995 y un intercepto de **−2 548** acres. Ese intercepto no nulo es la **señal** de que hay un
+estimador mejor esperando». No lo es: ese intercepto tiene un error estándar de **2 425**, o sea
+$t = -1{,}05$ y **p = 0,294**. No se distingue de cero. La frase presentaba como evidencia lo que es
+ruido, y justo donde Portela §7.2.3 pone el criterio formal para decidir entre razón y regresión.
+
+**El capítulo ya se contradecía a sí mismo, y nadie lo había visto.** El módulo 3, hablando del mismo
+simulador, dice que en `agsrs` «la recta por el origen y la de intercepto libre **se superponen**,
+porque el intercepto es −2 548 sobre un rango de más de un millón de acres, **prácticamente cero**».
+Y el módulo 7 concluye que «los tres estimadores con auxiliar están **empatados en la práctica**».
+Los módulos 3 y 7 tenían razón; el 6 era el que iba solo.
+
+**El arreglo.** La apertura del M6 plantea ahora la pregunta antes de contestarla —¿pide `agsrs` que
+se suelte el origen?— y la contesta con el contraste: no lo pide, y **por eso** el M7 va a encontrar
+a los tres empatados. La motivación del estimador de regresión pasa a ser la correcta: el origen no
+siempre se puede suponer, y no hace falta salir del capítulo para verlo — en `cherry` el mismo
+contraste da **p = 7,6 · 10⁻¹²**.
+
+**El criterio, con su letra pequeña** (nota nueva). Ajustar la recta libre y mirar el p-valor del
+intercepto; si no es significativo, razón (un parámetro menos); si lo es, regresión. Y tres avisos
+que el contraste no da solo: *(a)* **lleva el diseño dentro** —el de `lm()` supone iid, así que el
+bloque lo repite con `svyglm()`: misma conclusión (p = 0,294 y p = 0,338) pero ee de diseño **mayor**,
+2 654 contra 2 425, porque la dispersión crece con $x$—; *(b)* **no rechazar no es demostrar**, y con
+$n$ pequeño casi nada se rechaza; *(c)* $b_1 = s_{xy}/s_x^2$ es **sesgado** —con $S_x^2$ conocida,
+$s_{xy}/S_x^2$ sería insesgado—, así que la ventaja de la regresión se cobra en un parámetro más.
+
+**El código.** El bloque **R5** de `cap3/cadena.R` abre ahora con el contraste por las dos vías
+(`lm` y `svyglm`) antes de construir el estimador. El bloque **S2** —los cerezos del ejercicio 2 del
+M12— imprime además la tabla de coeficientes completa, y para ello baja el `scipen` que el R1 había
+subido a 999: sin eso el p-valor salía como `0,000000000007621`. Ninguna cifra escrita a mano.
+
+**Verificado.** `ensambla_cap3.py` reproduce el archivo **byte a byte** en la segunda pasada (mismo
+SHA-256). **171 de 171** cifras de bloques y **97 de prosa · 0 sin respaldo** (el `--solo-prosa
+--todos` de los ocho capítulos también queda en 0). En el navegador: 0 `.katex-error` con 22
+expresiones en el M6, consola limpia, las dos notas y las tres referencias en su sitio, y el M12
+mostrando la salida nueva del S2. La duración del M6 sube de 20 a 24 min en `courseData`.
+
+**Lo que enseña.** Una cifra puede estar bien calculada y aun así sostener una afirmación falsa. El
+−2 548 era correcto —lleva meses publicado y verificado— y lo que fallaba era lo que se decía de él:
+nadie le había preguntado por su error estándar. Y la contradicción llevaba tres módulos en pie sin
+que ninguna comprobación automática pudiera verla, porque ninguna de las tres frases es una cifra.
+
+**Pendiente:** el visto bueno de Javier para publicar.

@@ -65,6 +65,19 @@ round(c(sd_y = sd_y, sd_residuos = s_e,
 #>       correccion_tx  factor_estimadores
 #>              0.9306            110.2327
 cat("\n###BLOQUE-R5###\n")
+# Antes de soltar el origen conviene preguntar si hace falta. Se ajusta la recta
+# libre y se CONTRASTA su intercepto: si no se distingue de cero, la recta por el
+# origen -y con ella el estimador de razon- es defendible sobre estos datos.
+# Dos vias, porque el contraste de lm() supone observaciones iid y aqui hay un
+# diseno muestral detras: svyglm lo repite sobre el objeto de diseno.
+ajuste    <- lm(acres92 ~ acres87, data = agsrs)
+ajuste_sv <- svyglm(acres92 ~ acres87, design = dis)
+round(rbind(mco    = summary(ajuste)$coefficients[1, ],
+            diseno = summary(ajuste_sv)$coefficients[1, ]), 4)
+#>         Estimate Std. Error t value Pr(>|t|)
+#> mco    -2548.117   2424.954 -1.0508   0.2942
+#> diseno -2548.117   2653.927 -0.9601   0.3378
+
 # Estimador de regresion: no obliga a que la recta pase por el origen.
 b1 <- cov(agsrs$acres87, agsrs$acres92) / var(agsrs$acres87)
 b0 <- mean(agsrs$acres92) - b1 * mean(agsrs$acres87)
@@ -190,6 +203,15 @@ round(c(B_razon = mean(cherry$volume) / mean(cherry$diameter),
         r2 = summary(ajuste)$r.squared), 4)
 #>    B_razon intercepto  pendiente         r2
 #>     2.2773   -36.9435     5.0659     0.9353
+# El contraste sobre el intercepto -el criterio del modulo 6- aqui no deja lugar
+# a dudas, al reves que en agsrs: la recta NO pasa por el origen.
+options(scipen = 0)    # el p-valor es tan pequeno que con el scipen del bloque
+                       # R1 saldria como 0,000000000007621
+signif(summary(ajuste)$coefficients, 4)
+#>             Estimate Std. Error t value  Pr(>|t|)
+#> (Intercept)  -36.940     3.3650  -10.98 7.621e-12
+#> diameter       5.066     0.2474   20.48 8.644e-19
+options(scipen = 999)  # se restaura para los totales de nueve cifras
 cat("\n###BLOQUE-S3###\n")
 # Ejercicio 3 - El dominio "Oeste": media, error estandar y valor real.
 oeste <- as.numeric(agsrs$region == "W")
