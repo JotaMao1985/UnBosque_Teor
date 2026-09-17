@@ -4310,3 +4310,69 @@ ella. **Un capítulo posterior que no reusa el resultado del anterior suele esta
 hueco, no ahorrando repetición.**
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.40 — El empate de los tres estimadores es un teorema: el M7 del cap. 3 (2026-09-17)
+
+Cuarta tarea del plan del capítulo 3 con Portela & Villeta. **Cierra su fase 2**, la que había que
+tener antes del repaso del Parcial 2.
+
+**Lo que había.** El módulo 7 ponía los cuatro estimadores en una tabla y observaba que «los tres
+estimadores con auxiliar están empatados en la práctica». Cierto, y sin ninguna explicación: el
+lector no sabía si era una casualidad de `agsrs` o algo que tenía que pasar.
+
+**Tiene que pasar, y la cuenta cabe en tres líneas.** Los cuatro estimadores son **uno solo con
+cuatro valores de $b$** —$\hat t(b) = N[\bar y + b(\bar x_U - \bar x)]$, con $b = 0$, $B$, $1$ y
+$b_1$—, su varianza aproximada es una **parábola en $b$** cuyo mínimo está en $b_1 = S_{xy}/S_x^2$, y
+la distancia de cualquier otro $b$ a ese mínimo es un **cuadrado perfecto**:
+
+$$V(b) - V(b_1) = \frac{1-f}{n}\left(b\,S_x - \rho\,S_y\right)^2 \;\ge\; 0$$
+
+De ahí salen las dos desigualdades de Portela (§7.2.3, p. 228) de golpe, **con sus condiciones de
+igualdad**: frente a la expansión el hueco se anula solo si $\rho = 0$; frente a la razón, solo si
+$B = b_1$, **que es exactamente decir que la recta pasa por el origen** — el contraste que T7.34 puso
+en el módulo 6. Las tres tareas de la fase quedan cosidas por esta identidad.
+
+**Medido sobre `agpop`, que es censo.** Con $n = 300$, los errores estándar **verdaderos** del total:
+expansión **71,70** millones, regresión **7,1114** (el mínimo), razón **7,1298** (un **0,26 %** por
+encima) y diferencia **7,1749** (**0,89 %**). El empate no es retórico: $B = 0{,}9797$ y
+$b_1 = 0{,}9868$ se parecen tanto que el cuadrado perfecto no llega a abrirse.
+
+**Una cuarta vía de control, gratis.** El error estándar que la fórmula aproximada da para la razón,
+**7 129 751**, y el que midieron las **200 000 réplicas** del módulo 4, **7 106 715**, se separan un
+**0,32 %**. Son dos caminos independientes —aproximación de primer orden y simulación— y coinciden en
+tres cifras: la aproximación del módulo 2 queda contrastada sin gastar nada.
+
+**Y la trampa que había que desactivar.** En la tabla publicada la regresión sale con el **ee más
+grande** de los tres (5,59 frente a 5,54 de la razón), justo lo contrario de lo que acaba de
+demostrarse. Un `.warning` nuevo separa las tres cosas: *(a)* el teorema compara varianzas
+**verdaderas** y la tabla enseña **estimaciones** de una sola muestra, que se quedan cortas las tres
+(5,3–5,6 frente a 7,11); *(b)* la cifra de la regresión es la de `survey` con los pesos $g_k$ —con la
+fórmula clásica sale **5 330 862**, por debajo de la razón, tal como predice el teorema—; y *(c)* los
+huecos reales, 0,26 % y 0,89 %, son mucho menores que el error con que se estima cualquiera de los
+tres, así que **ninguna muestra puede resolver ese orden**, y ésa es la conclusión.
+
+**El reverso honesto**, en el último paso de la derivación: todo vale para el $b_1$ óptimo y
+**conocido**; con $\hat b_1$ estimado la ventaja es asintótica, y si la relación lineal es débil es
+preferible la expansión aunque el teorema diga que no puede perder.
+
+**Verificado.** Byte a byte en la segunda pasada. `genera_cap3.R` comprueba el cuadrado perfecto en
+relativo y **aborta** si el mínimo no cae en la regresión o si la aproximación se separa más de un
+1 % de la simulación. **179 de 179** cifras de bloques y **119 de prosa · 0 sin respaldo** (los ocho
+capítulos, 0). En el navegador: 0 `.katex-error` en los módulos 3, 4, 6 y 7, la derivación nueva
+abre con sus 4 pasos y 17 expresiones, la tabla-ranking sigue con sus cuatro filas y la consola
+limpia. El M7 sube de 18 a 24 min.
+
+**Un defecto de maquetación encontrado de paso, y NO tocado.** La fórmula del sesgo que abre el
+**módulo 4** —la que ya estaba— mide **632 px en una columna de 506**: se sale de su caja. Es
+anterior a todo este trabajo (está en `7f9da4e^`) y se arregla partiéndola en dos, como se hizo aquí
+con la del M7, que tenía el mismo problema (545 en 506) y se detectó midiendo
+`scrollWidth`/`clientWidth` de cada `.katex-display`. Queda anotado, sin tocar, para su propia tarea.
+
+**Lo que enseña.** «Están empatados en la práctica» era una observación; con el cuadrado perfecto es
+una predicción con su condición. Y el teorema resultó valer sobre todo para explicar **por qué la
+tabla no lo obedece**: cuando lo que se compara son estimaciones, un orden verdadero de dos décimas
+de por ciento es sencillamente inobservable.
+
+**Pendiente:** el visto bueno de Javier para publicar.

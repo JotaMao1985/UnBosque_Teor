@@ -259,6 +259,55 @@ cat(sprintf("Kish: cota poblacional %.4f, estimada con agsrs %.4f, |sesgo|/ee re
             kish$cotaPob, kish$cotaMuestra, kish$relEE, n_kish))
 stopifnot(n_kish > 30, n_kish < 100)
 
+# ---------------------------------------------------------------------------
+# 6c · EL ORDEN DE LAS VARIANZAS, QUE ES UN TEOREMA
+# ---------------------------------------------------------------------------
+# Los cuatro estimadores del capítulo son EL MISMO con cuatro valores de b:
+#   t(b) = N [ ybar + b (xbar_U - xbar) ]
+#   b = 0  -> expansión            b = B  -> razón (a primer orden)
+#   b = 1  -> diferencia           b = b1 -> regresión
+# Su varianza aproximada es  V(b) = (1-f)/n (S_y^2 + b^2 S_x^2 - 2 b S_xy), y al
+# restarle la del b óptimo b1 = S_xy/S_x^2 queda un CUADRADO PERFECTO:
+#   V(b) - V(b1) = (1-f)/n (b S_x - rho S_y)^2  >= 0
+# Es decir: la regresión no puede perder, y empata SOLO cuando b = b1. Para la
+# razón eso es B = b1, que equivale a que la recta de regresión pase por el
+# origen — el contraste del módulo 6.
+#
+# Se calcula sobre agpop, que es censo: son las varianzas VERDADERAS, no las
+# estimaciones con agsrs que publica la tabla del módulo 7.
+Sy_p  <- sd(agpop$acres92);  Sx_p <- sd(agpop$acres87)
+Sxy_p <- cov(agpop$acres87, agpop$acres92)
+rho_p <- cor(agpop$acres87, agpop$acres92)
+b1_pob <- Sxy_p / Sx_p^2
+k_var  <- (1 - n / N) / n
+V_de_b <- function(b) k_var * (Sy_p^2 + b^2 * Sx_p^2 - 2 * b * Sxy_p)
+V_opt  <- k_var * Sy_p^2 * (1 - rho_p^2)
+bs <- c(expansion = 0, razon = B_pob, diferencia = 1, regresion = b1_pob)
+orden <- data.frame(clave = names(bs), b = unname(bs),
+                    ee = N * sqrt(sapply(bs, V_de_b)),
+                    row.names = NULL, stringsAsFactors = FALSE)
+orden$huecoPct <- 100 * (orden$ee / (N * sqrt(V_opt)) - 1)
+print(orden, digits = 7)
+
+# El cuadrado perfecto, comprobado en relativo (las varianzas son de orden 1e8).
+resto <- max(abs(sapply(bs, V_de_b) - V_opt - k_var * (bs * Sx_p - rho_p * Sy_p)^2))
+igual(resto / V_opt, 0, 1e-9, "cuadrado perfecto del orden de varianzas")
+stopifnot(which.min(orden$ee) == which(orden$clave == "regresion"))
+
+# Y la varianza APROXIMADA de la razón tiene que parecerse a la que midieron las
+# 200 000 réplicas: es la aproximación del módulo 2 puesta a prueba contra una
+# medición independiente.
+ee_sim <- tabla_sesgo$ee[tabla_sesgo$n == n]
+dif_aprox <- abs(orden$ee[orden$clave == "razon"] - ee_sim) / ee_sim
+cat(sprintf("orden (ee del total en millones): %s\n",
+            paste(sprintf("%s %.4f", orden$clave, orden$ee / 1e6), collapse = " · ")))
+cat(sprintf("  razon aproximada %.0f frente a la simulada %.0f: %.2f %%\n",
+            orden$ee[orden$clave == "razon"], ee_sim, 100 * dif_aprox))
+stopifnot(dif_aprox < 0.01)
+ordenVarianzas <- list(tabla = orden, B = B_pob, b1 = b1_pob, rho = rho_p,
+                       eeOptimo = N * sqrt(V_opt), eeSimulado = ee_sim,
+                       difAproxPct = 100 * dif_aprox)
+
 # ===========================================================================
 # 7 · Linealización: qué término se desprecia
 # ===========================================================================
@@ -507,6 +556,7 @@ datos <- list(
   estimadores = estimadores,
   sesgoRazon = tabla_sesgo,
   kish = kish,
+  ordenVarianzas = ordenVarianzas,
   linealizacion = list(n = n_lin, exacto = ex[1:600], lineal = li[1:600],
                        correlacion = cor(ex, li), eeExacto = sd(ex), eeLineal = sd(li)),
   dominios = list(binario = tabla_dom, region = tabla_reg),

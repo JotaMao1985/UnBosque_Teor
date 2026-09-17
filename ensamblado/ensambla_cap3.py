@@ -127,7 +127,7 @@ def main():
         { id: 4, title: "Sesgo y error cuadrático medio", shortTitle: "Sesgo y ECM", duration: "28 min" },
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "12 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
-        { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "18 min" },
+        { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "24 min" },
         { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "20 min" },
         { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
         { id: 10, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },

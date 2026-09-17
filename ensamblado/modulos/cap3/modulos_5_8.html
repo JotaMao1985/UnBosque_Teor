@@ -261,11 +261,101 @@
           la práctica y todos multiplican por más de cien la eficiencia de la expansión.</p>
       </div>
 
+      <h3>El empate no es casualidad: es un teorema</h3>
+
+      <p>El módulo 3 dijo que los cuatro estimadores son la misma idea con distinta libertad para la recta. Ahora se
+        puede decir con exactitud: los cuatro son <strong>una sola fórmula con cuatro valores de $b$</strong>,</p>
+
+      <div class="formula">
+        <p style="text-align:center; margin-bottom:0.6rem;">
+          $$\hat{t}(b) = N\left[\bar{y} + b\,(\bar{x}_U - \bar{x})\right]$$
+          $$V(b) = \frac{1-f}{n}\left(S_y^2 + b^2S_x^2 - 2b\,S_{xy}\right)$$</p>
+        <p style="margin-bottom:0;">$b = 0$ es la <strong>expansión</strong>; $b = B$, la <strong>razón</strong>
+          (a primer orden, que es la linealización del módulo 4); $b = 1$, la <strong>diferencia</strong>; y
+          $b = b_1 = S_{xy}/S_x^2$, la <strong>regresión</strong>.</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-orden">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver por qué la regresión no puede perder, y cuándo empata exactamente</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-orden" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>$V(b)$ es una parábola en $b$ con las ramas hacia arriba. Su mínimo se busca derivando, y sale
+                justo el $b$ de la regresión:</p>
+              $$V'(b) = \frac{1-f}{n}\left(2bS_x^2 - 2S_{xy}\right) = 0
+                \iff b = \frac{S_{xy}}{S_x^2} = b_1$$
+            </li>
+            <li>
+              <p>El valor en ese mínimo se escribe con la correlación, porque
+                $S_{xy}^2/S_x^2 = \rho^2S_y^2$:</p>
+              $$V(b_1) = \frac{1-f}{n}\,S_y^2\left(1 - \rho^2\right)$$
+            </li>
+            <li>
+              <p>Y la distancia de cualquier otro $b$ al mínimo es un <strong>cuadrado perfecto</strong>:</p>
+              $$V(b) - V(b_1) = \frac{1-f}{n}\left(b\,S_x - \rho\,S_y\right)^2 \;\ge\; 0$$
+              <p style="margin-bottom:0;">De ahí salen las dos desigualdades de golpe. Frente a la
+                <strong>expansión</strong> ($b = 0$) el hueco es $\tfrac{1-f}{n}\rho^2S_y^2$, que se anula solo si
+                $\rho = 0$: sin correlación, la auxiliar no aporta nada. Frente a la <strong>razón</strong>
+                ($b = B$) el hueco se anula solo si $B = b_1$ — y eso es exactamente decir que
+                <strong>la recta de regresión pasa por el origen</strong>, que es el contraste del módulo 6.</p>
+            </li>
+            <li>
+              <p>Y el reverso honesto, que la desigualdad no dice. Todo esto vale para el $b_1$
+                <strong>óptimo y conocido</strong>. En la práctica se estima con $\hat{b}_1 = s_{xy}/s_x^2$, que es
+                un estimador sesgado y con su propia varianza, así que la ventaja es <em>asintótica</em>. Si la
+                relación lineal es débil, $b_1$ está cerca de cero y $\hat{t}_{\text{reg}} \approx N\bar{y}$,
+                pero con el ruido añadido de haber estimado una pendiente que no hacía falta: ahí es
+                <strong>preferible la expansión</strong>, aunque el teorema diga que no puede perder.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <p>Sobre <code>agpop</code>, que es censo, esos cuatro valores se pueden calcular de verdad. Con $n = 300$,
+        el error estándar <strong>verdadero</strong> del total es de <strong>71,70</strong> millones para la
+        expansión y de <strong>7,1114</strong> millones para la regresión, que es el mínimo. La razón se queda en
+        <strong>7,1298</strong> —un <strong>0,26 %</strong> por encima del óptimo— y la diferencia en
+        <strong>7,1749</strong>, un <strong>0,89 %</strong>. Ése es el empate, medido: la razón usa
+        $B = 0{,}9797$ y la regresión $b_1 = 0{,}9868$, dos pendientes que se parecen tanto que el cuadrado
+        perfecto no llega a abrirse.</p>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Y de paso, la aproximación del módulo 2 queda contrastada.</strong> El
+          error estándar que esta fórmula da para la razón, 7 129 751, y el que midieron las
+          <strong>200 000 réplicas</strong> del módulo 4, 7 106 715, se separan un <strong>0,32 %</strong>. Son dos
+          caminos independientes —una aproximación de primer orden y una simulación— y coinciden en tres cifras.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>Ojo: el teorema no ordena la tabla de arriba.</strong> En la tabla, la regresión sale con el
+          error estándar <em>más grande</em> de los tres (5,59 millones frente a 5,54 de la razón), y el teorema
+          acaba de decir que no puede perder. No hay contradicción, y separar las tres cosas que pasan aquí vale
+          por medio módulo:</p>
+        <ol style="margin-bottom:0;">
+          <li>El teorema compara <strong>varianzas verdaderas</strong>; la tabla enseña <strong>tres
+            estimaciones</strong> hechas con una sola muestra, y cada una tiene su propio error. Las tres se quedan
+            cortas: 5,3–5,6 millones frente a los 7,11 reales.</li>
+          <li>Las dos cifras no son de la misma fórmula. La de la regresión es la de <code>survey</code>, que tiene
+            en cuenta los pesos $g_k$ (módulo 6); con la fórmula clásica saldría <strong>5 330 862</strong>, por
+            <em>debajo</em> de la razón, tal como predice el teorema.</li>
+          <li>Y sobre todo: los huecos reales son del <strong>0,26 %</strong> y el <strong>0,89 %</strong>, mucho
+            más pequeños que el error con el que se estima cualquiera de los tres. Con estos datos, ninguna muestra
+            puede resolver ese orden — y ésa <em>es</em> la conclusión, no un defecto de la tabla.</li>
+        </ol>
+      </div>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Lohr, <strong>sección 3.2.2</strong> (2.ª ed.) o <strong>4.3.2</strong> (3.ª ed.) — el estimador de
             diferencia y el ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 12.</li>
+          <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.2.3</strong>
+            (pp. 228–229) — las dos desigualdades con sus condiciones de igualdad, y las salvedades sobre
+            $\hat{b}_1$ estimado. Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
         </ul>
       </div>
     </div>

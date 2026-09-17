@@ -98,7 +98,14 @@
     "-12,5": "3 078 x (-4 056,677) = -12 486 452, en millones: la correccion del estimador de diferencia",
     "2,7": "(196 701 - 191 486)/191 486 = 2,72 %: lo que la mediana estimada sobrepasa a la real (por survey, 2,74 %)",
     "7,6": "mantisa del p-valor del intercepto de lm(volume ~ diameter) sobre cherry, 7,621e-12, escrito en el texto como 7,6 · 10^-12; el bloque S2 lo imprime entero",
-    "-1,5": "sesgo simulado a n = 10 con M = 200 000: -1 478 485 acres, expresado en millones; el mismo que la prosa del modulo llama \"el millon y medio\""
+    "-1,5": "sesgo simulado a n = 10 con M = 200 000: -1 478 485 acres, expresado en millones; el mismo que la prosa del modulo llama \"el millon y medio\"",
+    "71,70": "ee verdadero del total por expansion a n = 300 sobre agpop: 71 698 231, en millones (ordenVarianzas)",
+    "7,1114": "ee verdadero del total por regresion a n = 300 sobre agpop: 7 111 379, en millones (ordenVarianzas)",
+    "7,1298": "ee verdadero del total por razon a n = 300 sobre agpop: 7 129 751, en millones (ordenVarianzas)",
+    "7,1749": "ee verdadero del total por diferencia a n = 300 sobre agpop: 7 174 913, en millones (ordenVarianzas)",
+    "0,9797": "razon poblacional B = t_y/t_x = 0,97974736, a cuatro decimales (ordenVarianzas.B)",
+    "5,3": "extremo bajo de los tres ee ESTIMADOS de la tabla del M7: el de la diferencia, 5 329 882, en millones",
+    "5,6": "extremo alto de los tres ee ESTIMADOS de la tabla del M7: el de la regresion por survey, 5 593 972, en millones"
   },
   "capitulo-4-muestreo-estratificado.html": {
     "85 296": "filas de BigLucy (TeachingSampling); verificado",
