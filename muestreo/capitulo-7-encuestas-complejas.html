@@ -3600,7 +3600,11 @@ c(t_nhanes = qt(0.975, degf(dis_nh)), t_syc = qt(0.975, degf(dis_sy)),
 
       <div class="warning">
         <p><strong>15 grados de libertad para 5 406 personas.</strong> En una encuesta compleja, los grados de
-          libertad son <strong>PSU menos estratos</strong>, no $n - 1$. NHANES tiene 30 conglomerados en 15
+          libertad son <strong>PSU menos estratos</strong>, no $n - 1$. La razón está en cómo se estima la
+          varianza: con los totales de las PSU, comparados dentro de su estrato. Un estrato con $n_h$ PSU aporta
+          $n_h - 1$ grados de libertad, como $n_h$ datos en una varianza muestral, y al sumar los estratos quedan
+          PSU − H. Un MAS es el caso de un solo estrato en el que cada persona es su propia PSU: sale $n - 1$, lo
+          del capítulo 2 (módulo 6). NHANES tiene 30 conglomerados en 15
           estratos: 15 gl, y el multiplicador del intervalo del 95 % pasa de 1,960 a <strong>2,131</strong> — un
           9 % más ancho antes de tocar nada más. SYC, con 861 centros, tiene 845 gl y prácticamente el valor
           normal. Cualquier software que reporte «gl = n − 1» sobre datos de encuesta está equivocándose.</p>
@@ -3720,7 +3724,8 @@ c(kish_nhanes = kish(nh_ad$wtmec2yr), kish_syc = kish(sy$finalwt))
         \frac{n \sum w_k^2}{\left(\sum w_k\right)^2}$$
         Mide cuánta varianza extra cuesta que los pesos no sean iguales, <em>ignorando</em> la estructura del
         diseño. En NHANES vale 1,89: la desigualdad de pesos, por sí sola, cuesta un 89 % de varianza. Es
-        <strong>una</strong> de las tres fuentes; el módulo 3 mide las tres juntas y da 7,12.</p>
+        <strong>una</strong> de las tres fuentes, y se calcula sin mirar la variable: el módulo 3 mide las tres
+        juntas sobre el IMC, da 7,12 y explica por qué allí los pesos cuestan algo menos.</p>
       </div>
 
       <div class="warning">
@@ -3872,7 +3877,8 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
         <p><strong>El deff no se acumula en una sola dirección.</strong> Los pesos desiguales multiplican la
           varianza por 1,73. Los estratos la <strong>bajan</strong> (1,73 → 1,71): es exactamente su trabajo,
           el del capítulo 4. Y los conglomerados la cuadruplican (1,71 → 6,92): el capítulo 5 avisó de que este
-          sería el ingrediente caro. Un «deff de 7» no es un número monolítico: es una suma de fuerzas, y solo
+          sería el ingrediente caro. Un «deff de 7» no es un número monolítico: es un producto de factores que
+          empujan en direcciones distintas, y solo
           descomponiéndolo se sabe dónde intervenir. El módulo 8 aplica exactamente esta lectura al recorte de
           pesos, con un resultado incómodo.</p>
       </div>
@@ -3883,6 +3889,11 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
           descomposición compara contra un MAS <em>ideal</em> (sin pesos), y <code>survey</code> contra un MAS
           <em>con estos pesos</em>. Las dos definiciones circulan en la literatura y ninguna está mal; lo que
           está mal es compararlas sin decir cuál es cuál.</p>
+        <p style="margin-bottom:0;"><strong>Tampoco el 1,73 de los pesos es el 1,89 de Kish del módulo 2.</strong>
+          Kish es una fórmula que solo mira los pesos: supone que la variable se comporta igual en todos los
+          niveles de peso, y por eso se calcula antes de mirar el IMC. El 1,73 es la varianza real de la media del
+          IMC con esos pesos. Kish anticipa el coste; la descomposición lo mide. Cuando las dos cifras se separan,
+          la variable no es tan ajena a los pesos como Kish supone.</p>
       </div>
 
       <div class="references">
@@ -3919,14 +3930,17 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
       </div>
 
       <p>La razón peso/altura de los adultos de NHANES vale <strong>0,495476</strong> y su error estándar,
-        <strong>0,004230</strong>. La primera cifra es una división; la segunda no sale de ninguna fórmula vista
-        hasta aquí, porque todas estiman varianzas de <em>totales</em> y una razón es un cociente de dos totales
-        <em>estimados</em>, los dos aleatorios a la vez. Este módulo construye el puente.</p>
+        <strong>0,004230</strong>. La primera cifra es una división. La segunda no pide una idea nueva: una razón
+        es un cociente de dos totales <em>estimados</em>, los dos aleatorios a la vez, y el capítulo 3 ya estimó
+        su varianza <strong>linealizándola</strong> —en el módulo 2, sobre el MAS de 300 condados, y con nombre
+        propio en el 4— y repitió la receta con los dominios (módulo 8) y con la mediana (módulo 11). Lo que
+        cambia aquí es el diseño: estratos, conglomerados y pesos desiguales a la vez.</p>
 
-      <p>Toda la teoría de los capítulos 2 a 6 estima la varianza de <strong>totales</strong>. Pero casi nada de
-        lo que se publica es un total: son medias, razones, proporciones, medianas, coeficientes de regresión,
-        índices de Gini. La linealización es el puente, y su idea cabe en una línea: <strong>sustituir el
-        estadístico por su aproximación lineal y estimar la varianza de esa</strong>.</p>
+      <p>Casi nada de lo que se publica es un total: son medias, razones, proporciones, medianas, coeficientes de
+        regresión, índices de Gini. La linealización es el puente para todos ellos, y su idea cabe en una línea:
+        <strong>sustituir el estadístico por su aproximación lineal y estimar la varianza de esa</strong>. Este
+        módulo la escribe en general, con pesos $w_k$, y comprueba sobre el diseño completo de NHANES que es
+        exactamente lo que hace <code>survey</code>.</p>
 
       <div class="derivacion">
         <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-taylor">
@@ -4020,15 +4034,17 @@ c(ee_svyratio = as.numeric(SE(r)),
           construir $u_k$, estimar el total de $u$. Sirve para la media (donde $u_k = (y_k - \bar y)/\hat N$),
           para los coeficientes de una regresión, para el índice de Gini. <code>survey</code> lo hace por dentro
           en <code>svymean</code>, <code>svyratio</code>, <code>svyglm</code>: cuando ves «linearization» en su
-          documentación, es esto. Donde la receta se atasca es en estadísticos no suaves — la mediana, que no es
-          derivable —, y ese es el hueco que llena el módulo 5.</p>
+          documentación, es esto. La receta se atasca en los estadísticos no suaves, como la mediana, que no es
+          derivable. El capítulo 3 (módulo 11) ya dio el rodeo —linealizar $\hat F$, que sí es suave, e invertir
+          su intervalo—, y el módulo 5 lo contrasta con la replicación.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Lohr — §9.1 (3.ª ed.): linealización; Särndal et al. §5.5 para el caso general.</li>
-          <li>Este material — cap. 3, módulo 3: la misma linealización aplicada al estimador de razón.</li>
+          <li>Este material — cap. 3, módulos 2 y 4 (la razón linealizada y el término que se desprecia), 8
+            (dominios) y 11 (la mediana por Woodruff).</li>
         </ul>
       </div>
     </div>
@@ -4057,12 +4073,14 @@ c(ee_svyratio = as.numeric(SE(r)),
 
       <p>La segunda familia de estimadores de varianza cambia el álgebra por la fuerza bruta: <strong>recalcular
         el estadístico muchas veces sobre versiones perturbadas de la muestra</strong> y medir cuánto baila. No
-        hace falta derivar nada, y por eso funciona con cualquier estadístico.</p>
+        hace falta derivar nada, y por eso sirve para casi cualquier estadístico — el «casi» lo pone la mediana,
+        al final del módulo.</p>
 
       <div class="definition">
         <h4>Los tres métodos</h4>
         <p><strong>Jackknife (JKn).</strong> Se elimina una PSU y se reponderan las que quedan en su estrato por
-          $n_h/(n_h - 1)$. Una réplica por PSU. Es el más transparente y el más usado.</p>
+          $n_h/(n_h - 1)$. Una réplica por PSU. Es el más transparente y el más usado, y solo es fiable con
+          estadísticos suaves: con una mediana, no.</p>
         <p><strong>BRR</strong> (<em>balanced repeated replication</em>). Diseñado para el caso de
           <strong>exactamente 2 PSU por estrato</strong>: cada réplica se queda con una de las dos en cada
           estrato, siguiendo una matriz de Hadamard que garantiza el equilibrio. Con 15 estratos bastan 16
@@ -4152,7 +4170,7 @@ round(c(linealizacion = as.numeric(SE(m)),
         bootstrap = as.numeric(SE(svymean(~bmxbmi, dis_boo)))), 6)
 c(replicas_JKn = ncol(dis_jkn$repweights$weights),
   replicas_BRR = ncol(dis_brr$repweights$weights))
-# Los cuatro coinciden en la tercera cifra. BRR usa 16 replicas — una matriz
+# Los cuatro coinciden en las dos primeras cifras. BRR usa 16 replicas — una matriz
 # de Hadamard de orden 16 para 15 estratos — frente a las 30 del jackknife.
 #&gt; linealizacion     jackknife           BRR     bootstrap
 #&gt;      0.253197      0.253259      0.258531      0.254364
@@ -4182,28 +4200,59 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
         <div class="simulador-lectura"></div>
       </div>
 
-      <p>Donde la replicación gana de verdad es en estadísticos que la linealización no alcanza. La mediana no es
-        derivable — su linealización necesita estimar la densidad —, pero recalcularla es trivial:</p>
+      <p>¿Y la mediana, que no es derivable? Aquí hay que ir con cuidado, porque es justo donde el jackknife
+        falla. <code>survey</code> no la recalcula en cada réplica salvo que se le pida: por defecto usa el método
+        de <strong>Woodruff</strong> —el del capítulo 3, módulo 11: estimar $\hat F$, ponerle un intervalo e
+        invertirlo—, y las réplicas solo estiman la varianza de esa proporción. El bloque hace las dos cosas:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La mediana por linealización y por jackknife">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Donde la replicacion gana de verdad: la MEDIANA. La linealizacion de un
-# cuantil exige la densidad; el jackknife solo recalcula el estadistico.
+          <pre><code class="language-r"># La MEDIANA. Por defecto, svyquantile NO recalcula la mediana en cada replica:
+# usa el metodo de Woodruff, el del capitulo 3 (modulo 11) — estima F, le pone
+# un intervalo a la proporcion y lo invierte —, y las replicas solo estiman la
+# varianza de esa proporcion. Por eso las dos vias dan el mismo intervalo, que
+# cae en valores observados del IMC, y el mismo error estandar:
 q_lin &lt;- svyquantile(~bmxbmi, dis_nh, 0.5, ci = TRUE)
 q_jk &lt;- svyquantile(~bmxbmi, dis_jkn, 0.5, ci = TRUE)
-round(c(mediana = as.numeric(coef(q_lin)),
-        ee_linealizacion = as.numeric(SE(q_lin)),
-        ee_jackknife = as.numeric(SE(q_jk))), 5)
-# Esa es la ventaja practica: cambia el estadistico, no el procedimiento. Con
-# un indice de Gini o una tasa de pobreza, la replicacion es la unica salida
-# razonable.
-#&gt;          mediana ee_linealizacion     ee_jackknife
-#&gt;         28.30000          0.32841          0.32841</code></pre>
+ee &lt;- function(q) as.numeric(SE(q))
+woodruff &lt;- function(q) c(inf = confint(q)[1], sup = confint(q)[2], ee = ee(q))
+round(rbind(linealizacion = woodruff(q_lin), jackknife = woodruff(q_jk)), 5)
+
+# Recalcular la mediana en cada replica es interval.type = "quantile". Vale con
+# BRR y bootstrap; con el jackknife NO, y survey lo avisa al calcularlo:
+# "Jackknife replicate weights may not give valid standard errors for quantiles"
+recalcula &lt;- function(dis, ...) svyquantile(~bmxbmi, dis, 0.5, ci = TRUE,
+                                            interval.type = "quantile", ...)
+jk_rep &lt;- recalcula(dis_jkn, return.replicates = TRUE)
+round(c(mediana = as.numeric(coef(q_lin)), BRR = ee(recalcula(dis_brr)),
+        bootstrap = ee(recalcula(dis_boo)), jackknife = ee(jk_rep)), 5)
+table(jk_rep$replicates)
+# BRR y bootstrap, recalculando de verdad, caen junto a Woodruff. El jackknife
+# se va un 23 % por encima: sus 30 replicas de la mediana solo toman cinco
+# valores, de 28.1 a 28.5. La mediana se mueve a saltos, y el jackknife solo es
+# fiable con estadisticos suaves.
+#&gt;                inf sup      ee
+#&gt; linealizacion 27.6  29 0.32841
+#&gt; jackknife     27.6  29 0.32841
+#&gt;   mediana       BRR bootstrap jackknife
+#&gt;  28.30000   0.32590   0.32760   0.40415
+#&gt;
+#&gt; 28.1 28.2 28.3 28.4 28.5
+#&gt;    4   10    9    6    1</code></pre>
         </div>
       </div>
+
+      <p>Con Woodruff, la linealización y el jackknife dan el mismo intervalo, $[27{,}6;\ 29]$, y el mismo error
+        estándar, <strong>0,32841</strong>: el intervalo cae en valores observados del IMC, y las dos vías llegan a
+        los mismos. Recalculando la mediana en cada réplica, BRR y bootstrap se quedan al lado
+        (<strong>0,32590</strong> y <strong>0,32760</strong>), pero el jackknife se va a <strong>0,40415</strong>,
+        un 23 % por encima. Sus 30 réplicas de la mediana solo toman cinco valores: al quitar una PSU, la mediana
+        salta de un valor observado a otro en vez de moverse poco a poco, y el jackknife solo es fiable con
+        estadísticos suaves. <code>survey</code> lo avisa al calcularlo. La regla: para cuantiles, Woodruff con
+        cualquier diseño, o réplicas de BRR o de bootstrap; réplicas de jackknife, nunca.</p>
 
       <div class="warning">
         <p><strong>BRR no siempre es una opción.</strong> Exige exactamente 2 PSU por estrato — NHANES lo cumple
@@ -4247,19 +4296,21 @@ round(c(mediana = as.numeric(coef(q_lin)),
 
       <p>Los pesos de diseño no reproducen los totales que ya se conocen de la población. Si el censo dice que
         hay 49 % de hombres y la muestra ponderada dice 47,9 %, esa discrepancia es información desperdiciada —
-        y a menudo síntoma de no respuesta diferencial. <strong>Calibrar</strong> es modificar los pesos lo
-        mínimo posible para que cuadren con lo conocido.</p>
+        y a menudo síntoma de no respuesta diferencial. <strong>Calibrar</strong> —la palabra con la que el
+        capítulo 3 cerró el GREG— es modificar los pesos lo mínimo posible para que cuadren con lo conocido.</p>
 
       <div class="definition">
         <h4>Las tres calibraciones, de menor a mayor generalidad</h4>
         <p><strong>Post-estratificación:</strong> ajustar a los totales de <em>una</em> clasificación completa
-          (por ejemplo, cada casilla sexo × edad). Requiere conocer la tabla entera.</p>
+          (por ejemplo, cada casilla sexo × edad). Requiere conocer la tabla entera. Es la del capítulo 4,
+          módulo 10, que ya la presentó como calibración.</p>
         <p><strong>Raking (IPFP):</strong> ajustar a los <em>márgenes</em> de varias clasificaciones sin conocer
           las casillas. Se cuadran las filas, luego las columnas, y se repite hasta converger. Es lo que se usa
           casi siempre, porque los censos publican márgenes, no tablas cruzadas completas.</p>
         <p style="margin-bottom:0;"><strong>Calibración general (GREG):</strong> ajustar a totales de variables
-          continuas, no solo categóricas. El capítulo 3 ya montó el estimador de regresión general; calibrar es
-          su cara operativa — mismo estimador, otra puerta de entrada.</p>
+          continuas, no solo categóricas. El capítulo 3 ya montó el estimador de regresión general (módulo 10) y
+          obtuvo la regresión con <code>calibrate()</code> (módulo 6); calibrar es su cara operativa — mismo
+          estimador, otra puerta de entrada.</p>
       </div>
 
       <div class="code-tabs">
@@ -4403,6 +4454,8 @@ signif(max(abs(as.matrix(svytable(~sexo + edadg, dis_rak)) - A)) / total, 3)
           <li>Gutiérrez — §10.1–10.5: calibración, la fuente principal de este módulo.</li>
           <li>Lohr — §8.6: post-estratificación y raking como ajuste por no respuesta.</li>
           <li>Deville y Särndal (1992): el artículo que fundó la calibración moderna.</li>
+          <li>Este material — cap. 4, módulo 10 (la postestratificación como calibración) y cap. 3, módulos 6 y
+            10 (la regresión con <code>calibrate()</code> y el GREG).</li>
         </ul>
       </div>
     </div>
@@ -4570,7 +4623,9 @@ print(f"deff teorico = 1 + (m-1)*rho = {1 + (Mi-1)*rho:.2f}")
         <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> Cobertura contra ICC</h4>
         <p class="simulador-intro">La simulación del bloque usa ICC = 0,15 y conglomerados de 40. El deslizador
           mueve la ICC y el tamaño del conglomerado: la curva es la cobertura <em>teórica</em> del intervalo
-          ingenuo, calculada con la aproximación normal y el deff de Kish. El punto naranja marca la
+          ingenuo, calculada con la aproximación normal y el deff de los conglomerados, $1 + (m-1)\rho$ —la
+          fórmula de Kish del capítulo 5, módulo 4, con $m$ en el papel de $\bar M$; no el deff por pesos del
+          módulo 2—. El punto naranja marca la
           configuración simulada, cuya cobertura empírica real (0,563 con 2 000 réplicas) aparece en la lectura.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Cobertura del intervalo nominal del 95 % que ignora los conglomerados</p>
@@ -4630,7 +4685,7 @@ data.frame(cuantil = rec$q, tope = round(rec$tope), afectados = rec$afectados,
           el error estándar no mejora (0,2532 → 0,2559, incluso peor) y la media se desplaza 0,057. La razón es
           estructural: en NHANES la varianza la ponen los <strong>conglomerados</strong> (el salto de 1,71 a
           6,92 del módulo 3), no los pesos. Aplanar pesos ataca el ingrediente equivocado y solo aporta sesgo.
-          <strong>La regla:</strong> antes de recortar, descomponer el deff; si el peso de Kish es pequeño frente
+          <strong>La regla:</strong> antes de recortar, descomponer el deff; si el deff de Kish es pequeño frente
           al deff total, el recorte no es la herramienta.</p>
       </div>
 
@@ -5079,9 +5134,10 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       <div class="note">
         <p><strong>Hacia el capítulo 8.</strong> Este capítulo supuso que quien fue sorteado, respondió. La
           realidad es otra: la etapa 4 del ciclo siempre devuelve menos de lo que se pidió, y los que faltan no
-          son un subconjunto al azar. El capítulo 8 cierra el curso con la fórmula del sesgo de no respuesta —
-          que explica por fin, y del todo, el desastre del <em>Literary Digest</em> del capítulo 1 —, los ajustes
-          de peso que aquí se nombraron sin desarrollar, la imputación y el taller de diseño integrador.</p>
+          son un subconjunto al azar. El capítulo 8 cierra el curso volviendo a la fórmula del sesgo de no
+          respuesta del capítulo 1 (módulo 4) —ahora medida con datos de quienes no contestaron, y llevada al
+          <em>Literary Digest</em> con la identidad de Meng—, con los ajustes de peso que aquí se nombraron sin
+          desarrollar, la imputación y el taller de diseño integrador.</p>
       </div>
     </div>
   </template>
@@ -7720,7 +7776,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       const R = D7.replicacion;
       return {
         descripcion: 'Cuatro maneras de estimar el error estándar del IMC medio de NHANES. Los ' +
-          'cuatro apuntan a la misma varianza y coinciden en la tercera cifra; se diferencian en ' +
+          'cuatro apuntan a la misma varianza y coinciden en las dos primeras cifras; se diferencian en ' +
           'cuánto cuestan y en qué estadísticos admiten. Pulsa cualquier cabecera para reordenar.',
         columnas: [
           { clave: 'metodo', titulo: 'Método', tipo: 'texto' },
@@ -7731,13 +7787,13 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
         ],
         filas: [
           { metodo: 'Linealización de Taylor', ee: R.ee[0], replicas: 0,
-            requisito: 'ninguno', noLineales: 'con dificultad (pide la densidad)' },
+            requisito: 'ninguno', noLineales: 'sí: Woodruff, invirtiendo la F estimada' },
           { metodo: 'Jackknife (JKn)', ee: R.ee[1], replicas: R.replicas[1],
-            requisito: '≥ 2 PSU por estrato', noLineales: 'sí, sin cambiar nada' },
+            requisito: '≥ 2 PSU por estrato', noLineales: 'solo por Woodruff: sus réplicas de la mediana no valen' },
           { metodo: 'BRR', ee: R.ee[2], replicas: R.replicas[2],
-            requisito: 'exactamente 2 PSU por estrato', noLineales: 'sí' },
+            requisito: 'exactamente 2 PSU por estrato', noLineales: 'sí, también recalculándola' },
           { metodo: 'Bootstrap (Rao–Wu)', ee: R.ee[3], replicas: R.replicas[3],
-            requisito: 'ninguno', noLineales: 'sí, y para lo más irregular' }
+            requisito: 'ninguno', noLineales: 'sí, también recalculándola, y para lo más irregular' }
         ],
         inicial: 'replicas',
         destacada: 'Jackknife (JKn)',
@@ -7911,7 +7967,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { texto: 'Los conglomerados son el ingrediente caro: cuadruplican la varianza.', correcta: true },
           { texto: 'El deff siempre crece al añadir componentes del diseño.', correcta: false }
         ],
-        retroAcierto: 'Todas menos la del deff que siempre crece, que es la idea que hay que desterrar: un deff de 7 no es un bloque monolítico, es una suma de fuerzas que empujan en direcciones distintas — y solo descomponiéndolo se sabe dónde intervenir (módulo 8).',
+        retroAcierto: 'Todas menos la del deff que siempre crece, que es la idea que hay que desterrar: un deff de 7 no es un bloque monolítico, es un producto de factores que empujan en direcciones distintas — y solo descomponiéndolo se sabe dónde intervenir (módulo 8).',
         retroFallo: 'Son las tres que describen la descomposición. La del deff que siempre crece es falsa y es la lección del módulo: los estratos reducen la varianza — es su trabajo desde el capítulo 4 — mientras pesos y conglomerados la aumentan.'
       },
       {
@@ -7987,7 +8043,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { texto: 'La tercera: al añadir los estratos la varianza BAJA respecto a la de solo pesos (deff 1,73 → 1,71), que es exactamente lo que un estratificado debe hacer.', correcta: true,
             retro: 'Correcto. Los estratos son el único componente que trabaja a favor de la precisión — lo demostró el capítulo 4 — y en la descomposición se ve en directo.' },
           { texto: 'La segunda: los pesos bajan la varianza al corregir el desbalance.', correcta: false,
-            retro: 'Los pesos la SUBEN (1 → 1,73). Corregir sesgo con pesos desiguales cuesta varianza: es el intercambio del capítulo 6, y el deff de Kish lo mide.' },
+            retro: 'Los pesos la SUBEN (1 → 1,73). Corregir sesgo con pesos desiguales cuesta varianza: es el intercambio del capítulo 6, y el deff de Kish lo anticipa mirando solo los pesos.' },
           { texto: 'La cuarta: los conglomerados bajan la varianza al agrupar observaciones parecidas.', correcta: false,
             retro: 'Al revés: la cuadruplican (1,71 → 6,92). Agrupar observaciones parecidas es justamente lo que destruye información — es el ICC del capítulo 5.' },
           { texto: 'Ninguna: las cuatro barras crecen monótonamente.', correcta: false,
@@ -8022,7 +8078,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { texto: 'Recortar pesos es siempre recomendable cuando la razón máx/mín supera 40.', correcta: false }
         ],
         retroAcierto: 'Todas menos la de la regla máx/mín > 40, que es la receta de cocina que el módulo desmonta: en NHANES la varianza la ponen los conglomerados, no los pesos, así que aplanar pesos ataca el ingrediente equivocado. Antes de recortar, descomponer el deff.',
-        retroFallo: 'Son las tres que describen lo que pasó al recortar. La de la regla máx/mín > 40 convierte en regla mecánica lo que es una decisión que depende de la DESCOMPOSICIÓN del deff: si el Kish es pequeño frente al deff total, el recorte no es la herramienta.'
+        retroFallo: 'Son las tres que describen lo que pasó al recortar. La de la regla máx/mín > 40 convierte en regla mecánica lo que es una decisión que depende de la DESCOMPOSICIÓN del deff: si el deff de Kish es pequeño frente al deff total, el recorte no es la herramienta.'
       },
       {
         tipo: 'opcion',
