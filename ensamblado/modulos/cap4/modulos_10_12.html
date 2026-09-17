@@ -35,6 +35,19 @@
         </div>
       </div>
 
+      <p>La tabla trae la columna que explica todo lo demás: $\hat{N}_h$, el tamaño que la muestra <em>estima</em>
+        para cada región con los pesos de partida — los 107 condados del Norte-Centro por 10,26 hacen
+        <strong>1 097,82</strong>, cuando el marco dice que son 1 054 —. El sorteo repartió la muestra con una
+        composición que no es la de la población, y el peso nuevo corrige exactamente ese desajuste,
+        multiplicando el viejo por $N_h/\hat{N}_h$.</p>
+
+      <p>El final del bloque añade el contraste que le da nombre a la operación. En el capítulo 3 la razón también
+        calibraba, pero contra un solo total: su factor $g = t_x/\hat{t}_x$ era el mismo para todas las unidades
+        —aquí <strong>1,0366</strong>, que deja el peso en <strong>10,6359</strong>, el que aquel capítulo ya
+        mostraba en su módulo 10— y los pesos calibrados sumaban <strong>3 190,7684</strong>, no $N$. En la
+        postestratificación hay un factor por postestrato y lo que se cuadra son los $N_h$: su suma, $N = 3\,078$,
+        cuadra de propina.</p>
+
       <div class="definition">
         <h4>Postestratificación</h4>
         <p>Con un MAS de $n$ unidades del que se observan $n_h$ en cada estrato (aleatorios, no fijados), el
@@ -45,6 +58,39 @@
           para que la muestra reproduzca exactamente los totales que el marco conoce ($\sum_{s_h} w_k = N_h$ para
           todo $h$). El capítulo 7 generaliza esta idea a varios márgenes a la vez (raking) y a totales continuos
           (GREG, que ya asomó en el capítulo 3).</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-post-razon">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver la postestratificación como un estimador de razón</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-post-razon" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Tómese como variable auxiliar, dentro del postestrato $h$, el <strong>indicador</strong>
+                $x_k = 1$ si $k \in U_h$ y $x_k = 0$ si no. Su total poblacional se conoce, y es justamente el
+                tamaño del postestrato: $t_x = N_h$.</p>
+            </li>
+            <li>
+              <p>Con los pesos de partida, la muestra estima ese total y el de $y$ restringido al postestrato:</p>
+              $$\hat{N}_h = \sum_{k \in s} w_k x_k, \qquad \hat{t}_{yh} = \sum_{k \in s} w_k x_k y_k$$
+            </li>
+            <li>
+              <p>El estimador de razón del capítulo 3 —lo estimado partido por lo estimado, por el total
+                conocido— da entonces</p>
+              $$\hat{t}_{yh,r} = \frac{\hat{t}_{yh}}{\hat{N}_h}\,N_h = N_h \, \bar{y}_h,$$
+              <p>porque el cociente de las dos estimaciones es la media muestral del postestrato.</p>
+            </li>
+            <li>
+              <p>Sumando sobre los $H$ postestratos aparece la fórmula de la definición: <strong>la
+                postestratificación es estimación por razón dentro de cada postestrato</strong>. Y en pesos, para
+                <em>cualquier</em> diseño de partida —no solo un MAS—: $w_k^* = (N_h/\hat{N}_h)\,w_k$ para
+                $k \in U_h$. Con un MAS, $w_k = N/n$ y sale el $N_h/n_h$ de arriba.</p>
+            </li>
+          </ol>
+        </div>
       </div>
 
       <div class="code-tabs">
@@ -142,10 +188,29 @@
           dar por buena su aproximación de la varianza; por debajo de ahí, fusionar celdas.</p>
       </div>
 
+      <div class="note">
+        <p><strong>Estrato, dominio y postestrato: las mismas cuatro regiones, tres papeles.</strong></p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li><strong>Estrato</strong> (módulos 1 a 8, con <code>agstrat</code>): el investigador fija los $n_h$
+            <em>antes</em> de sortear, y la variabilidad entre regiones desaparece de la varianza.</li>
+          <li><strong>Dominio</strong> (capítulo 3, módulo 8, con <code>agsrs</code>): la región interesa al
+            estimar, pero el sorteo no la miró, así que $n_d$ es aleatorio y la media de dominio se estima como una
+            razón.</li>
+          <li><strong>Postestrato</strong> (este módulo, con la misma <code>agsrs</code>): un dominio cuyo tamaño
+            poblacional $N_h$ <strong>sí</strong> se conoce. Eso es lo único que lo distingue del dominio, y es lo
+            que permite usar $N_h$ en lugar de $\hat{N}_h$ y ganar precisión.</li>
+        </ul>
+        <p style="margin-bottom:0;">Las $\bar{y}_h$ de este módulo son exactamente las medias de dominio que el
+          capítulo 3 estimó con esta misma muestra: cambia lo que se sabe de $N_h$, no el cálculo.</p>
+      </div>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §4.7 (2.ª ed.) / §4.4 (3.ª ed.): postestratificación.</li>
+          <li>Lohr — §4.7 (2.ª ed.) / §4.4 (3.ª ed.): postestratificación, con su derivación como razón y los
+            pesos ajustados (ecs. 4.26 a 4.29 de la 3.ª).</li>
+          <li>Lohr — §3.3 (2.ª ed.) / §4.3 (3.ª ed.): estimación en dominios, de la que el postestrato es el caso
+            con $N_h$ conocido.</li>
           <li>Gutiérrez — §10.1: calibración, donde esta idea se vuelve sistema.</li>
           <li>Holt y Smith (1979), «Post stratification» — la defensa clásica del análisis condicional.</li>
         </ul>

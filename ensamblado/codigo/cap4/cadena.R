@@ -308,18 +308,32 @@ table(agsrs$region)
 w0 <- N / 300
 n_obs  <- table(agsrs$region)
 w_post <- as.numeric(Nh[agsrs$region]) / as.numeric(n_obs[agsrs$region])
+# Nh_est es el tamano que la muestra ESTIMA para cada region con los pesos de
+# partida (N/n por unidad). El peso nuevo es el viejo corregido por N_h/Nh_est:
+# la postestratificacion es una razon dentro de cada postestrato.
 data.frame(region = names(Nh), peso_antes = round(w0, 4),
+           Nh = as.numeric(Nh), Nh_est = round(w0 * as.numeric(n_obs), 2),
            peso_despues = round(as.numeric(Nh) / as.numeric(n_obs), 4))
-#>   region peso_antes peso_despues
-#> 1     NC      10.26       9.8505
-#> 2     NE      10.26       9.1667
-#> 3      S      10.26      10.6308
-#> 4      W      10.26      10.8205
+#>   region peso_antes   Nh  Nh_est peso_despues
+#> 1     NC      10.26 1054 1097.82       9.8505
+#> 2     NE      10.26  220  246.24       9.1667
+#> 3      S      10.26 1382 1333.80      10.6308
+#> 4      W      10.26  422  400.14      10.8205
 
 # La suma de pesos ya no "casi" reconstruye N: lo reconstruye EXACTO.
 round(c(antes = 300 * w0, despues = sum(w_post)), 2)
 #>   antes despues
 #>    3078    3078
+
+# Contraste con la razon del capitulo 3, que tambien calibra: alli el factor
+# g = t_x / t_x estimado es el MISMO para todos (un solo total que cuadrar) y
+# los pesos calibrados NO suman N. Aqui hay un factor por postestrato y lo
+# que se cuadra son los N_h, asi que su suma, N, cuadra tambien.
+g_razon <- sum(agpop$acres87) / (w0 * sum(agsrs$acres87))
+round(c(g_razon = g_razon, peso_razon = g_razon * w0,
+        suma_pesos_razon = 300 * g_razon * w0, N = N), 4)
+#>          g_razon       peso_razon suma_pesos_razon                N
+#>           1.0366          10.6359        3190.7684        3078.0000
 
 cat("\n###BLOQUE-R14###\n")
 # La media postestratificada, a mano y con survey::postStratify.

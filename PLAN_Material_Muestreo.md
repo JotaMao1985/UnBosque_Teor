@@ -4145,3 +4145,45 @@ cajas más abajo sin que nadie hubiera cruzado los dos. Evaluar la regla sobre l
 contraejemplo —y ver que la pasa— es lo que convierte la advertencia en argumento.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.37 — La postestratificación es una razón: el M10 del cap. 4 lo dice y lo muestra (2026-09-17)
+
+Tercera y última tarea de la fase 2 del plan del capítulo 4 con Lohr 3.ª ed. (tareas B4 y B11).
+
+**Lo que faltaba.** El M10 enseñaba el peso postestratificado $N_h/n_h$ como una receta: aparecía
+hecho, sin decir de dónde sale. Lohr lo deriva en §4.4 —ecs. 4.26 a 4.29— como **estimación por
+razón dentro de cada postestrato**, con el indicador de pertenencia como variable auxiliar, y de ahí
+saca los pesos generales, válidos para cualquier diseño de partida y no solo para un MAS. El
+capítulo tenía además la pieza que hacía falta para verlo y no la mostraba: $\hat N_h$, el tamaño que
+la propia muestra estima para cada región. Sin esa columna, «calibrar» era una palabra.
+
+**El arreglo, en cuatro piezas.**
+- **La columna que faltaba**, en el bloque **R13**: $\hat N_h$ = **1 097,82 · 246,24 · 1 333,80 ·
+  400,14**, que es la Tabla 4.4 del Ejemplo 4.9 de Lohr. Los 107 condados del Norte-Centro por 10,26
+  dan 1 097,82 y el marco dice 1 054; el peso nuevo es el viejo por $N_h/\hat N_h$, y así se lee.
+- **Una `.derivacion` plegable nueva** (`der-post-razon`, cuatro pasos): indicador $x_k$ con
+  $t_x = N_h$ conocido → $\hat N_h$ y $\hat t_{yh}$ con los pesos de partida → la razón del capítulo 3
+  da $\hat t_{yh,r} = N_h\bar y_h$ → sumando sobre los $H$ sale la fórmula de la definición, y en
+  pesos $w_k^* = (N_h/\hat N_h)\,w_k$ para cualquier diseño.
+- **El contraste que le da nombre a «calibración»**, al final del R13 y en prosa: la razón del
+  capítulo 3 calibra contra **un solo** total, su $g = 1{,}0366$ es el mismo para todos, deja el peso
+  en **10,6359** —el que aquel capítulo ya mostraba en su M10— y sus pesos suman **3 190,7684**, no
+  $N$. La postestratificación cuadra cada $N_h$, y por eso su suma, **3 078**, cuadra de propina.
+- **Un `.note` de cierre**, «Estrato, dominio y postestrato: las mismas cuatro regiones, tres
+  papeles»: en el estrato los $n_h$ se fijan antes de sortear; en el dominio son aleatorios; el
+  postestrato es un dominio cuyo $N_h$ se conoce, y eso es lo **único** que lo distingue. Las
+  $\bar y_h$ de este módulo son las medias de dominio que el capítulo 3 estimó con esta misma
+  muestra. Referencia nueva a Lohr §3.3 (2.ª) / §4.3 (3.ª).
+
+**Verificado.** Byte a byte. **293 de 293** cifras de bloques (eran 281) y **95 de prosa · 0 sin
+respaldo**. En el navegador: la derivación abre con sus 4 pasos y 13 fórmulas, 0 `.katex-error`,
+ningún `$` suelto fuera del código y consola limpia.
+
+**Lo que enseña.** El capítulo enseñaba tres cosas —razón, dominios, postestratificación— como tres
+recetas, y son la misma con distinta información sobre $N_h$. Lo que las cose no es una explicación
+más, sino **la cifra intermedia que la receta escondía**: en cuanto $\hat N_h$ está impreso al lado
+de $N_h$, el peso deja de ser una fórmula que memorizar y pasa a ser una corrección que se lee.
+
+**Pendiente:** el visto bueno de Javier para publicar.
