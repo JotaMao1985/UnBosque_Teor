@@ -172,6 +172,13 @@ round(rbind(ee = sqrt(opciones), deff = opciones / V_mas), 4)
 #> ee   21109.0721        17111.7990        23144.7268 23304.8326
 #> deff     0.8212            0.5396            0.9872     1.0009
 
+# Por que acres87 gana y farms92 no: como numero, acres87 predice acres92
+# casi a la perfeccion, y farms92 casi nada.
+round(c(acres87 = cor(agpop$acres92, agpop$acres87),
+        farms92 = cor(agpop$acres92, agpop$farms92)), 4)
+#> acres87 farms92
+#>  0.9951  0.1470
+
 cat("\n###BLOQUE-R9###\n")
 # Por que gana estratificar? La descomposicion ANOVA de la poblacion:
 # la variabilidad total se parte en ENTRE regiones y DENTRO de regiones.
@@ -185,8 +192,22 @@ round(c(R2_entre = SSB / SST, dentro = SSW / SST), 4)
 #>     0.18     0.82
 
 # Ese 18 % ENTRE es justo lo que se ahorra la asignacion proporcional
-# (comparar con su deff de 0.82): estratificar renta lo que la variable
-# de estratificacion explica de la variable de interes.
+# (comparar con su deff de 0.82): estratificar renta lo que la particion
+# en estratos explica de la variable de interes.
+
+# La misma cuenta para las cuatro particiones del modulo 6, en %. Con estratos
+# grandes, el ahorro de varianza (1 - deff) es casi exacto el R2_entre. Y
+# R2_entre es el R^2 de la PARTICION, no el de la variable con la que se corto:
+entre <- function(f) sum(tapply(agpop$acres92, f, length) *
+                         (tapply(agpop$acres92, f, mean) - media_U)^2) / SST
+R2_part <- c(region            = entre(agpop$region),
+             cuartiles_acres87 = entre(corta4(agpop$acres87)),
+             cuartiles_farms92 = entre(corta4(agpop$farms92)),
+             al_azar           = entre(azar))
+round(100 * rbind(R2_entre = R2_part, ahorro = 1 - opciones / V_mas), 2)
+#>          region cuartiles_acres87 cuartiles_farms92 al_azar
+#> R2_entre  18.00             46.09              1.37    0.00
+#> ahorro    17.88             46.04              1.28   -0.09
 
 # Puede la proporcional perder contra el MAS? Restando las dos varianzas
 # sale una identidad exacta (Lohr, ec. 3.12 de la 3.a ed.): pierde solo si

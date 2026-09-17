@@ -3828,3 +3828,46 @@ salida es −515 394,3; el verificador captura el signo, y se reescribió con é
 M7: **0 `.katex-error`**, **0 `$` sueltos** fuera del código y consola limpia.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+### T7.31 — El número de estratos y el R² que no era el de la variable (cap. 4, 2026-09-17)
+
+Segunda tarea del plan de mejora del capítulo 4 con Lohr 3.ª ed. (`PLAN_Cap4_Lohr3e.md`, fuera del
+control de versiones). **Tres defectos, los tres en la misma cadena de razonamiento**: cuánto rinde
+partir en más estratos y por qué.
+
+**1 · «La caída es casi nula después de $H \approx 6$» (M6), desmentido por su propio JSON.** El
+barrido del capítulo va de deff **0,448** con seis estratos a **0,341** con diez: casi una cuarta
+parte menos de varianza. *Arreglo:* rendimientos decrecientes —cada estrato nuevo gana menos que el
+anterior—, pero la ganancia no se apaga.
+
+**2 · «Por eso las encuestas reales rara vez pasan de pocos estratos por variable» (M6).** Lohr §3.5
+dice lo contrario: *the more information you have, the more strata you should use… many surveys are
+stratified to the point that only two sampling units are observed in each stratum*. *Arreglo:* el
+texto se alinea con Lohr y explica el caso concreto —`acres87` predice `acres92` casi a la
+perfección, así que cada corte más fino sigue rindiendo; con una variable peor, la curva se
+aplanaría antes, porque lo que la variable no predice se queda dentro de cualquier estrato—. Se
+conserva «rendimientos decrecientes», que es cierto.
+
+**3 · «`acres87` ($R^2 \approx 0{,}46$ con la superficie del 92)» (M7).** Mezclaba dos erres
+cuadradas. El 0,46 es el $R^2$ de la **partición en cuartiles**; la variable, como número, tiene
+correlación **0,9951** con `acres92`. Tal como estaba, tapaba justo por qué partir más fino sigue
+rindiendo (defecto 1). *Arreglo:* R9 imprime, para las cuatro particiones del M6, el $R^2$ de cada
+una al lado del ahorro de varianza —46,09 contra 46,04; 18,00 contra 17,88; 1,37 contra 1,28; y
+0,00 contra **−0,09**, el azar, que pierde—, y la prosa distingue los dos $R^2$. R8 calcula las dos
+correlaciones (0,9951 y 0,147), que ahora citan las lecciones del módulo.
+
+**Y un menor de paso:** «para la proporcional (ignorando los fpc), deff ≈ SSW/SST» era falso; en la
+ec. 3.12 el fpc se cancela exacto y lo que hace falta es que los estratos sean **grandes**.
+
+**Verificado.** `ensambla_cap4.py` byte a byte en la segunda pasada; `verifica_bloques.py --prosa`:
+**270 de 270** cifras de bloques (eran 255) y **82 respaldadas · 0 sin respaldo** (eran 75). La
+tabla nueva salía en notación científica (`-9e-04`) y se imprime en porcentajes, que es como la cita
+la prosa. En el navegador, M4, M6 y M7: 0 `.katex-error`, 0 `$` sueltos fuera del código, consola
+limpia y los tres textos viejos ausentes.
+
+**Lo que enseña.** Los tres defectos se sostenían entre sí: el $R^2$ mal atribuido hacía plausible
+que la ganancia se agotara pronto, y eso a su vez explicaba una supuesta práctica de las encuestas
+reales. **Una cifra mal etiquetada no se queda quieta: fabrica la teoría que la justifica.** El
+barrido que la desmentía llevaba publicado en el JSON del propio capítulo desde julio.
+
+**Pendiente:** el visto bueno de Javier para publicar.

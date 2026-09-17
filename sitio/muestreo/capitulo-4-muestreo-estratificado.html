@@ -4256,20 +4256,27 @@ opciones &lt;- c(
 round(rbind(ee = sqrt(opciones), deff = opciones / V_mas), 4)
 #&gt;          region cuartiles_acres87 cuartiles_farms92    al_azar
 #&gt; ee   21109.0721        17111.7990        23144.7268 23304.8326
-#&gt; deff     0.8212            0.5396            0.9872     1.0009</code></pre>
+#&gt; deff     0.8212            0.5396            0.9872     1.0009
+
+# Por que acres87 gana y farms92 no: como numero, acres87 predice acres92
+# casi a la perfeccion, y farms92 casi nada.
+round(c(acres87 = cor(agpop$acres92, agpop$acres87),
+        farms92 = cor(agpop$acres92, agpop$farms92)), 4)
+#&gt; acres87 farms92
+#&gt;  0.9951  0.1470</code></pre>
         </div>
       </div>
 
       <p>La tabla ordena las lecciones sola:</p>
       <ul class="list-disc pl-6 space-y-2">
         <li><strong>Cuartiles de <code>acres87</code>: deff 0,54.</strong> La superficie de 1987 predice la de 1992
-          mejor que la geografía; estratificar por ella <strong>más que duplica</strong> la ganancia de la región: el deff
+          casi a la perfección —correlación 0,9951, al final del bloque— y mucho mejor que la geografía; estratificar por ella <strong>más que duplica</strong> la ganancia de la región: el deff
           pasa de 0,82 a 0,54, así que lo que se ahorra en varianza sube del 18 % al 46 %. Es la misma variable
           auxiliar que el capítulo 3 usaba para el estimador de razón, entrando ahora por el diseño.</li>
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
         <li><strong>Cuartiles de <code>farms92</code>: deff 0,99.</strong> El <em>número</em> de granjas casi no
-          dice nada de la <em>superficie</em> sembrada. Estratificar por una variable poco correlacionada es
+          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco correlacionada es
           trabajar gratis.</li>
         <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
           $y$ no ganan nada —en rigor pierden un pelo, 1,0009, y el módulo 7 explica por qué—, y el estratificado
@@ -4280,9 +4287,14 @@ round(rbind(ee = sqrt(opciones), deff = opciones / V_mas), 4)
         <h4><i class="fas fa-layer-group" aria-hidden="true"></i> El constructor de estratos</h4>
         <p class="simulador-intro">¿Y cuántos estratos? Mueve $H$ y mira caer el deff al partir <code>agpop</code>
           en $H$ estratos por cuantiles de <code>acres87</code>, siempre con asignación proporcional de 300. Las
-          líneas de referencia marcan la región, <code>farms92</code> y el azar. La caída es fuerte al principio y
-          casi nula después de $H \approx 6$: los rendimientos decrecientes son la razón por la que las encuestas
-          reales rara vez pasan de pocos estratos por variable.</p>
+          líneas de referencia marcan la región, <code>farms92</code> y el azar. Los rendimientos son decrecientes
+          —cada estrato nuevo gana menos que el anterior—, pero la ganancia no se apaga: de $H = 6$ a $H = 10$ el
+          deff todavía baja de 0,448 a 0,341, casi una cuarta parte menos de varianza. Es porque
+          <code>acres87</code> predice <code>acres92</code> casi a la perfección, y cada corte más fino separa
+          condados que de verdad tienen superficies distintas; con una variable que predijera peor, la curva se
+          aplanaría antes, porque lo que la variable no predice se queda dentro de cualquier estrato. La regla de
+          Lohr va en esa dirección: cuanta más información tenga el marco, más estratos, y muchas encuestas
+          estratifican hasta dejar solo dos unidades por estrato, el mínimo para poder estimar su varianza.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">deff al aumentar el número de estratos por cuantiles de acres87</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -4363,8 +4375,22 @@ round(c(R2_entre = SSB / SST, dentro = SSW / SST), 4)
 #&gt;     0.18     0.82
 
 # Ese 18 % ENTRE es justo lo que se ahorra la asignacion proporcional
-# (comparar con su deff de 0.82): estratificar renta lo que la variable
-# de estratificacion explica de la variable de interes.
+# (comparar con su deff de 0.82): estratificar renta lo que la particion
+# en estratos explica de la variable de interes.
+
+# La misma cuenta para las cuatro particiones del modulo 6, en %. Con estratos
+# grandes, el ahorro de varianza (1 - deff) es casi exacto el R2_entre. Y
+# R2_entre es el R^2 de la PARTICION, no el de la variable con la que se corto:
+entre &lt;- function(f) sum(tapply(agpop$acres92, f, length) *
+                         (tapply(agpop$acres92, f, mean) - media_U)^2) / SST
+R2_part &lt;- c(region            = entre(agpop$region),
+             cuartiles_acres87 = entre(corta4(agpop$acres87)),
+             cuartiles_farms92 = entre(corta4(agpop$farms92)),
+             al_azar           = entre(azar))
+round(100 * rbind(R2_entre = R2_part, ahorro = 1 - opciones / V_mas), 2)
+#&gt;          region cuartiles_acres87 cuartiles_farms92 al_azar
+#&gt; R2_entre  18.00             46.09              1.37    0.00
+#&gt; ahorro    17.88             46.04              1.28   -0.09
 
 # Puede la proporcional perder contra el MAS? Restando las dos varianzas
 # sale una identidad exacta (Lohr, ec. 3.12 de la 3.a ed.): pierde solo si
@@ -4393,11 +4419,17 @@ round(cbind(identidad = dif, modulo_6 = V_mas - opciones[c("region", "al_azar")]
       </div>
 
       <p>El 18 % de la variabilidad de <code>acres92</code> vive <em>entre</em> regiones — y el deff de la asignación
-        proporcional era 0,82. No es coincidencia: para la proporcional (ignorando los fpc), $\text{deff} \approx
-        \text{SSW}/\text{SST} = 1 - R^2$. La regla del módulo 6 era esto: <strong>estratificar renta exactamente lo
-        que la variable de estratificación explica de $y$</strong>. Por eso <code>acres87</code> ($R^2 \approx
-        0{,}46$ con la superficie del 92) gana a la región ($R^2 = 0{,}18$) y por eso el azar ($R^2 = 0$) no renta
-        nada.</p>
+        proporcional era 0,82. No es coincidencia: para la proporcional con estratos grandes, $\text{deff} \approx
+        \text{SSW}/\text{SST} = 1 - R^2$, donde $R^2 = \text{SSB}/\text{SST}$ es la parte de SST que queda entre
+        estratos. La regla del módulo 6 era esto: <strong>estratificar renta exactamente lo que la partición en
+        estratos explica de $y$</strong>. La segunda tabla del bloque lo comprueba con las cuatro particiones de ese
+        módulo: los cuartiles de <code>acres87</code> explican el 46,09 % y ahorran el 46,04 % de la varianza; la
+        región, el 18,00 % y el 17,88 %; el azar no explica nada y ahorra −0,09 %, es decir, pierde.</p>
+
+      <p>Ojo con qué $R^2$ es ese: el de la <em>partición</em>, no el de la variable. Como número,
+        <code>acres87</code> predice <code>acres92</code> con correlación 0,9951, pero cuatro cuartiles solo recogen
+        el 46,09 % de la variabilidad: el resto se queda <em>dentro</em> de cada cuartil, entre condados con
+        superficies muy distintas. Por eso partir más fino seguía rindiendo en el simulador del módulo 6.</p>
 
       <div class="note">
         <p><strong>¿Puede la proporcional perder contra el MAS?</strong> Sí, aunque con estratos grandes casi nunca.

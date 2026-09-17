@@ -269,13 +269,13 @@
       <p>La tabla ordena las lecciones sola:</p>
       <ul class="list-disc pl-6 space-y-2">
         <li><strong>Cuartiles de <code>acres87</code>: deff 0,54.</strong> La superficie de 1987 predice la de 1992
-          mejor que la geografía; estratificar por ella <strong>más que duplica</strong> la ganancia de la región: el deff
+          casi a la perfección —correlación 0,9951, al final del bloque— y mucho mejor que la geografía; estratificar por ella <strong>más que duplica</strong> la ganancia de la región: el deff
           pasa de 0,82 a 0,54, así que lo que se ahorra en varianza sube del 18 % al 46 %. Es la misma variable
           auxiliar que el capítulo 3 usaba para el estimador de razón, entrando ahora por el diseño.</li>
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
         <li><strong>Cuartiles de <code>farms92</code>: deff 0,99.</strong> El <em>número</em> de granjas casi no
-          dice nada de la <em>superficie</em> sembrada. Estratificar por una variable poco correlacionada es
+          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco correlacionada es
           trabajar gratis.</li>
         <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
           $y$ no ganan nada —en rigor pierden un pelo, 1,0009, y el módulo 7 explica por qué—, y el estratificado
@@ -286,9 +286,14 @@
         <h4><i class="fas fa-layer-group" aria-hidden="true"></i> El constructor de estratos</h4>
         <p class="simulador-intro">¿Y cuántos estratos? Mueve $H$ y mira caer el deff al partir <code>agpop</code>
           en $H$ estratos por cuantiles de <code>acres87</code>, siempre con asignación proporcional de 300. Las
-          líneas de referencia marcan la región, <code>farms92</code> y el azar. La caída es fuerte al principio y
-          casi nula después de $H \approx 6$: los rendimientos decrecientes son la razón por la que las encuestas
-          reales rara vez pasan de pocos estratos por variable.</p>
+          líneas de referencia marcan la región, <code>farms92</code> y el azar. Los rendimientos son decrecientes
+          —cada estrato nuevo gana menos que el anterior—, pero la ganancia no se apaga: de $H = 6$ a $H = 10$ el
+          deff todavía baja de 0,448 a 0,341, casi una cuarta parte menos de varianza. Es porque
+          <code>acres87</code> predice <code>acres92</code> casi a la perfección, y cada corte más fino separa
+          condados que de verdad tienen superficies distintas; con una variable que predijera peor, la curva se
+          aplanaría antes, porque lo que la variable no predice se queda dentro de cualquier estrato. La regla de
+          Lohr va en esa dirección: cuanta más información tenga el marco, más estratos, y muchas encuestas
+          estratifican hasta dejar solo dos unidades por estrato, el mínimo para poder estimar su varianza.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">deff al aumentar el número de estratos por cuantiles de acres87</p>
         <div class="grafico-wrapper" style="height:260px;">

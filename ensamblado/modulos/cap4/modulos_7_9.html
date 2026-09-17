@@ -45,11 +45,17 @@
       </div>
 
       <p>El 18 % de la variabilidad de <code>acres92</code> vive <em>entre</em> regiones — y el deff de la asignación
-        proporcional era 0,82. No es coincidencia: para la proporcional (ignorando los fpc), $\text{deff} \approx
-        \text{SSW}/\text{SST} = 1 - R^2$. La regla del módulo 6 era esto: <strong>estratificar renta exactamente lo
-        que la variable de estratificación explica de $y$</strong>. Por eso <code>acres87</code> ($R^2 \approx
-        0{,}46$ con la superficie del 92) gana a la región ($R^2 = 0{,}18$) y por eso el azar ($R^2 = 0$) no renta
-        nada.</p>
+        proporcional era 0,82. No es coincidencia: para la proporcional con estratos grandes, $\text{deff} \approx
+        \text{SSW}/\text{SST} = 1 - R^2$, donde $R^2 = \text{SSB}/\text{SST}$ es la parte de SST que queda entre
+        estratos. La regla del módulo 6 era esto: <strong>estratificar renta exactamente lo que la partición en
+        estratos explica de $y$</strong>. La segunda tabla del bloque lo comprueba con las cuatro particiones de ese
+        módulo: los cuartiles de <code>acres87</code> explican el 46,09 % y ahorran el 46,04 % de la varianza; la
+        región, el 18,00 % y el 17,88 %; el azar no explica nada y ahorra −0,09 %, es decir, pierde.</p>
+
+      <p>Ojo con qué $R^2$ es ese: el de la <em>partición</em>, no el de la variable. Como número,
+        <code>acres87</code> predice <code>acres92</code> con correlación 0,9951, pero cuatro cuartiles solo recogen
+        el 46,09 % de la variabilidad: el resto se queda <em>dentro</em> de cada cuartil, entre condados con
+        superficies muy distintas. Por eso partir más fino seguía rindiendo en el simulador del módulo 6.</p>
 
       <div class="note">
         <p><strong>¿Puede la proporcional perder contra el MAS?</strong> Sí, aunque con estratos grandes casi nunca.
