@@ -225,6 +225,40 @@ stopifnot(cor_sesgo > 0.95)
 # hicieran era justo el síntoma que delató el problema.
 stopifnot(all(sign(tabla_sesgo$sesgo[medibles]) == sign(tabla_sesgo$sesgoTeorico[medibles])))
 
+# ---------------------------------------------------------------------------
+# 6b · UN CRITERIO QUE SE PUEDE EVALUAR CON UNA SOLA MUESTRA
+# ---------------------------------------------------------------------------
+# La simulación de arriba es imposible en una encuesta de verdad: allí hay UNA
+# muestra, no 200 000. Pero el sesgo relativo del estimador de razón tiene una
+# cota que sí se calcula con lo que da esa única muestra (Portela y Villeta,
+# secc. 7.1.2, p. 212; la regla práctica es de Kish, 1965):
+#
+#   |Sesgo(B_hat)| / sd(B_hat)  <=  CV(xbar_hat) = CV(x) * sqrt((1 - f) / n)
+#
+# Sale de |cov(B_hat, xbar_hat)| <= sd(B_hat) sd(xbar_hat), o sea de |rho| <= 1,
+# así que es CONSERVADORA. Y es invariante de escala: vale igual para B_hat,
+# para la media de razón y para el total, porque los tres se diferencian en una
+# constante que se cancela entre numerador y denominador.
+CVx_pob <- sd(agpop$acres87) / xbar_U
+tabla_sesgo$cotaKish <- CVx_pob * sqrt((1 - tabla_sesgo$n / N) / tabla_sesgo$n)
+# La cota tiene que cumplirse en TODOS los tamaños simulados. Si fallara, o está
+# mal escrita o la simulación está mal hecha: es una tercera vía de control.
+stopifnot(all(abs(tabla_sesgo$sesgoRelEE) <= tabla_sesgo$cotaKish))
+
+# El n a partir del cual la regla del 0,2 declara el sesgo despreciable en esta
+# población, despejando n de CV(x) * sqrt((1 - n/N) / n) = 0,2.
+n_kish <- ceiling(1 / (0.04 / CVx_pob^2 + 1 / N))
+CVx_muestra <- sd(agsrs$acres87) / xbar        # lo ÚNICO que se tendría en campo
+kish <- list(
+  CVxPob      = CVx_pob,
+  cotaPob     = CVx_pob     * sqrt((1 - n / N) / n),
+  cotaMuestra = CVx_muestra * sqrt((1 - n / N) / n),
+  relEE       = abs(tabla_sesgo$sesgoRelEE[tabla_sesgo$n == n]),
+  nMinimo     = n_kish)
+cat(sprintf("Kish: cota poblacional %.4f, estimada con agsrs %.4f, |sesgo|/ee real %.4f; n minimo %d\n",
+            kish$cotaPob, kish$cotaMuestra, kish$relEE, n_kish))
+stopifnot(n_kish > 30, n_kish < 100)
+
 # ===========================================================================
 # 7 · Linealización: qué término se desprecia
 # ===========================================================================
@@ -472,6 +506,7 @@ datos <- list(
   ),
   estimadores = estimadores,
   sesgoRazon = tabla_sesgo,
+  kish = kish,
   linealizacion = list(n = n_lin, exacto = ex[1:600], lineal = li[1:600],
                        correlacion = cor(ex, li), eeExacto = sd(ex), eeLineal = sd(li)),
   dominios = list(binario = tabla_dom, region = tabla_reg),

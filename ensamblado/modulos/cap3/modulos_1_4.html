@@ -575,6 +575,68 @@
           propio error.</p>
       </div>
 
+      <h3>¿Y si solo tengo una muestra?</h3>
+
+      <p>Todo lo anterior se midió con <strong>200 000 muestras</strong> de una población que se conoce entera. En
+        una encuesta de verdad no hay ninguna de las dos cosas: hay <em>una</em> muestra y una población que
+        justamente se quiere estimar. Un módulo que deje la conversación aquí no sirve para trabajar. Y no hace
+        falta: el sesgo relativo tiene una <strong>cota</strong> que se calcula con lo que da esa única muestra.</p>
+
+      <div class="formula">
+        <p style="text-align:center; margin-bottom:0.6rem;">
+          $$\frac{\lvert\,\text{Sesgo}(\hat{B})\,\rvert}{\sqrt{V(\hat{B})}}
+            \;\le\; \text{CV}(\hat{\bar{x}})
+            \;=\; \text{CV}(x)\sqrt{\frac{1-f}{n}}$$</p>
+        <p style="margin-bottom:0;">Sale de que $\lvert\text{Sesgo}(\hat{B})\rvert =
+          \lvert\operatorname{cov}(\hat{B}, \hat{\bar{x}})\rvert/\bar{x}_U$ y de que una covarianza no supera
+          el producto de las dos desviaciones — es decir, de $\lvert\rho\rvert \le 1$. Y es
+          <strong>invariante de escala</strong>: vale igual para $\hat{B}$, para la media de razón y para
+          $\hat{t}_r$, porque los tres se diferencian en una constante que se cancela arriba y abajo.</p>
+      </div>
+
+      <p>Lo que se estima de la muestra es $\widehat{\text{CV}}(\hat{\bar{x}}) =
+        \sqrt{(1-f)/n}\;s_x/\bar{x}$, y sobre <code>agsrs</code> vale <strong>0,0626</strong>. La cota verdadera
+        —calculable aquí solo porque <code>agpop</code> es un censo— es <strong>0,0750</strong>: la muestra la
+        subestima algo, por la misma razón por la que se quedó corta en $t_x$. Y el sesgo relativo que las 200 000
+        réplicas midieron de verdad es <strong>0,0055</strong>, catorce veces por debajo de su propia cota. Eso es
+        lo normal: la cota tira de $\lvert\rho\rvert \le 1$ y es deliberadamente conservadora. El precálculo
+        comprueba que se cumple en <strong>los nueve tamaños simulados</strong>, y aborta si alguna vez falla; es
+        una tercera vía de control sobre la simulación.</p>
+
+      <div class="note">
+        <p><strong>La regla de Kish, y lo que hay que mirar cuando no se cumple.</strong> El criterio práctico
+          (Kish, 1965) es que si $\widehat{\text{CV}}(\hat{\bar{x}})$ no pasa de <strong>0,1–0,2</strong>, el
+          sesgo es despreciable frente a la variabilidad: con 0,2, el sesgo no llega a la quinta parte de un error
+          estándar. En esta población el umbral se cruza en <strong>$n = 47$</strong> — con menos de eso la regla
+          <em>no</em> da el sesgo por despreciable, y en efecto el simulador enseña $-1{,}5$ millones de acres en
+          $n = 10$. Los 300 de <code>agsrs</code> están holgadamente al otro lado.</p>
+        <p>Cuando la cota sale demasiado grande, la fórmula dice también dónde tocar, porque son los
+          <strong>tres únicos factores</strong> que la componen:</p>
+        <ul>
+          <li><strong>Que la relación sea proporcional.</strong> Si $y_k = B\,x_k$ exactamente, $\hat{B}$ es
+            constante muestra a muestra, su covarianza con $\hat{\bar{x}}$ es cero y el sesgo
+            <em>desaparece</em>. Cuanto más cerca del origen pase la recta, menos sesgo — es la misma condición
+            que el módulo 3 pedía por precisión, cobrando ahora por segunda vez.</li>
+          <li><strong>Que $\text{CV}(x)$ sea bajo.</strong> Aparece entero en la cota. Una auxiliar de
+            variabilidad relativa moderada reduce el sesgo <em>y</em> la varianza; es el argumento para preferir,
+            entre dos auxiliares igual de correlacionadas, la más estable.</li>
+          <li><strong>Que $n$ sea grande.</strong> El $\sqrt{(1-f)/n}$ es el que manda cuando no se puede elegir
+            la auxiliar. Aquí es donde aparece el orden $1/n$ de la primera fórmula del módulo.</li>
+        </ul>
+        <p style="margin-bottom:0;">No hacen falta los tres: basta con que el producto quede pequeño.</p>
+      </div>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Y el intervalo de confianza desprecia el sesgo a sabiendas.</strong> Los
+          intervalos que este capítulo construye —los del módulo 2, y los que devuelve
+          <code>confint()</code>— usan un estimador de varianza deducido <em>suponiendo el sesgo nulo</em>, y luego
+          se centran en un estimador que no lo es. No es un descuido: es una decisión amparada justamente en la
+          cota de arriba. Cuando $\widehat{\text{CV}}(\hat{\bar{x}})$ es pequeño, el desplazamiento del centro
+          es una fracción despreciable de la anchura y la cobertura no se resiente. Cuando <em>no</em> lo es —$n$
+          chico, auxiliar dispersa—, el intervalo está mal centrado y su cobertura real no es la nominal, sin que
+          nada en la salida lo advierta.</p>
+      </div>
+
       <h3>Qué se desprecia exactamente</h3>
 
       <p>La aproximación del módulo 2 consistió en sustituir $t_x/\hat{t}_{x,\pi}$ por 1. El simulador de abajo mide
@@ -600,6 +662,9 @@
             cuadrático medio del estimador de razón, con la aproximación de Taylor completa.</li>
           <li>Gutiérrez, <strong>sección 8.3</strong> — linealización de parámetros no lineales en el marco $\pi$,
             que es la herramienta que reaparece en los capítulos 7 y 8.</li>
+          <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.1.2</strong>
+            (pp. 211–214) — la cota del sesgo relativo con su demostración, la regla de Kish y los tres factores.
+            Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
         </ul>
       </div>
     </div>

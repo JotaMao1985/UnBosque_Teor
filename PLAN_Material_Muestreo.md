@@ -4196,3 +4196,62 @@ auxiliar de la publicación anterior no es ancestro de `main`. Se conservó su �
 colgó de `a705523` con `git commit-tree`, así que gh-pages avanzó en línea recta sin reescribir
 historia. Verificado en vivo: el capítulo 4 servido es byte a byte el del commit aprobado
 (md5 `ff04601de94f3ac18e3082ed164665c1`).
+
+---
+
+### T7.38 — «¿Y si solo tengo una muestra?»: la cota del sesgo en el M4 del cap. 3 (2026-09-17)
+
+Tercera tarea del plan del capítulo 3 con Portela & Villeta (`PLAN_Cap3_PortelaVilleta.md`), primera
+de su fase 2.
+
+**El hueco.** El módulo 4 mide el sesgo del estimador de razón con **200 000 réplicas por tamaño**
+sobre una población que se conoce entera, y concluye —bien— que es despreciable. Pero ninguna de las
+dos cosas existe en una encuesta de verdad: allí hay **una** muestra y una población que justamente
+se quiere estimar. El módulo cerraba sin decir qué hacer en esa situación, que es la única que el
+estudiante va a encontrarse.
+
+**Lo que se añade.** La cota del sesgo relativo (Portela & Villeta, §7.1.2, p. 212):
+
+$$\frac{\lvert\,\text{Sesgo}(\hat B)\,\rvert}{\sqrt{V(\hat B)}} \;\le\; \text{CV}(\hat{\bar x})
+  \;=\; \text{CV}(x)\sqrt{\tfrac{1-f}{n}}$$
+
+Sale de que el sesgo es $\lvert\operatorname{cov}(\hat B, \hat{\bar x})\rvert/\bar x_U$ y de que una
+covarianza no supera el producto de las desviaciones, o sea de $\lvert\rho\rvert \le 1$. Dos
+propiedades que el módulo dice explícitamente: es **conservadora** por ese mismo motivo, y es
+**invariante de escala**, así que vale igual para $\hat B$, para la media de razón y para $\hat t_r$.
+
+**Las cifras.** Sobre `agsrs`, $\widehat{\text{CV}}(\hat{\bar x}) = \mathbf{0{,}0626}$ — lo único que
+se tendría en campo. La cota verdadera, calculable solo porque `agpop` es un censo, es
+**0,0750**: la muestra la subestima, por la misma razón por la que se quedó corta en $t_x$. Y el
+sesgo relativo que las 200 000 réplicas midieron de verdad es **0,0055**, catorce veces por debajo de
+su cota.
+
+**Una tercera vía de control sobre la simulación.** `genera_cap3.R` añade a `tabla_sesgo` la columna
+`cotaKish` y **aborta si la cota falla en cualquiera de los nueve tamaños**. Se cumple en todos. Si
+alguna vez fallara, o la cota está mal escrita o la simulación está mal hecha.
+
+**La regla de Kish, con su umbral en esta población.** Si $\widehat{\text{CV}}(\hat{\bar x})$ no pasa
+de 0,1–0,2, el sesgo es despreciable. Despejando $n$ de $\text{CV}(x)\sqrt{(1-n/N)/n} = 0{,}2$ sale
+**n = 47**: con menos, la regla **no** lo da por despreciable — y en efecto el simulador enseña
+**−1,5 millones** de acres en $n = 10$. Los 300 de `agsrs` están holgadamente al otro lado. Y como la
+fórmula tiene tres factores, dice también dónde tocar cuando la cota sale grande: proporcionalidad,
+$\text{CV}(x)$ bajo y $n$ grande. El primero es **la misma condición que el módulo 3 pedía por
+precisión**, cobrando ahora por segunda vez.
+
+**Y una advertencia que faltaba.** Los intervalos de este capítulo usan un estimador de varianza
+deducido **suponiendo el sesgo nulo** y se centran en un estimador que no lo es. No es un descuido:
+es una decisión amparada en esa cota, y cuando la cota **no** es pequeña el intervalo está mal
+centrado y su cobertura real no es la nominal, sin que nada en la salida lo advierta.
+
+**Verificado.** Byte a byte en la segunda pasada. **179 de 179** cifras de bloques y **106 de prosa ·
+0 sin respaldo** (el `--solo-prosa --todos` de los ocho capítulos, también 0). En el navegador: 45
+expresiones KaTeX con 0 `.katex-error`, la fórmula nueva en modo display, los **dos simuladores del
+módulo siguen vivos** —el de barras con sus 4 series y el de dispersión— con sus lecturas correctas,
+y la consola limpia. El M4 sube de 22 a 28 min.
+
+**Lo que enseña.** El material tenía la medición más cara del capítulo —1,8 millones de muestras— y
+le faltaba la cuenta de una línea que responde la pregunta de verdad. Medir con una población que se
+conoce entera demuestra el hecho; no enseña a decidir. Las dos cosas hacen falta, y ahora la
+simulación sirve además para **comprobar la cota**, que es un uso que antes no tenía.
+
+**Pendiente:** el visto bueno de Javier para publicar.
