@@ -340,6 +340,19 @@ svymean(~acres92, disP)
 # recupera parte de la ganancia que el estratificado habria dado desde el
 # diseno. Es el puente al capitulo 7.
 
+# Y cuanto cuesta decidir tarde? NO es 17 513 contra los 16 380 del modulo 3:
+# esas dos cifras salen de dos muestras distintas. La prima se mide sobre la
+# poblacion, con la misma asignacion proporcional en las dos: el diseno fija
+# los n_h; la postestratificacion los deja al azar, y eso anade un termino de
+# segundo orden.
+nh_prop    <- 300 * Wh
+V_prop_pob <- sum(Wh^2 * (1 - nh_prop / as.numeric(Nh)) * S2h / nh_prop)
+V_post_pob <- V_prop_pob + (1 - 300 / N) / 300^2 * sum((1 - Wh) * S2h)
+round(c(ee_prop = sqrt(V_prop_pob), ee_post = sqrt(V_post_pob),
+        prima_pct = 100 * (sqrt(V_post_pob / V_prop_pob) - 1)), 2)
+#>   ee_prop   ee_post prima_pct
+#>  21109.07  21272.24      0.77
+
 cat("\n###BLOQUE-R15###\n")
 # La misma idea en machine learning, con rsample. Clase minoritaria: condados
 # "grandes" (mas de un millon de acres sembrados). Al partir en 5 pliegues de

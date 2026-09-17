@@ -398,8 +398,43 @@ comprueba("media postestratificada: a mano <-> survey", ybar_post, coef(sv_post)
 cat(sprintf("  survey SE = %.4f | condicional a mano = %.4f (difieren por diseño: nota didáctica)\n",
             SE(sv_post)[1], sqrt(V_post_cond)))
 
+# -----------------------------------------------------------------------------
+# ¿Cuánto cuesta decidir tarde? La prima de la postestratificación
+# -----------------------------------------------------------------------------
+# NO es la diferencia entre el ee estimado con agsrs (17 513) y el estimado con
+# agstrat (16 380): son dos muestras distintas. Se mide sobre la POBLACIÓN, con
+# la misma asignación proporcional en las dos:
+#   - diseño: los n_h están fijados          -> varianza del estratificado
+#   - postestratificación: los n_h son al azar -> + término de segundo orden
+# La segunda vía es simular, que es lo que Lohr deja como ejercicio 40 de la
+# 3.ª ed. (500 muestras de n = 40 sobre esta misma agpop). Aquí hacen falta
+# muchas más réplicas: la prima es del orden del 0,8 % y el error de Monte
+# Carlo de la desviación típica es sd/sqrt(2R).
+nh_prop     <- n_total * Wh                      # proporcional continua
+V_prop_pob  <- sum(Wh^2 * (1 - nh_prop / pob_h$Nh) * pob_h$S2 / nh_prop)
+V_post_pob  <- V_prop_pob +
+  (1 - n_total / N) / n_total^2 * sum((1 - Wh) * pob_h$S2)
+
+R_post <- 200000
+set.seed(4102)                                   # semilla propia: no toca el resto
+reg_f <- factor(agpop$region, levels = regiones)
+sim_post <- replicate(R_post, {
+  s <- sample.int(N, n_total)
+  sum(Wh * tapply(agpop$acres92[s], reg_f[s], mean))
+})
+ee_post_sim <- sd(sim_post)
+ee_post_mc  <- ee_post_sim / sqrt(2 * R_post)    # error de Monte Carlo del ee
+cat(sprintf("  prima: ee prop = %.1f | post aprox = %.1f (+%.2f %%) | post simulado = %.1f +- %.1f\n",
+            sqrt(V_prop_pob), sqrt(V_post_pob),
+            100 * (sqrt(V_post_pob / V_prop_pob) - 1), ee_post_sim, ee_post_mc))
+if (abs(ee_post_sim - sqrt(V_post_pob)) > 4 * ee_post_mc)
+  stop("la simulación no respalda la aproximación de segundo orden")
+
 cifras$postestratificacion <- list(
   conteos = as.numeric(conteo_srs), w0 = w0,
+  primaEeProp = sqrt(V_prop_pob), primaEePost = sqrt(V_post_pob),
+  primaPct = 100 * (sqrt(V_post_pob / V_prop_pob) - 1),
+  primaEeSim = ee_post_sim, primaEeSimMc = ee_post_mc, primaReplicas = R_post,
   wPost = pob_h$Nh / as.numeric(conteo_srs),
   ybarSrs = ybar_srs, seSrs = se_srs,
   ybarPost = ybar_post, sePost = SE(sv_post)[1], sePostCond = sqrt(V_post_cond),

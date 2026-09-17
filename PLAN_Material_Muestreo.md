@@ -3912,3 +3912,43 @@ fallaban eran las de las secciones que **cambiaron de sitio entre ediciones**, q
 mirar cuando un material cita dos numeraciones a la vez.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+### T7.33 — Cuánto cuesta de verdad decidir tarde: la prima de la postestratificación (2026-09-17)
+
+Primera tarea de la fase 2 del plan de mejora del capítulo 4 con Lohr 3.ª ed.
+
+**El defecto.** El M10 decía: «No alcanza al estratificado de diseño (16 380, porque este además
+*fijó* los $n_h$ donde convenía), y esa diferencia es la prima que se paga por decidir tarde», y la
+retro del quiz del M10 lo repetía. Dos cosas fallan: *(a)* 17 513 y 16 380 son errores estándar
+**estimados con dos muestras distintas** —`agsrs` y `agstrat`—, así que su diferencia es sobre todo
+el azar de cada sorteo; *(b)* `agstrat` es de asignación **proporcional**, no fijó nada «donde
+convenía».
+
+**La cifra que faltaba.** La prima se mide sobre la población, con la misma asignación en los dos
+casos: el estratificado de diseño tiene error estándar verdadero **21 109,07** y el postestratificado
+**21 272,24**, un **0,77 %**. Esa es toda la prima por tener los $n_h$ al azar en vez de fijados.
+Calculada por dos vías, como manda el protocolo: el término de segundo orden, en el bloque R14; y
+**200 000 muestras simuladas** en `genera_cap4.R`, que dan **21 298,8 ± 33,7** —a menos de un error
+de Monte Carlo de la aproximación—, con `stop()` si las dos vías se separan más de cuatro errores.
+Es la ruta que Lohr deja como ejercicio 40 de la 3.ª ed., sobre esta misma `agpop`.
+
+**Y la mitad que sí es cara.** Quien estratifica al diseñar elige además la **asignación**: con
+Neyman el error estándar verdadero baja a 17 291 frente a los 21 124 de la proporcional. Eso la
+postestratificación no lo puede imitar, porque el sorteo reparte la muestra en proporción al tamaño
+de cada estrato y no según su dispersión. La caja nueva del M10 separa los dos efectos; la retro del
+quiz también.
+
+**Verificado.** El JSON del precálculo ganó **seis campos** y ningún otro cambió (comparado campo a
+campo contra la versión anterior); `ensambla_cap4.py` byte a byte; `verifica_bloques.py --prosa`:
+**273 de 273** cifras de bloques (eran 270) y **87 de prosa · 0 sin respaldo** (eran 82). En el
+navegador, el M10: la caja nueva con sus seis cifras, 0 `.katex-error`, 0 `$` sueltos, consola limpia
+y la retro del quiz renderizada tras fallar el ítem. `genera_cap4.R` pasa de 1,9 s a 9,8 s.
+
+**Lo que enseña.** Comparar dos cifras **estimadas con muestras distintas** y llamar a la diferencia
+un efecto es el mismo error que T7.18 encontró en el deff medido en dos escalas, ahora en la
+dirección contraria: allí se comparaban un exacto y un estimado; aquí, dos estimados de sorteos
+distintos. La regla que sale de las dos: **un efecto se mide sobre la población, o con la misma
+muestra; nunca cruzando muestras.**
+
+**Pendiente:** el visto bueno de Javier para publicar; y la clave E1 (ii) y el mérito de P21 del
+Taller 2, que siguen pidiendo la frase vieja y los decide Javier con esa sesión.

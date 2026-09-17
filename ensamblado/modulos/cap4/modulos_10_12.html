@@ -57,9 +57,23 @@
       </div>
 
       <p>El error estándar bajó de 18 898 a 17 513 — un 7 % — <strong>sin una sola entrevista nueva</strong>, solo
-        confesándole al estimador algo que el marco sabía desde el principio. No alcanza al estratificado de diseño
-        (16 380, porque este además <em>fijó</em> los $n_h$ donde convenía), y esa diferencia es la prima que se
-        paga por decidir tarde.</p>
+        confesándole al estimador algo que el marco sabía desde el principio.</p>
+
+      <div class="note">
+        <p><strong>¿Y cuánto cuesta haber decidido tarde?</strong> No lo dice comparar ese 17 513 con el 16 380 del
+          estratificado de diseño: son dos muestras distintas —<code>agsrs</code> y <code>agstrat</code>— y buena
+          parte de esa diferencia es el azar de cada sorteo, no el precio de nada. La prima se mide sobre la
+          población, con la <em>misma</em> asignación proporcional en los dos casos, como calcula el final del
+          bloque: el estratificado de diseño tiene error estándar verdadero <strong>21 109,07</strong> y el
+          postestratificado <strong>21 272,24</strong>, un <strong>0,77 %</strong> más. Eso —y solo eso— es lo que
+          cuesta que los $n_h$ salgan al azar en vez de fijarlos. El precálculo lo comprueba por la otra vía,
+          simulando 200 000 muestras: <strong>21 298,8</strong>, con un error de Monte Carlo de 33,7.</p>
+        <p style="margin-bottom:0;">Lo caro de llegar tarde es <em>otra</em> cosa: quien estratifica al diseñar
+          elige además <strong>la asignación</strong>, y con Neyman el error estándar verdadero baja a 17 291, un
+          18 % menos que la proporcional (módulo 4). La postestratificación no puede imitar eso, porque el sorteo
+          reparte la muestra en proporción al tamaño de cada estrato y no según su dispersión. Decidir tarde cuesta
+          poco; renunciar a elegir el reparto cuesta lo que valga esa elección.</p>
+      </div>
 
       <div class="simulador" data-simulador="calibracion">
         <h4><i class="fas fa-anchor" aria-hidden="true"></i> La calibración ancla el estimador</h4>
