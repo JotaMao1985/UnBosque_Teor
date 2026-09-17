@@ -353,6 +353,21 @@ round(c(ee_prop = sqrt(V_prop_pob), ee_post = sqrt(V_post_pob),
 #>   ee_prop   ee_post prima_pct
 #>  21109.07  21272.24      0.77
 
+# Con la muestra en la mano hay mas de una forma de estimar esa varianza. La
+# que publica Lohr (ec. 4.27 de la 3.a ed.) es la de la asignacion
+# proporcional, usada como aproximacion: solo vale para un MAS y pide
+# postestratos con bastantes casos esperados ("30 o asi", dice el texto). La
+# otra condiciona a los n_h que salieron: la formula del estratificado, con
+# esos n_h en vez de unos fijados al disenar.
+s2h_srs <- tapply(agsrs$acres92, agsrs$region, var)
+ee_lohr <- sqrt((1 - 300 / N) * sum(Wh * s2h_srs) / 300)
+ee_cond <- sqrt(sum(Wh^2 * (1 - as.numeric(n_obs) / as.numeric(Nh)) *
+                    s2h_srs / as.numeric(n_obs)))
+round(c(lohr_4.27 = ee_lohr, survey = SE(svymean(~acres92, disP))[[1]],
+        condicional = ee_cond), 1)
+#>   lohr_4.27      survey condicional
+#>     17442.6     17513.4     17635.0
+
 cat("\n###BLOQUE-R15###\n")
 # La misma idea en machine learning, con rsample. Clase minoritaria: condados
 # "grandes" (mas de un millon de acres sembrados). Al partir en 5 pliegues de

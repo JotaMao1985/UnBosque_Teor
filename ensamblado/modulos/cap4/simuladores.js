@@ -776,7 +776,7 @@
           { texto: 'Conocer los tamaños poblacionales $N_h$ de las celdas (del marco o de un censo).', correcta: true },
           { texto: 'Observar la variable de estratificación en cada unidad muestreada.', correcta: true },
           { texto: 'Haber fijado los $n_h$ antes de sortear.', correcta: false },
-          { texto: 'Celdas con suficientes observaciones (la regla práctica pide $n_h \\geq 20$ o fusionar).', correcta: true }
+          { texto: 'Celdas con suficientes observaciones (Lohr pide del orden de 30 casos esperados por celda, o fusionar).', correcta: true }
         ],
         retroAcierto: 'Las tres verdaderas son el contrato completo. Fijar los $n_h$ antes de sortear es justo lo que la postestratificación NO pide — su razón de existir es llegar tarde al diseño y aun así cobrar parte de la ganancia.',
         retroFallo: 'Son todas menos la de fijar los $n_h$ antes de sortear. Eso es el estratificado de diseño; la postestratificación existe para cuando eso ya no fue posible. Y por tener los $n_h$ al azar se paga poco: sobre la población, 21 272,24 de error estándar contra 21 109,07 del estratificado proporcional, un 0,77 %. Lo caro de llegar tarde es no poder elegir la asignación.'

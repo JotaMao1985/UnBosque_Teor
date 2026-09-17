@@ -94,23 +94,40 @@
            con los n_h observados, que es la forma condicional. Comprobado sobre una muestra de 150
            con cuatro postestratos —survey queda a medio punto porcentual de la condicional y a
            cinco de la incondicional— y es coherente con el propio ejemplo de aquí arriba, donde las
-           dos cifras se llevan 0,7 %. La regla de forma 6 del Taller 2 depende de esto. -->
+           dos cifras se llevan 0,7 %. La regla de forma 6 del Taller 2 depende de esto.
+
+           2026-09-17 (T2.2 del plan del cap. 4 con Lohr 3.ª ed.): reproducido sobre agsrs, y el
+           argumento NUMÉRICO no se sostiene. Con esta muestra, la ec. 4.27 de Lohr (incondicional,
+           aproximada) da 17 442,6; survey, 17 513,4; la condicional, 17 635,0; y la 4.27 con su
+           término de segundo orden, 17 538,1. Es decir, survey cae MÁS CERCA de la incondicional.
+           El argumento ESTRUCTURAL sí se reprodujo: la receta de §4.1.4 de Lohr —u_i = g_i e_i con
+           g_h = N_h/N_h estimado— da 17 513,4, exactamente la cifra de survey; lo que no se sigue
+           es que eso la convierta en la condicional. Sin tocar la frase: la etiqueta la decidió
+           Javier en R16 y de ella depende el Taller 2. Pendiente de su decisión. -->
       <div class="warning">
-        <p><strong>Dos errores estándar para el mismo estimador.</strong> <code>survey</code> reporta 17 513 y la
-          fórmula condicional del texto da 17 635. No es un bug de nadie: la varianza se puede calcular
-          <em>condicional</em> a los $n_h$ observados (la recomendación clásica de Lohr) o <em>incondicional</em>,
-          promediando sobre lo que pudo salir, y <code>survey</code> lineariza los residuos con los $n_h$ que
-          salieron, de modo que su cifra es una forma de la <em>primera</em>, no de la segunda, que
-          además añade un término de segundo orden. Con $n_h$ grandes la diferencia es cosmética (aquí, 0,7 %); con celdas chicas puede no serlo, y
-          el capítulo 7 vuelve sobre esto. El protocolo del material —toda varianza por dos vías— existe para que
-          estas discrepancias se encuentren y se expliquen, no para esconderlas.</p>
+        <p><strong>Tres errores estándar para el mismo estimador.</strong> El final del bloque los pone en fila: la
+          fórmula que publica Lohr da <strong>17 442,6</strong>, <code>survey</code> da <strong>17 513,4</strong> y
+          la forma condicionada a los $n_h$ que salieron, <strong>17 635</strong>. No es un bug de nadie: la
+          varianza de este estimador se puede calcular <em>condicional</em> a los $n_h$ observados o
+          <em>incondicional</em>, promediando sobre lo que pudo salir.</p>
+        <p>La de Lohr (ec. 4.27 de la 3.ª ed.) es del segundo tipo y además una <em>aproximación</em>: usa la
+          varianza de la asignación proporcional —$\hat{V} = (1 - n/N)\sum_h W_h s_h^2 / n$—, vale solo para un MAS
+          y pide postestratos con bastantes casos esperados, «30 o así» según el texto. Es la cifra que publica su
+          Ejemplo 4.9 con esta misma muestra. <code>survey</code>, en cambio, lineariza los residuos con los $n_h$
+          que salieron, de modo que su cifra es una forma de la <em>primera</em>, no de la segunda, que además añade
+          un término de segundo orden.</p>
+        <p style="margin-bottom:0;">Con $n_h$ grandes la diferencia es cosmética (entre <code>survey</code> y la
+          condicional, aquí, 0,7 %); con celdas chicas puede no serlo, y el capítulo 7 vuelve sobre esto. El
+          protocolo del material —toda varianza por dos vías— existe para que estas discrepancias se encuentren y se
+          expliquen, no para esconderlas.</p>
       </div>
 
       <div class="note">
         <p><strong>Cuándo postestratificar.</strong> (1) El marco no traía la variable, pero sus totales se conocen
           por otra fuente — el censo, un registro administrativo. (2) Como ajuste parcial de no respuesta, el uso
           estrella del capítulo 8. (3) Nunca con celdas casi vacías: un $n_h$ de 2 o 3 fabrica pesos gigantes y una
-          varianza peor que la que venía. Regla práctica habitual: exigir $n_h \geq 20$ o fusionar celdas.</p>
+          varianza peor que la que venía. Lohr pide del orden de <strong>30 casos esperados por celda</strong> para
+          dar por buena su aproximación de la varianza; por debajo de ahí, fusionar celdas.</p>
       </div>
 
       <div class="references">

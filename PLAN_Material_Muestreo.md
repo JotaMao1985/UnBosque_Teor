@@ -3952,3 +3952,32 @@ muestra; nunca cruzando muestras.**
 
 **Pendiente:** el visto bueno de Javier para publicar; y la clave E1 (ii) y el mérito de P21 del
 Taller 2, que siguen pidiendo la frase vieja y los decide Javier con esa sesión.
+
+### T7.34 — La fórmula que Lohr sí publica para la postestratificación (2026-09-17)
+
+Segunda tarea de la fase 2 del plan del capítulo 4 con Lohr 3.ª ed.
+
+**El defecto.** La caja «Dos errores estándar para el mismo estimador» del M10 llamaba a la varianza
+**condicional** «la recomendación clásica de Lohr». No lo es: lo que Lohr publica en §4.4 es la
+**ec. 4.27**, la varianza de la asignación proporcional usada como aproximación —
+$\hat V = (1 - n/N)\sum_h W_h s_h^2/n$—, que vale **solo para un MAS** y pide postestratos con unos
+**30 casos esperados**. Sobre `agsrs` da **17 442,6**, que es el 17 443 de su Ejemplo 4.9, con esta
+misma muestra: una cifra que el capítulo no tenía en ningún sitio.
+
+**El arreglo.** El bloque R14 pone las tres en fila —Lohr 17 442,6 · `survey` 17 513,4 · condicional
+a los $n_h$ observados 17 635,0— y la caja pasa a «**Tres** errores estándar», con la fórmula de
+Lohr escrita y sus dos condiciones. De paso: el umbral «$n_h \geq 20$» de la nota y del quiz pasa a
+«del orden de 30 casos esperados por celda», que es el de Lohr y ya no va sin fuente; y el comentario
+de `genera_cap4.R` deja de llamar «Lohr 4.4, ecuación clásica» a la condicional.
+
+**Verificado.** Byte a byte; **277 de 277** cifras de bloques (eran 273) y **89 de prosa · 0 sin
+respaldo** (eran 87); `genera_cap4.R` reproduce su JSON. En el navegador: la caja con las tres
+cifras, el bloque con su fila `lohr_4.27`, el quiz con el umbral nuevo, 0 `.katex-error`, 0 `$`
+sueltos y consola limpia.
+
+**Lo que enseña.** El material llevaba desde julio citando a Lohr para una fórmula que no es la suya,
+y la pista estaba a la vista: el libro publica una cifra para este mismo ejemplo y el capítulo no la
+tenía. **Cuando la fuente trae el número del caso que uno está usando, calcularlo es la manera más
+barata de comprobar que se la está citando bien.**
+
+**Pendiente:** el visto bueno de Javier para publicar.

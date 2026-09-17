@@ -383,8 +383,11 @@ w_post <- pob_h$Nh[match(agsrs$region, pob_h$region)] / as.numeric(conteo_srs[ag
 comprueba("los pesos calibrados suman N", sum(w_post), N)
 ybar_post <- sum(w_post * agsrs$acres92) / sum(w_post)
 
-# La varianza condicional de la postestratificación (Lohr 4.4, ecuación clásica):
-# misma forma que la estratificada, con los n_h observados.
+# La varianza condicionada a los n_h que salieron: la misma forma que la del
+# estratificado, con esos n_h. OJO: no es la fórmula que publica Lohr en §4.4;
+# la suya (ec. 4.27 de la 3.ª ed.) es la de la asignación proporcional usada
+# como aproximación, y sobre esta misma muestra da 17 442,6 (su Ejemplo 4.9).
+# Las dos, y la de survey, salen en el bloque R14 de la cadena.
 V_post_cond <- sum(Wh^2 * sapply(regiones, function(r) {
   y <- agsrs$acres92[agsrs$region == r]
   (1 - length(y) / pob_h$Nh[pob_h$region == r]) * var(y) / length(y)
