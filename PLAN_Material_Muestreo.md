@@ -3697,5 +3697,12 @@ un bloque cuya salida contradecía su propio texto. **Cuando dos vías que el te
 dan exactamente la misma cifra, hay que preguntar si están calculando lo mismo** —y la respuesta estaba en la
 documentación instalada, no en la memoria—.
 
-**Pendiente:** el visto bueno de Javier para publicar. Antes del push, comparar `sitio/` contra
-`origin/gh-pages` y `HEAD` contra el commit aprobado.
+**Publicado el 2026-09-16** con el visto bueno de Javier: `gh-pages` de `4e91972` a **`d8d7986`**, que es
+exactamente `sitio/` de `3cb0860` —el árbol publicado y `HEAD:sitio` no tienen una sola diferencia—. La
+guarda encontró `HEAD`, `origin/main` y el commit aprobado en el mismo sitio, y `gh-pages` solo difería en
+la página del capítulo 7, así que bastó el `subtree push` del README y nada ajeno viajó. Antes del push,
+las ocho páginas del material pasaron `verifica_bloques.py --todos --prosa` con **2 376 de 2 376** cifras
+de bloques y **637 respaldadas · 0 sin respaldo**; `cuenta_sitio.py` da **9 páginas · 3 311 KB**; permisos
+a 644. Comprobado sobre la página en vivo: es **byte a byte** la de `3cb0860` (`cmp`, a los ~20 s del
+push), las frases nuevas de los módulos 3, 5, 6 y 8 están, las viejas («sí, sin cambiar nada», «no sale de
+ninguna fórmula vista») no, y el build de Pages es `built` en **`d8d7986`**.
