@@ -66,7 +66,11 @@
 
       <div class="warning">
         <p><strong>15 grados de libertad para 5 406 personas.</strong> En una encuesta compleja, los grados de
-          libertad son <strong>PSU menos estratos</strong>, no $n - 1$. NHANES tiene 30 conglomerados en 15
+          libertad son <strong>PSU menos estratos</strong>, no $n - 1$. La razón está en cómo se estima la
+          varianza: con los totales de las PSU, comparados dentro de su estrato. Un estrato con $n_h$ PSU aporta
+          $n_h - 1$ grados de libertad, como $n_h$ datos en una varianza muestral, y al sumar los estratos quedan
+          PSU − H. Un MAS es el caso de un solo estrato en el que cada persona es su propia PSU: sale $n - 1$, lo
+          del capítulo 2 (módulo 6). NHANES tiene 30 conglomerados en 15
           estratos: 15 gl, y el multiplicador del intervalo del 95 % pasa de 1,960 a <strong>2,131</strong> — un
           9 % más ancho antes de tocar nada más. SYC, con 861 centros, tiene 845 gl y prácticamente el valor
           normal. Cualquier software que reporte «gl = n − 1» sobre datos de encuesta está equivocándose.</p>
@@ -169,7 +173,8 @@
         \frac{n \sum w_k^2}{\left(\sum w_k\right)^2}$$
         Mide cuánta varianza extra cuesta que los pesos no sean iguales, <em>ignorando</em> la estructura del
         diseño. En NHANES vale 1,89: la desigualdad de pesos, por sí sola, cuesta un 89 % de varianza. Es
-        <strong>una</strong> de las tres fuentes; el módulo 3 mide las tres juntas y da 7,12.</p>
+        <strong>una</strong> de las tres fuentes, y se calcula sin mirar la variable: el módulo 3 mide las tres
+        juntas sobre el IMC, da 7,12 y explica por qué allí los pesos cuestan algo menos.</p>
       </div>
 
       <div class="warning">
@@ -268,7 +273,8 @@
         <p><strong>El deff no se acumula en una sola dirección.</strong> Los pesos desiguales multiplican la
           varianza por 1,73. Los estratos la <strong>bajan</strong> (1,73 → 1,71): es exactamente su trabajo,
           el del capítulo 4. Y los conglomerados la cuadruplican (1,71 → 6,92): el capítulo 5 avisó de que este
-          sería el ingrediente caro. Un «deff de 7» no es un número monolítico: es una suma de fuerzas, y solo
+          sería el ingrediente caro. Un «deff de 7» no es un número monolítico: es un producto de factores que
+          empujan en direcciones distintas, y solo
           descomponiéndolo se sabe dónde intervenir. El módulo 8 aplica exactamente esta lectura al recorte de
           pesos, con un resultado incómodo.</p>
       </div>
@@ -279,6 +285,11 @@
           descomposición compara contra un MAS <em>ideal</em> (sin pesos), y <code>survey</code> contra un MAS
           <em>con estos pesos</em>. Las dos definiciones circulan en la literatura y ninguna está mal; lo que
           está mal es compararlas sin decir cuál es cuál.</p>
+        <p style="margin-bottom:0;"><strong>Tampoco el 1,73 de los pesos es el 1,89 de Kish del módulo 2.</strong>
+          Kish es una fórmula que solo mira los pesos: supone que la variable se comporta igual en todos los
+          niveles de peso, y por eso se calcula antes de mirar el IMC. El 1,73 es la varianza real de la media del
+          IMC con esos pesos. Kish anticipa el coste; la descomposición lo mide. Cuando las dos cifras se separan,
+          la variable no es tan ajena a los pesos como Kish supone.</p>
       </div>
 
       <div class="references">

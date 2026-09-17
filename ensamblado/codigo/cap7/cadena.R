@@ -174,7 +174,7 @@ round(c(linealizacion = as.numeric(SE(m)),
         bootstrap = as.numeric(SE(svymean(~bmxbmi, dis_boo)))), 6)
 c(replicas_JKn = ncol(dis_jkn$repweights$weights),
   replicas_BRR = ncol(dis_brr$repweights$weights))
-# Los cuatro coinciden en la tercera cifra. BRR usa 16 replicas — una matriz
+# Los cuatro coinciden en las dos primeras cifras. BRR usa 16 replicas — una matriz
 # de Hadamard de orden 16 para 15 estratos — frente a las 30 del jackknife.
 #> linealizacion     jackknife           BRR     bootstrap
 #>      0.253197      0.253259      0.258531      0.254364
@@ -182,18 +182,38 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
 #>           30           16
 
 cat("\n###BLOQUE-R9###\n")
-# Donde la replicacion gana de verdad: la MEDIANA. La linealizacion de un
-# cuantil exige la densidad; el jackknife solo recalcula el estadistico.
+# La MEDIANA. Por defecto, svyquantile NO recalcula la mediana en cada replica:
+# usa el metodo de Woodruff, el del capitulo 3 (modulo 11) — estima F, le pone
+# un intervalo a la proporcion y lo invierte —, y las replicas solo estiman la
+# varianza de esa proporcion. Por eso las dos vias dan el mismo intervalo, que
+# cae en valores observados del IMC, y el mismo error estandar:
 q_lin <- svyquantile(~bmxbmi, dis_nh, 0.5, ci = TRUE)
 q_jk <- svyquantile(~bmxbmi, dis_jkn, 0.5, ci = TRUE)
-round(c(mediana = as.numeric(coef(q_lin)),
-        ee_linealizacion = as.numeric(SE(q_lin)),
-        ee_jackknife = as.numeric(SE(q_jk))), 5)
-# Esa es la ventaja practica: cambia el estadistico, no el procedimiento. Con
-# un indice de Gini o una tasa de pobreza, la replicacion es la unica salida
-# razonable.
-#>          mediana ee_linealizacion     ee_jackknife
-#>         28.30000          0.32841          0.32841
+ee <- function(q) as.numeric(SE(q))
+woodruff <- function(q) c(inf = confint(q)[1], sup = confint(q)[2], ee = ee(q))
+round(rbind(linealizacion = woodruff(q_lin), jackknife = woodruff(q_jk)), 5)
+
+# Recalcular la mediana en cada replica es interval.type = "quantile". Vale con
+# BRR y bootstrap; con el jackknife NO, y survey lo avisa al calcularlo:
+# "Jackknife replicate weights may not give valid standard errors for quantiles"
+recalcula <- function(dis, ...) svyquantile(~bmxbmi, dis, 0.5, ci = TRUE,
+                                            interval.type = "quantile", ...)
+jk_rep <- recalcula(dis_jkn, return.replicates = TRUE)
+round(c(mediana = as.numeric(coef(q_lin)), BRR = ee(recalcula(dis_brr)),
+        bootstrap = ee(recalcula(dis_boo)), jackknife = ee(jk_rep)), 5)
+table(jk_rep$replicates)
+# BRR y bootstrap, recalculando de verdad, caen junto a Woodruff. El jackknife
+# se va un 23 % por encima: sus 30 replicas de la mediana solo toman cinco
+# valores, de 28.1 a 28.5. La mediana se mueve a saltos, y el jackknife solo es
+# fiable con estadisticos suaves.
+#>                inf sup      ee
+#> linealizacion 27.6  29 0.32841
+#> jackknife     27.6  29 0.32841
+#>   mediana       BRR bootstrap jackknife
+#>  28.30000   0.32590   0.32760   0.40415
+#>
+#> 28.1 28.2 28.3 28.4 28.5
+#>    4   10    9    6    1
 
 cat("\n###BLOQUE-R10###\n")
 # CALIBRACION. Los pesos del diseno no reproducen los totales conocidos de la

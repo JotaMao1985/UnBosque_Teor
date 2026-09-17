@@ -22,14 +22,17 @@
       </div>
 
       <p>La razón peso/altura de los adultos de NHANES vale <strong>0,495476</strong> y su error estándar,
-        <strong>0,004230</strong>. La primera cifra es una división; la segunda no sale de ninguna fórmula vista
-        hasta aquí, porque todas estiman varianzas de <em>totales</em> y una razón es un cociente de dos totales
-        <em>estimados</em>, los dos aleatorios a la vez. Este módulo construye el puente.</p>
+        <strong>0,004230</strong>. La primera cifra es una división. La segunda no pide una idea nueva: una razón
+        es un cociente de dos totales <em>estimados</em>, los dos aleatorios a la vez, y el capítulo 3 ya estimó
+        su varianza <strong>linealizándola</strong> —en el módulo 2, sobre el MAS de 300 condados, y con nombre
+        propio en el 4— y repitió la receta con los dominios (módulo 8) y con la mediana (módulo 11). Lo que
+        cambia aquí es el diseño: estratos, conglomerados y pesos desiguales a la vez.</p>
 
-      <p>Toda la teoría de los capítulos 2 a 6 estima la varianza de <strong>totales</strong>. Pero casi nada de
-        lo que se publica es un total: son medias, razones, proporciones, medianas, coeficientes de regresión,
-        índices de Gini. La linealización es el puente, y su idea cabe en una línea: <strong>sustituir el
-        estadístico por su aproximación lineal y estimar la varianza de esa</strong>.</p>
+      <p>Casi nada de lo que se publica es un total: son medias, razones, proporciones, medianas, coeficientes de
+        regresión, índices de Gini. La linealización es el puente para todos ellos, y su idea cabe en una línea:
+        <strong>sustituir el estadístico por su aproximación lineal y estimar la varianza de esa</strong>. Este
+        módulo la escribe en general, con pesos $w_k$, y comprueba sobre el diseño completo de NHANES que es
+        exactamente lo que hace <code>survey</code>.</p>
 
       <div class="derivacion">
         <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-taylor">
@@ -99,15 +102,17 @@
           construir $u_k$, estimar el total de $u$. Sirve para la media (donde $u_k = (y_k - \bar y)/\hat N$),
           para los coeficientes de una regresión, para el índice de Gini. <code>survey</code> lo hace por dentro
           en <code>svymean</code>, <code>svyratio</code>, <code>svyglm</code>: cuando ves «linearization» en su
-          documentación, es esto. Donde la receta se atasca es en estadísticos no suaves — la mediana, que no es
-          derivable —, y ese es el hueco que llena el módulo 5.</p>
+          documentación, es esto. La receta se atasca en los estadísticos no suaves, como la mediana, que no es
+          derivable. El capítulo 3 (módulo 11) ya dio el rodeo —linealizar $\hat F$, que sí es suave, e invertir
+          su intervalo—, y el módulo 5 lo contrasta con la replicación.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Lohr — §9.1 (3.ª ed.): linealización; Särndal et al. §5.5 para el caso general.</li>
-          <li>Este material — cap. 3, módulo 3: la misma linealización aplicada al estimador de razón.</li>
+          <li>Este material — cap. 3, módulos 2 y 4 (la razón linealizada y el término que se desprecia), 8
+            (dominios) y 11 (la mediana por Woodruff).</li>
         </ul>
       </div>
     </div>
@@ -136,12 +141,14 @@
 
       <p>La segunda familia de estimadores de varianza cambia el álgebra por la fuerza bruta: <strong>recalcular
         el estadístico muchas veces sobre versiones perturbadas de la muestra</strong> y medir cuánto baila. No
-        hace falta derivar nada, y por eso funciona con cualquier estadístico.</p>
+        hace falta derivar nada, y por eso sirve para casi cualquier estadístico — el «casi» lo pone la mediana,
+        al final del módulo.</p>
 
       <div class="definition">
         <h4>Los tres métodos</h4>
         <p><strong>Jackknife (JKn).</strong> Se elimina una PSU y se reponderan las que quedan en su estrato por
-          $n_h/(n_h - 1)$. Una réplica por PSU. Es el más transparente y el más usado.</p>
+          $n_h/(n_h - 1)$. Una réplica por PSU. Es el más transparente y el más usado, y solo es fiable con
+          estadísticos suaves: con una mediana, no.</p>
         <p><strong>BRR</strong> (<em>balanced repeated replication</em>). Diseñado para el caso de
           <strong>exactamente 2 PSU por estrato</strong>: cada réplica se queda con una de las dos en cada
           estrato, siguiendo una matriz de Hadamard que garantiza el equilibrio. Con 15 estratos bastan 16
@@ -204,8 +211,10 @@
         <div class="simulador-lectura"></div>
       </div>
 
-      <p>Donde la replicación gana de verdad es en estadísticos que la linealización no alcanza. La mediana no es
-        derivable — su linealización necesita estimar la densidad —, pero recalcularla es trivial:</p>
+      <p>¿Y la mediana, que no es derivable? Aquí hay que ir con cuidado, porque es justo donde el jackknife
+        falla. <code>survey</code> no la recalcula en cada réplica salvo que se le pida: por defecto usa el método
+        de <strong>Woodruff</strong> —el del capítulo 3, módulo 11: estimar $\hat F$, ponerle un intervalo e
+        invertirlo—, y las réplicas solo estiman la varianza de esa proporción. El bloque hace las dos cosas:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La mediana por linealización y por jackknife">
@@ -215,6 +224,15 @@
           <pre><code class="language-r">⟦R9⟧</code></pre>
         </div>
       </div>
+
+      <p>Con Woodruff, la linealización y el jackknife dan el mismo intervalo, $[27{,}6;\ 29]$, y el mismo error
+        estándar, <strong>0,32841</strong>: el intervalo cae en valores observados del IMC, y las dos vías llegan a
+        los mismos. Recalculando la mediana en cada réplica, BRR y bootstrap se quedan al lado
+        (<strong>0,32590</strong> y <strong>0,32760</strong>), pero el jackknife se va a <strong>0,40415</strong>,
+        un 23 % por encima. Sus 30 réplicas de la mediana solo toman cinco valores: al quitar una PSU, la mediana
+        salta de un valor observado a otro en vez de moverse poco a poco, y el jackknife solo es fiable con
+        estadísticos suaves. <code>survey</code> lo avisa al calcularlo. La regla: para cuantiles, Woodruff con
+        cualquier diseño, o réplicas de BRR o de bootstrap; réplicas de jackknife, nunca.</p>
 
       <div class="warning">
         <p><strong>BRR no siempre es una opción.</strong> Exige exactamente 2 PSU por estrato — NHANES lo cumple
@@ -258,19 +276,21 @@
 
       <p>Los pesos de diseño no reproducen los totales que ya se conocen de la población. Si el censo dice que
         hay 49 % de hombres y la muestra ponderada dice 47,9 %, esa discrepancia es información desperdiciada —
-        y a menudo síntoma de no respuesta diferencial. <strong>Calibrar</strong> es modificar los pesos lo
-        mínimo posible para que cuadren con lo conocido.</p>
+        y a menudo síntoma de no respuesta diferencial. <strong>Calibrar</strong> —la palabra con la que el
+        capítulo 3 cerró el GREG— es modificar los pesos lo mínimo posible para que cuadren con lo conocido.</p>
 
       <div class="definition">
         <h4>Las tres calibraciones, de menor a mayor generalidad</h4>
         <p><strong>Post-estratificación:</strong> ajustar a los totales de <em>una</em> clasificación completa
-          (por ejemplo, cada casilla sexo × edad). Requiere conocer la tabla entera.</p>
+          (por ejemplo, cada casilla sexo × edad). Requiere conocer la tabla entera. Es la del capítulo 4,
+          módulo 10, que ya la presentó como calibración.</p>
         <p><strong>Raking (IPFP):</strong> ajustar a los <em>márgenes</em> de varias clasificaciones sin conocer
           las casillas. Se cuadran las filas, luego las columnas, y se repite hasta converger. Es lo que se usa
           casi siempre, porque los censos publican márgenes, no tablas cruzadas completas.</p>
         <p style="margin-bottom:0;"><strong>Calibración general (GREG):</strong> ajustar a totales de variables
-          continuas, no solo categóricas. El capítulo 3 ya montó el estimador de regresión general; calibrar es
-          su cara operativa — mismo estimador, otra puerta de entrada.</p>
+          continuas, no solo categóricas. El capítulo 3 ya montó el estimador de regresión general (módulo 10) y
+          obtuvo la regresión con <code>calibrate()</code> (módulo 6); calibrar es su cara operativa — mismo
+          estimador, otra puerta de entrada.</p>
       </div>
 
       <div class="code-tabs">
@@ -336,6 +356,8 @@
           <li>Gutiérrez — §10.1–10.5: calibración, la fuente principal de este módulo.</li>
           <li>Lohr — §8.6: post-estratificación y raking como ajuste por no respuesta.</li>
           <li>Deville y Särndal (1992): el artículo que fundó la calibración moderna.</li>
+          <li>Este material — cap. 4, módulo 10 (la postestratificación como calibración) y cap. 3, módulos 6 y
+            10 (la regresión con <code>calibrate()</code> y el GREG).</li>
         </ul>
       </div>
     </div>

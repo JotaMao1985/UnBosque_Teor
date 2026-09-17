@@ -424,7 +424,7 @@
       const R = D7.replicacion;
       return {
         descripcion: 'Cuatro maneras de estimar el error estándar del IMC medio de NHANES. Los ' +
-          'cuatro apuntan a la misma varianza y coinciden en la tercera cifra; se diferencian en ' +
+          'cuatro apuntan a la misma varianza y coinciden en las dos primeras cifras; se diferencian en ' +
           'cuánto cuestan y en qué estadísticos admiten. Pulsa cualquier cabecera para reordenar.',
         columnas: [
           { clave: 'metodo', titulo: 'Método', tipo: 'texto' },
@@ -435,13 +435,13 @@
         ],
         filas: [
           { metodo: 'Linealización de Taylor', ee: R.ee[0], replicas: 0,
-            requisito: 'ninguno', noLineales: 'con dificultad (pide la densidad)' },
+            requisito: 'ninguno', noLineales: 'sí: Woodruff, invirtiendo la F estimada' },
           { metodo: 'Jackknife (JKn)', ee: R.ee[1], replicas: R.replicas[1],
-            requisito: '≥ 2 PSU por estrato', noLineales: 'sí, sin cambiar nada' },
+            requisito: '≥ 2 PSU por estrato', noLineales: 'solo por Woodruff: sus réplicas de la mediana no valen' },
           { metodo: 'BRR', ee: R.ee[2], replicas: R.replicas[2],
-            requisito: 'exactamente 2 PSU por estrato', noLineales: 'sí' },
+            requisito: 'exactamente 2 PSU por estrato', noLineales: 'sí, también recalculándola' },
           { metodo: 'Bootstrap (Rao–Wu)', ee: R.ee[3], replicas: R.replicas[3],
-            requisito: 'ninguno', noLineales: 'sí, y para lo más irregular' }
+            requisito: 'ninguno', noLineales: 'sí, también recalculándola, y para lo más irregular' }
         ],
         inicial: 'replicas',
         destacada: 'Jackknife (JKn)',
@@ -615,7 +615,7 @@
           { texto: 'Los conglomerados son el ingrediente caro: cuadruplican la varianza.', correcta: true },
           { texto: 'El deff siempre crece al añadir componentes del diseño.', correcta: false }
         ],
-        retroAcierto: 'Todas menos la del deff que siempre crece, que es la idea que hay que desterrar: un deff de 7 no es un bloque monolítico, es una suma de fuerzas que empujan en direcciones distintas — y solo descomponiéndolo se sabe dónde intervenir (módulo 8).',
+        retroAcierto: 'Todas menos la del deff que siempre crece, que es la idea que hay que desterrar: un deff de 7 no es un bloque monolítico, es un producto de factores que empujan en direcciones distintas — y solo descomponiéndolo se sabe dónde intervenir (módulo 8).',
         retroFallo: 'Son las tres que describen la descomposición. La del deff que siempre crece es falsa y es la lección del módulo: los estratos reducen la varianza — es su trabajo desde el capítulo 4 — mientras pesos y conglomerados la aumentan.'
       },
       {
@@ -691,7 +691,7 @@
           { texto: 'La tercera: al añadir los estratos la varianza BAJA respecto a la de solo pesos (deff 1,73 → 1,71), que es exactamente lo que un estratificado debe hacer.', correcta: true,
             retro: 'Correcto. Los estratos son el único componente que trabaja a favor de la precisión — lo demostró el capítulo 4 — y en la descomposición se ve en directo.' },
           { texto: 'La segunda: los pesos bajan la varianza al corregir el desbalance.', correcta: false,
-            retro: 'Los pesos la SUBEN (1 → 1,73). Corregir sesgo con pesos desiguales cuesta varianza: es el intercambio del capítulo 6, y el deff de Kish lo mide.' },
+            retro: 'Los pesos la SUBEN (1 → 1,73). Corregir sesgo con pesos desiguales cuesta varianza: es el intercambio del capítulo 6, y el deff de Kish lo anticipa mirando solo los pesos.' },
           { texto: 'La cuarta: los conglomerados bajan la varianza al agrupar observaciones parecidas.', correcta: false,
             retro: 'Al revés: la cuadruplican (1,71 → 6,92). Agrupar observaciones parecidas es justamente lo que destruye información — es el ICC del capítulo 5.' },
           { texto: 'Ninguna: las cuatro barras crecen monótonamente.', correcta: false,
@@ -726,7 +726,7 @@
           { texto: 'Recortar pesos es siempre recomendable cuando la razón máx/mín supera 40.', correcta: false }
         ],
         retroAcierto: 'Todas menos la de la regla máx/mín > 40, que es la receta de cocina que el módulo desmonta: en NHANES la varianza la ponen los conglomerados, no los pesos, así que aplanar pesos ataca el ingrediente equivocado. Antes de recortar, descomponer el deff.',
-        retroFallo: 'Son las tres que describen lo que pasó al recortar. La de la regla máx/mín > 40 convierte en regla mecánica lo que es una decisión que depende de la DESCOMPOSICIÓN del deff: si el Kish es pequeño frente al deff total, el recorte no es la herramienta.'
+        retroFallo: 'Son las tres que describen lo que pasó al recortar. La de la regla máx/mín > 40 convierte en regla mecánica lo que es una decisión que depende de la DESCOMPOSICIÓN del deff: si el deff de Kish es pequeño frente al deff total, el recorte no es la herramienta.'
       },
       {
         tipo: 'opcion',

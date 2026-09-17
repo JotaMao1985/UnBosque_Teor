@@ -121,7 +121,9 @@
         <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> Cobertura contra ICC</h4>
         <p class="simulador-intro">La simulación del bloque usa ICC = 0,15 y conglomerados de 40. El deslizador
           mueve la ICC y el tamaño del conglomerado: la curva es la cobertura <em>teórica</em> del intervalo
-          ingenuo, calculada con la aproximación normal y el deff de Kish. El punto naranja marca la
+          ingenuo, calculada con la aproximación normal y el deff de los conglomerados, $1 + (m-1)\rho$ —la
+          fórmula de Kish del capítulo 5, módulo 4, con $m$ en el papel de $\bar M$; no el deff por pesos del
+          módulo 2—. El punto naranja marca la
           configuración simulada, cuya cobertura empírica real (0,563 con 2 000 réplicas) aparece en la lectura.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Cobertura del intervalo nominal del 95 % que ignora los conglomerados</p>
@@ -162,7 +164,7 @@
           el error estándar no mejora (0,2532 → 0,2559, incluso peor) y la media se desplaza 0,057. La razón es
           estructural: en NHANES la varianza la ponen los <strong>conglomerados</strong> (el salto de 1,71 a
           6,92 del módulo 3), no los pesos. Aplanar pesos ataca el ingrediente equivocado y solo aporta sesgo.
-          <strong>La regla:</strong> antes de recortar, descomponer el deff; si el peso de Kish es pequeño frente
+          <strong>La regla:</strong> antes de recortar, descomponer el deff; si el deff de Kish es pequeño frente
           al deff total, el recorte no es la herramienta.</p>
       </div>
 
@@ -525,9 +527,10 @@
       <div class="note">
         <p><strong>Hacia el capítulo 8.</strong> Este capítulo supuso que quien fue sorteado, respondió. La
           realidad es otra: la etapa 4 del ciclo siempre devuelve menos de lo que se pidió, y los que faltan no
-          son un subconjunto al azar. El capítulo 8 cierra el curso con la fórmula del sesgo de no respuesta —
-          que explica por fin, y del todo, el desastre del <em>Literary Digest</em> del capítulo 1 —, los ajustes
-          de peso que aquí se nombraron sin desarrollar, la imputación y el taller de diseño integrador.</p>
+          son un subconjunto al azar. El capítulo 8 cierra el curso volviendo a la fórmula del sesgo de no
+          respuesta del capítulo 1 (módulo 4) —ahora medida con datos de quienes no contestaron, y llevada al
+          <em>Literary Digest</em> con la identidad de Meng—, con los ajustes de peso que aquí se nombraron sin
+          desarrollar, la imputación y el taller de diseño integrador.</p>
       </div>
     </div>
   </template>

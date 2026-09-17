@@ -3602,3 +3602,100 @@ prosa, 0 sin respaldo**; `cuenta_sitio.py` **9 páginas · 3 307 KB**; permisos 
 **Publicado el 2026-09-14** con el visto bueno de Javier: `main` de `4507a8b` a **`8a5cb04`** y
 `gh-pages` de `4bd7065` a **`4e91972`**. Comprobado en vivo: la página servida por Pages ya trae la
 frase nueva —`curl` con cache-buster hasta verla— y devuelve 200.
+
+---
+
+### T7.28 — Auditoría de orden del capítulo 7 (2026-09-16)
+
+Tras T7.26, Javier pidió seguir con el capítulo 7. Se leyeron los diez módulos, el quiz, el glosario, los
+simuladores y las dos cadenas, y cada puntero se contrastó con los capítulos 1 a 6 y con la documentación
+instalada de `survey` 4.5. **Es el capítulo con más defectos de orden de los auditados**, y casi todos son
+de la variante inversa: no juzgar contra algo aún no visto, sino presentar como nuevo lo que un capítulo
+anterior ya construyó. Seis de orden y dos de cifras; Javier aprobó los ocho, y para la mediana pidió
+además un bloque que la calcule de verdad sobre réplicas.
+
+**1 · El módulo 5 enseñaba lo contrario de lo que documenta `survey` sobre la mediana** *(el más grave)*.
+El módulo 4 decía que la linealización «se atasca» con la mediana y que ese hueco lo llena el 5; el 5, que
+su linealización «necesita estimar la densidad», pero «recalcularla es trivial»; y la tabla de los cuatro
+métodos respondía, en la **fila destacada**, que el jackknife sirve para la mediana «sí, sin cambiar nada».
+Tres cosas lo desmienten: el capítulo 3 (módulo 11) ya estimó la mediana linealizando $\hat F$ e invirtiendo
+el intervalo —Woodruff, sin densidad—; la documentación de `svyquantile` dice que ese es el método por
+defecto en los dos tipos de diseño y que el intervalo basado en réplicas del cuantil «is not valid for
+jackknife-type replicates»; y el propio bloque R9 daba **0,32841** por las dos vías, idénticas porque las
+dos hacían Woodruff: la réplica solo estimaba la varianza de $\hat F$, no recalculaba nada.
+*Arreglo.* R9 reescrito: el intervalo de Woodruff por linealización y por jackknife ($[27{,}6;\ 29]$ y ee
+0,32841 las dos), y la mediana **recalculada** en cada réplica con `interval.type = "quantile"`: **BRR
+0,32590 · bootstrap 0,32760 · jackknife 0,40415**, un 23 % por encima, con el aviso de `survey`, y la tabla
+de sus 30 réplicas, que solo toman cinco valores (28,1 a 28,5). Párrafo nuevo después del bloque que lo
+lee y deja la regla —para cuantiles, Woodruff con cualquier diseño, o réplicas de BRR o bootstrap; de
+jackknife, nunca—. Corregidos también la nota del módulo 4, la apertura del 5 («sirve para casi cualquier
+estadístico»), la definición del jackknife («solo es fiable con estadísticos suaves») y la columna de la
+tabla.
+
+**2 · El módulo 4 presentaba como nueva la linealización del capítulo 3.** Abría con que el error estándar
+de la razón «no sale de ninguna fórmula vista hasta aquí» y que «toda la teoría de los capítulos 2 a 6
+estima la varianza de totales». El capítulo 3 linealizó la razón en su módulo 2, le dio nombre en el 4
+(«Linealización de Taylor: el término que se cae») y repitió la receta en dominios (8) y mediana (11); la
+retro del quiz del propio capítulo 7 lo decía. Su referencia apuntaba a «cap. 3, módulo 3», que es *¿Cuándo
+gana la razón?*. *Arreglo:* la apertura retoma el capítulo 3 y dice qué cambia —el diseño: estratos,
+conglomerados y pesos a la vez—; la referencia nombra los módulos 2, 4, 8 y 11.
+
+**3 · El «deff de Kish» del módulo 8 no era el que el capítulo definió.** El módulo 2 y el glosario llaman
+así al deff solo por pesos, $1 + s_w^2/\bar w^2$; el simulador de cobertura decía usarlo, pero calcula
+$1 + (m-1)\rho$ —la fórmula de conglomerados del capítulo 5, módulo 4—, con controles ρ y m y ningún peso.
+*Arreglo:* la introducción del simulador lo nombra y remite al capítulo 5.
+
+**4 · El módulo 6 presentaba la postestratificación sin nombrar el capítulo 4**, cuyo módulo 10
+(«Postestratificación como calibración») la construye y anuncia que el 7 la generaliza; el GREG remitía al
+capítulo 3 sin módulo. *Arreglo:* punteros al capítulo 4, módulo 10, y al capítulo 3, módulos 6
+(`calibrate()`) y 10 (GREG), en la definición y en las referencias; «calibrar» se presenta como la palabra
+con la que el capítulo 3 cerró el GREG.
+
+**5 · El módulo 1 prometía explicar los 15 grados de libertad y solo enunciaba la regla.** *Arreglo:* una
+frase en el aviso: la varianza se estima con los totales de las PSU dentro de su estrato, cada estrato con
+$n_h$ PSU aporta $n_h - 1$, y un MAS es un estrato donde cada persona es su PSU: $n - 1$, el caso del
+capítulo 2 (módulo 6).
+
+**6 · La nota final atribuía al capítulo 8 «la fórmula del sesgo de no respuesta — que explica por fin, y
+del todo» el *Literary Digest*.** Esa fórmula está en el capítulo 1, módulo 4. *Arreglo:* el 8 vuelve a
+ella, la mide con datos de quienes no contestaron y la lleva al *Digest* con la identidad de Meng.
+
+**7 · Dos costes de los pesos desiguales, sin conciliar** *(cifras)*. El módulo 2 da **1,89** (Kish) y
+decía que el 3 mide las tres fuentes; el 3 da **1,73** para los pesos; la retro del quiz decía «el deff de
+Kish lo mide» junto a 1 → 1,73. *Arreglo:* segundo párrafo en la nota «Dos deff que no son el mismo número»
+—Kish solo mira los pesos y supone la variable igual en todos los niveles de peso; el 1,73 es la varianza
+real de la media del IMC—, el módulo 2 lo anuncia, y la retro dice «lo anticipa mirando solo los pesos».
+De paso: «suma de fuerzas» → «producto de factores» (módulo 3 y quiz) y «peso de Kish» / «el Kish» →
+«deff de Kish» (módulo 8 y quiz).
+
+**8 · «Coinciden en la tercera cifra»** *(cifras)*, en la tabla del módulo 5 y en el comentario de R8: los
+cuatro errores estándar van de 0,2532 a 0,2585, y el BRR ya difiere en la tercera. Ahora «en las dos
+primeras cifras».
+
+**Fuera de alcance, anotado para cuando toque.** *(a)* El módulo 11 del capítulo 3 promete que «en el
+capítulo 7 se le pondrá nombre —linealización de Taylor—», pero su módulo 4 ya se lo puso. *(b)* El módulo 2
+del capítulo 8 se titula «La fórmula del sesgo de no respuesta» y la presenta con definición propia,
+cuando es la del capítulo 1, módulo 4: es el mismo defecto que el 6 de esta lista, y conviene mirarlo en la
+auditoría del capítulo 8. *(c)* `precalculo/genera_cap7.R` conserva el comentario «donde la linealización
+no aplica directo» y exporta `medianaEeLin`/`medianaEeJk` al JSON, pero la página no usa esos campos; no se
+tocó.
+
+**Verificado.** `verifica_bloques.py --prosa` sobre el capítulo: **241 de 241** cifras de bloques (eran
+224: salen las 3 del R9 viejo y entran 20) y **54 respaldadas · 0 sin respaldo** (eran 49: las cinco del
+párrafo nuevo). `ensambla_cap7.py` reproduce el archivo **byte a byte** en la segunda pasada. En el
+navegador, los diez módulos: **0 `.katex-error`**, **0 dólares sueltos**, consola sin errores, los lienzos de
+los simuladores presentes (en `simuladores.js` solo cambiaron textos de la tabla y del quiz, no el código de ningún simulador) y las 11 preguntas del quiz; la tabla del módulo 5 muestra la columna nueva, el
+bloque R9 sale con sus `#>` y el párrafo que lo lee; la introducción del simulador del módulo 8 renderiza
+$1 + (m-1)\rho$ y $\bar M$. Una lección de T7.24 sirvió: la primera captura salió en blanco porque el panel
+tenía `innerWidth` 0, no por la página.
+
+**Lo que enseña.** *(a)* La lente de orden tiene dos caras: usar algo antes de presentarlo, y presentar como
+nuevo lo que ya se presentó. Las auditorías de los capítulos 1 a 6 buscaron sobre todo la primera; en un
+capítulo de síntesis como el 7 domina la segunda, y se encuentra leyendo sus frases de «esto no se ha visto»
+contra el índice de los capítulos anteriores. *(b)* El defecto más grave no salía de ningún `grep`: salía de
+un bloque cuya salida contradecía su propio texto. **Cuando dos vías que el texto presenta como distintas
+dan exactamente la misma cifra, hay que preguntar si están calculando lo mismo** —y la respuesta estaba en la
+documentación instalada, no en la memoria—.
+
+**Pendiente:** el visto bueno de Javier para publicar. Antes del push, comparar `sitio/` contra
+`origin/gh-pages` y `HEAD` contra el commit aprobado.
