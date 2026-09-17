@@ -33,7 +33,8 @@
         <h4>Las tres asignaciones</h4>
         <ul style="margin-bottom:0;">
           <li><strong>Proporcional:</strong> $n_h = n \, W_h$. La muestra es una maqueta de la población, los pesos
-            salen todos iguales (<em>autoponderada</em>) y nunca lo hace peor que el MAS.</li>
+            salen todos iguales (<em>autoponderada</em>) y, con estratos grandes, casi nunca lo hace peor que el
+            MAS; el módulo 7 da la condición exacta en que pierde.</li>
           <li><strong>Igual:</strong> $n_h = n/H$. Reparte precisión por igual entre los estratos: es la elección
             cuando el objetivo son las <em>comparaciones entre</em> estratos, no el agregado nacional.</li>
           <li><strong>Neyman:</strong> $n_h \propto N_h S_{y,h}$. Minimiza la varianza del agregado: manda
@@ -277,7 +278,8 @@
           dice nada de la <em>superficie</em> sembrada. Estratificar por una variable poco correlacionada es
           trabajar gratis.</li>
         <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
-          $y$ ni ganan ni pierden — el estratificado degenera en un MAS con papeleo extra.</li>
+          $y$ no ganan nada —en rigor pierden un pelo, 1,0009, y el módulo 7 explica por qué—, y el estratificado
+          degenera en un MAS con papeleo extra.</li>
       </ul>
 
       <div class="simulador" data-simulador="constructor">

@@ -160,11 +160,12 @@ V_con <- function(f) {
   sum((Nh_ / N)^2 * (1 - nh_ / Nh_) * S2_ / nh_)
 }
 set.seed(2026)
+azar <- sample(rep(1:4, length.out = N))
 opciones <- c(
   region            = V_con(agpop$region),
   cuartiles_acres87 = V_con(corta4(agpop$acres87)),
   cuartiles_farms92 = V_con(corta4(agpop$farms92)),
-  al_azar           = V_con(sample(rep(1:4, length.out = N)))
+  al_azar           = V_con(azar)
 )
 round(rbind(ee = sqrt(opciones), deff = opciones / V_mas), 4)
 #>          region cuartiles_acres87 cuartiles_farms92    al_azar
@@ -186,6 +187,30 @@ round(c(R2_entre = SSB / SST, dentro = SSW / SST), 4)
 # Ese 18 % ENTRE es justo lo que se ahorra la asignacion proporcional
 # (comparar con su deff de 0.82): estratificar renta lo que la variable
 # de estratificacion explica de la variable de interes.
+
+# Puede la proporcional perder contra el MAS? Restando las dos varianzas
+# sale una identidad exacta (Lohr, ec. 3.12 de la 3.a ed.): pierde solo si
+#   SSB  <  cota = suma_h (1 - N_h/N) S_h^2.
+# Por region y por la particion al azar del modulo 6, en miles de millones:
+cond_prop <- function(f) {
+  Nh_ <- tapply(agpop$acres92, f, length)
+  c(SSB  = sum(Nh_ * (tapply(agpop$acres92, f, mean) - media_U)^2),
+    cota = sum((1 - Nh_ / N) * tapply(agpop$acres92, f, var)))
+}
+cond <- rbind(region = cond_prop(agpop$region), al_azar = cond_prop(azar))
+round(cond / 1e9, 1)
+#>             SSB  cota
+#> region  99907.0 689.6
+#> al_azar    14.4 541.6
+
+# La region ni se acerca a la cota; el azar se queda muy por debajo, y por
+# eso su deff del modulo 6 salio mayor que 1. La identidad da, ademas, la
+# diferencia exacta de varianzas V_MAS - V_prop, y cuadra con el modulo 6:
+dif <- (1 - 300 / N) * (cond[, "SSB"] - cond[, "cota"]) / (300 * (N - 1))
+round(cbind(identidad = dif, modulo_6 = V_mas - opciones[c("region", "al_azar")]), 1)
+#>          identidad   modulo_6
+#> region  97006902.2 97006902.2
+#> al_azar  -515394.3  -515394.3
 
 cat("\n###BLOQUE-R10###\n")
 # El efecto de diseno (deff) con las DOS muestras reales del material:

@@ -51,6 +51,24 @@
         0{,}46$ con la superficie del 92) gana a la región ($R^2 = 0{,}18$) y por eso el azar ($R^2 = 0$) no renta
         nada.</p>
 
+      <div class="note">
+        <p><strong>¿Puede la proporcional perder contra el MAS?</strong> Sí, aunque con estratos grandes casi nunca.
+          Restando las dos varianzas con la descomposición de arriba sale una identidad exacta:</p>
+        $$V_{\text{MAS}}(\bar{y}) - V_{\text{prop}}(\bar{y}_{\text{str}}) \;=\;
+          \frac{1 - n/N}{n\,(N - 1)} \left[\, \text{SSB} \;-\; \sum_h \Big(1 - \frac{N_h}{N}\Big) S^2_{y,h} \right]$$
+        <p>La proporcional pierde solo si SSB queda por debajo de esa suma, la <em>cota</em> del bloque. Y es difícil
+          que quede: la cota es menor que la suma de las $H$ varianzas de los estratos, mientras que SSB multiplica
+          cada distancia entre medias por $N_h$, que son cientos o miles de condados. Por región, SSB vale 99 907
+          miles de millones contra una cota de 689,6. La partición al azar del módulo 6 es el caso contrario: sus
+          cuatro medias casi coinciden, SSB se queda en 14,4 contra 541,6, y por eso su deff fue
+          <strong>1,0009</strong> y no 1. La última tabla del bloque comprueba la identidad contra las varianzas del
+          módulo 6: por región la diferencia es de 97 006 902 acres², la varianza que la proporcional le ahorra al
+          MAS; al azar sale negativa, −515 394, la que le añade.</p>
+        <p style="margin-bottom:0;">Todo esto habla de varianzas <em>poblacionales</em>. Con una muestra concreta,
+          la varianza <em>estimada</em> del estratificado proporcional puede salir mayor que la del MAS por puro
+          azar, aunque el diseño sea el mejor de los dos.</p>
+      </div>
+
       <div class="derivacion">
         <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-modelo">
           <i class="fas fa-square-root-variable" aria-hidden="true"></i>
@@ -111,6 +129,8 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
+          <li>Lohr — §4.4.1 (2.ª ed., ec. 4.11) / §3.4.1 (3.ª ed., ecs. 3.12–3.13): cuándo la asignación
+            proporcional pierde contra el MAS.</li>
           <li>Lohr — §4.6 (2.ª ed.) / §3.4.3 (3.ª ed.): el modelo del muestreo estratificado.</li>
           <li>Gutiérrez — cap. 17: el enfoque asistido por modelos, del que este módulo es un caso.</li>
         </ul>

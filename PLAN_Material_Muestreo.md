@@ -3789,3 +3789,42 @@ tipo que el «deff de Kish» de T7.28: una etiqueta que el curso ya había atado
 
 **Pendiente:** el visto bueno de Javier para publicar. Antes del push, comparar `sitio/` contra
 `origin/gh-pages` y `HEAD` contra el commit aprobado.
+
+### T7.30 — La proporcional sí puede perder contra el MAS: el cap. 4 frente a Lohr 3.ª ed. (2026-09-17)
+
+> Primera tarea del plan de mejora del capítulo 4 con Lohr 3.ª ed. Ese plan vive en
+> `PLAN_Cap4_Lohr3e.md`, **fuera del control de versiones**, porque cruza el calendario del Corte 2
+> con materiales de evaluación. Aquí se anota cada tarea cerrada, como siempre.
+
+**El contexto.** Javier pidió mejorar el capítulo 4 con el `Sampling.epub` de Lohr, que es la 3.ª ed.
+(2022). El material sigue la numeración de la 2.ª: en la 3.ª, el cap. 4 es razón y regresión, y lo que
+corresponde a este capítulo está en el cap. 3 (estratificado) y en las §4.3–4.5 (dominios,
+postestratificación, razón con muestreo estratificado). El diagnóstico encontró nueve errores ya
+publicados y catorce contenidos ausentes. Se reparte en fases atadas al Corte 2: primero, antes de la
+clase del 24–25 de septiembre, los errores de lo que se expone ese día. Los módulos M1–M11 no se
+renumeran, porque los enlazan los caps. 5, 7 y 8.
+
+**El defecto.** La definición de las tres asignaciones del M4 decía que la proporcional «nunca lo hace
+peor que el MAS», y el M6, que unos estratos al azar «ni ganan ni pierden». Lohr (§4.4.1, ec. 4.11 de la
+2.ª; §3.4.1, ecs. 3.12–3.13 de la 3.ª) da la identidad exacta y la condición para perder:
+$\text{SSB} < \sum_h (1 - N_h/N)\,S_h^2$. Con estratos grandes casi nunca se cumple, pero no es imposible.
+
+**El contraejemplo ya estaba publicado.** La partición al azar del M6 daba deff **1,0009**, y el texto la
+redondeaba a «ni ganan ni pierden». *Arreglo:*
+- **M4:** «con estratos grandes, casi nunca lo hace peor que el MAS; el módulo 7 da la condición exacta».
+- **M6:** los estratos al azar «no ganan nada —en rigor pierden un pelo, 1,0009—».
+- **M7:** una caja nueva junto a la identidad ANOVA, con la identidad, por qué casi nunca se cumple, las
+  cifras y el aviso de que con una muestra concreta la varianza *estimada* sí puede salir peor. La cita se
+  añade a las referencias.
+- **Código:** R8 guarda la partición en `azar` (misma semilla, mismo orden de sorteo; su salida no cambió) y
+  R9 calcula los dos lados de la condición. Por región, SSB vale **99 907** y la cota **689,6**; al azar,
+  **14,4** y **541,6** (miles de millones). La identidad reproduce **exactamente** las diferencias de
+  varianza del M6: 97 006 902,2 y −515 394,3.
+
+**Verificado.** `ensambla_cap4.py` reproduce el archivo **byte a byte** en la segunda pasada;
+`verifica_bloques.py --prosa`: **255 de 255** cifras de bloques (eran 246) y **75 respaldadas · 0 sin
+respaldo** (eran 68). La primera pasada dejó una sin respaldo: la prosa decía «le añade 515 394» y la
+salida es −515 394,3; el verificador captura el signo, y se reescribió con él. En el navegador, M4, M6 y
+M7: **0 `.katex-error`**, **0 `$` sueltos** fuera del código y consola limpia.
+
+**Pendiente:** el visto bueno de Javier para publicar.
