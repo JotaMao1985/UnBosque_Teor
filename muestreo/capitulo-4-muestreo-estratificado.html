@@ -4813,20 +4813,47 @@ table(agsrs$region)
 w0 &lt;- N / 300
 n_obs  &lt;- table(agsrs$region)
 w_post &lt;- as.numeric(Nh[agsrs$region]) / as.numeric(n_obs[agsrs$region])
+# Nh_est es el tamano que la muestra ESTIMA para cada region con los pesos de
+# partida (N/n por unidad). El peso nuevo es el viejo corregido por N_h/Nh_est:
+# la postestratificacion es una razon dentro de cada postestrato.
 data.frame(region = names(Nh), peso_antes = round(w0, 4),
+           Nh = as.numeric(Nh), Nh_est = round(w0 * as.numeric(n_obs), 2),
            peso_despues = round(as.numeric(Nh) / as.numeric(n_obs), 4))
-#&gt;   region peso_antes peso_despues
-#&gt; 1     NC      10.26       9.8505
-#&gt; 2     NE      10.26       9.1667
-#&gt; 3      S      10.26      10.6308
-#&gt; 4      W      10.26      10.8205
+#&gt;   region peso_antes   Nh  Nh_est peso_despues
+#&gt; 1     NC      10.26 1054 1097.82       9.8505
+#&gt; 2     NE      10.26  220  246.24       9.1667
+#&gt; 3      S      10.26 1382 1333.80      10.6308
+#&gt; 4      W      10.26  422  400.14      10.8205
 
 # La suma de pesos ya no "casi" reconstruye N: lo reconstruye EXACTO.
 round(c(antes = 300 * w0, despues = sum(w_post)), 2)
 #&gt;   antes despues
-#&gt;    3078    3078</code></pre>
+#&gt;    3078    3078
+
+# Contraste con la razon del capitulo 3, que tambien calibra: alli el factor
+# g = t_x / t_x estimado es el MISMO para todos (un solo total que cuadrar) y
+# los pesos calibrados NO suman N. Aqui hay un factor por postestrato y lo
+# que se cuadra son los N_h, asi que su suma, N, cuadra tambien.
+g_razon &lt;- sum(agpop$acres87) / (w0 * sum(agsrs$acres87))
+round(c(g_razon = g_razon, peso_razon = g_razon * w0,
+        suma_pesos_razon = 300 * g_razon * w0, N = N), 4)
+#&gt;          g_razon       peso_razon suma_pesos_razon                N
+#&gt;           1.0366          10.6359        3190.7684        3078.0000</code></pre>
         </div>
       </div>
+
+      <p>La tabla trae la columna que explica todo lo demás: $\hat{N}_h$, el tamaño que la muestra <em>estima</em>
+        para cada región con los pesos de partida — los 107 condados del Norte-Centro por 10,26 hacen
+        <strong>1 097,82</strong>, cuando el marco dice que son 1 054 —. El sorteo repartió la muestra con una
+        composición que no es la de la población, y el peso nuevo corrige exactamente ese desajuste,
+        multiplicando el viejo por $N_h/\hat{N}_h$.</p>
+
+      <p>El final del bloque añade el contraste que le da nombre a la operación. En el capítulo 3 la razón también
+        calibraba, pero contra un solo total: su factor $g = t_x/\hat{t}_x$ era el mismo para todas las unidades
+        —aquí <strong>1,0366</strong>, que deja el peso en <strong>10,6359</strong>, el que aquel capítulo ya
+        mostraba en su módulo 10— y los pesos calibrados sumaban <strong>3 190,7684</strong>, no $N$. En la
+        postestratificación hay un factor por postestrato y lo que se cuadra son los $N_h$: su suma, $N = 3\,078$,
+        cuadra de propina.</p>
 
       <div class="definition">
         <h4>Postestratificación</h4>
@@ -4838,6 +4865,39 @@ round(c(antes = 300 * w0, despues = sum(w_post)), 2)
           para que la muestra reproduzca exactamente los totales que el marco conoce ($\sum_{s_h} w_k = N_h$ para
           todo $h$). El capítulo 7 generaliza esta idea a varios márgenes a la vez (raking) y a totales continuos
           (GREG, que ya asomó en el capítulo 3).</p>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-post-razon">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver la postestratificación como un estimador de razón</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-post-razon" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Tómese como variable auxiliar, dentro del postestrato $h$, el <strong>indicador</strong>
+                $x_k = 1$ si $k \in U_h$ y $x_k = 0$ si no. Su total poblacional se conoce, y es justamente el
+                tamaño del postestrato: $t_x = N_h$.</p>
+            </li>
+            <li>
+              <p>Con los pesos de partida, la muestra estima ese total y el de $y$ restringido al postestrato:</p>
+              $$\hat{N}_h = \sum_{k \in s} w_k x_k, \qquad \hat{t}_{yh} = \sum_{k \in s} w_k x_k y_k$$
+            </li>
+            <li>
+              <p>El estimador de razón del capítulo 3 —lo estimado partido por lo estimado, por el total
+                conocido— da entonces</p>
+              $$\hat{t}_{yh,r} = \frac{\hat{t}_{yh}}{\hat{N}_h}\,N_h = N_h \, \bar{y}_h,$$
+              <p>porque el cociente de las dos estimaciones es la media muestral del postestrato.</p>
+            </li>
+            <li>
+              <p>Sumando sobre los $H$ postestratos aparece la fórmula de la definición: <strong>la
+                postestratificación es estimación por razón dentro de cada postestrato</strong>. Y en pesos, para
+                <em>cualquier</em> diseño de partida —no solo un MAS—: $w_k^* = (N_h/\hat{N}_h)\,w_k$ para
+                $k \in U_h$. Con un MAS, $w_k = N/n$ y sale el $N_h/n_h$ de arriba.</p>
+            </li>
+          </ol>
+        </div>
       </div>
 
       <div class="code-tabs">
@@ -4861,14 +4921,68 @@ svymean(~acres92, disP)
 
 # El ee baja de 18 898 a 17 513 sin una sola entrevista mas: la calibracion
 # recupera parte de la ganancia que el estratificado habria dado desde el
-# diseno. Es el puente al capitulo 7.</code></pre>
+# diseno. Es el puente al capitulo 7.
+
+# Y cuanto cuesta decidir tarde? NO es 17 513 contra los 16 380 del modulo 3:
+# esas dos cifras salen de dos muestras distintas. La prima se mide sobre la
+# poblacion, con la misma asignacion proporcional en las dos: el diseno fija
+# los n_h; la postestratificacion los deja al azar, y eso anade un termino de
+# segundo orden.
+nh_prop    &lt;- 300 * Wh
+V_prop_pob &lt;- sum(Wh^2 * (1 - nh_prop / as.numeric(Nh)) * S2h / nh_prop)
+V_post_pob &lt;- V_prop_pob + (1 - 300 / N) / 300^2 * sum((1 - Wh) * S2h)
+round(c(ee_prop = sqrt(V_prop_pob), ee_post = sqrt(V_post_pob),
+        prima_pct = 100 * (sqrt(V_post_pob / V_prop_pob) - 1)), 2)
+#&gt;   ee_prop   ee_post prima_pct
+#&gt;  21109.07  21272.24      0.77
+
+# Con la muestra en la mano hay mas de una forma de estimar esa varianza. La
+# que publica Lohr (ec. 4.27 de la 3.a ed.) es la de la asignacion
+# proporcional, usada como aproximacion: solo vale para un MAS y pide
+# postestratos con bastantes casos esperados ("30 o asi", dice el texto). La
+# otra condiciona a los n_h que salieron: la formula del estratificado, con
+# esos n_h en vez de unos fijados al disenar.
+s2h_srs &lt;- tapply(agsrs$acres92, agsrs$region, var)
+ee_lohr &lt;- sqrt((1 - 300 / N) * sum(Wh * s2h_srs) / 300)
+ee_cond &lt;- sqrt(sum(Wh^2 * (1 - as.numeric(n_obs) / as.numeric(Nh)) *
+                    s2h_srs / as.numeric(n_obs)))
+round(c(lohr_4.27 = ee_lohr, survey = SE(svymean(~acres92, disP))[[1]],
+        condicional = ee_cond), 1)
+#&gt;   lohr_4.27      survey condicional
+#&gt;     17442.6     17513.4     17635.0
+
+# Y survey no calcula ninguna de las dos: trata la postestratificacion como una
+# CALIBRACION y estima la varianza de diseno del estimador calibrado,
+# linealizando los residuos con los factores g_h = N_h / N_h estimado. Es la
+# receta de §4.1.4 de Lohr, y reproduce su cifra al decimal:
+g_h &lt;- as.numeric(Nh) / (w0 * as.numeric(n_obs))
+z_i &lt;- g_h[match(agsrs$region, names(Nh))] *
+       (agsrs$acres92 - tapply(agsrs$acres92, agsrs$region, mean)[agsrs$region])
+print(round(c(survey = SE(svymean(~acres92, disP))[[1]],
+              receta_4.1.4 = sqrt((1 - 300 / N) * var(z_i) / 300)), 4), digits = 9)
+#&gt;       survey receta_4.1.4
+#&gt;   17513.4478   17513.4478</code></pre>
         </div>
       </div>
 
       <p>El error estándar bajó de 18 898 a 17 513 — un 7 % — <strong>sin una sola entrevista nueva</strong>, solo
-        confesándole al estimador algo que el marco sabía desde el principio. No alcanza al estratificado de diseño
-        (16 380, porque este además <em>fijó</em> los $n_h$ donde convenía), y esa diferencia es la prima que se
-        paga por decidir tarde.</p>
+        confesándole al estimador algo que el marco sabía desde el principio.</p>
+
+      <div class="note">
+        <p><strong>¿Y cuánto cuesta haber decidido tarde?</strong> No lo dice comparar ese 17 513 con el 16 380 del
+          estratificado de diseño: son dos muestras distintas —<code>agsrs</code> y <code>agstrat</code>— y buena
+          parte de esa diferencia es el azar de cada sorteo, no el precio de nada. La prima se mide sobre la
+          población, con la <em>misma</em> asignación proporcional en los dos casos, como calcula el final del
+          bloque: el estratificado de diseño tiene error estándar verdadero <strong>21 109,07</strong> y el
+          postestratificado <strong>21 272,24</strong>, un <strong>0,77 %</strong> más. Eso —y solo eso— es lo que
+          cuesta que los $n_h$ salgan al azar en vez de fijarlos. El precálculo lo comprueba por la otra vía,
+          simulando 200 000 muestras: <strong>21 298,8</strong>, con un error de Monte Carlo de 33,7.</p>
+        <p style="margin-bottom:0;">Lo caro de llegar tarde es <em>otra</em> cosa: quien estratifica al diseñar
+          elige además <strong>la asignación</strong>, y con Neyman el error estándar verdadero baja a 17 291, un
+          18 % menos que la proporcional (módulo 4). La postestratificación no puede imitar eso, porque el sorteo
+          reparte la muestra en proporción al tamaño de cada estrato y no según su dispersión. Decidir tarde cuesta
+          poco; renunciar a elegir el reparto cuesta lo que valga esa elección.</p>
+      </div>
 
       <div class="simulador" data-simulador="calibracion">
         <h4><i class="fas fa-anchor" aria-hidden="true"></i> La calibración ancla el estimador</h4>
@@ -4889,29 +5003,77 @@ svymean(~acres92, disP)
            con los n_h observados, que es la forma condicional. Comprobado sobre una muestra de 150
            con cuatro postestratos —survey queda a medio punto porcentual de la condicional y a
            cinco de la incondicional— y es coherente con el propio ejemplo de aquí arriba, donde las
-           dos cifras se llevan 0,7 %. La regla de forma 6 del Taller 2 depende de esto. -->
+           dos cifras se llevan 0,7 %. La regla de forma 6 del Taller 2 depende de esto.
+
+           2026-09-17 (T2.2 del plan del cap. 4 con Lohr 3.ª ed.): reproducido sobre agsrs, y el
+           argumento NUMÉRICO no se sostiene. Con esta muestra, la ec. 4.27 de Lohr (incondicional,
+           aproximada) da 17 442,6; survey, 17 513,4; la condicional, 17 635,0; y la 4.27 con su
+           término de segundo orden, 17 538,1. Es decir, survey cae MÁS CERCA de la incondicional.
+           El argumento ESTRUCTURAL sí se reprodujo: la receta de §4.1.4 de Lohr —u_i = g_i e_i con
+           g_h = N_h/N_h estimado— da 17 513,4, exactamente la cifra de survey; lo que no se sigue
+           es que eso la convierta en la condicional.
+
+           Javier aprobó el cambio ese mismo día: la frase dice ahora lo comprobable —survey
+           lineariza la calibración, el bloque reproduce su cifra con la receta de §4.1.4, y esa
+           varianza de diseño promedia también sobre los n_h, así que cae del lado de la
+           incondicional—. Lo que NO se ha tocado es la clave de E2 del Taller 2 ni su informe de
+           IA, que siguen diciendo que survey calcula la condicional y llamando incondicional a la
+           fórmula del texto (que es la condicional MÁS un término de segundo orden, y tampoco es
+           la incondicional de Lohr). El enunciado no depende de la etiqueta desde R16 (b). -->
       <div class="warning">
-        <p><strong>Dos errores estándar para el mismo estimador.</strong> <code>survey</code> reporta 17 513 y la
-          fórmula condicional del texto da 17 635. No es un bug de nadie: la varianza se puede calcular
-          <em>condicional</em> a los $n_h$ observados (la recomendación clásica de Lohr) o <em>incondicional</em>,
-          promediando sobre lo que pudo salir, y <code>survey</code> lineariza los residuos con los $n_h$ que
-          salieron, de modo que su cifra es una forma de la <em>primera</em>, no de la segunda, que
-          además añade un término de segundo orden. Con $n_h$ grandes la diferencia es cosmética (aquí, 0,7 %); con celdas chicas puede no serlo, y
-          el capítulo 7 vuelve sobre esto. El protocolo del material —toda varianza por dos vías— existe para que
-          estas discrepancias se encuentren y se expliquen, no para esconderlas.</p>
+        <p><strong>Tres errores estándar para el mismo estimador.</strong> El final del bloque los pone en fila: la
+          fórmula que publica Lohr da <strong>17 442,6</strong>, <code>survey</code> da <strong>17 513,4</strong> y
+          la forma condicionada a los $n_h$ que salieron, <strong>17 635</strong>. No es un bug de nadie: la
+          varianza de este estimador se puede calcular <em>condicional</em> a los $n_h$ observados o
+          <em>incondicional</em>, promediando sobre lo que pudo salir.</p>
+        <p>La de Lohr (ec. 4.27 de la 3.ª ed.) es del segundo tipo y además una <em>aproximación</em>: usa la
+          varianza de la asignación proporcional —$\hat{V} = (1 - n/N)\sum_h W_h s_h^2 / n$—, vale solo para un MAS
+          y pide postestratos con bastantes casos esperados, «30 o así» según el texto. Es la cifra que publica su
+          Ejemplo 4.9 con esta misma muestra.</p>
+        <p><code>survey</code> no calcula ninguna de las dos. Trata la postestratificación como lo que es —una
+          <strong>calibración</strong>— y estima la varianza de diseño del estimador calibrado, linealizando los
+          residuos de cada postestrato con sus factores $g_h = N_h / \hat{N}_h$. El final del bloque lo reproduce a
+          mano con la receta de §4.1.4 de Lohr y sale su misma cifra al decimal, <strong>17 513,4478</strong>. Esa
+          varianza de diseño promedia sobre todas las muestras que el MAS pudo dar, los $n_h$ incluidos: los que
+          salieron entran como <em>datos</em>, no como condición. Por eso su cifra queda del lado de la
+          incondicional, entre la aproximación de Lohr y la forma condicional.</p>
+        <p style="margin-bottom:0;">Con $n_h$ grandes la diferencia es cosmética (entre <code>survey</code> y la
+          condicional, aquí, 0,7 %); con celdas chicas puede no serlo, y el capítulo 7 vuelve sobre esto. El
+          protocolo del material —toda varianza por dos vías— existe para que estas discrepancias se encuentren y se
+          expliquen, no para esconderlas.</p>
       </div>
 
       <div class="note">
         <p><strong>Cuándo postestratificar.</strong> (1) El marco no traía la variable, pero sus totales se conocen
           por otra fuente — el censo, un registro administrativo. (2) Como ajuste parcial de no respuesta, el uso
           estrella del capítulo 8. (3) Nunca con celdas casi vacías: un $n_h$ de 2 o 3 fabrica pesos gigantes y una
-          varianza peor que la que venía. Regla práctica habitual: exigir $n_h \geq 20$ o fusionar celdas.</p>
+          varianza peor que la que venía. Lohr pide del orden de <strong>30 casos esperados por celda</strong> para
+          dar por buena su aproximación de la varianza; por debajo de ahí, fusionar celdas.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Estrato, dominio y postestrato: las mismas cuatro regiones, tres papeles.</strong></p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li><strong>Estrato</strong> (módulos 1 a 8, con <code>agstrat</code>): el investigador fija los $n_h$
+            <em>antes</em> de sortear, y la variabilidad entre regiones desaparece de la varianza.</li>
+          <li><strong>Dominio</strong> (capítulo 3, módulo 8, con <code>agsrs</code>): la región interesa al
+            estimar, pero el sorteo no la miró, así que $n_d$ es aleatorio y la media de dominio se estima como una
+            razón.</li>
+          <li><strong>Postestrato</strong> (este módulo, con la misma <code>agsrs</code>): un dominio cuyo tamaño
+            poblacional $N_h$ <strong>sí</strong> se conoce. Eso es lo único que lo distingue del dominio, y es lo
+            que permite usar $N_h$ en lugar de $\hat{N}_h$ y ganar precisión.</li>
+        </ul>
+        <p style="margin-bottom:0;">Las $\bar{y}_h$ de este módulo son exactamente las medias de dominio que el
+          capítulo 3 estimó con esta misma muestra: cambia lo que se sabe de $N_h$, no el cálculo.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §4.7 (2.ª ed.) / §4.4 (3.ª ed.): postestratificación.</li>
+          <li>Lohr — §4.7 (2.ª ed.) / §4.4 (3.ª ed.): postestratificación, con su derivación como razón y los
+            pesos ajustados (ecs. 4.26 a 4.29 de la 3.ª).</li>
+          <li>Lohr — §3.3 (2.ª ed.) / §4.3 (3.ª ed.): estimación en dominios, de la que el postestrato es el caso
+            con $N_h$ conocido.</li>
           <li>Gutiérrez — §10.1: calibración, donde esta idea se vuelve sistema.</li>
           <li>Holt y Smith (1979), «Post stratification» — la defensa clásica del análisis condicional.</li>
         </ul>
@@ -5301,7 +5463,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
     // semilla 2026. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP4 = {"meta":{"generado":"precalculo/genera_cap4.R","semilla":2026,"replicas":10000,"rVersion":"4.4.1"},"poblacion":{"N":3078,"media":306676.97141001,"S2":180358776382.88388,"total":943951718,"Nh":[1054,220,1382,422],"negativos92":19},"agstrat":{"n":300,"ybar":295560.76523455,"se":16379.8727264,"total":909736035.391957,"seTotal":50417248.25185139,"ic":[263456.80461947,327664.72584964],"icTotal":[810920044.6187134,1008552026.1652007],"ybarSrs":297897.04666667,"seSrs":18898.43442803},"peq":{"y":[14,18,27,33,58],"t":150,"muestras":[{"s":[1,2,4],"t":114},{"s":[1,2,5],"t":164},{"s":[1,3,4],"t":127.5},{"s":[1,3,5],"t":177.5},{"s":[2,3,4],"t":133.5},{"s":[2,3,5],"t":183.5}],"V":691.5},"asignaciones":{"n":300,"regiones":["NC","NE","S","W"],"nombres":["Norte-Centro","Nordeste","Sur","Oeste"],"Nh":[1054,220,1382,422],"Sh":[271303.40626531,79365.44747428,243956.35049719,835638.9004829],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"prop":[103,21,135,41],"igual":[75,75,75,75],"neyman":[86,5,102,107],"V":{"mas":542599827.5846344,"prop":446220740.1494037,"igual":402368663.20543766,"neyman":298971216.82428384},"deff":{"prop":0.82237538,"igual":0.74155693,"neyman":0.55099763}},"costos":{"ch":{"NC":10,"NE":6,"S":8,"W":18},"C":3000,"optimo":{"nh":[79.86433275,6.29557693,105.2766817,73.40943096],"V":357827437.113399,"n":264.84602234},"propMismoCosto":{"nh":[103.63135815,21.63083377,135.88096487,41.49187205],"V":441294188.731976,"n":302.63502884}},"constructor":{"opciones":[{"etiqueta":"Región (la de Lohr)","H":4,"Nh":[1054,220,1382,422],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"V":445592925.3770826,"deff":0.82121833},{"etiqueta":"Cuartiles de acres87","H":4,"Nh":[770,769,770,769],"mediaH":[42625.73506494,130146.34070221,267942.27662338,786387.27308192],"V":292813664.7377756,"deff":0.53964939},{"etiqueta":"Cuartiles de farms92","H":4,"Nh":[775,767,767,769],"mediaH":[226180.63612903,316003.73402868,323880.43676662,361340.13784135],"V":535678377.2804061,"deff":0.98724391},{"etiqueta":"Cuartiles de largef92","H":4,"Nh":[773,779,765,761],"mediaH":[54038.32988357,147999.53786906,295187.96078431,737279.44678055],"V":337458776.4390231,"deff":0.62192938},{"etiqueta":"4 grupos al azar","H":4,"Nh":[770,770,769,769],"mediaH":[306455.58441558,310205.08701299,304396.55656697,305646.35760728],"V":543115221.8756696,"deff":1.00094986}],"barridoH":[{"H":2,"V":396649380.0226766,"deff":0.73101641},{"H":3,"V":332887636.8290658,"deff":0.61350487},{"H":4,"V":292813664.7377756,"deff":0.53964939},{"H":5,"V":264603727.74538517,"deff":0.48765907},{"H":6,"V":243175525.5188122,"deff":0.44816735},{"H":7,"V":225578598.63066012,"deff":0.41573658},{"H":8,"V":210216021.51957548,"deff":0.38742368},{"H":9,"V":197025433.5042602,"deff":0.3631137},{"H":10,"V":185216383.12030464,"deff":0.34134987}],"R2region":0.18002427,"SSB":99906979069126.19,"SST":554963954930133.44},"distribucion":{"replicas":10000,"mas":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[3,3,17,23,46,72,129,139,246,337,352,475,612,586,713,742,745,695,673,624,541,472,393,326,278,211,162,132,72,61,35,27,18,13,14,6,4,1,1,1],"ancho":4257.33646334},"estratificado":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[1,2,4,16,24,46,76,118,187,291,409,483,594,696,762,795,789,782,760,655,555,503,375,334,208,184,115,83,52,40,23,17,8,2,6,2,1,2,0,0],"ancho":4257.33646334},"varMas":543022487.7064464,"varStr":437069992.40986055,"coberturaMas":0.9313,"coberturaStr":0.9335,"media":306676.97141001},"ppt":{"mh":{"Big":60,"Medium":120,"Small":200},"estratos":[{"nivel":"Big","Nh":2905,"totalIncome":3629710,"totalEmployees":401135,"mediaIncome":1249.46987952},{"nivel":"Medium","Nh":25795,"totalIncome":17057285,"totalEmployees":2087505,"mediaIncome":661.26322931},{"nivel":"Small","Nh":56596,"totalIncome":15947738,"totalEmployees":2903352,"mediaIncome":281.7820694}],"tIncome":36634733,"estimacion":35887479.67260976,"se":920763.21578284,"porEstrato":{"t":[3518947.76176422,17175653.73433934,15192878.1765062],"se":[93910.11109418,542313.15732217,738161.38477185]},"seStsi":582345.93380524,"psiDeciles":[[0.00018946,0.00022187,0.00024929,0.00028669,0.00030414,0.00033156,0.00036147,0.00039388,0.00040635,0.00045371,0.00065564],[1.15e-05,2.156e-05,2.635e-05,3.114e-05,3.497e-05,3.928e-05,4.311e-05,4.599e-05,4.982e-05,5.605e-05,7.234e-05],[3.44429473e-07,6.19973052e-06,8.9551663e-06,1.171e-05,1.447e-05,1.757e-05,2.067e-05,2.377e-05,2.652e-05,2.928e-05,3.617e-05]],"ratioEmpleados":263},"postestratificacion":{"conteos":[107,24,130,39],"w0":10.26,"wPost":[9.85046729,9.16666667,10.63076923,10.82051282],"ybarSrs":297897.04666667,"seSrs":18898.43442803,"ybarPost":299778.1127586,"sePost":17513.44781603,"sePostCond":17635.00095587,"Nh":[1054,220,1382,422],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"ybarH":[350292.00934579,71970.83333333,206246.35384615,598680.58974359],"s2H":[86857007373.06596,4225007608.579709,76969408653.4242,266418735738.24835]}};
+    const DATOS_CAP4 = {"meta":{"generado":"precalculo/genera_cap4.R","semilla":2026,"replicas":10000,"rVersion":"4.4.1"},"poblacion":{"N":3078,"media":306676.97141001,"S2":180358776382.88388,"total":943951718,"Nh":[1054,220,1382,422],"negativos92":19},"agstrat":{"n":300,"ybar":295560.76523455,"se":16379.8727264,"total":909736035.391957,"seTotal":50417248.25185139,"ic":[263456.80461947,327664.72584964],"icTotal":[810920044.6187134,1008552026.1652007],"ybarSrs":297897.04666667,"seSrs":18898.43442803},"peq":{"y":[14,18,27,33,58],"t":150,"muestras":[{"s":[1,2,4],"t":114},{"s":[1,2,5],"t":164},{"s":[1,3,4],"t":127.5},{"s":[1,3,5],"t":177.5},{"s":[2,3,4],"t":133.5},{"s":[2,3,5],"t":183.5}],"V":691.5},"asignaciones":{"n":300,"regiones":["NC","NE","S","W"],"nombres":["Norte-Centro","Nordeste","Sur","Oeste"],"Nh":[1054,220,1382,422],"Sh":[271303.40626531,79365.44747428,243956.35049719,835638.9004829],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"prop":[103,21,135,41],"igual":[75,75,75,75],"neyman":[86,5,102,107],"V":{"mas":542599827.5846344,"prop":446220740.1494037,"igual":402368663.20543766,"neyman":298971216.82428384},"deff":{"prop":0.82237538,"igual":0.74155693,"neyman":0.55099763}},"costos":{"ch":{"NC":10,"NE":6,"S":8,"W":18},"C":3000,"optimo":{"nh":[79.86433275,6.29557693,105.2766817,73.40943096],"V":357827437.113399,"n":264.84602234},"propMismoCosto":{"nh":[103.63135815,21.63083377,135.88096487,41.49187205],"V":441294188.731976,"n":302.63502884}},"constructor":{"opciones":[{"etiqueta":"Región (la de Lohr)","H":4,"Nh":[1054,220,1382,422],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"V":445592925.3770826,"deff":0.82121833},{"etiqueta":"Cuartiles de acres87","H":4,"Nh":[770,769,770,769],"mediaH":[42625.73506494,130146.34070221,267942.27662338,786387.27308192],"V":292813664.7377756,"deff":0.53964939},{"etiqueta":"Cuartiles de farms92","H":4,"Nh":[775,767,767,769],"mediaH":[226180.63612903,316003.73402868,323880.43676662,361340.13784135],"V":535678377.2804061,"deff":0.98724391},{"etiqueta":"Cuartiles de largef92","H":4,"Nh":[773,779,765,761],"mediaH":[54038.32988357,147999.53786906,295187.96078431,737279.44678055],"V":337458776.4390231,"deff":0.62192938},{"etiqueta":"4 grupos al azar","H":4,"Nh":[770,770,769,769],"mediaH":[306455.58441558,310205.08701299,304396.55656697,305646.35760728],"V":543115221.8756696,"deff":1.00094986}],"barridoH":[{"H":2,"V":396649380.0226766,"deff":0.73101641},{"H":3,"V":332887636.8290658,"deff":0.61350487},{"H":4,"V":292813664.7377756,"deff":0.53964939},{"H":5,"V":264603727.74538517,"deff":0.48765907},{"H":6,"V":243175525.5188122,"deff":0.44816735},{"H":7,"V":225578598.63066012,"deff":0.41573658},{"H":8,"V":210216021.51957548,"deff":0.38742368},{"H":9,"V":197025433.5042602,"deff":0.3631137},{"H":10,"V":185216383.12030464,"deff":0.34134987}],"R2region":0.18002427,"SSB":99906979069126.19,"SST":554963954930133.44},"distribucion":{"replicas":10000,"mas":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[3,3,17,23,46,72,129,139,246,337,352,475,612,586,713,742,745,695,673,624,541,472,393,326,278,211,162,132,72,61,35,27,18,13,14,6,4,1,1,1],"ancho":4257.33646334},"estratificado":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[1,2,4,16,24,46,76,118,187,291,409,483,594,696,762,795,789,782,760,655,555,503,375,334,208,184,115,83,52,40,23,17,8,2,6,2,1,2,0,0],"ancho":4257.33646334},"varMas":543022487.7064464,"varStr":437069992.40986055,"coberturaMas":0.9313,"coberturaStr":0.9335,"media":306676.97141001},"ppt":{"mh":{"Big":60,"Medium":120,"Small":200},"estratos":[{"nivel":"Big","Nh":2905,"totalIncome":3629710,"totalEmployees":401135,"mediaIncome":1249.46987952},{"nivel":"Medium","Nh":25795,"totalIncome":17057285,"totalEmployees":2087505,"mediaIncome":661.26322931},{"nivel":"Small","Nh":56596,"totalIncome":15947738,"totalEmployees":2903352,"mediaIncome":281.7820694}],"tIncome":36634733,"estimacion":35887479.67260976,"se":920763.21578284,"porEstrato":{"t":[3518947.76176422,17175653.73433934,15192878.1765062],"se":[93910.11109418,542313.15732217,738161.38477185]},"seStsi":582345.93380524,"psiDeciles":[[0.00018946,0.00022187,0.00024929,0.00028669,0.00030414,0.00033156,0.00036147,0.00039388,0.00040635,0.00045371,0.00065564],[1.15e-05,2.156e-05,2.635e-05,3.114e-05,3.497e-05,3.928e-05,4.311e-05,4.599e-05,4.982e-05,5.605e-05,7.234e-05],[3.44429473e-07,6.19973052e-06,8.9551663e-06,1.171e-05,1.447e-05,1.757e-05,2.067e-05,2.377e-05,2.652e-05,2.928e-05,3.617e-05]],"ratioEmpleados":263},"postestratificacion":{"conteos":[107,24,130,39],"w0":10.26,"primaEeProp":21109.07211076,"primaEePost":21272.24289456,"primaPct":0.7729889,"primaEeSim":21298.79635533,"primaEeSimMc":33.67635395,"primaReplicas":200000,"wPost":[9.85046729,9.16666667,10.63076923,10.82051282],"ybarSrs":297897.04666667,"seSrs":18898.43442803,"ybarPost":299778.1127586,"sePost":17513.44781603,"sePostCond":17635.00095587,"Nh":[1054,220,1382,422],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"ybarH":[350292.00934579,71970.83333333,206246.35384615,598680.58974359],"s2H":[86857007373.06596,4225007608.579709,76969408653.4242,266418735738.24835]}};
 
     // ================================================================
     // Estado y elementos del DOM
@@ -8256,10 +8418,10 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
           { texto: 'Conocer los tamaños poblacionales $N_h$ de las celdas (del marco o de un censo).', correcta: true },
           { texto: 'Observar la variable de estratificación en cada unidad muestreada.', correcta: true },
           { texto: 'Haber fijado los $n_h$ antes de sortear.', correcta: false },
-          { texto: 'Celdas con suficientes observaciones (la regla práctica pide $n_h \\geq 20$ o fusionar).', correcta: true }
+          { texto: 'Celdas con suficientes observaciones (Lohr pide del orden de 30 casos esperados por celda, o fusionar).', correcta: true }
         ],
         retroAcierto: 'Las tres verdaderas son el contrato completo. Fijar los $n_h$ antes de sortear es justo lo que la postestratificación NO pide — su razón de existir es llegar tarde al diseño y aun así cobrar parte de la ganancia.',
-        retroFallo: 'Son todas menos la de fijar los $n_h$ antes de sortear. Eso es el estratificado de diseño; la postestratificación existe para cuando eso ya no fue posible, y el precio de decidir tarde fue 17 513 contra 16 380 de ee.'
+        retroFallo: 'Son todas menos la de fijar los $n_h$ antes de sortear. Eso es el estratificado de diseño; la postestratificación existe para cuando eso ya no fue posible. Y por tener los $n_h$ al azar se paga poco: sobre la población, 21 272,24 de error estándar contra 21 109,07 del estratificado proporcional, un 0,77 %. Lo caro de llegar tarde es no poder elegir la asignación.'
       },
       {
         tipo: 'opcion',
