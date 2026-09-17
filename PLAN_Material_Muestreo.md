@@ -4033,3 +4033,45 @@ nadie le había preguntado por su error estándar. Y la contradicción llevaba t
 que ninguna comprobación automática pudiera verla, porque ninguna de las tres frases es una cifra.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+### T7.35 — Qué varianza calcula `survey` en la postestratificación: la etiqueta, revisada (2026-09-17)
+
+Cierra lo que T7.34 dejó abierto, con el visto bueno de Javier. **Revisa una conclusión de T7.27
+(R16 del Taller 2)**, así que conviene leer las dos seguidas.
+
+**Qué decía el M10 desde T7.27.** Que `survey` «lineariza los residuos con los $n_h$ que salieron, de
+modo que su cifra es una forma de la *condicional*, no de la incondicional».
+
+**Qué se comprobó ahora, ejecutando.** Sobre `agsrs`, las cuatro cifras: ec. 4.27 de Lohr
+(incondicional, aproximada) **17 442,6**; con su término de segundo orden, **17 538,1**; `survey`
+**17 513,4478**; condicionada a los $n_h$ observados, **17 635,0**. Es decir, **`survey` cae más cerca
+de la incondicional que de la condicional**, al revés de lo que decía la frase.
+
+**Y lo que sí se sostiene, que es la mitad buena de T7.27.** La receta de §4.1.4 de Lohr —ponderar los
+residuos de cada postestrato con $g_h = N_h/\hat N_h$ y aplicar la varianza del MAS— reproduce la
+cifra de `survey` **al decimal**: 17 513,4478 por las dos vías. El bloque R14 lo hace ahora a la
+vista. Lo que no se seguía era la **inferencia**: que usar los $n_h$ observados al calcular convierta
+esa varianza en la condicional. No lo hace — los $n_h$ entran como datos; la varianza de diseño del
+estimador calibrado promedia sobre todas las muestras que el MAS pudo dar, los $n_h$ incluidos.
+
+**La frase, ahora.** «`survey` no calcula ninguna de las dos. Trata la postestratificación como lo que
+es —una calibración— y estima la varianza de diseño del estimador calibrado […]. Por eso su cifra
+queda del lado de la incondicional, entre la aproximación de Lohr y la forma condicional.» El
+comentario HTML de al lado guarda las cuatro cifras y la historia de las dos revisiones.
+
+**Lo que NO se ha tocado, y hay que mirar:** la **clave de E2** del Taller 2 y su informe de IA dicen
+que `survey` calcula la condicional y llaman incondicional a la fórmula del texto —que es la
+condicional **más** un término de segundo orden, y tampoco es la incondicional de Lohr—. El
+**enunciado** no depende de la etiqueta desde R16 (b), que puso la fórmula en la regla de forma 6.
+Decisión pendiente de Javier con esa sesión.
+
+**Verificado.** Byte a byte; **281 de 281** cifras de bloques (eran 277) y **90 de prosa · 0 sin
+respaldo**. En el navegador, el M10: la frase nueva, el bloque con `survey` y `receta_4.1.4` dando la
+misma cifra, 0 `.katex-error`, 0 `$` sueltos y consola limpia.
+
+**Lo que enseña.** Una etiqueta se corrige como una cifra: ejecutando. T7.27 arregló una frase falsa
+con un argumento medio bueno —el mecanismo era cierto, la conclusión no— y nadie lo notó porque el
+mecanismo sonaba convincente. **Cuando la justificación de una etiqueta es «porque usa X al
+calcular», hay que preguntar qué promedia la fórmula, no qué usa.**
+
+**Pendiente:** el visto bueno de Javier para publicar.

@@ -102,8 +102,15 @@
            término de segundo orden, 17 538,1. Es decir, survey cae MÁS CERCA de la incondicional.
            El argumento ESTRUCTURAL sí se reprodujo: la receta de §4.1.4 de Lohr —u_i = g_i e_i con
            g_h = N_h/N_h estimado— da 17 513,4, exactamente la cifra de survey; lo que no se sigue
-           es que eso la convierta en la condicional. Sin tocar la frase: la etiqueta la decidió
-           Javier en R16 y de ella depende el Taller 2. Pendiente de su decisión. -->
+           es que eso la convierta en la condicional.
+
+           Javier aprobó el cambio ese mismo día: la frase dice ahora lo comprobable —survey
+           lineariza la calibración, el bloque reproduce su cifra con la receta de §4.1.4, y esa
+           varianza de diseño promedia también sobre los n_h, así que cae del lado de la
+           incondicional—. Lo que NO se ha tocado es la clave de E2 del Taller 2 ni su informe de
+           IA, que siguen diciendo que survey calcula la condicional y llamando incondicional a la
+           fórmula del texto (que es la condicional MÁS un término de segundo orden, y tampoco es
+           la incondicional de Lohr). El enunciado no depende de la etiqueta desde R16 (b). -->
       <div class="warning">
         <p><strong>Tres errores estándar para el mismo estimador.</strong> El final del bloque los pone en fila: la
           fórmula que publica Lohr da <strong>17 442,6</strong>, <code>survey</code> da <strong>17 513,4</strong> y
@@ -113,9 +120,14 @@
         <p>La de Lohr (ec. 4.27 de la 3.ª ed.) es del segundo tipo y además una <em>aproximación</em>: usa la
           varianza de la asignación proporcional —$\hat{V} = (1 - n/N)\sum_h W_h s_h^2 / n$—, vale solo para un MAS
           y pide postestratos con bastantes casos esperados, «30 o así» según el texto. Es la cifra que publica su
-          Ejemplo 4.9 con esta misma muestra. <code>survey</code>, en cambio, lineariza los residuos con los $n_h$
-          que salieron, de modo que su cifra es una forma de la <em>primera</em>, no de la segunda, que además añade
-          un término de segundo orden.</p>
+          Ejemplo 4.9 con esta misma muestra.</p>
+        <p><code>survey</code> no calcula ninguna de las dos. Trata la postestratificación como lo que es —una
+          <strong>calibración</strong>— y estima la varianza de diseño del estimador calibrado, linealizando los
+          residuos de cada postestrato con sus factores $g_h = N_h / \hat{N}_h$. El final del bloque lo reproduce a
+          mano con la receta de §4.1.4 de Lohr y sale su misma cifra al decimal, <strong>17 513,4478</strong>. Esa
+          varianza de diseño promedia sobre todas las muestras que el MAS pudo dar, los $n_h$ incluidos: los que
+          salieron entran como <em>datos</em>, no como condición. Por eso su cifra queda del lado de la
+          incondicional, entre la aproximación de Lohr y la forma condicional.</p>
         <p style="margin-bottom:0;">Con $n_h$ grandes la diferencia es cosmética (entre <code>survey</code> y la
           condicional, aquí, 0,7 %); con celdas chicas puede no serlo, y el capítulo 7 vuelve sobre esto. El
           protocolo del material —toda varianza por dos vías— existe para que estas discrepancias se encuentren y se

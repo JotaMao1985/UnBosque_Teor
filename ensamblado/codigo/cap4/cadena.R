@@ -368,6 +368,18 @@ round(c(lohr_4.27 = ee_lohr, survey = SE(svymean(~acres92, disP))[[1]],
 #>   lohr_4.27      survey condicional
 #>     17442.6     17513.4     17635.0
 
+# Y survey no calcula ninguna de las dos: trata la postestratificacion como una
+# CALIBRACION y estima la varianza de diseno del estimador calibrado,
+# linealizando los residuos con los factores g_h = N_h / N_h estimado. Es la
+# receta de §4.1.4 de Lohr, y reproduce su cifra al decimal:
+g_h <- as.numeric(Nh) / (w0 * as.numeric(n_obs))
+z_i <- g_h[match(agsrs$region, names(Nh))] *
+       (agsrs$acres92 - tapply(agsrs$acres92, agsrs$region, mean)[agsrs$region])
+print(round(c(survey = SE(svymean(~acres92, disP))[[1]],
+              receta_4.1.4 = sqrt((1 - 300 / N) * var(z_i) / 300)), 4), digits = 9)
+#>       survey receta_4.1.4
+#>   17513.4478   17513.4478
+
 cat("\n###BLOQUE-R15###\n")
 # La misma idea en machine learning, con rsample. Clase minoritaria: condados
 # "grandes" (mas de un millon de acres sembrados). Al partir en 5 pliegues de
