@@ -1,5 +1,10 @@
 suppressMessages({library(survey); library(sampling); library(TeachingSampling); library(jsonlite)})
 Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
+# survey.lonely.psu = "adjust" dice que hacer con un estrato de una sola
+# unidad, donde s_h^2 no existe (modulo 5): en vez de abortar, survey centra
+# ese estrato en la media general. En este capitulo NO se activa nunca -el
+# estrato mas pequeno de agstrat tiene 21 condados-, y se fija aqui para que
+# la cadena no dependa de la opcion global de quien la ejecute.
 options(warn = 1, survey.lonely.psu = "adjust")
 
 cat("\n###BLOQUE-R1###\n")

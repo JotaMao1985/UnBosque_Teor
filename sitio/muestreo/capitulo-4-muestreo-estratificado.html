@@ -4511,7 +4511,7 @@ round(cbind(identidad = dif, modulo_6 = V_mas - opciones[c("region", "al_azar")]
         <ul style="margin-bottom:0;">
           <li>Lohr — §4.4.1 (2.ª ed., ec. 4.11) / §3.4.1 (3.ª ed., ecs. 3.12–3.13): cuándo la asignación
             proporcional pierde contra el MAS.</li>
-          <li>Lohr — §4.6 (2.ª ed.) / §3.4.3 (3.ª ed.): el modelo del muestreo estratificado.</li>
+          <li>Lohr — §4.6 (2.ª ed.) / §3.6 (3.ª ed.): el modelo del muestreo estratificado.</li>
           <li>Gutiérrez — cap. 17: el enfoque asistido por modelos, del que este módulo es un caso.</li>
         </ul>
       </div>
@@ -4626,7 +4626,7 @@ round(300 / (ee_str / ee_srs)^2, 0)
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Kish, <em>Survey Sampling</em> (1965) — §8.2: el efecto de diseño original.</li>
-          <li>Lohr — §7.5 (ambas ediciones): deff en encuestas complejas, el destino de esta idea.</li>
+          <li>Lohr — §7.5 (2.ª ed.) / §7.4 (3.ª ed.): deff en encuestas complejas, el destino de esta idea.</li>
         </ul>
       </div>
     </div>
@@ -4945,9 +4945,10 @@ svymean(~acres92, disP)
         «verdadera» del modelo sobre los datos que verá en producción, estimada con un conjunto de prueba. Todo lo
         que este curso dice de las encuestas aplica: si el conjunto de prueba no representa la población, la
         métrica sale sesgada — con el agravante de que nadie publica el error estándar de su <em>accuracy</em>. La
-        conexión no es una metáfora de este material: el propio Lohr abre el capítulo señalando que una muestra
-        estratificada «bien hecha da estimaciones más precisas», y la comunidad de ML redescubrió la regla con el
-        nombre de <em>stratified split</em>.</p>
+        conexión no es una metáfora de este material: la cuarta razón para estratificar con la que Lohr abre el
+        capítulo es que el muestreo estratificado, «si se hace correctamente, dará estimaciones más precisas»
+        (§4.1 de la 2.ª ed. / §3.1 de la 3.ª), y la comunidad de ML redescubrió la regla con el nombre de
+        <em>stratified split</em>.</p>
 
       <p>El caso donde más duele es el desbalance de clases. En <code>agpop</code>, los condados «grandes» (más de
         un millón de acres) son el <strong>5 %</strong> — la clase que interesa detectar y la que menos unidades
@@ -8095,7 +8096,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
         { concepto: 'Varianza del estrato', aqui: 'S^2_{y,h}', lohr: 'S_h^2', gutierrez: 'S^2_{y,U_h}', r: 'tapply(y, region, var)' },
         { concepto: 'Estimador estratificado', aqui: '\\bar{y}_{\\text{str}} = \\sum W_h \\bar{y}_h', lohr: '\\bar{y}_{\\text{str}}', gutierrez: '\\hat{\\bar{y}}_{U,\\pi}', r: 'svymean()' },
         { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k = n_h/N_h', lohr: 'n_h/N_h', gutierrez: '\\pi_k', r: 'nh/Nh' },
-        { concepto: 'Peso de diseño', aqui: 'w_k = N_h/n_h', lohr: 'w_i', gutierrez: '1/\\pi_k', r: 'weights=~strwt' },
+        { concepto: 'Peso de diseño', aqui: 'w_k = N_h/n_h', lohr: 'w_{hj}', gutierrez: '1/\\pi_k', r: 'weights=~strwt' },
         { concepto: 'Efecto de diseño', aqui: '\\text{deff}', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'deff=TRUE en svymean' },
         { concepto: 'Prob. de selección PPT', aqui: '\\psi_k = x_k/t_{x,h}', lohr: '\\psi_i', gutierrez: 'p_k', r: 'S.STPPS()' }
       ]
@@ -8228,7 +8229,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
         respuesta: 399,
         tolerancia: 2,
         retroAcierto: '$300 / 0{,}7512 = 399{,}4$: estratificar por región regaló el equivalente a unas 99 entrevistas. Ese es el argumento de venta del capítulo entero, en un número.',
-        retroFallo: 'Es $n/\\text{deff} = 300/0{,}7512 \\approx 399$. Si te dio 225, multiplicaste en lugar de dividir: deff < 1 significa que el diseño RINDE MÁS que el MAS, así que el equivalente tiene que salir mayor que 300.'
+        retroFallo: 'Es $n/\\text{deff} = 300/0{,}7512 \\approx 399$: cuántas entrevistas de un MAS harían falta para igualar a estas 300. Si te dio 225 multiplicaste, y esa es la pregunta inversa —cuántas estratificadas igualan a un MAS de 300—, que es la cuenta que hace Lohr al abrir su capítulo. Aquí se pide la otra: como deff < 1, el diseño RINDE MÁS que el MAS y el equivalente tiene que salir mayor que 300.'
       },
       {
         tipo: 'opcion',

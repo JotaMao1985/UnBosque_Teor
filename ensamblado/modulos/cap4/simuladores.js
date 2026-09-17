@@ -616,7 +616,7 @@
         { concepto: 'Varianza del estrato', aqui: 'S^2_{y,h}', lohr: 'S_h^2', gutierrez: 'S^2_{y,U_h}', r: 'tapply(y, region, var)' },
         { concepto: 'Estimador estratificado', aqui: '\\bar{y}_{\\text{str}} = \\sum W_h \\bar{y}_h', lohr: '\\bar{y}_{\\text{str}}', gutierrez: '\\hat{\\bar{y}}_{U,\\pi}', r: 'svymean()' },
         { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k = n_h/N_h', lohr: 'n_h/N_h', gutierrez: '\\pi_k', r: 'nh/Nh' },
-        { concepto: 'Peso de diseño', aqui: 'w_k = N_h/n_h', lohr: 'w_i', gutierrez: '1/\\pi_k', r: 'weights=~strwt' },
+        { concepto: 'Peso de diseño', aqui: 'w_k = N_h/n_h', lohr: 'w_{hj}', gutierrez: '1/\\pi_k', r: 'weights=~strwt' },
         { concepto: 'Efecto de diseño', aqui: '\\text{deff}', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'deff=TRUE en svymean' },
         { concepto: 'Prob. de selección PPT', aqui: '\\psi_k = x_k/t_{x,h}', lohr: '\\psi_i', gutierrez: 'p_k', r: 'S.STPPS()' }
       ]
@@ -749,7 +749,7 @@
         respuesta: 399,
         tolerancia: 2,
         retroAcierto: '$300 / 0{,}7512 = 399{,}4$: estratificar por región regaló el equivalente a unas 99 entrevistas. Ese es el argumento de venta del capítulo entero, en un número.',
-        retroFallo: 'Es $n/\\text{deff} = 300/0{,}7512 \\approx 399$. Si te dio 225, multiplicaste en lugar de dividir: deff < 1 significa que el diseño RINDE MÁS que el MAS, así que el equivalente tiene que salir mayor que 300.'
+        retroFallo: 'Es $n/\\text{deff} = 300/0{,}7512 \\approx 399$: cuántas entrevistas de un MAS harían falta para igualar a estas 300. Si te dio 225 multiplicaste, y esa es la pregunta inversa —cuántas estratificadas igualan a un MAS de 300—, que es la cuenta que hace Lohr al abrir su capítulo. Aquí se pide la otra: como deff < 1, el diseño RINDE MÁS que el MAS y el equivalente tiene que salir mayor que 300.'
       },
       {
         tipo: 'opcion',

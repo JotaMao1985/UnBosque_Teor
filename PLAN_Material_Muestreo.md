@@ -3871,3 +3871,44 @@ reales. **Una cifra mal etiquetada no se queda quieta: fabrica la teoría que la
 barrido que la desmentía llevaba publicado en el JSON del propio capítulo desde julio.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+### T7.32 — Las once citas a Lohr del capítulo 4, una a una (2026-09-17)
+
+Tercera tarea del plan de mejora del capítulo 4 con Lohr 3.ª ed. Cierra su fase 1: lo que se expone
+en clase el 24 y el 25 de septiembre.
+
+**Las citas.** Se auditaron las **once** referencias a Lohr del capítulo contra los índices de las
+dos ediciones. **Dos estaban mal:**
+- **M7:** «§4.6 (2.ª ed.) / §3.4.3 (3.ª ed.): el modelo del muestreo estratificado». En la 3.ª,
+  §3.4.3 es *Allocation for Specified Precision within Strata*; el modelo es **§3.6**.
+- **M8:** «§7.5 (ambas ediciones): deff». Es §7.5 en la 2.ª y **§7.4** en la 3.ª (allí la 7.5 es
+  NHANES).
+
+Las otras nueve son correctas, incluida la «§6.2 (ambas ediciones)» del M9, que sí coincide.
+
+**La retro del quiz del M8, que daba por mala una lectura correcta.** Decía: «Si te dio 225,
+multiplicaste en lugar de dividir». Pero Lohr hace exactamente esa multiplicación al abrir su
+capítulo —(300)(0,75) = 225— para responder la pregunta **inversa**: cuántas entrevistas
+estratificadas igualan a un MAS de 300. El ítem pide la otra. La retro nombra ahora las dos cuentas
+y dice cuál se pide, en vez de corregir a quien viene del libro.
+
+**Dos menores más.** *(a)* El M11 atribuía a Lohr, «abriendo el capítulo», que una muestra
+estratificada «bien hecha da estimaciones más precisas»: es la **cuarta razón para estratificar** de
+§4.1 (2.ª) / §3.1 (3.ª), y así se cita. *(b)* El glosario daba el peso de Lohr como $w_i$; es
+$w_{hj}$ (2.ª ed., ec. 4.8; 3.ª ed., §3.3).
+
+**Y una línea de higiene del código:** `cadena.R` fijaba `survey.lonely.psu = "adjust"` sin decir
+por qué. Ahora lo explica, y avisa de que en este capítulo **no se activa nunca** —el estrato más
+pequeño de `agstrat` tiene 21 condados—. Esas líneas van antes del primer marcador de bloque, así
+que la página no cambia por ello.
+
+**Verificado.** Byte a byte en la segunda pasada; **270 de 270** cifras de bloques y **82 de prosa ·
+0 sin respaldo**, sin cambios: esta tarea no toca ninguna cifra. En el navegador, las citas nuevas
+en su módulo, el glosario del M2 renderizando $w_{hj}$, y el ítem 8 del quiz respondido con 225 dos
+veces: sale la pista y después la retro nueva completa, con 0 `.katex-error` y consola limpia.
+
+**Lo que enseña.** Una cita a un libro es una cifra más: nadie la ejecuta. De las once, las dos que
+fallaban eran las de las secciones que **cambiaron de sitio entre ediciones**, que es justo donde
+mirar cuando un material cita dos numeraciones a la vez.
+
+**Pendiente:** el visto bueno de Javier para publicar.
