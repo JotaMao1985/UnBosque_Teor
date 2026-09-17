@@ -64,6 +64,20 @@ round(c(sd_y = sd_y, sd_residuos = s_e,
 #>         344551.8948          31657.2182             90.8121            118.4578
 #>       correccion_tx  factor_estimadores
 #>              0.9306            110.2327
+
+# Y si hay ganancia o no, que es otra pregunta. La razon le gana a la EXPANSION
+# -a nadie mas- cuando r > (1/2) CV(x) / CV(y). Se evalua en las dos nubes que
+# usa el simulador de este modulo.
+cherry <- read.csv("CSV data sets for SDA 3e/cherry.csv")
+umbral <- function(aux, obj) 0.5 * (sd(aux) / mean(aux)) / (sd(obj) / mean(obj))
+round(rbind(
+  agsrs  = c(r = cor(agsrs$acres87, agsrs$acres92),
+             umbral = umbral(agsrs$acres87, agsrs$acres92)),
+  cherry = c(r = cor(cherry$diameter, cherry$volume),
+             umbral = umbral(cherry$diameter, cherry$volume))), 4)
+#>             r umbral
+#> agsrs  0.9958 0.4937
+#> cherry 0.9671 0.2174
 cat("\n###BLOQUE-R5###\n")
 # Antes de soltar el origen conviene preguntar si hace falta. Se ajusta la recta
 # libre y se CONTRASTA su intercepto: si no se distingue de cero, la recta por el

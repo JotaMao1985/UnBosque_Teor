@@ -48,6 +48,20 @@ print(pd.Series({
 #> correccion_tx               0.9306
 #> factor_estimadores        110.2327
 
+# Y si hay ganancia o no, que es otra pregunta. La razon le gana a la EXPANSION
+# -a nadie mas- cuando r > (1/2) CV(x) / CV(y). Las mismas cuatro cifras que R.
+ch = pd.read_csv("CSV data sets for SDA 3e/cherry.csv")
+def umbral(aux, obj):
+    return 0.5 * (aux.std(ddof=1) / aux.mean()) / (obj.std(ddof=1) / obj.mean())
+print(pd.DataFrame(
+    {"r": [np.corrcoef(x, y)[0, 1], ch["diameter"].corr(ch["volume"])],
+     "umbral": [umbral(pd.Series(x), pd.Series(y)),
+                umbral(ch["diameter"], ch["volume"])]},
+    index=["agsrs", "cherry"]).round(4).to_string())
+#>             r  umbral
+#> agsrs  0.9958  0.4937
+#> cherry 0.9671  0.2174
+
 print("\n###BLOQUE-P3###\n")
 # El GREG escalar. Una sola linea de aritmetica; lo unico que cambia entre los
 # tres estimadores del capitulo es de donde sale beta.

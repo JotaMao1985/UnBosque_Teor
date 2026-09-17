@@ -4098,3 +4098,50 @@ mecanismo sonaba convincente. **Cuando la justificación de una etiqueta es «po
 calcular», hay que preguntar qué promedia la fórmula, no qué usa.**
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.36 — La regla del módulo 3 del cap. 3: demostrada, evaluada y con su rival dicho (2026-09-17)
+
+Segunda tarea del plan del capítulo 3 con Portela & Villeta (`PLAN_Cap3_PortelaVilleta.md`). Cierra
+su fase 1.
+
+**Lo que estaba.** El módulo 3 cerraba su caja «Cuál pide cada nube» con una frase suelta: «Frente a
+la expansión, la regla es que la razón gana cuando $r > \tfrac12\text{CV}(x)/\text{CV}(y)$». La
+regla es correcta —es el teorema de la p. 218 de Portela— pero llegaba **sin demostración**, **sin
+evaluarse nunca sobre los datos del capítulo** y con el rival en una subordinada que es fácil no
+leer. Un estudiante podía aplicarla al ejercicio 2 del módulo 12 —los cerezos— y concluir lo
+contrario de lo que ese ejercicio enseña.
+
+**Por qué importa esa subordinada.** En `cherry` el umbral vale **0,2174** y la correlación
+**0,9671**: la regla **se cumple de sobra**, y aun así el estimador de razón es el equivocado. No
+hay contradicción, y ese es justo el punto: la desigualdad sale de comparar la razón con la
+**expansión**, así que solo dice que la razón le gana a la expansión —cierto también en los
+cerezos—. Lo que no dice, porque no es su pregunta, es que no haya nada mejor que las dos.
+
+**El arreglo, en tres piezas.**
+- **La regla, con su rival en negrita y con cifras**: en `agsrs` el umbral es **0,4937** frente a
+  una correlación de **0,9958**.
+- **Una `.derivacion` plegable nueva** (`der-umbral`, cuatro pasos): las dos varianzas una encima de
+  otra, la resta, la sustitución $B = \bar y_U/\bar x_U$ y $S_{xy} = \rho S_xS_y$, y el despeje. Con
+  las tres lecturas: que si las variabilidades relativas se parecen el umbral se queda en
+  $\rho > 0{,}5$; que es un umbral **poblacional** y en la práctica se evalúa con $r$ y los
+  $\widehat{\text{CV}}$; y que **compara con la expansión y con nadie más**.
+- **La advertencia del final del módulo** —«correlación alta no es lo mismo que recta por el
+  origen»— abre ahora reconociendo que el umbral tampoco lo detecta, con las dos cifras de `cherry`.
+
+**El código, en las dos pestañas.** Los bloques **R4** y **P2** imprimen, después de sus seis cifras
+de siempre, una tabla de dos filas con $r$ y el umbral en `agsrs` y en `cherry`. Las dos pestañas
+dan las mismas cuatro cifras, que es la disciplina que T7.19 impuso a este mismo par de bloques.
+
+**Verificado.** Byte a byte en la segunda pasada. **179 de 179** cifras de bloques y **100 de prosa ·
+0 sin respaldo**. En el navegador: 0 `.katex-error` con 56 expresiones en el módulo, la derivación
+abre y cierra con su `aria-expanded` (18 expresiones y 4 pasos dentro), las dos pestañas muestran la
+tabla nueva y la consola queda limpia. El M3 sube de 22 a 25 min en `courseData`.
+
+**Lo que enseña.** Una regla sin su condición de aplicación es una trampa, no un atajo: el material
+la llevaba publicada con el rival dicho de pasada, y el propio capítulo tenía el contraejemplo dos
+cajas más abajo sin que nadie hubiera cruzado los dos. Evaluar la regla sobre los datos del
+contraejemplo —y ver que la pasa— es lo que convierte la advertencia en argumento.
+
+**Pendiente:** el visto bueno de Javier para publicar.

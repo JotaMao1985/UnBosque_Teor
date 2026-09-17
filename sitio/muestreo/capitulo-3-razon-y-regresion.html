@@ -3881,7 +3881,9 @@ signif(abs(ee_mano - ee_razon) / ee_mano, 3)      # discrepancia relativa
           los dos estimadores del total. Los dos errores estándar que compara son los del MAS del capítulo 2: el de
           la expansión es $N\sqrt{1-n/N}\,s_y/\sqrt{n}$, y el de la razón es ese mismo con $s_e$ en lugar de $s_y$
           y con $t_x/\bar{x}$ en lugar de $N$ —el <code>ee_mano</code> que el módulo 2 escribió a mano y comprobó
-          contra <code>svyratio</code>—. Las dos pestañas calculan las mismas seis cifras.</p>
+          contra <code>svyratio</code>—. Después de las seis cifras imprime una tabla de dos filas que sirve
+          para lo de más abajo: el umbral a partir del cual la razón le gana a la expansión, evaluado sobre las dos
+          nubes que usa el simulador del final del módulo. Las dos pestañas calculan lo mismo.</p>
       </div>
 
       <div class="code-tabs">
@@ -3906,7 +3908,21 @@ round(c(sd_y = sd_y, sd_residuos = s_e,
 #&gt;                sd_y         sd_residuos       reduccion_pct factor_desviaciones
 #&gt;         344551.8948          31657.2182             90.8121            118.4578
 #&gt;       correccion_tx  factor_estimadores
-#&gt;              0.9306            110.2327</code></pre>
+#&gt;              0.9306            110.2327
+
+# Y si hay ganancia o no, que es otra pregunta. La razon le gana a la EXPANSION
+# -a nadie mas- cuando r &gt; (1/2) CV(x) / CV(y). Se evalua en las dos nubes que
+# usa el simulador de este modulo.
+cherry &lt;- read.csv("CSV data sets for SDA 3e/cherry.csv")
+umbral &lt;- function(aux, obj) 0.5 * (sd(aux) / mean(aux)) / (sd(obj) / mean(obj))
+round(rbind(
+  agsrs  = c(r = cor(agsrs$acres87, agsrs$acres92),
+             umbral = umbral(agsrs$acres87, agsrs$acres92)),
+  cherry = c(r = cor(cherry$diameter, cherry$volume),
+             umbral = umbral(cherry$diameter, cherry$volume))), 4)
+#&gt;             r umbral
+#&gt; agsrs  0.9958 0.4937
+#&gt; cherry 0.9671 0.2174</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># Por que gana: la razon no estima la variabilidad de y, sino la de los
@@ -3928,7 +3944,21 @@ print(pd.Series({
 #&gt; reduccion_pct              90.8121
 #&gt; factor_desviaciones       118.4578
 #&gt; correccion_tx               0.9306
-#&gt; factor_estimadores        110.2327</code></pre>
+#&gt; factor_estimadores        110.2327
+
+# Y si hay ganancia o no, que es otra pregunta. La razon le gana a la EXPANSION
+# -a nadie mas- cuando r &gt; (1/2) CV(x) / CV(y). Las mismas cuatro cifras que R.
+ch = pd.read_csv("CSV data sets for SDA 3e/cherry.csv")
+def umbral(aux, obj):
+    return 0.5 * (aux.std(ddof=1) / aux.mean()) / (obj.std(ddof=1) / obj.mean())
+print(pd.DataFrame(
+    {"r": [np.corrcoef(x, y)[0, 1], ch["diameter"].corr(ch["volume"])],
+     "umbral": [umbral(pd.Series(x), pd.Series(y)),
+                umbral(ch["diameter"], ch["volume"])]},
+    index=["agsrs", "cherry"]).round(4).to_string())
+#&gt;             r  umbral
+#&gt; agsrs  0.9958  0.4937
+#&gt; cherry 0.9671  0.2174</code></pre>
         </div>
       </div>
 
@@ -3963,8 +3993,10 @@ print(pd.Series({
           <li><strong>La razón</strong>, cuando se cumplen las tres condiciones a la vez: la relación entre $y$ y $x$
             es <strong>aproximadamente lineal y pasa por el origen</strong>; la <strong>dispersión crece con
             $x$</strong> (las unidades grandes varían más en términos absolutos), que es justo el modelo de varianza
-            que la razón supone; y la correlación es alta. Frente a la expansión, la regla es que la razón gana
-            cuando $r > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$.</li>
+            que la razón supone; y la correlación es alta. <strong>Cuánto</strong> de alta lo dice un umbral, y
+            conviene leer con cuidado contra quién: la razón le gana <strong>a la expansión</strong> —a nadie más—
+            cuando $\rho > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$. En <code>agsrs</code> ese umbral vale
+            <strong>0,4937</strong> frente a una correlación de <strong>0,9958</strong>: gana, y con holgura.</li>
           <li><strong>La regresión</strong> (módulo 6), cuando la nube es lineal pero <strong>el intercepto no es
             despreciable</strong>, o cuando la dispersión no crece con $x$ sino que se mantiene constante. Estima el
             intercepto en vez de imponerlo; lo que paga a cambio es un parámetro más ajustado con la misma
@@ -3976,6 +4008,53 @@ print(pd.Series({
           <li><strong>La expansión</strong>, cuando la correlación no llega al umbral de la primera línea: la
             auxiliar no paga lo que cuesta, y estimar con ella una pendiente solo añade ruido.</li>
         </ul>
+      </div>
+
+      <div class="derivacion">
+        <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-umbral">
+          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
+          <span class="derivacion-texto">Ver de dónde sale ese umbral, y qué es exactamente lo que dice</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="derivacion-panel" id="der-umbral" hidden>
+          <ol class="derivacion-pasos">
+            <li>
+              <p>Las dos varianzas, una encima de la otra, con el mismo factor delante. La de la expansión es la del
+                capítulo 2; la de la razón es la aproximada del módulo 2, escrita en términos poblacionales:</p>
+              $$V(\hat{\bar{y}}) = \frac{1-f}{n}\,S_y^2, \qquad
+                V(\hat{\bar{y}}_r) \approx \frac{1-f}{n}\left(S_y^2 + B^2S_x^2 - 2B\,S_{xy}\right)$$
+              <p style="margin-bottom:0;">La segunda es la primera <em>más dos términos</em>: $B^2S_x^2$, lo que
+                cuesta apoyarse en la auxiliar, y $-2B\,S_{xy}$, lo que se gana porque vaya de la mano de $y$.</p>
+            </li>
+            <li>
+              <p>La razón gana cuando esos dos términos suman negativo. Como $B > 0$, se puede dividir por $B$ sin
+                cambiar el sentido de la desigualdad:</p>
+              $$B^2S_x^2 - 2B\,S_{xy} < 0 \iff B\,S_x^2 < 2\,S_{xy}$$
+            </li>
+            <li>
+              <p>Se sustituye $B = \bar{y}_U/\bar{x}_U$ y $S_{xy} = \rho\,S_xS_y$, y se despeja $\rho$. Los
+                $S_x$ y $S_y$ se reparten entre numerador y denominador, y lo que queda son los dos coeficientes de
+                variación:</p>
+              $$\frac{\bar{y}_U}{\bar{x}_U}S_x^2 < 2\rho\,S_xS_y \iff
+                \rho > \frac{1}{2}\cdot\frac{S_x/\bar{x}_U}{S_y/\bar{y}_U}
+                     = \frac{1}{2}\cdot\frac{\text{CV}(x)}{\text{CV}(y)}$$
+            </li>
+            <li>
+              <p>Tres cosas que leer en el resultado, y la tercera es la que más se olvida:</p>
+              <ul>
+                <li>Si $x$ e $y$ tienen <strong>variabilidad relativa parecida</strong>, el cociente de los dos CV
+                  vale aproximadamente 1 y el umbral se queda en el $\rho > 0{,}5$ de toda la vida.</li>
+                <li>El umbral es <strong>poblacional</strong>. En una encuesta se evalúa con lo que da la muestra
+                  —$r$ y los $\widehat{\text{CV}}$—, que es lo que hace la tabla del bloque de arriba.</li>
+                <li>La desigualdad salió de comparar con <strong>la expansión</strong>, así que eso es todo lo que
+                  dice. <strong>No</strong> dice que la razón le gane a la regresión, ni a la diferencia: esas dos
+                  comparaciones son otras cuentas y están en el módulo 7. Cumplir el umbral y estar usando aun así
+                  el estimador equivocado es perfectamente posible — la advertencia del final de este módulo es
+                  justo ese caso.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
       </div>
 
       <div class="note">
@@ -4004,7 +4083,11 @@ print(pd.Series({
       </div>
 
       <div class="warning">
-        <p><strong>Correlación alta no es lo mismo que recta por el origen.</strong> Los cerezos tienen
+        <p><strong>Correlación alta no es lo mismo que recta por el origen.</strong> Y el umbral de la caja
+          anterior tampoco lo detecta: en <code>cherry</code> vale <strong>0,2174</strong> frente a una correlación
+          de <strong>0,9671</strong>, así que la regla se cumple de sobra. No hay contradicción — dice que la razón
+          le gana a la expansión, y aquí también es verdad; lo que no dice, porque no es su pregunta, es que no haya
+          nada mejor que las dos. Los cerezos tienen
           $R^2 = 0{,}935$ y la razón es <em>mala</em> para ellos: el volumen crece con el cuadrado del diámetro por
           la altura, así que la relación lineal que se ajusta bien en el rango observado no se prolonga hasta el
           origen. Confundir las dos cosas es el error más frecuente del capítulo, y el simulador está para
@@ -5276,7 +5359,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
       modules: [
         { id: 1, title: "Variables auxiliares", shortTitle: "Auxiliares", duration: "15 min" },
         { id: 2, title: "El estimador de razón", shortTitle: "Razón", duration: "25 min" },
-        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "22 min" },
+        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "25 min" },
         { id: 4, title: "Sesgo y error cuadrático medio", shortTitle: "Sesgo y ECM", duration: "22 min" },
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "12 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
