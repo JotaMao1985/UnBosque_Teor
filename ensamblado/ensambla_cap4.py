@@ -131,7 +131,7 @@ def main():
         { id: 2, title: "La teoría en el marco π", shortTitle: "Teoría", duration: "25 min" },
         { id: 3, title: "Pesos y estimación", shortTitle: "Pesos", duration: "22 min" },
         { id: 4, title: "Asignación de observaciones", shortTitle: "Asignación", duration: "25 min" },
-        { id: 5, title: "Asignación óptima con costos", shortTitle: "Costos", duration: "18 min" },
+        { id: 5, title: "Asignación óptima con costos", shortTitle: "Costos", duration: "28 min" },
         { id: 6, title: "Definición de estratos", shortTitle: "Definir estratos", duration: "18 min" },
         { id: 7, title: "Un modelo para el estratificado", shortTitle: "Modelo", duration: "20 min" },
         { id: 8, title: "El efecto de diseño", shortTitle: "deff", duration: "15 min" },

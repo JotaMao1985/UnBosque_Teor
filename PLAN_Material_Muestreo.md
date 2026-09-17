@@ -4255,3 +4255,58 @@ conoce entera demuestra el hecho; no enseña a decidir. Las dos cosas hacen falt
 simulación sirve además para **comprobar la cota**, que es un uso que antes no tenía.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.39 — El $n$ que nadie había decidido: el M5 del cap. 4 lo despeja (2026-09-17)
+
+Primera tarea de la fase 3 del plan del capítulo 4 con Lohr 3.ª ed. (tareas B1 y B5). **La fase 3
+se adelantó**: el plan la ponía «después del 9 de octubre», pero la restricción R2 dice que cambiar
+un módulo *antes* de su clase no confunde, y M3–M6 se dictan el **24 y el 25 de septiembre**.
+Después del 9 esas clases ya habrían pasado.
+
+**Lo que faltaba.** Los módulos 4 y 5 repartían $n = 300$ de tres maneras, discutían cuál reparte
+mejor y **nunca decían de dónde salió el 300**. Era un dato caído del cielo, justo al revés de como
+se trabaja: se fija la precisión y se despeja el tamaño. Lohr lo cierra en §3.4.5 (ecs. 3.16–3.18) y
+el capítulo no lo tenía.
+
+**El arreglo, en dos bloques nuevos** —`R7B` y `R7C`, con el sufijo que ya usaban `R6B`/`R6C`, para
+no renumerar de R8 en adelante—.
+- **El ancla es el capítulo 2**, misma población y misma variable: el 10 % de error relativo sobre
+  `acres92` pedía allí **595** condados. Estratificando bajan a **506** (proporcional), **462**
+  (igual), **356** (Neyman) y **368** (con costos). La cuenta es la misma con $S^2$ cambiado por
+  $v = \sum_h W_h^2S_h^2/a_h$, y **el MAS sale del mismo código como el caso $H = 1$, reproduciendo
+  los 595 exactos**: la mejor comprobación de que la fórmula quedó bien puesta.
+- **La fila $v/S^2$** —**0,821 · 0,749 · 0,577 · 0,596**— es el deff **sin fpc**, y casi repite la
+  tabla del M4. El capítulo ya tenía esas cifras; ahora se ven leídas como ahorro de muestra.
+- **Dos identidades comprobadas en R** (`TRUE TRUE`): con proporcional $v = \sum W_hS_h^2$ y con
+  Neyman $v = (\sum W_hS_h)^2$. Y la observación que ordena el trabajo: **$v$ depende de cómo se
+  reparte, no de cuánto**, así que la asignación se elige antes que el tamaño.
+- **Multivariable**, que es el cierre explícito de §3.4.5: con la misma proporcional, `farms92` se
+  conforma con **214** y `acres92` exige **506**. Manda el mayor.
+- **Estratos de certeza (B5)**, pegados a la advertencia del truncamiento, que hasta ahora dejaba el
+  recorte como un remiendo: los **31** condados mayores son el **1,01 %** del marco y el **9,66 %**
+  de lo sembrado; sin ellos la desviación cae de **424 686,68** a **309 673,43**. Censarlos deja el
+  tamaño en **316** frente a 506, y 31 de esos 316 no son muestra sino censo. Con su advertencia: el
+  corte se hace con `acres87` (correlación **0,9951**), no con la variable que aún no se ha medido —
+  la trampa circular del cap. 2 otra vez.
+
+**Tres correcciones propias antes de cerrar.** Había escrito «una sexta parte menos de trabajo de
+campo» cuando 506 → 316 es **más de un tercio**; el nombre de la encuesta del Ej. 3.8 es Encuesta de
+Empleo, **Nóminas y Horas** de Canadá; y el encabezado `<h3>` que había puesto era un patrón de una
+sola vez en todo el material, así que se cambió por la apertura en negrita que el capítulo ya usa.
+También se quitó un «15 000» que venía del libro y no de un bloque: registrarlo obligaba a tocar
+`cifras_prosa.json`, que la sesión del cap. 3 tenía con cambios sin commitear.
+
+**Verificado.** Byte a byte; **317 de 317** cifras de bloques (eran 293) y **102 de prosa · 0 sin
+respaldo** (eran 95); `anota_salidas.py --check` sin diferencias. En el navegador: 29 expresiones
+KaTeX en el M5, 0 `.katex-error`, tres bloques y consola limpia. M5 pasa de 18 a **28 min** en
+`courseData`, los ~10 que preveía la sección 4 del plan.
+
+**Lo que enseña.** El capítulo enseñaba a repartir una muestra sin haber enseñado a decidirla, y el
+hueco no se veía porque el 300 venía de Lohr y **parecía un dato del problema**. La señal de que
+faltaba algo estaba en el capítulo 2: tenía la pregunta resuelta para el MAS y nadie había vuelto a
+ella. **Un capítulo posterior que no reusa el resultado del anterior suele estar escondiendo un
+hueco, no ahorrando repetición.**
+
+**Pendiente:** el visto bueno de Javier para publicar.

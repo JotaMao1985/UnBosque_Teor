@@ -150,6 +150,81 @@ round(c(n_total = sum(nh_opt), costo_total = sum(ch * nh_opt),
 #>     n_total costo_total          ee
 #>      264.85     3000.00    18916.33
 
+cat("\n###BLOQUE-R7B###\n")
+# Hasta aqui n = 300 fue un DATO. De donde sale? Del margen de error que se
+# quiera. El capitulo 2 ya lo resolvio para el MAS: un 10% de error relativo
+# sobre acres92 pedia 595 condados. La cuenta estratificada es la misma, con
+# S^2 cambiado por v, la "variabilidad media por unidad" de Lohr (3.16):
+#   v = sum_h W_h^2 S_h^2 / a_h,  con a_h = n_h/n la asignacion RELATIVA
+#   n = z^2 v / (e^2 + z^2 sum_h W_h S_h^2 / N)                      (3.18)
+# Notese que v depende de COMO se reparte, no de cuanto: por eso se puede
+# decidir la asignacion antes que el tamano.
+z <- qnorm(0.975)
+e <- 0.10 * mean(agpop$acres92)   # el mismo objetivo del cap. 2: 10% de la media
+
+a_rel <- cbind(proporcional = Wh,
+               igual        = rep(1 / 4, 4),
+               Neyman       = Wh * Sh / sum(Wh * Sh),
+               con_costos   = (Wh * Sh / sqrt(ch)) / sum(Wh * Sh / sqrt(ch)))
+v      <- apply(a_rel, 2, function(ah) sum(Wh^2 * S2h / ah))
+n_str  <- z^2 * v / (e^2 + z^2 * sum(Wh * S2h) / N)
+n_mas  <- z^2 * S2U / (e^2 + z^2 * S2U / N)
+# v/S^2 es el deff SIN fpc: lo que el reparto ahorra por unidad.
+round(c(MAS = 1, v / S2U), 3)
+#>          MAS proporcional        igual       Neyman   con_costos
+#>        1.000        0.821        0.749        0.577        0.596
+# Y los condados que hacen falta, redondeando hacia arriba como se hace:
+ceiling(c(MAS = n_mas, n_str))
+#>          MAS proporcional        igual       Neyman   con_costos
+#>          595          506          462          356          368
+
+# Con proporcional, v es exactamente el promedio de las varianzas DENTRO,
+# y con Neyman es el cuadrado del promedio de las desviaciones:
+c(prop_ok   = isTRUE(all.equal(unname(v["proporcional"]), sum(Wh * S2h))),
+  neyman_ok = isTRUE(all.equal(unname(v["Neyman"]), sum(Wh * Sh)^2)))
+#>   prop_ok neyman_ok
+#>      TRUE      TRUE
+
+# Una encuesta no mide una sola variable. El mismo 10% sobre farms92, con
+# LA MISMA asignacion proporcional (que no depende de la variable), pide
+# otro tamano; el que se usa es el MAYOR de los dos.
+S2h_f <- tapply(agpop$farms92, agpop$region, var)
+e_f   <- 0.10 * mean(agpop$farms92)
+n_f   <- z^2 * sum(Wh^2 * S2h_f / Wh) / (e_f^2 + z^2 * sum(Wh * S2h_f) / N)
+ceiling(c(acres92 = unname(n_str["proporcional"]), farms92 = n_f,
+          manda = max(n_str["proporcional"], n_f)))
+#> acres92 farms92   manda
+#>     506     214     506
+
+cat("\n###BLOQUE-R7C###\n")
+# Estratos de CERTEZA: unidades tan grandes que dejarlas al azar es regalar
+# varianza. Se censan (n_h = N_h), asi que su fpc vale 0 y NO aportan nada a
+# la varianza; su peso es 1 y se representan a si mismas.
+orden   <- order(agpop$acres92, decreasing = TRUE)
+gigante <- seq_len(N) %in% orden[1:31]          # el 1% mas grande del marco
+round(c(condados = sum(gigante),
+        pct_marco = 100 * sum(gigante) / N,
+        pct_acres = 100 * sum(agpop$acres92[gigante]) / sum(agpop$acres92),
+        S_con = sd(agpop$acres92),
+        S_sin = sd(agpop$acres92[!gigante])), 2)
+#>  condados pct_marco pct_acres     S_con     S_sin
+#>     31.00      1.01      9.66 424686.68 309673.43
+
+# El tamano que hace falta para el mismo 10%, censando a los gigantes y
+# repartiendo el resto proporcionalmente entre las cuatro regiones:
+resto  <- !gigante
+Nh_r   <- table(agpop$region[resto])
+Wh_r   <- as.numeric(Nh_r) / N                   # pesan sobre el marco ENTERO
+S2h_r  <- tapply(agpop$acres92[resto], agpop$region[resto], var)
+a_r    <- as.numeric(Nh_r) / sum(Nh_r)
+v_r    <- sum(Wh_r^2 * S2h_r / a_r)
+n_resto <- z^2 * v_r / (e^2 + z^2 * sum(Wh_r * S2h_r) / N)
+ceiling(c(censados = sum(gigante), resto = n_resto,
+          total = sum(gigante) + n_resto,
+          sin_certeza = unname(n_str["proporcional"])))
+#>    censados       resto       total sin_certeza
+#>          31         285         316         506
+
 cat("\n###BLOQUE-R8###\n")
 # Definir los estratos: la variable de estratificacion importa mas que el
 # numero de estratos. Cuatro maneras de partir agpop en 4 grupos, mismas
