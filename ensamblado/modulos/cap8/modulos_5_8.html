@@ -159,7 +159,7 @@
 
       <div class="warning">
         <p><strong>El mecanismo del encogimiento.</strong> El error estándar de la media es
-          $s/\sqrt{n}$. Imputar sube $n$ de 17 a 20 —eso baja el denominador— y además <strong>reduce
+          $s/\sqrt{n}$. Imputar sube $n$ de 17 a 20 —eso agranda el denominador— y además <strong>reduce
           $s$</strong>, porque los valores imputados están todos en el centro de la distribución (la media) o
           exactamente sobre la recta (la regresión). Las dos cosas empujan en la misma dirección. El
           hot-deck encoge menos, porque copia valores reales con su dispersión, pero también encoge: los
@@ -195,7 +195,8 @@
       <div class="note">
         <p><strong>Con tres huecos de veinte, la corrección es pequeña — y esa es la señal correcta.</strong>
           $B = 0{,}0215$ frente a $\bar U = 0{,}3862$: el error estándar pasa de 0,6214 a 0,6418, un 3,3 % más
-          ancho, y la fracción de información perdida es 0,062. Las reglas de Rubin no inflan por inflar:
+          ancho, y la <strong>fracción de información perdida</strong> —$(1 + 1/m)B/T$, la parte de la
+          varianza total que existe por imputar— es 0,062. Las reglas de Rubin no inflan por inflar:
           miden. Con un 30 % de faltantes en vez de un 15 %, la corrección es mucho mayor — que es lo que
           mide la simulación siguiente.</p>
       </div>
@@ -286,11 +287,13 @@
         <p>El <strong>R-indicator</strong> (Schouten et al., 2009) mide la otra mitad del problema: no cuánta
           gente falta, sino cuán <em>desigual</em> es la falta. Con $\hat\phi_k$ la propensión estimada de
           cada unidad y $S(\hat\phi)$ su desviación típica poblacional:</p>
-        <p>$$R \;=\; 1 - 2\,S(\hat\phi)$$</p>
+        <p>$$R(\hat\phi) \;=\; 1 - 2\,S(\hat\phi)$$</p>
+        <p>Se escribe $R(\hat\phi)$, y no $R$ a secas, para no confundirlo con la tasa de respuesta $R$ de la
+          fórmula del módulo 2.</p>
         <p style="margin-bottom:0;">Vale 1 cuando todos responden con la misma probabilidad —la no respuesta
           es entonces MCAR y no sesga— y baja hacia 0 cuando unos grupos responden y otros no. Es
-          independiente de la tasa global: se puede tener 80 % de respuesta con $R$ bajo, y eso es peor que
-          40 % con $R$ alto.</p>
+          independiente de la tasa global: se puede tener 80 % de respuesta con $R(\hat\phi)$ bajo, y eso es
+          peor que 40 % con $R(\hat\phi)$ alto.</p>
       </div>
 
       <div class="code-tabs">
@@ -303,7 +306,7 @@
       </div>
 
       <div class="warning">
-        <p><strong>$R = 0{,}473$.</strong> La propensión a responder varía de escuela a escuela con una
+        <p><strong>$R(\hat\phi) = 0{,}473$.</strong> La propensión a responder varía de escuela a escuela con una
           desviación típica de 0,263 sobre una media de 0,398: hay escuelas que devolvieron todo y escuelas
           que no devolvieron casi nada. Ese número, y no el 39,8 %, es el que anuncia que el ajuste por
           clases del módulo 3 iba a tener trabajo — y el que no anuncia, porque no puede, que las clases
@@ -314,7 +317,8 @@
         <h4><i class="fas fa-chart-simple" aria-hidden="true"></i> La misma tasa, dos encuestas distintas</h4>
         <p class="simulador-intro">Las barras son las 23 escuelas ordenadas por tasa de respuesta. El
           deslizador <em>homogeneiza</em>: en 0 están las tasas reales; en 1, todas las escuelas responden al
-          39,8 % — la misma tasa global, la misma cantidad de datos, y $R = 1$. Mira cómo el R-indicator sube
+          39,8 % — la misma tasa global, la misma cantidad de datos, y $R(\hat\phi) = 1$. Mira cómo el
+          R-indicator sube
           mientras la tasa global no se mueve ni un punto.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Tasa de respuesta por escuela y su dispersión</p>

@@ -457,8 +457,8 @@ p_bar <- sum(wpop * p_esc); s_p <- sqrt(sum(wpop * (p_esc - p_bar)^2))
 c(tasa_global = p_bar, sd_propension = s_p, R_indicator = 1 - 2 * s_p,
   tasa_min = min(p_esc), tasa_max = max(p_esc),
   correlacion_con_el_tamano = cor(miL$popteach, p_esc))
-# Dos encuestas con la misma tasa global pueden tener R muy distintos: la que
-# reparte la no respuesta por igual es mucho menos peligrosa.
+# Dos encuestas con la misma tasa global pueden tener R-indicators muy
+# distintos: la que reparte la no respuesta por igual es mucho menos peligrosa.
 #>               tasa_global             sd_propension               R_indicator
 #>                0.39808917                0.26334172                0.47331655
 #>                  tasa_min                  tasa_max correlacion_con_el_tamano
@@ -469,16 +469,16 @@ cat("\n###BLOQUE-R19###\n")
 # respuesta se diluye". Se refuta con la formula, que no contiene a n.
 n_seq <- c(25, 100, 400, 1600, 6400, 25600)
 tab <- rbind(ee = sd(teL$hrwork, na.rm = TRUE) / sqrt(n_seq),
-             sesgo = rep(abs(sesgo), length(n_seq)))
+             sesgo_abs = rep(abs(sesgo), length(n_seq)))
 colnames(tab) <- n_seq
-round(rbind(tab, raiz_ecm = sqrt(tab["ee", ]^2 + tab["sesgo", ]^2)), 4)
+round(rbind(tab, raiz_ecm = sqrt(tab["ee", ]^2 + tab["sesgo_abs", ]^2)), 4)
 # El error estandar cae con la raiz de n; el sesgo no se mueve. A partir de
 # n = 10 el sesgo ya domina, y de ahi en adelante mas datos solo estrechan un
 # intervalo centrado en el sitio equivocado.
-#>              25    100    400   1600   6400  25600
-#> ee       0.6953 0.3477 0.1738 0.0869 0.0435 0.0217
-#> sesgo    1.1018 1.1018 1.1018 1.1018 1.1018 1.1018
-#> raiz_ecm 1.3028 1.1553 1.1154 1.1052 1.1026 1.1020
+#>               25    100    400   1600   6400  25600
+#> ee        0.6953 0.3477 0.1738 0.0869 0.0435 0.0217
+#> sesgo_abs 1.1018 1.1018 1.1018 1.1018 1.1018 1.1018
+#> raiz_ecm  1.3028 1.1553 1.1154 1.1052 1.1026 1.1020
 
 cat("\n###BLOQUE-R20###\n")
 # IA · Afirmacion 2: "ponderar por las variables demograficas corrige la no

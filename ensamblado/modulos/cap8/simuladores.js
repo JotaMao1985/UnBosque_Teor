@@ -448,7 +448,7 @@
             valor: fmtPct(Math.min(...p), 1) + ' / ' + fmtPct(Math.max(...p), 1) },
           { etiqueta: 'desviación típica de la propensión:', valor: fmtNum(s, 4) },
           { etiqueta: 'R-indicator = 1 − 2·S(φ):', valor: fmtNum(1 - 2 * s, 4) },
-          { etiqueta: 'la encuesta real:', valor: 'R = ' + fmtNum(G.R, 4) +
+          { etiqueta: 'la encuesta real:', valor: 'R(φ) = ' + fmtNum(G.R, 4) +
             ', tasas de ' + fmtPct(G.minTasa, 1) + ' (E' + G.escuelaMin + ') a ' +
             fmtPct(G.maxTasa, 0) + ' (E' + G.escuelaMax + ')' }
         ]);
@@ -590,7 +590,7 @@
                 etiqueta: 'Sesgo del estimador',
                 resumen: 'Algunos estimadores son sesgados por construcción, aunque el diseño sea ' +
                   'perfecto. Es el único sesgo del árbol que $n$ sí reduce.',
-                efecto: 'sesgo', nAyuda: true, donde: 'Capítulo 3, módulo 3',
+                efecto: 'sesgo', nAyuda: true, donde: 'Capítulo 3, módulo 4',
                 ejemplo: 'el estimador de razón: $-38\\,963$ acres con $n = 300$, y menos con $n$ mayor.'
               }
             ]
@@ -755,7 +755,7 @@
       },
       {
         tipo: 'multiple',
-        modulo: 1,
+        modulo: 3,
         pregunta: 'La simulación de los cuatro mecanismos dio: MCAR sin sesgo, MAR con el 100,4 % del sesgo eliminado por el ajuste, «MAR fino» con el 81,6 % y MNAR con el −1,1 %. Marca <strong>todo</strong> lo que sea cierto.',
         pista: 'Fíjate en de qué depende la propensión en cada caso y qué ve el ajuste.',
         opciones: [
@@ -881,13 +881,13 @@
         pista: 'El R-indicator mide la <em>variabilidad</em> de la propensión, no su nivel.',
         opciones: [
           { texto: 'En la segunda, la no respuesta está muy concentrada en ciertos grupos, así que el riesgo de sesgo es mucho mayor aunque falte la misma cantidad de gente.', correcta: true,
-            retro: 'Correcto. $R = 0{,}95$ significa que casi todos responden con probabilidad parecida — no respuesta prácticamente MCAR, que no sesga. $R = 0{,}45$ significa que unos grupos responden y otros no, y la fórmula del módulo 2 convierte esa diferencia en sesgo si además difieren en $y$.' },
+            retro: 'Correcto. $R(\\hat\\phi) = 0{,}95$ significa que casi todos responden con probabilidad parecida — no respuesta prácticamente MCAR, que no sesga. $R(\\hat\\phi) = 0{,}45$ significa que unos grupos responden y otros no, y la fórmula del módulo 2 convierte esa diferencia en sesgo si además difieren en $y$.' },
           { texto: 'Son equivalentes: lo que importa para el sesgo es cuánta gente falta, y falta la misma.', correcta: false,
             retro: 'La cantidad es solo el factor $(1-R)$ de la fórmula. El otro factor es la brecha entre respondientes y ausentes, y una no respuesta concentrada en ciertos grupos es exactamente la que produce brechas grandes.' },
-          { texto: 'La segunda tiene mejor calidad porque un R más bajo indica más variabilidad y por tanto más información.', correcta: false,
+          { texto: 'La segunda tiene mejor calidad porque un R-indicator más bajo indica más variabilidad y por tanto más información.', correcta: false,
             retro: 'Va al revés: el R-indicator vale 1 en el mejor caso (todos responden con la misma probabilidad) y baja hacia 0 en el peor. Más variabilidad de la propensión es más riesgo, no más información.' },
           { texto: 'No se puede decir nada sin conocer la variable de interés.', correcta: false,
-            retro: 'Es cierto que el sesgo depende también de $y$ — por eso el R-indicator es un indicador de riesgo y no una medida de sesgo. Pero sí se puede decir algo: con $R = 0{,}95$ el sesgo está acotado por un número pequeño sea cual sea $y$.' }
+            retro: 'Es cierto que el sesgo depende también de $y$ — por eso el R-indicator es un indicador de riesgo y no una medida de sesgo. Pero sí se puede decir algo: con $R(\\hat\\phi) = 0{,}95$ el sesgo está acotado por un número pequeño sea cual sea $y$.' }
         ]
       }
     ];

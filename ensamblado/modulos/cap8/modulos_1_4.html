@@ -25,8 +25,9 @@
         cuestionario <strong>310</strong>: el <strong>41,1 %</strong>. De los que sí lo devolvieron,
         <strong>24 dejaron en blanco</strong> la pregunta sobre minutos de preparación.</p>
 
-      <p>Los siete capítulos anteriores del curso suponen que quien es sorteado, responde. Con esa suposición
-        se construyeron $\pi_k$, el estimador de Horvitz–Thompson y todo lo demás. Aquí se cae: la encuesta
+      <p>Los capítulos 2 a 7 del curso suponen que quien es sorteado, responde —el capítulo 1 ya mostró, con el
+        <em>Literary Digest</em>, lo que cuesta cuando no—. Con esa suposición se construyeron $\pi_k$, el
+        estimador de Horvitz–Thompson y todo lo demás. Aquí se cae: la encuesta
         que llegó al analista tiene 310 filas donde el diseño había previsto 754, y las 444 que faltan
         <strong>no son un subconjunto al azar</strong>.</p>
 
@@ -101,8 +102,8 @@
       <div class="note">
         <p><strong>El cuarto caso, «MAR fino», es el que aparece en la práctica.</strong> Ahí la propensión sí
           depende solo de $x$ —es MAR de libro—, pero varía <em>dentro</em> de cada clase de ajuste: de 0,94 a
-          0,18 entre la primera clase y la quinta, y también dentro de cada una. El ajuste por clases lo
-          corrige en parte, y esa parte se puede medir. Es la diferencia entre «MAR» como teorema y «MAR» como
+          0,18 entre la primera clase y la quinta, y también dentro de cada una. El ajuste por clases del
+          módulo 3 lo corrige en parte, y esa parte se puede medir. Es la diferencia entre «MAR» como teorema y «MAR» como
           procedimiento con clases concretas.</p>
       </div>
 
@@ -117,10 +118,13 @@
 
       <div class="simulador" data-simulador="mecanismos">
         <h4><i class="fas fa-diagram-project" aria-hidden="true"></i> Los cuatro mecanismos, medidos</h4>
-        <p class="simulador-intro">El deslizador elige el mecanismo. Las barras son el sesgo de la media de
-          los respondientes, en acres, con y sin ajuste por clases de la auxiliar; la banda gris es el error
-          de Monte Carlo de las 2 000 réplicas. Fíjate en que <strong>MCAR no tiene sesgo que corregir</strong>
-          y en que <strong>con MNAR el ajuste no cambia nada</strong>: las dos barras son la misma.</p>
+        <p class="simulador-intro">El deslizador elige el mecanismo. Las barras oscuras son el sesgo de la
+          media de los respondientes, en acres, y la banda gris es el error de Monte Carlo de las 2 000
+          réplicas. Las naranjas <strong>adelantan el módulo 3</strong>: son el sesgo después de ajustar por
+          clases de la auxiliar —dentro de cada quintil de $x$, los respondientes cargan con el peso de los que
+          no contestaron—, y es allí donde ese ajuste se construye y se lee. Por ahora basta con fijarse en que
+          <strong>MCAR no tiene sesgo que corregir</strong> y en que <strong>con MNAR el ajuste no cambia
+          nada</strong>: las dos barras son la misma.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Sesgo de la media estimada, sin ajustar y ajustando por clases de $x$</p>
         <div class="grafico-wrapper" style="height:250px;">
@@ -156,8 +160,8 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Escribir el sesgo como producto de dos
-              factores, medirlo sobre datos reales, y entender por qué $n$ no aparece en la fórmula.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Retomar el sesgo del capítulo 1 como producto de
+              dos factores, medirlo sobre datos reales, y entender por qué $n$ no aparece en la fórmula.</p>
           </div>
         </div>
       </div>
@@ -187,8 +191,9 @@
 
       <div class="definition">
         <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>El sesgo de no respuesta</h4>
-        <p>Partiendo la población en respondientes ($M_R$ unidades, media $\bar y_R$) y no respondientes
-          ($M_{NR}$, media $\bar y_{NR}$), con tasa de respuesta $R = M_R / M$:</p>
+        <p>Es la fórmula del capítulo 1, módulo 4, que allí se escribía con $r$ y $\bar y_M$; aquí se usa la
+          notación de Lohr. Partiendo la población en respondientes ($M_R$ unidades, media $\bar y_R$) y no
+          respondientes ($M_{NR}$, media $\bar y_{NR}$), con tasa de respuesta $R = M_R / M$:</p>
         <p>$$\text{sesgo}(\bar y_R) \;=\; \bar y_R - \bar y_U \;=\; (1 - R)\,(\bar y_R - \bar y_{NR})$$</p>
         <p style="margin-bottom:0;">Un <strong>producto de dos factores</strong>: cuánta gente falta y cuánto
           se diferencia. Si cualquiera de los dos es cero, no hay sesgo — y ninguno de los dos es $n$.</p>
@@ -250,7 +255,9 @@
 
       <p>Con la submuestra de no respondientes se puede hacer algo mejor que medir el sesgo: <strong>quitarlo
         </strong>. El estimador de dos fases de Hansen y Hurwitz (1946) usa las dos partes con el peso que le
-        corresponde a cada una:</p>
+        corresponde a cada una. Son los mismos autores del estimador con reemplazo del capítulo 6 (módulo 2),
+        pero no es el mismo estimador: aquel corregía probabilidades de selección desiguales, y este combina
+        la encuesta con una segunda fase de campo.</p>
 
       <div class="formula">
         <p>$$\hat{\bar y}_{HH} \;=\; R\,\bar y_R + (1 - R)\,\bar y_{NR}
@@ -262,11 +269,13 @@
         de los ausentes—, y por eso casi ninguna encuesta lo tiene. Cuando lo tiene, es la mejor información
         del estudio.</p>
 
-      <h3>El <em>Literary Digest</em>, ahora con la fórmula</h3>
+      <h3>El <em>Literary Digest</em>, con la identidad de Meng</h3>
 
       <p>El capítulo 1 abrió el curso con el desastre de 1936: la revista predijo Landon 54 % / Roosevelt 41 %
-        con más de dos millones de papeletas, y Roosevelt ganó con el 61 %. Entonces se dijo «la muestra no
-        era aleatoria». Ahora se puede decir <strong>cuánto</strong>:</p>
+        con más de dos millones de papeletas, y Roosevelt ganó con el 61 %. Aquel capítulo ya midió cuánto se
+        equivocó —un sesgo de −19,32 puntos (módulo 1) y la precisión de un muestreo aleatorio de 6,30
+        votantes (módulo 7)—. Lo que queda es ver <strong>de qué depende</strong>. El bloque rehace la cuenta
+        con la identidad de Meng, que se presenta justo después:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El Literary Digest con la identidad de Meng">
@@ -444,8 +453,8 @@
 
       <h3>Lo que la simulación ya sabía</h3>
 
-      <p>El módulo 1 fabricó cuatro mecanismos y midió el sesgo sin ajustar. La misma simulación traía la
-        segunda columna:</p>
+      <p>El módulo 1 fabricó cuatro mecanismos, midió el sesgo sin ajustar y su simulador adelantaba ya el
+        sesgo tras ajustar. Con el ajuste construido, esa segunda columna se puede leer entera:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Qué arregla el ajuste y qué no">
@@ -514,7 +523,9 @@
 
       <div class="definition">
         <h4><i class="fas fa-book mr-2" aria-hidden="true"></i>Post-estratificación y raking</h4>
-        <p>La <strong>post-estratificación</strong> reparte la muestra en celdas $c$ cuyo total poblacional
+        <p>Las dos ya salieron en el curso: la post-estratificación en el capítulo 4 (módulo 10) y el raking en
+          el 7 (módulo 6). Aquí trabajan para la no respuesta. La <strong>post-estratificación</strong> reparte
+          la muestra en celdas $c$ cuyo total poblacional
           $N_c$ se conoce, y fija el peso de forma que los pesos de cada celda sumen su total:</p>
         <p>$$w_k = \frac{N_c}{n_c}, \qquad k \in c \qquad\Longrightarrow\qquad \sum_{k \in c} w_k = N_c$$</p>
         <p style="margin-bottom:0;">El <strong>raking</strong> (o IPFP) hace lo mismo cuando solo se conocen

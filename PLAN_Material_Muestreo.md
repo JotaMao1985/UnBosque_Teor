@@ -3676,7 +3676,7 @@ primeras cifras».
 capítulo 7 se le pondrá nombre —linealización de Taylor—», pero su módulo 4 ya se lo puso. *(b)* El módulo 2
 del capítulo 8 se titula «La fórmula del sesgo de no respuesta» y la presenta con definición propia,
 cuando es la del capítulo 1, módulo 4: es el mismo defecto que el 6 de esta lista, y conviene mirarlo en la
-auditoría del capítulo 8. *(c)* `precalculo/genera_cap7.R` conserva el comentario «donde la linealización
+auditoría del capítulo 8. **Hecho en T7.29.** *(c)* `precalculo/genera_cap7.R` conserva el comentario «donde la linealización
 no aplica directo» y exporta `medianaEeLin`/`medianaEeJk` al JSON, pero la página no usa esos campos; no se
 tocó.
 
@@ -3706,3 +3706,86 @@ de bloques y **637 respaldadas · 0 sin respaldo**; `cuenta_sitio.py` da **9 pá
 a 644. Comprobado sobre la página en vivo: es **byte a byte** la de `3cb0860` (`cmp`, a los ~20 s del
 push), las frases nuevas de los módulos 3, 5, 6 y 8 están, las viejas («sí, sin cambiar nada», «no sale de
 ninguna fórmula vista») no, y el build de Pages es `built` en **`d8d7986`**.
+
+---
+
+### T7.29 — Auditoría de orden del capítulo 8 (2026-09-17)
+
+Tras publicar el 7, Javier pidió seguir con el 8, el último. Se leyeron los once módulos, el quiz, el
+glosario, el árbol del módulo 10, los simuladores y la cadena, y cada puntero se contrastó con los capítulos
+1 a 7. Diez hallazgos —ocho de orden y dos de cifras o redacción— y Javier aprobó los diez; para el choque
+de la letra $R$ eligió renombrar el R-indicator y dejar la tasa como está.
+
+**1 · El módulo 1 usaba el ajuste por clases antes de que el 3 lo construyera.** Su simulador ya dibujaba
+el «sesgo tras ajustar por clases de x» y leía «el ajuste elimina X % del sesgo»; su nota decía que el
+ajuste «lo corrige en parte». El módulo 3 presentaba después esas cifras como revelación («la misma
+simulación traía la segunda columna»), y la pregunta del quiz sobre el 100,4 / 81,6 / −1,1 % estaba
+asignada al **módulo 1**: quien la fallaba era enviado a repasar un módulo que no explica el ajuste. Es el
+mismo defecto que T7.13 arregló en el capítulo 2 con los pesos. *Arreglo:* la introducción del simulador
+presenta las barras naranjas como **adelanto del módulo 3**, con una línea de lo que hace el ajuste; la
+nota remite al módulo 3; el 3 reconoce el adelanto; la pregunta pasa al **módulo 3**, y la afirmación 2
+del módulo 9 dice «la simulación del módulo 1, leída en el módulo 3».
+
+**2 · El módulo 2 presentaba como nueva la fórmula del sesgo de no respuesta.** Definición propia,
+derivación y objetivo «escribir el sesgo como producto de dos factores», con casi las mismas palabras que
+el capítulo 1, módulo 4 —«un producto de dos factores: cuánta gente falta y cuánto se diferencian»—, sin
+puntero y con la notación cambiada en silencio ($r \to R$, $\bar y_M \to \bar y_{NR}$). El capítulo 1
+prometía que el 8 la «formaliza»; el 8 la volvía a presentar. *Arreglo:* el objetivo dice «retomar», y la
+definición abre diciendo que es la del capítulo 1 escrita con la notación de Lohr. Lo que el módulo
+aporta —medirla con los no respondientes de Gnap, el estimador de dos fases, Meng— sigue intacto.
+
+**3 · «Entonces se dijo "la muestra no era aleatoria". Ahora se puede decir cuánto».** El capítulo 1 ya
+había medido el sesgo del *Digest* (−19,32 puntos, módulo 1) y su precisión equivalente (6,30 votantes,
+módulo 7), y el propio módulo 2 lo admitía dos párrafos después. *Arreglo:* el título pasa a «con la
+identidad de Meng», y el párrafo dice que el capítulo 1 midió cuánto y que aquí se ve de qué depende.
+
+**4 · $R$ significaba dos cosas.** La tasa de respuesta en el módulo 2 ($R = 0{,}398$, el factor $1-R$) y
+el R-indicator en el 7 ($R = 1 - 2S(\hat\phi) = 0{,}473$). La retro de la pregunta del módulo 7 usaba los
+dos sentidos en la misma respuesta, y el simulador ponía «la encuesta real: R = 0,4733» junto a la tasa
+global. *Arreglo:* el R-indicator se escribe $R(\hat\phi)$ —como $R(\rho)$ en Schouten et al.— en la
+definición, con una frase que dice por qué, en el aviso, en el simulador (introducción y lectura) y en la
+pregunta; también en un comentario de la cadena. En el capítulo, todo `R = ` que queda es la tasa.
+**No se añadió** la fila del R-indicator al glosario, aunque el hallazgo la proponía: su columna de Lohr
+pide saber si Lohr lo trae y con qué símbolo, y no hay copia de los capítulos 8 o 15 en el repositorio
+para comprobarlo.
+
+**5 · Dos «Hansen–Hurwitz».** El estimador de dos fases, $\hat{\bar y}_{HH}$ (1946), compartía subíndice
+con el $\hat t_{HH}$ con reemplazo del capítulo 6, módulo 2. *Arreglo:* una frase que los distingue.
+
+**6 · «Los siete capítulos anteriores suponen que quien es sorteado, responde».** El capítulo 1 trata
+justamente de lo contrario. *Arreglo:* «los capítulos 2 a 7», con el capítulo 1 nombrado.
+
+**7 · «La fracción de información perdida es 0,062» (módulo 6) sin definir**: solo existía como
+`fmi = (1 + 1/m) * B / T_` en el bloque. *Arreglo:* se define en la misma frase.
+
+**8 · Punteros.** El árbol del módulo 10 remitía el sesgo del estimador de razón (−38 963 acres) al
+capítulo 3, módulo 3; está en el módulo 4 (*Sesgo y error cuadrático medio*). La definición del módulo 4
+volvía a presentar post-estratificación y raking sin nombrar en el texto el capítulo 4 (módulo 10) ni el 7
+(módulo 6); ahora los nombra.
+
+**9 · «Imputar sube $n$ de 17 a 20 —eso baja el denominador—»** *(redacción)*: lo agranda, y por eso baja
+el error estándar.
+
+**10 · El signo del sesgo en el módulo 9** *(cifras)*: decía «el sesgo 1,102» donde el módulo 2 da
+−1,10, porque R19 toma el valor absoluto y rotulaba la fila «sesgo». *Arreglo:* la prosa dice «cuyo sesgo
+es de −1,102 horas» y «1,102 en valor absoluto»; la fila de R19 se llama `sesgo_abs`, con su salida real
+pegada de nuevo (cambia la alineación, no las cifras).
+
+**Verificado.** `verifica_bloques.py --prosa` sobre el capítulo: **458 de 458** cifras de bloques y
+**140 respaldadas · 0 sin respaldo** (eran 139). `ensambla_cap8.py` reproduce el archivo **byte a byte**
+en la segunda pasada. En el navegador, con el panel a 1280 × 900 —comprobado `innerWidth` antes de fiarse
+de los lienzos—: los once módulos con **0 `.katex-error`** y **0 dólares sueltos**, los nueve lienzos —ocho
+simuladores y el gráfico del quiz— con ancho real, consola sin errores; el adelanto del módulo 1, la definición y el párrafo del *Digest* del 2,
+$R(\hat\phi)$ en la definición, el aviso y la lectura del simulador del 7, la fracción de información
+perdida del 6, el signo del 9 y la hoja del árbol del 10 («Capítulo 3, módulo 4») salen como se
+escribieron. El quiz queda repartido 1, 1, 3, 2, 2, 3, 3, 4, 5, 6, 7.
+
+**Lo que enseña.** Con el 8 se cierra la auditoría de orden de los ocho capítulos, y el patrón de los dos
+últimos es el mismo: **los capítulos de síntesis re-presentan lo que el curso ya construyó.** Los defectos
+no estaban en usar algo antes de tiempo, sino en frases como «ahora se puede decir cuánto», «la misma
+simulación traía» o una definición repetida sin puntero, que borran del mapa al capítulo donde la idea
+nació. Y dos de los diez eran choques de nombre —$R$ aquí, «Hansen–Hurwitz» con el capítulo 6—, el mismo
+tipo que el «deff de Kish» de T7.28: una etiqueta que el curso ya había atado a otra cosa.
+
+**Pendiente:** el visto bueno de Javier para publicar. Antes del push, comparar `sitio/` contra
+`origin/gh-pages` y `HEAD` contra el commit aprobado.
