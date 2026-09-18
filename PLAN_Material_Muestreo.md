@@ -5932,9 +5932,14 @@ a mano antes de empujar; mientras no esté en la puerta, depende de que alguien 
 
 ---
 
-### T7.67 — Los gráficos que le faltaban al capítulo 3, y un LaTeX que publiqué roto (2026-09-18)
+### T7.70 — Los gráficos que le faltaban al capítulo 3, y un LaTeX que publiqué roto (2026-09-18)
 
 Bloques 4 y 5 de la revisión, commits `b0dfddb`, `8f1885b`/`48e2a8d` y `4f94c6b`.
+
+> Numerada 70 y no 67: el 67 ya era de **T7.67**, de la otra sesión, commiteado dos horas antes.
+> El error fue mío y de método: comprobé el último número antes de escribir T7.64–T7.66 y luego
+> añadí esta nota sin volver a mirar el archivo, que entretanto había crecido tres entradas. La
+> publicación de esta misma regresión está contada desde el otro lado en **T7.69**.
 
 **Lo primero, porque fue un defecto publicado.** Los cuatro ítems que añadí al banco en el bloque 3
 llevaban el LaTeX con **barras simples** —`'$\bar{x}$'` en vez de `'$\\bar{x}$'`—, y JavaScript se las
