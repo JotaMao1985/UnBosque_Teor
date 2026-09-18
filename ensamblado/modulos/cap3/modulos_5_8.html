@@ -346,6 +346,57 @@
         $B = 0{,}9797$ y la regresión $b_1 = 0{,}9868$, dos pendientes que se parecen tanto que el cuadrado
         perfecto no llega a abrirse.</p>
 
+      <h4>Qué decide entre la razón y la diferencia</h4>
+
+      <p>El cuadrado perfecto da además una regla, y sin añadir teoría: entre dos valores de $b$ gana el que tenga
+        $(b\,S_x - \rho\,S_y)^2$ más pequeño, es decir <strong>aquel de los dos que se parezca más a
+        $b_1$</strong>. Para la razón ese valor es $B$; para la diferencia, 1. Así que la pregunta no es si $x$ e
+        $y$ son la misma variable medida dos veces —eso lo cumplen las cuatro parejas de <code>agpop</code>— sino
+        <strong>si la pendiente está más cerca de $B$ o de 1</strong>:</p>
+
+      <table>
+        <caption class="sr-only">La regla de la pendiente sobre las cuatro parejas de agpop</caption>
+        <thead>
+          <tr>
+            <th scope="col">Pareja</th>
+            <th scope="col">$B$</th>
+            <th scope="col">$b_1$</th>
+            <th scope="col">$b_1$ se parece más a</th>
+            <th scope="col">Gana de verdad</th>
+            <th scope="col">Por</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>acres92 ~ acres87</code></td><td>0,9797</td><td>0,9868</td>
+            <td>$B$</td><td>razón</td><td>0,63 %</td>
+          </tr>
+          <tr>
+            <td><code>farms92 ~ farms87</code></td><td>0,9222</td><td>0,9323</td>
+            <td>$B$</td><td>razón</td><td>20,5 %</td>
+          </tr>
+          <tr>
+            <td><code>largef92 ~ largef87</code></td><td>1,0240</td><td>0,9714</td>
+            <td><strong>1</strong></td><td><strong>diferencia</strong></td><td>6,8 %</td>
+          </tr>
+          <tr>
+            <td><code>smallf92 ~ smallf87</code></td><td>0,9085</td><td>1,0297</td>
+            <td><strong>1</strong></td><td><strong>diferencia</strong></td><td>16,0 %</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>La regla acierta en las cuatro. Y fíjate en el recorrido de la última columna: la diferencia va de perder
+        un <strong>20,5 %</strong> a ganar un <strong>16,0 %</strong>, con las cuatro parejas cumpliendo igual de
+        bien la condición de «la misma variable medida dos veces». <strong>Una condición que dispara igual en casos
+        con desenlaces opuestos no está decidiendo nada</strong>; la que decide es la de la pendiente, y sale de una
+        desigualdad que el capítulo ya tenía escrita.</p>
+
+      <p>Hay un detalle más, y es incómodo: <code>acres92 ~ acres87</code> —la pareja sobre la que corre todo este
+        capítulo— es la de <strong>menor apuesta de las cuatro</strong>. Un 0,63 %, del orden de los huecos que la
+        advertencia de abajo declara inobservables con una sola muestra. El capítulo eligió para enseñar el caso
+        donde menos se juega, que es bueno para ver el mecanismo y malo para creerse que la elección da igual.</p>
+
       <div class="note">
         <p style="margin-bottom:0;"><strong>Y de paso, la aproximación del módulo 2 queda contrastada.</strong> El
           error estándar que esta fórmula da para la razón, 7 129 751, y el que midieron las

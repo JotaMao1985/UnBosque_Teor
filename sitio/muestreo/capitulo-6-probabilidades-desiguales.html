@@ -836,12 +836,20 @@
     }
 
     /* Tables - CSS Puro */
+    /* El `overflow: hidden` de aquí estaba para que el border-radius recortara
+       las esquinas de la cabecera, pero con `width: 100%` y celdas largas la
+       tabla RECORTA su propio contenido en pantallas estrechas: las columnas de
+       la derecha se pierden y no hay forma de llegar a ellas. Medido a 375 px
+       en el capítulo 3: la tabla del módulo 3 mide 446 px en una columna de 303.
+       Con `overflow-x: auto` se conservan las esquinas y aparece barra cuando
+       hace falta, que es lo que hace .tabla-ranking-marco desde el principio. */
     table {
       width: 100%;
       margin-bottom: 2rem;
       border-collapse: collapse;
       border-radius: 0.5rem;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 

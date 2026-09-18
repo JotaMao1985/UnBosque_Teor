@@ -123,11 +123,11 @@ def main():
       modules: [
         { id: 1, title: "Variables auxiliares", shortTitle: "Auxiliares", duration: "18 min" },
         { id: 2, title: "El estimador de razón", shortTitle: "Razón", duration: "25 min" },
-        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "25 min" },
+        { id: 3, title: "¿Cuándo gana la razón?", shortTitle: "Cuándo gana", duration: "28 min" },
         { id: 4, title: "Sesgo y error cuadrático medio", shortTitle: "Sesgo y ECM", duration: "28 min" },
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "15 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
-        { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "24 min" },
+        { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "29 min" },
         { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "20 min" },
         { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
         { id: 10, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },

@@ -309,6 +309,72 @@ ordenVarianzas <- list(tabla = orden, B = B_pob, b1 = b1_pob, rho = rho_p,
                        difAproxPct = 100 * dif_aprox)
 
 # ---------------------------------------------------------------------------
+# 6e · QUÉ DECIDE DE VERDAD ENTRE LA RAZÓN Y LA DIFERENCIA
+# ---------------------------------------------------------------------------
+# El capítulo dice que la diferencia conviene «cuando x e y son la misma
+# variable medida dos veces». Esa condición NO discrimina: las cuatro parejas
+# de agpop la cumplen al pie de la letra y el desenlace va de la diferencia
+# perdiendo un 20 % a ganando un 16 %. Lo que decide sale del cuadrado perfecto
+# de 6c: gana el b cuyo (b S_x - rho S_y)^2 sea menor, o sea aquel de los dos
+# -B o 1- que se parezca más a b1. Se comprueba en las cuatro.
+compara_par <- function(xn, yn) {
+  xx <- agpop[[xn]]; yy <- agpop[[yn]]
+  Sx <- sd(xx); Sy <- sd(yy); Sxy <- cov(xx, yy); rho <- cor(xx, yy)
+  Bp <- sum(yy) / sum(xx); b1 <- Sxy / Sx^2
+  Vb <- function(b) ((1 - n / N) / n) * (Sy^2 + b^2 * Sx^2 - 2 * b * Sxy)
+  data.frame(par = paste0(yn, " ~ ", xn), B = Bp, b1 = b1,
+             distB = abs(b1 - Bp), dist1 = abs(b1 - 1),
+             predice = ifelse(abs(b1 - Bp) < abs(b1 - 1), "razon", "diferencia"),
+             gana    = ifelse(Vb(Bp) < Vb(1), "razon", "diferencia"),
+             ventajaPct = 100 * (max(sqrt(Vb(Bp)), sqrt(Vb(1))) /
+                                 min(sqrt(Vb(Bp)), sqrt(Vb(1))) - 1),
+             stringsAsFactors = FALSE)
+}
+regla <- do.call(rbind, lapply(
+  list(c("acres87", "acres92"), c("farms87", "farms92"),
+       c("largef87", "largef92"), c("smallf87", "smallf92")),
+  function(p) compara_par(p[1], p[2])))
+print(regla, digits = 5, row.names = FALSE)
+# La regla de la pendiente tiene que acertar en TODAS. Si fallara en alguna, la
+# regla que el capítulo va a enseñar no sirve y hay que volver a pensarla.
+stopifnot(all(regla$predice == regla$gana))
+# Y las cuatro tienen que cumplir «la misma variable medida dos veces», que es
+# justo lo que hace que la condición vieja no discrimine.
+stopifnot(nrow(regla) == 4, any(regla$gana == "razon"), any(regla$gana == "diferencia"))
+
+# ---------------------------------------------------------------------------
+# 6f · UNA AUXILIAR QUE NO PAGA LO QUE CUESTA
+# ---------------------------------------------------------------------------
+# El módulo 3 asegura que por debajo del umbral la auxiliar no compensa, y no
+# lo enseña nunca. farms92 con acres87 lo enseña: misma variable de interés que
+# el ejercicio 1 del módulo 12, dos auxiliares distintas, desenlaces opuestos.
+xa <- agpop$acres87; yf <- agpop$farms92
+Sxa <- sd(xa); Syf <- sd(yf); Sxya <- cov(xa, yf)
+rho_mala <- cor(xa, yf)
+umbral_mala <- 0.5 * (Sxa / mean(xa)) / (Syf / mean(yf))
+Vm <- function(b) ((1 - n / N) / n) * (Syf^2 + b^2 * Sxa^2 - 2 * b * Sxya)
+B_mala <- sum(yf) / sum(xa)
+xb <- agpop$farms87; B_buena <- sum(yf) / sum(xb)
+Vb2 <- function(b) ((1 - n / N) / n) *
+  (Syf^2 + b^2 * sd(xb)^2 - 2 * b * cov(xb, yf))
+noPaga <- list(
+  rho = rho_mala, umbral = umbral_mala,
+  eeExpansion = N * sqrt(Vm(0)),
+  eeRazonMala = N * sqrt(Vm(B_mala)),
+  peorPct     = 100 * (sqrt(Vm(B_mala)) / sqrt(Vm(0)) - 1),
+  rhoBuena    = cor(xb, yf),
+  eeRazonBuena = N * sqrt(Vb2(B_buena)),
+  vecesMejor  = sqrt(Vm(0)) / sqrt(Vb2(B_buena)))
+cat(sprintf("auxiliar que no paga: rho %.4f < umbral %.4f; razon %.0f contra expansion %.0f (%.1f %% peor)\n",
+            noPaga$rho, noPaga$umbral, noPaga$eeRazonMala, noPaga$eeExpansion, noPaga$peorPct))
+cat(sprintf("  la misma y con SU auxiliar (farms87, rho %.4f): %.0f, %.1f veces mejor que la expansion\n",
+            noPaga$rhoBuena, noPaga$eeRazonBuena, noPaga$vecesMejor))
+# La regla del umbral tiene que acertar el signo en los dos casos.
+stopifnot(noPaga$rho < noPaga$umbral, noPaga$peorPct > 0)
+stopifnot(noPaga$rhoBuena > 0.5 * (sd(xb) / mean(xb)) / (Syf / mean(yf)),
+          noPaga$eeRazonBuena < noPaga$eeExpansion)
+
+# ---------------------------------------------------------------------------
 # 6d · LA RAZÓN DE MEDIAS NO ES LA MEDIA DE COCIENTES
 # ---------------------------------------------------------------------------
 # No son dos estimadores del mismo parámetro: son DOS PARÁMETROS distintos.
@@ -616,6 +682,8 @@ datos <- list(
   sesgoRazon = tabla_sesgo,
   kish = kish,
   ordenVarianzas = ordenVarianzas,
+  reglaPendiente = regla,
+  auxiliarQueNoPaga = noPaga,
   cocientes = cocientes,
   linealizacion = list(n = n_lin, exacto = ex[1:600], lineal = li[1:600],
                        correlacion = cor(ex, li), eeExacto = sd(ex), eeLineal = sd(li)),

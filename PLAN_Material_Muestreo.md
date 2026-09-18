@@ -4687,3 +4687,72 @@ páginas quedaron en la versión servida (comprobado en vivo), porque lo que `ma
 —el arreglo de `.katex-display` de T7.44 y el trabajo de otras sesiones en los caps. 3 y 8— no está
 aprobado. El capítulo 4 sí se lleva el CSS, así que **de momento es la única página del sitio cuyas
 fórmulas en bloque no se salen en móvil**. Verificado en vivo: md5 `88244a22978265ca0fcde9185c047eda`.
+
+---
+
+### T7.46 — La regla que no decidía, la auxiliar que no paga, y las tablas recortadas (2026-09-17)
+
+Sale de un aviso de la sesión del capítulo 4: *un módulo que mide con rigor **una** variable y redacta
+el resultado como veredicto general*. Encontraron dos casos así en su capítulo (T7.45) y sugirieron
+buscar lo mismo aquí. Había.
+
+**A6 — la condición del estimador de diferencia no discriminaba.** El M3 decía que la diferencia
+conviene «cuando $x$ e $y$ son **la misma variable medida dos veces**». Las **cuatro** parejas de
+`agpop` cumplen esa condición al pie de la letra, y el desenlace va de la diferencia **perdiendo un
+20,5 %** a **ganando un 16,0 %**:
+
+| pareja | $B$ | $b_1$ | $b_1$ se parece más a | gana | por |
+|---|---:|---:|---|---|---:|
+| `acres92 ~ acres87` | 0,9797 | 0,9868 | $B$ | razón | 0,63 % |
+| `farms92 ~ farms87` | 0,9222 | 0,9323 | $B$ | razón | 20,5 % |
+| `largef92 ~ largef87` | 1,0240 | 0,9714 | **1** | **diferencia** | 6,8 % |
+| `smallf92 ~ smallf87` | 0,9085 | 1,0297 | **1** | **diferencia** | 16,0 % |
+
+**Ninguna frase publicada era falsa**, y por eso no se etiqueta como error: es una **regla de decisión
+incompleta**. Una condición que dispara igual en casos con desenlaces opuestos no está decidiendo
+nada. *(La sesión del cap. 4 propuso llamarlo «respuesta equivocada»; se midió la apuesta antes de
+aceptarlo —en `acres` la diferencia queda a 0,63 %, del orden de lo que T7.40 declaró inobservable con
+una muestra— y retiraron la etiqueta tras reproducir la tabla por su cuenta.)*
+
+**Y la regla que sí decide no añade teoría**: sale de leer el cuadrado perfecto que el M7 publica
+desde T7.40, $V(b) - V(b_1) = \frac{1-f}{n}(bS_x - \rho S_y)^2$, con $b = B$ y con $b = 1$. Gana
+**aquel de los dos que se parezca más a $b_1$**, y acierta en las cuatro filas. `genera_cap3.R` aborta
+si fallara en alguna: si la regla que el capítulo enseña no predice, no se enseña.
+
+**Un detalle incómodo, dicho:** `acres92 ~ acres87` —la pareja sobre la que corre **todo** el
+capítulo— es la de **menor apuesta de las cuatro**. Buena para ver el mecanismo, mala para creerse que
+la elección da igual.
+
+**A7 — la auxiliar que no paga, enseñada por fin.** El M3 asegura que bajo el umbral «la auxiliar no
+paga lo que cuesta» y nunca lo mostraba. Ahora sí, y con el contraste más limpio posible: **la misma
+variable de interés con dos auxiliares distintas**. `farms92` con `farms87` ($\rho = 0{,}9944$) deja
+el ee del total en **8 801** frente a **82 839** de la expansión — **9,4 veces mejor**. La misma
+`farms92` con `acres87` ($\rho = 0{,}1539$, umbral 0,8720) lo sube a **155 083**: un **87,2 % peor que
+no usar auxiliar ninguna**. Una auxiliar no es buena o mala en abstracto; lo es *para la variable que
+se está midiendo*.
+
+**Y un segundo arreglo transversal, que esto forzó.** La tabla nueva del M7 se salía en móvil, y al
+medirlo apareció que el defecto de las tablas es **peor que el de las fórmulas de T7.44**: la regla
+`table` llevaba `overflow: hidden` —puesto para que el `border-radius` recortara las esquinas de la
+cabecera— con `width: 100%`, así que en pantallas estrechas la tabla **recorta sus propias columnas de
+la derecha y no hay forma de llegar a ellas**. No se salen: desaparecen. Medido a 375 px: **17 de las
+18 tablas visibles del sitio son más anchas que su caja**. Se cambia a `overflow-x: auto` +
+`overflow-y: hidden`, que conserva las esquinas redondeadas y es lo que `.tabla-ranking-marco` hacía
+desde el principio. Tras el arreglo, **0 tablas con contenido inalcanzable**.
+
+**Verificado.** Byte a byte en la segunda pasada, los once archivos. **179 de 179** cifras de bloques
+y **137 de prosa · 0 sin respaldo** en el cap. 3 (los ocho capítulos, 0) — las trece cifras nuevas
+salen todas del JSON, ninguna necesitó entrada en `cifras_prosa.json`. El diff del sitio es **+9/−1
+por página** (la regla de `table`) salvo el capítulo 3, que lleva además A6 y A7. En el navegador: 0
+`.katex-error` en el M3 y el M7, las tres tablas del capítulo alcanzables a 375 px, consola limpia.
+El M3 sube de 25 a 28 min y el M7 de 24 a 29.
+
+**El capítulo 4 queda otra vez fuera** —lo lleva su propia sesión— y por tanto **sigue con
+`overflow: hidden` en sus tablas** hasta que reensamble. Se le avisa.
+
+**Lo que enseña.** El aviso vino de otra sesión, sobre su capítulo, y aquí valió igual: **cualquier
+sitio donde el material compare opciones con una sola variable de respuesta es candidato**. Y la
+segunda lección se repite: el defecto de las tablas tampoco lo encuentra nadie leyendo, porque no deja
+hueco ni desborde — la columna simplemente no está.
+
+**Pendiente:** el visto bueno de Javier para publicar.

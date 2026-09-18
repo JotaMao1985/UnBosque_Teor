@@ -414,13 +414,29 @@
             intercepto en vez de imponerlo; lo que paga a cambio es un parámetro más ajustado con la misma
             muestra.</li>
           <li><strong>La diferencia</strong> (módulo 7), cuando $x$ e $y$ son <strong>la misma variable medida dos
-            veces</strong>: dos censos de la misma superficie, el conteo por fotografía y el conteo en campo de las
-            mismas parcelas. Ahí la pendiente no se estima —se sabe que vale 1—, y el estimador sale además
-            insesgado.</li>
+            veces</strong> —dos censos de la misma superficie, el conteo por fotografía y el conteo en campo de las
+            mismas parcelas— <em>y la nube sube con pendiente cercana a 1</em>. Ahí la pendiente no se estima —se
+            sabe que vale 1—, y el estimador sale además insesgado. Esa cursiva es la mitad que decide, y conviene
+            leerla despacio: las cuatro parejas de <code>agpop</code> cumplen la primera condición al pie de la
+            letra, y en dos de ellas la diferencia le gana a la razón mientras que en las otras dos pierde. El
+            módulo 7 lo mide y da la regla que sí separa los casos.</li>
           <li><strong>La expansión</strong>, cuando la correlación no llega al umbral de la primera línea: la
-            auxiliar no paga lo que cuesta, y estimar con ella una pendiente solo añade ruido.</li>
+            auxiliar no paga lo que cuesta, y estimar con ella una pendiente solo añade ruido. Esto tampoco es
+            retórico, y el párrafo de abajo lo enseña ocurriendo.</li>
         </ul>
       </div>
+
+      <p>La última línea de esa tabla se suele leer por encima, así que conviene verla ocurrir. En
+        <code>agpop</code> la misma variable de interés admite dos auxiliares distintas, y el desenlace es
+        opuesto. Con <code>farms87</code> —el número de granjas del censo anterior— la correlación con
+        <code>farms92</code> es <strong>0,9944</strong>, muy por encima de su umbral, y la razón deja el error
+        estándar del total en <strong>8 801</strong> granjas frente a las <strong>82 839</strong> de la expansión:
+        <strong>9,4 veces mejor</strong>. Con <code>acres87</code> —la superficie sembrada— la correlación con esa
+        misma <code>farms92</code> cae a <strong>0,1539</strong> contra un umbral de <strong>0,8720</strong>, y la
+        razón sube el error estándar a <strong>155 083</strong>: un <strong>87,2 % peor que no usar auxiliar
+        ninguna</strong>. Una variable auxiliar no es buena o mala en abstracto; lo es <em>para la variable que se
+        está midiendo</em>. Superficie y número de granjas son dos cosas distintas, y el condado enorme con cuatro
+        granjas industriales lo demuestra.</p>
 
       <div class="derivacion">
         <button type="button" class="derivacion-boton" aria-expanded="false" aria-controls="der-umbral">
