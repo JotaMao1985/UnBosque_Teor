@@ -4376,3 +4376,61 @@ tabla no lo obedece**: cuando lo que se compara son estimaciones, un orden verda
 de por ciento es sencillamente inobservable.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.41 — «Óptima, ¿para qué variable?»: el M4 del cap. 4 lo mide (2026-09-17)
+
+Segunda tarea de la fase 3 del plan del capítulo 4 con Lohr 3.ª ed. (tareas B2, B8, B10 y B12).
+
+**El defecto.** El M4 ya **afirmaba**, en la última nota, que «la asignación óptima para *una*
+variable no es la óptima para otra». Lo decía y no lo mostraba: ni una cifra, ni una segunda
+variable, ni la salida. Una afirmación sin demostración en un módulo que por lo demás mide todo
+sobre la población entera.
+
+**El arreglo, en cinco piezas.**
+- **El mismo deff con dos varas** (bloque `R6B` nuevo). Con `acres92`: **0,8224 · 0,7416 · 0,5510**.
+  Con `farms92`, que correlaciona **0,147** con ella: **0,9723 · 1,1540 · 1,1190**. La proporcional
+  es la única que queda bajo 1 en las dos; la igual y la Neyman de `acres92` dejan `farms92`
+  **peor que un MAS del mismo tamaño**. Eso le da sentido a la proporcional, que hasta aquí parecía
+  la opción tímida: es la única que no necesita saber qué se va a medir.
+- **La familia de potencia** $n_h \propto N_h S_h^{\alpha}$, de proporcional ($\alpha=0$) a Neyman
+  ($\alpha=1$), que **reproduce exactamente las columnas del R6 en los dos extremos** —comprobación
+  cruzada que salió gratis—. En medio está lo bueno: $\alpha = 0{,}25$ da **0,6919 / 0,9237**, mejor
+  que la proporcional *en las dos varas a la vez*, y $\alpha = 0{,}5$ da **0,6108 / 0,9304**.
+- **El otro compromiso de Lohr**: piso de 20 por estrato y resto proporcional → **0,75 / 0,9491**,
+  con el argumento que la fórmula no mira (que ningún estrato quede sin poder estimar su $s_h^2$).
+- **B8 como cuarto paso de la derivación**: $V_{prop} - V_{Ney} = \frac{1}{n}\sum_h W_h(S_h-\bar
+  S)^2$ — **la ganancia de Neyman es la dispersión de las dispersiones**, y vale cero si todas las
+  $S_h$ coinciden. Las dos vías dan **146 643 787**. Con el corolario: si $S_h/\sqrt{c_h}$ no cambia
+  entre estratos, la óptima con costos *también* es la proporcional.
+- **B10 y B12 en notas**: precisión fijada *dentro de cada* estrato (Ej. 3.11) no es la asignación
+  igual, sino la regla del cap. 2 aplicada estrato a estrato; y el caribú (Ej. 3.10), donde Neyman
+  fue guía y no orden —menos de cinco unidades pedidas en un estrato de treinta, diez puestas, y las
+  225 planeadas acabando en **211**—.
+
+**Un arreglo que no estaba en la lista.** El quiz del M4 daba por correcta la opción «para estimar
+el total nacional, es la mejor asignación posible», **sin decir de qué**. Con el módulo nuevo eso
+pasa de impreciso a contradictorio, que es exactamente lo que costó T7.27. Ahora nombra `acres92` y
+la retro remata con el 1,1190 de `farms92`. El ítem vive solo en el capítulo, no en el banco del
+taller: se comprobó con `grep` antes de tocarlo.
+
+**Dos correcciones propias.** Había situado el censo de caribú «en el módulo 1» —el capítulo no lo
+menciona en ningún sitio, me inventé la referencia cruzada— y escrito «pusieron el triple» cuando la
+Tabla 3.7 va de 4,81 a 10. También se anota que el deff de `farms92` bajo Neyman sale **1,1190** con
+$n_h$ redondeados y no el 1,105 del diagnóstico, que usaba $n_h$ exactos: se publica el redondeado
+porque es el único que reproduce los 0,8224 y 0,5510 que el R6 ya tenía publicados.
+
+**Verificado.** Byte a byte; **348 de 348** cifras de bloques (eran 317) y **113 de prosa · 0 sin
+respaldo** (eran 102); `anota_salidas.py --check` sin diferencias. En el navegador: 32 expresiones
+KaTeX en el M4, 0 `.katex-error`, la derivación abre con **cuatro** pasos y 11 fórmulas, el quiz se
+responde y devuelve su retro con `<em>` y `<code>` renderizados, consola limpia. M4 pasa de 25 a
+**35 min** en `courseData`.
+
+**Lo que enseña.** El material llevaba la conclusión correcta escrita como sobremesa —una nota al
+final, sin cifras— mientras el módulo entero medía con rigor una sola variable. **Una afirmación que
+el propio método del capítulo podría comprobar y no comprueba es una deuda, no un matiz**: aquí
+bastaba una columna más para que la lección pasara de creída a vista, y de paso salió una asignación
+de compromiso que le gana a la proporcional en las dos variables.
+
+**Pendiente:** el visto bueno de Javier para publicar.

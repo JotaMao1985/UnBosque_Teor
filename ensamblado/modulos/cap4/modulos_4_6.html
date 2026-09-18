@@ -67,6 +67,21 @@
               <p>Cada estrato recibe en proporción a su masa por su dispersión. Un estrato homogéneo casi no
                 necesita muestra por grande que sea; uno disperso la necesita aunque sea chico.</p>
             </li>
+            <li>
+              <p><strong>Cuánto se gana, en cerrado.</strong> Sustituyendo cada reparto en la varianza e ignorando
+                los fpc, la diferencia se cierra en una sola expresión:</p>
+              $$V_{\text{prop}} - V_{\text{Ney}}
+                = \frac{1}{n}\left[\sum_h W_h S^2_{y,h} - \Big(\sum_h W_h S_{y,h}\Big)^{\!2}\right]
+                = \frac{1}{n}\sum_h W_h \big(S_{y,h} - \bar{S}\big)^2,
+                \qquad \bar{S} = \sum_h W_h S_{y,h}$$
+              <p><strong>La ganancia de Neyman es la dispersión de las dispersiones.</strong> Si todas las
+                $S_{y,h}$ son iguales, la suma es cero: Neyman <em>es</em> la proporcional y no hay nada que ganar.
+                Cuanto más difieran entre sí, más paga separarlas. En <code>agpop</code> las dos vías dan el mismo
+                <strong>146 643 787</strong>, que el bloque de más abajo comprueba.</p>
+              <p style="margin-bottom:0;">El mismo argumento con costos (módulo 5) da el corolario:
+                si $S_{y,h}/\sqrt{c_h}$ no cambia de un estrato a otro, la óptima con costos <em>también</em> es
+                la proporcional.</p>
+            </li>
           </ol>
         </div>
       </div>
@@ -124,18 +139,74 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <p><strong>Óptima, ¿para qué variable?</strong> Toda esta comparación se ha hecho con una sola vara,
+        <code>acres92</code>, y ahí está la trampa. Neyman reparte según las $S_{y,h}$ <em>de esa</em> variable; una
+        encuesta agrícola real preguntaría también por el número de granjas, <code>farms92</code>, que en esta
+        población apenas correlaciona <strong>0,147</strong> con la superficie sembrada. Lo que es óptimo para una
+        no tiene por qué serlo para la otra. Basta con medir el mismo deff con las dos varas:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El deff de cada asignación medido con dos variables">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6B⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La primera tabla da un vuelco. Con <code>acres92</code> el orden era igual &lt; proporcional y Neyman muy
+        por delante; con <code>farms92</code> se invierte: <strong>la proporcional es la única que sigue por debajo
+        de 1</strong> (<strong>0,9723</strong>), mientras que la igual sube a <strong>1,1540</strong> y la Neyman
+        de <code>acres92</code> a <strong>1,1190</strong>. Es decir: <strong>la asignación óptima para una variable
+        deja la otra peor que un MAS del mismo tamaño</strong>. Y no por poco.</p>
+
+      <p>Esto le da su sentido a la proporcional, que hasta aquí parecía la opción tímida. No gana en ninguna vara,
+        pero <strong>no pierde en ninguna</strong>: es la única que no necesita saber qué se va a medir, porque no
+        usa ninguna $S_{y,h}$. En una encuesta multipropósito eso vale más que un óptimo prestado de otra variable.</p>
+
+      <p>La segunda tabla es la salida de verdad, y es la que Lohr sugiere: <em>interpolar</em>. La familia
+        $n_h \propto N_h S_{y,h}^{\alpha}$ va de la proporcional ($\alpha = 0$) a Neyman ($\alpha = 1$) pasando
+        por todo lo de en medio — y en medio está lo bueno. Con $\alpha = 0{,}25$ el deff de <code>acres92</code>
+        baja a <strong>0,6919</strong> y el de <code>farms92</code> a <strong>0,9237</strong>:
+        <strong>mejor que la proporcional en las dos varas a la vez</strong>. Con $\alpha = 0{,}5$ —repartir por la
+        <em>raíz</em> de la desviación en vez de por la desviación— <code>acres92</code> llega a
+        <strong>0,6108</strong> y <code>farms92</code>
+        aguanta en <strong>0,9304</strong>. Solo al acercarse a Neyman, en $\alpha = 1$, se rompe.</p>
+
+      <p>El otro compromiso que sugiere Lohr llega al mismo sitio por otro camino: fijar un <strong>mínimo por
+        estrato</strong> y repartir el resto proporcionalmente. Con un piso de 20 condados sobre los 300, los deff
+        quedan en <strong>0,75</strong> y <strong>0,9491</strong>. Sirve además para lo que la fórmula no mira:
+        que ningún estrato se quede con tan poca muestra que no se pueda estimar $s^2_h$ ni publicar su cifra.</p>
+
       <div class="note">
         <p><strong>Neyman necesita conocer las $S_{y,h}$, y nadie las conoce.</strong> Se aproximan con un censo
           anterior, un piloto o una variable correlacionada (aquí serviría <code>acres87</code>). La buena noticia:
-          la varianza es plana cerca del óptimo — equivocarse moderadamente en las $S_{y,h}$ cuesta poco. La mala:
-          la asignación óptima para <em>una</em> variable no es la óptima para otra; una encuesta multipropósito
-          suele quedarse cerca de la proporcional como compromiso.</p>
+          la varianza es plana cerca del óptimo — equivocarse moderadamente en las $S_{y,h}$ cuesta poco. Así se
+          diseñó el conteo de caribú que Lohr usa de ejemplo: los investigadores tomaron el conteo estimado de cada
+          estrato <em>como si fuera</em> la desviación, y trataron la asignación resultante como una guía, no como
+          una orden. Donde Neyman pedía menos de cinco unidades en un estrato de treinta, ellos pusieron diez —un
+          tercio del estrato, que era el piso que se habían fijado— y el total, planeado en 225, acabó en 211.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Precisión fijada por estrato no es lo mismo que asignación igual.</strong> Si lo que se quiere es
+          una precisión dada <em>dentro de cada</em> estrato — el Servicio Postal de Estados Unidos pide
+          $\pm 3$ puntos porcentuales en cada área —, la cuenta no es ninguna de las tres de este módulo: es la
+          regla del tamaño de muestra del capítulo 2 <strong>aplicada por separado a cada estrato</strong>. El
+          resultado <em>suele parecerse</em> a la asignación igual, y en el caso postal coincide con ella, pero solo
+          porque la meta y la cota de $p(1-p)$ son las mismas en todas las áreas. En cuanto las metas, las $S_{y,h}$
+          o los $N_h$ difieren, deja de coincidir — y esa asignación no es ni proporcional ni óptima para el
+          agregado nacional. Simplemente responde a otra pregunta.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Lohr — §4.4 (2.ª ed.) / §3.4 (3.ª ed.): asignación de observaciones.</li>
+          <li>Lohr — §3.4.4 (3.ª ed.) y Ej. 3.12: qué asignación usar, y el ejemplo con el que muestra que la
+            óptima para una variable puede ser mala para otra.</li>
+          <li>Lohr — §3.4.3 (3.ª ed.) y Ej. 3.11: asignación para una precisión fijada dentro de cada estrato.</li>
+          <li>Lohr — Ej. 3.10 (3.ª ed.): Neyman en la práctica, con el mínimo por estrato del censo de caribú.</li>
           <li>Neyman (1934), «On the two different aspects of the representative method» — el artículo que fundó
             esto y de paso el muestreo probabilístico moderno.</li>
         </ul>

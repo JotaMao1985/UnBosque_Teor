@@ -130,6 +130,55 @@ round(rbind(ee = sqrt(tabla), deff = tabla / V_mas), 4)
 #> ee   23293.77   21123.9376 20059.1292 17290.784
 #> deff     1.00       0.8224     0.7416     0.551
 
+cat("\n###BLOQUE-R6B###\n")
+# La asignacion optima lo es PARA UNA VARIABLE. agpop trae otra que tambien
+# interesaria a una encuesta agricola, farms92 (numero de granjas), y que
+# apenas correlaciona 0,147 con acres92 (modulo 6). Mismo deff, dos varas:
+S2h_f    <- tapply(agpop$farms92, agpop$region, var)
+V_asig_f <- function(nh_) sum(Wh^2 * (1 - nh_ / as.numeric(Nh)) * S2h_f / nh_)
+V_mas_f  <- (1 - 300 / N) * var(agpop$farms92) / 300
+deff2    <- function(nh_) c(acres92 = V_asig(nh_) / V_mas,
+                            farms92 = V_asig_f(nh_) / V_mas_f)
+round(cbind(proporcional = deff2(n_prop), igual = deff2(n_igual),
+            Neyman_acres = deff2(n_neyman)), 4)
+#>         proporcional  igual Neyman_acres
+#> acres92       0.8224 0.7416        0.551
+#> farms92       0.9723 1.1540        1.119
+
+# La salida: interpolar. n_h propto N_h S_h^alpha va de la proporcional
+# (alpha = 0) a Neyman (alpha = 1) pasando por todo lo de en medio.
+reparte <- function(w, n) {          # reparto ENTERO que suma n exactamente
+  exacto <- n * w / sum(w)
+  nh     <- floor(exacto)
+  falta  <- n - sum(nh)
+  if (falta > 0) {
+    orden <- order(exacto - nh, decreasing = TRUE)[seq_len(falta)]
+    nh[orden] <- nh[orden] + 1
+  }
+  nh
+}
+alfas <- c(0, 0.25, 0.5, 0.75, 1)
+comp  <- sapply(alfas, function(al) deff2(reparte(Wh * Sh^al, 300)))
+colnames(comp) <- paste0("alfa=", alfas)
+round(comp, 4)
+#>         alfa=0 alfa=0.25 alfa=0.5 alfa=0.75 alfa=1
+#> acres92 0.8224    0.6919   0.6108    0.5667  0.551
+#> farms92 0.9723    0.9237   0.9304    0.9802  1.119
+
+# El otro compromiso que sugiere Lohr: un minimo por estrato y el resto
+# proporcional. Con 20 de piso sobre los 300:
+round(deff2(reparte(Wh, 300 - 4 * 20) + 20), 4)
+#> acres92 farms92
+#>  0.7500  0.9491
+
+# Y la ganancia de Neyman sobre la proporcional, en cerrado (sin fpc):
+#   V_prop - V_Ney = (1/n) sum_h W_h (S_h - Sbarra)^2,  Sbarra = sum_h W_h S_h
+Sbarra <- sum(Wh * Sh)
+c(directa = (sum(Wh * S2h) - Sbarra^2) / 300,
+  cerrada = sum(Wh * (Sh - Sbarra)^2) / 300)
+#>   directa   cerrada
+#> 146643787 146643787
+
 cat("\n###BLOQUE-R7###\n")
 # Asignacion optima con costos desiguales: entrevistar en el Oeste cuesta mas
 # (condados enormes y dispersos) y en el Nordeste menos. Con presupuesto C y

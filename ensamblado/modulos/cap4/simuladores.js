@@ -674,12 +674,12 @@
         pregunta: 'La asignación de Neyman le dio al Nordeste solo 5 de las 300 entrevistas. Marca <strong>todo</strong> lo que sea cierto.',
         pista: 'Neyman optimiza el agregado nacional. ¿Qué pasa con lo demás?',
         opciones: [
-          { texto: 'Para estimar el total nacional, es la mejor asignación posible con estos estratos.', correcta: true },
+          { texto: 'Para estimar el total nacional de <code>acres92</code>, es la mejor asignación posible con estos estratos.', correcta: true },
           { texto: 'Una estimación separada para el Nordeste quedará pésima: con 5 observaciones apenas hay con qué estimar su varianza.', correcta: true },
           { texto: 'El estimador nacional queda sesgado por abandonar así una región.', correcta: false },
           { texto: 'Si el objetivo fueran comparaciones entre regiones, convendría la asignación igual.', correcta: true }
         ],
-        retroAcierto: 'Las tres verdaderas dibujan el conflicto real del diseño: óptimo global, subgrupos pobres, y la asignación depende del objetivo. Sesgo no hay nunca: 5 entrevistas con peso 44 son pocas, pero son insesgadas.',
+        retroAcierto: 'Las tres verdaderas dibujan el conflicto real del diseño: óptimo global, subgrupos pobres, y la asignación depende del objetivo. Fíjate en que la primera dice <em>de acres92</em>: esa misma asignación deja el deff de <code>farms92</code> en 1,1190, peor que un MAS. Sesgo no hay nunca: 5 entrevistas con peso 44 son pocas, pero son insesgadas.',
         retroFallo: 'Son todas menos la del estimador sesgado. Esa es falsa: ninguna asignación con $n_h \\geq 1$ y pesos correctos sesga el estimador — asignar mal cuesta varianza (global o por subgrupo), no validez.'
       },
       {
