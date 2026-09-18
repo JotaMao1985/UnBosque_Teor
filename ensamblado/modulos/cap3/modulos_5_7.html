@@ -77,6 +77,33 @@
           $z_k = y_k/x_k$ es una variable como otra cualquiera y se estima con el capítulo 2.</p>
       </div>
 
+      <div class="simulador" data-simulador="cocientes">
+        <h4><i class="fas fa-chart-column" aria-hidden="true"></i> De dónde sale la brecha</h4>
+        <p class="simulador-intro">Los <strong>3 053</strong> cocientes $z_k = y_k/x_k$ de <code>agpop</code>, tramo
+          a tramo, con los dos números encima. Mira dónde cae cada uno: la <strong>media de los $z_k$</strong>
+          queda a la izquierda de $B$, y no porque haya condados raros a la izquierda —el grueso se apiña justo
+          alrededor de 1— sino porque la media simple le da el mismo peso a un condado de mil acres que a uno de un
+          millón. $B$ los pondera por su tamaño. Cambia el eje a logarítmico para ver la cola derecha, que es la
+          que un promedio de cocientes no sabe manejar.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:320px;">
+          <canvas aria-label="Histograma de los cocientes z = acres92/acres87 en los 3 053 condados con denominador positivo, con B y la media de los cocientes marcadas" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Y una fragilidad que el histograma deja ver, y que es el mejor
+          argumento del módulo.</strong> De esos 3 053 cocientes, <strong>once son negativos</strong>: son condados
+          con superficie positiva en 1987 y el código de faltante $-99$ en 1992, que <code>val_pob</code> no filtra
+          porque solo mira el denominador. Quedan fuera del eje, pero <em>no</em> de la media: con ellos la media de
+          cocientes vale 0,9530 y sin ellos <strong>0,9636</strong>, un <strong>1,11 %</strong> de diferencia. A
+          $B$ no la mueven: los diecinueve $-99$ de <code>acres92</code> le restan <strong>1 881</strong> acres
+          a un total de 943 millones. Once celdas sucias de 3 053 desplazan
+          un estimador más de un punto y al otro no lo tocan: eso es lo que significa que uno pondere por tamaño y
+          el otro no. Las cifras del módulo son las del archivo tal cual, que es la política del capítulo.</p>
+      </div>
+
       <div class="note">
         <p><strong>Dónde reaparece esto.</strong> El estimador de razón se usa en el <strong>módulo 12 del
           capítulo 4</strong>, «Razón en el estratificado», dentro de cada estrato (razón separada) o sobre el

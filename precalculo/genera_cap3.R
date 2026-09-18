@@ -426,6 +426,73 @@ cocientes$veces     <- cocientes$eeRelMedia / cocientes$eeRelB
 cat(sprintf("           precision: ee relativo de B_hat %.3f %% frente a %.3f %% de la media de cocientes (%.2f veces)\n",
             cocientes$eeRelB, cocientes$eeRelMedia, cocientes$veces))
 
+# El histograma de z_k, para el módulo 5. El módulo entero gira en torno a que
+# la media de los z_k apunta a otro parámetro que B, y no había una sola imagen
+# que lo enseñara: con la distribución delante se ve de dónde sale la brecha
+# —la cola derecha, que arrastra la media simple y no toca a B— y dónde caen los
+# dos números. Se exportan los conteos, no los 3 053 valores.
+#
+# HALLAZGO AL CONSTRUIRLO (2026-09-18). De los 3 053 cocientes, ONCE SON
+# NEGATIVOS: son condados con acres87 > 0 y acres92 = -99, el código de faltante
+# de la columna de interés. `val_pob` filtra por el denominador y no mira el
+# numerador, así que esos once entran en la media de cocientes que el módulo
+# publica. Pesan: con ellos sale 0,9530066 y sin ellos 0,9635844, un 1,11 % de
+# diferencia. B no se entera —los -99 aportan -1 881 sobre 943 millones—.
+#
+# Se mantiene el 0,9530, que es la política declarada del capítulo (el archivo
+# que tienen los estudiantes, tal cual), y se DICE, porque es el mejor argumento
+# que tiene el módulo: la media de cocientes es tan frágil que once códigos de
+# faltante la mueven más de un punto, y la razón de totales ni los nota.
+z_neg          <- z_pob < 0
+B_media_limpia <- mean(z_pob[!z_neg])
+cocientes$nNegativos     <- sum(z_neg)
+cocientes$BmediaLimpia   <- B_media_limpia
+cocientes$efectoNegPct   <- 100 * (B_media_limpia / B_media_pob - 1)
+cat(sprintf("           %d cocientes NEGATIVOS (acres92 = -99): la media de cocientes pasa de %.7f a %.7f (%.2f %%)\n",
+            cocientes$nNegativos, B_media_pob, B_media_limpia, cocientes$efectoNegPct))
+
+# La ventana del eje, elegida sobre los cuantiles y no a ojo. La distribución
+# está tan concentrada que con tramos de 0,1 un solo tramo se lleva el 53 % de
+# los condados: el histograma sale una espiga y no enseña nada. Con p1 = 0,683 y
+# p99 = 1,204, la ventana [0,6; 1,4] deja fuera el 0,66 % y deja ver la forma
+# —el pico cerca de 1 y la cola izquierda, que es la que arrastra la media—.
+# Tramos de 0,01: B y la media de los z quedan a casi tres tramos, así que las
+# dos verticales se separan, que es todo el contenido del gráfico.
+z_desde <- 0.6
+z_hasta <- 1.4
+z_paso  <- 0.01
+z_bordes <- seq(z_desde, z_hasta, by = z_paso)
+z_pos    <- z_pob[!z_neg]
+z_dentro <- z_pos[z_pos >= z_desde & z_pos <= z_hasta]
+z_conteo <- as.integer(table(cut(z_dentro, breaks = z_bordes,
+                                 right = FALSE, include.lowest = TRUE)))
+stopifnot(length(z_conteo) == length(z_bordes) - 1,
+          sum(z_conteo) == length(z_dentro))
+cocientes$histo <- list(
+  desde      = z_bordes[-length(z_bordes)],
+  hasta      = z_bordes[-1],
+  conteo     = z_conteo,
+  ejeDesde   = z_desde,
+  ejeHasta   = z_hasta,
+  nDentro    = length(z_dentro),
+  nNegativos = sum(z_neg),
+  nIzquierda = sum(z_pos < z_desde),
+  nDerecha   = sum(z_pos > z_hasta),
+  modaDesde  = z_bordes[which.max(z_conteo)],
+  modaHasta  = z_bordes[which.max(z_conteo) + 1],
+  medianaZ   = median(z_pos))
+cat(sprintf("           histograma de z: %d tramos de %.2f en [%.1f, %.1f]; %d dentro, %d a la izquierda, %d a la derecha, %d negativos\n",
+            length(z_conteo), z_paso, z_desde, z_hasta, cocientes$histo$nDentro,
+            cocientes$histo$nIzquierda, cocientes$histo$nDerecha, cocientes$histo$nNegativos))
+cat(sprintf("           moda en [%.2f, %.2f), mediana %.4f; B %.4f y media de z %.4f distan %.1f tramos\n",
+            cocientes$histo$modaDesde, cocientes$histo$modaHasta, cocientes$histo$medianaZ,
+            B_pob, B_media_pob, abs(B_pob - B_media_pob) / z_paso))
+# Los dos números que el módulo compara tienen que caer DENTRO del eje, y
+# separados por más de un tramo, o el gráfico no enseña lo que dice enseñar.
+stopifnot(B_pob > z_desde, B_pob < z_hasta,
+          B_media_pob > z_desde, B_media_pob < z_hasta,
+          abs(B_pob - B_media_pob) > z_paso)
+
 # Lo que SÍ se puede afirmar. (a) Los dos parámetros se separan de verdad.
 stopifnot(abs(cocientes$brechaPct) > 2)
 # (b) B_hat está más cerca de B que de la media de cocientes.
@@ -686,6 +753,59 @@ ch_cuad  <- list(
 cat(sprintf("cherry con diametro^2: b0 = %.4f (p = %.4f), R2 = %.4f; |b0|/rango %.2f %% frente a %.2f %% con diametro\n",
             ch_cuad$b0, ch_cuad$p0, ch_cuad$r2, ch_cuad$b0RelPct, ch_cuad$b0LinRelPct))
 stopifnot(ch_cuad$p0 < 0.05, abs(ch_cuad$b0) < abs(coef(ch_lm)[[1]]))
+
+# ---------------------------------------------------------------------------
+# 6g · LA FRONTERA DEL UMBRAL, CON LOS CUATRO PARES REALES (decisión D4)
+# ---------------------------------------------------------------------------
+# El plan proponía un simulador con dos deslizadores para mover un punto a
+# través de la frontera rho = (1/2) CV(x)/CV(y). Eso se entiende sin tocarlo:
+# es un punto cruzando una recta, y la derivación del módulo ya lo dice en
+# cuatro pasos. Lo que NO se ve en ninguna parte es dónde caen los casos reales
+# del capítulo, que están repartidos por la prosa en tres párrafos distintos —y
+# uno de ellos, `cherry`, está profundamente DENTRO de la región ganadora y aun
+# así la razón es el estimador equivocado, que es el error más frecuente del
+# capítulo. Cuatro puntos sobre el plano lo enseñan de una vez.
+# CADA PUNTO DE DONDE LO SACA EL MODULO, y el gráfico lo dice. El par de las
+# superficies el capítulo lo cita con la MUESTRA (0,9958 y 0,4937, del bloque
+# R4); los dos de `farms` con el censo entero, porque son errores estándar
+# verdaderos; y `cherry` son sus 31 árboles, que ahí no hay muestra. Mezclarlos
+# sin etiquetar es el defecto que el módulo 3 acaba de corregir.
+frontera_par <- function(datos, cx, cy, nombre, fuente, nota) {
+  x <- datos[[cx]]; y <- datos[[cy]]
+  cvx <- sd(x) / mean(x); cvy <- sd(y) / mean(y)
+  list(nombre = nombre, x = cx, y = cy, fuente = fuente,
+       rho = cor(x, y), cvX = cvx, cvY = cvy,
+       razonCV = cvx / cvy, umbral = 0.5 * cvx / cvy,
+       cumple = cor(x, y) > 0.5 * cvx / cvy, nota = nota)
+}
+frontera <- list(
+  frontera_par(agsrs, "acres87", "acres92", "acres92 ~ acres87",
+               "la muestra agsrs, n = 300",
+               "gana la razon: el EE del total se divide por 10"),
+  frontera_par(agpop, "farms87", "farms92", "farms92 ~ farms87",
+               "el censo agpop entero",
+               "gana la razon: 9,4 veces mejor que la expansion"),
+  frontera_par(agpop, "acres87", "farms92", "farms92 ~ acres87",
+               "el censo agpop entero",
+               "NO llega al umbral, y en efecto la razon sale un 87,2 % peor"),
+  frontera_par(cherry, "diameter", "volume", "volumen ~ diametro",
+               "los 31 cerezos",
+               "cumple de sobra Y LA RAZON ES EL ESTIMADOR EQUIVOCADO: el umbral no compara con la regresion"))
+for (f in frontera)
+  cat(sprintf("frontera: %-28s rho %.4f %s umbral %.4f  (CV(x)/CV(y) = %.4f)\n",
+              f$nombre, f$rho, ifelse(f$cumple, ">", "<"), f$umbral, f$razonCV))
+# Las cifras tienen que coincidir con las que el capítulo ya publica, o el
+# gráfico contaría otra historia que la prosa.
+igual(frontera[[1]]$umbral, 0.4937, 1e-4, "umbral de agsrs (modulo 3)")
+igual(frontera[[1]]$rho, 0.9958, 1e-4, "rho de agsrs (modulo 3)")
+igual(frontera[[4]]$umbral, 0.2174, 1e-4, "umbral de cherry (modulo 3)")
+igual(frontera[[4]]$rho, 0.9671, 1e-4, "rho de cherry (modulo 3)")
+igual(frontera[[3]]$umbral, noPaga$umbral, 1e-10, "umbral de farms92 ~ acres87")
+igual(frontera[[3]]$rho, noPaga$rho, 1e-10, "rho de farms92 ~ acres87")
+# Tres cumplen y una no: si todas cayeran del mismo lado, el grafico no ensena
+# nada. Y la que cumple sin que le sirva -cherry- es la que hay que mirar.
+stopifnot(sum(sapply(frontera, function(f) f$cumple)) == 3)
+
 cat(sprintf("cherry: B̂ = %.4f, recta = %.4f + %.4f·x, R² = %.4f\n",
             ch_B, coef(ch_lm)[1], coef(ch_lm)[2], summary(ch_lm)$r.squared))
 
@@ -732,8 +852,12 @@ datos <- list(
   ordenVarianzas = ordenVarianzas,
   reglaPendiente = regla,
   auxiliarQueNoPaga = noPaga,
+  frontera = frontera,
   cocientes = cocientes,
-  linealizacion = list(n = n_lin, exacto = ex[1:600], lineal = li[1:600],
+  # `replicas` es el total simulado y `exacto`/`lineal` son las que se dibujan:
+  # la etiqueta del gráfico decía «600 muestras» al lado de una prosa que
+  # decía 3 000, y los EE de la lectura salen de las 3 000.
+  linealizacion = list(n = n_lin, replicas = M2, exacto = ex[1:600], lineal = li[1:600],
                        correlacion = cor(ex, li), eeExacto = sd(ex), eeLineal = sd(li)),
   dominios = list(binario = tabla_dom, region = tabla_reg),
   greg = list(beta = betas, total = curva_greg, puntos = puntos_greg,

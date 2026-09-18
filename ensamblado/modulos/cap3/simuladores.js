@@ -16,6 +16,14 @@
       return (x < 0 ? '−' : '') + entero + (partes[1] ? ',' + partes[1] : '');
     }
     const puntosXY = (xs, ys) => xs.map((v, i) => ({ x: v, y: ys[i] }));
+    // Un tope de eje legible. Sin esto, `max(x) * 1.05` deja el ultimo tick en
+    // 17.9 o en 2 380 335,3, que es ruido: el eje no dice nada mas por llegar
+    // exactamente hasta el dato mayor.
+    function topeBonito(v) {
+      if (!(v > 0)) return v;
+      const mag = Math.pow(10, Math.floor(Math.log10(v)));
+      return Math.ceil(v / (mag / 2)) * (mag / 2);
+    }
     const recta = (a, b, x0, x1) => [{ x: x0, y: a + b * x0 }, { x: x1, y: a + b * x1 }];
 
     // ---------------------------------------------------------------
@@ -43,7 +51,7 @@
         const cfg = NUBES[params.cual];
         const d = cfg.d();
         const xs = d.x, ys = d.y;
-        const xMax = Math.max(...xs) * 1.05;
+        const xMax = topeBonito(Math.max(...xs) * 1.05);
         // La razón es siempre ȳ/x̄; para agsrs viene precalculada, para el
         // resto se recalcula aquí porque son diez o treinta puntos.
         const media = v => v.reduce((a, b) => a + b, 0) / v.length;
@@ -92,8 +100,12 @@
         const sxx = xs.reduce((a, v) => a + (v - mx) * (v - mx), 0);
         const syy = ys.reduce((a, v) => a + (v - my) * (v - my), 0);
         const r = sxy / Math.sqrt(sxx * syy);
-        // Cuál gana lo decide el intercepto: si b0 está lejos de cero en
-        // relación con el rango de y, la recta por el origen pierde.
+        // |b0| como porcentaje del rango de y. OJO: esto es una regla de
+        // bolsillo para mirar la nube, NO un criterio del capítulo. El criterio
+        // es el contraste del módulo 6 sobre el intercepto. Antes esta cantidad
+        // dictaba un «la razón es adecuada: sí/no» con un corte del 5 % que no
+        // aparece en ningún módulo, y que además se mueve con un solo atípico
+        // que ensanche el rango.
         const relIntercepto = Math.abs(b0) / (Math.max(...ys) - Math.min(...ys));
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'ȳ (la recta de la expansión) =', valor: fmtNum(my, 2) },
@@ -101,8 +113,9 @@
           { etiqueta: 'intercepto b₀ =', valor: fmtNum(b0, 3) },
           { etiqueta: 'pendiente b₁ =', valor: fmtNum(b1, 4) },
           { etiqueta: 'correlación r =', valor: fmtNum(r, 4) },
-          { etiqueta: '|b₀| como % del rango de y:', valor: fmtNum(100 * relIntercepto, 1) + ' %' },
-          { etiqueta: 'la razón es adecuada:', valor: relIntercepto < 0.05 ? 'sí' : 'no — el intercepto no es despreciable' }
+          { etiqueta: '|b₀| como % del rango de y:',
+            valor: fmtNum(100 * relIntercepto, 1) + ' %  (regla de bolsillo; ' +
+                   'el criterio formal es el contraste del módulo 6)' }
         ]);
       }
 
@@ -121,13 +134,72 @@
     };
 
     // ---------------------------------------------------------------
+    // M3 · La frontera del umbral, con los cuatro pares reales (D4)
+    //
+    //      El plan proponia dos deslizadores para mover un punto a traves de
+    //      la frontera. Eso se entiende sin tocarlo. Lo que no se ve en
+    //      ninguna parte es donde caen los casos REALES del capitulo, que
+    //      estan repartidos por la prosa en tres parrafos distintos -y uno de
+    //      ellos, cherry, esta dentro de la region ganadora y aun asi la razon
+    //      es el estimador equivocado-.
+    // ---------------------------------------------------------------
+    SIMULADORES['frontera'] = function (raiz) {
+      const F = D3.frontera;
+      const params = { cual: '0' };
+      const xMax = topeBonito(Math.max(...F.map(f => f.razonCV)) * 1.15);
+      const g = crearGraficoXY(raiz.querySelector('canvas'), [], {
+        tituloX: 'CV(x) / CV(y)', tituloY: 'correlación ρ',
+        xMin: 0, xMax: xMax, yMin: 0, yMax: 1.05
+      });
+
+      function pintar() {
+        const i = Number(params.cual), f = F[i];
+        // La frontera y, debajo de ella, la region en la que la razon le gana
+        // a la expansion. El relleno va hacia abajo: `fill: 'start'`.
+        const frontera = [{ x: 0, y: 0 }, { x: Math.min(xMax, 2.1), y: Math.min(xMax, 2.1) / 2 }];
+        g.data.datasets = [
+          { type: 'line', label: 'ρ = ½·CV(x)/CV(y) — la frontera', data: frontera,
+            borderColor: COLORES_GRAFICO.secundario, borderWidth: 2, pointRadius: 0,
+            fill: 'end', backgroundColor: 'rgba(255,102,0,0.10)' },
+          { type: 'scatter', label: 'la razón le gana a la expansión',
+            data: F.filter(q => q.cumple).map(q => ({ x: q.razonCV, y: q.rho })),
+            backgroundColor: COLORES_GRAFICO.primario, pointRadius: 6 },
+          { type: 'scatter', label: 'no llega al umbral',
+            data: F.filter(q => !q.cumple).map(q => ({ x: q.razonCV, y: q.rho })),
+            backgroundColor: '#DC2626', pointRadius: 6 },
+          { type: 'scatter', label: '', data: [{ x: f.razonCV, y: f.rho }],
+            backgroundColor: 'rgba(0,0,0,0)', borderColor: '#0e7490', borderWidth: 3,
+            pointRadius: 11 }
+        ];
+        g.update('none');
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'par:', valor: f.nombre },
+          { etiqueta: 'calculado sobre:', valor: f.fuente },
+          { etiqueta: 'correlación ρ:', valor: fmtNum(f.rho, 4) },
+          { etiqueta: 'CV(x) / CV(y):', valor: fmtNum(f.razonCV, 4) },
+          { etiqueta: 'umbral = la mitad de eso:', valor: fmtNum(f.umbral, 4) },
+          { etiqueta: '¿cumple la regla del módulo 3?',
+            valor: f.cumple ? 'sí, ρ está por encima del umbral' : 'NO, ρ se queda por debajo' },
+          { etiqueta: 'y lo que pasa de verdad:', valor: f.nota }
+        ]);
+      }
+
+      crearSelector(raiz.querySelector('.simulador-controles'), {
+        clave: 'cual', etiqueta: 'Par de variables',
+        opciones: F.map((f, k) => ({ valor: String(k), texto: f.nombre + ' · ' + f.fuente }))
+      }, params, pintar);
+      pintar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
     // M4 · El sesgo del estimador de razón, medido
     // ---------------------------------------------------------------
     SIMULADORES['sesgo-razon'] = function (raiz) {
       // `sesgoRazon` es un data.frame de R: jsonlite lo escribe como array de
       // filas, así que se lee fila a fila y no por columnas.
       const SR = D3.sesgoRazon;
-      const params = { i: 3 };
+      const params = { i: '3' };
       const etiquetas = SR.map(f => 'n = ' + f.n);
       const g = crearGraficoBarras(raiz.querySelector('canvas'), etiquetas,
         SR.map(f => f.sesgo / 1e6), {
@@ -161,8 +233,16 @@
       g.update('none');
 
       function pintar() {
-        const f = SR[params.i];
+        const i = Number(params.i);            // crearSelector devuelve texto
+        const f = SR[i];
         const cociente = Math.abs(f.sesgo) / f.eeMC;
+        // Destacar DE VERDAD el tamaño elegido: antes el control se llamaba
+        // «Tamaño destacado» y el gráfico no cambiaba nunca.
+        g.data.datasets[0].backgroundColor = SR.map((_, k) =>
+          k === i ? COLORES_GRAFICO.secundario : 'rgba(255,102,0,0.28)');
+        g.data.datasets[1].backgroundColor = SR.map((_, k) =>
+          k === i ? COLORES_GRAFICO.primario : 'rgba(1,40,32,0.25)');
+        g.update('none');
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'tamaño destacado:', valor: 'n = ' + f.n },
           { etiqueta: 'sesgo simulado:', valor: fmtNum(f.sesgo, 0) + ' acres' },
@@ -178,9 +258,10 @@
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
-        { clave: 'i', etiqueta: 'Tamaño destacado (índice)', min: 0, max: SR.length - 1, paso: 1 }
-      ], params, pintar);
+      crearSelector(raiz.querySelector('.simulador-controles'), {
+        clave: 'i', etiqueta: 'Tamaño de muestra',
+        opciones: SR.map((f, k) => ({ valor: String(k), texto: 'n = ' + f.n }))
+      }, params, pintar);
       pintar();
       return [g];
     };
@@ -198,7 +279,12 @@
       function pintar() {
         const ex = L.exacto.map(v => v / 1e6), li = L.lineal.map(v => v / 1e6);
         const lo = Math.min(...ex, ...li), hi = Math.max(...ex, ...li);
-        const series = [{ type: 'scatter', label: `${ex.length} muestras de tamaño ${L.n}`,
+        // La etiqueta dice las que se DIBUJAN y de cuántas salen: el JSON trae
+        // 600 de las 3 000 para no engordar la página, pero la intro del módulo
+        // y los EE de la lectura hablan de las 3 000. Decía «600 muestras» al
+        // lado de una prosa que decía 3 000.
+        const series = [{ type: 'scatter',
+          label: `${ex.length} de las ${fmtNum(L.replicas || 3000, 0)} muestras de tamaño ${L.n}`,
           data: puntosXY(ex, li), backgroundColor: 'rgba(1,40,32,0.35)', pointRadius: 2.5 }];
         if (params.mostrar !== 'solo') {
           series.push({ type: 'line', label: 'si la aproximación fuera exacta',
@@ -317,6 +403,158 @@
       crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'beta', etiqueta: 'Pendiente del modelo β', min: 0, max: 2, paso: 0.005, decimales: 3 }
       ], params, pintar);
+      pintar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
+    // M5 · La distribución de los cocientes z_k = y_k/x_k
+    //
+    //      El modulo entero gira en torno a que la media de los z_k apunta a
+    //      otro parametro que B, y no tenia ni una imagen. Con la distribucion
+    //      delante se ve de donde sale la brecha: la cola derecha arrastra la
+    //      media simple y no toca a la razon de totales.
+    // ---------------------------------------------------------------
+    SIMULADORES['cocientes'] = function (raiz) {
+      const C = D3.cocientes, H = C.histo;
+      const params = { escala: 'lineal' };
+      // Eje x LINEAL, no de categorias. Con tramos de 0,1 los dos numeros que
+      // el modulo compara -B = 0,9797 y la media de los z = 0,9530- caen en el
+      // MISMO tramo, asi que sobre un eje de categorias las dos verticales se
+      // superponen y la brecha, que es todo el contenido del grafico, no se ve.
+      const alto = Math.max(...H.conteo);
+      const g = crearGraficoXY(raiz.querySelector('canvas'), [], {
+        tituloX: 'z = acres92 / acres87  (cociente de cada condado)',
+        tituloY: 'condados', xMin: H.ejeDesde, xMax: H.ejeHasta
+      });
+
+      // El contorno del histograma: un escalon por tramo, relleno hasta el eje.
+      const contorno = [{ x: H.ejeDesde, y: 0 }]
+        .concat(H.desde.map((d, i) => ({ x: d, y: H.conteo[i] })))
+        .concat([{ x: H.ejeHasta, y: 0 }]);
+      const vertical = (v, label, color, dash) => ({
+        type: 'line', label: label,
+        data: [{ x: v, y: 0 }, { x: v, y: alto * 1.02 }],
+        borderColor: color, borderWidth: 2.5, borderDash: dash,
+        pointRadius: 0, fill: false
+      });
+
+      function pintar() {
+        const log = params.escala === 'log';
+        g.data.datasets = [
+          { type: 'line', label: `${fmtNum(H.nDentro, 0)} condados`, data: contorno,
+            stepped: 'after', borderColor: COLORES_GRAFICO.primario, borderWidth: 1.5,
+            backgroundColor: 'rgba(1,40,32,0.18)', pointRadius: 0, fill: 'origin' },
+          vertical(C.B, `B = ${fmtNum(C.B, 4)}  (razón de los totales)`,
+                   COLORES_GRAFICO.secundario, []),
+          vertical(C.Bmedia, `media de los z = ${fmtNum(C.Bmedia, 4)}`, '#DC2626', [6, 4])
+        ];
+        g.options.scales.y.type = log ? 'logarithmic' : 'linear';
+        g.options.scales.y.min = log ? 1 : 0;
+        // Redondeado hacia arriba a la decena: `alto * 1.08` deja un tick como
+        // 218.169800000000031 en el extremo del eje.
+        g.options.scales.y.max = log ? undefined : Math.ceil(alto * 1.08 / 10) * 10;
+        g.update('none');
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'condados con cociente definido:', valor: fmtNum(C.nValidosPob, 0) },
+          { etiqueta: 'tramo más poblado:',
+            valor: `[${fmtNum(H.modaDesde, 2)}, ${fmtNum(H.modaHasta, 2)}) con ` +
+                   fmtNum(alto, 0) + ' condados' },
+          { etiqueta: 'mediana de los z:', valor: fmtNum(H.medianaZ, 4) },
+          { etiqueta: 'B = razón de los totales:', valor: fmtNum(C.B, 4) },
+          { etiqueta: 'media de los cocientes:', valor: fmtNum(C.Bmedia, 4) },
+          { etiqueta: 'brecha entre las dos:', valor: fmtNum(Math.abs(C.brechaPct), 2) + ' %' },
+          { etiqueta: 'fuera del eje:',
+            valor: fmtNum(H.nIzquierda, 0) + ' por la izquierda y ' + fmtNum(H.nDerecha, 0) +
+                   ' por la derecha (el mayor, ' + fmtNum(C.maxZ, 2) + ')' },
+          { etiqueta: 'cocientes negativos (acres92 = −99):',
+            valor: fmtNum(H.nNegativos, 0) + ', y mueven la media un ' +
+                   fmtNum(Math.abs(C.efectoNegPct), 2) + ' %; a B no la tocan' }
+        ]);
+      }
+
+      crearSelector(raiz.querySelector('.simulador-controles'), {
+        clave: 'escala', etiqueta: 'Eje vertical',
+        opciones: [{ valor: 'lineal', texto: 'lineal — se ve la moda' },
+                   { valor: 'log', texto: 'logarítmico — se ve la cola' }]
+      }, params, pintar);
+      pintar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
+    // M3 · Los residuos contra x: la TERCERA condicion de la razon
+    //
+    //      El M3 afirma que la dispersion crece con x -«que es justo el modelo
+    //      de varianza que la razon supone»- y en todo el capitulo no habia
+    //      manera de verlo. La linealidad y el paso por el origen se ven en la
+    //      nube; esta no se veia en ninguna parte.
+    // ---------------------------------------------------------------
+    SIMULADORES['residuos'] = function (raiz) {
+      const params = { cual: 'agsrs', respecto: 'razon' };
+      const g = crearGraficoXY(raiz.querySelector('canvas'), [], { tituloX: '', tituloY: '' });
+      const media = v => v.reduce((a, b) => a + b, 0) / v.length;
+
+      function pintar() {
+        const cfg = NUBES[params.cual], d = cfg.d();
+        const xs = d.x, ys = d.y;
+        const mx = media(xs), my = media(ys);
+        const B = d.B !== undefined ? d.B : my / mx;
+        let b0 = d.b0, b1 = d.b1;
+        if (b0 === undefined) {
+          const sxy = xs.reduce((a, v, i) => a + (v - mx) * (ys[i] - my), 0);
+          const sxx = xs.reduce((a, v) => a + (v - mx) * (v - mx), 0);
+          b1 = sxy / sxx; b0 = my - b1 * mx;
+        }
+        const porRazon = params.respecto === 'razon';
+        const e = ys.map((y, i) => porRazon ? y - B * xs[i] : y - (b0 + b1 * xs[i]));
+        const xMax = topeBonito(Math.max(...xs) * 1.05);
+        g.data.datasets = [
+          { type: 'scatter', label: porRazon ? 'e = y − B̂·x' : 'e = y − (b₀ + b₁·x)',
+            data: puntosXY(xs, e), backgroundColor: 'rgba(1,40,32,0.45)', pointRadius: 3 },
+          { type: 'line', label: '', data: [{ x: 0, y: 0 }, { x: xMax, y: 0 }],
+            borderColor: COLORES_GRAFICO.gris, borderWidth: 1.5, borderDash: [4, 4],
+            pointRadius: 0, fill: false }
+        ];
+        g.options.scales.x.min = 0;
+        g.options.scales.x.max = xMax;
+        g.options.scales.x.title.text = cfg.ejeX;
+        g.options.scales.x.title.display = true;
+        g.options.scales.y.title.text = 'residuo';
+        g.options.scales.y.title.display = true;
+        g.update('none');
+
+        // La lectura mide lo que el ojo cree ver: se parte la muestra por la
+        // mediana de x y se comparan las dos dispersiones. Si el modelo de la
+        // razon es el bueno, la mitad de x grande dispersa mucho mas.
+        const orden = xs.map((v, i) => i).sort((a, b) => xs[a] - xs[b]);
+        const mitad = Math.floor(orden.length / 2);
+        const sd = idx => {
+          const v = idx.map(i => e[i]);
+          const m = media(v);
+          return Math.sqrt(v.reduce((a, u) => a + (u - m) * (u - m), 0) / (v.length - 1));
+        };
+        const sdBaja = sd(orden.slice(0, mitad)), sdAlta = sd(orden.slice(mitad));
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'unidades:', valor: fmtNum(xs.length, 0) },
+          { etiqueta: 'dispersión de los residuos en la mitad de x pequeña:', valor: fmtNum(sdBaja, 2) },
+          { etiqueta: 'en la mitad de x grande:', valor: fmtNum(sdAlta, 2) },
+          { etiqueta: 'cociente entre las dos:', valor: fmtNum(sdAlta / sdBaja, 2) + ' veces' },
+          { etiqueta: '¿la dispersión crece con x?',
+            valor: sdAlta / sdBaja > 1.5 ? 'sí, y bastante — el modelo de la razón encaja'
+                 : (sdAlta / sdBaja > 1 ? 'algo, pero poco' : 'no: aquí es más o menos constante') }
+        ]);
+      }
+
+      crearSelector(raiz.querySelector('.simulador-controles'), {
+        clave: 'cual', etiqueta: 'Conjunto de datos',
+        opciones: Object.keys(NUBES).map(k => ({ valor: k, texto: NUBES[k].etiqueta }))
+      }, params, pintar);
+      crearSelector(raiz.querySelector('.simulador-controles'), {
+        clave: 'respecto', etiqueta: 'Residuos respecto de',
+        opciones: [{ valor: 'razon', texto: 'la recta por el origen (razón)' },
+                   { valor: 'regresion', texto: 'la recta con intercepto (regresión)' }]
+      }, params, pintar);
       pintar();
       return [g];
     };
@@ -472,13 +710,13 @@
       {
         tipo: 'numerica',
         modulo: 2,
-        pregunta: 'Con $t_x = 963\,464\,412$, $\bar{x} = 301\,953{,}72$, $s_e = 31\,657{,}22$, $n = 300$ y $N = 3\,078$, calcula $\mathrm{EE}(\hat{t}_r) = \dfrac{t_x}{\bar{x}}\sqrt{1-n/N}\;\dfrac{s_e}{\sqrt{n}}$. Da el resultado en millones de acres, con dos decimales.',
+        pregunta: 'Con $t_x = 963\,464\,412$, $\\bar{x} = 301\,953{,}72$, $s_e = 31\,657{,}22$, $n = 300$ y $N = 3\,078$, calcula $\\mathrm{EE}(\\hat{t}_r) = \\dfrac{t_x}{\\bar{x}}\\sqrt{1-n/N}\;\\dfrac{s_e}{\\sqrt{n}}$. Da el resultado en millones de acres, con dos decimales.',
         pista: 'Son cuatro factores y ninguna sutileza. El $s_e$ es la desviación de los <em>residuos</em>, no la de $y$: por eso sale pequeño.',
         respuesta: 5.54,
         tolerancia: 0.03,
         unidad: 'millones de acres',
-        retroAcierto: 'Correcto: <strong>5,54 millones</strong>. Es la cifra insignia del capítulo, y conviene haberla calculado una vez a mano: el factor $t_x/\bar{x}$ lleva el error estándar a escala de total, la raíz es la corrección por población finita, y todo el trabajo de la variable auxiliar está metido dentro de $s_e$.',
-        retroFallo: 'Es $\dfrac{963\,464\,412}{301\,953{,}72}\sqrt{1-300/3078}\;\dfrac{31\,657{,}22}{\sqrt{300}} = 5\,540\,376$, es decir 5,54 millones. El fallo más común es usar la desviación de $y$ ($344\,829{,}6$) en vez de la de los residuos: con ella sale 60,3 millones, que es el orden de la expansión.'
+        retroAcierto: 'Correcto: <strong>5,54 millones</strong>. Es la cifra insignia del capítulo, y conviene haberla calculado una vez a mano: el factor $t_x/\\bar{x}$ lleva el error estándar a escala de total, la raíz es la corrección por población finita, y todo el trabajo de la variable auxiliar está metido dentro de $s_e$.',
+        retroFallo: 'Es $\\dfrac{963\,464\,412}{301\,953{,}72}\\sqrt{1-300/3078}\;\\dfrac{31\,657{,}22}{\\sqrt{300}} = 5\,540\,376$, es decir 5,54 millones. El fallo más común es usar la desviación de $y$ ($344\,829{,}6$) en vez de la de los residuos: con ella sale 60,3 millones, que es el orden de la expansión.'
       },
       {
         tipo: 'grafico',
@@ -626,10 +864,10 @@
         tipo: 'opcion',
         modulo: 7,
         pregunta: 'En <code>agpop</code>, para <code>largef92 ~ largef87</code> salen $B = 1{,}0240$ y $b_1 = 0{,}9714$. Las dos variables son la misma cosa medida dos veces. ¿Qué estimador gana?',
-        pista: 'El cuadrado perfecto $(b\,S_x - \rho\,S_y)^2$ premia al $b$ más próximo a un número concreto. ¿A cuál?',
+        pista: 'El cuadrado perfecto $(b\,S_x - \\rho\,S_y)^2$ premia al $b$ más próximo a un número concreto. ¿A cuál?',
         opciones: [
           { texto: 'La diferencia: $b_1$ queda más cerca de 1 que de $B$.', correcta: true,
-            retro: 'Exacto: $\lvert b_1 - 1\rvert = 0{,}0286$ contra $\lvert b_1 - B\rvert = 0{,}0526$. La diferencia gana un <strong>6,82 %</strong>, y la regla acierta en las cuatro parejas de <code>agpop</code>.' },
+            retro: 'Exacto: $\\lvert b_1 - 1\\rvert = 0{,}0286$ contra $\\lvert b_1 - B\\rvert = 0{,}0526$. La diferencia gana un <strong>6,82 %</strong>, y la regla acierta en las cuatro parejas de <code>agpop</code>.' },
           { texto: 'La razón: $B$ está más cerca de 1 que la pendiente ajustada.', correcta: false,
             retro: 'Lo que hay que comparar con $b_1$ no es 1 con $B$, sino cada candidato con $b_1$, que es donde la parábola tiene el mínimo. Y $b_1 = 0{,}9714$ dista menos de 1 que de $B = 1{,}0240$.' },
           { texto: 'La diferencia: $x$ e $y$ son la misma variable medida dos veces.', correcta: false,
@@ -693,7 +931,7 @@
         pista: 'Con la media basta una fórmula. Con el total hay un dato que el diseño no siempre tiene.',
         opciones: [
           { texto: 'Si se conoce $N_d$; no conocerlo sube el error estándar relativo.', correcta: true,
-            retro: 'Correcto. Con $N_d$ conocido, $\hat t_{yd} = N_d\,\hat{\bar y}_d$; sin él hay que pasar por $u_k = y_k\delta_k$ y estimar $N\bar u$, que arrastra la incertidumbre sobre el tamaño del dominio. En el dominio de los condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al <strong>9,29 %</strong>.' },
+            retro: 'Correcto. Con $N_d$ conocido, $\\hat t_{yd} = N_d\,\\hat{\\bar y}_d$; sin él hay que pasar por $u_k = y_k\\delta_k$ y estimar $N\\bar u$, que arrastra la incertidumbre sobre el tamaño del dominio. En el dominio de los condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al <strong>9,29 %</strong>.' },
           { texto: 'Si $n_d$ es grande; con $n_d$ pequeño la segunda es más estable.', correcta: false,
             retro: 'El tamaño de $n_d$ afecta a la precisión de las dos por igual. Lo que separa las fórmulas es si $N_d$ —el tamaño <em>poblacional</em> del dominio— se conoce, no cuántas unidades cayeron en la muestra.' },
           { texto: 'Si el dominio es un estrato; la segunda vale solo para estratos.', correcta: false,

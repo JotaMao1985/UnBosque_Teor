@@ -523,6 +523,40 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <div class="simulador" data-simulador="frontera">
+        <h4><i class="fas fa-bullseye" aria-hidden="true"></i> Dónde cae cada caso del capítulo</h4>
+        <p class="simulador-intro">La regla de la caja de arriba es una recta en el plano
+          $\big(\text{CV}(x)/\text{CV}(y),\ \rho\big)$, y los cuatro pares que el capítulo usa están
+          repartidos por el texto en párrafos distintos. Aquí están los cuatro a la vez. Tres caen en la zona
+          sombreada y uno no —<code>farms92</code> con <code>acres87</code>, que se queda muy por debajo y en
+          efecto sale un 87,2 % peor que no usar auxiliar—. <strong>Y mira dónde cae
+          <code>cherry</code>:</strong> en lo más alto de la zona ganadora, y aun así la razón es el estimador
+          equivocado. No es una contradicción, y es el punto entero de este gráfico: la frontera compara la razón
+          con la <em>expansión</em>, y de la regresión no dice nada.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:320px;">
+          <canvas aria-label="Los cuatro pares del capítulo sobre el plano CV(x)/CV(y) frente a la correlación, con la recta de la frontera y la región en que la razón le gana a la expansión" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <div class="simulador" data-simulador="residuos">
+        <h4><i class="fas fa-chart-scatter" aria-hidden="true"></i> La tercera condición: la dispersión crece con $x$</h4>
+        <p class="simulador-intro">De las tres condiciones de la razón, la nube de arriba enseña dos —que la
+          relación sea lineal y que pase por el origen—. La tercera, que <strong>la dispersión crezca con
+          $x$</strong>, no se ve ahí: los puntos grandes tapan el efecto porque están lejos. Se ve aquí, mirando
+          los <em>residuos</em> en vez de los datos. En <code>agsrs</code>, los condados pequeños se apiñan contra
+          el cero y los grandes se abren en abanico: eso es exactamente el modelo de varianza
+          $V(\varepsilon_k) \propto x_k$ que la razón supone, y por eso la razón pondera como pondera. Compáralo
+          con <code>deadtrees</code>, donde la dispersión se mantiene más o menos constante: ahí el modelo que
+          encaja es el de la regresión, no el de la razón.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:320px;">
+          <canvas aria-label="Residuos frente a la variable auxiliar, con la línea del cero" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
       <div class="warning">
         <p><strong>Correlación alta no es lo mismo que recta por el origen.</strong> Y el umbral de la caja
           anterior tampoco lo detecta: en <code>cherry</code> vale <strong>0,2174</strong> frente a una correlación
