@@ -6407,3 +6407,52 @@ coincidiendo vale más que uno diciendo 0.
 
 **Estado.** 413 resueltas, 0 nuevas, 0 cambiadas, salida 0. Base en 425 claves: cuatro del cap. 7
 revisadas a mano y **dos huérfanas borradas**, que `--anota` no quita porque solo añade.
+
+### T7.80 — Un rango no son dos módulos, y el extremo no protege (2026-09-18)
+
+`precalculo/verifica_referencias.py` y la línea base. Encima de T7.79, sobre el fichero ya
+commiteado por la otra sesión: los dos cambios se coordinaron para no guardar el mismo archivo a la
+vez, y el mío se preparó y probó en el scratchpad mientras el suyo estaba abierto.
+
+**Qué hacía falta.** `«Capítulo 3, módulos 5 a 8»` comprobaba **M5 y M8** y se saltaba M6 y M7: una
+renumeración que moviera solo el centro pasaba callada. Ahora `numeros_de()` expande el rango.
+
+**El tope, que es la parte de criterio.** Un rango más ancho que **20** no se expande: se deja en
+sus dos extremos. Ningún capítulo del curso pasa de 14 módulos, así que un rango más ancho no es un
+rango, es un fallo de captura —`«módulos 3 a 16 380»`—, y expandirlo convertiría un error de lectura
+en miles de comprobaciones falsas. Un descendente tampoco se expande.
+
+**Lo que destapó, y que es mejor hallazgo que el arreglo.** El extremo **tampoco** protegía. El M8
+del cap. 3 pasó de «Estimación en dominios» a «Un estimador distinto en cada grupo» en `251d1bf`, y
+la frase del cap. 4 M12 que lo cita se escribió en `ea718be`, que es **anterior** —comprobado con
+`merge-base --is-ancestor`, no por las fechas—. El extremo cambió de significado y nadie lo vio
+**porque el extremo seguía existiendo**. Hoy apunta a algo *más* pertinente que cuando se escribió:
+para un módulo sobre razón separada, «un estimador distinto en cada grupo» es justo lo que hace
+falta. Por eso no se tocó: no es un error que corregir, es una decisión sobre qué se quiso decir, y
+es de Javier.
+
+**Las once nuevas, revisadas antes de anotar** —no después, que es de lo que va la casa—:
+
+| dónde | qué añade | por qué es correcta |
+|---|---|---|
+| cap. 2 «módulos 1 a 4» | M2, M3 | la frase nombra literalmente $p(s)$, $\pi_k$, $\pi_{kl}$ y Horvitz–Thompson |
+| cap. 3 «módulos 10 a 12» | M11 | «el paraguas que los contiene a todos»: es lo que queda de capítulo antes del formulario |
+| cap. 4 «módulos 1 a 8» | M2–M7 | «Estrato (módulos 1 a 8, con agstrat)»: el bloque de estrato acaba en M8 porque el M9 ya es PPT |
+| cap. 4 «cap. 3, módulos 5 a 8» | M6, M7 | esos dos **no** se movieron en la renumeración |
+
+Anotadas: 425 → 436 claves, 11 añadidas, **0 huérfanas**. No las hubo porque este cambio no toca
+`REF_RE`: el texto de la referencia no crece, así que ninguna clave se mueve. La otra sesión sí tuvo
+dos y las borró a mano; se comprobó el delta en vez de suponerlo.
+
+**El error propio que merece quedar.** Al informar del prototipo escribí que «reutiliza su
+`GLOSA_RE`» **mientras definía la suya propia**: el patrón habría acabado en tres sitios. Las nueve
+pruebas pasaban igual —una copia funciona perfectamente; solo se desincroniza cuando alguien cambia
+una de las dos—, así que el verde no decía nada sobre lo que yo estaba afirmando. Lo cazó la otra
+sesión yendo a comprobarlo.
+
+**Dos sondas que no coincidieron, y por eso valen.** Sobre si la rama singular pierde listas:
+la suya dio **0** y la mía **2**. La suya exigía glosa; la mía la hacía opcional y pilla además
+«módulo 4, 7 106 715». Los dos casos míos son cifras, no listas, y la rama singular se para en el
+primer número. Misma conclusión por caminos distintos, que es la forma fuerte de coincidir.
+
+**Después:** 424 resueltas, 424 revisadas, 0 nuevas, 0 cambiadas, salida 0.

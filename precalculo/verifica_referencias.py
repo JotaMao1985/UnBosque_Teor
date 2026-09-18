@@ -187,6 +187,42 @@ def ajena(antes, capitulo_propio):
     return otro
 
 
+# Un rango no son dos módulos, son todos los de en medio. «Capítulo 3, módulos
+# 5 a 8» comprobaba M5 y M8 y se saltaba M6 y M7: una renumeración que moviera
+# solo el centro pasaba callada, que es el fallo que esta herramienta existe
+# para cazar. Y el extremo tampoco protege: el M8 del cap. 3 pasó de «Estimación
+# en dominios» a «Un estimador distinto en cada grupo» sin que nada chistara,
+# porque el extremo seguía EXISTIENDO.
+#
+# El tope evita convertir un error de lectura en una avalancha: si la expresión
+# capturase alguna vez «módulos 3 a 16 380», expandir daría miles de
+# comprobaciones falsas. Ningún capítulo pasa de 14 módulos, así que un rango
+# más ancho que 20 no es un rango: es un fallo de captura, y se deja en sus dos
+# extremos para que se vea.
+TOPE_RANGO = 20
+
+
+def numeros_de(crudo):
+    """Los módulos que nombra una referencia; «5 a 8» son cuatro, no dos."""
+    # Las glosas se quitan antes de contar, con la MISMA GLOSA_RE que usa
+    # REF_RE. El orden importa tanto como la expresión: el material escribe
+    # «módulo 2 ($7\,124$)», y contar sin limpiar daría los módulos 7 y 124,
+    # que existen en varios capítulos y resolverían como correctos.
+    piezas = re.findall(r'\d+|,|y|a', GLOSA_RE.sub(' ', crudo))
+    fuera, rango = [], False
+    for pieza in piezas:
+        if not pieza.isdigit():
+            rango = pieza == 'a'
+            continue
+        n = int(pieza)
+        if rango and fuera and fuera[-1] < n <= fuera[-1] + TOPE_RANGO:
+            fuera.extend(range(fuera[-1] + 1, n + 1))
+        else:
+            fuera.append(n)
+        rango = False
+    return fuera
+
+
 def referencias(ruta, mods_propios, propio=None):
     """Cada referencia con su contexto, saltándose el cromo de los encabezados."""
     texto = prosa(ruta)
@@ -195,7 +231,7 @@ def referencias(ruta, mods_propios, propio=None):
         crudo = m.group('modsP') or m.group('modsS')
         # Las glosas entre paréntesis pueden traer cifras («calibrate()» no, pero
         # nada lo impide), y esas cifras no son módulos. Se quitan antes de contar.
-        numeros = [int(x) for x in re.findall(r'\d+', GLOSA_RE.sub(' ', crudo))]
+        numeros = numeros_de(crudo)
         cap = m.group('capA') or m.group('capB')
         cap = int(cap) if cap else None
         despues = texto[m.end():m.end() + 90].strip()
