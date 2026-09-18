@@ -5618,3 +5618,48 @@ el cap. 5 no es de este plan.
 hasta que alguien las mire y ejecute `--anota`. Sembrarla sin revisar grabaría los errores de hoy y
 la herramienta dejaría de servir para siempre, así que no se siembra hasta que las tres de arriba
 estén arregladas.
+
+---
+
+### T7.62 — Las tres referencias rotas, y las 395 revisadas una a una (2026-09-18)
+
+Encargo de Javier: arreglar las tres que encontró `verifica_referencias.py` y revisar el resto para
+sembrar la línea base.
+
+**Las tres.** Una línea en cada capítulo, las dos del cap. 7 en la misma frase:
+
+| dónde | decía | dice |
+|---|---|---|
+| cap. 5 | «desde el módulo **9** del capítulo 3» | **10** — *Modelos poblacionales* |
+| cap. 7 | «los dominios (módulo **8**)» | **9** — *Estimación en dominios* |
+| cap. 7 | «con la mediana (módulo **11**)» | **12** — *Parámetros no lineales: la mediana* |
+
+Las dos páginas reensamblan **byte a byte**, el diff son **2 líneas**, y verifican: **163/163** y
+**241/241** cifras de bloques, 55 y 54 de prosa con 0 sin respaldo, y los cuatro encadenados de R y
+Python con salida 0.
+
+**La revisión: 395 referencias, y no todas costaban lo mismo.** La clave fue no tratarlas igual:
+
+1. **80 traen el título al lado** —«Capítulo 1, módulo 2 · Marco conceptual», «(ICC y deff)»—, así
+   que se comprueban **exactas**, sin criterio: 62 casan literalmente con el título del destino y 18
+   son paréntesis descriptivos, revisados uno a uno y todos correctos.
+2. **48 son cruzadas sin etiqueta**, que son las que rompe una renumeración ajena. Revisadas una a
+   una contra el contenido del módulo de destino: la SSW en *Un modelo para el estratificado*, Kish
+   en *La correlación intraclase*, Woodruff en *la mediana*, el IPFP en *Calibración y raking*,
+   Hansen–Hurwitz en el suyo… **todas correctas**.
+3. **17 sin capítulo claro.** Resueltas a mano: cinco eran del propio capítulo pese a nombrar otro
+   («en el módulo 10 **de este capítulo**»), y una el verificador la atribuía al cap. 4 cuando la
+   frase dice «el raking en el **7** (módulo 6)» — elipsis que ninguna expresión regular va a
+   resolver. Dos hacían una afirmación comprobable y se comprobó: **−19,32 está en el M1 del cap. 1
+   y 6,3 en el M7**, que es lo que el cap. 8 promete.
+4. **265 del propio capítulo**, que solo rompen si su capítulo se renumera a sí mismo.
+
+**Una sola imprecisión en todo el material**, y no es un enlace roto: el cap. 3 dice «el paquete que
+el capítulo 2 presentó en su módulo 5», pero `library(survey)` está en el **M1** del cap. 2 y el
+primer `svydesign` en el **M3**. El M5 usa `survey`, así que el enlace lleva a algo pertinente. Es
+del cap. 3: avisada la otra sesión, no se toca desde aquí.
+
+**Línea base sembrada**: `precalculo/referencias_cruzadas.json`, 395 referencias, 60 KB. Desde ahora
+la pasada sale limpia y cualquier renumeración que mueva un destino salta sola. La regla que queda
+escrita en el docstring sigue siendo la importante: **`--anota` solo después de mirar**, porque
+sembrar sin revisar graba los errores y la herramienta deja de servir para siempre.
