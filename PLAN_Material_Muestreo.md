@@ -4309,7 +4309,7 @@ faltaba algo estaba en el capítulo 2: tenía la pregunta resuelta para el MAS y
 ella. **Un capítulo posterior que no reusa el resultado del anterior suele estar escondiendo un
 hueco, no ahorrando repetición.**
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con el resto de la fase 3: ver el final de T7.45.
 
 ---
 
@@ -4436,7 +4436,7 @@ el propio método del capítulo podría comprobar y no comprueba es una deuda, n
 bastaba una columna más para que la lección pasara de creída a vista, y de paso salió una asignación
 de compromiso que le gana a la proporcional en las dos variables.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con el resto de la fase 3: ver el final de T7.45.
 
 
 ---
@@ -4546,7 +4546,7 @@ porque la biblioteca la aplica por dentro. **Cuando una función hace lo correct
 el material hereda el resultado pero no el entendimiento**: aquí bastó imprimir la identidad que
 `var()` da por supuesta para que el $n_h-1$ dejara de ser un detalle que memorizar.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con el resto de la fase 3: ver el final de T7.45.
 
 ---
 
@@ -4681,4 +4681,9 @@ veredicto sobre el mundo. En el M4 era la asignación; aquí, la partición. **C
 «esta opción es mala» y lo ha medido con una sola vara, la frase está midiendo la vara, no la
 opción.** Vale la pena revisar el resto del material con esa pregunta.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier: la fase 3 entera (T7.39, T7.41, T7.43 y
+T7.45), commit `9675b07` de `main` → gh-pages `6f41a9e`. Solo cambió el capítulo 4; las otras ocho
+páginas quedaron en la versión servida (comprobado en vivo), porque lo que `main` tiene sobre ellas
+—el arreglo de `.katex-display` de T7.44 y el trabajo de otras sesiones en los caps. 3 y 8— no está
+aprobado. El capítulo 4 sí se lleva el CSS, así que **de momento es la única página del sitio cuyas
+fórmulas en bloque no se salen en móvil**. Verificado en vivo: md5 `88244a22978265ca0fcde9185c047eda`.
