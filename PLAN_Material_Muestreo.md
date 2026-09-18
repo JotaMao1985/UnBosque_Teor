@@ -4932,10 +4932,10 @@ sección que sí existe y trata de otra cosa.
 
 ### T7.48 — Cinco preguntas nuevas en el cap. 4, y el M1 deja de estar en cero (2026-09-17)
 
-Primera tarea de la fase 5 del plan del capítulo 4 con Lohr 3.ª ed. (T5.1). *(Los números T7.47 y T7.48
-quedaron usados dos veces, por esta sesión y por la del cap. 3, que escribieron a la vez, igual que
-el T7.34. Se deshizo después en `84003d1`, con la regla de que se queda el número quien lo commiteó
-antes: las notas del cap. 3 pasaron a T7.53–T7.58 y éstas conservan el suyo.)*
+Primera tarea de la fase 5 del plan del capítulo 4 con Lohr 3.ª ed. (T5.1). *(Los números T7.47 y
+T7.48 quedaron usados dos veces, por esta sesión y por la del cap. 3, que escribieron a la vez,
+igual que el T7.34. Se deshizo después en `84003d1`, con la regla de que se queda el número quien
+lo commiteó antes: las notas del cap. 3 pasaron a T7.53–T7.58 y éstas conservan el suyo.)*
 
 **El hueco del M1.** Estaba anotado desde T7.18 y era el único módulo de contenido del capítulo sin
 una sola pregunta. La nueva no pregunta la definición: pone un marco que trae nombre, dirección y
@@ -5134,11 +5134,11 @@ usa `TeachingSampling`—. Se cargan `survey` en el R1 y `TeachingSampling` dond
 precedente que el bloque de `rsample` ya tenía. `sampling` y `jsonlite` no hacen falta: no aparecen
 en ningún bloque publicado. **Prueba de verdad: el capítulo entero corre con código de salida 0.**
 
-**Una evidencia mía que hubo que retirar.** El «0 tablas recortadas» que se dio en T7.46 descansaba
-en una comprobación de `scrollLeft` —que venía de la sesión del cap. 3 y que ella misma desmontó en
-T7.53— y que **no distingue nada**: `overflow: hidden` también crea
-contenedor de scroll, así que el valor se deja fijar por JavaScript aunque el usuario no pueda mover
-el contenido. La prueba buena es el estilo calculado. Repetida a 375 px sobre el capítulo 4 ya
+**Una evidencia que di por buena y hubo que retirar.** El «0 tablas recortadas» de T7.46 —nota de
+la sesión del cap. 3, que también repartió la prueba, y que la desmontó ella misma en T7.53—
+descansaba en una comprobación de `scrollLeft` que **no distingue nada**: `overflow: hidden` también
+crea contenedor de scroll, así que el valor se deja fijar por JavaScript aunque el usuario no pueda
+mover el contenido. La prueba buena es el estilo calculado. Repetida a 375 px sobre el capítulo 4 ya
 reensamblado: **31 de 31 bloques de código** desbordaban plegados y ahora todos tienen barra (era el
 `pre.collapsed` que arregló la otra sesión), 18 de 20 fórmulas con barra, 1 tabla con barra, y
 **ninguno de los tres grupos deja contenido inalcanzable**.
@@ -5348,6 +5348,13 @@ convenciones para que no se vuelvan a solapar.
 > **Cómo se evita:** un número de nota es un identificador compartido, y `tail` del archivo no basta
 > para reservarlo cuando otra sesión tiene el suyo sin commitear. Antes de numerar, mirar también lo
 > que hay **en el árbol sin commitear**.
+>
+> **Y cómo se resuelve una disputa de autoría, que hoy hicieron falta tres veces:** `git` **no
+> distingue** las dos sesiones. Las dos commitean como *Javier Mauricio Sierra
+> &lt;javier37649@gmail.com&gt;*, con el mismo *committer* y el mismo `Co-Authored-By`. El único
+> indicio es **qué toca el commit**: `650bc8c` toca módulos del cap. 3, `genera_cap3.R` y la
+> plantilla, luego su nota es de la sesión del cap. 3. **Atribuir por metadatos aquí no funciona; hay
+> que atribuir por contenido.**
 
 Encargo nuevo de Javier, fuera del plan de `PLAN_Cap3_PortelaVilleta.md`: traer al capítulo el
 **Ejemplo 7.9** de Portela y Villeta y las **dos primeras tablas de su §7.3**, que el alcance
