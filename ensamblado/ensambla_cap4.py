@@ -140,7 +140,7 @@ def main():
         { id: 10, title: "Postestratificación", shortTitle: "Postestratificación", duration: "20 min" },
         { id: 11, title: "Estratificación en machine learning", shortTitle: "Machine learning", duration: "18 min" },
         { id: 12, title: "Razón en el estratificado", shortTitle: "Razón estratificada", duration: "24 min" },
-        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
+        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "50 min" }
       ]
     };
 

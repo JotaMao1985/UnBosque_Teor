@@ -13,7 +13,7 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Dieciséis preguntas repartidas por los módulos del capítulo y cuatro
+            <p class="text-gray-600 text-sm" style="margin:0;">Dieciséis preguntas repartidas por los módulos del capítulo y ocho
               ejercicios de diseño resueltos con el código real del capítulo.</p>
           </div>
         </div>
@@ -38,9 +38,11 @@
 
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
-        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro son problemas de diseño sobre los datos reales
-          del capítulo. Las cifras de cada solución salen de <code>ensamblado/codigo/cap4/cadena.R</code>, que se
-          ejecuta de verdad: ninguna está escrita a mano.</p>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los ocho son problemas de diseño sobre datos reales. Los cuatro primeros usan
+          <code>agpop</code> y <code>agstrat</code>; los cuatro últimos, adaptados de los ejercicios de Lohr,
+          añaden dos encuestas de verdad — el cierre navideño de Arizona State y una muestra de novela negra —.
+          Las cifras de cada solución salen de <code>ensamblado/codigo/cap4/cadena.R</code>, que se ejecuta de
+          verdad: ninguna está escrita a mano.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>agstrat</code>, estima el
@@ -119,6 +121,102 @@
               empleados de cerca, así que los cocientes $y_k/\psi_k$ del PPT casi no varían — la condición exacta
               bajo la que Hansen–Hurwitz brilla. No son la misma variable, y por eso la comparación es de
               estrategias, no un experimento controlado; el capítulo 6 la hará en igualdad de condiciones.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">5.</span>Neyman pide las $S_{y,h}$ de la
+            población y nadie las tiene. Calcula el reparto de Neyman usando las desviaciones <strong>muestrales</strong>
+            de <code>agstrat</code>, como haría un diseñador con una encuesta anterior en la mano. Después ve a
+            <code>agpop</code> y mide qué varianza consigue de verdad ese reparto, comparado con el que saldría si
+            se conocieran las $S_{y,h}$ exactas. ¿Cuánto cuesta la ignorancia?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Las $s_h$ salen de <code>tapply(agstrat$acres92, agstrat$region, sd)</code>. El reparto es el mismo
+              $n_h \propto N_h s_h$ del módulo 4; la varianza que consigue se evalúa con la función
+              <code>V_asig</code> de ese módulo, que usa las $S^2_{y,h}$ de <code>agpop</code>.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R20⟧</code></pre>
+            <p>Las desviaciones muestrales se equivocan mucho —172 099 contra 271 303 en el Norte-Centro— y el
+              reparto sale bastante distinto: 69 en vez de 86, 122 en vez de 102. Y sin embargo el error estándar
+              solo empeora un <strong>1,81 %</strong>: 17 602,93 contra 17 290,78. Esto <strong>comprueba con
+              números la afirmación del módulo 4</strong> de que la varianza es plana cerca del óptimo. La lección
+              práctica: no hace falta acertar las $S_{y,h}$, basta con ordenarlas bien. Y aun equivocándose, Neyman
+              con datos viejos le sigue sacando mucho a la proporcional, que se queda en 21 123,94.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">6.</span>Toma un MAS de <strong>40</strong>
+            condados de <code>agpop</code> y postestratifícalo por región. Mira cuántos condados caen en el
+            Nordeste. Estima la media con y sin postestratificar, después <strong>fusiona</strong> la celda chica
+            con su vecina y vuelve a estimar. ¿Mejora el error estándar? ¿Por qué se fusiona, entonces?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p><code>postStratify</code> necesita un <code>data.frame</code> con los $N_h$ del marco. Para fusionar,
+              crea una variable nueva que junte dos regiones y arma el marco correspondiente. La nota del módulo 10
+              da el umbral: unos 30 casos <em>esperados</em> por celda.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R21⟧</code></pre>
+            <p>Al Nordeste le tocan <strong>4</strong> condados: con $n = 40$ y un peso del 7 %, lo esperado eran
+              menos de tres. Postestratificar baja el error estándar de <strong>41 209,38</strong> a
+              <strong>30 052,12</strong> y acerca la media a la verdad (306 676,97). Pero mira la fusión:
+              <strong>31 164,74</strong>, <em>peor</em> que sin fusionar. Y ahí está la trampa del ejercicio:
+              <strong>no se fusiona para bajar el error estándar, sino porque con cuatro observaciones la
+              <em>estimación</em> de la varianza no es de fiar</strong> y la aproximación del módulo 10 pide unos 30
+              esperados por celda. La cifra que se gana fusionando no es la varianza: es el derecho a creérsela.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">7.</span>En enero de 1995 la Universidad
+            Estatal de Arizona preguntó a su personal si querría repetir el cierre navideño. La muestra es
+            estratificada en cuatro tipos de empleado, con $N_h$ de 1 374, 1 960, 252 y 95
+            (<code>winter.csv</code>). Analizando solo a quienes contestaron la pregunta, estima la
+            <strong>proporción</strong> que diría que sí y su error estándar <em>con la fórmula</em> del módulo 3, y
+            después con <code>survey</code>. Estima también cuántas personas son.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Son las ecuaciones 3.7 y 3.8: $\hat{p}_{\text{str}} = \sum W_h \hat{p}_h$ y la varianza con
+              $\hat{p}_h(1-\hat{p}_h)/(n_h-1)$. Los $n_h$ son los de quienes <em>respondieron</em>, no los
+              cuestionarios enviados. El total es $\sum N_h \hat{p}_h$.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R22⟧</code></pre>
+            <p>Sale <strong>0,173778</strong> con error estándar <strong>0,012019</strong>, y las dos vías coinciden
+              al sexto decimal: la fórmula escrita a mano y <code>svymean</code> son la misma cuenta. En personas,
+              unas <strong>639,68</strong> de las 3 681. Fíjate en que el profesorado (estrato 1) dice que sí con
+              proporción <strong>0,2802</strong> y el personal clasificado con <strong>0,1070</strong>: esa
+              diferencia entre estratos es justamente lo que hace que estratificar aquí rinda.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">8.</span>Una lectora de novela negra sorteó
+            60 libros nominados al premio Edgar, en <strong>12 estratos de 4 a 6 libros</strong> cada uno
+            (<code>mysteries.csv</code>, pesos en <code>p1weight</code>). Estima, con su intervalo del 95 %,
+            <strong>cuántos detectives hombres hay por cada detective mujer</strong>. Antes de calcular nada,
+            decide: ¿razón combinada o separada?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Mira los $n_h$ y vuelve al simulador del módulo 12 antes de elegir. <code>svyratio</code> sin
+              <code>separate</code> da la combinada.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R23⟧</code></pre>
+            <p>La respuesta al «antes de calcular nada» es <strong>combinada</strong>, y el ejercicio está elegido
+              para que se vea: sus estratos tienen <strong>4</strong> o <strong>6</strong> libros, justo alrededor
+              del cruce en 5 que midió el módulo 12. Con esos $n_h$, la separada acumularía doce sesgos de cociente
+              sin ganar nada a cambio. La razón combinada da <strong>3,909</strong> detectives hombres por cada
+              mujer, con un intervalo de <strong>1,701</strong> a <strong>6,116</strong>: ancho, porque 60 libros
+              son pocos, pero que no contenga el 1 ya dice algo. Los totales estimados son <strong>688,917</strong>
+              y <strong>176,25</strong> entre los 655 libros nominados.</p>
           </details>
         </div>
       </div>

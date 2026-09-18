@@ -5093,3 +5093,66 @@ bloques visibles. Lo que no se ve leyendo es lo que **no está escrito en ningun
 ejecutarlo son seis capítulos.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.51 — Cuatro ejercicios más en el cap. 4, y el código publicado que no arrancaba (2026-09-17)
+
+Segunda tarea de la fase 5 (T5.2), que la cierra, más un arreglo que no estaba en el plan y pesa
+más que ella.
+
+**Los cuatro ejercicios**, que llevan el capítulo de 4 a 8 (bloques `R20`–`R23`):
+- **5 · Neyman sin conocer las $S_h$.** Se calcula el reparto con las desviaciones *muestrales* de
+  `agstrat` y se mide qué consigue de verdad sobre `agpop`. Las $s_h$ se equivocan mucho (172 099
+  contra 271 303 en el Norte-Centro) y el reparto sale distinto (69 en vez de 86), pero el error
+  estándar solo empeora un **1,81 %**. **Es la primera vez que el capítulo comprueba con números su
+  propia afirmación** de que la varianza es plana cerca del óptimo, que el M4 llevaba publicada sin
+  respaldo desde julio.
+- **6 · Postestratificar un MAS de 40.** Al Nordeste le tocan **4** condados. Postestratificar baja
+  el ee de 41 209,38 a 30 052,12; fusionar la celda chica lo deja en **31 164,74**, o sea *peor*. Ahí
+  está la trampa: **no se fusiona para bajar el error estándar, sino porque con cuatro observaciones
+  la estimación de la varianza no es de fiar**. Lo que se gana fusionando es el derecho a creérsela.
+- **7 · `winter.csv`.** El cierre navideño de Arizona State, cuatro estratos de empleado. Ejercita
+  las ecs. 3.7 y 3.8 que T7.43 añadió al M3: **0,173778** con ee **0,012019**, y la fórmula a mano y
+  `svymean` coinciden al sexto decimal.
+- **8 · `mysteries.csv`.** Razón combinada sobre 60 novelas nominadas al Edgar. El enunciado obliga a
+  decidir *antes* de calcular, y sus doce estratos tienen **4 o 6** libros: justo alrededor del cruce
+  en 5 que midió el simulador del M12. **El ejercicio del libro se responde con una cifra que
+  medimos nosotros.**
+
+**Y lo que no estaba en el plan: el código publicado del capítulo no arrancaba.** Lo detectó la
+sesión del cap. 3 y se verificó aquí extrayendo del HTML servido los treinta bloques de R que ve el
+estudiante y ejecutándolos en una sesión `--vanilla`: moría en el primer `svydesign()`.
+`library(survey)` vive en el **preámbulo de `cadena.R`**, que va antes del primer marcador y por eso
+nunca se publica. **Cualquiera que copiara el código del capítulo recibía un error en la primera
+línea útil.**
+
+El arreglo son dos líneas, y la segunda salió de no fiarse: la sesión del cap. 3 había medido que el
+capítulo 4 solo necesitaba `survey`, pero al ejecutar apareció un segundo fallo, `BigLucy` —el M9
+usa `TeachingSampling`—. Se cargan `survey` en el R1 y `TeachingSampling` donde se usa, siguiendo el
+precedente que el bloque de `rsample` ya tenía. `sampling` y `jsonlite` no hacen falta: no aparecen
+en ningún bloque publicado. **Prueba de verdad: el capítulo entero corre con código de salida 0.**
+
+**Una evidencia mía que hubo que retirar.** El «0 tablas recortadas» que se dio en T7.47 descansaba
+en una comprobación de `scrollLeft` que **no distingue nada**: `overflow: hidden` también crea
+contenedor de scroll, así que el valor se deja fijar por JavaScript aunque el usuario no pueda mover
+el contenido. La prueba buena es el estilo calculado. Repetida a 375 px sobre el capítulo 4 ya
+reensamblado: **31 de 31 bloques de código** desbordaban plegados y ahora todos tienen barra (era el
+`pre.collapsed` que arregló la otra sesión), 18 de 20 fórmulas con barra, 1 tabla con barra, y
+**ninguno de los tres grupos deja contenido inalcanzable**.
+
+**Una discrepancia del plan.** T5.2 pedía las soluciones en `genera_soluciones.R`, pero ese archivo
+es **solo del capítulo 2**; los ejercicios del capítulo 4 viven en `cadena.R`, que es donde estaban
+los cuatro originales y donde van los nuevos.
+
+**Verificado.** Byte a byte; **528 de 528** cifras de bloques (eran 437) y **172 de prosa · 0 sin
+respaldo**; `--check` sin diferencias. En el navegador: 8 ejercicios con sus 8 pistas y 8 soluciones,
+0 `.katex-error`, consola limpia. M13 pasa de 35 a **50 min**.
+
+**Lo que enseña.** El capítulo llevaba meses publicando código que ningún lector podía ejecutar, y
+**ninguna de las comprobaciones del proyecto lo habría encontrado nunca**: la cadena se ejecuta
+entera, con su preámbulo, así que siempre funcionó; el verificador compara cifras anunciadas contra
+salida real, y las cifras estaban bien. **Lo que se publica no es lo que se ejecuta**, y hasta hoy
+nadie había ejecutado lo que se publica. La prueba que faltaba no era más fina: era otra.
+
+**Pendiente:** el visto bueno de Javier para publicar.

@@ -8,6 +8,7 @@ Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 options(warn = 1, survey.lonely.psu = "adjust")
 
 cat("\n###BLOQUE-R1###\n")
+library(survey)   # svydesign, svymean, svytotal, svyratio y postStratify
 # agpop y agstrat: la poblacion del curso y la muestra ESTRATIFICADA oficial
 # de Lohr. agstrat no es agsrs: se sorteo por separado dentro de cada region.
 agpop   <- read.csv("CSV data sets for SDA 3e/agpop.csv")
@@ -480,6 +481,7 @@ cat("\n###BLOQUE-R11###\n")
 # Estratificado con probabilidades proporcionales (Gutierrez 5.3): dentro de
 # cada estrato, las unidades entran con probabilidad proporcional a su tamano.
 # BigLucy: 85 296 empresas en 3 niveles; x = empleados, y = ingresos.
+suppressMessages(library(TeachingSampling))   # BigLucy, S.STPPS y E.STPPS
 data(BigLucy)
 table(BigLucy$Level)
 #>    Big Medium  Small
@@ -764,3 +766,106 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
 # No son la misma variable, pero la leccion si es la misma: cuando el tamano
 # de la unidad manda en la variable de interes, meter ese tamano en el diseno
 # (PPT) o en los estratos (niveles de BigLucy) compra precision.
+
+cat("\n###BLOQUE-R20###\n")
+# EJERCICIO 5. Neyman necesita las S_h de la poblacion y nadie las tiene. En
+# la practica se usan las s_h de una muestra anterior: aqui, agstrat. Se
+# compara la asignacion que sale de ahi con la que saldria conociendo agpop.
+s_h <- tapply(agstrat$acres92, agstrat$region, sd)
+n_ney_s <- round(300 * as.numeric(Nh) * s_h / sum(as.numeric(Nh) * s_h))
+round(rbind(s_muestral = s_h, S_poblacional = Sh,
+            con_s = n_ney_s, con_S = n_neyman), 0)
+#>                   NC    NE      S      W
+#> s_muestral    172099 87450 231490 629433
+#> S_poblacional 271303 79365 243956 835639
+#> con_s             69     7    122    101
+#> con_S             86     5    102    107
+
+# Las desviaciones se equivocan mucho; el reparto, bastante. Y aun asi:
+round(c(ee_con_s = sqrt(V_asig(n_ney_s)), ee_con_S = sqrt(V_asig(n_neyman)),
+        perdida_pct = 100 * (sqrt(V_asig(n_ney_s) / V_asig(n_neyman)) - 1),
+        ee_proporcional = sqrt(V_asig(n_prop))), 2)
+#>        ee_con_s        ee_con_S     perdida_pct ee_proporcional
+#>        17602.93        17290.78            1.81        21123.94
+
+cat("\n###BLOQUE-R21###\n")
+# EJERCICIO 6. Postestratificar un MAS CHICO: n = 40 sobre agpop. El
+# Nordeste es el 7 % del marco, asi que su celda sale casi vacia.
+set.seed(4401)
+s40 <- agpop[sample(N, 40), ]
+table(s40$region)
+#> NC NE  S  W
+#> 14  4 14  8
+
+marco40 <- data.frame(region = names(Nh), Freq = as.numeric(Nh))
+d40 <- svydesign(id = ~1, fpc = ~rep(N, 40), data = s40)
+p40 <- postStratify(d40, ~region, marco40)
+round(rbind(mas  = c(media = coef(svymean(~acres92, d40)), ee = SE(svymean(~acres92, d40))),
+            post = c(coef(svymean(~acres92, p40)), SE(svymean(~acres92, p40)))), 2)
+#>      media.acres92       ee
+#> mas       346938.1 41209.38
+#> post      323336.2 30052.12
+
+# Fusionar la celda chica con su vecina, que es lo que se hace cuando no
+# llega a los 30 esperados por celda del modulo 10:
+s40$reg2 <- ifelse(s40$region %in% c("NE", "NC"), "NE+NC", s40$region)
+marco2  <- data.frame(reg2 = c("NE+NC", "S", "W"),
+                      Freq = c(sum(Nh[c("NE", "NC")]), Nh["S"], Nh["W"]))
+p40b <- postStratify(svydesign(id = ~1, fpc = ~rep(N, 40), data = s40), ~reg2, marco2)
+round(c(fusion = coef(svymean(~acres92, p40b)), ee = SE(svymean(~acres92, p40b)),
+        verdad = mean(agpop$acres92)), 2)
+#> fusion.acres92             ee         verdad
+#>      318620.90       31164.74      306676.97
+
+cat("\n###BLOQUE-R22###\n")
+# EJERCICIO 7. Proporciones estratificadas con las ecs. 3.7 y 3.8 del modulo
+# 3, sobre una encuesta de verdad: el cierre navideno de Arizona State, con
+# cuatro estratos de empleados. Solo se analizan los que respondieron.
+win <- read.csv("CSV data sets for SDA 3e/winter.csv")
+win <- win[win$breakaga %in% c(1, 2), ]
+win$si <- as.numeric(win$breakaga == 1)
+Nh_w <- c(1374, 1960, 252, 95)              # del enunciado de Lohr
+nh_w <- as.numeric(table(win$class))
+Wh_w <- Nh_w / sum(Nh_w)
+p_h  <- as.numeric(tapply(win$si, win$class, mean))
+data.frame(estrato = 1:4, Nh = Nh_w, nh = nh_w, p_h = round(p_h, 4))
+#>   estrato   Nh  nh    p_h
+#> 1       1 1374 232 0.2802
+#> 2       2 1960 514 0.1070
+#> 3       3  252  86 0.1279
+#> 4       4   95  67 0.1343
+
+# A mano con la 3.7 y la 3.8, y con survey:
+p_str <- sum(Wh_w * p_h)
+V_w   <- sum((1 - nh_w / Nh_w) * Wh_w^2 * p_h * (1 - p_h) / (nh_w - 1))
+win$pesow <- (Nh_w / nh_w)[win$class]
+win$Nhw   <- Nh_w[win$class]
+dis_w <- svydesign(id = ~1, strata = ~class, weights = ~pesow, fpc = ~Nhw, data = win)
+round(c(p_formula = p_str, ee_formula = sqrt(V_w),
+        p_survey = coef(svymean(~si, dis_w)), ee_survey = SE(svymean(~si, dis_w))[[1]],
+        total_personas = sum(Nh_w * p_h), poblacion = sum(Nh_w)), 6)
+#>      p_formula     ee_formula    p_survey.si      ee_survey total_personas
+#>       0.173778       0.012019       0.173778       0.012019     639.678275
+#>      poblacion
+#>    3681.000000
+
+cat("\n###BLOQUE-R23###\n")
+# EJERCICIO 8. Razon COMBINADA sobre una muestra estratificada de verdad:
+# 60 novelas policiacas nominadas al Edgar, en 12 estratos de 4 a 6 libros.
+# Cuantos detectives hombres hay por cada detective mujer?
+mys <- read.csv("CSV data sets for SDA 3e/mysteries.csv")
+table(mys$stratum)
+#>  1  2  3  4  5  6  7  8  9 10 11 12
+#>  6  6  6  4  4  4  6  6  6  4  4  4
+
+dis_m <- svydesign(id = ~1, strata = ~stratum, weights = ~p1weight,
+                   fpc = ~popsize, data = mys)
+razon <- svyratio(~mdetect, ~fdetect, dis_m)
+round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
+        confint(razon)[1, ],
+        total_hombres = coef(svytotal(~mdetect, dis_m))[[1]],
+        total_mujeres = coef(svytotal(~fdetect, dis_m))[[1]]), 3)
+#>         razon            ee         2.5 %        97.5 % total_hombres
+#>         3.909         1.126         1.701         6.116       688.917
+#> total_mujeres
+#>       176.250
