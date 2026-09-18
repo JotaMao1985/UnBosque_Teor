@@ -6196,3 +6196,35 @@ resultado, sino de volver al instrumento. Releer un número plausible no lo desm
 independientes desde que la invariante de T7.72 ató el árbol publicado a `origin/main:sitio`, y que
 con varias sesiones en el mismo árbol empujar arrastra los commits ajenos que estén debajo —que es
 lo que pasó con `af265ea` y `2be3093` en el push de T7.73—.
+
+### T7.75 — La línea base apuntaba a una página muerta, y nadie ejecutaba la de la viva (2026-09-18)
+
+`precalculo/cifras_prosa.json`, `precalculo/verifica_bloques.py` y `precalculo/README.md`. Salió al
+pasar los cuatro verificadores por todo, que es justo para lo que servía pasarlos.
+
+**El hueco, que no era un fallo.** `cifras_prosa.json` tenía entrada para
+`taller-1-preparacion-parcial-1.html` —absorbido por el preparcial y en el `.gitignore` desde
+entonces— y **ninguna** para `preparcial-corte-1.html`. Y `--todos` recorría solo `capitulo-*.html`,
+así que la novena página publicada nunca entraba en la pasada de rutina. Resultado: dos cifras de
+prosa del preparcial llevaban meses sin revisar. **No fallaban: nadie las había mirado.** Es la
+versión de línea base del patrón del día —una comprobación que existe y no se ejecuta da el mismo
+verde que una que pasa—.
+
+**Lo que se movió, verificado ítem por ítem.** De las tres entradas del taller, `500 000` ya no hace
+falta: en el preparcial esa cifra sale del JSON de salarios, no de un contrafactual. Las otras dos
+siguen siendo escenario inventado y se leyeron enteras antes de reescribirlas:
+
+| cifra | qué es |
+|---|---|
+| `2,3` | calificación media inventada del comedor en el ítem del QR; lo que se evalúa es la dirección del sesgo de autoselección, no la cifra |
+| `6 000` | contrafactual en la retro de un distractor: «con 6 000 abordadas a criterio del encuestador seguiría sin haber $p(s)$» |
+
+Se les quitaron los identificadores `S2-2` y `S3-1`: la renumeración del preparcial los dejó sin
+existir, y **una justificación que cita un ancla muerta es peor que una que describe el ítem**.
+
+**El arreglo de verdad no es la entrada, es el alcance.** Mover la clave sin tocar `--todos` habría
+dejado la línea base igual de sin ejecutar. Ahora `--todos` cubre las **9 páginas publicadas**
+—capítulos, preparcial y talleres— descartando las del `.gitignore`, que no llegan a `gh-pages`.
+
+**Después:** 9 páginas, 224 cifras de prosa respaldadas en el preparcial y **0 sin respaldo en
+total**, 0 secuencias de LaTeX con barra simple.

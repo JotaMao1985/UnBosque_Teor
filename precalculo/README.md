@@ -91,6 +91,14 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
   varias sesiones en el mismo árbol significa que al empujar se arrastran los commits ajenos que
   estén debajo.
 
+- **Una línea base solo sirve si algo la ejecuta.** `cifras_prosa.json` tenía entrada para
+  `taller-1-preparacion-parcial-1.html`, que el preparcial absorbió y que está en el `.gitignore`
+  desde entonces, y **ninguna** para `preparcial-corte-1.html`. El efecto no fue un fallo: fue que
+  dos cifras de esa página llevaban meses sin que nadie las mirara, porque `--todos` recorría
+  `capitulo-*.html` y la novena página publicada no entraba. Por eso `--todos` cubre ahora **todas
+  las páginas que se publican** —descartando las del `.gitignore`, que no llegan a `gh-pages`— y no
+  solo los capítulos. Al retirar o renombrar una página hay que mover su entrada en la línea base:
+  una clave que apunta a una página muerta no da error, se queda callada.
 - **Las cifras del curso viven en tres sitios, y cada uno se desfasa por su cuenta**: la tabla del
   README, las tarjetas del `index.html` y las **dos metaetiquetas** del `index.html`. Las metas son
   las peligrosas porque no se ven leyendo la página: se publicaron con «67 simuladores» cuando el

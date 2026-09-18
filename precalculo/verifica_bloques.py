@@ -28,7 +28,7 @@ Qué hace:
 
 Uso:
     python3 precalculo/verifica_bloques.py sitio/muestreo/capitulo-4-*.html
-    python3 precalculo/verifica_bloques.py --todos
+    python3 precalculo/verifica_bloques.py --todos   # las 9 publicadas
     python3 precalculo/verifica_bloques.py --todos --prosa
     python3 precalculo/verifica_bloques.py --todos --solo-latex
 
@@ -494,7 +494,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("html", nargs="*", help="capítulos a verificar")
     ap.add_argument("--todos", action="store_true",
-                    help="verifica todos los capítulos de sitio/muestreo/")
+                    help="verifica todas las páginas publicadas de sitio/muestreo/")
     ap.add_argument("--prosa", action="store_true",
                     help="verifica también las cifras citadas en el texto")
     ap.add_argument("--solo-prosa", action="store_true",
@@ -504,7 +504,19 @@ def main():
     args = ap.parse_args()
 
     if args.todos:
-        rutas = sorted((RAIZ / "sitio" / "muestreo").glob("capitulo-*.html"))
+        # Todas las páginas que se PUBLICAN, no solo los capítulos. El
+        # preparcial se quedó fuera de este glob cuando se creó y el efecto no
+        # fue que fallara: fue que su línea base nunca se ejecutó, así que dos
+        # cifras suyas llevaban meses sin mirar. Se descartan las del
+        # .gitignore —hoy el taller 1, que el preparcial absorbió— porque no
+        # llegan a gh-pages.
+        sitio = RAIZ / "sitio" / "muestreo"
+        rutas = sorted(sum((list(sitio.glob(f"{pre}-*.html"))
+                            for pre in ("capitulo", "preparcial", "taller")), []))
+        fuera = subprocess.run(["git", "check-ignore"] + [str(r) for r in rutas],
+                               cwd=RAIZ, capture_output=True, text=True
+                               ).stdout.splitlines()
+        rutas = [r for r in rutas if str(r) not in fuera]
     else:
         rutas = [Path(h) for h in args.html]
     if not rutas:

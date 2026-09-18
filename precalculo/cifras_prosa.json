@@ -13,7 +13,8 @@
     "protesta. Añadirla solo DESPUÉS de comprobarla ejecutando, nunca para",
     "silenciar el aviso.",
     "2026-08-19: se admitio UN decimal en la expresion de extraccion. Las 44 cifras de un decimal que quedaron sin respaldo se revisaron ejecutando una por una; 43 eran correctas y estan abajo, y una era un error real (el capitulo 2 citaba 2,4 millones de papeletas del Literary Digest donde son 2 266 566, o sea 2,3).",
-    "2026-08-19 (segunda pasada): el modo --prosa mira ahora tambien los literales de cadena del <script>, que es donde viven los enunciados, las opciones y la retroalimentacion de los simuladores. Las 37 cifras que aparecieron se revisaron ejecutando; 36 eran correctas y una era un error real (el cap. 1 decia que la mayor desviacion de la telefonica era 29,7 cuando es 29,6). OJO: en las preguntas hay cifras EQUIVOCADAS A PROPOSITO —las de los distractores y las que la retro cita como error tipico—; van igual a esta lista, pero su justificacion dice que lo son."
+    "2026-08-19 (segunda pasada): el modo --prosa mira ahora tambien los literales de cadena del <script>, que es donde viven los enunciados, las opciones y la retroalimentacion de los simuladores. Las 37 cifras que aparecieron se revisaron ejecutando; 36 eran correctas y una era un error real (el cap. 1 decia que la mayor desviacion de la telefonica era 29,7 cuando es 29,6). OJO: en las preguntas hay cifras EQUIVOCADAS A PROPOSITO —las de los distractores y las que la retro cita como error tipico—; van igual a esta lista, pero su justificacion dice que lo son.",
+    "2026-09-18: la entrada de taller-1-preparacion-parcial-1.html paso a preparcial-corte-1.html. El taller lo absorbio el preparcial y quedo en el .gitignore, asi que la base apuntaba a una pagina retirada y la que la sustituye no tenia ninguna: sus 2 cifras sin respaldo no es que fallaran, es que nadie las habia mirado. De las tres que habia, `500 000` ya no necesita entrada —en el preparcial esa cifra sale del JSON de salarios, no de un contrafactual— y las otras dos siguen siendo escenario inventado, verificadas leyendo los dos items el 2026-09-18. Se les quitaron los identificadores S2-2 y S3-1 de las justificaciones: la renumeracion del preparcial los dejo sin existir, y una justificacion que cita un ancla muerta es peor que una que describe el item."
   ],
   "global": {
     "1,960": "z de la normal al 95 %; constante de tabla",
@@ -203,9 +204,8 @@
     "2,50": "1/0,40 = 2,50: el factor de ajuste cuando la propension estimada es 80/200",
     "39,9": "valor equivocado de un distractor: nace de leer el deff de Kish 1,399 como un 39,9 % de sesgo corregido, y la retro explica por que no lo es"
   },
-  "taller-1-preparacion-parcial-1.html": {
-    "500 000": "marco hipotético del ítem S1-3: «un marco incompleto con 5 000 registros sigue siéndolo con 500 000». No es un dato, es el contrafactual del argumento",
-    "2,3": "calificación media inventada del comedor en el ítem S2-2. El escenario lo plantea la pregunta; lo que se evalúa es la dirección del sesgo, no la cifra",
-    "6 000": "personas abordadas en el contrafactual del ítem S3-1: «con 6 000 el defecto sería idéntico». Refuerza que el tamaño no arregla la falta de p(s)"
+  "preparcial-corte-1.html": {
+    "2,3": "calificación media inventada del comedor universitario en el ítem del QR (módulo 8, anclado al cap. 1 módulo 4). El escenario lo plantea la pregunta —«contestan 640 personas y la media sale 2,3»—; lo que se evalúa es la dirección del sesgo de autoselección, no la cifra",
+    "6 000": "contrafactual en la retro de un distractor: «con 6 000 personas abordadas a criterio del encuestador seguiría sin haber $p(s)$». Refuerza que el tamaño no arregla la falta de diseño; no es un dato"
   }
 }
