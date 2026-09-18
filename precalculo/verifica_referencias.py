@@ -62,15 +62,50 @@ BASE = RAIZ / "precalculo" / "referencias_cruzadas.json"
 # El singular NO admite lista. Si lo admite, «el estratificado del módulo 3,
 # 16 380» —donde 16 380 es un error estándar— se lee como «módulos 3 y 16», y la
 # herramienta informa de un módulo 16 inexistente que nadie escribió. Medido.
-# El `(?! \d{3})` remata lo mismo por el otro lado: descarta el número que en
+# El `(?!\d+\s\d{3})` remata lo mismo por el otro lado: descarta el número que en
 # realidad es la cabeza de una cifra con separador de millares.
+#
+# Va DELANTE de los dígitos, no detrás. Con `(?P<modsS>\d+)(?!\s\d{3})` la
+# expresión retrocede: en «módulo 16 380», `\d+` prueba «16», el guarda ve « 380»
+# y falla, así que reduce a «1», y entonces lo siguiente es «6» —no un espacio—,
+# el guarda pasa y la herramienta informa de una referencia al módulo 1. Como el
+# módulo 1 existe en todos los capítulos, se habría resuelto como correcta y la
+# línea base la habría bendecido. Hoy no ocurre —0 casos en las 10 páginas— pero
+# el agujero estaba abierto; anclado al inicio del número, no hay marcha atrás.
+#
+# La lista PLURAL admite glosas entre paréntesis en medio, porque el material
+# escribe «módulos 2 y 4 (la razón linealizada y el término que se desprecia),
+# 9 (dominios) y 12 (la mediana por Woodruff)» y sin esto la expresión cortaba en
+# el primer paréntesis: el 9 y el 12 eran INVISIBLES, y así se publicaron dos
+# referencias rotas que ninguna comprobación veía. La glosa solo se consume
+# cuando lleva a otro número, nunca al final, para no mover la clave de las
+# referencias que ya estaban revisadas. Medido sobre las 10 páginas: 412
+# coincidencias antes y después, y una sola difiere —la del cap. 7, que gana el
+# 9 y el 12—. La rama SINGULAR se deja como estaba a propósito: «el raking en el
+# 7 (módulo 6)» del cap. 8 tiene un 7 que es un CAPÍTULO, y una regla de «número
+# seguido de paréntesis» se lo comería.
+#
+# La glosa admite UN nivel de anidamiento porque el material escribe
+# «la regresión con calibrate()». Con `\([^()]*\)` a secas, «módulos 6 (la
+# regresión con calibrate()), 9 (dominios) y 11 (el GREG)» se trunca en el 6 y el
+# 9 y el 11 vuelven a ser invisibles. Hoy no muerde —esa glosa está al final de su
+# lista, donde no se consume, y sobre las 10 páginas las dos versiones dan 412
+# coincidencias y 433 números idénticos— pero bastaría con mover la frase.
+# El paréntesis de una glosa, con UN nivel de anidamiento («calibrate()»).
+# Vive aquí y en ningún otro sitio: la usan REF_RE para atravesarla y
+# referencias() para quitarla antes de contar números. Escrita dos veces se
+# desincroniza sola, y las dos mitades tienen que decir lo mismo o la expresión
+# atraviesa una glosa cuyos números luego se cuentan como módulos.
+GLOSA = r'\((?:[^()]|\([^()]*\))*\)'
+GLOSA_RE = re.compile(GLOSA)
+
 REF_RE = re.compile(
     # «cap. 4, módulo 8» es tan frecuente como «capítulo 4, módulo 8» (22 veces
     # en el material). Sin la abreviatura, esas 22 se resuelven contra el capítulo
     # equivocado y la herramienta da por buenas referencias que apuntan a otro sitio.
     r'(?:\bcap(?:[íi]tulo)?s?\.?\s+(?P<capA>\d+)\s*[,(]\s*)?'   # «capítulo 3, módulo 9» y «capítulo 3 (módulo 11)»
-    r'(?:m[óo]dulos\s+(?P<modsP>\d+(?:\s*(?:,|y|a)\s*\d+)*)'
-    r'|m[óo]dulo\s+(?P<modsS>\d+)(?!\s\d{3}))'
+    r'(?:m[óo]dulos\s+(?P<modsP>\d+(?:\s*(?:' + GLOSA + r'\s*)?(?:,|y|a)\s*(?!\d+\s\d{3})\d+)*)'
+    r'|m[óo]dulo\s+(?P<modsS>(?!\d+\s\d{3})\d+))'
     r'(?:\s+(?:de|del)\s+(?:la\s+)?cap[íi]tulo\s+(?P<capB>\d+))?',
     re.I)
 
@@ -158,7 +193,9 @@ def referencias(ruta, mods_propios, propio=None):
     fuera = []
     for m in REF_RE.finditer(texto):
         crudo = m.group('modsP') or m.group('modsS')
-        numeros = [int(x) for x in re.findall(r'\d+', crudo)]
+        # Las glosas entre paréntesis pueden traer cifras («calibrate()» no, pero
+        # nada lo impide), y esas cifras no son módulos. Se quitan antes de contar.
+        numeros = [int(x) for x in re.findall(r'\d+', GLOSA_RE.sub(' ', crudo))]
         cap = m.group('capA') or m.group('capB')
         cap = int(cap) if cap else None
         despues = texto[m.end():m.end() + 90].strip()

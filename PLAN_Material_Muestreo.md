@@ -6358,3 +6358,52 @@ arriba**».
 
 **Un instrumento más que mintió.** El barrido con que comprobé que no quedaban referencias era
 sensible a mayúsculas y se dejó fuera «**La** tabla». Da cero por la razón equivocada. Van seis hoy.
+
+---
+
+### T7.79 — `REF_RE` deja de cortar en el primer paréntesis (2026-09-18)
+
+`precalculo/verifica_referencias.py` y su línea base. No se publica: es herramienta.
+
+**El hueco.** El cap. 7 escribe «cap. 3, módulos 2 y 4 (la razón linealizada y el término que se
+desprecia), 9 (dominios) y 12 (la mediana por Woodruff)», y la expresión cortaba en el primer
+paréntesis: **el 9 y el 12 eran invisibles**, y así se publicaron dos referencias rotas que ninguna
+comprobación veía (T7.77). La glosa solo se consume cuando **lleva a otro número**, nunca al final,
+para no mover la clave de las referencias ya revisadas. Medido: 412 coincidencias antes y después,
+y **una sola difiere**.
+
+**Dos agujeros más, encontrados midiendo y no buscándolos.**
+
+1. **El guarda iba detrás de los dígitos.** Con `(?P<modsS>\d+)(?!\s\d{3})`, «módulo 16 380»
+   retrocede: `\d+` prueba «16», el guarda ve « 380» y falla, reduce a «1», lo siguiente es «6» —no
+   un espacio—, el guarda pasa, y sale una referencia al **módulo 1**. Como el módulo 1 existe en
+   todos los capítulos, se habría resuelto como correcta y la base la habría bendecido. 0 casos hoy;
+   latente, no vivo. Anclado al inicio, `(?!\d+\s\d{3})\d+`, no hay marcha atrás.
+2. **La glosa no cruzaba paréntesis anidados**, y el material escribe `calibrate()`. «módulos 6 (la
+   regresión con calibrate()), 9 (dominios) y 11 (el GREG)» daba `[6]`. Hoy no muerde porque esa
+   glosa está al final de su lista; bastaba con mover la frase. Admite un nivel, y las dos versiones
+   dan 412 coincidencias y 433 números idénticos.
+
+**`GLOSA` vive en un solo sitio.** La dejé repetida en dos —la expresión y el `re.sub()` que limpia
+antes de contar— y la otra sesión escribió su parche creyendo que ya estaba extraída. Extraída: si
+las dos mitades dejaran de decir lo mismo, la expresión atravesaría una glosa cuyos números luego se
+contarían como módulos. Que eso importa lo prueba `módulo 2 ($7\,124$)`, una glosa con una cifra
+dentro: sin limpiar, de ahí salen los módulos 7 y 124, **y los dos existen**.
+
+**Lo que sigue ignorándose a propósito.** La rama singular **no** admite glosa: «el raking en el 7
+(módulo 6)» del cap. 8 tiene un 7 que es un capítulo, y una regla de «número seguido de paréntesis»
+se lo comería. Medido que no pierde nada: 0 listas en singular, por dos sondas distintas.
+
+**Instrumentos que mintieron, y son los dos peores del día.** Para comprobar si `GLOSA_RE` existía
+hice `grep -n "\[^()\]"` y dio **cero** — mal escapado, el patrón estaba en dos líneas; con `grep -F`
+aparecen. Y antes, el barrido de referencias de T7.78 era sensible a mayúsculas y se dejó «**La**
+tabla». En los dos, **el resultado equivocado era el resultado esperado**, que es lo que hace que
+nadie mire dos veces.
+
+**Revisión cruzada.** La otra sesión verificó los cinco puntos leyendo el fichero y no mi lista, y
+midió la duda del singular con una sonda distinta a la mía: 0 la mía, 2 la suya, misma conclusión —
+la suya hacía la glosa opcional y pilla además «módulo 4, 7 106 715». Dos instrumentos distintos
+coincidiendo vale más que uno diciendo 0.
+
+**Estado.** 413 resueltas, 0 nuevas, 0 cambiadas, salida 0. Base en 425 claves: cuatro del cap. 7
+revisadas a mano y **dos huérfanas borradas**, que `--anota` no quita porque solo añade.
