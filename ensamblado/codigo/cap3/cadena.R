@@ -355,11 +355,21 @@ cat("\n###BLOQUE-S4###\n")
 # y 25 verificadas en campo (y). La media por foto de las 100 es 11.3.
 deadtrees <- read.csv("CSV data sets for SDA 3e/deadtrees.csv")
 N_dt <- 100; n_dt <- nrow(deadtrees); xbarU <- 11.3
-dif <- deadtrees$field - deadtrees$photo
-reg <- lm(field ~ photo, data = deadtrees)
+# Nombres propios: `reg` y `dif` ya son objetos de los bloques R8 y R9, y quien
+# vuelva a ellos despues de mirar esta solucion se encontraria con otra cosa.
+dif_dt <- deadtrees$field - deadtrees$photo
+reg_dt <- lm(field ~ photo, data = deadtrees)
+# El error estandar de la regresion, con el mismo convenio que el modulo 6: los
+# residuos de una recta AJUSTADA llevan divisor n-2, no n-1.
+s2_dt <- sum(residuals(reg_dt)^2) / (n_dt - 2)
 round(c(media_muestral_y = mean(deadtrees$field),
-        por_diferencia = xbarU + mean(dif),
-        ee_diferencia = sqrt((1 - n_dt / N_dt) * var(dif) / n_dt),
-        por_regresion = as.numeric(coef(reg)[1] + coef(reg)[2] * xbarU)), 4)
+        por_diferencia = xbarU + mean(dif_dt),
+        ee_diferencia = sqrt((1 - n_dt / N_dt) * var(dif_dt) / n_dt),
+        por_regresion = as.numeric(coef(reg_dt)[1] + coef(reg_dt)[2] * xbarU),
+        ee_regresion = sqrt((1 - n_dt / N_dt) * s2_dt / n_dt),
+        pendiente = as.numeric(coef(reg_dt)[2]),
+        correlacion = cor(deadtrees$photo, deadtrees$field)), 4)
 #> media_muestral_y   por_diferencia    ee_diferencia    por_regresion
 #>          11.5600          12.2600           0.4568          11.9893
+#>     ee_regresion        pendiente      correlacion
+#>           0.4168           0.6133           0.6242

@@ -60,7 +60,7 @@
             </tr>
             <tr>
               <td><strong>Estimador de la varianza</strong></td>
-              <td>$\hat V(\hat B) = \dfrac{1-f}{n\,\bar x_U^{2}}\left(s_y^{2} + \hat B^{2}s_x^{2} - 2\hat B\,s_{xy}\right)$</td>
+              <td>$\hat V(\hat B) = \dfrac{1-f}{n\,\bar x^{2}}\left(s_y^{2} + \hat B^{2}s_x^{2} - 2\hat B\,s_{xy}\right)$</td>
               <td>$\bar x_U^{2}\,\hat V(\hat B)$</td>
               <td>$N^{2}\,\hat V(\hat{\bar y}_r)$</td>
             </tr>
@@ -80,9 +80,20 @@
         </table>
       </div>
 
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>$\bar x_U$ arriba y $\bar x$ abajo: no es una errata.</strong> La
+          varianza teórica divide por la media poblacional $\bar x_U$, que es lo único que hay antes de tener
+          muestra. Al <em>estimarla</em> caben las dos: el libro deja $\bar x_U$, y este material conserva
+          $\bar x$ —es decir, el factor $t_x/\hat t_{x,\pi}$ que el paso 3 de la derivación del módulo 2
+          sustituyó por 1—, que es lo que hace <code>svyratio</code>. La segunda forma multiplica el error
+          estándar por ese factor, que en <code>agsrs</code> vale <strong>1,0366</strong>; con la primera
+          saldría algo menor. <strong>Las cifras de todo el capítulo son las de la segunda.</strong></p>
+      </div>
+
       <p><strong>Expresiones alternativas para la varianza de la razón.</strong> Las dos primeras son la de arriba
         desarrollada; las dos segundas, la misma factorizada como una suma de residuos $y_k - Bx_k$, que es la
-        forma en que el módulo 4 la presenta:</p>
+        forma en que el módulo 2 la presenta. Las dos de abajo están en la forma del libro: para llegar a las
+        cifras del capítulo hay que multiplicar la estimada por $(t_x/\hat t_{x,\pi})^{2}$:</p>
 
       <div class="formula">
         $$V(\hat{\bar y}_r) = \frac{1-f}{n}\cdot\frac{1}{N-1}\sum_{k \in U}\left(y_k^{2} + B^{2}x_k^{2} - 2B\,x_k y_k\right)
@@ -146,7 +157,8 @@
         <p><strong>Si lo comparas con el libro, dos cambios de letra.</strong> Portela llama $R$ a la razón
           poblacional, que aquí es $B$; y escribe $\hat{\bar y}$ para la media <em>muestral</em>, que aquí es
           $\bar y$ a secas. Su $\bar x$ es la media poblacional del auxiliar, que aquí lleva subíndice:
-          $\bar x_U$. El glosario del módulo 2 tiene el cruce completo, y con Gutiérrez además.</p>
+          $\bar x_U$. El glosario del módulo 1 cruza esta notación con la de Lohr y la de Gutiérrez; el cruce
+          con Portela es el de este recuadro.</p>
         <p style="margin-bottom:0;">Un aviso de citación: el capítulo 7 del libro <strong>repite números de
           teorema</strong> —hay dos «Teorema 7.7» y dos «Corolario 7.7»—, así que conviene citarlo por sección y
           página, nunca por número.</p>

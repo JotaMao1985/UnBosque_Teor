@@ -183,24 +183,32 @@
           <div class="ejercicio-panel pista" id="cap3-e4-pista" hidden>
             <p style="margin:0;">Empieza por comprobar si las 25 parcelas visitadas tienen una media fotográfica igual
               a la de las 100. Si no la tienen, ya sabes por qué la media de campo sola se queda corta, y en qué
-              dirección. Para elegir entre diferencia y regresión, mira si la pendiente ajustada está cerca de 1.</p>
+              dirección. Para elegir entre diferencia y regresión, el módulo 7 dice con qué hay que comparar la
+              pendiente ajustada: no con la correlación, y no con lo que midan las dos variables.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap3-e4-sol" hidden>
-            <p><strong>Por diferencia, 12,26 árboles por parcela con EE 0,457; por regresión, 11,99. La media de
-              campo sola daría 11,56, y se queda corta porque las 25 parcelas visitadas resultaron ser algo más
-              vacías que la media en la fotografía.</strong></p>
+            <p><strong>Por diferencia, 12,26 árboles por parcela con EE 0,457; por regresión, 11,99 con EE 0,417.
+              Gana la regresión. La media de campo sola daría 11,56, y se queda corta porque las 25 parcelas
+              visitadas resultaron ser algo más vacías que la media en la fotografía.</strong></p>
             <pre><code class="language-r">⟦S4⟧</code></pre>
             <p>La media fotográfica de las 25 visitadas es 10,6 frente a los 11,3 de las 100: la muestra cayó 0,7
-              árboles por debajo. Como el conteo de campo y el fotográfico están fuertemente relacionados, ese defecto
-              se arrastra a la media de campo, y el estimador de diferencia lo corrige sumando la discrepancia
-              observada: $11{,}3 + \bar{d}$.</p>
-            <p style="margin-bottom:0;">Entre los dos estimadores hay poco que elegir aquí, y el de <strong>diferencia
-              está especialmente justificado</strong>: las dos variables cuentan lo mismo —árboles muertos en la misma
-              parcela— y la fotografía se equivoca por una cantidad más o menos constante, no por un factor. Cuando
-              eso pasa, fijar la pendiente en 1 en vez de estimarla ahorra un parámetro y quita el sesgo: el
-              estimador de diferencia es <em>exactamente</em> insesgado, mientras que el de regresión no lo es. Este
-              es el diseño clásico de <em>doble muestreo</em>: una medición barata y sesgada en toda la población, y
-              una cara y correcta en una submuestra.</p>
+              árboles por debajo. Ese defecto se arrastra a la media de campo, y los dos estimadores con auxiliar lo
+              corrigen; el de diferencia, sumando la discrepancia observada tal cual: $11{,}3 + \bar{d}$.</p>
+            <p><strong>Y aquí es donde este ejercicio se gana su sitio.</strong> La tentación es decir que la
+              diferencia está especialmente justificada porque las dos variables cuentan lo mismo —árboles muertos en
+              la misma parcela—. Es exactamente el argumento que el módulo 7 desarma: esa condición la cumplen también
+              las cuatro parejas de <code>agpop</code>, y en dos de ellas la diferencia pierde. Lo que decide es
+              <strong>con cuál de los dos valores, $B$ o 1, se parece más la pendiente</strong>, y la pendiente aquí
+              vale <strong>0,6133</strong>. No está cerca de 1: fijarla en 1 cuesta precisión, y por eso el error
+              estándar de la diferencia, 0,457, es un <strong>9,6 % mayor</strong> que el de la regresión, 0,417.</p>
+            <p style="margin-bottom:0;">Que el estimador de diferencia sea <em>exactamente</em> insesgado no cambia la
+              decisión: el módulo 4 enseña a elegir por error cuadrático medio, y el sesgo de la regresión es
+              despreciable frente a esta diferencia de varianza. Cuidado también con la correlación: vale
+              <strong>0,6242</strong>, muy lejos de los 0,996 a los que acostumbra este capítulo, así que <em>ninguno</em>
+              de los dos estimadores va a hacer aquí el milagro que hacía en <code>agsrs</code>. Lo que sí es este
+              ejercicio es el diseño clásico de <em>doble muestreo</em>: una medición barata y sesgada en toda la
+              población, y una cara y correcta en una submuestra. Lohr lo resuelve por regresión, y con estos números
+              se ve por qué.</p>
           </div>
         </div>
       </div>

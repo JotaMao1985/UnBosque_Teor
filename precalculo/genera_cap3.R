@@ -599,7 +599,7 @@ mediana_manual <- cuantil_F(0.5)
 #   qrule = "math" (el de por defecto en survey 4.5) -> 196 733
 #   qrule = "hf4" y la definición inf{t : F̂(t) >= p} -> 196 701
 # Son 32 acres sobre 197 000: un 0,016 %. El material publica la definición
-# inf{...}, que es la que se deriva en el módulo 11, y usa `hf4` para que las
+# inf{...}, que es la que se deriva en el módulo 12, y usa `hf4` para que las
 # dos vías coincidan de verdad en vez de aparentarlo. El capítulo explica el
 # desacuerdo en una caja, porque es exactamente el tipo de detalle que
 # desconcierta a quien compara su código con el de otro.
@@ -612,9 +612,11 @@ cat(sprintf("mediana: a mano %.0f, survey(hf4) %.0f, survey(math) %.0f, real %.0
 igual(mediana_manual, mediana_sv, 1e-10, "mediana (a mano ↔ survey con qrule = hf4)")
 ic_med <- as.numeric(confint(sv_med))
 
-# La curva F_hat, adelgazada para el gráfico (una de cada tres unidades basta).
-paso <- 3
-cdf <- list(y = y_ord[seq(1, n, by = paso)], F = F_hat[seq(1, n, by = paso)])
+# La curva F_hat, entera. Antes iba adelgazada una de cada tres unidades para
+# el gráfico; 300 pares de números no le pesan a Chart.js, y el adelgazamiento
+# costaba caro: el simulador leía los cuantiles de esta misma curva y en
+# p = 0,5 se saltaba la unidad 150 (ver el hallazgo de abajo).
+cdf <- list(y = y_ord, F = F_hat)
 # La verdadera, para poder compararlas
 yp <- sort(agpop$acres92)
 idx <- round(seq(1, N, length.out = 200))
@@ -626,6 +628,30 @@ tabla_cuantiles <- data.frame(
   estimado = sapply(cuantiles, cuantil_F),
   real = as.numeric(quantile(agpop$acres92, cuantiles, type = 1)))
 print(tabla_cuantiles, digits = 7)
+
+# HALLAZGO DE LA REVISIÓN (2026-09-18). El deslizador del simulador recorre
+# p = 0,05 … 0,95 de cinco en cinco, y calculaba cada cuantil recorriendo la
+# curva ADELGAZADA de arriba. Al quitar dos de cada tres unidades, p = 0,5 se
+# salta la unidad 150 y devuelve la 151: 196 733, que es exactamente el
+# convenio `math` que el módulo 12 declara que este material NO usa —y lo
+# imprimía dos renglones encima de «mediana estimada: 196 701»—. Los nueve
+# cuantiles del deslizador salen ahora de la curva COMPLETA, tabulados aquí
+# con la misma definición inf{...} que el resto del módulo. La curva sigue
+# adelgazada, pero solo para dibujarla.
+p_slider <- seq(0.05, 0.95, by = 0.05)
+cuantiles_slider <- data.frame(
+  p = p_slider,
+  estimado = sapply(p_slider, cuantil_F),
+  real = as.numeric(quantile(agpop$acres92, p_slider, type = 1)))
+# `match()` compara por igualdad exacta y seq() no da 0,10 exacto: hay que
+# emparejar por proximidad o la comprobación falla sin que nada esté mal.
+idx_slider <- sapply(cuantiles, function(p) which.min(abs(p_slider - p)))
+stopifnot(all(abs(p_slider[idx_slider] - cuantiles) < 1e-9),
+          cuantiles_slider$estimado[which.min(abs(p_slider - 0.5))] == mediana_manual,
+          all(cuantiles_slider$estimado[idx_slider] == tabla_cuantiles$estimado),
+          all(cuantiles_slider$real[idx_slider] == tabla_cuantiles$real))
+cat(sprintf("cuantiles del deslizador: 19 valores, p = 0,05 a 0,95; máximo estimado %.0f\n",
+            max(cuantiles_slider$estimado)))
 
 # ===========================================================================
 # 11 · Los otros conjuntos de datos del capítulo
@@ -694,7 +720,7 @@ datos <- list(
   mediana = list(estimada = mediana_manual, real = mediana_real,
                  surveyMath = mediana_sv_math,
                  ic = ic_med, cdf = cdf, cdfReal = cdf_real,
-                 cuantiles = tabla_cuantiles),
+                 cuantiles = tabla_cuantiles, cuantilesSlider = cuantiles_slider),
   cherry = list(n = nrow(cherry), x = cherry$diameter, y = cherry$volume,
                 B = ch_B, b0 = unname(coef(ch_lm)[1]), b1 = unname(coef(ch_lm)[2]),
                 r2 = summary(ch_lm)$r.squared, correlacion = cor(cherry$diameter, cherry$volume)),

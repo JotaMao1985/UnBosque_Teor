@@ -69,6 +69,7 @@
     "0,0009": "0,03^2, el error admisible al cuadrado en n0 = 1,96^2 x 0,25/0,0009 = 1 067"
   },
   "capitulo-3-razon-y-regresion.html": {
+    "9,6": "0,456837 / 0,416758 - 1 = 9,62 %: cuanto mayor es el EE de la diferencia que el de la regresion en deadtrees; las dos cifras salen del bloque S4",
     "98,66": "razón muestral B = 0,9865652, expresada en porcentaje",
     "2,86": "(943 951 718 - 916 927 110)/943 951 718 = 2,8629 %",
     "5,54": "error estándar de la razón, 5 540 376, expresado en millones",

@@ -4068,7 +4068,7 @@ c(ee_svyratio = as.numeric(SE(r)),
           para los coeficientes de una regresión, para el índice de Gini. <code>survey</code> lo hace por dentro
           en <code>svymean</code>, <code>svyratio</code>, <code>svyglm</code>: cuando ves «linearization» en su
           documentación, es esto. La receta se atasca en los estadísticos no suaves, como la mediana, que no es
-          derivable. El capítulo 3 (módulo 11) ya dio el rodeo —linealizar $\hat F$, que sí es suave, e invertir
+          derivable. El capítulo 3 (módulo 12) ya dio el rodeo —linealizar $\hat F$, que sí es suave, e invertir
           su intervalo—, y el módulo 5 lo contrasta con la replicación.</p>
       </div>
 
@@ -4235,7 +4235,7 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
 
       <p>¿Y la mediana, que no es derivable? Aquí hay que ir con cuidado, porque es justo donde el jackknife
         falla. <code>survey</code> no la recalcula en cada réplica salvo que se le pida: por defecto usa el método
-        de <strong>Woodruff</strong> —el del capítulo 3, módulo 11: estimar $\hat F$, ponerle un intervalo e
+        de <strong>Woodruff</strong> —el del capítulo 3, módulo 12: estimar $\hat F$, ponerle un intervalo e
         invertirlo—, y las réplicas solo estiman la varianza de esa proporción. El bloque hace las dos cosas:</p>
 
       <div class="code-tabs">
@@ -4341,7 +4341,7 @@ table(jk_rep$replicates)
           las casillas. Se cuadran las filas, luego las columnas, y se repite hasta converger. Es lo que se usa
           casi siempre, porque los censos publican márgenes, no tablas cruzadas completas.</p>
         <p style="margin-bottom:0;"><strong>Calibración general (GREG):</strong> ajustar a totales de variables
-          continuas, no solo categóricas. El capítulo 3 ya montó el estimador de regresión general (módulo 10) y
+          continuas, no solo categóricas. El capítulo 3 ya montó el estimador de regresión general (módulo 11) y
           obtuvo la regresión con <code>calibrate()</code> (módulo 6); calibrar es su cara operativa — mismo
           estimador, otra puerta de entrada.</p>
       </div>
