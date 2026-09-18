@@ -2,6 +2,7 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
 # El estimador estratificado a mano, sin ninguna funcion de encuestas:
 # cuatro medias, cuatro pesos W_h = N_h/N, y una suma ponderada.
 pd.set_option("display.float_format", lambda x: f"{x:.4f}")

@@ -5149,6 +5149,12 @@ los cuatro originales y donde van los nuevos.
 respaldo**; `--check` sin diferencias. En el navegador: 8 ejercicios con sus 8 pistas y 8 soluciones,
 0 `.katex-error`, consola limpia. M13 pasa de 35 a **50 min**.
 
+**El mismo defecto en Python, avisado por la sesión del cap. 3 y arreglado aquí.** Los bloques de
+Python del capítulo morían en la primera línea con `NameError: name 'pd' is not defined`, por la
+razón idéntica: `import numpy as np, pandas as pd` vive en el preámbulo de `cadena.py`. Una línea al
+principio del P1; el `sklearn` del P4 ya se importaba dentro de su propio bloque. **Las dos cadenas
+publicadas del capítulo corren ahora con código de salida 0.**
+
 **Lo que enseña.** El capítulo llevaba meses publicando código que ningún lector podía ejecutar, y
 **ninguna de las comprobaciones del proyecto lo habría encontrado nunca**: la cadena se ejecuta
 entera, con su preámbulo, así que siempre funcionó; el verificador compara cifras anunciadas contra

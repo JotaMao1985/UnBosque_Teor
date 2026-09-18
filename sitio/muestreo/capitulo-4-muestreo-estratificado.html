@@ -3817,7 +3817,8 @@ round(c(total = N * ybar_str, ee_total = N * sqrt(V_str)), 0)
 #&gt; 909736035  50417248</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># El estimador estratificado a mano, sin ninguna funcion de encuestas:
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+# El estimador estratificado a mano, sin ninguna funcion de encuestas:
 # cuatro medias, cuatro pesos W_h = N_h/N, y una suma ponderada.
 pd.set_option("display.float_format", lambda x: f"{x:.4f}")
 agpop   = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
