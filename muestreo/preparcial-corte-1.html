@@ -529,6 +529,22 @@
       }
     }
 
+    /* Fórmulas en bloque ($$…$$). KaTeX no le pone desbordamiento a
+       .katex-display, y .formula solo desborda si el HIJO no cabe —no si se
+       sale el contenido del hijo—, así que en pantallas estrechas la fórmula se
+       salía de su caja sin barra y sin que la página ganara scroll horizontal:
+       nada avisaba de que faltaba texto. Medido a 375 px en el capítulo 3:
+       catorce fórmulas en nueve de los doce módulos; a 1 280 px, ninguna, que
+       es por lo que no se había visto. La barra aparece solo cuando hace falta,
+       y el relleno deja sitio para que no tape los subíndices de abajo. */
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-top: 0.2rem;
+      padding-bottom: 0.4rem;
+    }
+
     .diagram {
       background-color: #f8fafc;
       border: 2px dashed #cbd5e1;
@@ -657,7 +673,11 @@
 
     pre.collapsed {
       max-height: 150px;
-      overflow: hidden;
+      /* El plegado recorta en VERTICAL. `overflow: hidden` recortaba tambien en
+         horizontal, y en un movil eso deja el codigo cortado sin manera de
+         alcanzarlo: hay que dejar el eje x desplazable. */
+      overflow-x: auto;
+      overflow-y: hidden;
       position: relative;
     }
 
@@ -820,12 +840,20 @@
     }
 
     /* Tables - CSS Puro */
+    /* El `overflow: hidden` de aquí estaba para que el border-radius recortara
+       las esquinas de la cabecera, pero con `width: 100%` y celdas largas la
+       tabla RECORTA su propio contenido en pantallas estrechas: las columnas de
+       la derecha se pierden y no hay forma de llegar a ellas. Medido a 375 px
+       en el capítulo 3: la tabla del módulo 3 mide 446 px en una columna de 303.
+       Con `overflow-x: auto` se conservan las esquinas y aparece barra cuando
+       hace falta, que es lo que hace .tabla-ranking-marco desde el principio. */
     table {
       width: 100%;
       margin-bottom: 2rem;
       border-collapse: collapse;
       border-radius: 0.5rem;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
@@ -4301,6 +4329,7 @@ round(c(media = ybar, ee = ee, ic_inf = ic_media[1], ic_sup = ic_media[2],
                 <pre><code class="language-python"># EJERCICIO 1 - El MAS completo, de punta a punta.
 # Cada solucion carga sus propios datos: quien copie este bloque suelto tiene
 # que poder ejecutarlo sin haber corrido nada antes.
+import numpy as np, pandas as pd
 from scipy.stats import norm
 
 hs = pd.read_csv("CSV data sets for SDA 3e/htsrs.csv")
@@ -4746,7 +4775,9 @@ c(N = N, n = n, media_verdadera = media_verdadera, total_verdadero = total_verda
 #&gt;        2000.000         200.000         168.616      337232.000</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Las dos poblaciones del modulo. htpop son 2 000 personas con su estatura: es
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias
+
+# Las dos poblaciones del modulo. htpop son 2 000 personas con su estatura: es
 # la poblacion COMPLETA, asi que el parametro verdadero se conoce y cada error
 # se puede medir en vez de describirse. htsrs es la MAS de n = 200 que Lohr
 # extrae de ella. crimes son 5 000 delitos registrados, con una variable
