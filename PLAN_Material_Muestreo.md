@@ -4970,3 +4970,50 @@ en disco puede ensuciar el árbol compartido, y conviene mirar el diff antes de 
 que aparezca modificado.**
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.49 — La «2.ª edición» del capítulo 4 era la 1.ª: doce citas reetiquetadas (2026-09-17)
+
+**Revisa una afirmación de T7.32, que está publicada.** Esa nota dice haber auditado las once citas
+a Lohr «contra los índices de **las dos** ediciones». La frase no se sostiene: el archivo del
+proyecto `Sampling Lohr.pdf`, que se venía tomando por la 2.ª edición, es la **1.ª** —portada
+Duxbury Press / Brooks-Cole / ITP, 1999; la 2.ª es Brooks/Cole 2010—. Lo detectó la sesión del
+cap. 3 y se comprobó abriendo la portada y el índice.
+
+**Un error propio, de ayer, detectable sin salir del capítulo.** En las referencias del M12 nuevo se
+había escrito «§4.6 (2.ª ed.) / §4.5 (3.ª ed.): razón combinada y separada». El número de 2.ª estaba
+**inventado**, y además el M7 del mismo capítulo citaba «§4.6 (2.ª ed.)» para *el modelo del
+estratificado*: el capítulo se contradecía consigo mismo en dos referencias separadas por dos
+módulos. **La contradicción interna era visible sin consultar ninguna edición**, y aun así pasó la
+revisión de T4.1.
+
+**Lo que sí estaba bien.** Las doce citas se comprobaron una a una contra el índice y el texto de la
+1.ª, y **todas coinciden**: §4.1 qué es, §4.2 teoría, §4.3 pesos, §4.4 asignación, **§4.4.1
+proporcional con su ecuación (4.11)** —`SSB < Σ(1−N_h/N)S_h²`, exactamente la condición que el M7
+cita—, §4.5 definir estratos, §4.6 el modelo, §4.7 postestratificación, §3.3 dominios, §7.5 deff, y
+§6.2 con reemplazo, que además coincide en la 3.ª. O sea que no estaban inventadas: estaban
+**verificadas contra la 1.ª y etiquetadas como 2.ª**.
+
+**La decisión de Javier: reetiquetar.** Las doce pasan a decir «1.ª ed.», que es lo que de verdad
+está comprobado, y la 3.ª queda como estaba. Sin conseguir la 2.ª no se puede afirmar nada sobre
+ella, y afirmarlo era el defecto.
+
+**De propina, tres referencias mejoradas** con lo que se leyó de la 1.ª al verificarlas: la óptima
+con costos es **§4.4.2**; el tamaño total de muestra —el contenido que T7.39 acababa de añadir al
+M5— es **§4.4.4 «Determining Sample Sizes»**, que la 1.ª ya traía; la precisión fijada por estrato
+es **§4.4.3 con el Ej. 4.9** (el mismo Servicio Postal), y el caribú es **Ej. 4.8 con la Tabla 4.4**.
+El M12 queda citando solo la 3.ª, y diciendo por qué: en la 1.ª el capítulo de razón y regresión no
+tiene sección dedicada a la razón en el estratificado.
+
+**Verificado.** Byte a byte; 437 de 437 cifras de bloques y 0 de prosa sin respaldo; ninguna mención
+a «2.ª ed.» queda en el capítulo.
+
+**Lo que enseña.** Dos cosas distintas. La primera, sobre las fuentes: **una auditoría de citas
+hereda la fiabilidad del ejemplar que se abre**, y nadie había comprobado qué edición era el PDF
+porque el nombre del archivo no lo dice. La segunda, sobre la propia revisión: la contradicción del
+§4.6 era interna, no requería ninguna fuente, y sobrevivió a una tarea entera. **Antes de cotejar
+con el libro conviene cotejar el capítulo consigo mismo**, que es más barato y encuentra otra clase
+de error.
+
+**Pendiente:** el visto bueno de Javier para publicar. Afecta a material ya publicado (fase 1).
