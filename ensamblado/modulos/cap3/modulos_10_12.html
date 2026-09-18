@@ -150,7 +150,7 @@
           Si la muestra subestimó $t_x$, probablemente también subestimó $t_y$, y $\beta$ dice en qué proporción.</p>
       </div>
 
-      <p>El término $t_x - \hat{t}_{x,\pi}$ es medible: aquí vale 34 050 852, es decir, la muestra estimó el total de
+      <p>El término $t_x - \hat{t}_{x,\pi}$ se puede calcular: aquí vale 34 050 852, es decir, la muestra estimó el total de
         1987 con un 3,53 % de defecto. Lo único que falta es cuánto de eso trasladar a $y$, y esa es toda la elección
         que ofrece el GREG.</p>
 
@@ -170,11 +170,16 @@
       <div class="note">
         <p><strong>La comprobación que cierra el módulo.</strong> Con $v_k = x_k$, la pendiente sale
           <strong>0,98656524</strong> y el total <strong>950 520 496</strong>: exactamente $\hat{B}$ y exactamente
-          $\hat{t}_r$, hasta la última cifra. No es un parecido, es una identidad algebraica, y la derivación
-          plegable del módulo 10 la demuestra. Una nota de detalle: el cálculo con pesos $1/x_k$ deja fuera una
-          unidad, el condado de Hudson (Nueva Jersey), que tiene $x = 0$ e $y = 0$; como no aporta a ninguna de las
-          dos sumas, la identidad sigue siendo exacta. Comprobarlo cuesta una línea y es lo que separa una
-          afirmación de una suposición.</p>
+          $\hat{t}_r$, hasta la última cifra. No es un parecido, es una identidad algebraica. La derivación
+          plegable del módulo 10 prueba la primera mitad —que con $v_k = x_k$ sale $\hat\beta = \hat{B}$—; la
+          segunda es una línea: si $\hat\beta = \hat{B}$, entonces $\hat{t}_{y,\pi} = \hat{B}\,\hat{t}_{x,\pi}$,
+          y al sustituir en la corrección los dos términos en $\hat{t}_{x,\pi}$ se cancelan y queda
+          $\hat{B}\,t_x$, que es $\hat{t}_r$.</p>
+        <p style="margin-bottom:0;">Una nota de detalle: el cálculo con pesos $1/x_k$ deja fuera una unidad, el
+          condado de Hudson (Nueva Jersey), que tiene $x = 0$ e $y = 0$; como no aporta a ninguna de las dos
+          sumas, la identidad sigue siendo exacta. Y una advertencia sobre la tercera fila del bloque:
+          $v_k = 1$ <strong>no es ninguno de los cuatro estimadores</strong> del capítulo. Está para enseñar que
+          mover la varianza del modelo mueve $\beta$ —de 0,986565 a 0,991335— sin salirse de la misma recta.</p>
       </div>
 
       <div class="simulador" data-simulador="greg">
@@ -299,7 +304,8 @@
         <p><strong>Una trampa que cuesta media tarde.</strong> $\hat{F}$ vale <em>exactamente</em> 0,5 en la unidad
           150 de 300, y ahí la mediana muestral <strong>no está definida de forma única</strong>: la unidad 150 vale
           196 701 y la 151 vale 196 733, y las dos son legítimas según el convenio. <code>svyquantile</code> ofrece
-          nueve en su argumento <code>qrule</code>; el de por defecto (<code>"math"</code>) da 196 733 y
+          doce en su argumento <code>qrule</code> —nueve de ellos los de Hyndman y Fan—; el de por defecto
+          (<code>"math"</code>) da 196 733 y
           <code>"hf4"</code> da 196 701, que es el de la definición $\inf\{\cdot\}$ de arriba. Son 32 acres sobre
           197 000 —un 0,016 %—, pero conviene saberlo antes de pasar la tarde buscando un error que no existe. Este
           material usa <code>hf4</code> para que el cálculo a mano y <code>survey</code> coincidan de verdad y no
@@ -328,7 +334,8 @@
           ponderadas, así que su varianza sale de la misma linealización del módulo 4; y de ahí, invirtiendo, sale el
           intervalo de confianza de la mediana. Ese es el motivo de que este módulo esté en <em>este</em> capítulo y
           no en otro: la razón, los dominios y los cuantiles se estiman todos con la misma herramienta. En el
-          capítulo 7 se le pondrá nombre —linealización de Taylor— y se le añadirán las alternativas de remuestreo.</p>
+          capítulo 7 la retoma —el nombre, linealización de Taylor, ya lo lleva el simulador del módulo 4— y le
+          añade las alternativas de remuestreo.</p>
       </div>
 
       <div class="references">
@@ -340,7 +347,8 @@
             intervalos de confianza.</li>
           <li>Lumley, T. — la documentación de
             <a href="https://cran.r-project.org/package=survey" target="_blank" rel="noopener"><code>svyquantile</code></a>,
-            con la descripción de los nueve convenios de <code>qrule</code>.</li>
+            con la descripción de los doce convenios de <code>qrule</code>, nueve de ellos los de
+            Hyndman y Fan.</li>
         </ul>
       </div>
     </div>

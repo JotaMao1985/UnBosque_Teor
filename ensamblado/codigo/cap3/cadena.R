@@ -147,39 +147,75 @@ reg <- data.frame(
   sx   = c(5.4, 8.8, 9.1),        sy   = c(85.87, 94.7, 162.1),
   sxy  = c(208.66, 100, 1224.3))
 reg$xbarU <- c(9120, 11200, 15280) / reg$Nh   # el total auxiliar SI se conoce
-reg$R <- reg$ybar / reg$xbar                  # razon muestral del estrato
-reg$b <- reg$sxy / reg$sx^2                   # pendiente de minimos cuadrados
-reg$r <- reg$sxy / (reg$sx * reg$sy)          # correlacion del estrato
+# La razon del estrato se llama B, como en todo el material: Portela la llama R,
+# y aqui `R` ya significa otra cosa -el coeficiente de determinacion, que se
+# imprime mas abajo como R2-.
+reg$Bhat  <- reg$ybar / reg$xbar              # razon muestral del estrato
+reg$b1hat <- reg$sxy / reg$sx^2               # pendiente de minimos cuadrados
+reg$r     <- reg$sxy / (reg$sx * reg$sy)      # correlacion del estrato
 print(cbind(region = reg$region,
-            round(reg[, c("Nh", "nh", "xbarU", "R", "b", "r")], 4)),
+            round(reg[, c("Nh", "nh", "xbarU", "Bhat", "b1hat", "r")], 4)),
       row.names = FALSE)
-#>  region  Nh nh xbarU       R       b    r
+#>  region  Nh nh xbarU    Bhat   b1hat    r
 #>       I 600 20  15.2 20.8051  7.1557 0.45
 #>      II 400 13  28.0  4.4753  1.2913 0.12
 #>     III 800 27  19.1 14.8271 14.7844 0.83
 
+# La regla del modulo 3, estrato a estrato: la razon le gana a la EXPANSION
+# -y a nadie mas- cuando r > (1/2) CV(x)/CV(y). Es el criterio con el que se
+# descarta la auxiliar en la region II, asi que conviene evaluarlo y no solo
+# citarlo.
+reg$umbral <- 0.5 * (reg$sx / reg$xbar) / (reg$sy / reg$ybar)
+print(cbind(region = reg$region,
+            round(data.frame(r = reg$r, umbral = reg$umbral), 4),
+            gana_la_razon = reg$r > reg$umbral),
+      row.names = FALSE)
+#>  region    r umbral gana_la_razon
+#>       I 0.45 0.6542         FALSE
+#>      II 0.12 0.2079         FALSE
+#>     III 0.83 0.4162          TRUE
+
 # Los TRES estimadores de la media en cada estrato, cada uno con su varianza
 # estimada. Son las formulas del capitulo, aplicadas por separado.
 fpc <- (reg$Nh - reg$nh) / (reg$Nh * reg$nh)
+# La varianza residual de una recta AJUSTADA lleva divisor n-2, no n-1: se han
+# estimado dos parametros. Es el convenio que el modulo 6 usa con agsrs, y el
+# que necesitan los contrastes de mas abajo; con n_h de 13 y 20 la diferencia
+# no es cosmetica.
+s2e <- (1 - reg$r^2) * reg$sy^2 * (reg$nh - 1) / (reg$nh - 2)
 est <- data.frame(
   region = reg$region,
-  y_mas  = reg$ybar,                                   # expansion: ignora x
+  y_mas  = reg$ybar,                                      # expansion: ignora x
   V_mas  = fpc * reg$sy^2,
-  y_R    = reg$R * reg$xbarU,                          # razon
-  V_R    = fpc * (reg$sy^2 + reg$R^2 * reg$sx^2 - 2 * reg$R * reg$sxy),
-  y_reg  = reg$ybar + reg$b * (reg$xbarU - reg$xbar),  # regresion
-  V_reg  = fpc * (1 - reg$r^2) * reg$sy^2)
+  y_R    = reg$Bhat * reg$xbarU,                          # razon
+  V_R    = fpc * (reg$sy^2 + reg$Bhat^2 * reg$sx^2 - 2 * reg$Bhat * reg$sxy),
+  y_reg  = reg$ybar + reg$b1hat * (reg$xbarU - reg$xbar), # regresion
+  V_reg  = fpc * s2e)
 print(round(est[, -1], 2), row.names = FALSE)
 #>   y_mas  V_mas    y_R    V_R  y_reg  V_reg
-#>  368.25 356.39 316.24 546.81 350.36 284.23
-#>  145.00 667.43 125.31 716.25 139.32 657.82
-#>  306.92 940.35 283.20 292.59 283.26 292.59
+#>  368.25 356.39 316.24 546.81 350.36 300.02
+#>  145.00 667.43 125.31 716.25 139.32 717.62
+#>  306.92 940.35 283.20 292.59 283.26 304.29
+
+# En la region III las dos varianzas estimadas NO salen iguales, y conviene
+# saber por que antes de creer que el teorema del modulo 7 falla: el hueco
+# tiene dos partes. Sobre el mismo divisor queda el cuadrado perfecto -la
+# condicion de igualdad, casi cumplida-; el resto es el cambio de divisor.
+iii <- 3
+round(c(V_R = est$V_R[iii], V_reg = est$V_reg[iii],
+        V_reg_mismo_divisor = fpc[iii] * (1 - reg$r[iii]^2) * reg$sy[iii]^2,
+        cuadrado_perfecto = fpc[iii] * reg$sx[iii]^2 * (reg$Bhat[iii] - reg$b1hat[iii])^2,
+        hueco_por_divisor = est$V_reg[iii] - fpc[iii] * (1 - reg$r[iii]^2) * reg$sy[iii]^2,
+        factor_divisor = (reg$nh[iii] - 1) / (reg$nh[iii] - 2)), 4)
+#>                 V_R               V_reg V_reg_mismo_divisor   cuadrado_perfecto
+#>            292.5935            304.2916            292.5881              0.0054
+#>   hueco_por_divisor      factor_divisor
+#>             11.7035              1.0400
 
 # El criterio del modulo 6 -contrastar si la recta pasa por el origen- rehecho
-# desde los estadisticos: b0 = ybar - b*xbar, y su error estandar sale de la
-# varianza residual. No hacen falta los datos, solo sus resumenes.
-s2e  <- (1 - reg$r^2) * reg$sy^2 * (reg$nh - 1) / (reg$nh - 2)
-b0   <- reg$ybar - reg$b * reg$xbar
+# desde los estadisticos: b0 = ybar - b1*xbar, y su error estandar sale de la
+# misma varianza residual. No hacen falta los datos, solo sus resumenes.
+b0   <- reg$ybar - reg$b1hat * reg$xbar
 eeb0 <- sqrt(s2e) * sqrt(1 / reg$nh + reg$xbar^2 / ((reg$nh - 1) * reg$sx^2))
 tpen <- reg$r * sqrt(reg$nh - 2) / sqrt(1 - reg$r^2)
 print(cbind(region = reg$region, round(data.frame(
@@ -204,7 +240,7 @@ print(data.frame(region = reg$region, elegido, media = round(media, 2),
                  total = round(total), ee_total = round(sqrt(v_total), 1)),
       row.names = FALSE)
 #>  region   elegido  media  total ee_total
-#>       I regresion 350.36 210216  10115.4
+#>       I regresion 350.36 210216  10392.6
 #>      II expansion 145.00  58000  10333.9
 #>     III     razon 283.20 226557  13684.3
 N_pob <- sum(reg$Nh)
@@ -212,7 +248,7 @@ round(c(total = sum(total), ee_total = sqrt(sum(v_total)),
         media = sum(total) / N_pob, V_media = sum(v_total) / N_pob^2,
         ee_media = sqrt(sum(v_total)) / N_pob), 2)
 #>     total  ee_total     media   V_media  ee_media
-#> 494773.83  19909.06    274.87    122.34     11.06
+#> 494773.83  20051.31    274.87    124.09     11.14
 
 cat("\n###BLOQUE-R9###\n")
 # Dominios: subpoblaciones cuyo tamano NO se conoce de antemano. El tamano de
@@ -272,20 +308,29 @@ cat("\n###BLOQUE-R10###\n")
 # Cambiar el modelo de trabajo cambia beta, y con ello el estimador. Los tres
 # del capitulo son tres elecciones de la varianza del modelo, v_k.
 pos <- agsrs$acres87 > 0        # 1/x_k pide x_k positivo (Lohr hace lo mismo)
+total_greg <- function(beta) N * mean(agsrs$acres92) + beta * (t_x - N * mean(agsrs$acres87))
 greg <- function(vk) {
   w <- 1 / vk
   beta <- sum((w * agsrs$acres87 * agsrs$acres92)[pos]) / sum((w * agsrs$acres87^2)[pos])
-  c(beta = beta, total = N * mean(agsrs$acres92) + beta * (t_x - N * mean(agsrs$acres87)))
+  c(beta = beta, total = total_greg(beta))
 }
+# Los CUATRO estimadores del capitulo son cuatro valores de beta, y aqui estan
+# los cuatro: beta = 0 y beta = b1 no salen de tocar v_k, asi que se ponen a
+# mano. La fila v_k = 1 no es ninguno de los cuatro; se deja porque ensena que
+# cambiar la varianza del modelo mueve beta, y por eso va marcada.
+b1_mco <- cov(agsrs$acres87, agsrs$acres92) / var(agsrs$acres87)
 round(rbind(
-  `v_k = x_k  (razon)`      = greg(agsrs$acres87),
-  `v_k = 1    (homocedastico)` = greg(rep(1, n)),
-  `beta = 1   (diferencia)` = c(beta = 1, total = N * mean(agsrs$acres92) +
-                                  1 * (t_x - N * mean(agsrs$acres87)))), 6)
-#>                                beta     total
-#> v_k = x_k  (razon)         0.986565 950520496
-#> v_k = 1    (homocedastico) 0.991335 950682899
-#> beta = 1   (diferencia)    1.000000 950977961
+  `beta = 0   (expansion)`     = c(beta = 0, total = total_greg(0)),
+  `v_k = x_k  (razon)`         = greg(agsrs$acres87),
+  `v_k = 1    (ninguno)`       = greg(rep(1, n)),
+  `beta = 1   (diferencia)`    = c(beta = 1, total = total_greg(1)),
+  `b1 de MCO  (regresion)`     = c(beta = b1_mco, total = total_greg(b1_mco))), 6)
+#>                             beta     total
+#> beta = 0   (expansion)  0.000000 916927110
+#> v_k = x_k  (razon)      0.986565 950520496
+#> v_k = 1    (ninguno)    0.991335 950682899
+#> beta = 1   (diferencia) 1.000000 950977961
+#> b1 de MCO  (regresion)  0.995004 950807843
 cat("\n###BLOQUE-R11###\n")
 # La mediana no es una funcion lineal de los y_k: no hay formula cerrada. Se
 # estima la funcion de distribucion con los pesos y se le pide el cuantil.

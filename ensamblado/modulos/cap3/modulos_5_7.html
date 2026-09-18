@@ -9,13 +9,13 @@
           <span>Módulo 5</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Razones y proporciones
-          <span class="text-gray-400 font-normal text-2xl">/ Ratios of proportions</span></h2>
+          <span class="text-gray-400 font-normal text-2xl">/ Ratios and proportions</span></h2>
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Reconocer las razones que ya se venían usando sin
-              llamarlas así, y no confundir la razón de dos proporciones con la proporción de una razón.</p>
+              llamarlas así, y no confundir la razón de dos medias con la media de los cocientes.</p>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
             y su error estándar. No hace falta ninguna fórmula especial.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <h4 class="text-primary font-bold" style="margin-top:0;">Una razón de proporciones sí es una razón</h4>
+          <h4 class="text-primary font-bold" style="margin-top:0;">Un cociente de dos totales sí es una razón</h4>
           <p class="text-sm" style="margin-bottom:0;">«Superficie sembrada por granja» es
             $t_{\text{acres}} / t_{\text{granjas}}$: los dos totales se estiman y el cociente es una razón con
             denominador aleatorio. Igual «gasto por hogar», «horas por estudiante» o «casos por cada mil habitantes».
@@ -65,7 +65,7 @@
           lo que la vuelve peligrosa.</p>
         <p><strong>Y encima es más difícil de estimar.</strong> El cociente $z_k = y_k/x_k$ tiene la cola pesada:
           un condado con poca superficie en 1987 y mucha en 1992 da un $z$ enorme —en <code>agpop</code> llega a
-          <strong>9,09</strong>—, y eso dispara su variabilidad. Con los mismos 300 condados, el error estándar
+          <strong>9,09</strong>—, y eso dispara su variabilidad. Con una muestra de 300 en cada caso, el error estándar
           relativo de $\hat{B}$ es del <strong>0,76 %</strong> y el de la media de cocientes del
           <strong>1,84 %</strong>: <strong>2,4 veces</strong> peor. Promediar cocientes contesta otra pregunta y,
           además, la contesta con menos precisión.</p>
@@ -89,7 +89,8 @@
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Lohr, <strong>sección 3.1.3</strong> (2.ª ed.) o <strong>4.1.3</strong> (3.ª ed.) — razones con
-            variables indicadoras y estimación de proporciones dentro de dominios.</li>
+            variables indicadoras y estimación de proporciones. Los <em>dominios</em> no están ahí: son la
+            sección 3.3 (2.ª ed.) o 4.3 (3.ª ed.), que es el módulo 9.</li>
           <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.1.1</strong>
             (pp. 208–209) — el ejemplo de la epidemia, que abre su capítulo con esta misma confusión. Ojo: el libro
             trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
@@ -127,9 +128,10 @@
       <p>La respuesta es que no la pide. El ajuste libre da una pendiente de <strong>0,995</strong> y un intercepto
         de <strong>−2 548</strong> acres, pero ese intercepto viene con un error estándar de <strong>2 425</strong>:
         $t = -1{,}05$ y <strong>p = 0,294</strong>. Sobre estos datos el intercepto <strong>no se distingue de
-        cero</strong>, y la recta por el origen es defendible. Por eso el módulo 7 va a encontrar a los tres
+        cero</strong>, y la recta por el origen es defendible. Por eso el módulo 7 va a encontrar los tres
         estimadores con auxiliar empatados en la práctica: no es casualidad de esta muestra, es que aquí no hay
-        intercepto que recuperar.</p>
+        intercepto que recuperar —y, de paso, que la pendiente está pegada a 1, que es lo que hace entrar también
+        a la diferencia en el empate—.</p>
 
       <p>¿Para qué entonces el estimador de regresión? Porque el origen <em>no siempre</em> se puede suponer, y no
         hace falta salir del capítulo para verlo: en <code>cherry</code> —los 31 cerezos del ejercicio 2 del módulo
@@ -171,9 +173,9 @@
             el intercepto de cero, no que el intercepto valga cero. Con $n$ pequeño casi nada se rechaza, y ahí el
             criterio no decide nada: deciden la nube y lo que se sepa del fenómeno, que es el argumento del módulo
             3.</li>
-          <li><strong>La pendiente estimada también se paga.</strong> $b_1 = s_{xy}/s_x^2$ es un estimador
-            <em>sesgado</em> de la pendiente —si se conociera la $S_x^2$ poblacional, $s_{xy}/S_x^2$ sería
-            insesgado—, así que la ventaja teórica de la regresión se cobra en un parámetro más ajustado con la
+          <li><strong>La pendiente estimada también se paga.</strong> $\hat b_1 = s_{xy}/s_x^2$ es un estimador
+            <em>sesgado</em> de la pendiente poblacional $b_1 = S_{xy}/S_x^2$ —si se conociera $S_x^2$,
+            $s_{xy}/S_x^2$ sería insesgado—, así que la ventaja teórica de la regresión se cobra en un parámetro más ajustado con la
             misma muestra. El módulo 7 pone las tres varianzas una al lado de la otra.</li>
         </ul>
       </div>
@@ -292,8 +294,12 @@
 
       <div class="formula">
         <p style="text-align:center; margin-bottom:0.6rem;">
-          $$\hat{t}(b) = N\left[\bar{y} + b\,(\bar{x}_U - \bar{x})\right]$$
-          $$V(b) = \frac{1-f}{n}\left(S_y^2 + b^2S_x^2 - 2b\,S_{xy}\right)$$</p>
+          $$\hat{\bar y}(b) = \bar{y} + b\,(\bar{x}_U - \bar{x}), \qquad \hat{t}(b) = N\,\hat{\bar y}(b)$$
+          $$V(b) \;=\; V\big(\hat{\bar y}(b)\big) \;=\; \frac{1-f}{n}\left(S_y^2 + b^2S_x^2 - 2b\,S_{xy}\right),
+            \qquad V\big(\hat{t}(b)\big) = N^2\,V(b)$$</p>
+        <p style="margin-bottom:0.6rem;"><strong>$V(b)$ es la varianza de la <em>media</em></strong>, no la del
+          total: para el total hay que multiplicar por $N^2$, y las cifras en millones que vienen después ya lo
+          llevan.</p>
         <p style="margin-bottom:0;">$b = 0$ es la <strong>expansión</strong>; $b = B$, la <strong>razón</strong>
           (a primer orden, que es la linealización del módulo 4); $b = 1$, la <strong>diferencia</strong>; y
           $b = b_1 = S_{xy}/S_x^2$, la <strong>regresión</strong>.</p>

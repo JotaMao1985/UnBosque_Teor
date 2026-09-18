@@ -36,15 +36,17 @@
           unidades se observan —$n_1 = 20$, $n_2 = 13$, $n_3 = 27$, repartidos proporcionalmente—. Es lo contrario
           de un dominio del módulo 9, donde el tamaño lo decide el sorteo.</p>
         <p style="margin-bottom:0;">De todo el aparato del estratificado, este módulo necesita
-          <strong>una sola propiedad</strong>: que el muestreo de un estrato sea <strong>independiente</strong> del
-          de los demás. De ahí sale que los totales se sumen y que <em>las varianzas también</em>. El capítulo 4
-          construye el resto —la afijación, la razón separada y la combinada—; aquí basta con sumar.</p>
+          <strong>dos cosas</strong>: que el muestreo de un estrato sea <strong>independiente</strong> del de los
+          demás —de ahí sale que los totales se sumen y que <em>las varianzas también</em>— y que dentro de cada
+          región el sorteo sea aleatorio simple, que es lo que autoriza a usar en ella las fórmulas del capítulo.
+          El capítulo 4 construye el resto —la afijación, la razón separada y la combinada—; aquí basta con
+          sumar.</p>
       </div>
 
       <h3>Lo que se sabe de cada región</h3>
 
       <p>El libro no publica los datos: publica los <strong>estadísticos por región</strong>. Eso no es una
-        limitación del ejemplo, es la situación normal cuando la fuente es un informe. Y alcanza: todo lo que
+        limitación del ejemplo, es la situación normal cuando la fuente es un informe. Y basta: todo lo que
         sigue —estimaciones, varianzas y hasta los contrastes de regresión— se reconstruye a partir de ellos.</p>
 
       <div class="code-tabs">
@@ -58,8 +60,8 @@
 
       <h3>Tres regiones, tres decisiones</h3>
 
-      <p>Con las tres salidas delante, cada región se decide con el criterio que le corresponde, y ninguna de las
-        tres elige lo mismo:</p>
+      <p>Con las cuatro salidas delante, cada región se decide con el criterio que le corresponde, y las tres
+        eligen cosas distintas:</p>
 
       <div class="tabla-ranking-marco">
         <table>
@@ -76,15 +78,16 @@
             </tr>
             <tr>
               <td><strong>II</strong></td>
-              <td>$R^2 = 0{,}0144$ y ninguno de los dos contrastes rechaza. La varianza de la regresión, 657,82,
-                es casi la del m.a.s., 667,43: un 1,4 % de ganancia.</td>
+              <td>$r = 0{,}12$ contra un umbral de <strong>0,2079</strong>: la razón pierde contra la expansión.
+                Y la regresión tampoco paga —717,62 frente a los 667,43 del m.a.s.—, con $R^2 = 0{,}0144$ y
+                ninguno de los dos contrastes rechazando.</td>
               <td>Regla del módulo 3</td>
               <td><strong>expansión</strong></td>
             </tr>
             <tr>
               <td><strong>III</strong></td>
-              <td>La constante es 0,88 con $p = 0{,}9844$: la recta pasa por el origen. Y las dos varianzas
-                coinciden en 292,59.</td>
+              <td>La constante es 0,88 con $p = 0{,}9844$: la recta pasa por el origen. Y la razón no pierde
+                nada frente a la regresión.</td>
               <td>Teorema del módulo 7</td>
               <td><strong>razón</strong></td>
             </tr>
@@ -92,12 +95,23 @@
         </table>
       </div>
 
-      <p>La región III merece una lectura más despacio, porque es el <strong>teorema del módulo 7 cumpliéndose a
-        la vista</strong>. Allí se demostró que $V(\hat{\bar y}_r) \ge V(\hat{\bar y}_{\text{reg}})$ con igualdad
+      <p>La región III merece leerse más despacio, porque es el <strong>teorema del módulo 7 cumpliéndose a la
+        vista</strong>. Allí se demostró que $V(\hat{\bar y}_r) \ge V(\hat{\bar y}_{\text{reg}})$ con igualdad
         si y solo si $B = b_1$, es decir <em>si y solo si la recta pasa por el origen</em>. Aquí la constante es
-        0,88 sobre una media de 306,92 —tres milésimas de la escala—, y las dos varianzas estimadas salen iguales
-        hasta el segundo decimal: <strong>292,59 y 292,59</strong>. No es una coincidencia del redondeo: es la
-        condición de igualdad.</p>
+        0,88 sobre una media de 306,92 —tres milésimas de la escala—, y en efecto $\hat B = 14{,}8271$ y
+        $\hat b_1 = 14{,}7844$ casi coinciden.</p>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Cuidado al leer la tabla: 292,59 contra 304,29 no contradice al
+          teorema.</strong> El teorema compara <em>varianzas verdaderas</em>, y lo que la tabla trae son dos
+          <em>estimaciones</em> que ni siquiera usan el mismo divisor. La de la razón se construye con $s_x^2$,
+          $s_y^2$ y $s_{xy}$, que dividen por $n_h - 1$; la de la regresión divide por $n_h - 2$, porque la recta
+          gastó dos parámetros. El bloque descompone el hueco: puestas sobre el mismo divisor, las dos
+          varianzas distan $\hat V_R - \hat V_{\text{reg}} = \frac{1-f_h}{n_h}\,s_x^2\,(\hat B - \hat b_1)^2
+          = \mathbf{0{,}0054}$ —el cuadrado perfecto del módulo 7, con la condición de igualdad casi cumplida—, y
+          los <strong>11,7035</strong> restantes son el cambio de divisor, un factor <strong>1,0400</strong> que
+          con $n_h = 27$ pesa mucho más que el teorema.</p>
+      </div>
 
       <p>Y entonces se prefiere la <strong>razón</strong>, que es el modelo más simple: una recta por el origen
         tiene un parámetro en vez de dos, y no se paga nada por ello.</p>
@@ -118,8 +132,8 @@
         hereda la varianza sin más.</p>
 
       <p>El resultado es un total de <strong>494 774</strong> toneladas con un error estándar de
-        <strong>19 909</strong> —un 4,0 %—, y una media por plantación de <strong>274,87</strong> con error
-        estándar <strong>11,06</strong>.</p>
+        <strong>20 051</strong> —un 4,1 %—, y una media por plantación de <strong>274,87</strong> con error
+        estándar <strong>11,14</strong>.</p>
 
       <div class="warning">
         <p style="margin-bottom:0;"><strong>Este estimador no es insesgado, y conviene decirlo.</strong> Uno de
@@ -134,8 +148,8 @@
       <div class="note">
         <p><strong>Dónde no coinciden estos números con los del libro, y por qué.</strong> La tabla 7.9 de Portela
           publica 316,16 donde aquí sale 316,24, y un total de 494 670 contra 494 774. La diferencia es del
-          <strong>0,02 %</strong> y tiene una sola causa: el libro <strong>trunca</strong> $\hat R$ y $\hat b$ a
-          dos decimales en su tabla 7.8 —escribe 20,80 donde la división da 20,8051— y sigue calculando con los
+          <strong>0,02 %</strong> y tiene una sola causa: el libro <strong>trunca</strong> a dos decimales, en su
+          tabla 7.8, lo que él llama $\hat R$ y $\hat b$ —aquí $\hat B$ y $\hat b_1$— —escribe 20,80 donde la división da 20,8051— y sigue calculando con los
           valores truncados. Aquí se calcula con los exactos.</p>
         <p style="margin-bottom:0;">Merece la pena porque enseña algo: <strong>redondear a mitad de camino se
           paga al final</strong>. Dos decimales en una razón que después multiplica a 800 plantaciones son cien

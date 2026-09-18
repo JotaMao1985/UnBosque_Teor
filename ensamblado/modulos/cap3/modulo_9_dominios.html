@@ -45,7 +45,17 @@
       </div>
 
       <p>es un cociente con <strong>denominador aleatorio</strong>: es una razón, y su error estándar sale de
-        linealizarla igual que en el módulo 4. El residuo linealizado es $u_k = \delta_k\,(y_k - \hat{\bar{y}}_d)$.</p>
+        linealizarla igual que en el módulo 4. El residuo linealizado es $u_k = \delta_k\,(y_k - \hat{\bar{y}}_d)$,
+        y con él la varianza se escribe como la de cualquier media, bajo m.a.s.:</p>
+
+      <div class="formula">
+        $$\hat V\big(\hat{\bar{y}}_d\big) \;=\; \frac{1-f}{n}\cdot\frac{s_u^2}{(n_d/n)^2},
+          \qquad s_u^2 = \frac{1}{n-1}\sum_{k \in s}\big(u_k - \bar u\big)^2$$
+        <p style="margin-bottom:0;">El denominador $(n_d/n)^2$ es la fracción de la muestra que cayó en el
+          dominio, elevada al cuadrado: es lo que convierte la varianza del residuo, que se calcula sobre las $n$
+          unidades, en la varianza de una media calculada solo sobre $n_d$. El bloque de abajo la aplica tal cual,
+          y <code>svyby</code> devuelve lo mismo.</p>
+      </div>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Estimación en dominios">

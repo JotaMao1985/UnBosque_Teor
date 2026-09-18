@@ -245,19 +245,25 @@ tabla_sesgo$cotaKish <- CVx_pob * sqrt((1 - tabla_sesgo$n / N) / tabla_sesgo$n)
 # mal escrita o la simulación está mal hecha: es una tercera vía de control.
 stopifnot(all(abs(tabla_sesgo$sesgoRelEE) <= tabla_sesgo$cotaKish))
 
-# El n a partir del cual la regla del 0,2 declara el sesgo despreciable en esta
-# población, despejando n de CV(x) * sqrt((1 - n/N) / n) = 0,2.
-n_kish <- ceiling(1 / (0.04 / CVx_pob^2 + 1 / N))
+# El n a partir del cual la regla declara el sesgo despreciable en esta
+# población, despejando n de CV(x) * sqrt((1 - n/N) / n) = c. La regla de Kish
+# da un INTERVALO, 0,1-0,2, y los dos extremos piden muestras muy distintas:
+# decir solo «el umbral se cruza en n = 47» deja fuera que el extremo exigente
+# pide casi el cuádruple.
+n_umbral <- function(c) ceiling(1 / (c^2 / CVx_pob^2 + 1 / N))
+n_kish    <- n_umbral(0.2)
+n_kish_01 <- n_umbral(0.1)
 CVx_muestra <- sd(agsrs$acres87) / xbar        # lo ÚNICO que se tendría en campo
 kish <- list(
   CVxPob      = CVx_pob,
   cotaPob     = CVx_pob     * sqrt((1 - n / N) / n),
   cotaMuestra = CVx_muestra * sqrt((1 - n / N) / n),
   relEE       = abs(tabla_sesgo$sesgoRelEE[tabla_sesgo$n == n]),
-  nMinimo     = n_kish)
-cat(sprintf("Kish: cota poblacional %.4f, estimada con agsrs %.4f, |sesgo|/ee real %.4f; n minimo %d\n",
-            kish$cotaPob, kish$cotaMuestra, kish$relEE, n_kish))
-stopifnot(n_kish > 30, n_kish < 100)
+  nMinimo     = n_kish,
+  nMinimo01   = n_kish_01)
+cat(sprintf("Kish: cota poblacional %.4f, estimada con agsrs %.4f, |sesgo|/ee real %.4f; n minimo %d (0,2) y %d (0,1)\n",
+            kish$cotaPob, kish$cotaMuestra, kish$relEE, n_kish, n_kish_01))
+stopifnot(n_kish > 30, n_kish < 100, n_kish_01 > n_kish)
 
 # ---------------------------------------------------------------------------
 # 6c · EL ORDEN DE LAS VARIANZAS, QUE ES UN TEOREMA
@@ -664,6 +670,22 @@ deadtrees <- lee_lohr("deadtrees")
 # y eso es justo lo que hay que ver.
 ch_B <- mean(cherry$volume) / mean(cherry$diameter)
 ch_lm <- lm(volume ~ diameter, data = cherry)
+
+# El cambio de auxiliar que propone el módulo 3: diámetro^2 en vez de diámetro,
+# porque el volumen de un cilindro va con el cuadrado del radio. Acerca mucho la
+# recta al origen, pero NO cierra el contraste del módulo 6, y el material no
+# debe prometer más de lo que hay: p sigue por debajo de 0,05.
+ch_lm2   <- lm(volume ~ I(diameter^2), data = cherry)
+ch_rango <- diff(range(cherry$volume))
+ch_cuad  <- list(
+  b0        = unname(coef(ch_lm2)[1]),
+  p0        = summary(ch_lm2)$coefficients[1, 4],
+  r2        = summary(ch_lm2)$r.squared,
+  b0RelPct  = 100 * abs(coef(ch_lm2)[[1]]) / ch_rango,
+  b0LinRelPct = 100 * abs(coef(ch_lm)[[1]]) / ch_rango)
+cat(sprintf("cherry con diametro^2: b0 = %.4f (p = %.4f), R2 = %.4f; |b0|/rango %.2f %% frente a %.2f %% con diametro\n",
+            ch_cuad$b0, ch_cuad$p0, ch_cuad$r2, ch_cuad$b0RelPct, ch_cuad$b0LinRelPct))
+stopifnot(ch_cuad$p0 < 0.05, abs(ch_cuad$b0) < abs(coef(ch_lm)[[1]]))
 cat(sprintf("cherry: B̂ = %.4f, recta = %.4f + %.4f·x, R² = %.4f\n",
             ch_B, coef(ch_lm)[1], coef(ch_lm)[2], summary(ch_lm)$r.squared))
 
@@ -723,7 +745,8 @@ datos <- list(
                  cuantiles = tabla_cuantiles, cuantilesSlider = cuantiles_slider),
   cherry = list(n = nrow(cherry), x = cherry$diameter, y = cherry$volume,
                 B = ch_B, b0 = unname(coef(ch_lm)[1]), b1 = unname(coef(ch_lm)[2]),
-                r2 = summary(ch_lm)$r.squared, correlacion = cor(cherry$diameter, cherry$volume)),
+                r2 = summary(ch_lm)$r.squared, correlacion = cor(cherry$diameter, cherry$volume),
+                cuadratico = ch_cuad),
   santacruz = list(n = nrow(santacruz), x = santacruz$seed92, y = santacruz$seed94, B = sc_B),
   deadtrees = list(N = N_dt, n = n_dt, x = deadtrees$photo, y = deadtrees$field,
                    xbarU = xbar_U_dt, mediaDiferencia = ybar_dif_dt, eeDiferencia = se_dif_dt,

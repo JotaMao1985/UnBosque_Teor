@@ -69,8 +69,14 @@
               1 925 300, y la razón se queda a un 0,29 % de él con una varianza <em>68 veces</em> menor.</strong></p>
             <pre><code class="language-r">⟦S1⟧</code></pre>
             <p>La correlación es 0,9933, algo menor que el 0,9958 de las superficies, y la ganancia también es algo
-              menor: la varianza se divide por 68 en vez de por 110. Es la relación que el módulo 3 anticipa: la
-              eficiencia del estimador de razón depende de lo pequeños que sean los residuos, y eso lo gobierna la
+              menor: la varianza se divide por 68 en vez de por 110. <strong>Ojo al comparar con el módulo 3</strong>,
+              que para esta misma pareja da 0,9944 y «9,4 veces mejor»: aquellas cifras son las
+              <em>verdaderas</em>, calculadas sobre <code>agpop</code> entero porque es un censo; éstas son
+              <em>estimaciones</em> hechas con los 300 de la muestra, que es lo único que hay en una encuesta de
+              verdad. Las dos son correctas, y la distancia entre ellas es el error de muestreo del propio error
+              estándar.</p>
+            <p>Lo que sí coincide en las dos versiones es la relación que el módulo 3 anticipa: la eficiencia del
+              estimador de razón depende de lo pequeños que sean los residuos, y eso lo gobierna la
               correlación.</p>
             <p style="margin-bottom:0;">Fíjate además en el error de la expansión: −4,2 %, el mismo orden que tenía
               con <code>acres92</code>. No es casualidad. Esta muestra concreta salió con condados algo más pequeños
@@ -94,11 +100,9 @@
           </div>
           <div class="ejercicio-panel pista" id="cap3-e2-pista" hidden>
             <p style="margin:0;">«Justifícalo con números, no con la correlación» es la mitad del ejercicio: el
-              $R^2$ va a salir alto y no va a decidir nada. El número que decide es el <strong>intercepto</strong>, y
-              el criterio del módulo 6 dice qué hacer con él: contrastar $H_0: a = 0$ y mirar el p-valor. Compáralo
-              además con el rango de los volúmenes, para tener también la lectura sin contraste. Y si te preguntas
-              por qué la relación no pasa por el origen, piensa en qué relación geométrica hay entre el diámetro de
-              un cilindro y su volumen.</p>
+              $R^2$ va a salir alto y no va a decidir nada. Ajusta la recta libre y pregúntate cuál de sus dos
+              coeficientes contesta la pregunta del capítulo, y con qué criterio se juzga. Y si la respuesta te
+              sorprende, piensa en qué relación geométrica hay entre el diámetro de un cilindro y su volumen.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap3-e2-sol" hidden>
             <p><strong>No. El contraste sobre el intercepto lo cierra sin discusión: $t = -10{,}98$ con

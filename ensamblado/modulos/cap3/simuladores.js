@@ -404,11 +404,14 @@
           eficiencia: f.eficiencia
         })),
         inicial: 'ee',
-        destacada: 'Diferencia',
         pie: 'Los tres estimadores con variable auxiliar están empatados en la práctica —entre 108 ' +
           'y 119 veces más eficientes que la expansión— y muy por delante de ella. La diferencia ' +
-          'gana por poco, y solo porque acres92 y acres87 miden lo mismo con dos censos de por ' +
-          'medio: en cuanto x e y estén en unidades distintas, dejará de ser una opción.'
+          'sale primera en ESTA muestra, y conviene no leer más de lo que eso dice: sobre agpop ' +
+          'entero, con n = 300, el orden verdadero pone delante a la regresión y deja a la ' +
+          'diferencia la última de las tres. Un hueco del 0,89 % no lo resuelve ninguna muestra. ' +
+          'Y ojo con el argumento fácil: que acres92 y acres87 midan lo mismo NO es lo que decide ' +
+          '—las cuatro parejas de agpop lo cumplen y en dos gana la razón—; decide si la pendiente ' +
+          'está más cerca de B o de 1.'
       };
     };
 

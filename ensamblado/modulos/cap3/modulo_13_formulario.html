@@ -128,7 +128,8 @@
             </tr>
             <tr>
               <td><strong>Estimador de la varianza</strong></td>
-              <td>$\hat V(\hat{\bar y}_{\text{reg}}) = \dfrac{1-f}{n}\left(s_y^{2} + \hat b_1^{2}s_x^{2} - 2\hat b_1 s_{xy}\right)$</td>
+              <td>$\hat V(\hat{\bar y}_{\text{reg}}) = \dfrac{1-f}{n}\,s_e^{2}$, con
+                $s_e^{2} = \dfrac{1}{n-2}\displaystyle\sum_{k \in s}\big(y_k - \hat b_0 - \hat b_1 x_k\big)^{2}$</td>
               <td>$N^{2}\,\hat V(\hat{\bar y}_{\text{reg}})$</td>
             </tr>
             <tr>
@@ -145,7 +146,15 @@
 
       <div class="formula">
         $$V(\hat{\bar y}_{\text{reg}}) = \frac{1-f}{n}\left(1 - \rho^{2}\right)S_y^{2}, \qquad\qquad
-          \hat V(\hat{\bar y}_{\text{reg}}) = \frac{1-f}{n}\left(1 - r^{2}\right)s_y^{2}$$
+          \hat V(\hat{\bar y}_{\text{reg}}) = \frac{1-f}{n}\cdot\frac{n-1}{n-2}\left(1 - r^{2}\right)s_y^{2}$$
+      </div>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>El $\frac{n-1}{n-2}$ del estimador no es un adorno.</strong>
+          $(1-r^2)s_y^2$ es la suma de residuos dividida por $n-1$, y la recta gastó <em>dos</em> parámetros: el
+          divisor que corresponde es $n-2$. Con $n = 300$ la diferencia es del 0,3 % y no se nota; con los
+          $n_h = 13$ y $20$ del módulo 8 es del 9 % y del 6 %, y cambia el signo de una conclusión. Todas las
+          cifras de regresión del capítulo llevan $n-2$.</p>
       </div>
 
       <p>Escrita así se lee de un vistazo: la regresión deja la varianza del m.a.s. multiplicada por
@@ -171,6 +180,13 @@
           $\hat V = \frac{1-f}{n}(s_y^2 + s_x^2 - 2s_{xy})$. Tampoco el <strong>GREG</strong> ni la
           <strong>calibración</strong> (módulos 10 y 11), que son posteriores al marco del libro. Y las versiones
           <strong>separada y combinada</strong> para muestreo estratificado están en el capítulo 4.</p>
+        <p style="margin-bottom:0;">Tampoco están, porque no son del capítulo 7 del libro: la <strong>media y el
+          total de dominio</strong> con sus dos fórmulas según se conozca o no $N_d$ (módulo 9); la
+          <strong>mediana y los cuantiles</strong> a partir de $\hat F$ (módulo 12); la <strong>cota del sesgo
+          relativo</strong> de Kish, $\lvert\text{Sesgo}(\hat B)\rvert/\sigma_{\hat B} \le
+          \text{CV}(\hat{\bar x})$ (módulo 4); y el <strong>umbral</strong>
+          $\rho > \tfrac12\,\text{CV}(x)/\text{CV}(y)$ que decide entre razón y expansión (módulo 3). Cada una
+          está en su módulo.</p>
       </div>
 
       <div class="references">

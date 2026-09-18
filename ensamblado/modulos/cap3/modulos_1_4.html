@@ -35,7 +35,8 @@
         <p>Una variable $x$ es auxiliar cuando se cumplen las <strong>dos</strong> condiciones a la vez:</p>
         <ol>
           <li>$x_k$ se observa en las unidades de la muestra, y</li>
-          <li>su total poblacional $t_x = \sum_{k \in U} x_k$ (o su media $\bar{x}_U$) <strong>se conoce</strong>.</li>
+          <li>su total poblacional $t_x = \sum_{k \in U} x_k$ <strong>se conoce</strong> —o su media
+            $\bar{x}_U$, si además se conoce $N$—.</li>
         </ol>
         <p style="margin-bottom:0;">La segunda es la restrictiva. Es lo que limita en la práctica qué variables sirven:
           registros administrativos, censos anteriores, padrones. Si solo se tiene $x_k$ en la muestra, no hay
@@ -49,7 +50,8 @@
           un número incierto de cestas de fresa del que se quiere saber el azúcar total: se pesa el camión —ése es
           $t_x$— y se analizan unas cuantas cestas, midiendo en cada una el azúcar ($y$) y el peso ($x$). El
           cociente azúcar/peso de la muestra, multiplicado por el peso del camión, da el total buscado <em>sin
-          contar una sola cesta</em>. El estimador de expansión $N\bar{y}$ del capítulo 2 no puede hacer eso. Es la
+          contar una sola cesta</em> —el ejemplo es de Portela y Villeta, sección 7.1.1, p. 210—. El estimador
+          de expansión $N\bar{y}$ del capítulo 2 no puede hacer eso. Es la
           primera vez en el curso que un estimador se libra de $N$, y no será la última: en el
           <strong>capítulo 5</strong>, con conglomerados, no conocer el número de elementos es la situación
           normal.</p>
@@ -141,14 +143,17 @@
         <p style="margin-bottom:0;"><strong>Antes de seguir: $\hat{B}$ no es el promedio de los cocientes.</strong>
           $\hat{B} = \bar{y}/\bar{x}$ es un cociente de dos <em>promedios</em>, no el promedio de los cocientes
           $y_k/x_k$ de cada unidad. Las dos cuentas dan números distintos y no estiman lo mismo: sobre
-          <code>agsrs</code>, <strong>0,9866</strong> la primera y <strong>0,9677</strong> la segunda. El módulo 5
+          <code>agsrs</code>, <strong>0,9866</strong> la primera y <strong>0,9677</strong> la segunda —ésta
+          sobre los 299 condados con $x_k > 0$: el que tiene cero acres en 1987 no admite cociente, y la media
+          sale <code>NaN</code>—. El módulo 5
           dice a qué parámetro apunta cada una, y por qué esa diferencia <em>no</em> se arregla con más muestra.</p>
       </div>
 
       <div class="note">
         <p><strong>Qué hace el bloque de abajo, y con qué.</strong> Calcula el mismo total dos veces sobre la misma
           muestra —sin la auxiliar y con ella— para poder ponerlos uno al lado del otro. Lo hace con
-          <code>survey</code>, el paquete que el capítulo 2 presentó en su módulo 5, y aquí aparecen cuatro piezas que
+          <code>survey</code>, el paquete que el capítulo 2 puso a trabajar en su módulo 3, «El estimador de
+        Horvitz–Thompson», y aquí aparecen cuatro piezas que
           conviene conocer antes de leerlo:</p>
         <ul style="margin-bottom:0.5rem;">
           <li><code>svydesign(id = ~1, fpc = rep(N, n), data = agsrs)</code> <strong>declara el diseño</strong>:
@@ -330,7 +335,7 @@
           <tr>
             <td><strong>Diferencia</strong> $\hat{t}_d$</td>
             <td>pendiente fijada en 1, sin estimar</td>
-            <td>$x$ e $y$ miden lo mismo en las mismas unidades</td>
+            <td>que la pendiente valga 1 — no basta con que $x$ e $y$ midan lo mismo (módulo 7)</td>
             <td>módulo 7</td>
           </tr>
         </tbody>
@@ -420,13 +425,19 @@
             leerla despacio: las cuatro parejas de <code>agpop</code> cumplen la primera condición al pie de la
             letra, y en dos de ellas la diferencia le gana a la razón mientras que en las otras dos pierde. El
             módulo 7 lo mide y da la regla que sí separa los casos.</li>
-          <li><strong>La expansión</strong>, cuando la correlación no llega al umbral de la primera línea: la
-            auxiliar no paga lo que cuesta, y estimar con ella una pendiente solo añade ruido. Esto tampoco es
+          <li><strong>La expansión</strong>, cuando la correlación no llega al umbral de la primera línea:
+            frente a la <em>razón</em>, la auxiliar no paga lo que cuesta. Ojo con extender la conclusión a los
+            otros dos: el teorema del módulo 7 dice que la regresión no puede perder contra la expansión, pase lo
+            que pase con este umbral. Lo que sí ocurre con $\rho$ pequeña es que la pendiente estimada trae tanta
+            varianza que la mejora se evapora, y entonces la expansión es la opción sensata. Esto tampoco es
             retórico, y el párrafo de abajo lo enseña ocurriendo.</li>
         </ul>
       </div>
 
-      <p>La última línea de esa tabla se suele leer por encima, así que conviene verla ocurrir. En
+      <p>La última línea de esa tabla se suele leer por encima, así que conviene verla ocurrir. Las cifras que
+        siguen son <strong>errores estándar verdaderos con $n = 300$</strong>, calculados sobre el censo entero
+        —aquí se puede—, no estimaciones de una muestra; el ejercicio 1 del módulo 14 rehace la misma comparación
+        con <code>agsrs</code> y da números algo distintos, que es exactamente lo que cabe esperar. En
         <code>agpop</code> la misma variable de interés admite dos auxiliares distintas, y el desenlace es
         opuesto. Con <code>farms87</code> —el número de granjas del censo anterior— la correlación con
         <code>farms92</code> es <strong>0,9944</strong>, muy por encima de su umbral, y la razón deja el error
@@ -448,7 +459,9 @@
           <ol class="derivacion-pasos">
             <li>
               <p>Las dos varianzas, una encima de la otra, con el mismo factor delante. La de la expansión es la del
-                capítulo 2; la de la razón es la aproximada del módulo 2, escrita en términos poblacionales:</p>
+                capítulo 2; la de la razón es la aproximada del módulo 2, escrita en términos poblacionales. Aquí aparece por
+                primera vez $f = n/N$, la <strong>fracción de muestreo</strong>, que abrevia el
+                $(1 - n/N)$ que el capítulo venía escribiendo entero:</p>
               $$V(\hat{\bar{y}}) = \frac{1-f}{n}\,S_y^2, \qquad
                 V(\hat{\bar{y}}_r) \approx \frac{1-f}{n}\left(S_y^2 + B^2S_x^2 - 2B\,S_{xy}\right)$$
               <p style="margin-bottom:0;">La segunda es la primera <em>más dos términos</em>: $B^2S_x^2$, lo que
@@ -521,8 +534,11 @@
           origen. Confundir las dos cosas es el error más frecuente del capítulo, y el simulador está para
           desactivarlo. <strong>Y lo que se usa en su lugar no es la expansión</strong> —tirar la auxiliar sería
           desperdiciarla—: es la regresión del módulo 6, que estima ese intercepto en vez de imponer que sea cero, o
-          bien un cambio de auxiliar por $\text{diámetro}^2$, que sí crece de forma aproximadamente proporcional al
-          volumen y devuelve el problema al terreno de la razón.</p>
+          bien un cambio de auxiliar por $\text{diámetro}^2$, que sí crece de forma aproximadamente proporcional
+          al volumen. Ojo con esperar demasiado de ese cambio: acerca mucho la recta al origen —el intercepto
+          baja de $-36{,}9435$ a $-3{,}3551$, es decir del <strong>55,30 %</strong> al <strong>5,02 %</strong>
+          del rango de los volúmenes, y el $R^2$ sube de 0,9353 a <strong>0,9594</strong>—, pero el contraste del
+          módulo 6 <em>sigue</em> rechazando el origen: $p = 0{,}0248$. Mejora mucho el problema; no lo cierra.</p>
       </div>
 
       <div class="references">
@@ -533,9 +549,10 @@
             coeficientes de variación está en «Advantages of Ratio Estimation», al final del 4.1, con la desigualdad
             $\rho \ge \mathrm{CV}(x) / [2\,\mathrm{CV}(y)]$ escrita tal cual — ojo, Lohr escribe $R$ donde este
             material escribe $\rho$, y esa $R$ es la correlación, no la razón poblacional.</li>
-          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — la regresión y la
-            diferencia, que aquí solo se anuncian para poder comparar; los módulos 6 y 7 las construyen y el 7 pone
-            los cuatro estimadores en una misma tabla.</li>
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — la regresión, que
+            aquí solo se anuncia para poder comparar. La <strong>diferencia</strong> es la sección 3.2.2 en la
+            2.ª ed.; en la 3.ª deja de ser sección y queda como el <strong>ejercicio 32</strong> del capítulo 4.
+            Los módulos 6 y 7 las construyen, y el 7 pone los cuatro estimadores en una misma tabla.</li>
         </ul>
       </div>
     </div>
@@ -569,7 +586,10 @@
 
       <div class="formula">
         $$\text{Sesgo}(\hat{t}_r) \;\approx\; \frac{N(1 - n/N)}{n}\cdot\frac{B\,S_x^2 - S_{xy}}{\bar{x}_U}
-          \;=\; \frac{1}{n}\times(\text{algo que no depende de } n)$$
+          \;=\; \frac{N - n}{n}\times(\text{algo que no depende de } n)$$
+        <p>Es decir, <strong>de orden $1/n$</strong>. Ojo con escribirlo como $c/n$ a secas: el factor
+          $(1 - n/N)$ también depende de $n$, y con $n$ cerca de $N$ el sesgo se apaga más deprisa que $1/n$
+          —en el censo entero, $n = N$, se anula—.</p>
         <p style="margin-bottom:0;">En el capítulo 1 el sesgo se escribía $B(\hat\theta)$, por <em>bias</em>. Aquí
           no se puede: desde el módulo 2, $B$ es la razón poblacional $t_y/t_x$, y en esta misma fórmula aparece
           dentro del numerador. Por eso el sesgo va con todas sus letras.</p>
@@ -611,10 +631,10 @@
           variabilidad. Elevado al cuadrado dentro del ECM, su contribución relativa es de $3{,}0 \times 10^{-5}$.
           Cambiar un estimador insesgado por otro que reduce el error estándar diez veces a cambio de eso no es un
           compromiso: es una ganga.</p>
-        <p style="margin-bottom:0;">Y no confundas esos 7,11 millones con los 5,54 del módulo 2. Aquéllos son la
-          <em>estimación</em> de este mismo error estándar hecha con la sola muestra <code>agsrs</code>, y en esta
-          muestra concreta se queda corta en más de una quinta parte. Un error estándar estimado también tiene su
-          propio error.</p>
+        <p style="margin-bottom:0;">Y no confundas esos 7,11 millones con los 5,54 del módulo 2. <strong>Los
+          5,54</strong> son la <em>estimación</em> de este mismo error estándar hecha con la sola muestra
+          <code>agsrs</code>, y en esta muestra concreta se queda corta en más de una quinta parte. Un error
+          estándar estimado también tiene su propio error.</p>
       </div>
 
       <h3>¿Y si solo tengo una muestra?</h3>
@@ -649,7 +669,8 @@
         <p><strong>La regla de Kish, y lo que hay que mirar cuando no se cumple.</strong> El criterio práctico
           (Kish, 1965) es que si $\widehat{\text{CV}}(\hat{\bar{x}})$ no pasa de <strong>0,1–0,2</strong>, el
           sesgo es despreciable frente a la variabilidad: con 0,2, el sesgo no llega a la quinta parte de un error
-          estándar. En esta población el umbral se cruza en <strong>$n = 47$</strong> — con menos de eso la regla
+          estándar. En esta población el umbral <em>más laxo</em>, el de 0,2, se cruza en <strong>$n = 47$</strong>
+          —el de 0,1 pide $n = 177$—; con menos de 47 la regla
           <em>no</em> da el sesgo por despreciable, y en efecto el simulador enseña $-1{,}5$ millones de acres en
           $n = 10$. Los 300 de <code>agsrs</code> están holgadamente al otro lado.</p>
         <p>Cuando la cota sale demasiado grande, la fórmula dice también dónde tocar, porque son los
@@ -670,8 +691,9 @@
 
       <div class="warning">
         <p style="margin-bottom:0;"><strong>Y el intervalo de confianza desprecia el sesgo a sabiendas.</strong> Los
-          intervalos que este capítulo construye —los del módulo 2, y los que devuelve
-          <code>confint()</code>— usan un estimador de varianza deducido <em>suponiendo el sesgo nulo</em>, y luego
+          intervalos que se construyen con estos estimadores —los del capítulo 2, módulo 6, aplicados ahora a
+          $\hat{t}_r$, o los que devuelve <code>confint()</code> sobre un objeto de <code>survey</code>— usan un
+          estimador de varianza deducido <em>suponiendo el sesgo nulo</em>, y luego
           se centran en un estimador que no lo es. No es un descuido: es una decisión amparada justamente en la
           cota de arriba. Cuando $\widehat{\text{CV}}(\hat{\bar{x}})$ es pequeño, el desplazamiento del centro
           es una fracción despreciable de la anchura y la cobertura no se resiente. Cuando <em>no</em> lo es —$n$
@@ -704,6 +726,9 @@
             cuadrático medio del estimador de razón, con la aproximación de Taylor completa.</li>
           <li>Gutiérrez, <strong>sección 8.3</strong> — linealización de parámetros no lineales en el marco $\pi$,
             que es la herramienta que reaparece en los capítulos 7 y 8.</li>
+          <li>Kish, L. (1965). <em>Survey Sampling</em>. Wiley — el origen de la regla del 0,1–0,2, que este
+            módulo usa por su nombre y hasta ahora citaba sin fuente. La referencia la da Portela en su
+            bibliografía.</li>
           <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.1.2</strong>
             (pp. 211–214) — la cota del sesgo relativo con su demostración, la regla de Kish y los tres factores.
             Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
