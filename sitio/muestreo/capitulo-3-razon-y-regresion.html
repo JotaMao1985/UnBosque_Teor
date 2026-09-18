@@ -673,7 +673,11 @@
 
     pre.collapsed {
       max-height: 150px;
-      overflow: hidden;
+      /* El plegado recorta en VERTICAL. `overflow: hidden` recortaba tambien en
+         horizontal, y en un movil eso deja el codigo cortado sin manera de
+         alcanzarlo: hay que dejar el eje x desplazable. */
+      overflow-x: auto;
+      overflow-y: hidden;
       position: relative;
     }
 
@@ -3579,6 +3583,8 @@
           <pre><code class="language-r"># La muestra del capitulo 2: 300 condados de los 3078, tomados al azar simple.
 # Lo nuevo es que ahora se dispone de una variable AUXILIAR conocida para toda
 # la poblacion: acres87, la superficie sembrada en el censo anterior.
+library(survey)               # todo el capitulo corre sobre este paquete: sin
+                              # esta linea, svydesign() y las demas no existen
 options(scipen = 999)         # los totales son de nueve cifras: sin esto R los
                               # imprime en notacion cientifica y no se leen
 agpop &lt;- read.csv("CSV data sets for SDA 3e/agpop.csv")
@@ -3716,7 +3722,9 @@ round(c(expansion = as.numeric(coef(exp_sv)), ee_expansion = as.numeric(SE(exp_s
 #&gt; 916927109.6400  58169381.1695         0.9866 950520496.1040   5540375.7938</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Los totales son de nueve cifras: sin fijar el formato, pandas los imprime en
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
+# Los totales son de nueve cifras: sin fijar el formato, pandas los imprime en
 # notacion cientifica y no hay quien los lea.
 pd.set_option("display.float_format", lambda v: f"{v:,.4f}".replace(",", " "))
 
@@ -4166,7 +4174,8 @@ print(pd.DataFrame(
           <li>Lohr, <strong>sección 3.1.1</strong> (2.ª ed.) o <strong>4.1.1 y 4.1.5</strong> (3.ª ed.) — cuándo usar el
             estimador de razón. Son dos sitios: el 4.1.1 da el motivo, y la regla sobre las correlaciones y los
             coeficientes de variación está en «Advantages of Ratio Estimation», al final del 4.1, con la desigualdad
-            $R \ge \mathrm{CV}(x) / [2\,\mathrm{CV}(y)]$ escrita tal cual.</li>
+            $\rho \ge \mathrm{CV}(x) / [2\,\mathrm{CV}(y)]$ escrita tal cual — ojo, Lohr escribe $R$ donde este
+            material escribe $\rho$, y esa $R$ es la correlación, no la razón poblacional.</li>
           <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — la regresión y la
             diferencia, que aquí solo se anuncian para poder comparar; los módulos 6 y 7 las construyen y el 7 pone
             los cuatro estimadores en una misma tabla.</li>

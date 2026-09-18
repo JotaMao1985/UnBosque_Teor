@@ -5017,3 +5017,79 @@ con el libro conviene cotejar el capítulo consigo mismo**, que es más barato y
 de error.
 
 **Pendiente:** el visto bueno de Javier para publicar. Afecta a material ya publicado (fase 1).
+
+### T7.48 — La auditoría del capítulo 3, y dos defectos que solo se ven ejecutando (2026-09-17)
+
+**T5.1**, la fase 5 del plan del cap. 3: el protocolo de verificación entero, punto por punto, sobre
+un capítulo ya escrito. Encontró dos cosas que ninguna lectura habría encontrado, y una tercera que
+invalida una prueba que yo mismo repartí.
+
+**1 · El código publicado no arrancaba.** Punto 2 del protocolo —«un bloque que usa un objeto nunca
+definido falla en manos del estudiante aunque funcione en una sesión con variables ya cargadas»—. Se
+comprobó por primera vez **ejecutándolo**: se extraen del HTML servido los bloques que ve el
+estudiante, se quitan las líneas `#>`, y se corre en una sesión limpia. Resultado:
+
+| capítulo | qué pasa al pegarlo en un R nuevo |
+|---|---|
+| 1 | corre |
+| **2, 4, 5, 6, 7, 8** | **`no se pudo encontrar la función "svydesign"`** (o `inclusionprobabilities`) |
+| 3 | corría hasta hoy **no**; ahora sí |
+
+`library(survey)` estaba en el **preámbulo de la cadena**, que va antes del primer marcador de bloque
+y por tanto **no se publica**. El taller y el preparcial sí lo muestran: la convención existía y a los
+capítulos no se les aplicó. Corregido en el cap. 3 —`library(survey)` visible en el R1,
+`import numpy as np, pandas as pd` en el P1— y **comprobado con ejecución**, código de salida 0 en R
+y en Python. **Los otros seis capítulos siguen rotos**; es una línea en cada `cadena.R`, y ya está
+medido cuál: `survey` en el 2, 4, 5 y 7; `survey` + `sampling` en el 6; `survey` + `mitools` en el 8;
+el 1 no necesita ninguna. **Tarea aparte, pendiente de decisión.**
+
+**2 · El código se recortaba en el móvil, y no había manera de alcanzarlo.** Tercer miembro de la
+familia de T7.44 (fórmulas) y T7.46 (tablas), y el peor de los tres porque afecta a lo que este
+material es. La regla `pre.collapsed { max-height: 150px; overflow: hidden }` pliega los bloques
+largos en vertical, **y de paso recorta el eje horizontal**. A 375 px los diez bloques del cap. 3
+desbordaban entre **403 y 470 px** —aproximadamente la mitad de cada línea— sin barra y sin ancestro
+desplazable. Arreglado en la plantilla con el mismo patrón que la tabla: `overflow-x: auto;
+overflow-y: hidden`, que conserva el plegado vertical. Retropropagado a las **nueve páginas**.
+Medido después: cap. 3 a 375 px, **10 de 10 bloques con barra**; cap. 8 a 270 px, **25 de 25**.
+
+**3 · Y la prueba que yo repartí en T7.46 no distingue.** Le di a la sesión del cap. 4 esta
+comprobación de alcanzabilidad: `t.scrollLeft = 999; const alcanzable = t.scrollLeft > 0`.
+**No sirve.** `overflow: hidden` **sí** crea un contenedor de scroll: `scrollLeft` se deja fijar por
+JavaScript aunque el usuario no pueda desplazar nada. Comprobado con un elemento fabricado al vuelo:
+`width:100px`, `scrollWidth 3740`, `overflow:hidden` → `scrollLeft` queda en 999. Da «alcanzable» en
+los dos casos. **La prueba buena es el estilo calculado**: `getComputedStyle(e).overflowX` tiene que
+ser `auto` o `scroll`. El arreglo de T7.46 era correcto —las tablas del cap. 3 calculan hoy
+`overflow-x: auto`, verificado ya con la prueba buena—, pero **la evidencia que di para él no valía**.
+Avisado al cap. 4.
+
+**Lo que sí estaba bien.** Las nueve páginas se reensamblan **byte a byte** desde sus fuentes
+commiteadas. **2 694 cifras de bloques y 805 de prosa, 0 sin respaldo** en los ocho capítulos. El
+JSON incrustado del cap. 3 valida, con sus 17 claves. En el navegador: 0 `.katex-error` en los doce
+módulos, cada `canvas` con su gráfico vivo y **solo uno vivo al final** (se destruyen al cambiar de
+módulo), las pestañas R/Python conmutando en los tres módulos que las tienen, y los **cinco
+simuladores respondiendo en los extremos de sus diez controles** sin un `NaN`. Geometría a 1 280 px:
+**0 solapamientos, 0 alturas cero, 0 desbordes** entre hermanos de los doce módulos.
+
+**Falsas alarmas, anotadas para no repetirlas.** *(a)* Cinco clases sin regla CSS —`module-content`,
+`glosario-texto`, `derivacion-texto`, `quiz-preguntas`, `quiz-conteo`— son **ganchos de
+`querySelector`**, no componentes sin estilo. *(b)* Un primer barrido de geometría dio 98
+solapamientos: comparaba cada `<p>` **anidado dentro** de un `.note` contra el rectángulo del
+`.note`. Con hermanos del mismo nivel, cero. *(c)* Y la medida se hizo a 270 px sin querer, porque el
+panel se había estrechado: **el ancho hay que fijarlo, no heredarlo**.
+
+**La portada, puesta al día con `cuenta_sitio.py`.** Decía 65 simuladores, 88 preguntas, 88 módulos;
+son **67, 98 y 89**. Además la tarjeta del cap. 2 decía 9 simuladores (son 10) y la del cap. 4, 12
+módulos y 8 simuladores (son 13 y 9). Seis sitios en total, incluidos el `meta description` y el
+`og:description`. Acordado con la sesión del cap. 4 que la portada la llevo yo.
+
+**Una desambiguación de notación (riesgo R7 del plan).** En la cita nueva del M3 había escrito la
+desigualdad de Lohr con su `R`. En este material `R` no es la correlación, y la razón poblacional es
+`B`. Pasa a `\rho`, diciendo que Lohr escribe `R` y que esa `R` es la correlación, no la razón.
+
+**Lo que enseña.** El protocolo lleva desde el principio diciendo «comprobar que cada bloque es
+autónomo». Se venía comprobando **leyendo**, y leyendo está bien: los objetos se definen todos en
+bloques visibles. Lo que no se ve leyendo es lo que **no está escrito en ninguna parte visible** —un
+`library()` que vive en un preámbulo que nadie publica—. La diferencia entre auditar un protocolo y
+ejecutarlo son seis capítulos.
+
+**Pendiente:** el visto bueno de Javier para publicar.

@@ -673,7 +673,11 @@
 
     pre.collapsed {
       max-height: 150px;
-      overflow: hidden;
+      /* El plegado recorta en VERTICAL. `overflow: hidden` recortaba tambien en
+         horizontal, y en un movil eso deja el codigo cortado sin manera de
+         alcanzarlo: hay que dejar el eje x desplazable. */
+      overflow-x: auto;
+      overflow-y: hidden;
       position: relative;
     }
 

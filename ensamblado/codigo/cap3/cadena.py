@@ -2,6 +2,8 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
 # Los totales son de nueve cifras: sin fijar el formato, pandas los imprime en
 # notacion cientifica y no hay quien los lea.
 pd.set_option("display.float_format", lambda v: f"{v:,.4f}".replace(",", " "))
