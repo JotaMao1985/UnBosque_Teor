@@ -1301,6 +1301,53 @@
       display: none;
     }
 
+    /* Las retroalimentaciones de las opciones que el estudiante no eligió.
+       Van plegadas para no tapar la respuesta, pero existen: son la mitad del
+       valor didáctico del banco y antes no se mostraban nunca. */
+    .quiz-otras {
+      margin-top: 0.6rem;
+      border-top: 1px solid rgba(100, 116, 139, 0.25);
+      padding-top: 0.5rem;
+    }
+
+    .quiz-otras > summary {
+      cursor: pointer;
+      font-weight: 600;
+      list-style: none;
+      opacity: 0.85;
+    }
+
+    .quiz-otras > summary::-webkit-details-marker { display: none; }
+
+    .quiz-otras > summary::before {
+      content: "▸ ";
+      display: inline-block;
+      transition: transform 0.15s ease;
+    }
+
+    .quiz-otras[open] > summary::before {
+      transform: rotate(90deg);
+    }
+
+    .quiz-otras ul {
+      margin: 0.5rem 0 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .quiz-otras li {
+      margin-bottom: 0.45rem;
+      padding-left: 1.6rem;
+      text-indent: -1.6rem;
+    }
+
+    .quiz-otras li:last-child { margin-bottom: 0; }
+
+    .quiz-otras-letra {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
     .quiz-marcador {
       margin-top: 1.15rem;
       font-weight: 600;
@@ -7895,7 +7942,14 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         }
       }
 
-      function cerrar(i, bloque, acierto, textoRetro) {
+      // `opcs` y `vistas` son opcionales: las traen las preguntas con opciones,
+      // y sirven para volcar al cerrar las retroalimentaciones que el estudiante
+      // NO llegó a ver. Sin esto, el módulo prometía que «cada opción trae su
+      // propia retroalimentación, también las incorrectas» y el motor no las
+      // enseñaba nunca: al acertar se veía solo la de la correcta, y al primer
+      // fallo la pista en lugar de la retro de lo que se había marcado. En el
+      // capítulo 3 eran 39 retros de distractor que nadie leía.
+      function cerrar(i, bloque, acierto, textoRetro, opcs, vistas) {
         estado[i].resuelta = true;
         estado[i].acierto = acierto;
         const retro = bloque.querySelector('.quiz-retro');
@@ -7912,6 +7966,22 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         // `retroAcierto`, y sin esta guarda el estudiante veia la palabra
         // "undefined" detras de "Correcto". (Bug encontrado auditando el cap. 6.)
         retro.innerHTML = encabezado + (textoRetro || '');
+        const yaVistas = new Set(vistas || []);
+        const otras = (opcs || [])
+          .map((o, j) => ({ o: o, j: j }))
+          .filter(x => x.o && x.o.retro && !yaVistas.has(x.j));
+        if (otras.length) {
+          const det = document.createElement('details');
+          det.className = 'quiz-otras';
+          // La retro de la correcta suele abrir con «Exacto.» o «Correcto.», que
+          // dentro de esta lista va detrás de «era la correcta» y suena a eco.
+          const sinEco = s => s.replace(/^(Exacto|Correcto|Eso es|Ésa es|Así es|Cierto)[.,:]?\s*/, '');
+          det.innerHTML = '<summary>Por qué las demás</summary><ul>' + otras.map(x =>
+            `<li><span class="quiz-otras-letra">${LETRAS[x.j]})</span> ` +
+            (x.o.correcta ? '<strong>era la correcta.</strong> ' + sinEco(x.o.retro) : x.o.retro) + '</li>'
+          ).join('') + '</ul>';
+          retro.appendChild(det);
+        }
         retro.hidden = false;
         katexEn(retro);
         actualizarMarcador();
@@ -8068,7 +8138,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
               // declaran `retroAcierto`: se junta la retroalimentacion de las
               // opciones correctas, que ya estaba escrita y no se mostraba.
               cerrar(i, bloque, true, p.retroAcierto || opcs
-                .filter(o => o.correcta).map(o => o.retro).filter(Boolean).join(' '));
+                .filter(o => o.correcta).map(o => o.retro).filter(Boolean).join(' '),
+                opcs, opcs.map((o, j) => o.correcta ? j : -1).filter(j => j >= 0));
             } else if (estado[i].intentos === 1) {
               const bien = [...marcadas].filter(j => correctas.has(j)).length;
               pista.innerHTML = `<strong>Casi.</strong> De las ${marcadas.size} que marcaste, ` +
@@ -8085,7 +8156,7 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
                 else if (marcadas.has(j)) b.classList.add('incorrecta');
               });
               boton.disabled = true;
-              cerrar(i, bloque, false, p.retroFallo);
+              cerrar(i, bloque, false, p.retroFallo, opcs, []);
             }
           });
 
@@ -8114,7 +8185,7 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
               estado[i].intentos++;
               if (op.correcta) {
                 botones.forEach((x, k) => { x.disabled = true; if (opcs[k].correcta) x.classList.add('correcta'); });
-                cerrar(i, bloque, true, op.retro);
+                cerrar(i, bloque, true, op.retro, opcs, [j]);
               } else if (estado[i].intentos === 1) {
                 // Primer fallo: se descarta esa opción, se da la pista y se reintenta
                 b.disabled = true;
@@ -8123,7 +8194,7 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
               } else {
                 botones.forEach((x, k) => { x.disabled = true; if (opcs[k].correcta) x.classList.add('correcta'); });
                 b.classList.add('incorrecta');
-                cerrar(i, bloque, false, op.retro);
+                cerrar(i, bloque, false, op.retro, opcs, [j]);
               }
             });
             lista.appendChild(b);

@@ -470,6 +470,17 @@
         retroFallo: 'Es $\\bar{y}/\\bar{x} = 0{,}9866$. Un error típico es dividir al revés y dar 1,0136: $\\hat{B}$ estima $t_y/t_x$, así que la $y$ va arriba.'
       },
       {
+        tipo: 'numerica',
+        modulo: 2,
+        pregunta: 'Con $t_x = 963\,464\,412$, $\bar{x} = 301\,953{,}72$, $s_e = 31\,657{,}22$, $n = 300$ y $N = 3\,078$, calcula $\mathrm{EE}(\hat{t}_r) = \dfrac{t_x}{\bar{x}}\sqrt{1-n/N}\;\dfrac{s_e}{\sqrt{n}}$. Da el resultado en millones de acres, con dos decimales.',
+        pista: 'Son cuatro factores y ninguna sutileza. El $s_e$ es la desviación de los <em>residuos</em>, no la de $y$: por eso sale pequeño.',
+        respuesta: 5.54,
+        tolerancia: 0.03,
+        unidad: 'millones de acres',
+        retroAcierto: 'Correcto: <strong>5,54 millones</strong>. Es la cifra insignia del capítulo, y conviene haberla calculado una vez a mano: el factor $t_x/\bar{x}$ lleva el error estándar a escala de total, la raíz es la corrección por población finita, y todo el trabajo de la variable auxiliar está metido dentro de $s_e$.',
+        retroFallo: 'Es $\dfrac{963\,464\,412}{301\,953{,}72}\sqrt{1-300/3078}\;\dfrac{31\,657{,}22}{\sqrt{300}} = 5\,540\,376$, es decir 5,54 millones. El fallo más común es usar la desviación de $y$ ($344\,829{,}6$) en vez de la de los residuos: con ella sale 60,3 millones, que es el orden de la expansión.'
+      },
+      {
         tipo: 'grafico',
         modulo: 3,
         alto: 230,
@@ -516,18 +527,20 @@
         ]
       },
       {
-        tipo: 'multiple',
+        tipo: 'opcion',
         modulo: 4,
-        pregunta: 'Sobre el sesgo del estimador de razón, marca <strong>todo</strong> lo que sea cierto.',
-        pista: 'Dos cosas distintas: cómo se comporta con $n$, y cómo se compara con el error estándar.',
+        pregunta: 'Con $n = 300$ el sesgo de $\\hat{t}_r$ vale $-38\\,963$ acres y su error estándar 7,11 millones. ¿Qué justifica <em>aceptar</em> un estimador sesgado?',
+        pista: 'El capítulo 1 dejó la herramienta que suma las dos cosas en un solo número.',
         opciones: [
-          { texto: 'Es de orden $1/n$: se hace despreciable al crecer la muestra.', correcta: true },
-          { texto: 'Con $n = 300$ es 182 veces menor que el error estándar.', correcta: true },
-          { texto: 'Existe aunque el muestreo sea aleatorio simple y perfectamente ejecutado.', correcta: true },
-          { texto: 'Se puede eliminar usando <code>survey</code> en vez de la fórmula a mano.', correcta: false }
-        ],
-        retroAcierto: 'Todas menos la de <code>survey</code>. El sesgo es una propiedad del <em>estimador</em>, no del software ni del diseño: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas.',
-        retroFallo: 'Son las tres que no mencionan el software. Lo que no es cierto es que <code>survey</code> elimine el sesgo: calcula el mismo estimador, con el mismo sesgo. Lo que hace pequeño al sesgo es $n$, y a cambio se acepta porque el error cuadrático medio baja muchísimo.'
+          { texto: 'Que el sesgo al cuadrado desaparece dentro del ECM.', correcta: true,
+            retro: 'Exacto: $\\text{ECM} = \\text{Sesgo}^2 + V$, y aquí el sesgo es <strong>182 veces</strong> menor que el error estándar, así que su cuadrado aporta tres cienmilésimas del ECM. Se cambia insesgadez por un error estándar diez veces menor: es una ganga, y está medida.' },
+          { texto: 'Que el sesgo medido salió negativo en los nueve tamaños.', correcta: false,
+            retro: 'El signo es un hecho de esta población —el estimador subestima aquí—, no un argumento. Un sesgo pequeño se acepta por su tamaño relativo, nunca por su dirección.' },
+          { texto: 'Que con 200 000 réplicas el sesgo deja de poder medirse.', correcta: false,
+            retro: 'Al revés: con 5 000 réplicas el sesgo era ruido, y con 200 000 la incertidumbre de Monte Carlo bajó a 15 900 y el sesgo <em>por fin</em> se distinguió de cero. Más réplicas lo hacen visible, no lo eliminan.' },
+          { texto: 'Que el sesgo se anula si el muestreo es aleatorio simple.', correcta: false,
+            retro: 'No se anula con ningún diseño: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas. Lo que lo hace pequeño es $n$, no la forma de sortear.' }
+        ]
       },
       {
         tipo: 'numerica',
@@ -556,20 +569,15 @@
         ]
       },
       {
-        tipo: 'opcion',
+        tipo: 'numerica',
         modulo: 6,
-        pregunta: 'En <code>survey</code>, ¿cómo se calcula el estimador de regresión?',
-        pista: '¿Qué información se le está imponiendo a los pesos?',
-        opciones: [
-          { texto: 'Con <code>calibrate()</code>, imponiéndole a los pesos $N$ y $t_x$.', correcta: true,
-            retro: 'Exacto, y ese es el puente con el capítulo 7: la regresión, la razón y la postestratificación son todas calibración, con distintos totales impuestos.' },
-          { texto: 'Con <code>svyglm()</code>, tomando el coeficiente de la pendiente.', correcta: false,
-            retro: '<code>svyglm()</code> da la pendiente, pero el estimador de regresión del total es otra cosa: la pendiente es un ingrediente, no el resultado.' },
-          { texto: 'Con <code>svyratio()</code> y el argumento <code>intercept = TRUE</code>.', correcta: false,
-            retro: 'Ese argumento no existe. <code>svyratio()</code> hace la razón, que es la recta forzada por el origen.' },
-          { texto: 'No se puede: hay que programarlo a mano, término a término.', correcta: false,
-            retro: 'Se puede, y conviene hacerlo de las dos maneras. En este capítulo el total coincide exactamente por las dos vías; el error estándar difiere un 4,9 %, y el módulo 6 explica por qué.' }
-        ]
+        pregunta: 'Con $\\bar{y} = 297\\,897{,}05$, $\\hat b_1 = 0{,}995004$, $\\bar{x} = 301\\,953{,}72$ y $\\bar{x}_U = 313\\,016{,}38$, calcula la media por regresión $\\hat{\\bar y}_{\\text{reg}} = \\bar{y} + \\hat b_1(\\bar{x}_U - \\bar{x})$. Da el resultado en acres, redondeado a la unidad.',
+        pista: 'La muestra se quedó corta en $x$, así que $\\bar{x}_U - \\bar{x}$ es positivo y la corrección <em>sube</em> la media.',
+        respuesta: 308904,
+        tolerancia: 3,
+        unidad: 'acres',
+        retroAcierto: '$297\\,897{,}05 + 0{,}995004 \\times 11\\,062{,}66 = 308\\,904$. Multiplicado por $N = 3\\,078$ da 950 807 843, que es el total por regresión del módulo 6 hasta la última cifra.',
+        retroFallo: 'Es $297\\,897{,}05 + 0{,}995004 \\times (313\\,016{,}38 - 301\\,953{,}72) = 308\\,904$. Dos fallos típicos: restar al revés dentro del paréntesis —la corrección sube, no baja, porque la muestra se quedó corta en $x$— y multiplicar por $N$, que da el total y no la media.'
       },
       {
         tipo: 'opcion',
@@ -594,6 +602,7 @@
         pista: '$\\hat{t}_d = t_x + N\\,(\\bar{y} - \\bar{x})$, y la media de las diferencias ya es $\\bar{y} - \\bar{x}$.',
         respuesta: 951.0,
         tolerancia: 0.15,
+        unidad: 'millones de acres',
         retroAcierto: '$963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961$, es decir 951,0 millones. La corrección es de −12,5 millones sobre el total de 1987.',
         retroFallo: 'Es $963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961 \\approx 951{,}0$ millones. El error frecuente es olvidar multiplicar por $N$: la media de diferencias hay que llevarla a escala poblacional.'
       },
@@ -615,6 +624,22 @@
       },
       {
         tipo: 'opcion',
+        modulo: 7,
+        pregunta: 'En <code>agpop</code>, para <code>largef92 ~ largef87</code> salen $B = 1{,}0240$ y $b_1 = 0{,}9714$. Las dos variables son la misma cosa medida dos veces. ¿Qué estimador gana?',
+        pista: 'El cuadrado perfecto $(b\,S_x - \rho\,S_y)^2$ premia al $b$ más próximo a un número concreto. ¿A cuál?',
+        opciones: [
+          { texto: 'La diferencia: $b_1$ queda más cerca de 1 que de $B$.', correcta: true,
+            retro: 'Exacto: $\lvert b_1 - 1\rvert = 0{,}0286$ contra $\lvert b_1 - B\rvert = 0{,}0526$. La diferencia gana un <strong>6,82 %</strong>, y la regla acierta en las cuatro parejas de <code>agpop</code>.' },
+          { texto: 'La razón: $B$ está más cerca de 1 que la pendiente ajustada.', correcta: false,
+            retro: 'Lo que hay que comparar con $b_1$ no es 1 con $B$, sino cada candidato con $b_1$, que es donde la parábola tiene el mínimo. Y $b_1 = 0{,}9714$ dista menos de 1 que de $B = 1{,}0240$.' },
+          { texto: 'La diferencia: $x$ e $y$ son la misma variable medida dos veces.', correcta: false,
+            retro: 'Esa condición la cumplen las <em>cuatro</em> parejas de <code>agpop</code>, y en dos de ellas gana la razón. Una condición que dispara igual en casos con desenlaces opuestos no está decidiendo nada.' },
+          { texto: 'La razón: su umbral del módulo 3 se cumple aquí de sobra.', correcta: false,
+            retro: 'El umbral del módulo 3 solo dice que la razón le gana a la <strong>expansión</strong>. Aquí la comparación es contra la diferencia, y ésa es otra cuenta: la del cuadrado perfecto del módulo 7.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
         modulo: 8,
         pregunta: 'En el ejemplo de los tomates se usa regresión en la región I, la media muestral en la II y razón en la III, y luego se suman los tres totales <strong>y las tres varianzas</strong>. ¿Qué permite sumar las varianzas sin términos cruzados?',
         pista: 'No es una propiedad de los estimadores elegidos. Es una propiedad del <em>diseño</em>.',
@@ -631,6 +656,22 @@
       },
       {
         tipo: 'opcion',
+        modulo: 8,
+        pregunta: 'En la región III de los tomates la constante ajustada vale 0,88 con $p = 0{,}9844$. ¿Por qué se elige ahí la razón y no la regresión?',
+        pista: 'El teorema del módulo 7 dice cuándo las dos empatan. Si empatan, ¿qué desempata?',
+        opciones: [
+          { texto: 'Porque la recta pasa por el origen y cuesta un parámetro menos.', correcta: true,
+            retro: 'Eso es. Con $p = 0{,}9844$ no hay ninguna razón para creer que la constante no sea cero, y el teorema del módulo 7 dice que ahí la razón no pierde nada frente a la regresión. Empatando, se prefiere el modelo más simple: una recta por el origen tiene un parámetro en vez de dos.' },
+          { texto: 'Porque el teorema del módulo 7 prohíbe usar la regresión aquí.', correcta: false,
+            retro: 'El teorema no prohíbe nada: dice que la regresión nunca tiene <em>más</em> varianza verdadera que la razón. Lo que pasa en esta región es que las iguala, y entonces el criterio pasa a ser otro.' },
+          { texto: 'Porque su $R^2$, 0,6889, es el más alto de las tres regiones.', correcta: false,
+            retro: 'Volver al $R^2$ es el error más frecuente del capítulo. Que la relación sea fuerte no dice nada sobre si pasa por el origen, y la región I tiene la constante más significativa de las tres con un $R^2$ de solo 0,2025.' },
+          { texto: 'Porque la expansión y la razón dan la misma varianza estimada ahí.', correcta: false,
+            retro: 'No la dan: en la región III la expansión sale con 940,35 y la razón con 292,59, tres veces menos. Las dos que casi coinciden son la razón y la regresión, y ése es justo el punto.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
         modulo: 9,
         pregunta: 'Al estimar la media de un dominio, ¿por qué no sirve la fórmula del error estándar del MAS?',
         pista: '¿Qué cantidad de la fórmula del MAS es fija por diseño, y qué pasa con su equivalente aquí?',
@@ -643,6 +684,38 @@
             retro: 'Conocer $N_d$ no cambia nada aquí: el error estándar de la <em>media</em> de dominio no lo contiene. Donde sí decide es en el <em>total</em>, que tiene una fórmula si $N_d$ se conoce y otra, más cara, si no.' },
           { texto: 'Porque la media de dominio es un estimador sesgado.', correcta: false,
             retro: 'Lo es, ligeramente, por ser una razón; pero eso no es lo que invalida la fórmula del error estándar.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 9,
+        pregunta: 'Para estimar el <strong>total</strong> de un dominio hay dos fórmulas. ¿Qué decide cuál se usa, y qué cuesta la segunda?',
+        pista: 'Con la media basta una fórmula. Con el total hay un dato que el diseño no siempre tiene.',
+        opciones: [
+          { texto: 'Si se conoce $N_d$; no conocerlo sube el error estándar relativo.', correcta: true,
+            retro: 'Correcto. Con $N_d$ conocido, $\hat t_{yd} = N_d\,\hat{\bar y}_d$; sin él hay que pasar por $u_k = y_k\delta_k$ y estimar $N\bar u$, que arrastra la incertidumbre sobre el tamaño del dominio. En el dominio de los condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al <strong>9,29 %</strong>.' },
+          { texto: 'Si $n_d$ es grande; con $n_d$ pequeño la segunda es más estable.', correcta: false,
+            retro: 'El tamaño de $n_d$ afecta a la precisión de las dos por igual. Lo que separa las fórmulas es si $N_d$ —el tamaño <em>poblacional</em> del dominio— se conoce, no cuántas unidades cayeron en la muestra.' },
+          { texto: 'Si el dominio es un estrato; la segunda vale solo para estratos.', correcta: false,
+            retro: 'Al revés: si fuera un estrato, $n_h$ sería fijo y no haría falta nada de este módulo. Las dos fórmulas son para dominios, y la que se usa depende de $N_d$.' },
+          { texto: 'Si la variable es continua; con indicadoras solo sirve la primera.', correcta: false,
+            retro: 'La naturaleza de $y$ no interviene. De hecho la segunda fórmula funciona convirtiendo en ceros las unidades de fuera, que es exactamente trabajar con una indicadora.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 10,
+        pregunta: 'El enfoque asistido por modelos usa un modelo para construir el estimador. ¿Qué pasa si el modelo está mal especificado?',
+        pista: '¿De qué depende la insesgadez del GREG: del modelo o del diseño?',
+        opciones: [
+          { texto: 'Sigue siendo insesgado por diseño; lo que se pierde es eficiencia.', correcta: true,
+            retro: 'Exacto, y esa es toda la gracia del enfoque asistido por modelos: el modelo se usa para <em>construir</em> el estimador, pero la inferencia se apoya en el diseño. Un modelo malo cuesta precisión, no validez.' },
+          { texto: 'Se vuelve sesgado y deja de servir para hacer inferencia válida.', correcta: false,
+            retro: 'Eso ocurriría con un enfoque puramente basado en modelos, donde la inferencia depende de que el modelo sea correcto. El GREG no: su insesgadez asintótica es de diseño.' },
+          { texto: 'El error estándar deja de poder calcularse con los residuos del modelo.', correcta: false,
+            retro: 'Se calcula igual, con los residuos del modelo. Si el modelo ajusta mal, los residuos son grandes y el error estándar sale grande: el método avisa.' },
+          { texto: 'No pasa nada: el modelo es del todo irrelevante para el resultado.', correcta: false,
+            retro: 'Sí pasa: la eficiencia depende por completo del modelo. Con $r = 0{,}996$ se gana un factor 110; con una auxiliar sin relación con $y$, el GREG no gana nada y puede incluso perder.' }
         ]
       },
       {
@@ -689,22 +762,6 @@
             retro: 'El desacuerdo aparecería igual sin ningún valor repetido: lo que lo produce es que la función escalonada alcance el nivel 0,5 justo en un escalón.' },
           { texto: 'Que la mediana real es 191 486 y las dos estimaciones están mal.', correcta: false,
             retro: 'Las dos estimaciones son de la <em>muestra</em>, y las dos sobrestiman la mediana poblacional en torno a un 2,7 %. Eso es error de muestreo, que es otra cosa distinta del desacuerdo entre convenios.' }
-        ]
-      },
-      {
-        tipo: 'opcion',
-        modulo: 10,
-        pregunta: 'El enfoque asistido por modelos usa un modelo para construir el estimador. ¿Qué pasa si el modelo está mal especificado?',
-        pista: '¿De qué depende la insesgadez del GREG: del modelo o del diseño?',
-        opciones: [
-          { texto: 'Sigue siendo insesgado por diseño; lo que se pierde es eficiencia.', correcta: true,
-            retro: 'Exacto, y esa es toda la gracia del enfoque asistido por modelos: el modelo se usa para <em>construir</em> el estimador, pero la inferencia se apoya en el diseño. Un modelo malo cuesta precisión, no validez.' },
-          { texto: 'Se vuelve sesgado y deja de servir para hacer inferencia válida.', correcta: false,
-            retro: 'Eso ocurriría con un enfoque puramente basado en modelos, donde la inferencia depende de que el modelo sea correcto. El GREG no: su insesgadez asintótica es de diseño.' },
-          { texto: 'El error estándar deja de poder calcularse con los residuos del modelo.', correcta: false,
-            retro: 'Se calcula igual, con los residuos del modelo. Si el modelo ajusta mal, los residuos son grandes y el error estándar sale grande: el método avisa.' },
-          { texto: 'No pasa nada: el modelo es del todo irrelevante para el resultado.', correcta: false,
-            retro: 'Sí pasa: la eficiencia depende por completo del modelo. Con $r = 0{,}996$ se gana un factor 110; con una auxiliar sin relación con $y$, el GREG no gana nada y puede incluso perder.' }
         ]
       }
     ];

@@ -69,6 +69,9 @@
     "0,0009": "0,03^2, el error admisible al cuadrado en n0 = 1,96^2 x 0,25/0,0009 = 1 067"
   },
   "capitulo-3-razon-y-regresion.html": {
+    "308 904": "297 897,05 + 0,995004 * 11 062,66 = 308 904,44: la media por regresion, respuesta del item numerico del M6; x 3 078 da el total 950 807 843 del bloque R6",
+    "11 062,66": "313 016,38 - 301 953,72: el desvio del auxiliar en la muestra, dentro de la retro del item numerico del M6",
+    "60,3": "(963 464 412 / 301 953,72) * sqrt(1 - 300/3078) * 344 829,6 / sqrt(300) = 60 349 130: el EE que sale al usar s_y en vez de s_e; es el fallo que la retro del item nuevo del M2 describe",
     "4,1": "20 051,31 / 494 773,83 = 4,05 %: el EE del total de tomates como porcentaje del total; las dos cifras salen del bloque R8",
     "9,6": "0,456837 / 0,416758 - 1 = 9,62 %: cuanto mayor es el EE de la diferencia que el de la regresion en deadtrees; las dos cifras salen del bloque S4",
     "98,66": "razón muestral B = 0,9865652, expresada en porcentaje",

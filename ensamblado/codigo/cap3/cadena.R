@@ -368,17 +368,17 @@ cat("\n###BLOQUE-S2###\n")
 # Ejercicio 2 - Cerezos: volumen a partir del diametro. Aqui la recta por el
 # origen NO sirve, y el intercepto dice por que.
 cherry <- read.csv("CSV data sets for SDA 3e/cherry.csv")
-ajuste <- lm(volume ~ diameter, data = cherry)
+ajuste_ch <- lm(volume ~ diameter, data = cherry)   # el nombre `ajuste` ya es del bloque R5
 round(c(B_razon = mean(cherry$volume) / mean(cherry$diameter),
-        intercepto = as.numeric(coef(ajuste)[1]), pendiente = as.numeric(coef(ajuste)[2]),
-        r2 = summary(ajuste)$r.squared), 4)
+        intercepto = as.numeric(coef(ajuste_ch)[1]), pendiente = as.numeric(coef(ajuste_ch)[2]),
+        r2 = summary(ajuste_ch)$r.squared), 4)
 #>    B_razon intercepto  pendiente         r2
 #>     2.2773   -36.9435     5.0659     0.9353
 # El contraste sobre el intercepto -el criterio del modulo 6- aqui no deja lugar
 # a dudas, al reves que en agsrs: la recta NO pasa por el origen.
 options(scipen = 0)    # el p-valor es tan pequeno que con el scipen del bloque
                        # R1 saldria como 0,000000000007621
-signif(summary(ajuste)$coefficients, 4)
+signif(summary(ajuste_ch)$coefficients, 4)
 #>             Estimate Std. Error t value  Pr(>|t|)
 #> (Intercept)  -36.940     3.3650  -10.98 7.621e-12
 #> diameter       5.066     0.2474   20.48 8.644e-19

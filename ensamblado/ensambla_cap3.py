@@ -136,7 +136,7 @@ def main():
         { id: 11, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },
         { id: 12, title: "Parámetros no lineales: la mediana", shortTitle: "Mediana", duration: "20 min" },
         { id: 13, title: "Formulario", shortTitle: "Formulario", duration: "10 min" },
-        { id: 14, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "40 min" }
+        { id: 14, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "50 min" }
       ]
     };
 
