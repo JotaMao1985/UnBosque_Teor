@@ -128,11 +128,11 @@ def main():
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "15 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
         { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "29 min" },
-        { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "20 min" },
+        { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "27 min" },
         { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
         { id: 10, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },
         { id: 11, title: "Parámetros no lineales: la mediana", shortTitle: "Mediana", duration: "20 min" },
-        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "30 min" }
+        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "40 min" }
       ]
     };
 

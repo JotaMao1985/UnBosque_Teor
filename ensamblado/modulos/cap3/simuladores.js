@@ -488,6 +488,22 @@
         ]
       },
       {
+        tipo: 'opcion',
+        modulo: 3,
+        pregunta: 'La regla del módulo 3 dice que conviene la razón si $\\rho > \\tfrac12\\,\\mathrm{CV}(x)/\\mathrm{CV}(y)$. En <code>agsrs</code> sale $0{,}9958$ contra un umbral de $0{,}4937$. ¿Qué se ha demostrado con eso?',
+        pista: 'La desigualdad salió de comparar dos errores cuadráticos medios. ¿Cuáles dos?',
+        opciones: [
+          { texto: 'Que la razón bate a la <strong>expansión</strong>, es decir a no usar auxiliar. No dice nada sobre la regresión.', correcta: true,
+            retro: 'Exacto, y es el matiz que más se pierde. La desigualdad se obtuvo de $\\mathrm{ECM}(\\hat{\\bar y}_r) \\le \\mathrm{ECM}(\\bar y)$: su rival es el estimador que ignora $x$. La regresión nunca entró en la cuenta, y de hecho es siempre al menos tan buena como la razón.' },
+          { texto: 'Que la razón es el mejor de los cuatro estimadores del capítulo.', correcta: false,
+            retro: 'No. La regla solo compara con la expansión. El módulo 7 demuestra que la regresión tiene varianza menor o igual que la razón <em>siempre</em>, pase lo que pase con esta desigualdad.' },
+          { texto: 'Que la recta de regresión pasa por el origen.', correcta: false,
+            retro: 'Ésa es otra pregunta y otro criterio: el contraste sobre el intercepto del módulo 6. Una correlación altísima es perfectamente compatible con un intercepto muy distinto de cero — los cerezos del ejercicio 2 lo enseñan.' },
+          { texto: 'Que el sesgo de $\\hat{B}$ es despreciable en esta muestra.', correcta: false,
+            retro: 'Eso lo dice la cota del módulo 4, $\\lvert\\mathrm{Sesgo}\\rvert/\\sigma \\le \\mathrm{CV}(\\hat{\\bar x})$, que en <code>agsrs</code> vale 0,0626. Son dos criterios distintos y ninguno implica al otro.' }
+        ]
+      },
+      {
         tipo: 'multiple',
         modulo: 4,
         pregunta: 'Sobre el sesgo del estimador de razón, marca <strong>todo</strong> lo que sea cierto.',
@@ -500,6 +516,32 @@
         ],
         retroAcierto: 'Todas menos la de <code>survey</code>. El sesgo es una propiedad del <em>estimador</em>, no del software ni del diseño: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas.',
         retroFallo: 'Son las tres que no mencionan el software. Lo que no es cierto es que <code>survey</code> elimine el sesgo: calcula el mismo estimador, con el mismo sesgo. Lo que hace pequeño al sesgo es $n$, y a cambio se acepta porque el error cuadrático medio baja muchísimo.'
+      },
+      {
+        tipo: 'numerica',
+        modulo: 4,
+        pregunta: 'En <code>agsrs</code>, $s_x = 344\\,829{,}6$, $\\bar{x} = 301\\,953{,}7$, $n = 300$ y $N = 3\\,078$. Calcula $\\widehat{\\mathrm{CV}}(\\hat{\\bar x}) = \\sqrt{(1-f)/n}\\;s_x/\\bar{x}$, la cota del sesgo relativo. Da cuatro decimales.',
+        pista: 'Con $f = n/N = 300/3\\,078$. Es una sola cuenta, y el resultado tiene que quedar muy por debajo de 0,1.',
+        respuesta: 0.0626,
+        tolerancia: 0.0004,
+        retroAcierto: 'Correcto: $0{,}0626$. La regla de Kish pide que esté por debajo de 0,1–0,2 para dar el sesgo por despreciable, y aquí sobra margen. Lo notable es que esta cifra sale de <strong>una sola muestra</strong>: la simulación de 200 000 réplicas confirma lo mismo, pero en la vida real no se tiene.',
+        retroFallo: 'Es $\\sqrt{(1 - 300/3078)/300} \\times 344\\,829{,}6/301\\,953{,}7 = 0{,}0626$. Los dos fallos típicos: olvidar la corrección por población finita, u olvidar dividir por $\\bar{x}$ —la cota es un <em>coeficiente de variación</em>, no una desviación típica—.'
+      },
+      {
+        tipo: 'opcion',
+        modulo: 5,
+        pregunta: 'Un estudiante estima $B$ con la media de los cocientes, $\\frac1n\\sum y_k/x_k$, en vez de $\\bar{y}/\\bar{x}$. Con muestra suficiente, ¿qué le pasa?',
+        pista: 'Pregúntate a qué número converge cada una de las dos fórmulas cuando $n \\to N$.',
+        opciones: [
+          { texto: 'No converge a $B$: converge a otro parámetro poblacional, la media de los cocientes, que en <code>agpop</code> vale $0{,}9530$ frente a $B = 0{,}9797$.', correcta: true,
+            retro: 'Ése es el fondo del asunto. No es un estimador peor de lo mismo: es un estimador de <em>otra cosa</em>. Por eso aumentar $n$ no lo arregla — lo hace converger, con más precisión, al número equivocado. El desvío es del 2,73 %.' },
+          { texto: 'Converge a $B$, pero con más varianza.', correcta: false,
+            retro: 'Si sólo fuera varianza, más muestra lo resolvería. El problema es que el límite es otro: $0{,}9530$ en vez de $0{,}9797$. Ningún tamaño de muestra corrige un objetivo equivocado.' },
+          { texto: 'Da exactamente lo mismo: es la misma cantidad reordenada.', correcta: false,
+            retro: 'Sólo coinciden si todos los $x_k$ son iguales. Tómese dos unidades, la primera con $x = 1$ e $y = 2$, la segunda con $x = 6$ e $y = 6$: la razón de medias vale $8/7 = 1{,}14$ y la media de cocientes vale $\\tfrac12(2 + 1) = 1{,}50$. Los mismos datos, dos números.' },
+          { texto: 'Falla sólo si hay valores atípicos.', correcta: false,
+            retro: 'Los atípicos lo empeoran, pero el problema es anterior: apunta a otro parámetro aunque no haya ninguno. Y hay un fallo más brusco: si algún $x_k = 0$ el cociente no existe — en <code>agpop</code> son 25 condados que la media de cocientes ni siquiera puede usar.' }
+        ]
       },
       {
         tipo: 'opcion',
@@ -518,6 +560,22 @@
         ]
       },
       {
+        tipo: 'opcion',
+        modulo: 6,
+        pregunta: 'Para decidir entre razón y regresión se contrasta $H_0: a = 0$ en la recta libre. En <code>agsrs</code> sale $p = 0{,}2942$ por MCO. ¿Qué conviene hacer antes de darlo por bueno?',
+        pista: 'Piensa en qué supone <code>lm()</code> sobre cómo se obtuvieron las observaciones.',
+        opciones: [
+          { texto: 'Repetirlo con <code>svyglm()</code>: el contraste de <code>lm()</code> ignora el diseño muestral.', correcta: true,
+            retro: 'Correcto, y es el aviso que el propio criterio no trae. Aquí da igual —bajo m.a.s. las dos estimaciones del intercepto coinciden y el p-valor pasa de 0,2942 a 0,3378, misma conclusión—, pero con estratos o conglomerados el error estándar de <code>lm()</code> puede quedarse muy corto y volver significativo lo que no lo era.' },
+          { texto: 'Nada: un p-valor es un p-valor.', correcta: false,
+            retro: 'El p-valor depende del error estándar, y el de <code>lm()</code> se calcula suponiendo observaciones independientes e idénticamente distribuidas. Eso es cierto bajo m.a.s. y falso en casi cualquier otro diseño del curso.' },
+          { texto: 'Comprobar que $R^2$ sea alto.', correcta: false,
+            retro: 'El $R^2$ no interviene en esta decisión. En los cerezos vale 0,9353 y aun así la razón está descartada: son preguntas distintas.' },
+          { texto: 'Rechazar la razón, porque $p > 0{,}05$.', correcta: false,
+            retro: 'Al revés. $p > 0{,}05$ significa que no se puede rechazar que la recta pase por el origen, y entonces se prefiere la razón <em>por ser el modelo más simple</em>. Lo que descarta la razón es un p-valor pequeño, como el $7{,}6\\times10^{-12}$ de los cerezos.' }
+        ]
+      },
+      {
         tipo: 'numerica',
         modulo: 7,
         pregunta: 'El total auxiliar es $t_x = 963\\,464\\,412$ y la media de las diferencias $y_k - x_k$ en la muestra es $-4\\,056{,}677$. Con $N = 3\\,078$, ¿cuánto vale el estimador de diferencia? Da el resultado en millones, con un decimal.',
@@ -526,6 +584,22 @@
         tolerancia: 0.15,
         retroAcierto: '$963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961$, es decir 951,0 millones. La corrección es de −12,5 millones sobre el total de 1987.',
         retroFallo: 'Es $963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961 \\approx 951{,}0$ millones. El error frecuente es olvidar multiplicar por $N$: la media de diferencias hay que llevarla a escala poblacional.'
+      },
+      {
+        tipo: 'opcion',
+        modulo: 7,
+        pregunta: 'El teorema del módulo 7 dice $V(\\hat{\\bar y}_r) \\ge V(\\hat{\\bar y}_{\\text{reg}})$, con igualdad si y sólo si $B = b_1$. ¿Qué significa esa condición de igualdad?',
+        pista: 'Escribe la recta de regresión $y = b_0 + b_1 x$ y pregúntate qué vale $b_0$ cuando $b_1$ coincide con $B = \\bar{y}_U/\\bar{x}_U$.',
+        opciones: [
+          { texto: 'Que la recta de regresión pasa por el origen. Es el mismo criterio del módulo 6, dicho en varianzas.', correcta: true,
+            retro: 'Exacto, y eso une los tres módulos: $b_1 = B$ equivale a $b_0 = 0$. Cuando la recta pasa por el origen, la razón no pierde nada frente a la regresión; cuando no, la regresión gana justo lo que mide el cuadrado $(B S_x - \\rho S_y)^2$.' },
+          { texto: 'Que la correlación es 1.', correcta: false,
+            retro: 'Con $\\rho = 1$ las dos varianzas se anulan y el empate es trivial. Pero la igualdad se da mucho antes: basta que la recta pase por el origen, con cualquier correlación.' },
+          { texto: 'Que la muestra es grande.', correcta: false,
+            retro: 'El teorema es sobre varianzas poblacionales aproximadas; no hay ningún $n$ que lo active o lo desactive. El tamaño influye en si la <em>tabla estimada</em> deja ver el orden, no en si el orden existe.' },
+          { texto: 'Que los cuatro estimadores del capítulo coinciden.', correcta: false,
+            retro: 'No: $B = b_1$ empata razón y regresión, y deja fuera a la expansión y a la diferencia. Que la diferencia empate exige otra cosa, $b_1 = 1$, y la expansión $b_1 = 0$.' }
+        ]
       },
       {
         tipo: 'opcion',
@@ -538,7 +612,7 @@
           { texto: 'Porque los dominios no son estratos.', correcta: false,
             retro: 'Cierto que no lo son, pero la razón de fondo es la que dice la otra opción: en un estrato, $n_h$ lo fija el diseño; en un dominio, $n_d$ sale de la muestra.' },
           { texto: 'Porque el tamaño poblacional del dominio $N_d$ se conoce.', correcta: false,
-            retro: 'Justo al revés: cuando $N_d$ <em>se conoce</em>, el dominio se comporta casi como un estrato y la fórmula se simplifica. El caso difícil es cuando no se conoce.' },
+            retro: 'Conocer $N_d$ no cambia nada aquí: el error estándar de la <em>media</em> de dominio no lo contiene. Donde sí decide es en el <em>total</em>, que tiene una fórmula si $N_d$ se conoce y otra, más cara, si no.' },
           { texto: 'Porque la media de dominio es sesgada.', correcta: false,
             retro: 'Lo es, ligeramente, por ser una razón; pero eso no es lo que invalida la fórmula del error estándar.' }
         ]

@@ -106,7 +106,9 @@
     "0,9797": "razon poblacional B = t_y/t_x = 0,97974736, a cuatro decimales (ordenVarianzas.B)",
     "5,3": "extremo bajo de los tres ee ESTIMADOS de la tabla del M7: el de la diferencia, 5 329 882, en millones",
     "5,6": "extremo alto de los tres ee ESTIMADOS de la tabla del M7: el de la regresion por survey, 5 593 972, en millones",
-    "2,73": "brecha entre la media de cocientes y B en agpop: (0,95300659 - 0,97974736)/0,97974736 = -2,7294 %, citada en valor absoluto (cocientes.brechaPct)"
+    "2,73": "brecha entre la media de cocientes y B en agpop: (0,95300659 - 0,97974736)/0,97974736 = -2,7294 %, citada en valor absoluto (cocientes.brechaPct)",
+    "344 829,6": "sd(agsrs$acres87) = 344 829,6: la s_x del enunciado de la pregunta 6 del quiz; el bloque R4 solo imprime la CV que resulta de ella (0,0626)",
+    "-1,37": "vcov(med)[1,2] = -1,372644e-22 en el bloque R8: la covarianza entre las dos medias de dominio, escrita en el texto como -1,37e-22 porque el bloque la imprime en notacion cientifica"
   },
   "capitulo-4-muestreo-estratificado.html": {
     "85 296": "filas de BigLucy (TeachingSampling); verificado",

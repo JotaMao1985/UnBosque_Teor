@@ -154,6 +154,36 @@ round(por_mano, 4)
 #>       600 o mas granjas menos de 600
 #> media         316565.65    283813.71
 #> ee             21553.21     28852.24
+
+# El TOTAL de dominio depende de si se conoce N_d. Si NO se conoce, se define
+# u = y * ind y se estima su total: el tamano del dominio deja de ser un dato y
+# pasa a estimarse tambien, y esa incertidumbre entra en el error estandar.
+dis2    <- update(dis2, u1 = acres92 * (dom == "600 o mas granjas"))
+med     <- svyby(~acres92, ~dom, dis2, svymean, covmat = TRUE)
+Nd_real <- sum(agpop$farms92 >= 600)           # agpop es censo: aqui SI se sabe
+tot_dom <- rbind(
+  "N_d desconocido" = c(total = coef(svytotal(~u1, dis2)),
+                        ee    = SE(svytotal(~u1, dis2))),
+  "N_d conocido"    = c(total = Nd_real * coef(med)[1],
+                        ee    = Nd_real * SE(med)[1]))
+round(cbind(tot_dom, ee_rel = 100 * tot_dom[, 2] / tot_dom[, 1]), 2)
+#>                  total.u1       ee ee_rel
+#> N_d desconocido 418987302 38938277   9.29
+#> N_d conocido    423564841 28838198   6.81
+
+# Y la diferencia entre dos medias de dominio: survey calcula la covarianza,
+# que en m.a.s. es practicamente nula porque cada condado cae en un dominio
+# o en el otro, nunca en los dos.
+dif <- svycontrast(med, quote(`600 o mas granjas` - `menos de 600`))
+print(dif)
+#>          nlcon    SE
+#> contrast 32752 36014
+options(scipen = 0)   # R1 fijo scipen = 999; aqui estorba para ver un cero
+c(cov_estimada = vcov(med)[1, 2],
+  ee_si_cov_0  = sqrt(sum(SE(med)^2)))
+options(scipen = 999)
+#>  cov_estimada   ee_si_cov_0
+#> -1.372644e-22  3.601379e+04
 cat("\n###BLOQUE-R9###\n")
 # El estimador general de regresion (GREG) con una auxiliar:
 #   t_greg = t_pi + beta (t_x - t_x_pi)

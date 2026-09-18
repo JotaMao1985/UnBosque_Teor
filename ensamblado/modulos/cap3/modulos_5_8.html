@@ -78,16 +78,17 @@
       </div>
 
       <div class="note">
-        <p><strong>Dónde reaparece esto.</strong> El estimador de razón se usa en el capítulo 4 dentro de cada
-          estrato (razón separada) o sobre el conjunto (razón combinada); en el capítulo 5 es la forma natural de
-          estimar cuando los conglomerados tienen tamaños desiguales; y en el capítulo 7 es la base de la
-          linealización de Taylor para cualquier estadístico no lineal.</p>
+        <p><strong>Dónde reaparece esto.</strong> El estimador de razón se usa en el <strong>módulo 12 del
+          capítulo 4</strong>, «Razón en el estratificado», dentro de cada estrato (razón separada) o sobre el
+          conjunto (razón combinada); en el capítulo 5 es la forma natural de estimar cuando los conglomerados
+          tienen tamaños desiguales; y en el capítulo 7 es la base de la linealización de Taylor para cualquier
+          estadístico no lineal.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.1.3</strong> (2.ª ed.) o <strong>4.2.3</strong> (3.ª ed.) — razones con
+          <li>Lohr, <strong>sección 3.1.3</strong> (2.ª ed.) o <strong>4.1.3</strong> (3.ª ed.) — razones con
             variables indicadoras y estimación de proporciones dentro de dominios.</li>
           <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.1.1</strong>
             (pp. 208–209) — el ejemplo de la epidemia, que abre su capítulo con esta misma confusión. Ojo: el libro
@@ -198,7 +199,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.3</strong> (3.ª ed.) — el estimador de
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — el estimador de
             regresión y su varianza.</li>
           <li>Lumley, T. <em>Complex Surveys: A Guide to Analysis Using R</em> — el capítulo sobre
             <code>calibrate()</code>, que explica el estimador de varianza que usa el paquete.</li>
@@ -425,8 +426,13 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.2.2</strong> (2.ª ed.) o <strong>4.3.2</strong> (3.ª ed.) — el estimador de
-            diferencia y el ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 12.</li>
+          <li>Lohr, <strong>sección 3.2.2</strong> (2.ª ed.) — el estimador de diferencia. En la 3.ª ed. deja de
+            ser sección: la diferencia queda como el <strong>ejercicio 32</strong> del capítulo 4, planteada como
+            el caso de la regresión con la pendiente fijada en 1, que es exactamente lo que dice el cuadrado
+            perfecto de arriba.</li>
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.), Ejemplo 4.7 — el
+            ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 12. Ojo: Lohr lo resuelve por
+            <em>regresión</em>, no por diferencia.</li>
           <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.2.3</strong>
             (pp. 228–229) — las dos desigualdades con sus condiciones de igualdad, y las salvedades sobre
             $\hat{b}_1$ estimado. Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
@@ -464,10 +470,14 @@
 
       <div class="definition">
         <h4>Dominio</h4>
-        <p style="margin-bottom:0;">Un <strong>dominio</strong> es una subpoblación $U_d \subset U$ sobre la que se
-          quiere estimar por separado, pero que <em>no</em> se usó para diseñar la muestra. La diferencia con un
-          estrato es exactamente esa: en un estrato, $n_h$ lo fija el investigador; en un dominio, $n_d$ es
-          <strong>aleatorio</strong> —depende de cuántas unidades del dominio hayan caído en la muestra—.</p>
+        <p>Un <strong>dominio</strong> es cualquier subpoblación $U_d \subset U$ sobre la que se quiere estimar por
+          separado. Eso es todo: un dominio se decide <em>al analizar</em>, no al diseñar.</p>
+        <p style="margin-bottom:0;">Lo que cambia las fórmulas no es ser dominio, sino de dónde sale $n_d$. Si el
+          dominio coincide con un estrato, $n_h$ lo fijó el investigador y $n_d = n_h$ es <strong>constante</strong>:
+          se estima con las fórmulas del capítulo 4. Si el dominio no es un estrato, $n_d$ es
+          <strong>aleatorio</strong> —depende de cuántas unidades del dominio hayan caído en la muestra— y la media
+          se vuelve una razón. Un estrato, por tanto, <em>también</em> es un dominio cuando se pide su estimación
+          aparte; lo que no es, es un dominio con $n_d$ aleatorio.</p>
       </div>
 
       <p>Esa aleatoriedad de $n_d$ tiene una consecuencia directa: la media de dominio</p>
@@ -491,6 +501,53 @@
 
       <p>Las dos vías coinciden hasta el último decimal impreso, lo cual confirma que <code>svyby</code> está
         haciendo exactamente la linealización de la fórmula, y no otra cosa.</p>
+
+      <h3>El total de dominio: dos fórmulas según lo que se sepa</h3>
+
+      <p>Con la <em>media</em> basta una fórmula. Con el <strong>total</strong> hay dos, y la que toca depende de un
+        dato que el diseño no siempre tiene: <strong>$N_d$, cuántas unidades de la población hay en el dominio</strong>.</p>
+
+      <div class="formula">
+        $$\hat t_{yd} \;=\; N_d\,\hat{\bar y}_d \quad \text{si } N_d \text{ se conoce},
+          \qquad\qquad
+          \hat t_{yd} \;=\; \hat t_u \;=\; N\,\bar u, \quad u_k = y_k\,\delta_k, \quad \text{si no}$$
+      </div>
+
+      <p>La segunda no necesita saber nada del dominio: convierte en ceros las unidades que no le pertenecen y
+        estima el total de esa variable nueva. Sale más cara, y el bloque dice cuánto: sobre el dominio de los
+        condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al
+        <strong>9,29 %</strong>. Esa diferencia es el precio de no conocer $N_d$ —la incertidumbre sobre el tamaño
+        del dominio, que entra por $s_u$ y no estaba en $s_{yd}$—.</p>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Y por qué aquí se pueden comparar las dos.</strong> Porque
+          <code>agpop</code> es un censo: se puede mirar y contar los $N_d$ condados de verdad. En una encuesta
+          real no se puede, y ésa es justamente la situación en la que se usa la segunda fórmula. Que los dos
+          totales no coincidan —418 987 302 contra 423 564 841— no es un error de ninguna de las dos: son dos
+          estimadores distintos del mismo parámetro, y ambos insesgados o casi.</p>
+      </div>
+
+      <h3>Comparar dos dominios</h3>
+
+      <p>La pregunta que de verdad se hace un informe no es «¿cuánto vale el dominio 1?», sino «¿difieren?». Con
+        <code>svycontrast</code> sobre un <code>svyby</code> guardado con <code>covmat = TRUE</code>, la diferencia
+        de las dos medias sale <strong>32 752</strong> acres con error estándar <strong>36 014</strong>: mayor que
+        la propia diferencia, así que estos datos <em>no</em> sostienen que los dos grupos de condados tengan
+        superficies medias distintas.</p>
+
+      <p>Lo interesante es de dónde sale ese 36 014. La covarianza estimada entre las dos medias es
+        $-1{,}37\times 10^{-22}$ —cero, con ruido de coma flotante—, así que el error estándar de la diferencia es
+        exactamente $\sqrt{21\,553{,}21^2 + 28\,852{,}24^2}$. No es casualidad: bajo m.a.s. cada unidad cae en un
+        dominio <em>o</em> en el otro, nunca en los dos, y de ahí que las dos medias sean prácticamente
+        incorreladas. Lohr lo pide demostrar en el ejercicio 26 del capítulo 4.</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Ojo: eso vale para dominios disjuntos bajo m.a.s.</strong> Si los
+          dominios se solapan, o si el diseño tiene conglomerados y las unidades de los dos dominios comparten
+          conglomerado, la covarianza deja de ser nula y sumar varianzas subestima o exagera el error. La razón
+          para usar <code>covmat = TRUE</code> no es que la covarianza valga cero: es que
+          <code>svycontrast</code> la calcule y no haya que suponerlo.</p>
+      </div>
 
       <div class="simulador" data-simulador="dominios">
         <h4><i class="fas fa-object-group" aria-hidden="true"></i> Dominios sobre <code>agsrs</code></h4>
@@ -517,10 +574,14 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.3</strong> (2.ª ed.) o <strong>4.4</strong> (3.ª ed.) — estimación en dominios,
+          <li>Lohr, <strong>sección 3.3</strong> (2.ª ed.) o <strong>4.3</strong> (3.ª ed.) — estimación en dominios,
             con el ejemplo de los condados con 600 granjas o más que se reproduce en el bloque de arriba.</li>
-          <li>Lohr, <strong>capítulo 14</strong> (3.ª ed.) — estimación en áreas pequeñas, que es lo que se hace
-            cuando $n_d$ es demasiado pequeño para este enfoque.</li>
+          <li>Lohr, <strong>ejercicio 26</strong> del capítulo 4 (3.ª ed.) — la demostración de que
+            $\mathrm{Cov}(\hat{\bar y}_1, \hat{\bar y}_2) \approx 0$ para dos dominios disjuntos bajo m.a.s.</li>
+          <li>Lohr, <strong>sección 11.3</strong> (3.ª ed.), «Using Regression to Compare Domain Means» — comparar
+            dominios en diseños complejos, donde la covarianza deja de ser nula; y el <strong>capítulo 14</strong>
+            (3.ª ed.) — estimación en áreas pequeñas, que es lo que se hace cuando $n_d$ es demasiado pequeño para
+            este enfoque.</li>
         </ul>
       </div>
     </div>

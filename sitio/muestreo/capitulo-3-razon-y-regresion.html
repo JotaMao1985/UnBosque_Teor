@@ -3834,7 +3834,7 @@ signif(abs(ee_mano - ee_razon) / ee_mano, 3)      # discrepancia relativa
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>secciones 3.1 y 3.1.1</strong> (2.ª ed.) o <strong>4.1 y 4.2</strong> (3.ª ed.) — el
+          <li>Lohr, <strong>secciones 3.1 y 3.1.1</strong> (2.ª ed.) o <strong>4.1 y 4.1.1</strong> (3.ª ed.) — el
             estimador de razón, su error estándar y los ejemplos con <code>agsrs</code> que se reproducen aquí.</li>
           <li>Gutiérrez, <strong>sección 8.2</strong> — la razón poblacional como parámetro no lineal, con la
             linealización hecha en el marco $\pi$ general.</li>
@@ -4163,9 +4163,11 @@ print(pd.DataFrame(
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.1.1</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — cuándo usar el
-            estimador de razón, con la regla sobre las correlaciones y los coeficientes de variación.</li>
-          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.3</strong> (3.ª ed.) — la regresión y la
+          <li>Lohr, <strong>sección 3.1.1</strong> (2.ª ed.) o <strong>4.1.1 y 4.1.5</strong> (3.ª ed.) — cuándo usar el
+            estimador de razón. Son dos sitios: el 4.1.1 da el motivo, y la regla sobre las correlaciones y los
+            coeficientes de variación está en «Advantages of Ratio Estimation», al final del 4.1, con la desigualdad
+            $R \ge \mathrm{CV}(x) / [2\,\mathrm{CV}(y)]$ escrita tal cual.</li>
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — la regresión y la
             diferencia, que aquí solo se anuncian para poder comparar; los módulos 6 y 7 las construyen y el 7 pone
             los cuatro estimadores en una misma tabla.</li>
         </ul>
@@ -4332,7 +4334,7 @@ print(pd.DataFrame(
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.1.2</strong> (2.ª ed.) o <strong>4.2.2</strong> (3.ª ed.) — sesgo y error
+          <li>Lohr, <strong>sección 3.1.2</strong> (2.ª ed.) o <strong>4.1.2</strong> (3.ª ed.) — sesgo y error
             cuadrático medio del estimador de razón, con la aproximación de Taylor completa.</li>
           <li>Gutiérrez, <strong>sección 8.3</strong> — linealización de parámetros no lineales en el marco $\pi$,
             que es la herramienta que reaparece en los capítulos 7 y 8.</li>
@@ -4423,16 +4425,17 @@ print(pd.DataFrame(
       </div>
 
       <div class="note">
-        <p><strong>Dónde reaparece esto.</strong> El estimador de razón se usa en el capítulo 4 dentro de cada
-          estrato (razón separada) o sobre el conjunto (razón combinada); en el capítulo 5 es la forma natural de
-          estimar cuando los conglomerados tienen tamaños desiguales; y en el capítulo 7 es la base de la
-          linealización de Taylor para cualquier estadístico no lineal.</p>
+        <p><strong>Dónde reaparece esto.</strong> El estimador de razón se usa en el <strong>módulo 12 del
+          capítulo 4</strong>, «Razón en el estratificado», dentro de cada estrato (razón separada) o sobre el
+          conjunto (razón combinada); en el capítulo 5 es la forma natural de estimar cuando los conglomerados
+          tienen tamaños desiguales; y en el capítulo 7 es la base de la linealización de Taylor para cualquier
+          estadístico no lineal.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.1.3</strong> (2.ª ed.) o <strong>4.2.3</strong> (3.ª ed.) — razones con
+          <li>Lohr, <strong>sección 3.1.3</strong> (2.ª ed.) o <strong>4.1.3</strong> (3.ª ed.) — razones con
             variables indicadoras y estimación de proporciones dentro de dominios.</li>
           <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.1.1</strong>
             (pp. 208–209) — el ejemplo de la epidemia, que abre su capítulo con esta misma confusión. Ojo: el libro
@@ -4571,7 +4574,7 @@ round(c(b0 = b0, b1 = b1, regresion_a_mano = t_regresion,
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.3</strong> (3.ª ed.) — el estimador de
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.) — el estimador de
             regresión y su varianza.</li>
           <li>Lumley, T. <em>Complex Surveys: A Guide to Analysis Using R</em> — el capítulo sobre
             <code>calibrate()</code>, que explica el estimador de varianza que usa el paquete.</li>
@@ -4818,8 +4821,13 @@ print(comparacion, row.names = FALSE, digits = 6)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.2.2</strong> (2.ª ed.) o <strong>4.3.2</strong> (3.ª ed.) — el estimador de
-            diferencia y el ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 12.</li>
+          <li>Lohr, <strong>sección 3.2.2</strong> (2.ª ed.) — el estimador de diferencia. En la 3.ª ed. deja de
+            ser sección: la diferencia queda como el <strong>ejercicio 32</strong> del capítulo 4, planteada como
+            el caso de la regresión con la pendiente fijada en 1, que es exactamente lo que dice el cuadrado
+            perfecto de arriba.</li>
+          <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.), Ejemplo 4.7 — el
+            ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 12. Ojo: Lohr lo resuelve por
+            <em>regresión</em>, no por diferencia.</li>
           <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.2.3</strong>
             (pp. 228–229) — las dos desigualdades con sus condiciones de igualdad, y las salvedades sobre
             $\hat{b}_1$ estimado. Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
@@ -4857,10 +4865,14 @@ print(comparacion, row.names = FALSE, digits = 6)
 
       <div class="definition">
         <h4>Dominio</h4>
-        <p style="margin-bottom:0;">Un <strong>dominio</strong> es una subpoblación $U_d \subset U$ sobre la que se
-          quiere estimar por separado, pero que <em>no</em> se usó para diseñar la muestra. La diferencia con un
-          estrato es exactamente esa: en un estrato, $n_h$ lo fija el investigador; en un dominio, $n_d$ es
-          <strong>aleatorio</strong> —depende de cuántas unidades del dominio hayan caído en la muestra—.</p>
+        <p>Un <strong>dominio</strong> es cualquier subpoblación $U_d \subset U$ sobre la que se quiere estimar por
+          separado. Eso es todo: un dominio se decide <em>al analizar</em>, no al diseñar.</p>
+        <p style="margin-bottom:0;">Lo que cambia las fórmulas no es ser dominio, sino de dónde sale $n_d$. Si el
+          dominio coincide con un estrato, $n_h$ lo fijó el investigador y $n_d = n_h$ es <strong>constante</strong>:
+          se estima con las fórmulas del capítulo 4. Si el dominio no es un estrato, $n_d$ es
+          <strong>aleatorio</strong> —depende de cuántas unidades del dominio hayan caído en la muestra— y la media
+          se vuelve una razón. Un estrato, por tanto, <em>también</em> es un dominio cuando se pide su estimación
+          aparte; lo que no es, es un dominio con $n_d$ aleatorio.</p>
       </div>
 
       <p>Esa aleatoriedad de $n_d$ tiene una consecuencia directa: la media de dominio</p>
@@ -4898,12 +4910,89 @@ por_mano &lt;- sapply(unique(agsrs$dom), function(dd) {
 round(por_mano, 4)
 #&gt;       600 o mas granjas menos de 600
 #&gt; media         316565.65    283813.71
-#&gt; ee             21553.21     28852.24</code></pre>
+#&gt; ee             21553.21     28852.24
+
+# El TOTAL de dominio depende de si se conoce N_d. Si NO se conoce, se define
+# u = y * ind y se estima su total: el tamano del dominio deja de ser un dato y
+# pasa a estimarse tambien, y esa incertidumbre entra en el error estandar.
+dis2    &lt;- update(dis2, u1 = acres92 * (dom == "600 o mas granjas"))
+med     &lt;- svyby(~acres92, ~dom, dis2, svymean, covmat = TRUE)
+Nd_real &lt;- sum(agpop$farms92 &gt;= 600)           # agpop es censo: aqui SI se sabe
+tot_dom &lt;- rbind(
+  "N_d desconocido" = c(total = coef(svytotal(~u1, dis2)),
+                        ee    = SE(svytotal(~u1, dis2))),
+  "N_d conocido"    = c(total = Nd_real * coef(med)[1],
+                        ee    = Nd_real * SE(med)[1]))
+round(cbind(tot_dom, ee_rel = 100 * tot_dom[, 2] / tot_dom[, 1]), 2)
+#&gt;                  total.u1       ee ee_rel
+#&gt; N_d desconocido 418987302 38938277   9.29
+#&gt; N_d conocido    423564841 28838198   6.81
+
+# Y la diferencia entre dos medias de dominio: survey calcula la covarianza,
+# que en m.a.s. es practicamente nula porque cada condado cae en un dominio
+# o en el otro, nunca en los dos.
+dif &lt;- svycontrast(med, quote(`600 o mas granjas` - `menos de 600`))
+print(dif)
+#&gt;          nlcon    SE
+#&gt; contrast 32752 36014
+options(scipen = 0)   # R1 fijo scipen = 999; aqui estorba para ver un cero
+c(cov_estimada = vcov(med)[1, 2],
+  ee_si_cov_0  = sqrt(sum(SE(med)^2)))
+options(scipen = 999)
+#&gt;  cov_estimada   ee_si_cov_0
+#&gt; -1.372644e-22  3.601379e+04</code></pre>
         </div>
       </div>
 
       <p>Las dos vías coinciden hasta el último decimal impreso, lo cual confirma que <code>svyby</code> está
         haciendo exactamente la linealización de la fórmula, y no otra cosa.</p>
+
+      <h3>El total de dominio: dos fórmulas según lo que se sepa</h3>
+
+      <p>Con la <em>media</em> basta una fórmula. Con el <strong>total</strong> hay dos, y la que toca depende de un
+        dato que el diseño no siempre tiene: <strong>$N_d$, cuántas unidades de la población hay en el dominio</strong>.</p>
+
+      <div class="formula">
+        $$\hat t_{yd} \;=\; N_d\,\hat{\bar y}_d \quad \text{si } N_d \text{ se conoce},
+          \qquad\qquad
+          \hat t_{yd} \;=\; \hat t_u \;=\; N\,\bar u, \quad u_k = y_k\,\delta_k, \quad \text{si no}$$
+      </div>
+
+      <p>La segunda no necesita saber nada del dominio: convierte en ceros las unidades que no le pertenecen y
+        estima el total de esa variable nueva. Sale más cara, y el bloque dice cuánto: sobre el dominio de los
+        condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al
+        <strong>9,29 %</strong>. Esa diferencia es el precio de no conocer $N_d$ —la incertidumbre sobre el tamaño
+        del dominio, que entra por $s_u$ y no estaba en $s_{yd}$—.</p>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Y por qué aquí se pueden comparar las dos.</strong> Porque
+          <code>agpop</code> es un censo: se puede mirar y contar los $N_d$ condados de verdad. En una encuesta
+          real no se puede, y ésa es justamente la situación en la que se usa la segunda fórmula. Que los dos
+          totales no coincidan —418 987 302 contra 423 564 841— no es un error de ninguna de las dos: son dos
+          estimadores distintos del mismo parámetro, y ambos insesgados o casi.</p>
+      </div>
+
+      <h3>Comparar dos dominios</h3>
+
+      <p>La pregunta que de verdad se hace un informe no es «¿cuánto vale el dominio 1?», sino «¿difieren?». Con
+        <code>svycontrast</code> sobre un <code>svyby</code> guardado con <code>covmat = TRUE</code>, la diferencia
+        de las dos medias sale <strong>32 752</strong> acres con error estándar <strong>36 014</strong>: mayor que
+        la propia diferencia, así que estos datos <em>no</em> sostienen que los dos grupos de condados tengan
+        superficies medias distintas.</p>
+
+      <p>Lo interesante es de dónde sale ese 36 014. La covarianza estimada entre las dos medias es
+        $-1{,}37\times 10^{-22}$ —cero, con ruido de coma flotante—, así que el error estándar de la diferencia es
+        exactamente $\sqrt{21\,553{,}21^2 + 28\,852{,}24^2}$. No es casualidad: bajo m.a.s. cada unidad cae en un
+        dominio <em>o</em> en el otro, nunca en los dos, y de ahí que las dos medias sean prácticamente
+        incorreladas. Lohr lo pide demostrar en el ejercicio 26 del capítulo 4.</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Ojo: eso vale para dominios disjuntos bajo m.a.s.</strong> Si los
+          dominios se solapan, o si el diseño tiene conglomerados y las unidades de los dos dominios comparten
+          conglomerado, la covarianza deja de ser nula y sumar varianzas subestima o exagera el error. La razón
+          para usar <code>covmat = TRUE</code> no es que la covarianza valga cero: es que
+          <code>svycontrast</code> la calcule y no haya que suponerlo.</p>
+      </div>
 
       <div class="simulador" data-simulador="dominios">
         <h4><i class="fas fa-object-group" aria-hidden="true"></i> Dominios sobre <code>agsrs</code></h4>
@@ -4930,10 +5019,14 @@ round(por_mano, 4)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.3</strong> (2.ª ed.) o <strong>4.4</strong> (3.ª ed.) — estimación en dominios,
+          <li>Lohr, <strong>sección 3.3</strong> (2.ª ed.) o <strong>4.3</strong> (3.ª ed.) — estimación en dominios,
             con el ejemplo de los condados con 600 granjas o más que se reproduce en el bloque de arriba.</li>
-          <li>Lohr, <strong>capítulo 14</strong> (3.ª ed.) — estimación en áreas pequeñas, que es lo que se hace
-            cuando $n_d$ es demasiado pequeño para este enfoque.</li>
+          <li>Lohr, <strong>ejercicio 26</strong> del capítulo 4 (3.ª ed.) — la demostración de que
+            $\mathrm{Cov}(\hat{\bar y}_1, \hat{\bar y}_2) \approx 0$ para dos dominios disjuntos bajo m.a.s.</li>
+          <li>Lohr, <strong>sección 11.3</strong> (3.ª ed.), «Using Regression to Compare Domain Means» — comparar
+            dominios en diseños complejos, donde la covarianza deja de ser nula; y el <strong>capítulo 14</strong>
+            (3.ª ed.) — estimación en áreas pequeñas, que es lo que se hace cuando $n_d$ es demasiado pequeño para
+            este enfoque.</li>
         </ul>
       </div>
     </div>
@@ -5050,7 +5143,7 @@ round(por_mano, 4)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, <strong>sección 3.4</strong> (2.ª ed.) o <strong>4.5</strong> (3.ª ed.) — modelos para la razón y
+          <li>Lohr, <strong>sección 3.4</strong> (2.ª ed.) o <strong>4.6</strong> (3.ª ed.) — modelos para la razón y
             la regresión, y el análisis basado en modelos de <code>agsrs</code>.</li>
           <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 17</strong> — el enfoque asistido por
             modelos desarrollado en general.</li>
@@ -5356,7 +5449,7 @@ print(pd.DataFrame({
         <ul style="margin-bottom:0;">
           <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>secciones 8.2 y 8.3</strong> — parámetros no
             lineales, la razón poblacional y los cuantiles estimados desde $\hat{F}$.</li>
-          <li>Lohr, <strong>sección 7.5</strong> (3.ª ed.) — estimación de cuantiles en encuestas complejas y sus
+          <li>Lohr, <strong>sección 7.3</strong> (3.ª ed.) — estimación de cuantiles en encuestas complejas y sus
             intervalos de confianza.</li>
           <li>Lumley, T. — la documentación de
             <a href="https://cran.r-project.org/package=survey" target="_blank" rel="noopener"><code>svyquantile</code></a>,
@@ -5381,7 +5474,7 @@ print(pd.DataFrame({
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre diez de los once módulos y cuatro
+            <p class="text-gray-600 text-sm" style="margin:0;">Dieciséis preguntas sobre los once módulos y cuatro
               ejercicios con los datos de Lohr, resueltos en R.</p>
           </div>
         </div>
@@ -5393,7 +5486,7 @@ print(pd.DataFrame({
 
       <div class="quiz" data-quiz="cap3">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 3</h4>
-        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+        <p class="text-sm" style="margin-bottom:0;">Dieciséis preguntas. Cada opción trae su propia retroalimentación,
           también las incorrectas: leerlas cuando aciertas también enseña.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
@@ -5471,13 +5564,16 @@ round(c(total_real = sum(agpop$farms92),
           </div>
           <div class="ejercicio-panel pista" id="cap3-e2-pista" hidden>
             <p style="margin:0;">«Justifícalo con números, no con la correlación» es la mitad del ejercicio: el
-              $R^2$ va a salir alto y no va a decidir nada. El número que decide es el <strong>intercepto</strong>,
-              comparado con el rango de los volúmenes. Y si te preguntas por qué la relación no pasa por el origen,
-              piensa en qué relación geométrica hay entre el diámetro de un cilindro y su volumen.</p>
+              $R^2$ va a salir alto y no va a decidir nada. El número que decide es el <strong>intercepto</strong>, y
+              el criterio del módulo 6 dice qué hacer con él: contrastar $H_0: a = 0$ y mirar el p-valor. Compáralo
+              además con el rango de los volúmenes, para tener también la lectura sin contraste. Y si te preguntas
+              por qué la relación no pasa por el origen, piensa en qué relación geométrica hay entre el diámetro de
+              un cilindro y su volumen.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap3-e2-sol" hidden>
-            <p><strong>No. El intercepto ajustado es −36,94 sobre volúmenes que van de 10 a 77 pies cúbicos: más de
-              la mitad del rango. La recta por el origen no describe estos datos, aunque el $R^2$ sea 0,9353.</strong></p>
+            <p><strong>No. El contraste sobre el intercepto lo cierra sin discusión: $t = -10{,}98$ con
+              $p = 7{,}6\times 10^{-12}$. La recta por el origen no describe estos datos, aunque el $R^2$ sea
+              0,9353.</strong></p>
             <pre><code class="language-r"># Ejercicio 2 - Cerezos: volumen a partir del diametro. Aqui la recta por el
 # origen NO sirve, y el intercepto dice por que.
 cherry &lt;- read.csv("CSV data sets for SDA 3e/cherry.csv")
@@ -5496,6 +5592,14 @@ signif(summary(ajuste)$coefficients, 4)
 #&gt; (Intercept)  -36.940     3.3650  -10.98 7.621e-12
 #&gt; diameter       5.066     0.2474   20.48 8.644e-19
 options(scipen = 999)  # se restaura para los totales de nueve cifras</code></pre>
+            <p>Ése es el criterio del módulo 6 aplicado tal cual, y conviene ver el contraste con
+              <code>agsrs</code>: allí el mismo contraste daba $p = 0{,}2942$ —no se puede rechazar que la recta pase
+              por el origen, y la razón queda justificada por ser el modelo más simple—. Aquí el p-valor es doce
+              órdenes de magnitud menor. <strong>El mismo procedimiento decide en los dos sentidos</strong>, que es
+              lo que hace que sea un criterio y no una excusa.</p>
+            <p>Sin contraste se llega a lo mismo leyendo la magnitud: un intercepto de −36,94 sobre volúmenes que van
+              de 10 a 77 pies cúbicos es más de la mitad del rango. Esa lectura sirve, pero es informal; la que pide
+              el enunciado —«con números»— es la de arriba.</p>
             <p>El estimador de razón supondría $\hat{B} = 2{,}2773$ pies cúbicos por pulgada de diámetro, constante.
               Pero la recta ajustada tiene pendiente 5,07 y arranca en −36,9: en el rango observado las dos rectas
               se cruzan, y fuera de él se separan sin remedio. Aplicar la razón sobrestimaría el volumen de los
@@ -5656,11 +5760,11 @@ round(c(media_muestral_y = mean(deadtrees$field),
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "15 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
         { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "29 min" },
-        { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "20 min" },
+        { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "27 min" },
         { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
         { id: 10, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },
         { id: 11, title: "Parámetros no lineales: la mediana", shortTitle: "Mediana", duration: "20 min" },
-        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "30 min" }
+        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "40 min" }
       ]
     };
 
@@ -8336,6 +8440,22 @@ round(c(media_muestral_y = mean(deadtrees$field),
         ]
       },
       {
+        tipo: 'opcion',
+        modulo: 3,
+        pregunta: 'La regla del módulo 3 dice que conviene la razón si $\\rho > \\tfrac12\\,\\mathrm{CV}(x)/\\mathrm{CV}(y)$. En <code>agsrs</code> sale $0{,}9958$ contra un umbral de $0{,}4937$. ¿Qué se ha demostrado con eso?',
+        pista: 'La desigualdad salió de comparar dos errores cuadráticos medios. ¿Cuáles dos?',
+        opciones: [
+          { texto: 'Que la razón bate a la <strong>expansión</strong>, es decir a no usar auxiliar. No dice nada sobre la regresión.', correcta: true,
+            retro: 'Exacto, y es el matiz que más se pierde. La desigualdad se obtuvo de $\\mathrm{ECM}(\\hat{\\bar y}_r) \\le \\mathrm{ECM}(\\bar y)$: su rival es el estimador que ignora $x$. La regresión nunca entró en la cuenta, y de hecho es siempre al menos tan buena como la razón.' },
+          { texto: 'Que la razón es el mejor de los cuatro estimadores del capítulo.', correcta: false,
+            retro: 'No. La regla solo compara con la expansión. El módulo 7 demuestra que la regresión tiene varianza menor o igual que la razón <em>siempre</em>, pase lo que pase con esta desigualdad.' },
+          { texto: 'Que la recta de regresión pasa por el origen.', correcta: false,
+            retro: 'Ésa es otra pregunta y otro criterio: el contraste sobre el intercepto del módulo 6. Una correlación altísima es perfectamente compatible con un intercepto muy distinto de cero — los cerezos del ejercicio 2 lo enseñan.' },
+          { texto: 'Que el sesgo de $\\hat{B}$ es despreciable en esta muestra.', correcta: false,
+            retro: 'Eso lo dice la cota del módulo 4, $\\lvert\\mathrm{Sesgo}\\rvert/\\sigma \\le \\mathrm{CV}(\\hat{\\bar x})$, que en <code>agsrs</code> vale 0,0626. Son dos criterios distintos y ninguno implica al otro.' }
+        ]
+      },
+      {
         tipo: 'multiple',
         modulo: 4,
         pregunta: 'Sobre el sesgo del estimador de razón, marca <strong>todo</strong> lo que sea cierto.',
@@ -8348,6 +8468,32 @@ round(c(media_muestral_y = mean(deadtrees$field),
         ],
         retroAcierto: 'Todas menos la de <code>survey</code>. El sesgo es una propiedad del <em>estimador</em>, no del software ni del diseño: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas.',
         retroFallo: 'Son las tres que no mencionan el software. Lo que no es cierto es que <code>survey</code> elimine el sesgo: calcula el mismo estimador, con el mismo sesgo. Lo que hace pequeño al sesgo es $n$, y a cambio se acepta porque el error cuadrático medio baja muchísimo.'
+      },
+      {
+        tipo: 'numerica',
+        modulo: 4,
+        pregunta: 'En <code>agsrs</code>, $s_x = 344\\,829{,}6$, $\\bar{x} = 301\\,953{,}7$, $n = 300$ y $N = 3\\,078$. Calcula $\\widehat{\\mathrm{CV}}(\\hat{\\bar x}) = \\sqrt{(1-f)/n}\\;s_x/\\bar{x}$, la cota del sesgo relativo. Da cuatro decimales.',
+        pista: 'Con $f = n/N = 300/3\\,078$. Es una sola cuenta, y el resultado tiene que quedar muy por debajo de 0,1.',
+        respuesta: 0.0626,
+        tolerancia: 0.0004,
+        retroAcierto: 'Correcto: $0{,}0626$. La regla de Kish pide que esté por debajo de 0,1–0,2 para dar el sesgo por despreciable, y aquí sobra margen. Lo notable es que esta cifra sale de <strong>una sola muestra</strong>: la simulación de 200 000 réplicas confirma lo mismo, pero en la vida real no se tiene.',
+        retroFallo: 'Es $\\sqrt{(1 - 300/3078)/300} \\times 344\\,829{,}6/301\\,953{,}7 = 0{,}0626$. Los dos fallos típicos: olvidar la corrección por población finita, u olvidar dividir por $\\bar{x}$ —la cota es un <em>coeficiente de variación</em>, no una desviación típica—.'
+      },
+      {
+        tipo: 'opcion',
+        modulo: 5,
+        pregunta: 'Un estudiante estima $B$ con la media de los cocientes, $\\frac1n\\sum y_k/x_k$, en vez de $\\bar{y}/\\bar{x}$. Con muestra suficiente, ¿qué le pasa?',
+        pista: 'Pregúntate a qué número converge cada una de las dos fórmulas cuando $n \\to N$.',
+        opciones: [
+          { texto: 'No converge a $B$: converge a otro parámetro poblacional, la media de los cocientes, que en <code>agpop</code> vale $0{,}9530$ frente a $B = 0{,}9797$.', correcta: true,
+            retro: 'Ése es el fondo del asunto. No es un estimador peor de lo mismo: es un estimador de <em>otra cosa</em>. Por eso aumentar $n$ no lo arregla — lo hace converger, con más precisión, al número equivocado. El desvío es del 2,73 %.' },
+          { texto: 'Converge a $B$, pero con más varianza.', correcta: false,
+            retro: 'Si sólo fuera varianza, más muestra lo resolvería. El problema es que el límite es otro: $0{,}9530$ en vez de $0{,}9797$. Ningún tamaño de muestra corrige un objetivo equivocado.' },
+          { texto: 'Da exactamente lo mismo: es la misma cantidad reordenada.', correcta: false,
+            retro: 'Sólo coinciden si todos los $x_k$ son iguales. Tómese dos unidades, la primera con $x = 1$ e $y = 2$, la segunda con $x = 6$ e $y = 6$: la razón de medias vale $8/7 = 1{,}14$ y la media de cocientes vale $\\tfrac12(2 + 1) = 1{,}50$. Los mismos datos, dos números.' },
+          { texto: 'Falla sólo si hay valores atípicos.', correcta: false,
+            retro: 'Los atípicos lo empeoran, pero el problema es anterior: apunta a otro parámetro aunque no haya ninguno. Y hay un fallo más brusco: si algún $x_k = 0$ el cociente no existe — en <code>agpop</code> son 25 condados que la media de cocientes ni siquiera puede usar.' }
+        ]
       },
       {
         tipo: 'opcion',
@@ -8366,6 +8512,22 @@ round(c(media_muestral_y = mean(deadtrees$field),
         ]
       },
       {
+        tipo: 'opcion',
+        modulo: 6,
+        pregunta: 'Para decidir entre razón y regresión se contrasta $H_0: a = 0$ en la recta libre. En <code>agsrs</code> sale $p = 0{,}2942$ por MCO. ¿Qué conviene hacer antes de darlo por bueno?',
+        pista: 'Piensa en qué supone <code>lm()</code> sobre cómo se obtuvieron las observaciones.',
+        opciones: [
+          { texto: 'Repetirlo con <code>svyglm()</code>: el contraste de <code>lm()</code> ignora el diseño muestral.', correcta: true,
+            retro: 'Correcto, y es el aviso que el propio criterio no trae. Aquí da igual —bajo m.a.s. las dos estimaciones del intercepto coinciden y el p-valor pasa de 0,2942 a 0,3378, misma conclusión—, pero con estratos o conglomerados el error estándar de <code>lm()</code> puede quedarse muy corto y volver significativo lo que no lo era.' },
+          { texto: 'Nada: un p-valor es un p-valor.', correcta: false,
+            retro: 'El p-valor depende del error estándar, y el de <code>lm()</code> se calcula suponiendo observaciones independientes e idénticamente distribuidas. Eso es cierto bajo m.a.s. y falso en casi cualquier otro diseño del curso.' },
+          { texto: 'Comprobar que $R^2$ sea alto.', correcta: false,
+            retro: 'El $R^2$ no interviene en esta decisión. En los cerezos vale 0,9353 y aun así la razón está descartada: son preguntas distintas.' },
+          { texto: 'Rechazar la razón, porque $p > 0{,}05$.', correcta: false,
+            retro: 'Al revés. $p > 0{,}05$ significa que no se puede rechazar que la recta pase por el origen, y entonces se prefiere la razón <em>por ser el modelo más simple</em>. Lo que descarta la razón es un p-valor pequeño, como el $7{,}6\\times10^{-12}$ de los cerezos.' }
+        ]
+      },
+      {
         tipo: 'numerica',
         modulo: 7,
         pregunta: 'El total auxiliar es $t_x = 963\\,464\\,412$ y la media de las diferencias $y_k - x_k$ en la muestra es $-4\\,056{,}677$. Con $N = 3\\,078$, ¿cuánto vale el estimador de diferencia? Da el resultado en millones, con un decimal.',
@@ -8374,6 +8536,22 @@ round(c(media_muestral_y = mean(deadtrees$field),
         tolerancia: 0.15,
         retroAcierto: '$963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961$, es decir 951,0 millones. La corrección es de −12,5 millones sobre el total de 1987.',
         retroFallo: 'Es $963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961 \\approx 951{,}0$ millones. El error frecuente es olvidar multiplicar por $N$: la media de diferencias hay que llevarla a escala poblacional.'
+      },
+      {
+        tipo: 'opcion',
+        modulo: 7,
+        pregunta: 'El teorema del módulo 7 dice $V(\\hat{\\bar y}_r) \\ge V(\\hat{\\bar y}_{\\text{reg}})$, con igualdad si y sólo si $B = b_1$. ¿Qué significa esa condición de igualdad?',
+        pista: 'Escribe la recta de regresión $y = b_0 + b_1 x$ y pregúntate qué vale $b_0$ cuando $b_1$ coincide con $B = \\bar{y}_U/\\bar{x}_U$.',
+        opciones: [
+          { texto: 'Que la recta de regresión pasa por el origen. Es el mismo criterio del módulo 6, dicho en varianzas.', correcta: true,
+            retro: 'Exacto, y eso une los tres módulos: $b_1 = B$ equivale a $b_0 = 0$. Cuando la recta pasa por el origen, la razón no pierde nada frente a la regresión; cuando no, la regresión gana justo lo que mide el cuadrado $(B S_x - \\rho S_y)^2$.' },
+          { texto: 'Que la correlación es 1.', correcta: false,
+            retro: 'Con $\\rho = 1$ las dos varianzas se anulan y el empate es trivial. Pero la igualdad se da mucho antes: basta que la recta pase por el origen, con cualquier correlación.' },
+          { texto: 'Que la muestra es grande.', correcta: false,
+            retro: 'El teorema es sobre varianzas poblacionales aproximadas; no hay ningún $n$ que lo active o lo desactive. El tamaño influye en si la <em>tabla estimada</em> deja ver el orden, no en si el orden existe.' },
+          { texto: 'Que los cuatro estimadores del capítulo coinciden.', correcta: false,
+            retro: 'No: $B = b_1$ empata razón y regresión, y deja fuera a la expansión y a la diferencia. Que la diferencia empate exige otra cosa, $b_1 = 1$, y la expansión $b_1 = 0$.' }
+        ]
       },
       {
         tipo: 'opcion',
@@ -8386,7 +8564,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
           { texto: 'Porque los dominios no son estratos.', correcta: false,
             retro: 'Cierto que no lo son, pero la razón de fondo es la que dice la otra opción: en un estrato, $n_h$ lo fija el diseño; en un dominio, $n_d$ sale de la muestra.' },
           { texto: 'Porque el tamaño poblacional del dominio $N_d$ se conoce.', correcta: false,
-            retro: 'Justo al revés: cuando $N_d$ <em>se conoce</em>, el dominio se comporta casi como un estrato y la fórmula se simplifica. El caso difícil es cuando no se conoce.' },
+            retro: 'Conocer $N_d$ no cambia nada aquí: el error estándar de la <em>media</em> de dominio no lo contiene. Donde sí decide es en el <em>total</em>, que tiene una fórmula si $N_d$ se conoce y otra, más cara, si no.' },
           { texto: 'Porque la media de dominio es sesgada.', correcta: false,
             retro: 'Lo es, ligeramente, por ser una razón; pero eso no es lo que invalida la fórmula del error estándar.' }
         ]

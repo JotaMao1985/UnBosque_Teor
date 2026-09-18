@@ -14,7 +14,7 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre diez de los once módulos y cuatro
+            <p class="text-gray-600 text-sm" style="margin:0;">Dieciséis preguntas sobre los once módulos y cuatro
               ejercicios con los datos de Lohr, resueltos en R.</p>
           </div>
         </div>
@@ -26,7 +26,7 @@
 
       <div class="quiz" data-quiz="cap3">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 3</h4>
-        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+        <p class="text-sm" style="margin-bottom:0;">Dieciséis preguntas. Cada opción trae su propia retroalimentación,
           también las incorrectas: leerlas cuando aciertas también enseña.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
@@ -94,14 +94,25 @@
           </div>
           <div class="ejercicio-panel pista" id="cap3-e2-pista" hidden>
             <p style="margin:0;">«Justifícalo con números, no con la correlación» es la mitad del ejercicio: el
-              $R^2$ va a salir alto y no va a decidir nada. El número que decide es el <strong>intercepto</strong>,
-              comparado con el rango de los volúmenes. Y si te preguntas por qué la relación no pasa por el origen,
-              piensa en qué relación geométrica hay entre el diámetro de un cilindro y su volumen.</p>
+              $R^2$ va a salir alto y no va a decidir nada. El número que decide es el <strong>intercepto</strong>, y
+              el criterio del módulo 6 dice qué hacer con él: contrastar $H_0: a = 0$ y mirar el p-valor. Compáralo
+              además con el rango de los volúmenes, para tener también la lectura sin contraste. Y si te preguntas
+              por qué la relación no pasa por el origen, piensa en qué relación geométrica hay entre el diámetro de
+              un cilindro y su volumen.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap3-e2-sol" hidden>
-            <p><strong>No. El intercepto ajustado es −36,94 sobre volúmenes que van de 10 a 77 pies cúbicos: más de
-              la mitad del rango. La recta por el origen no describe estos datos, aunque el $R^2$ sea 0,9353.</strong></p>
+            <p><strong>No. El contraste sobre el intercepto lo cierra sin discusión: $t = -10{,}98$ con
+              $p = 7{,}6\times 10^{-12}$. La recta por el origen no describe estos datos, aunque el $R^2$ sea
+              0,9353.</strong></p>
             <pre><code class="language-r">⟦S2⟧</code></pre>
+            <p>Ése es el criterio del módulo 6 aplicado tal cual, y conviene ver el contraste con
+              <code>agsrs</code>: allí el mismo contraste daba $p = 0{,}2942$ —no se puede rechazar que la recta pase
+              por el origen, y la razón queda justificada por ser el modelo más simple—. Aquí el p-valor es doce
+              órdenes de magnitud menor. <strong>El mismo procedimiento decide en los dos sentidos</strong>, que es
+              lo que hace que sea un criterio y no una excusa.</p>
+            <p>Sin contraste se llega a lo mismo leyendo la magnitud: un intercepto de −36,94 sobre volúmenes que van
+              de 10 a 77 pies cúbicos es más de la mitad del rango. Esa lectura sirve, pero es informal; la que pide
+              el enunciado —«con números»— es la de arriba.</p>
             <p>El estimador de razón supondría $\hat{B} = 2{,}2773$ pies cúbicos por pulgada de diámetro, constante.
               Pero la recta ajustada tiene pendiente 5,07 y arranca en −36,9: en el rango observado las dos rectas
               se cruzan, y fuera de él se separan sin remedio. Aplicar la razón sobrestimaría el volumen de los

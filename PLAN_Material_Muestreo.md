@@ -4824,3 +4824,106 @@ rastro en el capítulo que las debe**. La auditoría que las encuentra hay que h
 por eso valió la pena que el diagnóstico las buscara con `grep` en vez de releyendo.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+### T7.47 — La fase 4 del capítulo 3: las citas a Lohr, los dominios y el quiz (2026-09-17)
+
+Cierra la **fase 4** de `PLAN_Cap3_PortelaVilleta.md`: T4.1, T4.2, T4.3 y T4.4, las cuatro. Sin
+publicar.
+
+**T4.1 — Las doce citas a la 3.ª ed., una a una.** Auditadas contra el índice del epub
+(`04chap_04.xhtml`, `07chap_07.xhtml`, `contents.xhtml`). **Diez estaban mal**, el diagnóstico las
+había previsto todas:
+
+| módulo | decía (3.ª) | qué es en realidad esa sección | pasa a decir |
+|---|---|---|---|
+| M2 | 4.1 y 4.2 | 4.2 es *Regression Estimation* | **4.1 y 4.1.1** |
+| M3 | 4.2 | idem | **4.1.1 y 4.1.5** |
+| M3 | 4.3 | *Estimation in Domains* | **4.2** |
+| M4 | 4.2.2 | **no existe**: el 4.2 no tiene subsecciones | **4.1.2** |
+| M5 | 4.2.3 | **no existe** | **4.1.3** |
+| M6 | 4.3 | *Estimation in Domains* | **4.2** |
+| M7 | 4.3.2 | **no existe** | **3.2.2 (2.ª) y ejercicio 32** |
+| M8 | 4.4 | *Poststratification* | **4.3** |
+| M9 | 4.5 | *Ratio Estimation with Stratified Sampling* | **4.6** |
+| M11 | 7.5 | *NHANES* | **7.3** |
+
+Las dos correctas: la «4.1» del M1 y el «capítulo 14» del M8.
+
+**Tres hallazgos que no eran renumeración.** *(a)* En la 3.ª ed. **el estimador de diferencia deja
+de ser sección**: sólo aparece como el **ejercicio 32**, planteado como la regresión con la pendiente
+fijada en 1 —que es exactamente el cuadrado perfecto del M7—. Citarlo como «§4.3.2» mandaba a un
+sitio que no existe a buscar algo que ya no está donde estaba. *(b)* El **ejemplo de los árboles
+muertos** que el M7 asociaba a la diferencia es el **Ejemplo 4.7 de §4.2**, y Lohr lo resuelve por
+**regresión**; el módulo 12 pide las dos, así que ahora la cita lo dice. *(c)* La **regla de los CV**
+del M3 no está donde el material la mandaba buscar: está en «Advantages of Ratio Estimation»
+(§4.1.5), con la desigualdad $R \ge \mathrm{CV}(x)/[2\,\mathrm{CV}(y)]$ escrita tal cual — la misma
+que T1.2 dedujo de Portela.
+
+**Lo que NO se tocó, y por qué.** Los números de la **2.ª ed.** El disco tiene la **1.ª** (Duxbury,
+`Sampling Lohr.pdf`) y la **3.ª**, no la 2.ª. En la 1.ª, «Advantages of Ratio Estimation» es la
+**§3.1.2.2**, no la 3.1.1 que cita el M3: si la 2.ª heredó esa estructura, esa cita también está mal.
+No se cambia un número que no se puede comprobar, y la redacción nueva del M3 se escribió para no
+afirmar nada de la 2.ª ed. **Queda para cuando aparezca la 2.ª ed.**
+
+**T4.2 — M8: dominio y estrato, y el total cuando no se sabe $N_d$.** La definición decía que un
+dominio es la subpoblación «que *no* se usó para diseñar la muestra». Lohr: *the stratum is also a
+domain*. Lo que separa los casos no es ser dominio, sino de dónde sale $n_d$ —fijo si el dominio es
+un estrato, aleatorio si no—, y así se redefine. Además el módulo sólo tenía la **media** de dominio;
+ahora tiene el **total**, con sus dos fórmulas: $N_d\,\hat{\bar y}_d$ si $N_d$ se conoce, y
+$\hat t_u = N\bar u$ si no. El bloque R8 reproduce el Ejemplo 4.8 de Lohr al dígito
+(**418 987 302**, ee **38 938 277**) y pone precio a no saber $N_d$: el error estándar relativo pasa
+del **6,81 %** al **9,29 %**. Y la **diferencia de dos medias de dominio** con `svycontrast`:
+32 752 con ee 36 014 —mayor que la diferencia misma—, donde la covarianza estimada sale
+$-1{,}37\times10^{-22}$, o sea cero, y el ee es exactamente $\sqrt{s_1^2+s_2^2}$. Es el ejercicio 26
+de Lohr comprobado. El `.warning` dice cuándo eso **deja** de valer: dominios que se solapan, o
+conglomerados compartidos.
+
+**Una retro del quiz que este trabajo delató.** La pregunta del M8 decía, en un distractor, que
+«cuando $N_d$ se conoce… la fórmula se simplifica». El error estándar de la **media** de dominio no
+contiene $N_d$ por ningún lado: conocerlo no cambia nada ahí. Reescrita para decir dónde sí decide,
+que es en el total.
+
+**T4.3 — El ejercicio 2 cerrado, y cinco preguntas nuevas.** El ejercicio de los cerezos decidía
+comparando «a ojo» el intercepto (−36,94) con el rango de volúmenes (10–77). Ahora abre con el
+contraste —$t = -10{,}98$, $p = 7{,}6\times10^{-12}$— y **enseña el mismo contraste decidiendo al
+revés** en `agsrs` ($p = 0{,}2942$): es lo que lo convierte en criterio. La lectura por magnitud se
+queda, dicha como lo que es, informal. Y una pregunta nueva por cada contenido de prioridad 1: B8
+(contra quién compara la regla), B2 (calcular la cota de Kish: 0,0626), B1 (la media de cocientes
+converge a **otro parámetro**), B4 (el contraste es MCO e ignora el diseño), B5 (la condición de
+igualdad $B = b_1$ **es** que la recta pase por el origen). El quiz pasa de **11 a 16** preguntas y
+de **10 a los 11 módulos**: el M5 no tenía ninguna.
+
+**T4.4 — A5 enlazada.** El M5 prometía que la razón reaparece en el cap. 4 «separada o combinada».
+Era falso hasta ayer; la sesión del cap. 4 lo cerró en `ea718be`. Ahora nombra su destino: el
+**módulo 12, «Razón en el estratificado»**. No se puso un `href`: **el material no enlaza entre
+capítulos en ningún sitio**, y no se inventa una convención para una nota.
+
+**Una cifra inventada, cazada antes de publicar.** Escribí en el enunciado de la pregunta de Kish
+$s_x = 344\,551{,}9$. El valor real es **344 829,6**. No salía de ninguna ejecución: la puse yo. Se
+detectó al comprobarla contra los datos antes de ensamblar, no después. Las dos cifras nuevas que no
+puede derivar el verificador —esa $s_x$ y la covarianza en notación científica— están en
+`cifras_prosa.json` con su origen.
+
+**Verificado.** Byte a byte en la segunda pasada; **191 de 191** cifras de bloques y **154 de prosa ·
+0 sin respaldo**. En el navegador: 0 `.katex-error`, consola limpia, las 16 preguntas renderizando,
+la numérica nueva aceptando «0,0626» con su retro, y los dos `h3` nuevos del M8 con sus cifras. A
+**375 px**, barriendo los doce módulos con `loadModule()`: **14 fórmulas en bloque, 9 desbordan, 0
+recortadas**; **3 tablas, las 3 más anchas que su caja, 0 inalcanzables**. Duraciones: M8 20→27,
+M12 30→40.
+
+**Un aviso de medición.** El primer barrido móvil dio 12 fórmulas y 3 tablas porque a 375 px el
+`nav` se colapsa y `nav *` ya no alcanza los botones de módulo: se estaba midiendo doce veces el
+mismo módulo. Con `loadModule(m)` salen 14 y 3. **A ancho de móvil hay que navegar por la API de la
+página, no por el menú.**
+
+**Pendiente además del visto bueno:** la portada dice «65 simuladores, 88 preguntas» y ahora son
+**67 y 98** —cinco preguntas suyas del cap. 4 y cinco mías—. El plan del cap. 3 asigna la portada a
+su **T5.1**, así que se corrige allí, con el recuento de `cuenta_sitio.py` delante.
+
+**Lo que enseña.** Diez citas mal de doce, y las diez se arreglan con el índice abierto en quince
+minutos. Lo que no se arregla con el índice es lo otro: que en la edición nueva **un tema entero
+cambió de categoría** —la diferencia pasó de sección a ejercicio— y que un ejemplo cambió de método.
+Una cita corrida una sección se nota al abrirla; un tema que deja de existir, no: manda a leer una
+sección que sí existe y trata de otra cosa.
+
+**Pendiente:** el visto bueno de Javier para publicar.
