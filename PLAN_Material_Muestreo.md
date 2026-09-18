@@ -4932,9 +4932,10 @@ sección que sí existe y trata de otra cosa.
 
 ### T7.48 — Cinco preguntas nuevas en el cap. 4, y el M1 deja de estar en cero (2026-09-17)
 
-Primera tarea de la fase 5 del plan del capítulo 4 con Lohr 3.ª ed. (T5.1). *(El número T7.47 quedó
-usado dos veces, por esta sesión y por la del cap. 3, que escribieron a la vez; como con el T7.34
-duplicado, se deja constancia en vez de renumerar.)*
+Primera tarea de la fase 5 del plan del capítulo 4 con Lohr 3.ª ed. (T5.1). *(Los números T7.47 y T7.48
+quedaron usados dos veces, por esta sesión y por la del cap. 3, que escribieron a la vez, igual que
+el T7.34. Se deshizo después en `84003d1`, con la regla de que se queda el número quien lo commiteó
+antes: las notas del cap. 3 pasaron a T7.53–T7.58 y éstas conservan el suyo.)*
 
 **El hueco del M1.** Estaba anotado desde T7.18 y era el único módulo de contenido del capítulo sin
 una sola pregunta. La nueva no pregunta la definición: pone un marco que trae nombre, dirección y
@@ -5133,8 +5134,9 @@ usa `TeachingSampling`—. Se cargan `survey` en el R1 y `TeachingSampling` dond
 precedente que el bloque de `rsample` ya tenía. `sampling` y `jsonlite` no hacen falta: no aparecen
 en ningún bloque publicado. **Prueba de verdad: el capítulo entero corre con código de salida 0.**
 
-**Una evidencia mía que hubo que retirar.** El «0 tablas recortadas» que se dio en T7.47 descansaba
-en una comprobación de `scrollLeft` que **no distingue nada**: `overflow: hidden` también crea
+**Una evidencia mía que hubo que retirar.** El «0 tablas recortadas» que se dio en T7.46 descansaba
+en una comprobación de `scrollLeft` —que venía de la sesión del cap. 3 y que ella misma desmontó en
+T7.53— y que **no distingue nada**: `overflow: hidden` también crea
 contenedor de scroll, así que el valor se deja fijar por JavaScript aunque el usuario no pueda mover
 el contenido. La prueba buena es el estilo calculado. Repetida a 375 px sobre el capítulo 4 ya
 reensamblado: **31 de 31 bloques de código** desbordaban plegados y ahora todos tienen barra (era el
@@ -5425,7 +5427,9 @@ git push origin b0c4930c7c24befcbc8399230e23c86e00b7dd53:gh-pages
 **Y una herramienta nueva que ya paga.** `precalculo/verifica_publicado.py`, escrita por la sesión
 del cap. 4 (`6912d6c`) sobre el hueco que abrió T7.54: ejecuta el código **tal como está publicado**,
 sin anteponerle nada. Corrida sobre el capítulo con catorce módulos y sobre el sitio entero:
-**las once páginas arrancan**, R y Python, salida 0. Es la primera vez que eso se comprueba con una
-herramienta y no a mano.
+**arrancan todas**, R y Python, salida 0. Es la primera vez que eso se comprueba con una herramienta
+y no a mano. *Con una precisión sobre el recuento, que apuntó la sesión del cap. 4:* en modo
+`--local` son **once** páginas y contra la rama publicada son **diez**, porque `taller-1` vive en
+`sitio/` pero lo ignora el `.gitignore` y no se publica.
 
 **Pendiente:** el visto bueno de Javier.
