@@ -4966,6 +4966,15 @@ print(comparacion, row.names = FALSE, digits = 6)
         </ol>
       </div>
 
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Aquí se cierra la comparación, y aquí empieza a hacer falta un sitio
+          donde mirar las fórmulas.</strong> Los cuatro estimadores, sus varianzas y sus estimadores de varianza
+          están en el <strong>módulo 13</strong>, el formulario, en dos tablas ordenadas por lo que se estima —la
+          razón, la media o el total—. Lo que queda de capítulo son casos particulares y extensiones: elegir un
+          estimador distinto en cada grupo (módulo 8), estimar en subpoblaciones que nadie planificó (módulo 9) y
+          el paraguas que los contiene a todos (módulos 10 a 12).</p>
+      </div>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
@@ -5306,7 +5315,7 @@ round(c(total = sum(total), ee_total = sqrt(sum(v_total)),
 
       <p>Hasta aquí se ha estimado <em>un</em> total para todo el país. Pero casi ningún informe se conforma con
         eso: se quiere el dato por región, por tamaño, por sector. De los 300 condados de la muestra,
-        <strong>129</strong> tienen 600 granjas o más y <strong>171</strong> menos — y esos dos números
+        <strong>129</strong> tienen 600 granjas o más y <strong>171</strong> menos. Y esos dos números
         <em>no los eligió nadie</em>: salieron del sorteo. Esa es toda la diferencia con un estrato, y tiene
         consecuencias sobre la varianza.</p>
 
@@ -5512,7 +5521,7 @@ options(scipen = 999)
 
       <p>Los tres estimadores de los módulos anteriores salieron de una intuición gráfica: una recta ajustada a la
         nube. Razón, regresión y diferencia dieron sobre <code>agsrs</code> errores estándar de 5,54, 5,59 y 5,33
-        millones — parecidos pero no iguales—, y hasta ahora la elección entre ellos se ha justificado mirando el
+        millones —parecidos pero no iguales—, y hasta ahora la elección entre ellos se ha justificado mirando el
         dibujo. Detrás de cada uno hay un <strong>modelo</strong> explícito, y escribirlo convierte esa elección en
         una decisión razonada: cada estimador es el óptimo bajo un supuesto distinto sobre cómo se relacionan $x$ e
         $y$.</p>
@@ -5767,7 +5776,7 @@ print(pd.DataFrame({
                 intercepto y con $v_k = x_k$— todos los $g_k$ valen lo mismo,
                 $g = t_x / \hat{t}_{x,\pi} = 1{,}036637$: cada peso del muestreo aleatorio simple pasa de 10,26 a
                 10,635895. En la regresión del módulo 6, que calibra a $N$ y a $t_x$ a la vez, cada unidad recibe su
-                propio $g_k$, y por eso allí se notaba que se separaran de 1.</p>
+                propio $g_k$, y por eso allí se notaba que se separaban de 1.</p>
             </li>
           </ol>
         </div>
