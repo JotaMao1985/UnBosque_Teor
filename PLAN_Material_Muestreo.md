@@ -5709,3 +5709,99 @@ plantilla y **no enseña nunca la retroalimentación de los distractores**, aunq
 que sí: al acertar solo se ve la de la correcta, y al fallar, la pista. De las 39 retros de
 distractor escritas para el cap. 3, un estudiante lee cero o una. Arreglarlo toca la plantilla, así
 que se retropropaga a las nueve y hay que coordinar quién reensambla y quién verifica.
+
+---
+
+### T7.64 — La revisión del capítulo 3: el informe, y los seis bloqueantes (2026-09-18)
+
+Encargo de Javier: revisar el capítulo 3 entero —redacción, coherencia narrativa y explicativa,
+pertinencia y calidad de gráficos y simulaciones, y si las preguntas están bien planteadas, bien
+barajadas y evalúan lo que deben—. Se repartió en **cinco lecturas independientes** (M1–M4, M5–M8,
+M9–M13, gráficos y simuladores, evaluación) y cada afirmación fuerte se comprobó antes de darla por
+buena. El informe completo está fuera del repositorio; lo que sigue es lo que se arregló.
+
+**Lo que las herramientas del proyecto ya daban por bueno, y seguía estándolo:** 261/261 cifras de
+bloques, 173 de prosa sin una sola sin respaldo, el código publicado arrancando solo y 0 módulos
+formalizando antes de anclar. **Ninguno de los defectos de abajo lo habría cazado `--prosa`.**
+
+**Seis bloqueantes**, commit `65b5960`:
+
+| # | dónde | qué pasaba |
+|:--:|---|---|
+| 1 | M13, formulario | La fila del *estimador* de la varianza dividía por $\bar x_U$ y daba 5 344 567 donde el capítulo publica **5 540 376**, un 3,66 %. La de la varianza teórica sí era correcta |
+| 2 | M12, simulador de la mediana | Leía los cuantiles de una curva adelgazada 1 de cada 3, se saltaba la unidad 150 y publicaba **196 733** —el convenio `math` que el propio módulo declara que NO usa— dos renglones encima de «mediana estimada: 196 701». Y en $p = 0{,}95$ el cuantil, 1 019 300, caía fuera del eje |
+| 3 | M4, simulador del sesgo | Las barras de Monte Carlo llevaban `x` numérica sobre un eje de **categorías**: nueve de los dieciocho puntos se amontonaban en la última barra |
+| 4 | M8 | «Dos de sus tres sumandos son insesgados» y la propia frase nombra uno |
+| 5 | banco | En los **doce** ítems de opción única la correcta era, sin excepción, la más larga: 12 de 12 sin abrir el capítulo |
+| 6 | ejercicio 4 | La pista mandaba mirar si la pendiente está cerca de 1 —vale **0,6133**—, llamaba «fuertemente relacionados» a datos con $r = 0{,}6242$ y concluía diferencia cuando gana la regresión (EE 0,4168 contra 0,4568) |
+
+**Y ocho enlaces rotos por la renumeración a catorce módulos**, que era el riesgo que la restricción
+R1 del plan del capítulo nombraba por su nombre: cuatro en el cap. 4, tres en el cap. 7, uno dentro
+del propio cap. 3 y cinco comentarios de código. **Las ocho pasaban `--prosa` antes y después**: el
+verificador comprueba que las cifras salgan de una ejecución, no que una referencia apunte a donde
+dice. De ese hueco salió `verifica_referencias.py` (T7.61), escrito por la otra sesión.
+
+---
+
+### T7.65 — El capítulo 3 deja de desmentirse a sí mismo (2026-09-18)
+
+Commit `12e2bd9`. Seis autocontradicciones, las fórmulas que cambiaban de escala o de divisor sin
+avisar, y cinco citas mal dirigidas.
+
+**Las que el propio capítulo desmentía.** La nube de linealización «se desvía hacia abajo» y se
+desvía **hacia arriba** —media(lineal − exacto) = +613 263 sobre los 600 puntos publicados—. Los
+«intervalos del módulo 2» no existen, y `confint` no aparecía en ningún bloque. El pie de la tabla
+ordenable del M7 sostenía el argumento que el propio M7 desarma. La cuarta línea de «cuál pide cada
+nube» usaba el umbral contra los cuatro estimadores. `diámetro²` prometía «devolver el problema al
+terreno de la razón» y el contraste **sigue** rechazando el origen, $p = 0{,}0248$. Y la región II
+del M8 se etiquetaba «Regla del módulo 3» sin que el bloque la evaluara.
+
+**El divisor, que eran tres convenios sin declarar.** $n-2$ para `agsrs`, $n-1$ en los tomates y
+$n-1$ en el formulario. Unificado en **$n-2$**, que es el de Lohr y el de la cifra insignia
+5 330 862. El EE del total de tomates pasa de 19 909 a **20 051**.
+
+**Y una consecuencia que el informe no había previsto:** con $n-2$, el empate de la región III deja
+de verse (292,59 contra 304,29). No es que el teorema falle, y el bloque lo descompone: sobre el
+mismo divisor las dos varianzas distan **0,0054** —el cuadrado perfecto del M7, con la condición de
+igualdad casi cumplida— y los **11,7035** restantes son el divisor, un factor 1,0400. El argumento
+de la región II sale **reforzado**: con $n-2$ la regresión no gana un 1,4 %, pierde frente al m.a.s.
+
+**El bloque R10 no cumplía la promesa del módulo**: imprimía tres estimadores donde el de Python
+imprimía cinco, y el M11 promete «los cuatro son cuatro valores de $\beta$». Ahora trae los cinco,
+en el mismo orden que Python, con `v_k = 1` marcado como lo que es: ninguno de los cuatro.
+
+Además: $V(b)$ llevaba un $N^2$ de menos, `reg$R` reintroducía la $R$ de Portela que el material
+prohíbe, el M9 nunca escribía la varianza de la media de dominio, y `qrule` tiene **doce** convenios,
+no nueve. Las 22 referencias nuevas se revisaron una a una contra el título del destino antes de
+sembrarlas en la línea base.
+
+---
+
+### T7.66 — Las 39 retros que el motor nunca enseñaba, y el banco del cap. 3 (2026-09-18)
+
+Commit `d0437f8`. **El arreglo grande no es del capítulo 3: es del motor del quiz**, que vive en la
+plantilla y afecta a las nueve páginas.
+
+El material promete que «cada opción trae su propia retroalimentación, también las incorrectas». El
+motor no lo hacía: al acertar mostraba solo la de la correcta; al primer fallo, la **pista** en lugar
+de la retro de lo marcado; al segundo, la de la segunda opción. **La retro del primer distractor
+elegido no se veía nunca.** Ahora `cerrar()` recibe las opciones barajadas y cuáles se han visto, y
+vuelca el resto en un desplegable «Por qué las demás», con su letra y marcando la correcta si el
+estudiante no dio con ella.
+
+**El banco pasa de 17 a 21 preguntas.** Dos ítems que no medían lo suyo —el `multiple` 3-de-4 del M4,
+que es un «señala la falsa» disfrazado, y el del M6, que preguntaba el *nombre* de una función— y
+cuatro huecos de cobertura: el cálculo del EE del total por razón, la regla de la pendiente del M7,
+la decisión por grupos del M8 y las dos fórmulas del total de dominio del M9. Los doce módulos de
+contenido quedan cubiertos, el orden pasa a ser ascendente y la correcta no es la más larga en
+ninguno de los 15 de opción única.
+
+**Verificado a cuatro manos.** La otra sesión comprobó por su cuenta que las líneas añadidas y
+quitadas son **idénticas en las ocho páginas ajenas** (huella `94b74c54…`), que las once reensamblan
+byte a byte, y los cuatro caminos del motor en el navegador. Cazó además el riesgo real del cambio,
+que aquí no se había mirado: **el panel es DOM inyectado después del render**, así que KaTeX podía no
+pasar por él. Pasa.
+
+**Pendiente:** publicar esta tanda —lo da una sola sesión, no las dos— y los bloques 4 (los dos
+gráficos que faltan, en el M5 y el M3, y la decisión D4) y 5 (redacción menor y los dos README, que
+siguen diciendo «88 módulos, 65 simuladores» cuando son 91 y 67).
