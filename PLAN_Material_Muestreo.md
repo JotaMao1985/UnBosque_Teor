@@ -5984,3 +5984,56 @@ desfasada de las `<meta>` de las nueve páginas—; y los ejes de Chart.js sigue
 gráficos con cifras de cinco dígitos se lee mal **por un factor de mil** (`100,000` leído como cien).
 Eso vive en la plantilla y va en su propio commit, para que la comparación de huellas entre las ocho
 páginas ajenas siga sirviendo.
+
+### T7.71 — El detector de LaTeX mira la fuente, y encuentra 17 barras que seguían vivas (2026-09-18)
+
+`precalculo/verifica_bloques.py` y `precalculo/README.md`. No se publica: es herramienta, no sitio.
+
+**Qué comprueba.** Dentro de un literal de JavaScript un comando de LaTeX necesita **dos** barras;
+con una, JS se la come antes de que KaTeX lea la cadena. El detector busca esa barra sola en los
+literales de los `<script>`, con una lista corta de comandos que el material usa de verdad, más el
+espaciado `\,` `\;` `\:` `\!`. Fuera de `<script>`, en el texto HTML, la barra simple es la
+**correcta** —hay 2 665 en los módulos— y no se mira.
+
+**Por qué a nivel de fuente y no de DOM.** T7.69 lo dejó medido: `.katex-error` da **0 en todos los
+casos**, y la familia peor (`pi` por `\pi`) produce LaTeX válido, sin consola y sin DOM. Ninguna
+comprobación del navegador la ve.
+
+**Y por eso basta una sola rama, que es lo que no era obvio.** Se busca `\comando` con barra sola;
+**no** se busca el comando desnudo sin barra. Parece que eso deja fuera la familia silenciosa, y no
+la deja: el comando desnudo solo existe en la cadena **en memoria**. En la fuente sigue teniendo su
+barra —`'$\pi$'`— y ahí es donde se le caza. Lo único que queda descubierto es que alguien escriba
+`$pi$` a mano, que ya no es un fallo de escape. La rama contraria, en cambio, haría saltar cada
+«bar», «times» o «mu» de la prosa, y ese ruido acaba en que nadie mire.
+
+**Va en toda ejecución, no detrás de una opción** (hay `--solo-latex`, que es instantáneo). Es la
+lección de la tarde de T7.69: una comprobación que hay que acordarse de pedir no habría servido.
+
+**Cómo se probó, que es la mitad del trabajo.** Un detector que da 0 en ficheros limpios no prueba
+nada. Se pasó por la versión **rota** recuperada de git, `b0dfddb^`, y da **40**. El mensaje de aquel
+commit documenta 23. Las 23 salen todas.
+
+**Las otras 17 seguían vivas, y ese es el hallazgo.** El arreglo de `b0dfddb` se quedó a medio
+camino: puso las barras dobles en los comandos de letras y dejó el **espaciado** con barra simple
+—14 `\,` y 3 `\;`—, en las mismas cuatro preguntas. Ejecutando el literal publicado en node, no
+leyendo la fuente, esto es lo que recibía KaTeX:
+
+    Con $t_x = 963,464,412$, $\bar{x} = 301,953{,}72$, $s_e = 31,657{,}22$
+
+El separador de millares se convierte en **coma**, que en este material es el separador **decimal**:
+el estudiante leía «301,953,72» donde el capítulo dice 301 953,72. Es peor que el fallo de `\bar`:
+aquel se veía roto, este **parece un número bien escrito**. En `ensamblado/modulos/cap3/simuladores.js`,
+líneas 713, 719, 867 y 934. Lo arregla la otra sesión; el cap. 3 es suyo.
+
+**Alcance.** Los 8 capítulos ensamblados y los 10 ficheros de módulos con JavaScript: las 17 son
+todas de `cap3/simuladores.js`, cero en el resto. La unidad natural es la **página ensamblada**,
+porque `simuladores.js` acaba dentro de un `<script>`; pero el detector acepta un `.js` suelto
+(`es_js`), que es donde se arregla. Sin regresión: cap. 1 completo da 303/303 y salida 0, y los ocho
+en `--solo-prosa` dan 0 cifras sin respaldo.
+
+**Para la siguiente.** La otra sesión aporta una invariante mejor que el md5 que usa hoy
+`verifica_publicado.py`: `origin/gh-pages^{tree}` y `origin/main:sitio` deben ser el mismo hash. Caza
+dos cosas que hoy no caza nada —publicar desde un árbol local sin subir `main`, y editar `sitio/`
+directamente en `gh-pages`— y vale mientras el camino corto publique el árbol entero. Y un dato
+suyo: `taller-1` no se publica porque **no está en git**, no por una exclusión; un `git add -A`
+distraído lo publicaría sin que nada chistara.

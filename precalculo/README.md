@@ -28,7 +28,7 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 | `genera_cap2.R` | `salidas/cap2_datos.json` | espacio de muestras, distribución de muestreo, cobertura, Bernoulli, sistemático |
 | `genera_cap3.R` | `salidas/cap3_datos.json` | razón, regresión, diferencia, sesgo simulado, dominios, GREG, mediana |
 | `genera_soluciones.R` | consola | soluciones de los ejercicios guiados del cap. 2 |
-| `verifica_bloques.py` | consola | contrasta cada cifra `#>` de un capítulo con la salida real |
+| `verifica_bloques.py` | consola | contrasta cada cifra `#>` de un capítulo con la salida real; con `--prosa`, también las del texto; y **siempre** el LaTeX con barra simple dentro de los literales de JS |
 | `verifica_publicado.py` | consola | ejecuta el código **del sitio vivo**, sin anteponerle nada; comprueba además que lo servido coincida con `gh-pages` |
 | `verifica_referencias.py` | consola | comprueba que cada «capítulo C, módulo N» apunte al módulo que la frase dice; `referencias_cruzadas.json` es su línea base |
 | `anota_salidas.py` | reescribe la cadena | anota en cada grupo `#>` la salida real de SUS sentencias; aborta si no puede colocarla (ver el docstring: los dos estilos de anotación) |
@@ -57,6 +57,18 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
   respaldada tanto si el módulo 8 trata de lo que dice la frase como si no. Por eso existe
   `verifica_referencias.py`, y por eso **hay que correrlo al renumerar cualquier capítulo**, no solo
   el que se toca.
+- **El LaTeX roto no se ve desde el navegador; hay que mirar la fuente.** Dentro de un literal
+  de JavaScript un comando de LaTeX necesita DOS barras: con una, JS se la come antes de que KaTeX
+  lea la cadena. Se publicaron así cuatro preguntas del cap. 3 —el estudiante leía `ar{x} = 301
+  953,72`— y no lo cazó nadie porque **KaTeX falla sin crear un `.katex-error`**: está medido sobre
+  la página viva, LaTeX roto da 0 elementos `.katex-error`, el error va a la consola y el texto se
+  queda crudo. Hay dos variantes, y la segunda es peor: si la barra se pierde del todo (`pi` por
+  `\pi`) el resultado es LaTeX VÁLIDO —letras en cursiva—, así que no hay ni consola ni DOM que
+  avise. Y el espaciado (`\,`, `\;`) no se ve roto en absoluto: `963\,464\,412` llega como
+  `963,464,412`, con el separador de millares convertido en el separador DECIMAL de este material.
+  Por eso la comprobación va **en toda ejecución** de `verifica_bloques.py`, no detrás de una
+  opción: una comprobación que hay que acordarse de pedir no habría servido aquella tarde. Fuera de
+  `<script>`, en el texto HTML, la barra simple es la CORRECTA y no se mira.
 - Cuando una comparación es sobre un borde exacto (`F̂(t) >= p` con pesos iguales), va **con
   tolerancia**: `cumsum()/sum()` redondea a un lado en R y al otro en Python, y sin tolerancia las
   dos pestañas del mismo capítulo publican cuantiles distintos.

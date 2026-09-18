@@ -14,7 +14,13 @@ Qué hace:
   3. Para cada bloque, extrae los números de sus líneas `#>` y comprueba que
      aparezcan en la salida real de ESE bloque.
 
-  4. Con `--prosa`, contrasta además las cifras citadas en el TEXTO (párrafos,
+  4. En TODAS las ejecuciones, sin pedirlo, busca el LaTeX escrito con barra
+     simple dentro de los literales de JavaScript. Va siempre porque el fallo
+     es invisible en el navegador (KaTeX falla SIN crear `.katex-error`) y ya
+     se publicó una vez; una comprobación que hay que acordarse de pedir no
+     habría servido de nada aquella tarde.
+
+  5. Con `--prosa`, contrasta además las cifras citadas en el TEXTO (párrafos,
      cajas, listas) contra las salidas ejecutadas y el JSON del precálculo.
      Ese era el último hueco de verificación del proyecto: los bloques estaban
      cubiertos, pero la prosa que los comenta citaba números que nadie
@@ -24,6 +30,7 @@ Uso:
     python3 precalculo/verifica_bloques.py sitio/muestreo/capitulo-4-*.html
     python3 precalculo/verifica_bloques.py --todos
     python3 precalculo/verifica_bloques.py --todos --prosa
+    python3 precalculo/verifica_bloques.py --todos --solo-latex
 
 Se ejecuta desde la raíz del repositorio (la carpeta Muestreo/): las sesiones de
 R y de Python heredan ese directorio de trabajo, así que las rutas relativas a
@@ -324,6 +331,87 @@ def verifica_prosa(ruta, base):
     return respaldadas, sin_respaldo
 
 
+# ---------------------------------------------------------------------------
+# LaTeX con barra simple dentro de los literales de JavaScript
+# ---------------------------------------------------------------------------
+# Por que existe: se publico el cap. 3 con cuatro preguntas cuyo LaTeX llevaba
+# barra SIMPLE dentro de un literal de JS -'$\bar{x}$' en vez de '$\\bar{x}$'-.
+# JavaScript se come la barra antes de que KaTeX vea la cadena, y el estudiante
+# lee «ar{x} = 301 953,72» donde deberia ir la formula. Eran 23 secuencias.
+#
+# Por que no lo cazo ninguna prueba de las que habia, que es lo que hay que
+# recordar: **KaTeX falla sin crear un `.katex-error`**. Esta medido sobre la
+# pagina viva -LaTeX roto da 0 elementos `.katex-error`-: auto-render atrapa el
+# ParseError, lo escribe en la consola y deja el texto crudo. Y el caso peor, la
+# barra que se pierde del todo (`pi` por `\pi`), produce LaTeX VALIDO -letras en
+# cursiva-: ni consola ni DOM. Ninguna comprobacion del navegador lo ve; solo
+# esta, que mira la FUENTE.
+#
+# Una sola rama, la de la secuencia de escape: en la fuente, dentro de un
+# literal de JS, una barra sola delante de un comando de LaTeX SIEMPRE esta mal.
+# La rama contraria -buscar el comando desnudo, sin barra- haria saltar cada
+# «bar», «times» o «mu» de la prosa, y ese ruido acaba en que nadie mire.
+# Fuera de <script> no se mira: en el texto HTML la barra simple es la CORRECTA
+# (hay 2 665 en los modulos, todas buenas).
+COMANDOS_LATEX = (
+    'pi|rho|sigma|mu|beta|alpha|delta|theta|lambda|hat|bar|frac|dfrac|tfrac|'
+    'sqrt|mathrm|mathbb|mathcal|lvert|rvert|widehat|overline|operatorname|'
+    'displaystyle|infty|approx|cdot|times|neq|leq|geq|quad|qquad|varepsilon|'
+    'Delta|Sigma')
+# La lista es corta a proposito: son los comandos que el material usa de verdad.
+# `(?<!\\)` deja pasar la forma correcta `\\bar`; `(?![A-Za-z])` evita que `\mu`
+# case dentro de `\mumble` y que `\pi` case dentro de `\pierde`.
+#
+# La segunda rama, `[,;:!]`, es el espaciado de LaTeX, y esta aqui porque el
+# arreglo de b0dfddb se quedo a medio camino: puso las barras dobles en los
+# comandos de letras y dejo 17 `\,` simples en las mismas cuatro preguntas.
+# El sintoma es peor que el de un comando perdido, porque no parece un error:
+# `963\,464\,412` llega a KaTeX como `963,464,412` y `301\,953{,}72` como
+# `301,953{,}72`, es decir, el separador de millares se convierte en una coma
+# —que en este material es el separador DECIMAL—. Comprobado ejecutando el
+# literal publicado en node, no leyendo la fuente.
+LATEX_BARRA_SIMPLE_RE = re.compile(
+    r'(?<!\\)\\(?:(?:' + COMANDOS_LATEX + r')(?![A-Za-z])|[,;:!])')
+
+
+def latex_barra_simple(html, es_js=False):
+    """Devuelve (n_literales, [(linea, comando, contexto)]) de la pagina.
+
+    Con `es_js`, el texto entero se trata como un guion. Sirve para mirar
+    `ensamblado/modulos/capN/simuladores.js`, que es DONDE SE ARREGLA: en el
+    fichero suelto no hay etiqueta `<script>` que buscar, aunque en la pagina
+    ensamblada su contenido acabe dentro de una.
+    """
+    hallazgos = []
+    literales = 0
+    guiones = ([re.match(r'(?s).*', html)] if es_js
+               else re.finditer(r'<script>(.*?)</script>', html, flags=re.S))
+    for guion in guiones:
+        g = 0 if es_js else 1
+        inicio = guion.start(g)
+        for m in LITERAL_JS_RE.finditer(guion.group(g)):
+            i = next(k for k in (1, 2, 3) if m.group(k) is not None)
+            crudo = m.group(i)
+            literales += 1
+            # `${...}` es codigo JS, no texto: ahi la barra sola es legitima.
+            # Se sustituye por espacios en vez de borrarse para no mover las
+            # posiciones con las que despues se calcula la linea.
+            limpio = INTERPOLACION_RE.sub(lambda x: ' ' * len(x.group()), crudo)
+            for h in LATEX_BARRA_SIMPLE_RE.finditer(limpio):
+                pos = inicio + m.start(i) + h.start()
+                ini = max(0, h.start() - 45)
+                hallazgos.append((html.count('\n', 0, pos) + 1, h.group(),
+                                  crudo[ini:h.end() + 45].replace('\n', ' ')))
+    # Guarda contra el fallo silencioso, igual que en extrae(): si la pagina
+    # trae <script> y no sale de el ni un literal, el marcado cambio y hay que
+    # arreglar LITERAL_JS_RE, no dar la pagina por limpia.
+    if (es_js or '<script>' in html) and not literales:
+        raise SystemExit(
+            "ABORTA: la pagina tiene <script> y no se extrajo ni un literal. "
+            "Arregla LITERAL_JS_RE antes de fiarte de este verificador.")
+    return literales, hallazgos
+
+
 def verifica(rutas):
     textos = [(p.name, p.read_text(encoding="utf-8")) for p in rutas]
     bloques = extrae(textos)
@@ -387,6 +475,8 @@ def main():
                     help="verifica también las cifras citadas en el texto")
     ap.add_argument("--solo-prosa", action="store_true",
                     help="solo la prosa, sin ejecutar los bloques (rápido)")
+    ap.add_argument("--solo-latex", action="store_true",
+                    help="solo el LaTeX de los literales de JS (instantáneo)")
     args = ap.parse_args()
 
     if args.todos:
@@ -409,8 +499,20 @@ def main():
 
     peor = 0
     total_sin = 0
+    total_latex = 0
     for p in rutas:
         print(f"\n{'=' * 70}\n{p.name}\n{'=' * 70}")
+        # Primero el LaTeX: es instantáneo y así se ve aunque el resto tarde.
+        lits, sueltos = latex_barra_simple(p.read_text(encoding="utf-8"),
+                                           es_js=p.suffix == ".js")
+        print(f"LATEX: {lits} literales de JS · {len(sueltos)} con barra simple")
+        for linea, cmd, ctx in sueltos:
+            print(f"    línea {linea}: {cmd}   …{ctx}…")
+        total_latex += len(sueltos)
+        if sueltos:
+            peor = 1
+        if args.solo_latex or p.suffix == ".js":
+            continue
         if not args.solo_prosa:
             peor = max(peor, verifica([p]))
         if args.prosa or args.solo_prosa:
@@ -423,6 +525,8 @@ def main():
                 peor = 1
     if args.prosa or args.solo_prosa:
         print(f"\n=== PROSA: {total_sin} cifras sin respaldo en total ===")
+    print(f"=== LATEX: {total_latex} secuencias con barra simple en "
+          f"{len(rutas)} página{'s' if len(rutas) != 1 else ''} ===")
     return peor
 
 
