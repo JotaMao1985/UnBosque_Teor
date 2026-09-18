@@ -29,6 +29,7 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 | `genera_cap3.R` | `salidas/cap3_datos.json` | razón, regresión, diferencia, sesgo simulado, dominios, GREG, mediana |
 | `genera_soluciones.R` | consola | soluciones de los ejercicios guiados del cap. 2 |
 | `verifica_bloques.py` | consola | contrasta cada cifra `#>` de un capítulo con la salida real |
+| `verifica_publicado.py` | consola | ejecuta el código **del sitio vivo**, sin anteponerle nada; comprueba además que lo servido coincida con `gh-pages` |
 | `anota_salidas.py` | reescribe la cadena | anota en cada grupo `#>` la salida real de SUS sentencias; aborta si no puede colocarla (ver el docstring: los dos estilos de anotación) |
 | `pruebas/prueba_anotador.py` | consola | regresión del anotador; la primera prueba es que no duplique una cadena intercalada |
 
@@ -42,6 +43,13 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 - Datos: `../CSV data sets for SDA 3e/` (los 82 datasets oficiales de Lohr).
 - **Toda varianza se calcula por dos vías** —la fórmula a mano y `survey`— y el script aborta si no
   coinciden. Donde Lohr publica la cifra, se contrasta también contra ella.
+- **Los dos verificadores se reparten el trabajo y no se solapan.** `verifica_bloques.py`
+  pregunta *¿son ciertas las cifras?*, y para eso antepone las librerías y los imports antes de
+  ejecutar. `verifica_publicado.py` pregunta *¿arranca esto tal como se publica?*, y por eso no
+  antepone nada. Entre las dos preguntas hubo meses un hueco —el preámbulo estaba en `cadena.R`,
+  que se ejecuta al precalcular, pero no en los bloques, que son lo que se publica— por el que
+  diez páginas se sirvieron con un `could not find function "svydesign"` en el primer bloque.
+  Añadirle una cabecera a `verifica_publicado.py` «para que pase» vuelve a abrir ese hueco.
 - Cuando una comparación es sobre un borde exacto (`F̂(t) >= p` con pesos iguales), va **con
   tolerancia**: `cumsum()/sum()` redondea a un lado en R y al otro en Python, y sin tolerancia las
   dos pestañas del mismo capítulo publican cuantiles distintos.

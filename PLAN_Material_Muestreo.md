@@ -5325,9 +5325,9 @@ El instrumento malo era el `grep`.
 
 **Resultado de la primera pasada completa** (`3782180`, sitio vivo, salida 0):
 
-| | páginas | huella | R | Python |
-|---|---|---|---|---|
-| publicadas | 10 | 10/10 coinciden | 180 bloques, todas arrancan | 66 bloques, todas arrancan |
+| páginas publicadas | huella contra la rama | bloques de R | bloques de Python |
+|---|---|---|---|
+| 10 (9 con código; el índice no lleva) | 10/10 coinciden | 180, arrancan | 66, arrancan |
 
 Documentado en `precalculo/README.md`, con el reparto entre los dos verificadores dicho en las
 convenciones para que no se vuelvan a solapar.

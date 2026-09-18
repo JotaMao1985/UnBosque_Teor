@@ -42,6 +42,9 @@ __pycache__/
 # Guiones temporales que escribe precalculo/verifica_bloques.py
 precalculo/.tmp_verifica/
 
+# Guiones temporales que escribe precalculo/verifica_publicado.py
+precalculo/.tmp_publicado/
+
 # Temporales de ofimática
 ~$*
 *.tmp
