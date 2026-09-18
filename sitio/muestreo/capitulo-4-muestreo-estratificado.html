@@ -836,12 +836,20 @@
     }
 
     /* Tables - CSS Puro */
+    /* El `overflow: hidden` de aquí estaba para que el border-radius recortara
+       las esquinas de la cabecera, pero con `width: 100%` y celdas largas la
+       tabla RECORTA su propio contenido en pantallas estrechas: las columnas de
+       la derecha se pierden y no hay forma de llegar a ellas. Medido a 375 px
+       en el capítulo 3: la tabla del módulo 3 mide 446 px en una columna de 303.
+       Con `overflow-x: auto` se conservan las esquinas y aparece barra cuando
+       hace falta, que es lo que hace .tabla-ranking-marco desde el principio. */
     table {
       width: 100%;
       margin-bottom: 2rem;
       border-collapse: collapse;
       border-radius: 0.5rem;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
@@ -5750,13 +5758,246 @@ print(f"prueba estratificada:    {y_prueba_estr.mean():.4f}")
   </template>
 
   <!-- ============================================================ -->
-  <!-- MÓDULO 12 · Autoevaluación y ejercicios guiados               -->
+  <!-- MÓDULO 12 · Razón en el estratificado                         -->
   <!-- ============================================================ -->
   <template id="module-12">
     <div class="animate-fade-in">
       <div class="border-b border-gray-100 pb-6 mb-6">
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
           <span>Módulo 12</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Razón en el estratificado
+          <span class="text-gray-400 font-normal text-2xl">/ Combined &amp; separate ratio</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Juntar la razón del capítulo 3 con los estratos de
+              este, por las dos vías posibles, y saber cuál elegir.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>El capítulo 3 prometió que su estimador de razón reaparecería aquí «dentro de cada estrato o sobre el
+        conjunto». Este módulo cumple esa promesa, y de paso cierra el capítulo con la idea que más precisión ha
+        comprado en todo el material: <strong>usar una variable auxiliar conocida</strong>.</p>
+
+      <p>El punto de partida es que hay <em>dos</em> maneras de combinar razón y estratos, y no dan lo mismo. La
+        diferencia está en el orden de las operaciones:</p>
+
+      <div class="definition">
+        <h4>Combinada y separada</h4>
+        <ul style="margin-bottom:0;">
+          <li><strong>Combinada</strong> ($\hat{t}_{yrc}$): primero se <em>suman</em> los estratos, luego se hace
+            <em>una</em> razón. $\hat{t}_{yrc} = \hat{B}\,t_x$ con
+            $\hat{B} = \hat{t}_{y,\text{str}} / \hat{t}_{x,\text{str}}$. Solo necesita el total poblacional $t_x$.</li>
+          <li><strong>Separada</strong> ($\hat{t}_{yrs}$): primero la razón <em>dentro</em> de cada estrato, luego
+            se suman. $\hat{t}_{yrs} = \sum_h t_{xh}\,\dfrac{\hat{t}_{yh}}{\hat{t}_{xh}} = \sum_h t_{xh}
+            \dfrac{\bar{y}_h}{\bar{x}_h}$. Necesita los $t_{xh}$ de <strong>cada</strong> estrato, que es bastante
+            más información y no siempre se tiene.</li>
+        </ul>
+      </div>
+
+      <p>Si las razones de los estratos fueran todas iguales, los dos estimadores serían el mismo. Toda la
+        diferencia entre ellos vive en cuánto se separan esas razones:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Razón combinada y separada sobre agstrat">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># RAZON EN EL ESTRATIFICADO. Dos maneras de juntar la razon del capitulo 3
+# con los estratos de este:
+#   COMBINADA: primero se suman los estratos, luego se hace UNA razon.
+#   SEPARADA : primero la razon DENTRO de cada estrato, luego se suman.
+# La combinada solo pide el total poblacional t_x; la separada pide los
+# t_xh de cada estrato, que es mas informacion y no siempre se tiene.
+tx  &lt;- sum(agpop$acres87)
+txh &lt;- tapply(agpop$acres87, agpop$region, sum)
+
+# Toda la diferencia entre las dos sale de aqui: las razones por region NO
+# coinciden. Si coincidieran, los dos estimadores serian el mismo.
+Bh_r &lt;- tapply(agstrat$acres92, agstrat$region, mean) /
+        tapply(agstrat$acres87, agstrat$region, mean)
+round(c(Bh_r, combinada = sum(as.numeric(Nh) * tapply(agstrat$acres92, agstrat$region, mean)) /
+                          sum(as.numeric(Nh) * tapply(agstrat$acres87, agstrat$region, mean))), 4)
+#&gt;        NC        NE         S         W combinada
+#&gt;    0.9751    0.8956    0.9935    1.0120    0.9900
+
+# Las dos con survey, contra el estratificado sin auxiliar del modulo 3.
+# Como agpop esta entera, se puede poner al lado la VERDAD:
+rc &lt;- predict(svyratio(~acres92, ~acres87, dis), total = tx)
+rs &lt;- predict(svyratio(~acres92, ~acres87, dis, separate = TRUE), total = txh)
+sa &lt;- svytotal(~acres92, dis)
+comp &lt;- rbind(sin_auxiliar = c(as.numeric(coef(sa)), as.numeric(SE(sa))),
+              combinada    = c(as.numeric(rc$total), as.numeric(rc$se)),
+              separada     = c(as.numeric(rs$total), as.numeric(rs$se)))
+colnames(comp) &lt;- c("total", "ee")
+round(cbind(comp / 1e6, error_pct = 100 * (comp[, 1] / sum(agpop$acres92) - 1)), 3)
+#&gt;                total     ee error_pct
+#&gt; sin_auxiliar 909.736 50.417    -3.625
+#&gt; combinada    953.827  5.962     1.046
+#&gt; separada     954.334  5.724     1.100
+
+# A mano, para ver que hay dentro de cada una. La COMBINADA linealiza con
+# un solo B y corrige la varianza por (t_x / t_x estimado)^2:
+Nn &lt;- as.numeric(Nh); nn &lt;- as.numeric(nh)
+ty_str &lt;- sum(Nn * tapply(agstrat$acres92, agstrat$region, mean))
+tx_str &lt;- sum(Nn * tapply(agstrat$acres87, agstrat$region, mean))
+B_c    &lt;- ty_str / tx_str
+s2e_c  &lt;- tapply(agstrat$acres92 - B_c * agstrat$acres87, agstrat$region, var)
+V_c    &lt;- (tx / tx_str)^2 * sum((1 - fh) * Nn^2 * s2e_c / nn)
+
+# La SEPARADA hace lo mismo H veces, con su propia B_h y su propio t_xh:
+s2e_s &lt;- tapply(agstrat$acres92 - Bh_r[agstrat$region] * agstrat$acres87,
+                agstrat$region, var)
+V_s   &lt;- sum((as.numeric(txh) / (Nn * tapply(agstrat$acres87, agstrat$region, mean)))^2 *
+             (1 - fh) * Nn^2 * s2e_s / nn)
+round(rbind(combinada = c(a_mano = B_c * tx, survey = as.numeric(rc$total),
+                          ee_a_mano = sqrt(V_c), ee_survey = as.numeric(rc$se)),
+            separada  = c(sum(as.numeric(txh) * Bh_r), as.numeric(rs$total),
+                          sqrt(V_s), as.numeric(rs$se))), 0)
+#&gt;              a_mano    survey ee_a_mano ee_survey
+#&gt; combinada 953826982 953826982   5961684   5961684
+#&gt; separada  954334131 954334131   5724041   5724041</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python"># Razon en el estratificado, a mano: las dos vias con numpy y pandas. No
+# hace falta ninguna libreria de encuestas, solo respetar el orden de las
+# operaciones, que es lo unico que distingue a las dos.
+agpop   = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
+agstrat = pd.read_csv("CSV data sets for SDA 3e/agstrat.csv")
+Nh  = agpop.groupby("region").size()
+nh  = agstrat.groupby("region").size()
+fh  = nh / Nh
+tx  = agpop["acres87"].sum()
+txh = agpop.groupby("region")["acres87"].sum()
+
+ybar = agstrat.groupby("region")["acres92"].mean()
+xbar = agstrat.groupby("region")["acres87"].mean()
+
+# COMBINADA: se suman los estratos y luego se hace UNA razon.
+ty_str, tx_str = (Nh * ybar).sum(), (Nh * xbar).sum()
+B_c = ty_str / tx_str
+e_c = agstrat["acres92"] - B_c * agstrat["acres87"]
+s2e_c = e_c.groupby(agstrat["region"]).var()
+V_c = (tx / tx_str) ** 2 * ((1 - fh) * Nh ** 2 * s2e_c / nh).sum()
+
+# SEPARADA: una razon por estrato, y luego se suman.
+Bh = ybar / xbar
+e_s = agstrat["acres92"] - agstrat["region"].map(Bh) * agstrat["acres87"]
+s2e_s = e_s.groupby(agstrat["region"]).var()
+V_s = ((txh / (Nh * xbar)) ** 2 * (1 - fh) * Nh ** 2 * s2e_s / nh).sum()
+
+print(pd.DataFrame(
+    {"total": [B_c * tx, (txh * Bh).sum()], "ee": [np.sqrt(V_c), np.sqrt(V_s)]},
+    index=["combinada", "separada"]) / 1e6)
+#&gt;              total     ee
+#&gt; combinada 953.8270 5.9617
+#&gt; separada  954.3341 5.7240</code></pre>
+        </div>
+      </div>
+
+      <p>Lo primero que salta no es la diferencia entre las dos razones, sino <strong>lo que vale la variable
+        auxiliar</strong>. El estratificado del módulo 3, sin auxiliar, estimaba el total nacional con un error
+        estándar de <strong>50,417</strong> millones de acres. Con <code>acres87</code> el error baja a
+        <strong>5,962</strong> millones la combinada y <strong>5,724</strong> la separada: <strong>casi nueve veces
+        menos</strong>. Y se nota en el acierto — como <code>agpop</code> está entera, se puede comprobar: el
+        estratificado solo se queda a <strong>−3,625 %</strong> de la verdad, y las dos razones a
+        <strong>1,046 %</strong> y <strong>1,100 %</strong>.</p>
+
+      <p>Entre las dos, aquí gana la separada, y se entiende por qué: las razones por región son
+        <strong>0,9751</strong>, <strong>0,8956</strong>, <strong>0,9935</strong> y <strong>1,0120</strong> — el
+        Nordeste siembra bastante menos de lo que sembraba, el Oeste algo más —. La combinada las aplasta todas en
+        una sola, <strong>0,9900</strong>, y pierde esa información. Pero fíjate en <em>cuánto</em> gana: de 5,962
+        a 5,724, un 4 %. La ventaja de la separada es real y es pequeña.</p>
+
+      <div class="note">
+        <p><strong>La postestratificación era esto.</strong> El módulo 10 estimaba $\sum_h N_h \bar{y}_h$ usando
+          los $N_h$ conocidos, y su derivación lo presentaba como una razón dentro de cada postestrato con el
+          indicador de pertenencia como auxiliar. Eso es exactamente la razón <strong>separada</strong> con
+          $x_k = 1$: entonces $t_{xh} = N_h$ y $\bar{y}_h/\bar{x}_h = \bar{y}_h$. La postestratificación es un caso
+          particular de este módulo, y el módulo 10 ya lo había hecho sin llamarlo por su nombre.</p>
+      </div>
+
+      <div class="warning">
+        <p><strong>Y sin embargo, casi todo el software calcula la combinada por defecto.</strong> Si la separada
+          gana, ¿por qué? Porque su ventaja es pequeña y su riesgo no lo es. Cada una de las $H$ razones de la
+          separada es un cociente de dos estimaciones, y <strong>un cociente es sesgado</strong>: es el sesgo que el
+          capítulo 3 midió para un solo estimador de razón. La separada lo comete $H$ veces y los suma. Con
+          estratos grandes el sesgo es despreciable; con estratos chicos, no.</p>
+      </div>
+
+      <p>Eso se puede medir en vez de creerlo. El precálculo sorteó estratificados de <code>agpop</code> con
+        distintos $n_h$ por estrato y comparó los dos estimadores contra la verdad:</p>
+
+      <div class="simulador" data-simulador="razon-estratificada">
+        <h4><i class="fas fa-code-branch" aria-hidden="true"></i> ¿Combinada o separada?</h4>
+        <p class="simulador-intro">Mueve el tamaño por estrato $n_h$ y mira las dos curvas: la raíz del error
+          cuadrático medio relativo de cada estimador, y debajo su sesgo. Con estratos chicos la separada se
+          desploma; a partir de cierto punto adelanta a la combinada y ya no la suelta — pero nunca por mucho. La
+          línea vertical marca el cruce.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Error cuadrático medio relativo de cada estimador, según $n_h$</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Error cuadrático medio de la razón combinada y la separada según el tamaño por estrato" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>La asimetría es la lección del módulo. Con <strong>3</strong> por estrato la separada tiene un error
+        cuadrático medio de <strong>7,195 %</strong> contra <strong>3,734 %</strong> de la combinada: casi el doble
+        de malo. El cruce llega en <strong>5</strong>, y de ahí en adelante la separada gana siempre — pero con
+        <strong>20</strong> por estrato la ventaja es de <strong>1,528 %</strong> contra <strong>1,554 %</strong>,
+        menos de dos centésimas. <strong>Arriba se gana poco y abajo se pierde mucho</strong>, y por eso el valor
+        por defecto de los paquetes es el que es.</p>
+
+      <p>El cruce merece una nota sobre cómo se midió, porque es la clase de cifra que se equivoca sola. Comparar
+        los dos errores cuadráticos sin más lo situaba en 4; pero los dos estimadores se calculan
+        <em>sobre la misma muestra</em>, así que su <strong>diferencia</strong> se estima mucho mejor que cada uno
+        por separado, y exigiéndole a esa diferencia que supere dos errores Monte Carlo el cruce se va a 5: en 4 la
+        ventaja aparente no se distinguía del ruido de la simulación. Por la misma razón, la paliza de la separada
+        en $n_h = 3$ no llega a certificarse ni con <strong>20000</strong> réplicas — sus colas son tan pesadas,
+        precisamente por los cocientes que ocasionalmente estallan, que el promedio se mueve más que la diferencia
+        que se quiere medir.</p>
+
+      <div class="note">
+        <p><strong>Con dos por estrato ni siquiera está definida.</strong> Por debajo del cruce hay un escalón que
+          las fórmulas no anuncian: la separada divide por $\bar{x}_h$, la media del estrato, y esa media puede
+          salir cero o negativa. En <code>agpop</code> pasa, porque <code>acres87</code> arrastra 23 condados con
+          el código de faltante $-99$ y dos con 0 — los mismos que el módulo 6 señalaba como estrato «basura»
+          silencioso —. Con $n_h = 2$, el <strong>0,23 %</strong> de las muestras deja alguna región con
+          $\bar{x}_h \leq 0$ y el estimador separado <strong>no existe</strong>. La combinada, que divide por el
+          total estimado de toda la muestra, no tiene ese problema.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Cómo elegir, en una línea.</strong> Usa la <strong>separada</strong> si tienes los $t_{xh}$ de
+          cada estrato <em>y</em> los $n_h$ son holgados <em>y</em> tienes razón para creer que las razones
+          cambian entre estratos. Si falla cualquiera de las tres, usa la <strong>combinada</strong>. Y si no
+          tienes ni $t_x$, te queda el estratificado del módulo 3, que aquí costaba nueve veces más error.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.6 (2.ª ed.) / §4.5 (3.ª ed.): razón combinada y separada, con la observación de que la
+            postestratificación es un caso particular de la separada.</li>
+          <li>Lohr — §4.1.2 (3.ª ed.): el sesgo del estimador de razón, que es el que la separada comete $H$ veces.</li>
+          <li>Capítulo 3, módulos 5 a 8: el estimador de razón de donde sale todo esto.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+  <!-- ============================================================ -->
+  <!-- MÓDULO 13 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-13">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 13</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
           guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
@@ -5964,7 +6205,8 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
         { id: 9, title: "Estratificado con probabilidades proporcionales", shortTitle: "PPT por estrato", duration: "22 min" },
         { id: 10, title: "Postestratificación", shortTitle: "Postestratificación", duration: "20 min" },
         { id: 11, title: "Estratificación en machine learning", shortTitle: "Machine learning", duration: "18 min" },
-        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
+        { id: 12, title: "Razón en el estratificado", shortTitle: "Razón estratificada", duration: "24 min" },
+        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
       ]
     };
 
@@ -5973,7 +6215,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
     // semilla 2026. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP4 = {"meta":{"generado":"precalculo/genera_cap4.R","semilla":2026,"replicas":10000,"rVersion":"4.4.1"},"poblacion":{"N":3078,"media":306676.97141001,"S2":180358776382.88388,"total":943951718,"Nh":[1054,220,1382,422],"negativos92":19},"agstrat":{"n":300,"ybar":295560.76523455,"se":16379.8727264,"total":909736035.391957,"seTotal":50417248.25185139,"ic":[263456.80461947,327664.72584964],"icTotal":[810920044.6187134,1008552026.1652007],"ybarSrs":297897.04666667,"seSrs":18898.43442803},"peq":{"y":[14,18,27,33,58],"t":150,"muestras":[{"s":[1,2,4],"t":114},{"s":[1,2,5],"t":164},{"s":[1,3,4],"t":127.5},{"s":[1,3,5],"t":177.5},{"s":[2,3,4],"t":133.5},{"s":[2,3,5],"t":183.5}],"V":691.5},"asignaciones":{"n":300,"regiones":["NC","NE","S","W"],"nombres":["Norte-Centro","Nordeste","Sur","Oeste"],"Nh":[1054,220,1382,422],"Sh":[271303.40626531,79365.44747428,243956.35049719,835638.9004829],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"prop":[103,21,135,41],"igual":[75,75,75,75],"neyman":[86,5,102,107],"V":{"mas":542599827.5846344,"prop":446220740.1494037,"igual":402368663.20543766,"neyman":298971216.82428384},"deff":{"prop":0.82237538,"igual":0.74155693,"neyman":0.55099763}},"costos":{"ch":{"NC":10,"NE":6,"S":8,"W":18},"C":3000,"optimo":{"nh":[79.86433275,6.29557693,105.2766817,73.40943096],"V":357827437.113399,"n":264.84602234},"propMismoCosto":{"nh":[103.63135815,21.63083377,135.88096487,41.49187205],"V":441294188.731976,"n":302.63502884}},"constructor":{"opciones":[{"etiqueta":"Región (la de Lohr)","H":4,"Nh":[1054,220,1382,422],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"V":445592925.3770826,"deff":0.82121833},{"etiqueta":"Cuartiles de acres87","H":4,"Nh":[770,769,770,769],"mediaH":[42625.73506494,130146.34070221,267942.27662338,786387.27308192],"V":292813664.7377756,"deff":0.53964939},{"etiqueta":"Cuartiles de farms92","H":4,"Nh":[775,767,767,769],"mediaH":[226180.63612903,316003.73402868,323880.43676662,361340.13784135],"V":535678377.2804061,"deff":0.98724391},{"etiqueta":"Cuartiles de largef92","H":4,"Nh":[773,779,765,761],"mediaH":[54038.32988357,147999.53786906,295187.96078431,737279.44678055],"V":337458776.4390231,"deff":0.62192938},{"etiqueta":"4 grupos al azar","H":4,"Nh":[770,770,769,769],"mediaH":[306455.58441558,310205.08701299,304396.55656697,305646.35760728],"V":543115221.8756696,"deff":1.00094986}],"barridoH":[{"H":2,"V":396649380.0226766,"deff":0.73101641},{"H":3,"V":332887636.8290658,"deff":0.61350487},{"H":4,"V":292813664.7377756,"deff":0.53964939},{"H":5,"V":264603727.74538517,"deff":0.48765907},{"H":6,"V":243175525.5188122,"deff":0.44816735},{"H":7,"V":225578598.63066012,"deff":0.41573658},{"H":8,"V":210216021.51957548,"deff":0.38742368},{"H":9,"V":197025433.5042602,"deff":0.3631137},{"H":10,"V":185216383.12030464,"deff":0.34134987}],"R2region":0.18002427,"SSB":99906979069126.19,"SST":554963954930133.44},"distribucion":{"replicas":10000,"mas":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[3,3,17,23,46,72,129,139,246,337,352,475,612,586,713,742,745,695,673,624,541,472,393,326,278,211,162,132,72,61,35,27,18,13,14,6,4,1,1,1],"ancho":4257.33646334},"estratificado":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[1,2,4,16,24,46,76,118,187,291,409,483,594,696,762,795,789,782,760,655,555,503,375,334,208,184,115,83,52,40,23,17,8,2,6,2,1,2,0,0],"ancho":4257.33646334},"varMas":543022487.7064464,"varStr":437069992.40986055,"coberturaMas":0.9313,"coberturaStr":0.9335,"media":306676.97141001},"ppt":{"mh":{"Big":60,"Medium":120,"Small":200},"estratos":[{"nivel":"Big","Nh":2905,"totalIncome":3629710,"totalEmployees":401135,"mediaIncome":1249.46987952},{"nivel":"Medium","Nh":25795,"totalIncome":17057285,"totalEmployees":2087505,"mediaIncome":661.26322931},{"nivel":"Small","Nh":56596,"totalIncome":15947738,"totalEmployees":2903352,"mediaIncome":281.7820694}],"tIncome":36634733,"estimacion":35887479.67260976,"se":920763.21578284,"porEstrato":{"t":[3518947.76176422,17175653.73433934,15192878.1765062],"se":[93910.11109418,542313.15732217,738161.38477185]},"seStsi":582345.93380524,"psiDeciles":[[0.00018946,0.00022187,0.00024929,0.00028669,0.00030414,0.00033156,0.00036147,0.00039388,0.00040635,0.00045371,0.00065564],[1.15e-05,2.156e-05,2.635e-05,3.114e-05,3.497e-05,3.928e-05,4.311e-05,4.599e-05,4.982e-05,5.605e-05,7.234e-05],[3.44429473e-07,6.19973052e-06,8.9551663e-06,1.171e-05,1.447e-05,1.757e-05,2.067e-05,2.377e-05,2.652e-05,2.928e-05,3.617e-05]],"ratioEmpleados":263},"postestratificacion":{"conteos":[107,24,130,39],"w0":10.26,"primaEeProp":21109.07211076,"primaEePost":21272.24289456,"primaPct":0.7729889,"primaEeSim":21298.79635533,"primaEeSimMc":33.67635395,"primaReplicas":200000,"wPost":[9.85046729,9.16666667,10.63076923,10.82051282],"ybarSrs":297897.04666667,"seSrs":18898.43442803,"ybarPost":299778.1127586,"sePost":17513.44781603,"sePostCond":17635.00095587,"Nh":[1054,220,1382,422],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"ybarH":[350292.00934579,71970.83333333,206246.35384615,598680.58974359],"s2H":[86857007373.06596,4225007608.579709,76969408653.4242,266418735738.24835]}};
+    const DATOS_CAP4 = {"meta":{"generado":"precalculo/genera_cap4.R","semilla":2026,"replicas":10000,"rVersion":"4.4.1"},"poblacion":{"N":3078,"media":306676.97141001,"S2":180358776382.88388,"total":943951718,"Nh":[1054,220,1382,422],"negativos92":19},"agstrat":{"n":300,"ybar":295560.76523455,"se":16379.8727264,"total":909736035.391957,"seTotal":50417248.25185139,"ic":[263456.80461947,327664.72584964],"icTotal":[810920044.6187134,1008552026.1652007],"ybarSrs":297897.04666667,"seSrs":18898.43442803},"peq":{"y":[14,18,27,33,58],"t":150,"muestras":[{"s":[1,2,4],"t":114},{"s":[1,2,5],"t":164},{"s":[1,3,4],"t":127.5},{"s":[1,3,5],"t":177.5},{"s":[2,3,4],"t":133.5},{"s":[2,3,5],"t":183.5}],"V":691.5},"asignaciones":{"n":300,"regiones":["NC","NE","S","W"],"nombres":["Norte-Centro","Nordeste","Sur","Oeste"],"Nh":[1054,220,1382,422],"Sh":[271303.40626531,79365.44747428,243956.35049719,835638.9004829],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"prop":[103,21,135,41],"igual":[75,75,75,75],"neyman":[86,5,102,107],"V":{"mas":542599827.5846344,"prop":446220740.1494037,"igual":402368663.20543766,"neyman":298971216.82428384},"deff":{"prop":0.82237538,"igual":0.74155693,"neyman":0.55099763}},"costos":{"ch":{"NC":10,"NE":6,"S":8,"W":18},"C":3000,"optimo":{"nh":[79.86433275,6.29557693,105.2766817,73.40943096],"V":357827437.113399,"n":264.84602234},"propMismoCosto":{"nh":[103.63135815,21.63083377,135.88096487,41.49187205],"V":441294188.731976,"n":302.63502884}},"constructor":{"opciones":[{"etiqueta":"Región (la de Lohr)","H":4,"Nh":[1054,220,1382,422],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"V":445592925.3770826,"deff":0.82121833},{"etiqueta":"Cuartiles de acres87","H":4,"Nh":[770,769,770,769],"mediaH":[42625.73506494,130146.34070221,267942.27662338,786387.27308192],"V":292813664.7377756,"deff":0.53964939},{"etiqueta":"Cuartiles de farms92","H":4,"Nh":[775,767,767,769],"mediaH":[226180.63612903,316003.73402868,323880.43676662,361340.13784135],"V":535678377.2804061,"deff":0.98724391},{"etiqueta":"Cuartiles de largef92","H":4,"Nh":[773,779,765,761],"mediaH":[54038.32988357,147999.53786906,295187.96078431,737279.44678055],"V":337458776.4390231,"deff":0.62192938},{"etiqueta":"4 grupos al azar","H":4,"Nh":[770,770,769,769],"mediaH":[306455.58441558,310205.08701299,304396.55656697,305646.35760728],"V":543115221.8756696,"deff":1.00094986}],"barridoH":[{"H":2,"V":396649380.0226766,"deff":0.73101641},{"H":3,"V":332887636.8290658,"deff":0.61350487},{"H":4,"V":292813664.7377756,"deff":0.53964939},{"H":5,"V":264603727.74538517,"deff":0.48765907},{"H":6,"V":243175525.5188122,"deff":0.44816735},{"H":7,"V":225578598.63066012,"deff":0.41573658},{"H":8,"V":210216021.51957548,"deff":0.38742368},{"H":9,"V":197025433.5042602,"deff":0.3631137},{"H":10,"V":185216383.12030464,"deff":0.34134987}],"R2region":0.18002427,"SSB":99906979069126.19,"SST":554963954930133.44},"distribucion":{"replicas":10000,"mas":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[3,3,17,23,46,72,129,139,246,337,352,475,612,586,713,742,745,695,673,624,541,472,393,326,278,211,162,132,72,61,35,27,18,13,14,6,4,1,1,1],"ancho":4257.33646334},"estratificado":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[1,2,4,16,24,46,76,118,187,291,409,483,594,696,762,795,789,782,760,655,555,503,375,334,208,184,115,83,52,40,23,17,8,2,6,2,1,2,0,0],"ancho":4257.33646334},"varMas":543022487.7064464,"varStr":437069992.40986055,"coberturaMas":0.9313,"coberturaStr":0.9335,"media":306676.97141001},"ppt":{"mh":{"Big":60,"Medium":120,"Small":200},"estratos":[{"nivel":"Big","Nh":2905,"totalIncome":3629710,"totalEmployees":401135,"mediaIncome":1249.46987952},{"nivel":"Medium","Nh":25795,"totalIncome":17057285,"totalEmployees":2087505,"mediaIncome":661.26322931},{"nivel":"Small","Nh":56596,"totalIncome":15947738,"totalEmployees":2903352,"mediaIncome":281.7820694}],"tIncome":36634733,"estimacion":35887479.67260976,"se":920763.21578284,"porEstrato":{"t":[3518947.76176422,17175653.73433934,15192878.1765062],"se":[93910.11109418,542313.15732217,738161.38477185]},"seStsi":582345.93380524,"psiDeciles":[[0.00018946,0.00022187,0.00024929,0.00028669,0.00030414,0.00033156,0.00036147,0.00039388,0.00040635,0.00045371,0.00065564],[1.15e-05,2.156e-05,2.635e-05,3.114e-05,3.497e-05,3.928e-05,4.311e-05,4.599e-05,4.982e-05,5.605e-05,7.234e-05],[3.44429473e-07,6.19973052e-06,8.9551663e-06,1.171e-05,1.447e-05,1.757e-05,2.067e-05,2.377e-05,2.652e-05,2.928e-05,3.617e-05]],"ratioEmpleados":263},"postestratificacion":{"conteos":[107,24,130,39],"w0":10.26,"primaEeProp":21109.07211076,"primaEePost":21272.24289456,"primaPct":0.7729889,"primaEeSim":21298.79635533,"primaEeSimMc":33.67635395,"primaReplicas":200000,"wPost":[9.85046729,9.16666667,10.63076923,10.82051282],"ybarSrs":297897.04666667,"seSrs":18898.43442803,"ybarPost":299778.1127586,"sePost":17513.44781603,"sePostCond":17635.00095587,"Nh":[1054,220,1382,422],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"ybarH":[350292.00934579,71970.83333333,206246.35384615,598680.58974359],"s2H":[86857007373.06596,4225007608.579709,76969408653.4242,266418735738.24835]},"razonEstratificada":{"nh":[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"cruce":5,"pctIndefinida":0.23,"replicas":20000,"sesgoComb":[-0.13206736,-0.0844334,-0.06052853,-0.08798844,-0.06520802,-0.06690422,-0.07677805,-0.02467729,-0.05710908,-0.05041093,-0.0230144,-0.0286779,-0.03599687,-0.01443777,-0.00381275,-0.0105897,-0.02625791,-0.03189555],"sesgoSep":[-0.29521635,-0.2705896,-0.19655531,-0.20637102,-0.16916378,-0.14930436,-0.15156114,-0.09483012,-0.12035992,-0.10051196,-0.07120126,-0.07937097,-0.07995079,-0.05605012,-0.0438442,-0.04335485,-0.06079168,-0.06371892],"ecmComb":[3.73439744,3.29159768,3.02056697,2.79930179,2.54518897,2.46050492,2.30569849,2.18735108,2.09427303,2.02248366,1.88631768,1.8321667,1.78703186,1.70231927,1.64875831,1.62989007,1.59291174,1.55401394],"ecmSep":[7.19514095,3.27616553,2.88655421,2.66333083,2.45063744,2.32328649,2.20742642,2.11439468,2.01421802,1.95517364,1.83098541,1.77730988,1.73945582,1.66628551,1.60695779,1.59961343,1.55596446,1.52780558],"difMedia":[0.00378243,-1.014e-05,-7.916e-05,-7.428e-05,-4.724e-05,-6.564e-05,-4.435e-05,-3.138e-05,-3.289e-05,-2.677e-05,-2.057e-05,-1.98e-05,-1.678e-05,-1.214e-05,-1.361e-05,-9.77784987e-06,-1.163e-05,-8.07694208e-06],"difMc":[0.00306769,3.46e-05,1.829e-05,1.275e-05,8.73861408e-06,7.72255474e-06,6.31127117e-06,4.53426653e-06,4.01447956e-06,3.55569911e-06,2.90024136e-06,2.54089654e-06,2.24704513e-06,2.00840406e-06,1.65658941e-06,1.62930185e-06,1.51906212e-06,1.58502818e-06],"Bh":[0.97506657,0.89560729,0.99354831,1.01197448],"regiones":["NC","NE","S","W"]}};
 
     // ================================================================
     // Estado y elementos del DOM
@@ -8561,6 +8803,61 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
     // sintetica de 3000 puntos con PRNG de semilla fija (mulberry32),
     // para que el mismo escenario produzca siempre los mismos pliegues.
     // ---------------------------------------------------------------
+    // ---------------------------------------------------------------
+    // M12 · ¿Combinada o separada?
+    // ---------------------------------------------------------------
+    SIMULADORES['razon-estratificada'] = function (raiz) {
+      const R = D4.razonEstratificada;
+      const params = { nh: 5 };
+      const lienzo = raiz.querySelector('canvas');
+      const iDe = n => R.nh.indexOf(n);
+
+      const g = crearGraficoXY(lienzo, [], {
+        tituloX: 'tamaño de muestra por estrato n_h',
+        tituloY: 'raíz del ECM relativo (%)',
+        xMin: R.nh[0] - 0.5, xMax: R.nh[R.nh.length - 1] + 0.5
+      });
+
+      function pintar() {
+        const i = iDe(params.nh);
+        const pts = clave => R.nh.map((n, k) => ({ x: n, y: R[clave][k] }));
+        g.data.datasets = [
+          { type: 'line', label: 'combinada', data: pts('ecmComb'),
+            borderColor: COLORES_GRAFICO.primario, borderWidth: 2, pointRadius: 2, fill: false },
+          { type: 'line', label: 'separada', data: pts('ecmSep'),
+            borderColor: COLORES_GRAFICO.secundario, borderWidth: 2, pointRadius: 2, fill: false },
+          { type: 'scatter', label: 'tu n_h',
+            data: [{ x: params.nh, y: R.ecmComb[i] }, { x: params.nh, y: R.ecmSep[i] }],
+            backgroundColor: '#111827', pointRadius: 5 },
+          serieVertical(R.cruce, Math.max(R.ecmComb[0], R.ecmSep[0]), 'cruce', '#dc2626')
+        ];
+        g.update('none');
+
+        const dif = R.ecmSep[i] - R.ecmComb[i];
+        const distinguible = R.difMedia[i] < -2 * R.difMc[i];
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'n_h por estrato:', valor: String(params.nh) + '  (n = ' + (4 * params.nh) + ')' },
+          { etiqueta: 'ECM relativo, combinada:', valor: fmtNum(R.ecmComb[i], 3) + ' %' },
+          { etiqueta: 'ECM relativo, separada:', valor: fmtNum(R.ecmSep[i], 3) + ' %' },
+          { etiqueta: 'sesgo, combinada / separada:',
+            valor: fmtNum(R.sesgoComb[i], 3) + ' % / ' + fmtNum(R.sesgoSep[i], 3) + ' %' },
+          { etiqueta: 'veredicto:',
+            valor: distinguible
+              ? 'gana la separada por ' + fmtNum(100 * (1 - R.ecmSep[i] / R.ecmComb[i]), 1) + ' %'
+              : (dif > 0 ? 'la separada va peor, pero con ' + R.replicas.toLocaleString('es') +
+                           ' réplicas la diferencia no se distingue del ruido'
+                         : 'empate, la diferencia no se distingue del ruido') }
+        ]);
+      }
+
+      crearControles(raiz.querySelector('.simulador-controles'), [
+        { clave: 'nh', etiqueta: 'Tamaño por estrato n_h',
+          min: R.nh[0], max: R.nh[R.nh.length - 1], paso: 1 }
+      ], params, pintar);
+      pintar();
+      return [g];
+    };
+
     SIMULADORES['kfold'] = function (raiz) {
       const params = { prevalencia: 5, k: 5 };
       const lienzo = raiz.querySelector('canvas');
@@ -8770,7 +9067,9 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
         { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k = n_h/N_h', lohr: 'n_h/N_h', gutierrez: '\\pi_k', r: 'nh/Nh' },
         { concepto: 'Peso de diseño', aqui: 'w_k = N_h/n_h', lohr: 'w_{hj}', gutierrez: '1/\\pi_k', r: 'weights=~strwt' },
         { concepto: 'Efecto de diseño', aqui: '\\text{deff}', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'deff=TRUE en svymean' },
-        { concepto: 'Prob. de selección PPT', aqui: '\\psi_k = x_k/t_{x,h}', lohr: '\\psi_i', gutierrez: 'p_k', r: 'S.STPPS()' }
+        { concepto: 'Prob. de selección PPT', aqui: '\\psi_k = x_k/t_{x,h}', lohr: '\\psi_i', gutierrez: 'p_k', r: 'S.STPPS()' },
+        { concepto: 'Razón combinada', aqui: '\\hat{t}_{yrc} = \\hat{B}\\, t_x', lohr: '\\hat{t}_{yrc}', gutierrez: '\\hat{t}_{y,\\text{rc}}', r: 'svyratio(...)' },
+        { concepto: 'Razón separada', aqui: '\\hat{t}_{yrs} = \\sum_h t_{xh}\\bar{y}_h/\\bar{x}_h', lohr: '\\hat{t}_{yrs}', gutierrez: '\\hat{t}_{y,\\text{rs}}', r: 'svyratio(separate = TRUE)' }
       ]
     };
 

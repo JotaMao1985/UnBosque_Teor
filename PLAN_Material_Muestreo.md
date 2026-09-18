@@ -4756,3 +4756,71 @@ segunda lección se repite: el defecto de las tablas tampoco lo encuentra nadie 
 hueco ni desborde — la columna simplemente no está.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.47 — El módulo 12 del cap. 4: la razón vuelve, por las dos vías (2026-09-17)
+
+Fase 4 del plan del capítulo 4 con Lohr 3.ª ed. (tarea B3) y **cumplimiento de A9**: el capítulo 3
+prometía desde su módulo 8 que el estimador de razón reaparecía en el capítulo 4 «dentro de cada
+estrato o sobre el conjunto», y el capítulo 4 no traía ninguno de los dos. La promesa se cumple
+construyendo lo prometido, no borrándola.
+
+**El módulo nuevo.** M12 «Razón en el estratificado», con la autoevaluación renumerada a **M13** y
+sacada a `modulo_13.html`, que es como la tienen los capítulos 1, 2 y 3. Comprobado con `grep` que
+nadie enlazaba al `#module-12` del capítulo 4 antes de moverlo.
+
+**Las cifras.** Sobre `agstrat` con `acres87` de auxiliar, y con `agpop` entera al lado para poder
+decir la verdad:
+
+| estimador | total (millones) | ee (millones) | error |
+|---|---:|---:|---:|
+| estratificado sin auxiliar (M3) | 909,736 | **50,417** | −3,625 % |
+| razón **combinada** | 953,827 | **5,962** | +1,046 % |
+| razón **separada** | 954,334 | **5,724** | +1,100 % |
+
+Lo primero que enseña no es la diferencia entre las dos razones sino **lo que vale la auxiliar**: el
+error estándar cae casi nueve veces. Entre las dos gana la separada, porque las razones por región
+—**0,9751 · 0,8956 · 0,9935 · 1,0120**— se separan y la combinada las aplasta en una sola, 0,9900.
+Pero gana por **4 %**, y ahí está la lección.
+
+**La asimetría, medida.** El precálculo sortea 20 000 estratificados por cada $n_h$ de 3 a 20. Con
+**3** por estrato la separada tiene un ECM relativo de **7,195 %** contra **3,734 %**; el cruce está
+en **5**; con **20** la ventaja es **1,528 %** contra **1,554 %**. **Arriba se gana poco y abajo se
+pierde mucho**, que es por qué los paquetes calculan la combinada por defecto. Y por debajo del
+cruce hay un escalón que las fórmulas no anuncian: con $n_h = 2$ el **0,23 %** de las muestras deja
+alguna región con $\bar x_h \leq 0$ —`acres87` arrastra 23 códigos $-99$ y dos ceros, los que el M6
+ya señalaba— y **la separada no existe**. La combinada no tiene ese problema.
+
+**El cruce se midió dos veces y salió distinto.** Comparando los dos ECM sin más, 4; exigiendo que
+la **diferencia emparejada** —los dos estimadores se calculan sobre la misma muestra, así que su
+diferencia se estima mucho mejor que cada uno— supere dos errores Monte Carlo, **5**: en 4 la
+ventaja aparente no se distinguía del ruido. Lo mismo deja ver que ni siquiera la paliza en $n_h=3$
+llega a certificarse con 20 000 réplicas, porque las colas de la separada son pesadísimas justo por
+los cocientes que estallan. El simulador dice «empate» cuando toca en vez de fingir un ganador.
+
+**La postestratificación era esto**, y el módulo lo dice: la razón separada con el indicador de
+pertenencia como auxiliar da $t_{xh} = N_h$ y $\bar y_h/\bar x_h = \bar y_h$. El M10 llevaba desde
+T7.37 haciendo exactamente eso sin llamarlo por su nombre.
+
+**Lo demás.** Bloques `R15B` y `P5`, que dan las mismas cifras en los dos lenguajes (la disciplina de
+T7.19), cada uno con su doble vía: `svyratio(separate = TRUE/FALSE)` contra la fórmula a mano,
+idénticas al entero. Simulador `razon-estratificada`. Dos filas nuevas de glosario
+($\hat t_{yrc}$, $\hat t_{yrs}$). **Ej. 4.10 de Lohr no se adaptó**, como avisaba el plan: su ee no
+cuadra con la fórmula que declara y haría falta la fe de erratas.
+
+**Verificado.** Byte a byte; **437 de 437** cifras de bloques del capítulo (458 en el sitio entero) y
+**147 de prosa · 0 sin respaldo**; `--check` sin diferencias en las dos cadenas; `genera_cap4.R`
+reproduce su JSON y aborta si la separada no pierde con $n_h$ chicos o no gana con grandes. En el
+navegador: 13 módulos, 9 simuladores, 26 expresiones KaTeX en el M12, 0 `.katex-error`, las dos
+pestañas coincidiendo, el simulador dando «empate» en 3 y 4 y «gana la separada por 4,4 %» en 5, el
+glosario con sus 14 filas y el M13 con sus cuatro bloques de ejercicios. Reensamblado sobre
+`650bc8c`: a 375 px, **18 de 20** fórmulas con barra, **0** recortadas, y la única tabla HTML del
+capítulo ya alcanzable.
+
+**Lo que enseña.** El capítulo llevaba meses con una promesa hecha en otro capítulo y sin cumplir, y
+nadie lo habría notado nunca leyendo el capítulo 4 solo: **las deudas entre capítulos no dejan
+rastro en el capítulo que las debe**. La auditoría que las encuentra hay que hacerla desde fuera, y
+por eso valió la pena que el diagnóstico las buscara con `grep` en vez de releyendo.
+
+**Pendiente:** el visto bueno de Javier para publicar.

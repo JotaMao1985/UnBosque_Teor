@@ -74,3 +74,38 @@ print(f"prueba estratificada:    {y_prueba_estr.mean():.4f}")
 #> poblacion: 0.0500
 #> prueba sin estratificar: 0.0325
 #> prueba estratificada:    0.0503
+
+print("\n###BLOQUE-P5###\n")
+# Razon en el estratificado, a mano: las dos vias con numpy y pandas. No
+# hace falta ninguna libreria de encuestas, solo respetar el orden de las
+# operaciones, que es lo unico que distingue a las dos.
+agpop   = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
+agstrat = pd.read_csv("CSV data sets for SDA 3e/agstrat.csv")
+Nh  = agpop.groupby("region").size()
+nh  = agstrat.groupby("region").size()
+fh  = nh / Nh
+tx  = agpop["acres87"].sum()
+txh = agpop.groupby("region")["acres87"].sum()
+
+ybar = agstrat.groupby("region")["acres92"].mean()
+xbar = agstrat.groupby("region")["acres87"].mean()
+
+# COMBINADA: se suman los estratos y luego se hace UNA razon.
+ty_str, tx_str = (Nh * ybar).sum(), (Nh * xbar).sum()
+B_c = ty_str / tx_str
+e_c = agstrat["acres92"] - B_c * agstrat["acres87"]
+s2e_c = e_c.groupby(agstrat["region"]).var()
+V_c = (tx / tx_str) ** 2 * ((1 - fh) * Nh ** 2 * s2e_c / nh).sum()
+
+# SEPARADA: una razon por estrato, y luego se suman.
+Bh = ybar / xbar
+e_s = agstrat["acres92"] - agstrat["region"].map(Bh) * agstrat["acres87"]
+s2e_s = e_s.groupby(agstrat["region"]).var()
+V_s = ((txh / (Nh * xbar)) ** 2 * (1 - fh) * Nh ** 2 * s2e_s / nh).sum()
+
+print(pd.DataFrame(
+    {"total": [B_c * tx, (txh * Bh).sum()], "ee": [np.sqrt(V_c), np.sqrt(V_s)]},
+    index=["combinada", "separada"]) / 1e6)
+#>              total     ee
+#> combinada 953.8270 5.9617
+#> separada  954.3341 5.7240

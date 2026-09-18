@@ -641,6 +641,62 @@ round(rbind(
 #> pool_por_defecto 0.0584 0.0536 0.0422 0.0423 0.0537
 #> pool_correcto    0.0503 0.0503 0.0503 0.0503 0.0489
 
+cat("\n###BLOQUE-R15B###\n")
+# RAZON EN EL ESTRATIFICADO. Dos maneras de juntar la razon del capitulo 3
+# con los estratos de este:
+#   COMBINADA: primero se suman los estratos, luego se hace UNA razon.
+#   SEPARADA : primero la razon DENTRO de cada estrato, luego se suman.
+# La combinada solo pide el total poblacional t_x; la separada pide los
+# t_xh de cada estrato, que es mas informacion y no siempre se tiene.
+tx  <- sum(agpop$acres87)
+txh <- tapply(agpop$acres87, agpop$region, sum)
+
+# Toda la diferencia entre las dos sale de aqui: las razones por region NO
+# coinciden. Si coincidieran, los dos estimadores serian el mismo.
+Bh_r <- tapply(agstrat$acres92, agstrat$region, mean) /
+        tapply(agstrat$acres87, agstrat$region, mean)
+round(c(Bh_r, combinada = sum(as.numeric(Nh) * tapply(agstrat$acres92, agstrat$region, mean)) /
+                          sum(as.numeric(Nh) * tapply(agstrat$acres87, agstrat$region, mean))), 4)
+#>        NC        NE         S         W combinada
+#>    0.9751    0.8956    0.9935    1.0120    0.9900
+
+# Las dos con survey, contra el estratificado sin auxiliar del modulo 3.
+# Como agpop esta entera, se puede poner al lado la VERDAD:
+rc <- predict(svyratio(~acres92, ~acres87, dis), total = tx)
+rs <- predict(svyratio(~acres92, ~acres87, dis, separate = TRUE), total = txh)
+sa <- svytotal(~acres92, dis)
+comp <- rbind(sin_auxiliar = c(as.numeric(coef(sa)), as.numeric(SE(sa))),
+              combinada    = c(as.numeric(rc$total), as.numeric(rc$se)),
+              separada     = c(as.numeric(rs$total), as.numeric(rs$se)))
+colnames(comp) <- c("total", "ee")
+round(cbind(comp / 1e6, error_pct = 100 * (comp[, 1] / sum(agpop$acres92) - 1)), 3)
+#>                total     ee error_pct
+#> sin_auxiliar 909.736 50.417    -3.625
+#> combinada    953.827  5.962     1.046
+#> separada     954.334  5.724     1.100
+
+# A mano, para ver que hay dentro de cada una. La COMBINADA linealiza con
+# un solo B y corrige la varianza por (t_x / t_x estimado)^2:
+Nn <- as.numeric(Nh); nn <- as.numeric(nh)
+ty_str <- sum(Nn * tapply(agstrat$acres92, agstrat$region, mean))
+tx_str <- sum(Nn * tapply(agstrat$acres87, agstrat$region, mean))
+B_c    <- ty_str / tx_str
+s2e_c  <- tapply(agstrat$acres92 - B_c * agstrat$acres87, agstrat$region, var)
+V_c    <- (tx / tx_str)^2 * sum((1 - fh) * Nn^2 * s2e_c / nn)
+
+# La SEPARADA hace lo mismo H veces, con su propia B_h y su propio t_xh:
+s2e_s <- tapply(agstrat$acres92 - Bh_r[agstrat$region] * agstrat$acres87,
+                agstrat$region, var)
+V_s   <- sum((as.numeric(txh) / (Nn * tapply(agstrat$acres87, agstrat$region, mean)))^2 *
+             (1 - fh) * Nn^2 * s2e_s / nn)
+round(rbind(combinada = c(a_mano = B_c * tx, survey = as.numeric(rc$total),
+                          ee_a_mano = sqrt(V_c), ee_survey = as.numeric(rc$se)),
+            separada  = c(sum(as.numeric(txh) * Bh_r), as.numeric(rs$total),
+                          sqrt(V_s), as.numeric(rs$se))), 0)
+#>              a_mano    survey ee_a_mano ee_survey
+#> combinada 953826982 953826982   5961684   5961684
+#> separada  954334131 954334131   5724041   5724041
+
 cat("\n###BLOQUE-R16###\n")
 # EJERCICIO 1. Con agstrat, estimar el total nacional de acres sembrados con
 # su intervalo del 95 %, y contrastarlo con el total verdadero de agpop.

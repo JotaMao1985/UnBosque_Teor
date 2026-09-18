@@ -114,7 +114,8 @@ def main():
     # ---------------------------------------------------------------- módulos
     modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap4" / f).read_text(encoding="utf-8")
                       for f in ["modulos_1_3.html", "modulos_4_6.html",
-                                "modulos_7_9.html", "modulos_10_12.html"])
+                                "modulos_7_9.html", "modulos_10_12.html",
+                                "modulo_13.html"])
     antes, despues = corta(
         html,
         "  <!-- ============================================================ -->\n  <!-- MÓDULO 1 · Cajas y tipografía",
@@ -138,7 +139,8 @@ def main():
         { id: 9, title: "Estratificado con probabilidades proporcionales", shortTitle: "PPT por estrato", duration: "22 min" },
         { id: 10, title: "Postestratificación", shortTitle: "Postestratificación", duration: "20 min" },
         { id: 11, title: "Estratificación en machine learning", shortTitle: "Machine learning", duration: "18 min" },
-        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
+        { id: 12, title: "Razón en el estratificado", shortTitle: "Razón estratificada", duration: "24 min" },
+        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
       ]
     };
 

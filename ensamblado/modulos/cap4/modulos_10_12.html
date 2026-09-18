@@ -327,7 +327,7 @@
   </template>
 
   <!-- ============================================================ -->
-  <!-- MÓDULO 12 · Autoevaluación y ejercicios guiados               -->
+  <!-- MÓDULO 12 · Razón en el estratificado                         -->
   <!-- ============================================================ -->
   <template id="module-12">
     <div class="animate-fade-in">
@@ -335,127 +335,142 @@
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
           <span>Módulo 12</span>
         </div>
-        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
-          guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Razón en el estratificado
+          <span class="text-gray-400 font-normal text-2xl">/ Combined &amp; separate ratio</span></h2>
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas repartidas por los módulos del capítulo y cuatro
-              ejercicios de diseño resueltos con el código real del capítulo.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Juntar la razón del capítulo 3 con los estratos de
+              este, por las dos vías posibles, y saber cuál elegir.</p>
           </div>
         </div>
       </div>
 
-      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al
-        final, el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos antes
-        de abrir la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+      <p>El capítulo 3 prometió que su estimador de razón reaparecería aquí «dentro de cada estrato o sobre el
+        conjunto». Este módulo cumple esa promesa, y de paso cierra el capítulo con la idea que más precisión ha
+        comprado en todo el material: <strong>usar una variable auxiliar conocida</strong>.</p>
 
-      <div class="quiz" data-quiz="cap4">
-        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 4</h4>
-        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
-          también las incorrectas: leerlas cuando aciertas también enseña.</p>
-        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
-        <div class="quiz-preguntas"></div>
-        <div class="quiz-resumen" role="status" hidden></div>
-        <div class="quiz-marcador">
-          <span class="quiz-conteo"></span>
-          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+      <p>El punto de partida es que hay <em>dos</em> maneras de combinar razón y estratos, y no dan lo mismo. La
+        diferencia está en el orden de las operaciones:</p>
+
+      <div class="definition">
+        <h4>Combinada y separada</h4>
+        <ul style="margin-bottom:0;">
+          <li><strong>Combinada</strong> ($\hat{t}_{yrc}$): primero se <em>suman</em> los estratos, luego se hace
+            <em>una</em> razón. $\hat{t}_{yrc} = \hat{B}\,t_x$ con
+            $\hat{B} = \hat{t}_{y,\text{str}} / \hat{t}_{x,\text{str}}$. Solo necesita el total poblacional $t_x$.</li>
+          <li><strong>Separada</strong> ($\hat{t}_{yrs}$): primero la razón <em>dentro</em> de cada estrato, luego
+            se suman. $\hat{t}_{yrs} = \sum_h t_{xh}\,\dfrac{\hat{t}_{yh}}{\hat{t}_{xh}} = \sum_h t_{xh}
+            \dfrac{\bar{y}_h}{\bar{x}_h}$. Necesita los $t_{xh}$ de <strong>cada</strong> estrato, que es bastante
+            más información y no siempre se tiene.</li>
+        </ul>
+      </div>
+
+      <p>Si las razones de los estratos fueran todas iguales, los dos estimadores serían el mismo. Toda la
+        diferencia entre ellos vive en cuánto se separan esas razones:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Razón combinada y separada sobre agstrat">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+          <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R15B⟧</code></pre>
+        </div>
+        <div class="code-tab-panel" data-lang="python" hidden>
+          <pre><code class="language-python">⟦P5⟧</code></pre>
         </div>
       </div>
 
-      <div class="exercise">
-        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
-        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro son problemas de diseño sobre los datos reales
-          del capítulo. Las cifras de cada solución salen de <code>ensamblado/codigo/cap4/cadena.R</code>, que se
-          ejecuta de verdad: ninguna está escrita a mano.</p>
+      <p>Lo primero que salta no es la diferencia entre las dos razones, sino <strong>lo que vale la variable
+        auxiliar</strong>. El estratificado del módulo 3, sin auxiliar, estimaba el total nacional con un error
+        estándar de <strong>50,417</strong> millones de acres. Con <code>acres87</code> el error baja a
+        <strong>5,962</strong> millones la combinada y <strong>5,724</strong> la separada: <strong>casi nueve veces
+        menos</strong>. Y se nota en el acierto — como <code>agpop</code> está entera, se puede comprobar: el
+        estratificado solo se queda a <strong>−3,625 %</strong> de la verdad, y las dos razones a
+        <strong>1,046 %</strong> y <strong>1,100 %</strong>.</p>
 
-        <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>agstrat</code>, estima el
-            <strong>total nacional de acres sembrados en 1992</strong> con su intervalo del 95 %. Después ve a
-            <code>agpop</code> —que es un censo— y comprueba si el intervalo contuvo la verdad.</p>
-          <details class="ejercicio-pista">
-            <summary>Pista</summary>
-            <p>El diseño ya está declarado en el módulo 3: <code>svytotal</code> y <code>confint</code> hacen el
-              resto. La verdad es <code>sum(agpop$acres92)</code>, con los −99 incluidos — recuerda la decisión del
-              capítulo 2 sobre el marco completo.</p>
-          </details>
-          <details class="ejercicio-solucion">
-            <summary>Solución</summary>
-            <pre><code class="language-r">⟦R16⟧</code></pre>
-            <p>El total estimado es 909 736 036 con intervalo [810 920 045, 1 008 552 026]; la verdad, 943 951 718,
-              cae dentro con holgura. Nota el ancho del intervalo — ±11 % — pese al deff favorable: los totales de
-              variables asimétricas son caros de estimar, y esa es la motivación del PPT del módulo 9.</p>
-          </details>
-        </div>
+      <p>Entre las dos, aquí gana la separada, y se entiende por qué: las razones por región son
+        <strong>0,9751</strong>, <strong>0,8956</strong>, <strong>0,9935</strong> y <strong>1,0120</strong> — el
+        Nordeste siembra bastante menos de lo que sembraba, el Oeste algo más —. La combinada las aplasta todas en
+        una sola, <strong>0,9900</strong>, y pierde esa información. Pero fíjate en <em>cuánto</em> gana: de 5,962
+        a 5,724, un 4 %. La ventaja de la separada es real y es pequeña.</p>
 
-        <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>El presupuesto sube a
-            <strong>$n = 400$</strong>. Reparte con Neyman y con proporcional, y cuantifica en porcentaje del error
-            estándar lo que la asignación óptima le saca a la cómoda.</p>
-          <details class="ejercicio-pista">
-            <summary>Pista</summary>
-            <p>Las $S_{y,h}$ poblacionales ya están calculadas en el módulo 4. Neyman: $n_h = 400 \cdot N_h S_h /
-              \sum N_g S_g$; redondea al entero. La función de varianza del módulo 4 acepta cualquier reparto.</p>
-          </details>
-          <details class="ejercicio-solucion">
-            <summary>Solución</summary>
-            <pre><code class="language-r">⟦R17⟧</code></pre>
-            <p>Neyman: 115/7/136/142 frente a 137/29/180/55 de la proporcional; error estándar 14 566 contra 17 925 —
-              un <strong>18,7 %</strong> menos. Con un matiz que conviene ver: al redondear, la proporcional suma
-              <strong>401</strong> entrevistas y Neyman 400, así que la comparación le regala una entrevista a la
-              proporcional; con 400 exactas la ventaja de Neyman sería algo mayor. Compara con el 18,1 % que ganaba en
-              $n = 300$: la ventaja relativa de Neyman es estable con el tamaño, porque depende de la estructura de
-              la población, no de $n$.</p>
-          </details>
-        </div>
+      <div class="note">
+        <p><strong>La postestratificación era esto.</strong> El módulo 10 estimaba $\sum_h N_h \bar{y}_h$ usando
+          los $N_h$ conocidos, y su derivación lo presentaba como una razón dentro de cada postestrato con el
+          indicador de pertenencia como auxiliar. Eso es exactamente la razón <strong>separada</strong> con
+          $x_k = 1$: entonces $t_{xh} = N_h$ y $\bar{y}_h/\bar{x}_h = \bar{y}_h$. La postestratificación es un caso
+          particular de este módulo, y el módulo 10 ya lo había hecho sin llamarlo por su nombre.</p>
+      </div>
 
-        <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Diseña sobre <strong>BigLucy</strong>
-            un estratificado <em>clásico</em> (MAS dentro de cada nivel) con $n = 380$ repartido proporcionalmente, y
-            estima el <strong>total de impuestos</strong> con su intervalo. ¿Atrapó la verdad?</p>
-          <details class="ejercicio-pista">
-            <summary>Pista</summary>
-            <p>Los $N_h$ salen de <code>table(BigLucy$Level)</code>; el reparto proporcional da 13/115/252. Sortea
-              con <code>sample()</code> dentro de cada nivel, arma los pesos $N_h/n_h$ y declara el diseño con
-              <code>svydesign(strata =, weights =, fpc =)</code>.</p>
-          </details>
-          <details class="ejercicio-solucion">
-            <summary>Solución</summary>
-            <pre><code class="language-r">⟦R18⟧</code></pre>
-            <p>Total estimado 1 015 706 con intervalo [920 481, 1 110 931]; la verdad es 1 008 426 — dentro, a un
-              0,7 % del centro. Con el 0,4 % de la población, el diseño estratificado deja el total de una variable
-              tan sesgada como los impuestos a tiro de piedra.</p>
-          </details>
-        </div>
+      <div class="warning">
+        <p><strong>Y sin embargo, casi todo el software calcula la combinada por defecto.</strong> Si la separada
+          gana, ¿por qué? Porque su ventaja es pequeña y su riesgo no lo es. Cada una de las $H$ razones de la
+          separada es un cociente de dos estimaciones, y <strong>un cociente es sesgado</strong>: es el sesgo que el
+          capítulo 3 midió para un solo estimador de razón. La separada lo comete $H$ veces y los suma. Con
+          estratos grandes el sesgo es despreciable; con estratos chicos, no.</p>
+      </div>
 
-        <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Sobre BigLucy y con el mismo
-            $n = 380$, el módulo 9 estimó ingresos con <strong>PPT por empleados</strong> y el ejercicio 3 estimó
-            impuestos con <strong>MAS por estrato</strong>. Compara la calidad de las dos estrategias con el
-            coeficiente de variación estimado y explica la diferencia.</p>
-          <details class="ejercicio-pista">
-            <summary>Pista</summary>
-            <p>$\text{CV} = \text{ee}/\hat{t}$. Los dos objetos ya existen en la sesión: <code>est</code> (módulo 9)
-              y <code>disL</code> (ejercicio 3). La explicación está en qué tan proporcional es cada $y$ al tamaño
-              de la empresa.</p>
-          </details>
-          <details class="ejercicio-solucion">
-            <summary>Solución</summary>
-            <pre><code class="language-r">⟦R19⟧</code></pre>
-            <p>CV del 2,6 % para el PPT contra 4,8 % del estratificado clásico. Los ingresos siguen al número de
-              empleados de cerca, así que los cocientes $y_k/\psi_k$ del PPT casi no varían — la condición exacta
-              bajo la que Hansen–Hurwitz brilla. No son la misma variable, y por eso la comparación es de
-              estrategias, no un experimento controlado; el capítulo 6 la hará en igualdad de condiciones.</p>
-          </details>
+      <p>Eso se puede medir en vez de creerlo. El precálculo sorteó estratificados de <code>agpop</code> con
+        distintos $n_h$ por estrato y comparó los dos estimadores contra la verdad:</p>
+
+      <div class="simulador" data-simulador="razon-estratificada">
+        <h4><i class="fas fa-code-branch" aria-hidden="true"></i> ¿Combinada o separada?</h4>
+        <p class="simulador-intro">Mueve el tamaño por estrato $n_h$ y mira las dos curvas: la raíz del error
+          cuadrático medio relativo de cada estimador, y debajo su sesgo. Con estratos chicos la separada se
+          desploma; a partir de cierto punto adelanta a la combinada y ya no la suelta — pero nunca por mucho. La
+          línea vertical marca el cruce.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Error cuadrático medio relativo de cada estimador, según $n_h$</p>
+        <div class="grafico-wrapper" style="height:260px;">
+          <canvas aria-label="Error cuadrático medio de la razón combinada y la separada según el tamaño por estrato" role="img"></canvas>
         </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p>La asimetría es la lección del módulo. Con <strong>3</strong> por estrato la separada tiene un error
+        cuadrático medio de <strong>7,195 %</strong> contra <strong>3,734 %</strong> de la combinada: casi el doble
+        de malo. El cruce llega en <strong>5</strong>, y de ahí en adelante la separada gana siempre — pero con
+        <strong>20</strong> por estrato la ventaja es de <strong>1,528 %</strong> contra <strong>1,554 %</strong>,
+        menos de dos centésimas. <strong>Arriba se gana poco y abajo se pierde mucho</strong>, y por eso el valor
+        por defecto de los paquetes es el que es.</p>
+
+      <p>El cruce merece una nota sobre cómo se midió, porque es la clase de cifra que se equivoca sola. Comparar
+        los dos errores cuadráticos sin más lo situaba en 4; pero los dos estimadores se calculan
+        <em>sobre la misma muestra</em>, así que su <strong>diferencia</strong> se estima mucho mejor que cada uno
+        por separado, y exigiéndole a esa diferencia que supere dos errores Monte Carlo el cruce se va a 5: en 4 la
+        ventaja aparente no se distinguía del ruido de la simulación. Por la misma razón, la paliza de la separada
+        en $n_h = 3$ no llega a certificarse ni con <strong>20000</strong> réplicas — sus colas son tan pesadas,
+        precisamente por los cocientes que ocasionalmente estallan, que el promedio se mueve más que la diferencia
+        que se quiere medir.</p>
+
+      <div class="note">
+        <p><strong>Con dos por estrato ni siquiera está definida.</strong> Por debajo del cruce hay un escalón que
+          las fórmulas no anuncian: la separada divide por $\bar{x}_h$, la media del estrato, y esa media puede
+          salir cero o negativa. En <code>agpop</code> pasa, porque <code>acres87</code> arrastra 23 condados con
+          el código de faltante $-99$ y dos con 0 — los mismos que el módulo 6 señalaba como estrato «basura»
+          silencioso —. Con $n_h = 2$, el <strong>0,23 %</strong> de las muestras deja alguna región con
+          $\bar{x}_h \leq 0$ y el estimador separado <strong>no existe</strong>. La combinada, que divide por el
+          total estimado de toda la muestra, no tiene ese problema.</p>
       </div>
 
       <div class="note">
-        <p><strong>Hacia el capítulo 5.</strong> Este capítulo partió la población en grupos para meterlos
-          <em>todos</em> en la muestra con cuota garantizada. El siguiente hace lo contrario: parte la población en
-          grupos y sortea <em>cuáles</em> grupos entran completos. Estratos y conglomerados son la misma cuchilla
-          con el filo al revés — y las consecuencias sobre la varianza tienen el signo opuesto.</p>
+        <p><strong>Cómo elegir, en una línea.</strong> Usa la <strong>separada</strong> si tienes los $t_{xh}$ de
+          cada estrato <em>y</em> los $n_h$ son holgados <em>y</em> tienes razón para creer que las razones
+          cambian entre estratos. Si falla cualquiera de las tres, usa la <strong>combinada</strong>. Y si no
+          tienes ni $t_x$, te queda el estratificado del módulo 3, que aquí costaba nueve veces más error.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Lohr — §4.6 (2.ª ed.) / §4.5 (3.ª ed.): razón combinada y separada, con la observación de que la
+            postestratificación es un caso particular de la separada.</li>
+          <li>Lohr — §4.1.2 (3.ª ed.): el sesgo del estimador de razón, que es el que la separada comete $H$ veces.</li>
+          <li>Capítulo 3, módulos 5 a 8: el estimador de razón de donde sale todo esto.</li>
+        </ul>
       </div>
     </div>
   </template>

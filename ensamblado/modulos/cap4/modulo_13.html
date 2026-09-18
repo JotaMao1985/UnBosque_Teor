@@ -1,0 +1,133 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 13 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-13">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 13</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
+          guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas repartidas por los módulos del capítulo y cuatro
+              ejercicios de diseño resueltos con el código real del capítulo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Contesta primero la autoevaluación. Si fallas una pregunta aparece una pista y puedes reintentarla; al
+        final, el resumen dice qué módulos conviene repasar. Después vienen los ejercicios: <strong>inténtalos antes
+        de abrir la pista</strong>, y abre la solución solo cuando tengas una respuesta que contrastar.</p>
+
+      <div class="quiz" data-quiz="cap4">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 4</h4>
+        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro son problemas de diseño sobre los datos reales
+          del capítulo. Las cifras de cada solución salen de <code>ensamblado/codigo/cap4/cadena.R</code>, que se
+          ejecuta de verdad: ninguna está escrita a mano.</p>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>agstrat</code>, estima el
+            <strong>total nacional de acres sembrados en 1992</strong> con su intervalo del 95 %. Después ve a
+            <code>agpop</code> —que es un censo— y comprueba si el intervalo contuvo la verdad.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>El diseño ya está declarado en el módulo 3: <code>svytotal</code> y <code>confint</code> hacen el
+              resto. La verdad es <code>sum(agpop$acres92)</code>, con los −99 incluidos — recuerda la decisión del
+              capítulo 2 sobre el marco completo.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R16⟧</code></pre>
+            <p>El total estimado es 909 736 036 con intervalo [810 920 045, 1 008 552 026]; la verdad, 943 951 718,
+              cae dentro con holgura. Nota el ancho del intervalo — ±11 % — pese al deff favorable: los totales de
+              variables asimétricas son caros de estimar, y esa es la motivación del PPT del módulo 9.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>El presupuesto sube a
+            <strong>$n = 400$</strong>. Reparte con Neyman y con proporcional, y cuantifica en porcentaje del error
+            estándar lo que la asignación óptima le saca a la cómoda.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Las $S_{y,h}$ poblacionales ya están calculadas en el módulo 4. Neyman: $n_h = 400 \cdot N_h S_h /
+              \sum N_g S_g$; redondea al entero. La función de varianza del módulo 4 acepta cualquier reparto.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R17⟧</code></pre>
+            <p>Neyman: 115/7/136/142 frente a 137/29/180/55 de la proporcional; error estándar 14 566 contra 17 925 —
+              un <strong>18,7 %</strong> menos. Con un matiz que conviene ver: al redondear, la proporcional suma
+              <strong>401</strong> entrevistas y Neyman 400, así que la comparación le regala una entrevista a la
+              proporcional; con 400 exactas la ventaja de Neyman sería algo mayor. Compara con el 18,1 % que ganaba en
+              $n = 300$: la ventaja relativa de Neyman es estable con el tamaño, porque depende de la estructura de
+              la población, no de $n$.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Diseña sobre <strong>BigLucy</strong>
+            un estratificado <em>clásico</em> (MAS dentro de cada nivel) con $n = 380$ repartido proporcionalmente, y
+            estima el <strong>total de impuestos</strong> con su intervalo. ¿Atrapó la verdad?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Los $N_h$ salen de <code>table(BigLucy$Level)</code>; el reparto proporcional da 13/115/252. Sortea
+              con <code>sample()</code> dentro de cada nivel, arma los pesos $N_h/n_h$ y declara el diseño con
+              <code>svydesign(strata =, weights =, fpc =)</code>.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R18⟧</code></pre>
+            <p>Total estimado 1 015 706 con intervalo [920 481, 1 110 931]; la verdad es 1 008 426 — dentro, a un
+              0,7 % del centro. Con el 0,4 % de la población, el diseño estratificado deja el total de una variable
+              tan sesgada como los impuestos a tiro de piedra.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Sobre BigLucy y con el mismo
+            $n = 380$, el módulo 9 estimó ingresos con <strong>PPT por empleados</strong> y el ejercicio 3 estimó
+            impuestos con <strong>MAS por estrato</strong>. Compara la calidad de las dos estrategias con el
+            coeficiente de variación estimado y explica la diferencia.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>$\text{CV} = \text{ee}/\hat{t}$. Los dos objetos ya existen en la sesión: <code>est</code> (módulo 9)
+              y <code>disL</code> (ejercicio 3). La explicación está en qué tan proporcional es cada $y$ al tamaño
+              de la empresa.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <pre><code class="language-r">⟦R19⟧</code></pre>
+            <p>CV del 2,6 % para el PPT contra 4,8 % del estratificado clásico. Los ingresos siguen al número de
+              empleados de cerca, así que los cocientes $y_k/\psi_k$ del PPT casi no varían — la condición exacta
+              bajo la que Hansen–Hurwitz brilla. No son la misma variable, y por eso la comparación es de
+              estrategias, no un experimento controlado; el capítulo 6 la hará en igualdad de condiciones.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Hacia el capítulo 5.</strong> Este capítulo partió la población en grupos para meterlos
+          <em>todos</em> en la muestra con cuota garantizada. El siguiente hace lo contrario: parte la población en
+          grupos y sortea <em>cuáles</em> grupos entran completos. Estratos y conglomerados son la misma cuchilla
+          con el filo al revés — y las consecuencias sobre la varianza tienen el signo opuesto.</p>
+      </div>
+    </div>
+  </template>

@@ -449,6 +449,85 @@ cifras$postestratificacion <- list(
 )
 
 # =============================================================================
+# Razon en el estratificado: combinada contra separada (modulo 12)
+# =============================================================================
+# La separada gana cuando las razones por estrato se separan, pero cada una
+# de sus H razones es sesgada y el sesgo se acumula. Con n_h chicos eso la
+# hunde. Aqui se mide donde esta el cruce, sorteando estratificados de
+# tamano n_h por estrato sobre agpop entera.
+set.seed(4301)
+R_raz  <- 20000
+idx_r  <- split(seq_len(nrow(agpop)), factor(agpop$region))
+y_r    <- agpop$acres92; x_r <- agpop$acres87
+Nn_r   <- sapply(idx_r, length)
+txh_r  <- sapply(idx_r, function(i) sum(x_r[i]))
+tx_r   <- sum(x_r); ty_r <- sum(y_r)
+
+sortea <- function(m) {
+  s <- unlist(mapply(function(i, k) sample(i, k), idx_r, rep(m, length(idx_r)),
+                     SIMPLIFY = FALSE))
+  g <- rep(seq_along(idx_r), each = m)
+  list(ybar = tapply(y_r[s], g, mean),
+       xbar = tapply(x_r[s], g, mean))
+}
+
+# acres87 trae 23 condados con el codigo de faltante -99 y dos con 0 (ver la
+# nota del modulo 6). Con n_h = 2 eso basta para que algun xbar_h salga <= 0
+# y la razon separada quede INDEFINIDA: se mide cada cuanto pasa.
+indef <- 0
+for (r in seq_len(R_raz)) {
+  m <- sortea(2)
+  if (any(!is.finite(m$xbar)) || any(m$xbar <= 0)) indef <- indef + 1
+}
+pct_indef <- 100 * indef / R_raz
+
+# Rejilla CONTIGUA para que el deslizador del simulador muestre el n_h de
+# verdad y no una posicion. Los dos estimadores se calculan sobre la MISMA
+# muestra, asi que su diferencia se estima mucho mejor que cada uno por
+# separado: por eso el cruce se decide con el error Monte Carlo de la
+# diferencia de errores cuadraticos, no comparando dos numeros ruidosos.
+rejilla <- 3:20
+curva <- t(sapply(rejilla, function(m) {
+  comb <- sep <- numeric(R_raz)
+  for (r in seq_len(R_raz)) {
+    mm <- sortea(m)
+    comb[r] <- sum(Nn_r * mm$ybar) / sum(Nn_r * mm$xbar) * tx_r
+    sep[r]  <- sum(txh_r * mm$ybar / mm$xbar)
+  }
+  d2 <- (sep / ty_r - 1)^2 - (comb / ty_r - 1)^2      # emparejado
+  c(sesgoComb = 100 * (mean(comb) / ty_r - 1),
+    sesgoSep  = 100 * (mean(sep)  / ty_r - 1),
+    ecmComb   = 100 * sqrt(mean((comb / ty_r - 1)^2)),
+    ecmSep    = 100 * sqrt(mean((sep  / ty_r - 1)^2)),
+    difMedia  = mean(d2),
+    difMc     = sd(d2) / sqrt(R_raz))
+}))
+# El cruce es el primer n_h en que la separada gana de forma distinguible
+# del ruido de la simulacion (dos errores Monte Carlo).
+gana_sep <- curva[, "difMedia"] < -2 * curva[, "difMc"]
+cruce <- if (any(gana_sep)) rejilla[which(gana_sep)[1]] else NA
+
+cat(sprintf("razon estratificada: indefinida %.3f %% con n_h = 2; cruce en n_h = %d\n",
+            pct_indef, cruce))
+# Las dos cosas que el modulo afirma, comprobadas antes de publicarlas:
+if (!(curva[1, "ecmSep"] > curva[1, "ecmComb"]))
+  stop("con n_h = 3 la separada deberia perder contra la combinada")
+if (!(curva[nrow(curva), "ecmSep"] < curva[nrow(curva), "ecmComb"]))
+  stop("con n_h = 50 la separada deberia ganarle a la combinada")
+if (!all(abs(curva[, "sesgoSep"]) >= abs(curva[, "sesgoComb"]) - 1e-9))
+  stop("el sesgo de la separada deberia dominar al de la combinada en toda la rejilla")
+
+cifras$razonEstratificada <- list(
+  nh = rejilla, cruce = cruce, pctIndefinida = pct_indef, replicas = R_raz,
+  sesgoComb = as.numeric(curva[, "sesgoComb"]), sesgoSep = as.numeric(curva[, "sesgoSep"]),
+  ecmComb   = as.numeric(curva[, "ecmComb"]),   ecmSep   = as.numeric(curva[, "ecmSep"]),
+  difMedia  = as.numeric(curva[, "difMedia"]),  difMc    = as.numeric(curva[, "difMc"]),
+  Bh = as.numeric(tapply(agstrat$acres92, agstrat$region, mean) /
+                  tapply(agstrat$acres87, agstrat$region, mean)),
+  regiones = as.character(regiones)
+)
+
+# =============================================================================
 # Salida
 # =============================================================================
 datos <- c(list(meta = list(

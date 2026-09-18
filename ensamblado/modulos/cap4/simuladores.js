@@ -409,6 +409,61 @@
     // sintetica de 3000 puntos con PRNG de semilla fija (mulberry32),
     // para que el mismo escenario produzca siempre los mismos pliegues.
     // ---------------------------------------------------------------
+    // ---------------------------------------------------------------
+    // M12 · ¿Combinada o separada?
+    // ---------------------------------------------------------------
+    SIMULADORES['razon-estratificada'] = function (raiz) {
+      const R = D4.razonEstratificada;
+      const params = { nh: 5 };
+      const lienzo = raiz.querySelector('canvas');
+      const iDe = n => R.nh.indexOf(n);
+
+      const g = crearGraficoXY(lienzo, [], {
+        tituloX: 'tamaño de muestra por estrato n_h',
+        tituloY: 'raíz del ECM relativo (%)',
+        xMin: R.nh[0] - 0.5, xMax: R.nh[R.nh.length - 1] + 0.5
+      });
+
+      function pintar() {
+        const i = iDe(params.nh);
+        const pts = clave => R.nh.map((n, k) => ({ x: n, y: R[clave][k] }));
+        g.data.datasets = [
+          { type: 'line', label: 'combinada', data: pts('ecmComb'),
+            borderColor: COLORES_GRAFICO.primario, borderWidth: 2, pointRadius: 2, fill: false },
+          { type: 'line', label: 'separada', data: pts('ecmSep'),
+            borderColor: COLORES_GRAFICO.secundario, borderWidth: 2, pointRadius: 2, fill: false },
+          { type: 'scatter', label: 'tu n_h',
+            data: [{ x: params.nh, y: R.ecmComb[i] }, { x: params.nh, y: R.ecmSep[i] }],
+            backgroundColor: '#111827', pointRadius: 5 },
+          serieVertical(R.cruce, Math.max(R.ecmComb[0], R.ecmSep[0]), 'cruce', '#dc2626')
+        ];
+        g.update('none');
+
+        const dif = R.ecmSep[i] - R.ecmComb[i];
+        const distinguible = R.difMedia[i] < -2 * R.difMc[i];
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'n_h por estrato:', valor: String(params.nh) + '  (n = ' + (4 * params.nh) + ')' },
+          { etiqueta: 'ECM relativo, combinada:', valor: fmtNum(R.ecmComb[i], 3) + ' %' },
+          { etiqueta: 'ECM relativo, separada:', valor: fmtNum(R.ecmSep[i], 3) + ' %' },
+          { etiqueta: 'sesgo, combinada / separada:',
+            valor: fmtNum(R.sesgoComb[i], 3) + ' % / ' + fmtNum(R.sesgoSep[i], 3) + ' %' },
+          { etiqueta: 'veredicto:',
+            valor: distinguible
+              ? 'gana la separada por ' + fmtNum(100 * (1 - R.ecmSep[i] / R.ecmComb[i]), 1) + ' %'
+              : (dif > 0 ? 'la separada va peor, pero con ' + R.replicas.toLocaleString('es') +
+                           ' réplicas la diferencia no se distingue del ruido'
+                         : 'empate, la diferencia no se distingue del ruido') }
+        ]);
+      }
+
+      crearControles(raiz.querySelector('.simulador-controles'), [
+        { clave: 'nh', etiqueta: 'Tamaño por estrato n_h',
+          min: R.nh[0], max: R.nh[R.nh.length - 1], paso: 1 }
+      ], params, pintar);
+      pintar();
+      return [g];
+    };
+
     SIMULADORES['kfold'] = function (raiz) {
       const params = { prevalencia: 5, k: 5 };
       const lienzo = raiz.querySelector('canvas');
@@ -618,7 +673,9 @@
         { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k = n_h/N_h', lohr: 'n_h/N_h', gutierrez: '\\pi_k', r: 'nh/Nh' },
         { concepto: 'Peso de diseño', aqui: 'w_k = N_h/n_h', lohr: 'w_{hj}', gutierrez: '1/\\pi_k', r: 'weights=~strwt' },
         { concepto: 'Efecto de diseño', aqui: '\\text{deff}', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'deff=TRUE en svymean' },
-        { concepto: 'Prob. de selección PPT', aqui: '\\psi_k = x_k/t_{x,h}', lohr: '\\psi_i', gutierrez: 'p_k', r: 'S.STPPS()' }
+        { concepto: 'Prob. de selección PPT', aqui: '\\psi_k = x_k/t_{x,h}', lohr: '\\psi_i', gutierrez: 'p_k', r: 'S.STPPS()' },
+        { concepto: 'Razón combinada', aqui: '\\hat{t}_{yrc} = \\hat{B}\\, t_x', lohr: '\\hat{t}_{yrc}', gutierrez: '\\hat{t}_{y,\\text{rc}}', r: 'svyratio(...)' },
+        { concepto: 'Razón separada', aqui: '\\hat{t}_{yrs} = \\sum_h t_{xh}\\bar{y}_h/\\bar{x}_h', lohr: '\\hat{t}_{yrs}', gutierrez: '\\hat{t}_{y,\\text{rs}}', r: 'svyratio(separate = TRUE)' }
       ]
     };
 
