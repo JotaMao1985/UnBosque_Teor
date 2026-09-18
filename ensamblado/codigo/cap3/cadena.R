@@ -135,6 +135,86 @@ print(comparacion, row.names = FALSE, digits = 6)
 #>   regresion 950807843  5593972  0.726322    108.131
 #>  diferencia 950977961  5329882  0.744343    119.111
 cat("\n###BLOQUE-R8###\n")
+# Ejemplo 7.9 de Portela y Villeta (pp. 235-239): la produccion de tomates en
+# tres regiones, con la cosecha de calabacin del ano anterior como auxiliar.
+# El libro NO publica los datos: solo los estadisticos por region (su tabla
+# 7.8). Todo lo que sigue se reconstruye a partir de ellos, que es exactamente
+# lo que se puede hacer cuando la fuente da resumenes y no observaciones.
+reg <- data.frame(
+  region = c("I", "II", "III"),
+  Nh   = c(600, 400, 800),        nh   = c(20, 13, 27),
+  ybar = c(368.25, 145, 306.92),  xbar = c(17.7, 32.4, 20.7),
+  sx   = c(5.4, 8.8, 9.1),        sy   = c(85.87, 94.7, 162.1),
+  sxy  = c(208.66, 100, 1224.3))
+reg$xbarU <- c(9120, 11200, 15280) / reg$Nh   # el total auxiliar SI se conoce
+reg$R <- reg$ybar / reg$xbar                  # razon muestral del estrato
+reg$b <- reg$sxy / reg$sx^2                   # pendiente de minimos cuadrados
+reg$r <- reg$sxy / (reg$sx * reg$sy)          # correlacion del estrato
+print(cbind(region = reg$region,
+            round(reg[, c("Nh", "nh", "xbarU", "R", "b", "r")], 4)),
+      row.names = FALSE)
+#>  region  Nh nh xbarU       R       b    r
+#>       I 600 20  15.2 20.8051  7.1557 0.45
+#>      II 400 13  28.0  4.4753  1.2913 0.12
+#>     III 800 27  19.1 14.8271 14.7844 0.83
+
+# Los TRES estimadores de la media en cada estrato, cada uno con su varianza
+# estimada. Son las formulas del capitulo, aplicadas por separado.
+fpc <- (reg$Nh - reg$nh) / (reg$Nh * reg$nh)
+est <- data.frame(
+  region = reg$region,
+  y_mas  = reg$ybar,                                   # expansion: ignora x
+  V_mas  = fpc * reg$sy^2,
+  y_R    = reg$R * reg$xbarU,                          # razon
+  V_R    = fpc * (reg$sy^2 + reg$R^2 * reg$sx^2 - 2 * reg$R * reg$sxy),
+  y_reg  = reg$ybar + reg$b * (reg$xbarU - reg$xbar),  # regresion
+  V_reg  = fpc * (1 - reg$r^2) * reg$sy^2)
+print(round(est[, -1], 2), row.names = FALSE)
+#>   y_mas  V_mas    y_R    V_R  y_reg  V_reg
+#>  368.25 356.39 316.24 546.81 350.36 284.23
+#>  145.00 667.43 125.31 716.25 139.32 657.82
+#>  306.92 940.35 283.20 292.59 283.26 292.59
+
+# El criterio del modulo 6 -contrastar si la recta pasa por el origen- rehecho
+# desde los estadisticos: b0 = ybar - b*xbar, y su error estandar sale de la
+# varianza residual. No hacen falta los datos, solo sus resumenes.
+s2e  <- (1 - reg$r^2) * reg$sy^2 * (reg$nh - 1) / (reg$nh - 2)
+b0   <- reg$ybar - reg$b * reg$xbar
+eeb0 <- sqrt(s2e) * sqrt(1 / reg$nh + reg$xbar^2 / ((reg$nh - 1) * reg$sx^2))
+tpen <- reg$r * sqrt(reg$nh - 2) / sqrt(1 - reg$r^2)
+print(cbind(region = reg$region, round(data.frame(
+  b0 = b0, t_const = b0 / eeb0,
+  p_const = 2 * pt(-abs(b0 / eeb0), reg$nh - 2),
+  t_pend = tpen, p_pend = 2 * pt(-abs(tpen), reg$nh - 2), R2 = reg$r^2), 4)),
+  row.names = FALSE)
+#>  region       b0 t_const p_const t_pend p_pend     R2
+#>       I 241.5942  3.9087  0.0010 2.1378 0.0465 0.2025
+#>      II 103.1612  0.9564  0.3594 0.4009 0.6962 0.0144
+#>     III   0.8820  0.0197  0.9844 7.4396 0.0000 0.6889
+
+# Decidido el metodo en cada estrato, el total se suma. Y las varianzas TAMBIEN
+# se suman, porque el muestreo es independiente entre estratos: esa es la
+# propiedad que hace legitimo mezclar estimadores distintos.
+elegido <- c("regresion", "expansion", "razon")
+media   <- c(est$y_reg[1], est$y_mas[2], est$y_R[3])
+varianza<- c(est$V_reg[1], est$V_mas[2], est$V_R[3])
+total   <- reg$Nh * media
+v_total <- reg$Nh^2 * varianza
+print(data.frame(region = reg$region, elegido, media = round(media, 2),
+                 total = round(total), ee_total = round(sqrt(v_total), 1)),
+      row.names = FALSE)
+#>  region   elegido  media  total ee_total
+#>       I regresion 350.36 210216  10115.4
+#>      II expansion 145.00  58000  10333.9
+#>     III     razon 283.20 226557  13684.3
+N_pob <- sum(reg$Nh)
+round(c(total = sum(total), ee_total = sqrt(sum(v_total)),
+        media = sum(total) / N_pob, V_media = sum(v_total) / N_pob^2,
+        ee_media = sqrt(sum(v_total)) / N_pob), 2)
+#>     total  ee_total     media   V_media  ee_media
+#> 494773.83  19909.06    274.87    122.34     11.06
+
+cat("\n###BLOQUE-R9###\n")
 # Dominios: subpoblaciones cuyo tamano NO se conoce de antemano. El tamano de
 # muestra en cada dominio es aleatorio, y eso cambia la formula de la varianza.
 agsrs$dom <- ifelse(agsrs$farms92 >= 600, "600 o mas granjas", "menos de 600")
@@ -186,7 +266,7 @@ c(cov_estimada = vcov(med)[1, 2],
 options(scipen = 999)
 #>  cov_estimada   ee_si_cov_0
 #> -1.372644e-22  3.601379e+04
-cat("\n###BLOQUE-R9###\n")
+cat("\n###BLOQUE-R10###\n")
 # El estimador general de regresion (GREG) con una auxiliar:
 #   t_greg = t_pi + beta (t_x - t_x_pi)
 # Cambiar el modelo de trabajo cambia beta, y con ello el estimador. Los tres
@@ -206,7 +286,7 @@ round(rbind(
 #> v_k = x_k  (razon)         0.986565 950520496
 #> v_k = 1    (homocedastico) 0.991335 950682899
 #> beta = 1   (diferencia)    1.000000 950977961
-cat("\n###BLOQUE-R10###\n")
+cat("\n###BLOQUE-R11###\n")
 # La mediana no es una funcion lineal de los y_k: no hay formula cerrada. Se
 # estima la funcion de distribucion con los pesos y se le pide el cuantil.
 w <- rep(N / n, n)

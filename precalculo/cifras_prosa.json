@@ -108,7 +108,13 @@
     "5,6": "extremo alto de los tres ee ESTIMADOS de la tabla del M7: el de la regresion por survey, 5 593 972, en millones",
     "2,73": "brecha entre la media de cocientes y B en agpop: (0,95300659 - 0,97974736)/0,97974736 = -2,7294 %, citada en valor absoluto (cocientes.brechaPct)",
     "344 829,6": "sd(agsrs$acres87) = 344 829,6: la s_x del enunciado de la pregunta 6 del quiz; el bloque R4 solo imprime la CV que resulta de ella (0,0626)",
-    "-1,37": "vcov(med)[1,2] = -1,372644e-22 en el bloque R8: la covarianza entre las dos medias de dominio, escrita en el texto como -1,37e-22 porque el bloque la imprime en notacion cientifica"
+    "-1,37": "vcov(med)[1,2] = -1,372644e-22 en el bloque R8: la covarianza entre las dos medias de dominio, escrita en el texto como -1,37e-22 porque el bloque la imprime en notacion cientifica",
+    "316,16": "Portela y Villeta, tabla 7.9, p. 236: la media por razon de la region I que PUBLICA el libro. Aqui el bloque R8 obtiene 316,24; la diferencia es el truncamiento del libro y se cita para contrastarla",
+    "494 670": "Portela y Villeta, p. 239: el total estimado que publica el libro. El bloque R8 obtiene 494 773,83 partiendo de la misma tabla 7.8, sin truncar",
+    "20,80": "Portela y Villeta, tabla 7.8, p. 236: el R de la region I tal como lo imprime el libro. La division 368,25/17,7 da 20,8051, que es lo que calcula el bloque R8",
+    "0,88433": "Portela y Villeta, p. 237: la constante de regresion de la region III segun la salida de SAS del libro. El bloque R8 obtiene 0,8820 desde los estadisticos",
+    "0,9843": "Portela y Villeta, p. 237: el p-valor de esa constante segun SAS. El bloque R8 obtiene 0,9844",
+    "0,0888": "Portela y Villeta, p. 237: el p-valor de la constante de la region II segun SAS, calculado con 38 g.l. (n = 40). Con el n2 = 13 que declara la tabla 7.8 el bloque R8 obtiene 0,3594, y esa discrepancia es justo lo que el modulo senala"
   },
   "capitulo-4-muestreo-estratificado.html": {
     "85 296": "filas de BigLucy (TeachingSampling); verificado",

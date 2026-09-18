@@ -3802,7 +3802,7 @@ print(pd.Series({"B": B, "t_razon": t_razon, "s_e": s_e, "ee": ee}).round(4).to_
                 Es lo que hacen <code>svyratio</code> y el bloque de abajo:</p>
               $$\widehat{V}(\hat{t}_r) = \left(\frac{t_x}{\hat{t}_{x,\pi}}\right)^{2}
                 N^2\left(1 - \frac{n}{N}\right)\frac{s_e^2}{n}$$
-              <p style="margin-bottom:0;">Aquí ese factor vale 1,0366 —es el $g$ del módulo 10—, y el error estándar
+              <p style="margin-bottom:0;">Aquí ese factor vale 1,0366 —es el $g$ del módulo 11—, y el error estándar
                 que publica este material es el de esta segunda forma: con la primera saldría algo menor.</p>
             </li>
           </ol>
@@ -4835,7 +4835,7 @@ print(comparacion, row.names = FALSE, digits = 6)
             el caso de la regresión con la pendiente fijada en 1, que es exactamente lo que dice el cuadrado
             perfecto de arriba.</li>
           <li>Lohr, <strong>sección 3.2</strong> (2.ª ed.) o <strong>4.2</strong> (3.ª ed.), Ejemplo 4.7 — el
-            ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 12. Ojo: Lohr lo resuelve por
+            ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 14. Ojo: Lohr lo resuelve por
             <em>regresión</em>, no por diferencia.</li>
           <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.2.3</strong>
             (pp. 228–229) — las dos desigualdades con sus condiciones de igualdad, y las salvedades sobre
@@ -4846,13 +4846,261 @@ print(comparacion, row.names = FALSE, digits = 6)
   </template>
 
   <!-- ============================================================ -->
-  <!-- MÓDULO 8 · Estimación en dominios                             -->
+  <!-- MÓDULO 8 · Un estimador distinto en cada grupo               -->
   <!-- ============================================================ -->
   <template id="module-8">
     <div class="animate-fade-in">
       <div class="border-b border-gray-100 pb-6 mb-6">
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
           <span>Módulo 8</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Un estimador distinto en cada grupo
+          <span class="text-gray-400 font-normal text-2xl">/ Choosing per subgroup</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🍅</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Aplicar los tres criterios del capítulo cuando la
+              respuesta no es la misma en toda la población, y juntar después las piezas.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Los siete módulos anteriores han contestado una pregunta —¿razón, regresión, diferencia o expansión?—
+        suponiendo, sin decirlo, que <strong>la respuesta es una sola para toda la población</strong>. Casi nunca
+        lo es. La relación entre $y$ y $x$ puede ser fuerte en una zona y no existir en otra; puede pasar por el
+        origen aquí y no allá.</p>
+
+      <p>Este módulo reproduce el <strong>ejemplo 7.9 de Portela y Villeta</strong> (pp. 235–239), que es el caso
+        limpio de eso: la producción de tomates en <strong>tres regiones</strong>, con la cosecha de calabacín del
+        año anterior como variable auxiliar. Los tres criterios que el capítulo ya tiene —la regla del módulo 3,
+        el contraste del módulo 6 y la comparación de varianzas del módulo 7— se aplican <em>por separado</em> en
+        cada región, y dan <strong>tres respuestas distintas</strong>.</p>
+
+      <div class="note">
+        <p><strong>Un préstamo del capítulo 4, y solo uno.</strong> Aquí las tres regiones son
+          <strong>estratos</strong>: grupos fijados <em>al diseñar</em>, de los que se decide de antemano cuántas
+          unidades se observan —$n_1 = 20$, $n_2 = 13$, $n_3 = 27$, repartidos proporcionalmente—. Es lo contrario
+          de un dominio del módulo 9, donde el tamaño lo decide el sorteo.</p>
+        <p style="margin-bottom:0;">De todo el aparato del estratificado, este módulo necesita
+          <strong>una sola propiedad</strong>: que el muestreo de un estrato sea <strong>independiente</strong> del
+          de los demás. De ahí sale que los totales se sumen y que <em>las varianzas también</em>. El capítulo 4
+          construye el resto —la afijación, la razón separada y la combinada—; aquí basta con sumar.</p>
+      </div>
+
+      <h3>Lo que se sabe de cada región</h3>
+
+      <p>El libro no publica los datos: publica los <strong>estadísticos por región</strong>. Eso no es una
+        limitación del ejemplo, es la situación normal cuando la fuente es un informe. Y alcanza: todo lo que
+        sigue —estimaciones, varianzas y hasta los contrastes de regresión— se reconstruye a partir de ellos.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El ejemplo de los tomates">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># Ejemplo 7.9 de Portela y Villeta (pp. 235-239): la produccion de tomates en
+# tres regiones, con la cosecha de calabacin del ano anterior como auxiliar.
+# El libro NO publica los datos: solo los estadisticos por region (su tabla
+# 7.8). Todo lo que sigue se reconstruye a partir de ellos, que es exactamente
+# lo que se puede hacer cuando la fuente da resumenes y no observaciones.
+reg &lt;- data.frame(
+  region = c("I", "II", "III"),
+  Nh   = c(600, 400, 800),        nh   = c(20, 13, 27),
+  ybar = c(368.25, 145, 306.92),  xbar = c(17.7, 32.4, 20.7),
+  sx   = c(5.4, 8.8, 9.1),        sy   = c(85.87, 94.7, 162.1),
+  sxy  = c(208.66, 100, 1224.3))
+reg$xbarU &lt;- c(9120, 11200, 15280) / reg$Nh   # el total auxiliar SI se conoce
+reg$R &lt;- reg$ybar / reg$xbar                  # razon muestral del estrato
+reg$b &lt;- reg$sxy / reg$sx^2                   # pendiente de minimos cuadrados
+reg$r &lt;- reg$sxy / (reg$sx * reg$sy)          # correlacion del estrato
+print(cbind(region = reg$region,
+            round(reg[, c("Nh", "nh", "xbarU", "R", "b", "r")], 4)),
+      row.names = FALSE)
+#&gt;  region  Nh nh xbarU       R       b    r
+#&gt;       I 600 20  15.2 20.8051  7.1557 0.45
+#&gt;      II 400 13  28.0  4.4753  1.2913 0.12
+#&gt;     III 800 27  19.1 14.8271 14.7844 0.83
+
+# Los TRES estimadores de la media en cada estrato, cada uno con su varianza
+# estimada. Son las formulas del capitulo, aplicadas por separado.
+fpc &lt;- (reg$Nh - reg$nh) / (reg$Nh * reg$nh)
+est &lt;- data.frame(
+  region = reg$region,
+  y_mas  = reg$ybar,                                   # expansion: ignora x
+  V_mas  = fpc * reg$sy^2,
+  y_R    = reg$R * reg$xbarU,                          # razon
+  V_R    = fpc * (reg$sy^2 + reg$R^2 * reg$sx^2 - 2 * reg$R * reg$sxy),
+  y_reg  = reg$ybar + reg$b * (reg$xbarU - reg$xbar),  # regresion
+  V_reg  = fpc * (1 - reg$r^2) * reg$sy^2)
+print(round(est[, -1], 2), row.names = FALSE)
+#&gt;   y_mas  V_mas    y_R    V_R  y_reg  V_reg
+#&gt;  368.25 356.39 316.24 546.81 350.36 284.23
+#&gt;  145.00 667.43 125.31 716.25 139.32 657.82
+#&gt;  306.92 940.35 283.20 292.59 283.26 292.59
+
+# El criterio del modulo 6 -contrastar si la recta pasa por el origen- rehecho
+# desde los estadisticos: b0 = ybar - b*xbar, y su error estandar sale de la
+# varianza residual. No hacen falta los datos, solo sus resumenes.
+s2e  &lt;- (1 - reg$r^2) * reg$sy^2 * (reg$nh - 1) / (reg$nh - 2)
+b0   &lt;- reg$ybar - reg$b * reg$xbar
+eeb0 &lt;- sqrt(s2e) * sqrt(1 / reg$nh + reg$xbar^2 / ((reg$nh - 1) * reg$sx^2))
+tpen &lt;- reg$r * sqrt(reg$nh - 2) / sqrt(1 - reg$r^2)
+print(cbind(region = reg$region, round(data.frame(
+  b0 = b0, t_const = b0 / eeb0,
+  p_const = 2 * pt(-abs(b0 / eeb0), reg$nh - 2),
+  t_pend = tpen, p_pend = 2 * pt(-abs(tpen), reg$nh - 2), R2 = reg$r^2), 4)),
+  row.names = FALSE)
+#&gt;  region       b0 t_const p_const t_pend p_pend     R2
+#&gt;       I 241.5942  3.9087  0.0010 2.1378 0.0465 0.2025
+#&gt;      II 103.1612  0.9564  0.3594 0.4009 0.6962 0.0144
+#&gt;     III   0.8820  0.0197  0.9844 7.4396 0.0000 0.6889
+
+# Decidido el metodo en cada estrato, el total se suma. Y las varianzas TAMBIEN
+# se suman, porque el muestreo es independiente entre estratos: esa es la
+# propiedad que hace legitimo mezclar estimadores distintos.
+elegido &lt;- c("regresion", "expansion", "razon")
+media   &lt;- c(est$y_reg[1], est$y_mas[2], est$y_R[3])
+varianza&lt;- c(est$V_reg[1], est$V_mas[2], est$V_R[3])
+total   &lt;- reg$Nh * media
+v_total &lt;- reg$Nh^2 * varianza
+print(data.frame(region = reg$region, elegido, media = round(media, 2),
+                 total = round(total), ee_total = round(sqrt(v_total), 1)),
+      row.names = FALSE)
+#&gt;  region   elegido  media  total ee_total
+#&gt;       I regresion 350.36 210216  10115.4
+#&gt;      II expansion 145.00  58000  10333.9
+#&gt;     III     razon 283.20 226557  13684.3
+N_pob &lt;- sum(reg$Nh)
+round(c(total = sum(total), ee_total = sqrt(sum(v_total)),
+        media = sum(total) / N_pob, V_media = sum(v_total) / N_pob^2,
+        ee_media = sqrt(sum(v_total)) / N_pob), 2)
+#&gt;     total  ee_total     media   V_media  ee_media
+#&gt; 494773.83  19909.06    274.87    122.34     11.06</code></pre>
+        </div>
+      </div>
+
+      <h3>Tres regiones, tres decisiones</h3>
+
+      <p>Con las tres salidas delante, cada región se decide con el criterio que le corresponde, y ninguna de las
+        tres elige lo mismo:</p>
+
+      <div class="tabla-ranking-marco">
+        <table>
+          <thead>
+            <tr><th>Región</th><th>Qué dicen los números</th><th>Criterio</th><th>Gana</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>I</strong></td>
+              <td>La constante es 241,59 con $p = 0{,}0010$: la recta <em>no</em> pasa por el origen. La pendiente
+                también es significativa ($p = 0{,}0465$).</td>
+              <td>Contraste del módulo 6</td>
+              <td><strong>regresión</strong></td>
+            </tr>
+            <tr>
+              <td><strong>II</strong></td>
+              <td>$R^2 = 0{,}0144$ y ninguno de los dos contrastes rechaza. La varianza de la regresión, 657,82,
+                es casi la del m.a.s., 667,43: un 1,4 % de ganancia.</td>
+              <td>Regla del módulo 3</td>
+              <td><strong>expansión</strong></td>
+            </tr>
+            <tr>
+              <td><strong>III</strong></td>
+              <td>La constante es 0,88 con $p = 0{,}9844$: la recta pasa por el origen. Y las dos varianzas
+                coinciden en 292,59.</td>
+              <td>Teorema del módulo 7</td>
+              <td><strong>razón</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>La región III merece una lectura más despacio, porque es el <strong>teorema del módulo 7 cumpliéndose a
+        la vista</strong>. Allí se demostró que $V(\hat{\bar y}_r) \ge V(\hat{\bar y}_{\text{reg}})$ con igualdad
+        si y solo si $B = b_1$, es decir <em>si y solo si la recta pasa por el origen</em>. Aquí la constante es
+        0,88 sobre una media de 306,92 —tres milésimas de la escala—, y las dos varianzas estimadas salen iguales
+        hasta el segundo decimal: <strong>292,59 y 292,59</strong>. No es una coincidencia del redondeo: es la
+        condición de igualdad.</p>
+
+      <p>Y entonces se prefiere la <strong>razón</strong>, que es el modelo más simple: una recta por el origen
+        tiene un parámetro en vez de dos, y no se paga nada por ello.</p>
+
+      <h3>Juntar las piezas</h3>
+
+      <p>Decidido el método en cada región, el total se estima región a región y se suma. La varianza también, y
+        esa es justamente la propiedad prestada del capítulo 4:</p>
+
+      <div class="formula">
+        $$\hat t \;=\; \sum_{h=1}^{3} N_h\,\hat{\bar y}_h, \qquad\qquad
+          \hat V(\hat t) \;=\; \sum_{h=1}^{3} N_h^2\,\hat V(\hat{\bar y}_h)$$
+      </div>
+
+      <p>Las varianzas se suman <strong>sin términos cruzados</strong> porque los tres sorteos son independientes.
+        Ésa es la licencia que permite mezclar tres estimadores distintos en una misma cuenta sin que el resultado
+        sea un híbrido injustificable: cada sumando es una estimación legítima de su propio estrato, y la suma
+        hereda la varianza sin más.</p>
+
+      <p>El resultado es un total de <strong>494 774</strong> toneladas con un error estándar de
+        <strong>19 909</strong> —un 4,0 %—, y una media por plantación de <strong>274,87</strong> con error
+        estándar <strong>11,06</strong>.</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Este estimador no es insesgado, y conviene decirlo.</strong> Dos de
+          sus tres sumandos lo son —la expansión de la región II—, pero la razón y la regresión <em>no</em>: el
+          módulo 4 midió ese sesgo y dio la cota que lo acota. Aquí se acepta por lo de siempre, que el error
+          cuadrático medio baja mucho más de lo que el sesgo sube; y la cota del módulo 4 es evaluable en cada
+          estrato por separado, con sus propios $n_h$, que son pequeños —13 en la región II—. <strong>Con
+          $n_h$ de dos dígitos, esa cota conviene mirarla, no darla por buena.</strong></p>
+      </div>
+
+      <div class="note">
+        <p><strong>Dónde no coinciden estos números con los del libro, y por qué.</strong> La tabla 7.9 de Portela
+          publica 316,16 donde aquí sale 316,24, y un total de 494 670 contra 494 774. La diferencia es del
+          <strong>0,02 %</strong> y tiene una sola causa: el libro <strong>trunca</strong> $\hat R$ y $\hat b$ a
+          dos decimales en su tabla 7.8 —escribe 20,80 donde la división da 20,8051— y sigue calculando con los
+          valores truncados. Aquí se calcula con los exactos.</p>
+        <p style="margin-bottom:0;">Merece la pena porque enseña algo: <strong>redondear a mitad de camino se
+          paga al final</strong>. Dos decimales en una razón que después multiplica a 800 plantaciones son cien
+          toneladas de diferencia en el total.</p>
+      </div>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Y un desajuste de la fuente que no es de redondeo.</strong> El libro
+          acompaña el ejemplo con tres salidas de SAS. Las de las regiones I y II están calculadas sobre
+          <em>otra</em> muestra: sus grados de libertad —«Corrected Total 59» y «39»— corresponden a
+          $n = 60$ y $n = 40$, mientras su propia tabla 7.8 dice $n_1 = 20$ y $n_2 = 13$. La de la región III sí
+          cuadra: «Corrected Total 26» para $n_3 = 27$, y es la única cuyos números se reproducen aquí casi
+          exactamente —constante 0,88 contra 0,88433, $p$ de 0,9844 contra 0,9843—. Rehechos los contrastes con
+          los $n_h$ que el libro declara, <strong>las tres conclusiones se mantienen</strong>; lo que cambia son
+          los $p$ (en la región II, 0,3594 en vez de 0,0888). Se señala porque un grado de libertad es una cifra
+          como otra cualquiera: nadie la ejecuta.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.2.4</strong>
+            (pp. 232–239) — la estimación separada y combinada de regresión, y este Ejemplo 7.9 con sus figuras.
+            Ojo: el libro trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
+          <li>Lohr, <strong>sección 4.5</strong> (3.ª ed.) — razón con muestreo estratificado, separada y
+            combinada, que es la maquinaria completa de la que aquí solo se toma prestada la independencia entre
+            estratos.</li>
+          <li>El <strong>módulo 12 del capítulo 4</strong>, «Razón en el estratificado», donde esa maquinaria se
+            construye con el diseño ya presentado.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 9 · Estimación en dominios                             -->
+  <!-- ============================================================ -->
+  <template id="module-9">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 9</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estimación en dominios
           <span class="text-gray-400 font-normal text-2xl">/ Domain estimation</span></h2>
@@ -5042,13 +5290,13 @@ options(scipen = 999)
   </template>
 
   <!-- ============================================================ -->
-  <!-- MÓDULO 9 · Modelos poblacionales                              -->
+  <!-- MÓDULO 10 · Modelos poblacionales                              -->
   <!-- ============================================================ -->
-  <template id="module-9">
+  <template id="module-10">
     <div class="animate-fade-in">
       <div class="border-b border-gray-100 pb-6 mb-6">
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-          <span>Módulo 9</span>
+          <span>Módulo 10</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelos poblacionales
           <span class="text-gray-400 font-normal text-2xl">/ Model-assisted inference</span></h2>
@@ -5164,13 +5412,13 @@ options(scipen = 999)
   </template>
 
   <!-- ============================================================ -->
-  <!-- MÓDULO 10 · El estimador general de regresión (GREG)          -->
+  <!-- MÓDULO 11 · El estimador general de regresión (GREG)          -->
   <!-- ============================================================ -->
-  <template id="module-10">
+  <template id="module-11">
     <div class="animate-fade-in">
       <div class="border-b border-gray-100 pb-6 mb-6">
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-          <span>Módulo 10</span>
+          <span>Módulo 11</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">El estimador general de
           regresión <span class="text-gray-400 font-normal text-2xl">/ The GREG estimator</span></h2>
@@ -5253,7 +5501,7 @@ print(pd.DataFrame({
         <p><strong>La comprobación que cierra el módulo.</strong> Con $v_k = x_k$, la pendiente sale
           <strong>0,98656524</strong> y el total <strong>950 520 496</strong>: exactamente $\hat{B}$ y exactamente
           $\hat{t}_r$, hasta la última cifra. No es un parecido, es una identidad algebraica, y la derivación
-          plegable del módulo 9 la demuestra. Una nota de detalle: el cálculo con pesos $1/x_k$ deja fuera una
+          plegable del módulo 10 la demuestra. Una nota de detalle: el cálculo con pesos $1/x_k$ deja fuera una
           unidad, el condado de Hudson (Nueva Jersey), que tiene $x = 0$ e $y = 0$; como no aporta a ninguna de las
           dos sumas, la identidad sigue siendo exacta. Comprobarlo cuesta una línea y es lo que separa una
           afirmación de una suposición.</p>
@@ -5327,13 +5575,13 @@ print(pd.DataFrame({
   </template>
 
   <!-- ============================================================ -->
-  <!-- MÓDULO 11 · Parámetros no lineales: razón poblacional y mediana -->
+  <!-- MÓDULO 12 · Parámetros no lineales: razón poblacional y mediana -->
   <!-- ============================================================ -->
-  <template id="module-11">
+  <template id="module-12">
     <div class="animate-fade-in">
       <div class="border-b border-gray-100 pb-6 mb-6">
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-          <span>Módulo 11</span>
+          <span>Módulo 12</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Parámetros no lineales
           <span class="text-gray-400 font-normal text-2xl">/ Nonlinear parameters</span></h2>
@@ -5467,15 +5715,195 @@ print(pd.DataFrame({
       </div>
     </div>
   </template>
-
   <!-- ============================================================ -->
-  <!-- MÓDULO 12 · Autoevaluación y ejercicios guiados               -->
+  <!-- MÓDULO 13 · Formulario                                       -->
   <!-- ============================================================ -->
-  <template id="module-12">
+  <template id="module-13">
     <div class="animate-fade-in">
       <div class="border-b border-gray-100 pb-6 mb-6">
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-          <span>Módulo 12</span>
+          <span>Módulo 13</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Formulario
+          <span class="text-gray-400 font-normal text-2xl">/ Formula tables</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">📋</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Tener en un solo sitio las fórmulas del capítulo,
+              ordenadas por lo que se estima.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Las dos tablas de la <strong>sección 7.3 de Portela y Villeta</strong>, traducidas a la notación de este
+        material. Cada columna es <em>qué se quiere estimar</em>: la razón, la media o el total. Se leen en
+        vertical: elegida la columna, la fila da el estimador, su varianza y cómo estimarla.</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Todo esto vale bajo muestreo aleatorio simple, y solo ahí.</strong>
+          Las fórmulas suponen m.a.s. sin reposición y no llevan $\pi_k$ por ninguna parte. Con cualquier otro
+          diseño —estratificado, conglomerados, probabilidades desiguales— cambian, y lo que no cambia es el
+          camino: linealizar y aplicar la varianza del diseño. Un formulario es un atajo para el caso que ya se
+          entiende, no un sustituto de entenderlo.</p>
+      </div>
+
+      <h3>Estimación de razón bajo m.a.s.</h3>
+
+      <p>Con $f = n/N$ la fracción de muestreo, de modo que $(N-n)/(Nn) = (1-f)/n$.</p>
+
+      <div class="tabla-ranking-marco">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Razón &nbsp; $B$</th>
+              <th>Media &nbsp; $\bar y_U$</th>
+              <th>Total &nbsp; $t_y = N\bar y_U$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Estimador</strong></td>
+              <td>$\hat B = \dfrac{\bar y}{\bar x}$</td>
+              <td>$\hat{\bar y}_r = \hat B\,\bar x_U$</td>
+              <td>$\hat t_r = N\,\hat{\bar y}_r = \hat B\,t_x$</td>
+            </tr>
+            <tr>
+              <td><strong>Varianza</strong></td>
+              <td>$V(\hat B) \simeq \dfrac{1-f}{n\,\bar x_U^{2}}\left(S_y^{2} + B^{2}S_x^{2} - 2B\,S_{xy}\right)$</td>
+              <td>$\bar x_U^{2}\,V(\hat B)$</td>
+              <td>$N^{2}\,V(\hat{\bar y}_r)$</td>
+            </tr>
+            <tr>
+              <td><strong>Estimador de la varianza</strong></td>
+              <td>$\hat V(\hat B) = \dfrac{1-f}{n\,\bar x_U^{2}}\left(s_y^{2} + \hat B^{2}s_x^{2} - 2\hat B\,s_{xy}\right)$</td>
+              <td>$\bar x_U^{2}\,\hat V(\hat B)$</td>
+              <td>$N^{2}\,\hat V(\hat{\bar y}_r)$</td>
+            </tr>
+            <tr>
+              <td><strong>Sesgo</strong></td>
+              <td>$\operatorname{Sesgo}(\hat B) = -\dfrac{\operatorname{Cov}(\hat B, \bar x)}{\bar x_U}$</td>
+              <td>$\bar x_U\operatorname{Sesgo}(\hat B)$</td>
+              <td>$N\,\bar x_U\operatorname{Sesgo}(\hat B)$</td>
+            </tr>
+            <tr>
+              <td><strong>Aproximación al sesgo</strong></td>
+              <td>$\dfrac{-\operatorname{Cov}(\bar y, \bar x) + B\,V(\bar x)}{\bar x_U^{2}}$</td>
+              <td>$\bar x_U\widehat{\operatorname{Sesgo}}(\hat B)$</td>
+              <td>$N\,\bar x_U\widehat{\operatorname{Sesgo}}(\hat B)$</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Expresiones alternativas para la varianza de la razón.</strong> Las dos primeras son la de arriba
+        desarrollada; las dos segundas, la misma factorizada como una suma de residuos $y_k - Bx_k$, que es la
+        forma en que el módulo 4 la presenta:</p>
+
+      <div class="formula">
+        $$V(\hat{\bar y}_r) = \frac{1-f}{n}\cdot\frac{1}{N-1}\sum_{k \in U}\left(y_k^{2} + B^{2}x_k^{2} - 2B\,x_k y_k\right)
+          \;=\; \frac{1-f}{n}\cdot\frac{1}{N-1}\sum_{k \in U}\left(y_k - B\,x_k\right)^{2}$$
+      </div>
+      <div class="formula">
+        $$\hat V(\hat{\bar y}_r) = \frac{1-f}{n}\cdot\frac{1}{n-1}\sum_{k \in s}\left(y_k^{2} + \hat B^{2}x_k^{2} - 2\hat B\,x_k y_k\right)
+          \;=\; \frac{1-f}{n}\cdot\frac{1}{n-1}\sum_{k \in s}\left(y_k - \hat B\,x_k\right)^{2}$$
+      </div>
+
+      <h3>Estimación de regresión</h3>
+
+      <div class="tabla-ranking-marco">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Media &nbsp; $\bar y_U$</th>
+              <th>Total &nbsp; $t_y = N\bar y_U$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Estimador</strong></td>
+              <td>$\hat{\bar y}_{\text{reg}} = \bar y + \hat b_1\left(\bar x_U - \bar x\right)$</td>
+              <td>$\hat t_{\text{reg}} = N\,\hat{\bar y}_{\text{reg}}$</td>
+            </tr>
+            <tr>
+              <td><strong>Varianza</strong></td>
+              <td>$V(\hat{\bar y}_{\text{reg}}) = \dfrac{1-f}{n}\left(S_y^{2} + b_1^{2}S_x^{2} - 2b_1 S_{xy}\right)$</td>
+              <td>$N^{2}\,V(\hat{\bar y}_{\text{reg}})$</td>
+            </tr>
+            <tr>
+              <td><strong>Estimador de la varianza</strong></td>
+              <td>$\hat V(\hat{\bar y}_{\text{reg}}) = \dfrac{1-f}{n}\left(s_y^{2} + \hat b_1^{2}s_x^{2} - 2\hat b_1 s_{xy}\right)$</td>
+              <td>$N^{2}\,\hat V(\hat{\bar y}_{\text{reg}})$</td>
+            </tr>
+            <tr>
+              <td><strong>La pendiente</strong></td>
+              <td>$\hat b_1 = \dfrac{s_{xy}}{s_x^{2}}$</td>
+              <td>la misma</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Expresiones alternativas, y las más útiles de las dos.</strong> Sustituyendo $b_1 = \rho S_y/S_x$
+        en la varianza, los tres términos colapsan en uno:</p>
+
+      <div class="formula">
+        $$V(\hat{\bar y}_{\text{reg}}) = \frac{1-f}{n}\left(1 - \rho^{2}\right)S_y^{2}, \qquad\qquad
+          \hat V(\hat{\bar y}_{\text{reg}}) = \frac{1-f}{n}\left(1 - r^{2}\right)s_y^{2}$$
+      </div>
+
+      <p>Escrita así se lee de un vistazo: la regresión deja la varianza del m.a.s. multiplicada por
+        $1 - \rho^{2}$. Con $\rho = 0$ no gana nada; con $\rho = \pm 1$ no queda varianza. Es la misma cuenta que
+        el módulo 6 hace con <code>agsrs</code> y la que el módulo 8 usa para descartar la variable auxiliar en la
+        región II.</p>
+
+      <div class="note">
+        <p><strong>Si lo comparas con el libro, dos cambios de letra.</strong> Portela llama $R$ a la razón
+          poblacional, que aquí es $B$; y escribe $\hat{\bar y}$ para la media <em>muestral</em>, que aquí es
+          $\bar y$ a secas. Su $\bar x$ es la media poblacional del auxiliar, que aquí lleva subíndice:
+          $\bar x_U$. El glosario del módulo 2 tiene el cruce completo, y con Gutiérrez además.</p>
+        <p style="margin-bottom:0;">Un aviso de citación: el capítulo 7 del libro <strong>repite números de
+          teorema</strong> —hay dos «Teorema 7.7» y dos «Corolario 7.7»—, así que conviene citarlo por sección y
+          página, nunca por número.</p>
+      </div>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Lo que este formulario no trae.</strong> El estimador de
+          <strong>diferencia</strong> (módulo 7) no aparece en las tablas del libro porque es el caso
+          $b_1 = 1$ de la regresión: $\hat{\bar y}_d = \bar y + (\bar x_U - \bar x)$, con
+          $\hat V = \frac{1-f}{n}(s_y^2 + s_x^2 - 2s_{xy})$. Tampoco el <strong>GREG</strong> ni la
+          <strong>calibración</strong> (módulos 10 y 11), que son posteriores al marco del libro. Y las versiones
+          <strong>separada y combinada</strong> para muestreo estratificado están en el capítulo 4.</p>
+      </div>
+
+      <div class="references">
+        <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
+        <ul style="margin-bottom:0;">
+          <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.3</strong>
+            (pp. 239–241) — el formulario completo, del que aquí están las dos primeras tablas; las otras dos son
+            las del estimador separado y combinado, que corresponden al capítulo 4.</li>
+          <li>Lohr, <strong>secciones 4.1 y 4.2</strong> (3.ª ed.) — las mismas fórmulas con la deducción
+            completa y los ejemplos.</li>
+          <li>Gutiérrez, <strong>capítulo 8</strong> — las versiones $\pi$, que son las que sobreviven cuando el
+            diseño deja de ser m.a.s. De
+            <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
+            abierto</a>.</li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+
+  <!-- ============================================================ -->
+  <!-- MÓDULO 14 · Autoevaluación y ejercicios guiados               -->
+  <!-- ============================================================ -->
+  <template id="module-14">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 14</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Autoevaluación y ejercicios
           guiados <span class="text-gray-400 font-normal text-2xl">/ Self-assessment</span></h2>
@@ -5483,7 +5911,7 @@ print(pd.DataFrame({
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Dieciséis preguntas sobre los once módulos y cuatro
+            <p class="text-gray-600 text-sm" style="margin:0;">Diecisiete preguntas sobre los doce módulos de contenido y cuatro
               ejercicios con los datos de Lohr, resueltos en R.</p>
           </div>
         </div>
@@ -5495,7 +5923,7 @@ print(pd.DataFrame({
 
       <div class="quiz" data-quiz="cap3">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 3</h4>
-        <p class="text-sm" style="margin-bottom:0;">Dieciséis preguntas. Cada opción trae su propia retroalimentación,
+        <p class="text-sm" style="margin-bottom:0;">Diecisiete preguntas. Cada opción trae su propia retroalimentación,
           también las incorrectas: leerlas cuando aciertas también enseña.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
@@ -5735,7 +6163,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
             <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
             abierto</a>.</li>
           <li>Gutiérrez, <strong>capítulos 10 y 17</strong> — calibración y estimadores asistidos por modelos, que es
-            adonde lleva el módulo 10.</li>
+            adonde lleva el módulo 11.</li>
           <li>Särndal, C.-E., Swensson, B. y Wretman, J. (1992). <em>Model Assisted Survey Sampling</em>,
             <strong>capítulos 5 a 7</strong> — la referencia canónica del GREG y de la inferencia asistida por
             modelos.</li>
@@ -5769,11 +6197,13 @@ round(c(media_muestral_y = mean(deadtrees$field),
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "15 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
         { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "29 min" },
-        { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "27 min" },
-        { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
-        { id: 10, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },
-        { id: 11, title: "Parámetros no lineales: la mediana", shortTitle: "Mediana", duration: "20 min" },
-        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "40 min" }
+        { id: 8, title: "Un estimador distinto en cada grupo", shortTitle: "Por grupos", duration: "26 min" },
+        { id: 9, title: "Estimación en dominios", shortTitle: "Dominios", duration: "27 min" },
+        { id: 10, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
+        { id: 11, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },
+        { id: 12, title: "Parámetros no lineales: la mediana", shortTitle: "Mediana", duration: "20 min" },
+        { id: 13, title: "Formulario", shortTitle: "Formulario", duration: "10 min" },
+        { id: 14, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "40 min" }
       ]
     };
 
@@ -8565,6 +8995,22 @@ round(c(media_muestral_y = mean(deadtrees$field),
       {
         tipo: 'opcion',
         modulo: 8,
+        pregunta: 'En el ejemplo de los tomates se usa regresión en la región I, la media muestral en la II y razón en la III, y luego se suman los tres totales <strong>y las tres varianzas</strong>. ¿Qué permite sumar las varianzas sin términos cruzados?',
+        pista: 'No es una propiedad de los estimadores elegidos. Es una propiedad del <em>diseño</em>.',
+        opciones: [
+          { texto: 'Que el muestreo de cada estrato es <strong>independiente</strong> del de los demás.', correcta: true,
+            retro: 'Exacto, y es lo único que el módulo toma prestado del capítulo 4. Como los tres sorteos son independientes, las covarianzas entre estratos son cero y $\\hat V(\\hat t) = \\sum_h N_h^2 \\hat V(\\hat{\\bar y}_h)$. Eso es lo que hace legítimo mezclar tres estimadores distintos en una sola cuenta.' },
+          { texto: 'Que los tres estimadores son insesgados.', correcta: false,
+            retro: 'Ni siquiera es cierto: la razón y la regresión son sesgadas, y el módulo lo avisa. Y aunque lo fueran, el insesgamiento no dice nada sobre covarianzas.' },
+          { texto: 'Que las tres regiones tienen el mismo tamaño de muestra.', correcta: false,
+            retro: 'No lo tienen —20, 13 y 27, por afijación proporcional— y daría igual: la independencia no depende de que los $n_h$ coincidan.' },
+          { texto: 'Que se eligió el estimador de menor varianza en cada región.', correcta: false,
+            retro: 'Eso es lo que hace pequeña a la suma, no lo que permite sumarla. Aunque se hubiera elegido el peor estimador en cada estrato, las varianzas seguirían sumándose igual.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 9,
         pregunta: 'Al estimar la media de un dominio, ¿por qué no sirve la fórmula del error estándar del MAS?',
         pista: '¿Qué cantidad de la fórmula del MAS es fija por diseño, y qué pasa con su equivalente aquí?',
         opciones: [
@@ -8580,7 +9026,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
       },
       {
         tipo: 'opcion',
-        modulo: 10,
+        modulo: 11,
         pregunta: 'En el GREG $\\hat{t}_{\\text{GREG}} = \\hat{t}_\\pi + \\beta\\,(t_x - \\hat{t}_{x,\\pi})$, ¿qué se obtiene con $\\beta = 0$?',
         pista: 'Sustituye y mira qué queda.',
         opciones: [
@@ -8596,7 +9042,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
       },
       {
         tipo: 'multiple',
-        modulo: 10,
+        modulo: 11,
         pregunta: 'El GREG con modelo $y_k = \\beta x_k + \\varepsilon_k$ y varianza $V(\\varepsilon_k) = \\sigma^2 v_k$. Marca <strong>las correspondencias correctas</strong>.',
         pista: 'La pendiente sale de mínimos cuadrados ponderados con peso $1/v_k$. Sustituye cada $v_k$ y simplifica.',
         opciones: [
@@ -8610,7 +9056,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
       },
       {
         tipo: 'opcion',
-        modulo: 11,
+        modulo: 12,
         pregunta: 'La mediana estimada de <code>acres92</code> sale 196 701 con la definición $\\inf\\{t: \\hat{F}(t) \\ge 0{,}5\\}$ y 196 733 con el convenio por defecto de <code>svyquantile</code>. ¿Qué está pasando?',
         pista: '¿Cuánto vale $\\hat{F}$ exactamente en la unidad 150 de 300?',
         opciones: [
@@ -8626,7 +9072,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
       },
       {
         tipo: 'opcion',
-        modulo: 9,
+        modulo: 10,
         pregunta: 'El enfoque asistido por modelos usa un modelo para construir el estimador. ¿Qué pasa si el modelo está mal especificado?',
         pista: '¿De qué depende la insesgadez del GREG: del modelo o del diseño?',
         opciones: [

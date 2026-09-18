@@ -5266,3 +5266,134 @@ darlo a petición mía**, con razón: si lo diera porque se lo pide otra sesión
 existir sin que nadie lo hubiera levantado. Lo correcto era dejárselo a Javier y nada más; pasar el
 comando a un par ya empuja en la dirección equivocada aunque se condicione. **Un permiso denegado no
 se resuelve buscando otra sesión a la que no se lo hayan denegado.**
+
+---
+
+### T7.52 — El verificador de lo publicado, y el push que sí podía dar (2026-09-17)
+
+Dos encargos de Javier en una: empujar el commit que la sesión del cap. 3 tenía detenido, y escribir
+el verificador que faltaba.
+
+**El push.** Lo pidió Javier, no la sesión del cap. 3 —que es toda la diferencia: a ella se lo negué
+ayer mismo, porque un permiso denegado no se levanta buscando otra sesión—. Comprobado antes de
+darlo: `3782180` es avance rápido sobre `7913210`, toca nueve páginas y el blob del cap. 4 es el
+mismo byte a byte (`2509cfa`). Empujado, desplegado y contrastado.
+
+**El verificador: `precalculo/verifica_publicado.py`.** La pregunta que nadie hacía era
+
+> ¿arranca lo que el estudiante se encuentra, con lo que el estudiante tiene?
+
+y la causa de que nadie la hiciera está escrita en el verificador que ya existía. `verifica_bloques.py`
+antepone `CABECERA_R` (`library(survey)`, `sampling`, `TeachingSampling`, `jsonlite`) y `CABECERA_PY`
+(`import numpy as np, pandas as pd`) antes de ejecutar, porque su pregunta es si las cifras son
+ciertas. Con el preámbulo puesto, el código corría. El defecto vivía **en el hueco entre las dos
+preguntas**: el preámbulo estaba en `cadena.R`, que es lo que se ejecuta al precalcular, y no en los
+bloques, que es lo que se publica.
+
+De ahí las dos decisiones de fondo, ambas escritas en el docstring para que no se deshagan por
+comodidad:
+
+1. **No antepone nada.** Si el código publicado necesita `library(survey)`, tiene que traerlo.
+   Añadirle una cabecera «para que pase» reabre exactamente el agujero original.
+2. **Lee el sitio vivo, no `sitio/`.** Lo que estaba roto no era el repositorio: era lo servido.
+   Con `--local` se comprueba antes de publicar; sin `--local`, se comprueba lo publicado. Y de paso
+   contrasta la huella md5 de lo servido contra el blob de `origin/gh-pages`, que cubre el último
+   tramo —del commit aprobado a lo que de verdad ve el estudiante—.
+
+**Control negativo antes de fiarme de él.** Un verificador que solo se ha visto pasar no ha
+demostrado nada; es la lección de la prueba del `scrollLeft`, que no distinguía nada y hubo que
+retirar. Sobre el cap. 4 en `74a5bed` —anterior al arreglo— reproduce los dos defectos exactos:
+`R: FALLA en el bloque 4 de 26` con `no se pudo encontrar la función "svydesign"`, y
+`Python: FALLA en el bloque 1 de 5` con `NameError: name 'pd' is not defined`. La guarda del bloque
+sin clase de lenguaje se probó igual, en los dos sentidos.
+
+**Dos defectos propios, encontrados al usarlo.**
+
+- Daba por rota `taller-1-preparacion-parcial-1.html`, que no se publica **a propósito** (la absorbió
+  el preparcial: no está en `gh-pages` ni la enlaza el índice). La lista de páginas salía de `sitio/`
+  y ahora sale de la rama; lo que está en `sitio/` y no se publica se informa aparte, sin llamarlo
+  fallo. Un verificador que grita en falso deja de leerse, y entonces no sirve para nada.
+- El JS del material dice «si el bloque no declara lenguaje, se asume R»: un `<pre><code>` sin clase
+  se le sirve al estudiante como R y `BLOQUE_RE` no lo vería. Hoy no hay ninguno en las once páginas
+  —comprobado—, pero es un hueco que se abriría solo y en silencio, que es justo como se coló el
+  defecto de origen. Ahora aborta si aparece uno.
+
+**Y una medición mía que estaba mal.** Conté los bloques con `grep -o 'language-r'` y salían 32 en
+el cap. 4 frente a los 30 del verificador; parecía que se le escapaban dos. No: las tres menciones
+de sobra están dentro del `<script>` que envuelve los bloques. 38 − 3 = 35 = 30 de R + 5 de Python.
+El instrumento malo era el `grep`.
+
+**Resultado de la primera pasada completa** (`3782180`, sitio vivo, salida 0):
+
+| | páginas | huella | R | Python |
+|---|---|---|---|---|
+| publicadas | 10 | 10/10 coinciden | 180 bloques, todas arrancan | 66 bloques, todas arrancan |
+
+Documentado en `precalculo/README.md`, con el reparto entre los dos verificadores dicho en las
+convenciones para que no se vuelvan a solapar.
+
+### T7.51 — El ejemplo 7.9 y el formulario: el cap. 3 pasa a catorce módulos (2026-09-17)
+
+Encargo nuevo de Javier, fuera del plan de `PLAN_Cap3_PortelaVilleta.md`: traer al capítulo el
+**Ejemplo 7.9** de Portela y Villeta y las **dos primeras tablas de su §7.3**, que el alcance
+original dejaba fuera a propósito («parando antes del formulario»).
+
+**Tres decisiones suyas antes de escribir.** *(a)* El 7.9 va en un **módulo nuevo tras el M7**,
+leyendo «después del módulo II» como «después de la sección II», §7.2, igual que en el encargo
+original. Ponerlo tras el M2 literal era imposible: el ejemplo decide con la regresión, el contraste
+del intercepto y la comparación de varianzas, que el estudiante aún no ha visto. *(b)* Los estratos
+entran **con puente explícito**, sin revocar D2: el módulo toma prestada **una sola propiedad** del
+cap. 4 —la independencia entre estratos, que es lo que permite sumar varianzas— y deja allí el resto.
+*(c)* Las cifras se **reproducen desde los estadísticos** de la tabla 7.8, que es lo único que el
+libro publica.
+
+**Renumeración.** M1–M7 quedan; **M8 nuevo** (tomates), el resto corre uno: dominios 8→9, modelos
+9→10, GREG 10→11, mediana 11→12; **M13 nuevo** (formulario) y la autoevaluación 12→**14**. Con ella,
+los bloques `R8`→`R9`, `R9`→`R10`, `R10`→`R11`, y los archivos se parten y renombran para que el
+nombre diga la verdad: `modulos_5_8.html` → `modulos_5_7.html` + `modulo_9_dominios.html`;
+`modulos_9_11.html` → `modulos_10_12.html`; `modulo_12.html` → `modulo_14_autoevaluacion.html`.
+
+**La renumeración a ciegas rompió una cosa, y era la única que podía romper.** El barrido de
+«módulo N» convirtió en «módulo 14» una referencia que decía **«módulo 12 del capítulo 4»**: la que
+T7.47 acababa de escribir para cerrar A5. Revertida. **Un barrido por número no distingue de qué
+capítulo se habla**, y en un material con referencias cruzadas ésa es exactamente la que hay que
+mirar a mano.
+
+**Lo que el ejemplo enseña, y por qué valía la pena.** Los siete módulos anteriores contestan
+«¿razón, regresión, diferencia o expansión?» **suponiendo que la respuesta es una sola para toda la
+población**. El 7.9 es el caso en que no lo es: tres regiones, tres respuestas distintas, y cada una
+sale de un criterio distinto del propio capítulo —el contraste del M6 en la I ($p = 0{,}0010$), la
+regla del M3 en la II ($R^2 = 0{,}0144$), el teorema del M7 en la III—. La **región III es el teorema
+cumpliéndose a la vista**: constante 0,88 sobre una media de 306,92, y las dos varianzas estimadas
+iguales hasta el segundo decimal, **292,59 y 292,59**. Eso es la condición de igualdad $B = b_1$, no
+un redondeo afortunado.
+
+**Dos desajustes de la fuente, los dos comprobados.** *(a)* El libro **trunca** $\hat R$ y $\hat b$ a
+dos decimales en la tabla 7.8 —escribe 20,80 donde la división da 20,8051— y sigue calculando con lo
+truncado; de ahí que su total sea 494 670 y aquí salga **494 774**, un 0,02 %. *(b)* Más serio: sus
+**salidas de SAS para las regiones I y II están calculadas sobre otra muestra**. Los grados de
+libertad —«Corrected Total 59» y «39»— corresponden a $n = 60$ y $n = 40$, mientras su propia tabla
+7.8 declara $n_1 = 20$ y $n_2 = 13$. La región III sí cuadra (26 para $n_3 = 27$) y es la única que
+se reproduce casi exactamente: constante 0,88 contra 0,88433, $p$ 0,9844 contra 0,9843. Rehechos los
+contrastes con los $n_h$ declarados, **las tres conclusiones del libro se mantienen**; cambian los
+$p$. Las seis cifras del libro citadas para el contraste están en `cifras_prosa.json` con su página.
+
+**El formulario (M13)** trae las dos tablas en la notación del material —$B$ donde Portela pone $R$,
+$\bar x_U$ donde pone $\bar x$— con las expresiones alternativas, y dice **lo que no trae**: la
+diferencia (que es el caso $b_1 = 1$), el GREG y la calibración, posteriores al marco del libro, y la
+separada/combinada, que es del cap. 4. Con el aviso de que todo vale **solo bajo m.a.s.**
+
+**Una pregunta nueva, porque el encabezado dejó de ser cierto.** El M8 se quedaba sin ítem y el quiz
+decía «sobre los once módulos». Ahora son **17 preguntas sobre los doce módulos de contenido**, y la
+nueva pregunta por lo estructural: qué permite sumar las tres varianzas (la independencia entre
+estratos, no que los estimadores sean buenos).
+
+**Verificado.** Byte a byte; **261 de 261** cifras de bloques y **173 de prosa · 0 sin respaldo**; el
+código publicado sigue arrancando en sesión limpia (código de salida 0). En el navegador: los catorce
+módulos en orden, 533 expresiones de KaTeX con **0 errores**, consola limpia, y el mapeo
+pregunta → módulo del resumen del quiz apuntando a los títulos nuevos. A 375 px: 18 fórmulas
+(13 desbordan), 6 tablas (6 desbordan) y 11 bloques de código (11 desbordan), **0 sin barra** en las
+tres familias. Portada: **91 módulos, 99 preguntas**.
+
+**Pendiente:** el visto bueno de Javier. Y sigue pendiente el `push` de T7.50, que ahora habría que
+rehacer sobre este trabajo.

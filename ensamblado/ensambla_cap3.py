@@ -107,8 +107,10 @@ def main():
 
     # ---------------------------------------------------------------- módulos
     modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap3" / f).read_text(encoding="utf-8")
-                      for f in ["modulos_1_4.html", "modulos_5_8.html",
-                                "modulos_9_11.html", "modulo_12.html"])
+                      for f in ["modulos_1_4.html", "modulos_5_7.html",
+                                "modulo_8_tomates.html", "modulo_9_dominios.html",
+                                "modulos_10_12.html", "modulo_13_formulario.html",
+                                "modulo_14_autoevaluacion.html"])
     antes, despues = corta(
         html,
         "  <!-- ============================================================ -->\n  <!-- MÓDULO 1 · Cajas y tipografía",
@@ -128,11 +130,13 @@ def main():
         { id: 5, title: "Razones y proporciones", shortTitle: "Proporciones", duration: "15 min" },
         { id: 6, title: "Estimación de regresión", shortTitle: "Regresión", duration: "24 min" },
         { id: 7, title: "Estimación de diferencia", shortTitle: "Diferencia", duration: "29 min" },
-        { id: 8, title: "Estimación en dominios", shortTitle: "Dominios", duration: "27 min" },
-        { id: 9, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
-        { id: 10, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },
-        { id: 11, title: "Parámetros no lineales: la mediana", shortTitle: "Mediana", duration: "20 min" },
-        { id: 12, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "40 min" }
+        { id: 8, title: "Un estimador distinto en cada grupo", shortTitle: "Por grupos", duration: "26 min" },
+        { id: 9, title: "Estimación en dominios", shortTitle: "Dominios", duration: "27 min" },
+        { id: 10, title: "Modelos poblacionales", shortTitle: "Modelos", duration: "18 min" },
+        { id: 11, title: "El estimador general de regresión (GREG)", shortTitle: "GREG", duration: "25 min" },
+        { id: 12, title: "Parámetros no lineales: la mediana", shortTitle: "Mediana", duration: "20 min" },
+        { id: 13, title: "Formulario", shortTitle: "Formulario", duration: "10 min" },
+        { id: 14, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "40 min" }
       ]
     };
 

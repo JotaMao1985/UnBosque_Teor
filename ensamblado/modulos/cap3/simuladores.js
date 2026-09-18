@@ -604,6 +604,22 @@
       {
         tipo: 'opcion',
         modulo: 8,
+        pregunta: 'En el ejemplo de los tomates se usa regresión en la región I, la media muestral en la II y razón en la III, y luego se suman los tres totales <strong>y las tres varianzas</strong>. ¿Qué permite sumar las varianzas sin términos cruzados?',
+        pista: 'No es una propiedad de los estimadores elegidos. Es una propiedad del <em>diseño</em>.',
+        opciones: [
+          { texto: 'Que el muestreo de cada estrato es <strong>independiente</strong> del de los demás.', correcta: true,
+            retro: 'Exacto, y es lo único que el módulo toma prestado del capítulo 4. Como los tres sorteos son independientes, las covarianzas entre estratos son cero y $\\hat V(\\hat t) = \\sum_h N_h^2 \\hat V(\\hat{\\bar y}_h)$. Eso es lo que hace legítimo mezclar tres estimadores distintos en una sola cuenta.' },
+          { texto: 'Que los tres estimadores son insesgados.', correcta: false,
+            retro: 'Ni siquiera es cierto: la razón y la regresión son sesgadas, y el módulo lo avisa. Y aunque lo fueran, el insesgamiento no dice nada sobre covarianzas.' },
+          { texto: 'Que las tres regiones tienen el mismo tamaño de muestra.', correcta: false,
+            retro: 'No lo tienen —20, 13 y 27, por afijación proporcional— y daría igual: la independencia no depende de que los $n_h$ coincidan.' },
+          { texto: 'Que se eligió el estimador de menor varianza en cada región.', correcta: false,
+            retro: 'Eso es lo que hace pequeña a la suma, no lo que permite sumarla. Aunque se hubiera elegido el peor estimador en cada estrato, las varianzas seguirían sumándose igual.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 9,
         pregunta: 'Al estimar la media de un dominio, ¿por qué no sirve la fórmula del error estándar del MAS?',
         pista: '¿Qué cantidad de la fórmula del MAS es fija por diseño, y qué pasa con su equivalente aquí?',
         opciones: [
@@ -619,7 +635,7 @@
       },
       {
         tipo: 'opcion',
-        modulo: 10,
+        modulo: 11,
         pregunta: 'En el GREG $\\hat{t}_{\\text{GREG}} = \\hat{t}_\\pi + \\beta\\,(t_x - \\hat{t}_{x,\\pi})$, ¿qué se obtiene con $\\beta = 0$?',
         pista: 'Sustituye y mira qué queda.',
         opciones: [
@@ -635,7 +651,7 @@
       },
       {
         tipo: 'multiple',
-        modulo: 10,
+        modulo: 11,
         pregunta: 'El GREG con modelo $y_k = \\beta x_k + \\varepsilon_k$ y varianza $V(\\varepsilon_k) = \\sigma^2 v_k$. Marca <strong>las correspondencias correctas</strong>.',
         pista: 'La pendiente sale de mínimos cuadrados ponderados con peso $1/v_k$. Sustituye cada $v_k$ y simplifica.',
         opciones: [
@@ -649,7 +665,7 @@
       },
       {
         tipo: 'opcion',
-        modulo: 11,
+        modulo: 12,
         pregunta: 'La mediana estimada de <code>acres92</code> sale 196 701 con la definición $\\inf\\{t: \\hat{F}(t) \\ge 0{,}5\\}$ y 196 733 con el convenio por defecto de <code>svyquantile</code>. ¿Qué está pasando?',
         pista: '¿Cuánto vale $\\hat{F}$ exactamente en la unidad 150 de 300?',
         opciones: [
@@ -665,7 +681,7 @@
       },
       {
         tipo: 'opcion',
-        modulo: 9,
+        modulo: 10,
         pregunta: 'El enfoque asistido por modelos usa un modelo para construir el estimador. ¿Qué pasa si el modelo está mal especificado?',
         pista: '¿De qué depende la insesgadez del GREG: del modelo o del diseño?',
         opciones: [
