@@ -5805,3 +5805,33 @@ pasar por él. Pasa.
 **Pendiente:** publicar esta tanda —lo da una sola sesión, no las dos— y los bloques 4 (los dos
 gráficos que faltan, en el M5 y el M3, y la decisión D4) y 5 (redacción menor y los dos README, que
 siguen diciendo «88 módulos, 65 simuladores» cuando son 91 y 67).
+
+---
+
+### T7.67 — El README que sí se sirve, con las cifras de hace dos semanas (2026-09-18)
+
+Lo encontró la sesión del cap. 3 mirando el árbol de `gh-pages`, y el hallazgo de fondo es de
+dónde salió: **`sitio/muestreo/README.md` está entre los 14 archivos publicados**, y las dos
+sesiones lo tratábamos como interno. Se sirve, y decía «88 módulos, 65 simuladores, 88 preguntas,
+33 ejercicios, 183 bloques y 2 033 cifras» cuando son **91, 67, 103, 37, 215 y 2 786**.
+
+**Era peor que lo reportado.** El aviso hablaba de una fila; eran **el total y tres filas**:
+
+| | decía | dice |
+|---|---|---|
+| cap. 2 | 11 / **9** | 11 / **10** |
+| cap. 3 | **12** / 6 | **14** / 6 |
+| cap. 4 | **12** / **8** | **13** / **9** |
+
+La del cap. 4 es desfase propio: el simulador de razón estratificada del M12 lo añadió esta sesión
+y nadie tocó el README. Por eso lo arregla esta sesión y no la otra, aunque lo encontrara ella.
+
+**Ninguna cifra a mano:** las ocho filas y los totales salen de `cuenta_sitio.py` restando el
+preparcial —que el README no cuenta—, y las 2 786 de sumar lo que `verifica_bloques --todos`
+contrasta en los ocho capítulos. Comprobado después fila a fila contra el contador: 0 discrepancias.
+
+**El hueco que deja al descubierto.** Las tarjetas del índice estaban **todas correctas**; el README
+no. La diferencia es que la portada la revisa alguien cada vez que cambia un capítulo, y el README
+no lo mira nadie: ninguna de las cuatro herramientas lo toca —`verifica_bloques` y
+`verifica_publicado` solo leen `.html`, `verifica_referencias` también, y `cuenta_sitio`
+cuenta pero no contrasta—. **Es el único archivo publicado sin ninguna verificación encima.**
