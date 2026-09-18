@@ -105,7 +105,8 @@
     "7,1749": "ee verdadero del total por diferencia a n = 300 sobre agpop: 7 174 913, en millones (ordenVarianzas)",
     "0,9797": "razon poblacional B = t_y/t_x = 0,97974736, a cuatro decimales (ordenVarianzas.B)",
     "5,3": "extremo bajo de los tres ee ESTIMADOS de la tabla del M7: el de la diferencia, 5 329 882, en millones",
-    "5,6": "extremo alto de los tres ee ESTIMADOS de la tabla del M7: el de la regresion por survey, 5 593 972, en millones"
+    "5,6": "extremo alto de los tres ee ESTIMADOS de la tabla del M7: el de la regresion por survey, 5 593 972, en millones",
+    "2,73": "brecha entre la media de cocientes y B en agpop: (0,95300659 - 0,97974736)/0,97974736 = -2,7294 %, citada en valor absoluto (cocientes.brechaPct)"
   },
   "capitulo-4-muestreo-estratificado.html": {
     "85 296": "filas de BigLucy (TeachingSampling); verificado",

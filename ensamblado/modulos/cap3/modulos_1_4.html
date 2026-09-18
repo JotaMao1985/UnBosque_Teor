@@ -42,6 +42,19 @@
           información nueva que aportar.</p>
       </div>
 
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Fíjate en lo que la definición <em>no</em> pide: $N$.</strong> El
+          estimador de razón del total, $\hat{t}_r = \hat{B}\,t_x$, necesita conocer $t_x$ y nada más; el tamaño
+          de la población puede ser desconocido y el estimador sigue funcionando. Piensa en un camión cargado con
+          un número incierto de cestas de fresa del que se quiere saber el azúcar total: se pesa el camión —ése es
+          $t_x$— y se analizan unas cuantas cestas, midiendo en cada una el azúcar ($y$) y el peso ($x$). El
+          cociente azúcar/peso de la muestra, multiplicado por el peso del camión, da el total buscado <em>sin
+          contar una sola cesta</em>. El estimador de expansión $N\bar{y}$ del capítulo 2 no puede hacer eso. Es la
+          primera vez en el curso que un estimador se libra de $N$, y no será la última: en el
+          <strong>capítulo 5</strong>, con conglomerados, no conocer el número de elementos es la situación
+          normal.</p>
+      </div>
+
       <p>El ejemplo del capítulo es el censo agrícola. Se quiere el total de superficie sembrada en 1992
         ($y = $ <code>acres92</code>), y se conoce por completo la de 1987 ($x = $ <code>acres87</code>) porque hubo un
         censo. Las dos variables miden lo mismo con cinco años de diferencia, así que la correlación es altísima.</p>
@@ -113,7 +126,9 @@
           \qquad\text{y bajo MAS}\qquad \hat{B} = \frac{\bar{y}}{\bar{x}}$$</p>
         <p style="margin-bottom:0;">De ahí sale el <strong>estimador de razón del total</strong>, que es el objeto
           central del capítulo:</p>
-        <p style="text-align:center; margin-bottom:0;">$$\hat{t}_r = \hat{B}\, t_x$$</p>
+        <p style="text-align:center;">$$\hat{t}_r = \hat{B}\, t_x$$</p>
+        <p style="margin-bottom:0;">En esa fórmula <strong>no aparece $N$</strong>: al estimador de razón le hace
+          falta $t_x$, no el tamaño de la población. El módulo 1 dice por qué eso no es un detalle.</p>
       </div>
 
       <p>La idea es sencilla y vale la pena decirla en palabras: <em>en la muestra, la superficie de 1992 fue el
@@ -121,6 +136,14 @@
         98,66 % del total conocido de 1987</em>. Si haces esa cuenta a mano te saldrán unas decenas de miles de
         acres más que en la nota de abajo: el porcentaje está redondeado a dos decimales, y sobre 963 millones cada
         decimal pesa. El código usa $\hat{B}$ entero.</p>
+
+      <div class="warning">
+        <p style="margin-bottom:0;"><strong>Antes de seguir: $\hat{B}$ no es el promedio de los cocientes.</strong>
+          $\hat{B} = \bar{y}/\bar{x}$ es un cociente de dos <em>promedios</em>, no el promedio de los cocientes
+          $y_k/x_k$ de cada unidad. Las dos cuentas dan números distintos y no estiman lo mismo: sobre
+          <code>agsrs</code>, <strong>0,9866</strong> la primera y <strong>0,9677</strong> la segunda. El módulo 5
+          dice a qué parámetro apunta cada una, y por qué esa diferencia <em>no</em> se arregla con más muestra.</p>
+      </div>
 
       <div class="note">
         <p><strong>Qué hace el bloque de abajo, y con qué.</strong> Calcula el mismo total dos veces sobre la misma

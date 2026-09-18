@@ -54,7 +54,27 @@
           se aproximan entre sí: la primera pondera cada unidad por su tamaño $x_k$, la segunda le da a todas el
           mismo peso. Si se quiere «el rendimiento medio por acre del país», la respuesta correcta es la primera —un
           condado con un millón de acres debe pesar más que uno con mil—. La segunda contesta a otra pregunta: «el
-          rendimiento del condado típico».</p>
+          rendimiento del condado típico». Con <strong>tasas</strong> el contraste es más crudo: la proporción de
+          contagiados de una comarca es $\sum y_k / \sum x_k$ —casos entre habitantes—, mientras que promediar las
+          proporciones de cada pueblo le da al caserío de veinte vecinos el mismo peso que a la ciudad de cien
+          mil.</p>
+        <p><strong>Cuánto se separan, aquí.</strong> Sobre <code>agpop</code>, $B = 0{,}9797$ y la media de
+          cocientes vale <strong>0,9530</strong>: un <strong>2,73 %</strong> de diferencia. Y no es un error de
+          muestreo —son dos números de la población entera—, así que quien promedia cocientes no estima mal $B$:
+          <strong>estima bien otra cosa</strong>. Por eso la diferencia <em>no se reduce al crecer $n$</em>, que es
+          lo que la vuelve peligrosa.</p>
+        <p><strong>Y encima es más difícil de estimar.</strong> El cociente $z_k = y_k/x_k$ tiene la cola pesada:
+          un condado con poca superficie en 1987 y mucha en 1992 da un $z$ enorme —en <code>agpop</code> llega a
+          <strong>9,09</strong>—, y eso dispara su variabilidad. Con los mismos 300 condados, el error estándar
+          relativo de $\hat{B}$ es del <strong>0,76 %</strong> y el de la media de cocientes del
+          <strong>1,84 %</strong>: <strong>2,4 veces</strong> peor. Promediar cocientes contesta otra pregunta y,
+          además, la contesta con menos precisión.</p>
+        <p style="margin-bottom:0;"><strong>Y un detalle que decide solo.</strong> La media de cocientes ni siquiera
+          <em>existe</em> donde $x_k = 0$. En <code>agpop</code> hay <strong>2</strong> condados con cero acres en
+          1987 y <strong>23</strong> más con el código de faltante: para promediar cocientes hay que dejar fuera los
+          25 y se acaba describiendo una población distinta de la que se quería. $B$ no necesita esa cirugía. Y si
+          lo que de verdad se busca <em>es</em> la media de cocientes, no hace falta nada de este capítulo:
+          $z_k = y_k/x_k$ es una variable como otra cualquiera y se estima con el capítulo 2.</p>
       </div>
 
       <div class="note">
@@ -69,6 +89,9 @@
         <ul style="margin-bottom:0;">
           <li>Lohr, <strong>sección 3.1.3</strong> (2.ª ed.) o <strong>4.2.3</strong> (3.ª ed.) — razones con
             variables indicadoras y estimación de proporciones dentro de dominios.</li>
+          <li>Portela, J. y Villeta, M. <em>Técnicas de muestreo estadístico</em>, <strong>sección 7.1.1</strong>
+            (pp. 208–209) — el ejemplo de la epidemia, que abre su capítulo con esta misma confusión. Ojo: el libro
+            trabaja siempre bajo m.a.s., sin $\pi_k$, y su software es SAS.</li>
         </ul>
       </div>
     </div>

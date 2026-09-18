@@ -4365,10 +4365,13 @@ abre con sus 4 pasos y 17 expresiones, la tabla-ranking sigue con sus cuatro fil
 limpia. El M7 sube de 18 a 24 min.
 
 **Un defecto de maquetación encontrado de paso, y NO tocado.** La fórmula del sesgo que abre el
-**módulo 4** —la que ya estaba— mide **632 px en una columna de 506**: se sale de su caja. Es
-anterior a todo este trabajo (está en `7f9da4e^`) y se arregla partiéndola en dos, como se hizo aquí
-con la del M7, que tenía el mismo problema (545 en 506) y se detectó midiendo
-`scrollWidth`/`clientWidth` de cada `.katex-display`. Queda anotado, sin tocar, para su propia tarea.
+**módulo 4** —la que ya estaba— se sale de su caja: **632 px en una columna de 506** con la ventana a
+1 000 px. Es anterior a todo este trabajo (está en `7f9da4e^`). Se detectó midiendo
+`scrollWidth`/`clientWidth` de cada `.katex-display`. Queda anotado, sin tocar.
+> **Corregido en T7.42:** esto no era un caso aislado ni se arregla partiendo fórmulas. El barrido a
+> 375 px encontró **14 fórmulas desbordadas en 9 de los 12 módulos**, y a 1 280 px no desborda
+> ninguna. Es un problema de CSS —`.katex-display` con `overflow-x: visible`— y su arreglo es una
+> línea en el componente, retropropagada a los ocho capítulos.
 
 **Lo que enseña.** «Están empatados en la práctica» era una observación; con el cuadrado perfecto es
 una predicción con su condición. Y el teorema resultó valer sobre todo para explicar **por qué la
@@ -4432,5 +4435,65 @@ final, sin cifras— mientras el módulo entero medía con rigor una sola variab
 el propio método del capítulo podría comprobar y no comprueba es una deuda, no un matiz**: aquí
 bastaba una columna más para que la lección pasara de creída a vista, y de paso salió una asignación
 de compromiso que le gana a la proporcional en las dos variables.
+
+**Pendiente:** el visto bueno de Javier para publicar.
+
+
+---
+
+### T7.42 — La fase 3 del cap. 3: la media de cocientes, el total sin $N$, y un barrido en móvil (2026-09-17)
+
+Fase 3 completa del plan del capítulo 3 con Portela & Villeta: sus dos tareas, T3.1 y T3.2.
+
+**Primero, una corrección a mi propio diagnóstico.** El plan daba por ausente del capítulo la
+distinción entre la razón de medias y la media de cocientes («`grep` de "media de razones", "media de
+los cocientes", "razón de medias": cero»). **Estaba, y bien puesta**, en el módulo 5: «El error
+clásico: promediar cocientes… las dos cantidades son distintas… la primera pondera cada unidad por su
+tamaño». El `grep` falló porque el material lo dice con otras palabras. Lo que de verdad faltaba era
+más pequeño y más útil.
+
+**T3.1 — lo que le faltaba al argumento: el número.** El módulo afirmaba que las dos cantidades «no
+se aproximan entre sí» sin decir cuánto. Sobre `agpop`, $B = 0{,}9797$ y la media de cocientes
+**0,9530**: un **2,73 %**. Y como son dos números de la población entera, quien promedia cocientes no
+estima mal $B$ —**estima bien otra cosa**—, así que la diferencia **no se reduce al crecer $n$**. Se
+añaden dos argumentos más: que la media de cocientes **ni existe** donde $x_k = 0$ (en `agpop`, 2
+condados con cero acres y 23 con el código de faltante: hay que quitar 25 y se acaba describiendo otra
+población), y que además es **más difícil de estimar**, porque $z_k = y_k/x_k$ tiene la cola pesada
+—llega a **9,09**— y con los mismos 300 condados su error estándar relativo es del **1,84 %** frente
+al **0,76 %** de $\hat B$: **2,4 veces peor**. En el **módulo 2**, donde se define $\hat B$, queda un
+aviso corto que remite al 5: la confusión empieza allí, tres módulos antes de la advertencia.
+
+**Una aserción que me paró, y tenía razón.** Había escrito en el módulo 5 que «en la muestra se ve
+apuntando cada uno a su sitio: $\hat B = 0{,}9866$ está cerca del 0,9797 y el promedio de cocientes,
+0,9677, está cerca del 0,9530». **Es falso:** 0,9677 dista 0,0121 de $B$ y 0,0147 de su propio
+parámetro — está más cerca del ajeno. Lo descubrió el `stopifnot` simétrico que yo mismo había puesto
+en `genera_cap3.R`, que abortó el precálculo. La causa es el tercer argumento en acción: con esa cola,
+300 condados estiman la media de cocientes con un error estándar verdadero que deja los dos
+parámetros dentro del margen. **La frase se cayó** y el capítulo argumenta solo con los parámetros
+poblacionales, que es donde el argumento es firme. La aserción se quedó, con el comentario de por qué
+la simétrica **no** se puede exigir.
+
+**T3.2 — el total que no necesita $N$.** El módulo 1 define variable auxiliar por dos condiciones y
+no sacaba la consecuencia: en $\hat t_r = \hat B\,t_x$ **no aparece $N$**. Nota nueva con el camión
+de cestas de fresa —se pesa el camión, se analizan unas cestas, y el total sale sin contar una sola—
+y el puente al **capítulo 5**, donde no conocer el número de elementos es lo normal. El módulo 2
+añade una línea bajo la fórmula, que es donde se ve.
+
+**El barrido en móvil, que corrige lo anotado en T7.40.** Midiendo `scrollWidth`/`clientWidth` de
+cada `.katex-display` a **375 px**: **14 fórmulas desbordan su caja, en 9 de los 12 módulos**; a
+1 280 px no desborda ninguna, y a 1 000 px desbordan dos. Solo 4 de las 14 son de este trabajo. No es
+un defecto de fórmulas concretas y **no se arregla partiéndolas**: `.katex-display` lleva
+`overflow-x: visible` y el texto se sale sin que aparezca barra de desplazamiento. El arreglo es una
+línea de CSS en el componente, retropropagada a los ocho capítulos — y por eso **no se hizo aquí**.
+Queda como tarea propia, con el barrido ya hecho.
+
+**Verificado.** Byte a byte en la segunda pasada. **179 de 179** cifras de bloques y **126 de prosa ·
+0 sin respaldo** (los ocho capítulos, 0). En el navegador a 1 280 px: 0 `.katex-error` en los módulos
+1, 2 y 5, ninguna fórmula desbordada, consola limpia. El M1 sube de 15 a 18 min y el M5 de 12 a 15.
+
+**Lo que enseña.** Dos cosas, y las dos sobre no fiarse de uno mismo. Un `grep` que no encuentra algo
+solo demuestra que no se buscaron las palabras que el autor usó: el diagnóstico decía «falta» y lo que
+faltaba era otra cosa. Y una aserción escrita para adornar un cálculo acabó tumbando una frase que yo
+había dado por evidente; si no la hubiera puesto, la frase se publica.
 
 **Pendiente:** el visto bueno de Javier para publicar.

@@ -308,6 +308,65 @@ ordenVarianzas <- list(tabla = orden, B = B_pob, b1 = b1_pob, rho = rho_p,
                        eeOptimo = N * sqrt(V_opt), eeSimulado = ee_sim,
                        difAproxPct = 100 * dif_aprox)
 
+# ---------------------------------------------------------------------------
+# 6d · LA RAZÓN DE MEDIAS NO ES LA MEDIA DE COCIENTES
+# ---------------------------------------------------------------------------
+# No son dos estimadores del mismo parámetro: son DOS PARÁMETROS distintos.
+#   B       = sum(y) / sum(x)        pondera cada unidad por su x
+#   Bmedia  = (1/N) sum(y_k / x_k)   da a todas el mismo peso
+# Promediar cocientes no estima mal B: estima bien OTRA COSA, así que la
+# discrepancia no se reduce al crecer n. Y la media de cocientes ni siquiera
+# está definida donde x_k = 0 o falta, mientras que B no necesita esa cirugía.
+val_pob <- agpop$acres87 > 0                   # 2 ceros y 23 con -99
+B_media_pob <- mean(agpop$acres92[val_pob] / agpop$acres87[val_pob])
+val_mue <- agsrs$acres87 > 0
+B_media_mue <- mean(agsrs$acres92[val_mue] / agsrs$acres87[val_mue])
+cocientes <- list(
+  B            = B_pob,
+  Bmedia       = B_media_pob,
+  brechaPct    = 100 * (B_media_pob - B_pob) / B_pob,
+  nValidosPob  = sum(val_pob),
+  nExcluidosPob = sum(!val_pob),
+  ceros        = sum(agpop$acres87 == 0),
+  faltantes    = sum(agpop$acres87 == -99),
+  Bhat         = B,
+  BmediaMuestra = B_media_mue,
+  nValidosMue  = sum(val_mue))
+cat(sprintf("cocientes: B = %.7f, media de cocientes = %.7f (brecha %.2f %%; %d de %d condados)\n",
+            cocientes$B, cocientes$Bmedia, cocientes$brechaPct,
+            cocientes$nValidosPob, N))
+cat(sprintf("           en la muestra: B_hat = %.7f, media de cocientes = %.7f\n",
+            cocientes$Bhat, cocientes$BmediaMuestra))
+
+# Y no solo es OTRO parámetro: es uno MUCHO más difícil de estimar, porque
+# z_k = y_k/x_k tiene la cola pesada (un condado con poca superficie en 1987 y
+# mucha en 1992 da un z enorme). Se comparan los dos errores estándar
+# VERDADEROS con la misma muestra de 300, cada uno respecto de SU parámetro.
+z_pob <- agpop$acres92[val_pob] / agpop$acres87[val_pob]
+N_val <- sum(val_pob)
+ee_B_true <- sqrt(V_de_b(B_pob)) / xbar_U              # de 6c: V(ybar_r)/xbar_U^2
+ee_Z_true <- sqrt(1 - n / N_val) * sd(z_pob) / sqrt(n)
+cocientes$sdZ       <- sd(z_pob)
+cocientes$maxZ      <- max(z_pob)
+cocientes$eeRelB    <- 100 * ee_B_true / B_pob
+cocientes$eeRelMedia <- 100 * ee_Z_true / B_media_pob
+cocientes$veces     <- cocientes$eeRelMedia / cocientes$eeRelB
+cat(sprintf("           precision: ee relativo de B_hat %.3f %% frente a %.3f %% de la media de cocientes (%.2f veces)\n",
+            cocientes$eeRelB, cocientes$eeRelMedia, cocientes$veces))
+
+# Lo que SÍ se puede afirmar. (a) Los dos parámetros se separan de verdad.
+stopifnot(abs(cocientes$brechaPct) > 2)
+# (b) B_hat está más cerca de B que de la media de cocientes.
+stopifnot(abs(cocientes$Bhat - cocientes$B) < abs(cocientes$Bhat - cocientes$Bmedia))
+# (c) Estimar la media de cocientes es menos preciso.
+stopifnot(cocientes$veces > 1.5)
+# Lo que NO se puede afirmar, y conviene dejar escrito: la simétrica de (b) es
+# FALSA en esta muestra —la media de cocientes muestral, 0,9677, cae más cerca
+# de B que de su propio parámetro—. No es una casualidad incómoda: es (c) en
+# acción. Con la cola de z, 300 condados estiman su media con un ee verdadero
+# que deja los dos parámetros dentro del margen. Por eso el capítulo argumenta
+# con los parámetros poblacionales y no con esta muestra.
+
 # ===========================================================================
 # 7 · Linealización: qué término se desprecia
 # ===========================================================================
@@ -557,6 +616,7 @@ datos <- list(
   sesgoRazon = tabla_sesgo,
   kish = kish,
   ordenVarianzas = ordenVarianzas,
+  cocientes = cocientes,
   linealizacion = list(n = n_lin, exacto = ex[1:600], lineal = li[1:600],
                        correlacion = cor(ex, li), eeExacto = sd(ex), eeLineal = sd(li)),
   dominios = list(binario = tabla_dom, region = tabla_reg),
