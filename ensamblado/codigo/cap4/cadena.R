@@ -354,6 +354,56 @@ round(c(acres87 = cor(agpop$acres92, agpop$acres87),
 #> acres87 farms92
 #>  0.9951  0.1470
 
+cat("\n###BLOQUE-R8B###\n")
+# La tabla de arriba ordena las particiones para acres92. Pero los estratos
+# se eligen una vez para TODA la encuesta, no para una variable. El mismo
+# deff con las dos varas del modulo 4:
+V_con2 <- function(f, y) {
+  Nh_ <- tapply(y, f, length)
+  S2_ <- tapply(y, f, var)
+  nh_ <- 300 * Nh_ / N
+  sum((Nh_ / N)^2 * (1 - nh_ / Nh_) * S2_ / nh_)
+}
+particiones <- list(region            = agpop$region,
+                    cuartiles_acres87 = corta4(agpop$acres87),
+                    cuartiles_farms92 = corta4(agpop$farms92),
+                    al_azar           = azar)
+round(sapply(particiones,
+             function(f) c(acres92 = V_con2(f, agpop$acres92) / V_mas,
+                           farms92 = V_con2(f, agpop$farms92) / V_mas_f)), 4)
+#>         region cuartiles_acres87 cuartiles_farms92 al_azar
+#> acres92 0.8212            0.5396            0.9872  1.0009
+#> farms92 0.9713            0.7925            0.3240  0.9997
+
+# En la practica se estratifica con lo que trae el marco del ano anterior,
+# y el censo de 1987 predice bien las DOS variables de 1992:
+round(c(acres = cor(agpop$acres92, agpop$acres87),
+        farms = cor(agpop$farms92, agpop$farms87)), 4)
+#>  acres  farms
+#> 0.9951 0.9944
+
+cat("\n###BLOQUE-R8C###\n")
+# Estratos con dos objetivos a la vez (Lohr, Ej. 3.13): el conteo anual de
+# personas sin hogar de Nueva York. La ciudad clasifica sus areas en de ALTA
+# y BAJA densidad con los conteos de anos anteriores; censa las de alta
+# (fraccion 1) y muestrea las de baja 1 de cada 16.
+pit <- read.csv("CSV data sets for SDA 3e/pitcount.csv")
+dis_pit <- svydesign(id = ~1, strata = ~strat, weights = ~areawt,
+                     fpc = ~popsize, data = pit)
+c(areas_del_marco = sum(tapply(pit$popsize, pit$strat, function(x) x[1])),
+  areas_visitadas = nrow(pit))
+#> areas_del_marco areas_visitadas
+#>            1000             100
+svytotal(~y, dis_pit)
+#>   total     SE
+#> y   496 70.793
+
+# Lo que aporta cada mitad del diseno al conteo y a la incertidumbre:
+svyby(~y, ~density, dis_pit, svytotal)
+#>      density   y       se
+#> High    High 224  0.00000
+#> Low      Low 272 70.79296
+
 cat("\n###BLOQUE-R9###\n")
 # Por que gana estratificar? La descomposicion ANOVA de la poblacion:
 # la variabilidad total se parte en ENTRE regiones y DENTRO de regiones.

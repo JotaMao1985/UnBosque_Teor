@@ -432,8 +432,9 @@
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
         <li><strong>Cuartiles de <code>farms92</code>: deff 0,99.</strong> El <em>número</em> de granjas casi no
-          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco correlacionada es
-          trabajar gratis.</li>
+          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco
+          correlacionada <em>con la variable que se mide</em> es trabajar gratis — y conviene leer esa cursiva
+          despacio, porque más abajo esta misma partición resulta ser la mejor de las cuatro para otra cosa.</li>
         <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
           $y$ no ganan nada —en rigor pierden un pelo, 1,0009, y el módulo 7 explica por qué—, y el estratificado
           degenera en un MAS con papeleo extra.</li>
@@ -459,6 +460,70 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <p><strong>¿Y con qué se estratifica, entonces?</strong> Lo ideal sería partir por la propia $y$: los
+        condados que más siembran en el estrato 1, los siguientes en el 2, y así. Es imposible por la razón más
+        obvia de todas — si se conociera $y$ en toda la población no haría falta encuestar—. De modo que se
+        estratifica con lo que trae el marco y <em>se parece</em> a $y$: el censo anterior, el tamaño del
+        establecimiento, la geografía. Y hay una condición que la tabla de arriba no puede ver, porque mide con una
+        sola vara: <strong>la variable de estratificación tiene que servirle a muchas variables a la vez</strong>,
+        porque los estratos se construyen una sola vez para toda la encuesta.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las cuatro particiones medidas con dos variables">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8B⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La segunda fila desarma el ranking de la primera. Los cuartiles de <code>farms92</code>, que para
+        <code>acres92</code> eran «trabajar gratis» con su deff de <strong>0,9872</strong>, son <strong>la mejor
+        partición de las cuatro</strong> si lo que se mide es el número de granjas: deff <strong>0,3240</strong>,
+        por debajo incluso de los cuartiles de <code>acres87</code>. No había ninguna partición mala; había una
+        pregunta mal hecha.</p>
+
+      <p>La que aguanta las dos varas es <code>acres87</code> —<strong>0,5396</strong> y
+        <strong>0,7925</strong>—, y no por casualidad: el censo anterior mide <em>las dos</em> cosas. Su correlación
+        con la superficie de 1992 es 0,9951 y la de <code>farms87</code> con las granjas de 1992 es
+        <strong>0,9944</strong>. Esa es la receta real: <strong>estratificar con el marco del año pasado</strong>,
+        que suele venir correlacionado con todo lo que la encuesta va a preguntar. Es el mismo argumento que el
+        módulo 4 hizo para las asignaciones, ahora un paso antes, sobre los estratos mismos.</p>
+
+      <div class="note">
+        <p><strong>Clasificar mal no invalida nada.</strong> Si al construir los estratos un condado enorme acaba
+          en el cuartil que no le tocaba —porque el dato de 1987 estaba mal, o porque la clasificación se hizo con
+          información imperfecta—, el estimador <strong>sigue siendo insesgado y su error estándar sigue siendo
+          correcto</strong>. Las propiedades del diseño dependen solo de la estratificación que <em>se usó</em>, no
+          de la que se quiso usar. Lo único que se pierde es eficiencia: estratos peor separados, menos SSB, menos
+          ganancia. Por eso se puede estratificar con información vieja o aproximada sin pedir permiso a nadie.</p>
+      </div>
+
+      <p><strong>Estratos que persiguen dos objetivos.</strong> A veces la partición no se diseña solo para bajar la
+        varianza. Lohr cuenta el conteo anual de personas sin hogar de Nueva York: una sola noche de enero,
+        voluntarios recorriendo la ciudad, y dos metas a la vez — estimar bien <em>y</em> llegar a cuanta más gente
+        mejor, porque la noche del conteo también se reparte información sobre servicios sociales. La ciudad
+        clasifica sus áreas en de alta y baja densidad con los conteos de años anteriores, censa las de alta y
+        muestrea las de baja:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El conteo de personas sin hogar de Nueva York">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R8C⟧</code></pre>
+        </div>
+      </div>
+
+      <p>El diseño resuelve las dos metas con el mismo movimiento. De las <strong>1 000</strong> áreas del marco se
+        visitan <strong>100</strong>, y el conteo estimado es <strong>496</strong> personas con error estándar
+        <strong>70,793</strong>. Pero mira la última tabla: las áreas de alta densidad aportan <strong>224</strong>
+        al conteo <strong>y cero</strong> a la incertidumbre — son <strong>estratos de certeza</strong>, los del
+        módulo 5: se censan, su fpc vale 0 y no tienen varianza que aportar. Toda la incertidumbre,
+        <strong>70,79296</strong>, viene de las áreas de baja densidad, que son el 96 % del marco y donde hay poca
+        gente que contar. Mandar a los voluntarios donde está la gente sirve <em>a la vez</em> para el objetivo de
+        contacto y para el de precisión; no hubo que elegir.</p>
+
       <div class="note">
         <p><strong>Los −99 también se estratifican.</strong> Los 23 condados con <code>acres87 = −99</code> (código
           de faltante, capítulo 1) caen todos en el primer cuantil, porque −99 es el valor más chico del archivo.
@@ -470,7 +535,10 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §4.5 (2.ª ed.) / §3.5 (3.ª ed.): definición de estratos.</li>
+          <li>Lohr — §4.5 (2.ª ed.) / §3.5 (3.ª ed.): definición de estratos, con la regla de «más información,
+            más estratos» y por qué clasificar mal no invalida la estimación.</li>
+          <li>Lohr — Ej. 3.13 (3.ª ed.): el conteo de personas sin hogar de Nueva York, con los datos de
+            <code>pitcount.csv</code>.</li>
           <li>Dalenius y Hodges (1959): el método clásico de cortes óptimos por cuantiles acumulados de
             $\sqrt{f}$.</li>
         </ul>

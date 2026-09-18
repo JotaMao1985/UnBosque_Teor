@@ -4608,3 +4608,69 @@ no lo encuentra la revisión humana ni el verificador de cifras; hace falta preg
 por una medida concreta. Conviene añadir esa medición al protocolo de publicación.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.45 — Con qué se estratifica y qué promete el modelo: M6 y M7 del cap. 4 (2026-09-17)
+
+Cuarta tarea y **cierre de la fase 3** del plan del capítulo 4 con Lohr 3.ª ed. (tareas B13 y B14).
+
+**El mismo defecto que T7.41 encontró en el M4, ahora en el M6.** Su tabla ordenaba cuatro maneras
+de partir `agpop` usando una sola vara, `acres92`, y sacaba de ahí un veredicto sobre cada variable.
+Medidas con dos varas (bloque `R8B`), el ranking se da vuelta más fuerte todavía: los cuartiles de
+`farms92`, que el módulo despachaba como «trabajar gratis» con deff **0,9872**, son **la mejor
+partición de las cuatro** para estimar el número de granjas, con **0,3240** — por debajo incluso de
+los cuartiles de `acres87`—. **No había particiones malas; había una pregunta mal hecha.** Se
+corrigieron el bullet del módulo y la retro del quiz del M6, que afirmaban la media verdad.
+
+**Y la receta que sale de ahí.** La única partición que aguanta las dos varas es `acres87`
+(**0,5396** y **0,7925**), y no por casualidad: el censo del año anterior mide *las dos* cosas.
+`cor(farms92, farms87)` = **0,9944**, al lado del 0,9951 que el módulo ya publicaba. Estratificar con
+el marco del año pasado es lo que sirve a una encuesta multipropósito, que es justo lo que pedía
+Lohr §3.5 y el capítulo no decía.
+
+**Lo que faltaba de principio.** Que lo ideal sería estratificar por la propia $y$ y es imposible
+por la razón más obvia —si se conociera, no haría falta encuestar—. Y su corolario, en nota nueva:
+**clasificar mal no invalida nada**, porque las propiedades del diseño dependen solo de la
+estratificación que se usó; lo único que se pierde es eficiencia. Por eso se puede estratificar con
+información vieja o aproximada sin pedirle permiso a nadie.
+
+**El Ej. 3.13 con datos reales** (bloque `R8C`; `pitcount.csv` entra por primera vez al capítulo):
+el conteo anual de personas sin hogar de Nueva York, diseñado para dos objetivos a la vez —estimar
+bien y llegar a cuanta más gente mejor—. De **1 000** áreas se visitan **100**; el conteo estimado es
+**496** con ee **70,793**. El remate: las áreas de alta densidad aportan **224** al conteo y **cero**
+a la varianza, porque son **estratos de certeza** —los que T7.39 acababa de introducir en el M5— y su
+fpc vale 0. Toda la incertidumbre, **70,79296**, viene de las de baja densidad. Mandar a los
+voluntarios donde está la gente sirve a la vez a los dos objetivos: no hubo que elegir.
+
+**B13, quinto paso de `der-modelo` en el M7.** El error cuadrático medio bajo el modelo,
+$\sum_h N_h^2(1-n_h/N_h)\sigma_h^2/n_h$, es **término a término** la varianza de diseño del M3: dos
+teorías que no comparten ni el objeto aleatorio llegan al mismo error estándar. Con la asimetría que
+importa y que el módulo no decía: la de diseño vale sea cual sea el modelo, porque solo promedia
+sobre el sorteo; la de modelo vale solo si el modelo es cierto, y si lo que falla es la independencia
+dentro del estrato se queda **corta**. Enlaza con el cap. 5, donde esa dependencia es el tema.
+
+**Verificado.** Byte a byte; **411 de 411** cifras de bloques (eran 389) y **131 de prosa · 0 sin
+respaldo** (eran 123); `anota_salidas.py --check` sin diferencias. En el navegador: 0 `.katex-error`,
+la derivación del M7 abre con **cinco** pasos, ningún `$` suelto y consola limpia. M6 pasa de 18 a
+**26 min** y M7 de 20 a **22 min**.
+
+**Coordinación con la sesión del cap. 3 (T7.44).** Avisó de que iba a arreglar `.katex-display` en
+la plantilla compartida. Al reensamblar me llevé su regla aún sin commitear dentro del HTML del
+capítulo 4, así que se le pidió commitear la plantilla sola primero; con `ce54da0` en `main` se
+reensambló el capítulo 4 y este commit ya es reproducible desde lo commiteado. **La cifra del
+capítulo 4 para su tabla**, medida a 375 px recorriendo los doce módulos con las derivaciones
+abiertas: **18 de 20** fórmulas en bloque necesitan la barra (9 de los 12 módulos tienen fórmulas) y
+**0 quedan recortadas** en vertical, así que el `padding-top` de 0,2 rem basta también aquí. El diff
+del HTML fue +153/−7, de los que 16 son su CSS.
+
+**D5 sigue sin decidir**: la regla de la $\sqrt{f}$ acumulada (Dalenius–Hodges) no se tocó, y la
+referencia del M6 queda como estaba. Decide Javier.
+
+**Lo que enseña.** Es la segunda vez en el mismo capítulo —y en la misma tarde— que aparece el mismo
+patrón: un módulo que mide con rigor **una** variable y redacta el resultado como si fuera un
+veredicto sobre el mundo. En el M4 era la asignación; aquí, la partición. **Cuando un material dice
+«esta opción es mala» y lo ha medido con una sola vara, la frase está midiendo la vara, no la
+opción.** Vale la pena revisar el resto del material con esa pregunta.
+
+**Pendiente:** el visto bueno de Javier para publicar.

@@ -705,7 +705,7 @@
         pista: 'La regla del módulo 7: estratificar renta lo que la variable de estratificación explica de $y$.',
         opciones: [
           { texto: 'Porque el número de granjas casi no está correlacionado con la superficie sembrada: las medias de sus cuartiles son casi iguales y SSB ≈ 0.', correcta: true,
-            retro: 'Eso es. Muchas granjas pequeñas pueden sumar menos superficie que pocas gigantes. Sin diferencia entre las medias de los estratos, no hay nada que el diseñador pueda «pagar por adelantado».' },
+            retro: 'Eso es. Muchas granjas pequeñas pueden sumar menos superficie que pocas gigantes. Sin diferencia entre las medias de los estratos, no hay nada que el diseñador pueda «pagar por adelantado». Fíjate en que la pregunta dice <em>superficie sembrada</em>: esa misma partición es la mejor de las cuatro si lo que se estima es el número de granjas, con deff 0,3240.' },
           { texto: 'Porque cuatro estratos son pocos; con diez cuartiles habría funcionado.', correcta: false,
             retro: 'El barrido del simulador dice lo contrario: subir H con una variable útil da rendimientos decrecientes, y subir H con una variable inútil multiplica el papeleo de una ganancia que no existe.' },
           { texto: 'Porque los cuartiles dejan estratos de igual tamaño, y eso anula la estratificación.', correcta: false,

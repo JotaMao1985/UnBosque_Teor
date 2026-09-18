@@ -100,6 +100,23 @@
                 varianza. Comparar con el estimador de razón, que tampoco se sesgaba (asintóticamente) con un mal
                 modelo pero podía perder contra la expansión.</p>
             </li>
+            <li>
+              <p><strong>Y las dos varianzas coinciden.</strong> Bajo el modelo, el error cuadrático medio del
+                total estimado es</p>
+              $$E_M\big[(\hat{t} - t)^2\big] = \sum_h N_h^2 \left(1 - \frac{n_h}{N_h}\right)
+                \frac{\sigma_h^2}{n_h},$$
+              <p>que al estimar cada $\sigma_h^2$ con $s^2_h$ es <strong>la misma fórmula</strong> que la varianza
+                de diseño del módulo 3 — no parecida: idéntica, término a término. Dos teorías que no comparten ni
+                el objeto aleatorio (allí la muestra, aquí la población) llegan al mismo error estándar.</p>
+              <p style="margin-bottom:0;">Que coincidan es una propiedad <em>de este modelo</em>, no un teorema
+                general: con otro modelo salen otros estimadores y otras varianzas. Y la simetría se rompe en
+                cuanto el modelo falla. La varianza de diseño vale igual, porque solo promedia sobre el sorteo, que
+                es cosa del diseñador; la de modelo vale <strong>solo si el modelo es cierto</strong>, y si lo que
+                falla es la independencia dentro del estrato —vecinos que se parecen, la dependencia espacial que
+                el modelo supone inexistente— se queda <em>corta</em>, y se publica una precisión que no se tiene.
+                Ese es el argumento de fondo para trabajar con el diseño y usar el modelo como guía: el capítulo 5
+                lo verá en serio, cuando los conglomerados hagan de esa dependencia el tema central.</p>
+            </li>
           </ol>
         </div>
       </div>
@@ -137,7 +154,8 @@
         <ul style="margin-bottom:0;">
           <li>Lohr — §4.4.1 (2.ª ed., ec. 4.11) / §3.4.1 (3.ª ed., ecs. 3.12–3.13): cuándo la asignación
             proporcional pierde contra el MAS.</li>
-          <li>Lohr — §4.6 (2.ª ed.) / §3.6 (3.ª ed.): el modelo del muestreo estratificado.</li>
+          <li>Lohr — §4.6 (2.ª ed.) / §3.6 (3.ª ed.): el modelo del muestreo estratificado, y por qué su error
+            cuadrático medio coincide término a término con la varianza de diseño.</li>
           <li>Gutiérrez — cap. 17: el enfoque asistido por modelos, del que este módulo es un caso.</li>
         </ul>
       </div>

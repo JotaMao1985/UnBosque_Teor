@@ -529,6 +529,22 @@
       }
     }
 
+    /* Fórmulas en bloque ($$…$$). KaTeX no le pone desbordamiento a
+       .katex-display, y .formula solo desborda si el HIJO no cabe —no si se
+       sale el contenido del hijo—, así que en pantallas estrechas la fórmula se
+       salía de su caja sin barra y sin que la página ganara scroll horizontal:
+       nada avisaba de que faltaba texto. Medido a 375 px en el capítulo 3:
+       catorce fórmulas en nueve de los doce módulos; a 1 280 px, ninguna, que
+       es por lo que no se había visto. La barra aparece solo cuando hace falta,
+       y el relleno deja sitio para que no tape los subíndices de abajo. */
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-top: 0.2rem;
+      padding-bottom: 0.4rem;
+    }
+
     .diagram {
       background-color: #f8fafc;
       border: 2px dashed #cbd5e1;
@@ -4640,8 +4656,9 @@ round(c(acres87 = cor(agpop$acres92, agpop$acres87),
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
         <li><strong>Cuartiles de <code>farms92</code>: deff 0,99.</strong> El <em>número</em> de granjas casi no
-          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco correlacionada es
-          trabajar gratis.</li>
+          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco
+          correlacionada <em>con la variable que se mide</em> es trabajar gratis — y conviene leer esa cursiva
+          despacio, porque más abajo esta misma partición resulta ser la mejor de las cuatro para otra cosa.</li>
         <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
           $y$ no ganan nada —en rigor pierden un pelo, 1,0009, y el módulo 7 explica por qué—, y el estratificado
           degenera en un MAS con papeleo extra.</li>
@@ -4667,6 +4684,114 @@ round(c(acres87 = cor(agpop$acres92, agpop$acres87),
         <div class="simulador-lectura"></div>
       </div>
 
+      <p><strong>¿Y con qué se estratifica, entonces?</strong> Lo ideal sería partir por la propia $y$: los
+        condados que más siembran en el estrato 1, los siguientes en el 2, y así. Es imposible por la razón más
+        obvia de todas — si se conociera $y$ en toda la población no haría falta encuestar—. De modo que se
+        estratifica con lo que trae el marco y <em>se parece</em> a $y$: el censo anterior, el tamaño del
+        establecimiento, la geografía. Y hay una condición que la tabla de arriba no puede ver, porque mide con una
+        sola vara: <strong>la variable de estratificación tiene que servirle a muchas variables a la vez</strong>,
+        porque los estratos se construyen una sola vez para toda la encuesta.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las cuatro particiones medidas con dos variables">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># La tabla de arriba ordena las particiones para acres92. Pero los estratos
+# se eligen una vez para TODA la encuesta, no para una variable. El mismo
+# deff con las dos varas del modulo 4:
+V_con2 &lt;- function(f, y) {
+  Nh_ &lt;- tapply(y, f, length)
+  S2_ &lt;- tapply(y, f, var)
+  nh_ &lt;- 300 * Nh_ / N
+  sum((Nh_ / N)^2 * (1 - nh_ / Nh_) * S2_ / nh_)
+}
+particiones &lt;- list(region            = agpop$region,
+                    cuartiles_acres87 = corta4(agpop$acres87),
+                    cuartiles_farms92 = corta4(agpop$farms92),
+                    al_azar           = azar)
+round(sapply(particiones,
+             function(f) c(acres92 = V_con2(f, agpop$acres92) / V_mas,
+                           farms92 = V_con2(f, agpop$farms92) / V_mas_f)), 4)
+#&gt;         region cuartiles_acres87 cuartiles_farms92 al_azar
+#&gt; acres92 0.8212            0.5396            0.9872  1.0009
+#&gt; farms92 0.9713            0.7925            0.3240  0.9997
+
+# En la practica se estratifica con lo que trae el marco del ano anterior,
+# y el censo de 1987 predice bien las DOS variables de 1992:
+round(c(acres = cor(agpop$acres92, agpop$acres87),
+        farms = cor(agpop$farms92, agpop$farms87)), 4)
+#&gt;  acres  farms
+#&gt; 0.9951 0.9944</code></pre>
+        </div>
+      </div>
+
+      <p>La segunda fila desarma el ranking de la primera. Los cuartiles de <code>farms92</code>, que para
+        <code>acres92</code> eran «trabajar gratis» con su deff de <strong>0,9872</strong>, son <strong>la mejor
+        partición de las cuatro</strong> si lo que se mide es el número de granjas: deff <strong>0,3240</strong>,
+        por debajo incluso de los cuartiles de <code>acres87</code>. No había ninguna partición mala; había una
+        pregunta mal hecha.</p>
+
+      <p>La que aguanta las dos varas es <code>acres87</code> —<strong>0,5396</strong> y
+        <strong>0,7925</strong>—, y no por casualidad: el censo anterior mide <em>las dos</em> cosas. Su correlación
+        con la superficie de 1992 es 0,9951 y la de <code>farms87</code> con las granjas de 1992 es
+        <strong>0,9944</strong>. Esa es la receta real: <strong>estratificar con el marco del año pasado</strong>,
+        que suele venir correlacionado con todo lo que la encuesta va a preguntar. Es el mismo argumento que el
+        módulo 4 hizo para las asignaciones, ahora un paso antes, sobre los estratos mismos.</p>
+
+      <div class="note">
+        <p><strong>Clasificar mal no invalida nada.</strong> Si al construir los estratos un condado enorme acaba
+          en el cuartil que no le tocaba —porque el dato de 1987 estaba mal, o porque la clasificación se hizo con
+          información imperfecta—, el estimador <strong>sigue siendo insesgado y su error estándar sigue siendo
+          correcto</strong>. Las propiedades del diseño dependen solo de la estratificación que <em>se usó</em>, no
+          de la que se quiso usar. Lo único que se pierde es eficiencia: estratos peor separados, menos SSB, menos
+          ganancia. Por eso se puede estratificar con información vieja o aproximada sin pedir permiso a nadie.</p>
+      </div>
+
+      <p><strong>Estratos que persiguen dos objetivos.</strong> A veces la partición no se diseña solo para bajar la
+        varianza. Lohr cuenta el conteo anual de personas sin hogar de Nueva York: una sola noche de enero,
+        voluntarios recorriendo la ciudad, y dos metas a la vez — estimar bien <em>y</em> llegar a cuanta más gente
+        mejor, porque la noche del conteo también se reparte información sobre servicios sociales. La ciudad
+        clasifica sus áreas en de alta y baja densidad con los conteos de años anteriores, censa las de alta y
+        muestrea las de baja:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El conteo de personas sin hogar de Nueva York">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># Estratos con dos objetivos a la vez (Lohr, Ej. 3.13): el conteo anual de
+# personas sin hogar de Nueva York. La ciudad clasifica sus areas en de ALTA
+# y BAJA densidad con los conteos de anos anteriores; censa las de alta
+# (fraccion 1) y muestrea las de baja 1 de cada 16.
+pit &lt;- read.csv("CSV data sets for SDA 3e/pitcount.csv")
+dis_pit &lt;- svydesign(id = ~1, strata = ~strat, weights = ~areawt,
+                     fpc = ~popsize, data = pit)
+c(areas_del_marco = sum(tapply(pit$popsize, pit$strat, function(x) x[1])),
+  areas_visitadas = nrow(pit))
+#&gt; areas_del_marco areas_visitadas
+#&gt;            1000             100
+svytotal(~y, dis_pit)
+#&gt;   total     SE
+#&gt; y   496 70.793
+
+# Lo que aporta cada mitad del diseno al conteo y a la incertidumbre:
+svyby(~y, ~density, dis_pit, svytotal)
+#&gt;      density   y       se
+#&gt; High    High 224  0.00000
+#&gt; Low      Low 272 70.79296</code></pre>
+        </div>
+      </div>
+
+      <p>El diseño resuelve las dos metas con el mismo movimiento. De las <strong>1 000</strong> áreas del marco se
+        visitan <strong>100</strong>, y el conteo estimado es <strong>496</strong> personas con error estándar
+        <strong>70,793</strong>. Pero mira la última tabla: las áreas de alta densidad aportan <strong>224</strong>
+        al conteo <strong>y cero</strong> a la incertidumbre — son <strong>estratos de certeza</strong>, los del
+        módulo 5: se censan, su fpc vale 0 y no tienen varianza que aportar. Toda la incertidumbre,
+        <strong>70,79296</strong>, viene de las áreas de baja densidad, que son el 96 % del marco y donde hay poca
+        gente que contar. Mandar a los voluntarios donde está la gente sirve <em>a la vez</em> para el objetivo de
+        contacto y para el de precisión; no hubo que elegir.</p>
+
       <div class="note">
         <p><strong>Los −99 también se estratifican.</strong> Los 23 condados con <code>acres87 = −99</code> (código
           de faltante, capítulo 1) caen todos en el primer cuantil, porque −99 es el valor más chico del archivo.
@@ -4678,7 +4803,10 @@ round(c(acres87 = cor(agpop$acres92, agpop$acres87),
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §4.5 (2.ª ed.) / §3.5 (3.ª ed.): definición de estratos.</li>
+          <li>Lohr — §4.5 (2.ª ed.) / §3.5 (3.ª ed.): definición de estratos, con la regla de «más información,
+            más estratos» y por qué clasificar mal no invalida la estimación.</li>
+          <li>Lohr — Ej. 3.13 (3.ª ed.): el conteo de personas sin hogar de Nueva York, con los datos de
+            <code>pitcount.csv</code>.</li>
           <li>Dalenius y Hodges (1959): el método clásico de cortes óptimos por cuantiles acumulados de
             $\sqrt{f}$.</li>
         </ul>
@@ -4838,6 +4966,23 @@ round(cbind(identidad = dif, modulo_6 = V_mas - opciones[c("region", "al_azar")]
                 varianza. Comparar con el estimador de razón, que tampoco se sesgaba (asintóticamente) con un mal
                 modelo pero podía perder contra la expansión.</p>
             </li>
+            <li>
+              <p><strong>Y las dos varianzas coinciden.</strong> Bajo el modelo, el error cuadrático medio del
+                total estimado es</p>
+              $$E_M\big[(\hat{t} - t)^2\big] = \sum_h N_h^2 \left(1 - \frac{n_h}{N_h}\right)
+                \frac{\sigma_h^2}{n_h},$$
+              <p>que al estimar cada $\sigma_h^2$ con $s^2_h$ es <strong>la misma fórmula</strong> que la varianza
+                de diseño del módulo 3 — no parecida: idéntica, término a término. Dos teorías que no comparten ni
+                el objeto aleatorio (allí la muestra, aquí la población) llegan al mismo error estándar.</p>
+              <p style="margin-bottom:0;">Que coincidan es una propiedad <em>de este modelo</em>, no un teorema
+                general: con otro modelo salen otros estimadores y otras varianzas. Y la simetría se rompe en
+                cuanto el modelo falla. La varianza de diseño vale igual, porque solo promedia sobre el sorteo, que
+                es cosa del diseñador; la de modelo vale <strong>solo si el modelo es cierto</strong>, y si lo que
+                falla es la independencia dentro del estrato —vecinos que se parecen, la dependencia espacial que
+                el modelo supone inexistente— se queda <em>corta</em>, y se publica una precisión que no se tiene.
+                Ese es el argumento de fondo para trabajar con el diseño y usar el modelo como guía: el capítulo 5
+                lo verá en serio, cuando los conglomerados hagan de esa dependencia el tema central.</p>
+            </li>
           </ol>
         </div>
       </div>
@@ -4875,7 +5020,8 @@ round(cbind(identidad = dif, modulo_6 = V_mas - opciones[c("region", "al_azar")]
         <ul style="margin-bottom:0;">
           <li>Lohr — §4.4.1 (2.ª ed., ec. 4.11) / §3.4.1 (3.ª ed., ecs. 3.12–3.13): cuándo la asignación
             proporcional pierde contra el MAS.</li>
-          <li>Lohr — §4.6 (2.ª ed.) / §3.6 (3.ª ed.): el modelo del muestreo estratificado.</li>
+          <li>Lohr — §4.6 (2.ª ed.) / §3.6 (3.ª ed.): el modelo del muestreo estratificado, y por qué su error
+            cuadrático medio coincide término a término con la varianza de diseño.</li>
           <li>Gutiérrez — cap. 17: el enfoque asistido por modelos, del que este módulo es un caso.</li>
         </ul>
       </div>
@@ -5812,8 +5958,8 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
         { id: 3, title: "Pesos y estimación", shortTitle: "Pesos", duration: "27 min" },
         { id: 4, title: "Asignación de observaciones", shortTitle: "Asignación", duration: "35 min" },
         { id: 5, title: "Asignación óptima con costos", shortTitle: "Costos", duration: "28 min" },
-        { id: 6, title: "Definición de estratos", shortTitle: "Definir estratos", duration: "18 min" },
-        { id: 7, title: "Un modelo para el estratificado", shortTitle: "Modelo", duration: "20 min" },
+        { id: 6, title: "Definición de estratos", shortTitle: "Definir estratos", duration: "26 min" },
+        { id: 7, title: "Un modelo para el estratificado", shortTitle: "Modelo", duration: "22 min" },
         { id: 8, title: "El efecto de diseño", shortTitle: "deff", duration: "15 min" },
         { id: 9, title: "Estratificado con probabilidades proporcionales", shortTitle: "PPT por estrato", duration: "22 min" },
         { id: 10, title: "Postestratificación", shortTitle: "Postestratificación", duration: "20 min" },
@@ -8711,7 +8857,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
         pista: 'La regla del módulo 7: estratificar renta lo que la variable de estratificación explica de $y$.',
         opciones: [
           { texto: 'Porque el número de granjas casi no está correlacionado con la superficie sembrada: las medias de sus cuartiles son casi iguales y SSB ≈ 0.', correcta: true,
-            retro: 'Eso es. Muchas granjas pequeñas pueden sumar menos superficie que pocas gigantes. Sin diferencia entre las medias de los estratos, no hay nada que el diseñador pueda «pagar por adelantado».' },
+            retro: 'Eso es. Muchas granjas pequeñas pueden sumar menos superficie que pocas gigantes. Sin diferencia entre las medias de los estratos, no hay nada que el diseñador pueda «pagar por adelantado». Fíjate en que la pregunta dice <em>superficie sembrada</em>: esa misma partición es la mejor de las cuatro si lo que se estima es el número de granjas, con deff 0,3240.' },
           { texto: 'Porque cuatro estratos son pocos; con diez cuartiles habría funcionado.', correcta: false,
             retro: 'El barrido del simulador dice lo contrario: subir H con una variable útil da rendimientos decrecientes, y subir H con una variable inútil multiplica el papeleo de una ganancia que no existe.' },
           { texto: 'Porque los cuartiles dejan estratos de igual tamaño, y eso anula la estratificación.', correcta: false,
