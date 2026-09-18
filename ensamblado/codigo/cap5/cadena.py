@@ -2,6 +2,8 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
 # El estimador de conglomerados a mano: totales por suite, nada mas.
 gpa = pd.read_csv("CSV data sets for SDA 3e/gpa.csv")
 t_i = gpa.groupby("suite")["gpa"].sum()

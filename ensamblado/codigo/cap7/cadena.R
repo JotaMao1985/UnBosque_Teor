@@ -6,6 +6,9 @@ cat("\n###BLOQUE-R1###\n")
 # Dos encuestas reales, dos anatomias. NHANES (salud, EE.UU.) y SYC (jovenes
 # en custodia). Las dos son estratos x conglomerados x pesos, pero con una
 # diferencia estructural que decide que se puede hacer con cada una.
+library(survey)               # el capitulo entero corre sobre este paquete
+library(jsonlite)             # para leer el JSON del precalculo
+
 options(scipen = 8, digits = 7)
 nh <- read.csv("CSV data sets for SDA 3e/nhanes.csv")
 sy <- read.csv("CSV data sets for SDA 3e/syc.csv")

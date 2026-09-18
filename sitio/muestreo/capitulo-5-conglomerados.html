@@ -3570,6 +3570,9 @@
           <pre><code class="language-r"># La poblacion del curso, reagrupada: los 3078 condados viven en 50 estados.
 # Un estado es un CONGLOMERADO natural: si el presupuesto obliga a visitar
 # pocos estados, la muestra son estados enteros, no condados sueltos.
+library(survey)               # el disenno y sus estimadores
+library(TeachingSampling)     # BigLucy y los S.* / E.* del muestreo por etapas
+
 agpop &lt;- read.csv("CSV data sets for SDA 3e/agpop.csv")
 # Notacion del capitulo: N cuenta CONGLOMERADOS (los 50 estados) y K las
 # unidades (los 3078 condados). Es al reves que en los capitulos 2-4, y el
@@ -3814,7 +3817,9 @@ round(c(media = ybar_cl, ee = sqrt(V_cl)), 4)
 #&gt; 2.8260 0.1637</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># El estimador de conglomerados a mano: totales por suite, nada mas.
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
+# El estimador de conglomerados a mano: totales por suite, nada mas.
 gpa = pd.read_csv("CSV data sets for SDA 3e/gpa.csv")
 t_i = gpa.groupby("suite")["gpa"].sum()
 print(t_i.round(2).to_string())

@@ -2,6 +2,8 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
 # El deff, calculado con las tres piezas a la vista. Python no tiene survey:
 # hay que escribir la varianza del diseno a mano, y eso es justo la leccion.
 nh = pd.read_csv("CSV data sets for SDA 3e/nhanes.csv")

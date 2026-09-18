@@ -6,6 +6,10 @@ cat("\n###BLOQUE-R1###\n")
 # Cuatro tiendas y una auditoria de ventas (el ejemplo 6.1 de Lohr): la
 # tienda D tiene diez veces el area de la A. Si el sorteo las trata igual,
 # el azar decide si la muestra ve el 82 % de las ventas o el 4 %.
+library(survey)               # el disenno y sus estimadores
+library(sampling)             # inclusionprobabilities() y los algoritmos PPT
+library(jsonlite)             # para leer el JSON del precalculo
+
 options(scipen = 8)
 tiendas <- data.frame(tienda = c("A", "B", "C", "D"),
                       m2 = c(100, 200, 300, 1000),

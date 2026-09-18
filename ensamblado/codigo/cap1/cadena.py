@@ -2,6 +2,8 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
 # El sesgo del Literary Digest, partido en sus dos causas. El modelo tiene
 # cuatro numeros y ninguna libreria: es aritmetica, y esa es la leccion.
 #

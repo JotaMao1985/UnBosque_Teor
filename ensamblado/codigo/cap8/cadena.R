@@ -6,6 +6,9 @@ cat("\n###BLOQUE-R1###\n")
 # La encuesta de carga laboral docente de Gnap (1995), condado de Maricopa.
 # Diseno previsto: conglomerados de una etapa, 23 escuelas de las 245 del
 # estrato grande, y TODOS los profesores de cada escuela sorteada.
+library(survey)               # el disenno y sus estimadores
+library(mitools)              # MIcombine(): las reglas de Rubin
+
 options(scipen = 8, digits = 7)
 te <- read.csv("CSV data sets for SDA 3e/teachers.csv")
 mi <- read.csv("CSV data sets for SDA 3e/teachmi.csv")

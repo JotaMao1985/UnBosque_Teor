@@ -4329,6 +4329,7 @@ round(c(media = ybar, ee = ee, ic_inf = ic_media[1], ic_sup = ic_media[2],
                 <pre><code class="language-python"># EJERCICIO 1 - El MAS completo, de punta a punta.
 # Cada solucion carga sus propios datos: quien copie este bloque suelto tiene
 # que poder ejecutarlo sin haber corrido nada antes.
+import numpy as np, pandas as pd
 from scipy.stats import norm
 
 hs = pd.read_csv("CSV data sets for SDA 3e/htsrs.csv")
@@ -4774,7 +4775,9 @@ c(N = N, n = n, media_verdadera = media_verdadera, total_verdadero = total_verda
 #&gt;        2000.000         200.000         168.616      337232.000</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Las dos poblaciones del modulo. htpop son 2 000 personas con su estatura: es
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias
+
+# Las dos poblaciones del modulo. htpop son 2 000 personas con su estatura: es
 # la poblacion COMPLETA, asi que el parametro verdadero se conoce y cada error
 # se puede medir en vez de describirse. htsrs es la MAS de n = 200 que Lohr
 # extrae de ella. crimes son 5 000 delitos registrados, con una variable

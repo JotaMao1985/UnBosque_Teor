@@ -2,6 +2,8 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
 from itertools import combinations
 
 y = np.array([14, 18, 27, 33, 58])

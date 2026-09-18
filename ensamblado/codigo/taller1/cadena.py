@@ -3,6 +3,8 @@ import numpy as np, pandas as pd
 from scipy.stats import norm
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias
+
 # Las dos poblaciones del modulo. htpop son 2 000 personas con su estatura: es
 # la poblacion COMPLETA, asi que el parametro verdadero se conoce y cada error
 # se puede medir en vez de describirse. htsrs es la MAS de n = 200 que Lohr
@@ -212,6 +214,7 @@ print("\n###BLOQUE-PS1###\n")
 # EJERCICIO 1 - El MAS completo, de punta a punta.
 # Cada solucion carga sus propios datos: quien copie este bloque suelto tiene
 # que poder ejecutarlo sin haber corrido nada antes.
+import numpy as np, pandas as pd
 from scipy.stats import norm
 
 hs = pd.read_csv("CSV data sets for SDA 3e/htsrs.csv")

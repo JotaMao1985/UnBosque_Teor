@@ -3567,6 +3567,9 @@
           <pre><code class="language-r"># La encuesta de carga laboral docente de Gnap (1995), condado de Maricopa.
 # Diseno previsto: conglomerados de una etapa, 23 escuelas de las 245 del
 # estrato grande, y TODOS los profesores de cada escuela sorteada.
+library(survey)               # el disenno y sus estimadores
+library(mitools)              # MIcombine(): las reglas de Rubin
+
 options(scipen = 8, digits = 7)
 te &lt;- read.csv("CSV data sets for SDA 3e/teachers.csv")
 mi &lt;- read.csv("CSV data sets for SDA 3e/teachmi.csv")
@@ -3873,7 +3876,9 @@ c(sd_y = sd(teL$hrwork, na.rm = TRUE),
 #&gt;        3.476573       10.000000</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># La formula del sesgo de no respuesta, con las tres piezas a la vista. No
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
+# La formula del sesgo de no respuesta, con las tres piezas a la vista. No
 # hace falta ningun paquete de encuestas: es una media ponderada.
 pd.set_option("display.width", 100)
 te = pd.read_csv("CSV data sets for SDA 3e/teachers.csv").replace(-9, np.nan)

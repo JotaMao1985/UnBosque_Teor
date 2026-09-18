@@ -5162,3 +5162,48 @@ salida real, y las cifras estaban bien. **Lo que se publica no es lo que se ejec
 nadie había ejecutado lo que se publica. La prueba que faltaba no era más fina: era otra.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+### T7.49 — El código publicado de todo el sitio arranca (2026-09-17)
+
+Continuación directa de T7.48, con el visto bueno de Javier: arreglar el `library()` de los
+capítulos que quedaban, esperar al cap. 4, recontar la portada y publicar todo junto.
+
+**El alcance real era el doble de lo anunciado.** T7.48 midió el defecto solo en R. Al repetir la
+prueba sobre los bloques de **Python** apareció el mismo agujero, y en más sitios:
+
+| cadena | páginas rotas antes | después |
+|---|---|---|
+| R | 7 de 10 (todas menos el cap. 1, el taller y el preparcial) | **0** |
+| Python | **8 de 10** | **0** |
+
+Añadido, en el primer bloque publicado de cada cadena y no en el preámbulo:
+`library(survey)` en los caps. 2, 5, 6, 7 y 8; más `TeachingSampling` en el 5, `sampling` y
+`jsonlite` en el 6, `jsonlite` en el 7 y `mitools` en el 8; e
+`import numpy as np, pandas as pd` en los caps. 1, 2, 5, 6, 7, 8 y en `taller1`. El cap. 3 ya lo
+tenía de T7.48 y el cap. 4 lo cerró su sesión en `0e89d64` y `9c0d430`.
+
+**Dos trampas que el método «deducir de las funciones» no ve.** *(a)* El cap. 5 necesita
+`TeachingSampling` por `BigLucy` y los `S.*`/`E.*`, que no son llamadas a funciones reconocibles por
+un patrón de `svy*`; lo avisó la sesión del cap. 4 tras tropezar con lo mismo en su módulo 9. *(b)*
+**El primer bloque de la cadena no es el primero de la página.** En el taller, la página publica
+antes el `PS1` (las soluciones) que el `P1`, así que el `import` insertado en el P1 no servía de
+nada: el estudiante se encuentra primero el otro. Solo se vio ejecutando.
+
+**La prueba, que es la lección.** Se extraen del **HTML servido** los bloques del lenguaje que sea,
+se quitan las líneas `#>` y se ejecuta en sesión limpia (`Rscript --vanilla` del R 4.4, o `python3`).
+Las diez páginas dan hoy **código de salida 0 en los dos lenguajes**.
+
+**Por qué sobrevivió meses.** Ninguna comprobación del proyecto mira lo que se publica.
+`anota_salidas.py` ejecuta la cadena **entera, con su preámbulo**, y por eso siempre funcionó;
+`verifica_bloques.py` compara cifras anunciadas contra salida real, y también estaban bien. Las dos
+herramientas miran el archivo ejecutable; **el estudiante mira la página**, y no son el mismo
+programa. *Propuesto, no hecho:* un `verifica_publicado.py` que haga esta extracción y ejecución
+como parte del protocolo. Toca `precalculo/`, así que se decide aparte.
+
+**Portada, recuento definitivo con `cuenta_sitio.py`** sobre los ocho capítulos: **89 módulos, 67
+simuladores, 98 preguntas, 37 ejercicios**. Los ejercicios subieron de 33 a 37 por la T5.2 del
+cap. 4, contados después de su commit.
+
+**Verificado.** Las diez páginas byte a byte en la segunda pasada; **2 694 cifras de bloques y 805
+de prosa · 0 sin respaldo** en los ocho capítulos; las dos cadenas de las diez páginas con código de
+salida 0.

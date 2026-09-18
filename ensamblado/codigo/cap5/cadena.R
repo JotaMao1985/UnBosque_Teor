@@ -6,6 +6,9 @@ cat("\n###BLOQUE-R1###\n")
 # La poblacion del curso, reagrupada: los 3078 condados viven en 50 estados.
 # Un estado es un CONGLOMERADO natural: si el presupuesto obliga a visitar
 # pocos estados, la muestra son estados enteros, no condados sueltos.
+library(survey)               # el disenno y sus estimadores
+library(TeachingSampling)     # BigLucy y los S.* / E.* del muestreo por etapas
+
 agpop <- read.csv("CSV data sets for SDA 3e/agpop.csv")
 # Notacion del capitulo: N cuenta CONGLOMERADOS (los 50 estados) y K las
 # unidades (los 3078 condados). Es al reves que en los capitulos 2-4, y el

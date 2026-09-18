@@ -3550,6 +3550,10 @@
           <pre><code class="language-r"># Cuatro tiendas y una auditoria de ventas (el ejemplo 6.1 de Lohr): la
 # tienda D tiene diez veces el area de la A. Si el sorteo las trata igual,
 # el azar decide si la muestra ve el 82 % de las ventas o el 4 %.
+library(survey)               # el disenno y sus estimadores
+library(sampling)             # inclusionprobabilities() y los algoritmos PPT
+library(jsonlite)             # para leer el JSON del precalculo
+
 options(scipen = 8)
 tiendas &lt;- data.frame(tienda = c("A", "B", "C", "D"),
                       m2 = c(100, 200, 300, 1000),
@@ -3708,7 +3712,9 @@ c(t_hat = mean(z), ee_estimado = sqrt(var(z) / 2))
 # puntual ya usa bien los tamanos. Con n realista, ambos mejoran.</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Hansen-Hurwitz a mano: el estimador es un promedio de y/psi, y su varianza
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
+# Hansen-Hurwitz a mano: el estimador es un promedio de y/psi, y su varianza
 # exacta sale de recorrer las 4 tiendas con sus probabilidades.
 m2 = np.array([100, 200, 300, 1000])
 ventas = np.array([11, 20, 24, 245])

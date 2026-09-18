@@ -3642,6 +3642,8 @@
           <pre><code class="language-r"># Cinco condados. y = superficie sembrada (miles de acres): es lo que se quiere
 # estimar y no se conoce antes de muestrear. x = numero de granjas del censo
 # anterior: se conoce para TODA la poblacion y por eso puede usarse al disenar.
+library(survey)               # el capitulo entero corre sobre este paquete
+
 y &lt;- c(14, 18, 27, 33, 58)
 x &lt;- c(1, 1, 2, 2, 4)
 N &lt;- 5
@@ -3672,7 +3674,9 @@ c(suma_A = sum(p_mas), suma_B = sum(p_est), suma_C = sum(p_des))
 #&gt;      1      1      1</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python">from itertools import combinations
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
+from itertools import combinations
 
 y = np.array([14, 18, 27, 33, 58])
 x = np.array([1, 1, 2, 2, 4])

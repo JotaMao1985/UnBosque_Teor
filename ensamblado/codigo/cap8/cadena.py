@@ -2,6 +2,8 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
 # La formula del sesgo de no respuesta, con las tres piezas a la vista. No
 # hace falta ningun paquete de encuestas: es una media ponderada.
 pd.set_option("display.width", 100)

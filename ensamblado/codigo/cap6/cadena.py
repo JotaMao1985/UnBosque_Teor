@@ -2,6 +2,8 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
+import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
 # Hansen-Hurwitz a mano: el estimador es un promedio de y/psi, y su varianza
 # exacta sale de recorrer las 4 tiendas con sus probabilidades.
 m2 = np.array([100, 200, 300, 1000])

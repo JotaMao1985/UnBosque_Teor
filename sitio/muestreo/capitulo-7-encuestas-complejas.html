@@ -3565,6 +3565,9 @@
           <pre><code class="language-r"># Dos encuestas reales, dos anatomias. NHANES (salud, EE.UU.) y SYC (jovenes
 # en custodia). Las dos son estratos x conglomerados x pesos, pero con una
 # diferencia estructural que decide que se puede hacer con cada una.
+library(survey)               # el capitulo entero corre sobre este paquete
+library(jsonlite)             # para leer el JSON del precalculo
+
 options(scipen = 8, digits = 7)
 nh &lt;- read.csv("CSV data sets for SDA 3e/nhanes.csv")
 sy &lt;- read.csv("CSV data sets for SDA 3e/syc.csv")
@@ -3835,7 +3838,9 @@ c(n = nrow(nh_ad), n_efectivo = nrow(nh_ad) / as.numeric(deff(m)))
 #&gt;  5406.0000   758.7546</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># El deff, calculado con las tres piezas a la vista. Python no tiene survey:
+          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+
+# El deff, calculado con las tres piezas a la vista. Python no tiene survey:
 # hay que escribir la varianza del diseno a mano, y eso es justo la leccion.
 nh = pd.read_csv("CSV data sets for SDA 3e/nhanes.csv")
 nh = nh[(nh.wtmec2yr &gt; 0) &amp; (nh.bmxbmi &gt; 0) &amp; (nh.ridageyr &gt;= 20)]
