@@ -5559,3 +5559,62 @@ se escribió, porque D4 lo deja fuera.
 
 **El plan del capítulo 4 queda cerrado: 13 tareas hechas, 0 abiertas; 5 decisiones tomadas, 0
 abiertas.** `PLAN_Cap4_Lohr3e.md` no está versionado, así que ese archivo no entra en el commit.
+
+---
+
+### T7.61 — El verificador de referencias cruzadas, y tres que siguen rotas (2026-09-18)
+
+Encargo de Javier tras el hallazgo del día: al pasar el cap. 3 de 12 a 14 módulos, **ocho
+referencias de cuatro capítulos quedaron apuntando a otro módulo**, y las ocho pasaron
+`verifica_bloques.py --prosa` antes y después. Con razón: esa herramienta comprueba que las CIFRAS
+salgan de una ejecución, y «módulo 8» es una cifra respaldada trate el módulo 8 de lo que dice la
+frase o de otra cosa. Las ocho las encontró la sesión del cap. 3 leyendo.
+
+**`precalculo/verifica_referencias.py`.** Resuelve cada «capítulo C, módulo N» contra el
+`courseData` de la página de destino y comprueba tres cosas: que el módulo exista; que **no haya
+cambiado de destino** desde que se revisó (línea base en `referencias_cruzadas.json`); y, para las
+que aún no están en la línea base, cuánto se parece el título al contexto. La segunda es la que
+cierra el hueco: las otras dos solo adelantan trabajo.
+
+**Control negativo, que es lo único que demuestra que sirve.** Línea base sobre el material en
+`251d1bf^` (cap. 3 con 12 módulos) y comprobación sobre `251d1bf` (con 14): **caza las 8**, con
+nombre, destino viejo y destino nuevo, y sale con código 1. Y encuentra **una novena en el cap. 5**
+que no había visto nadie.
+
+**Seis defectos míos, encontrados usándola.** Van dieciséis hoy del mismo tipo, y todos los de hoy
+son medidas mías, no del material:
+
+1. El singular admitía lista, así que «el estratificado del módulo 3, **16 380**» —donde 16 380 es
+   un error estándar— se leía como «módulos 3 y 16» e inventaba un módulo 16 inexistente.
+2. No reconocía «capítulo 3 **(**módulo 11**)**», con paréntesis en vez de coma. Dos del cap. 7.
+3. **No reconocía «cap. 4, módulo 8»**, la forma abreviada, que el material usa **22 veces**. Las
+   conté en el primer barrido y no las implementé: esas 22 se resolvían contra el capítulo
+   equivocado y se daban por buenas.
+4. La ambigüedad se buscaba en una ventana de 120 caracteres. Con eso se escapa «El capítulo 3 ya
+   estimó … y repitió la receta con los dominios (módulo 8)»: el «capítulo 3» queda a unos 130, y el
+   «módulo 8» resuelve contra el capítulo propio —que también tiene un 8— y **pasa por bueno**. Se
+   busca ahora en la FRASE.
+5. El archivo tenía **caracteres de retroceso literales** (`\x08`) donde yo creía haber escrito
+   `\b`: el heredoc se comió el escape y la expresión estaba mal sin que se notara.
+6. Una comprobación heurística —«¿encaja mejor otro módulo?»— daba **24 avisos y casi ninguno
+   valía**, porque medía el contexto ANTERIOR, que suele ser la frase de antes. Acotada a la frase
+   bajó a 11, y **aun así se retiró del informe**: una sección que grita en falso enseña a
+   saltársela, y entonces tampoco se leen las que importan. La función queda solo como pista dentro
+   de la cola de ambiguas.
+
+**Tres que siguen rotas en el árbol, y ninguna es del cap. 4.**
+
+| dónde | dice | debería decir |
+|---|---|---|
+| cap. 5 | «desde el **módulo 9** del capítulo 3» | **10** — *Modelos poblacionales* |
+| cap. 7 | «los dominios (**módulo 8**)» | **9** — *Estimación en dominios* |
+| cap. 7 | «con la mediana (**módulo 11**)» | **12** — *Parámetros no lineales: la mediana* |
+
+Las dos del cap. 7 están en la misma frase, y son de las que la revisión a mano arregló **alrededor**
+sin verlas. No se tocan aquí: el cap. 7 está dentro de la publicación pendiente de la otra sesión y
+el cap. 5 no es de este plan.
+
+**Lo que falta.** La línea base está vacía: las 395 referencias del sitio salen como «sin revisar»
+hasta que alguien las mire y ejecute `--anota`. Sembrarla sin revisar grabaría los errores de hoy y
+la herramienta dejaría de servir para siempre, así que no se siembra hasta que las tres de arriba
+estén arregladas.

@@ -30,6 +30,7 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 | `genera_soluciones.R` | consola | soluciones de los ejercicios guiados del cap. 2 |
 | `verifica_bloques.py` | consola | contrasta cada cifra `#>` de un capítulo con la salida real |
 | `verifica_publicado.py` | consola | ejecuta el código **del sitio vivo**, sin anteponerle nada; comprueba además que lo servido coincida con `gh-pages` |
+| `verifica_referencias.py` | consola | comprueba que cada «capítulo C, módulo N» apunte al módulo que la frase dice; `referencias_cruzadas.json` es su línea base |
 | `anota_salidas.py` | reescribe la cadena | anota en cada grupo `#>` la salida real de SUS sentencias; aborta si no puede colocarla (ver el docstring: los dos estilos de anotación) |
 | `pruebas/prueba_anotador.py` | consola | regresión del anotador; la primera prueba es que no duplique una cadena intercalada |
 
@@ -50,6 +51,12 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
   que se ejecuta al precalcular, pero no en los bloques, que son lo que se publica— por el que
   diez páginas se sirvieron con un `could not find function "svydesign"` en el primer bloque.
   Añadirle una cabecera a `verifica_publicado.py` «para que pase» vuelve a abrir ese hueco.
+- **Renumerar un capítulo rompe las referencias de los demás, en silencio.** Al pasar el cap. 3 de
+  12 a 14 módulos quedaron **8 referencias apuntando a otro módulo**, repartidas por cuatro
+  capítulos, y las 8 pasaron `verifica_bloques.py --prosa` antes y después: «módulo 8» es una cifra
+  respaldada tanto si el módulo 8 trata de lo que dice la frase como si no. Por eso existe
+  `verifica_referencias.py`, y por eso **hay que correrlo al renumerar cualquier capítulo**, no solo
+  el que se toca.
 - Cuando una comparación es sobre un borde exacto (`F̂(t) >= p` con pesos iguales), va **con
   tolerancia**: `cumsum()/sum()` redondea a un lado en R y al otro en Python, y sin tolerancia las
   dos pestañas del mismo capítulo publican cuantiles distintos.
