@@ -4008,7 +4008,7 @@ barata de comprobar que se la está citando bien.**
 
 ---
 
-### T7.34 — El intercepto que el capítulo 3 leía como señal y era ruido (cap. 3, 2026-09-17)
+### T7.57 — El intercepto que el capítulo 3 leía como señal y era ruido (cap. 3, 2026-09-17)
 
 Primera tarea del plan de mejora del capítulo 3 con Portela & Villeta, cap. 7 (§7.1–§7.2), que vive
 en `PLAN_Cap3_PortelaVilleta.md`, fuera del control de versiones. Cierra su fase 1 a medias: queda
@@ -4331,7 +4331,7 @@ $$V(b) - V(b_1) = \frac{1-f}{n}\left(b\,S_x - \rho\,S_y\right)^2 \;\ge\; 0$$
 
 De ahí salen las dos desigualdades de Portela (§7.2.3, p. 228) de golpe, **con sus condiciones de
 igualdad**: frente a la expansión el hueco se anula solo si $\rho = 0$; frente a la razón, solo si
-$B = b_1$, **que es exactamente decir que la recta pasa por el origen** — el contraste que T7.34 puso
+$B = b_1$, **que es exactamente decir que la recta pasa por el origen** — el contraste que T7.57 puso
 en el módulo 6. Las tres tareas de la fase quedan cosidas por esta identidad.
 
 **Medido sobre `agpop`, que es censo.** Con $n = 300$, los errores estándar **verdaderos** del total:
@@ -4825,7 +4825,7 @@ por eso valió la pena que el diagnóstico las buscara con `grep` en vez de rele
 
 **Publicado el 2026-09-17** con el visto bueno de Javier, junto con las fases 4 y 5: ver el final de T7.51.
 
-### T7.47 — La fase 4 del capítulo 3: las citas a Lohr, los dominios y el quiz (2026-09-17)
+### T7.58 — La fase 4 del capítulo 3: las citas a Lohr, los dominios y el quiz (2026-09-17)
 
 Cierra la **fase 4** de `PLAN_Cap3_PortelaVilleta.md`: T4.1, T4.2, T4.3 y T4.4, las cuatro. Sin
 publicar.
@@ -5018,7 +5018,7 @@ de error.
 
 **Publicado el 2026-09-17** con el visto bueno de Javier, junto con las fases 4 y 5: ver el final de T7.51. Afecta a material ya publicado (fase 1).
 
-### T7.48 — La auditoría del capítulo 3, y dos defectos que solo se ven ejecutando (2026-09-17)
+### T7.53 — La auditoría del capítulo 3, y dos defectos que solo se ven ejecutando (2026-09-17)
 
 **T5.1**, la fase 5 del plan del cap. 3: el protocolo de verificación entero, punto por punto, sobre
 un capítulo ya escrito. Encontró dos cosas que ninguna lectura habría encontrado, y una tercera que
@@ -5169,12 +5169,12 @@ bueno. Verificado en vivo: md5 `f5a863ab24684a9f0a894362144b9520`. **Se publicó
 a propósito**: el código que no arrancaba es lo único del capítulo que impedía *usarlo*, y esperar a
 una auditoría no lo mejoraba.
 
-### T7.49 — El código publicado de todo el sitio arranca (2026-09-17)
+### T7.54 — El código publicado de todo el sitio arranca (2026-09-17)
 
-Continuación directa de T7.48, con el visto bueno de Javier: arreglar el `library()` de los
+Continuación directa de T7.53, con el visto bueno de Javier: arreglar el `library()` de los
 capítulos que quedaban, esperar al cap. 4, recontar la portada y publicar todo junto.
 
-**El alcance real era el doble de lo anunciado.** T7.48 midió el defecto solo en R. Al repetir la
+**El alcance real era el doble de lo anunciado.** T7.53 midió el defecto solo en R. Al repetir la
 prueba sobre los bloques de **Python** apareció el mismo agujero, y en más sitios:
 
 | cadena | páginas rotas antes | después |
@@ -5186,7 +5186,7 @@ Añadido, en el primer bloque publicado de cada cadena y no en el preámbulo:
 `library(survey)` en los caps. 2, 5, 6, 7 y 8; más `TeachingSampling` en el 5, `sampling` y
 `jsonlite` en el 6, `jsonlite` en el 7 y `mitools` en el 8; e
 `import numpy as np, pandas as pd` en los caps. 1, 2, 5, 6, 7, 8 y en `taller1`. El cap. 3 ya lo
-tenía de T7.48 y el cap. 4 lo cerró su sesión en `0e89d64` y `9c0d430`.
+tenía de T7.53 y el cap. 4 lo cerró su sesión en `0e89d64` y `9c0d430`.
 
 **Dos trampas que el método «deducir de las funciones» no ve.** *(a)* El cap. 5 necesita
 `TeachingSampling` por `BigLucy` y los `S.*`/`E.*`, que no son llamadas a funciones reconocibles por
@@ -5214,7 +5214,7 @@ cap. 4, contados después de su commit.
 de prosa · 0 sin respaldo** en los ocho capítulos; las dos cadenas de las diez páginas con código de
 salida 0.
 
-### T7.50 — La publicación de las fases 4 y 5 del cap. 3, preparada y detenida (2026-09-17)
+### T7.55 — La publicación de las fases 4 y 5 del cap. 3, preparada y detenida (2026-09-17)
 
 El commit de `gh-pages` está **construido, comprobado y sin empujar**: el entorno bloquea el `push`
 a `gh-pages` («Production Deploy») y no se busca rodeo. Falta **un comando**, que hay que dar a mano:
@@ -5332,7 +5332,20 @@ El instrumento malo era el `grep`.
 Documentado en `precalculo/README.md`, con el reparto entre los dos verificadores dicho en las
 convenciones para que no se vuelvan a solapar.
 
-### T7.51 — El ejemplo 7.9 y el formulario: el cap. 3 pasa a catorce módulos (2026-09-17)
+### T7.56 — El ejemplo 7.9 y el formulario: el cap. 3 pasa a catorce módulos (2026-09-17)
+
+> **Nota de numeración (2026-09-17).** Las dos sesiones que escriben este archivo eligieron cinco
+> veces el mismo número: **T7.34, T7.47, T7.48, T7.49 y T7.51 quedaron duplicados**. Se resolvió con
+> una regla neutral y comprobable —**quien commiteó antes ese número se lo queda**—, que en las cinco
+> fue la sesión del cap. 4. Las notas del cap. 3 pasaron a **T7.53, T7.54, T7.55, T7.56, T7.57 y
+> T7.58**, y con ellas sus referencias cruzadas y las de `PLAN_Cap3_PortelaVilleta.md`. Comprobado
+> después: **57 notas, 57 identificadores citados, ninguno huérfano y ninguno repetido**. El
+> comentario entre paréntesis de T7.48 que daba la duplicación por aceptada se ha quedado viejo; es
+> texto de la otra sesión y lo corrige ella.
+>
+> **Cómo se evita:** un número de nota es un identificador compartido, y `tail` del archivo no basta
+> para reservarlo cuando otra sesión tiene el suyo sin commitear. Antes de numerar, mirar también lo
+> que hay **en el árbol sin commitear**.
 
 Encargo nuevo de Javier, fuera del plan de `PLAN_Cap3_PortelaVilleta.md`: traer al capítulo el
 **Ejemplo 7.9** de Portela y Villeta y las **dos primeras tablas de su §7.3**, que el alcance
@@ -5355,7 +5368,7 @@ nombre diga la verdad: `modulos_5_8.html` → `modulos_5_7.html` + `modulo_9_dom
 
 **La renumeración a ciegas rompió una cosa, y era la única que podía romper.** El barrido de
 «módulo N» convirtió en «módulo 14» una referencia que decía **«módulo 12 del capítulo 4»**: la que
-T7.47 acababa de escribir para cerrar A5. Revertida. **Un barrido por número no distingue de qué
+T7.58 acababa de escribir para cerrar A5. Revertida. **Un barrido por número no distingue de qué
 capítulo se habla**, y en un material con referencias cruzadas ésa es exactamente la que hay que
 mirar a mano.
 
@@ -5395,5 +5408,5 @@ pregunta → módulo del resumen del quiz apuntando a los títulos nuevos. A 375
 (13 desbordan), 6 tablas (6 desbordan) y 11 bloques de código (11 desbordan), **0 sin barra** en las
 tres familias. Portada: **91 módulos, 99 preguntas**.
 
-**Pendiente:** el visto bueno de Javier. Y sigue pendiente el `push` de T7.50, que ahora habría que
+**Pendiente:** el visto bueno de Javier. Y sigue pendiente el `push` de T7.55, que ahora habría que
 rehacer sobre este trabajo.
