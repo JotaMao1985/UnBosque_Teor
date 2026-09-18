@@ -5876,3 +5876,56 @@ panel porque sus opciones no llevan retro propia.
 lleva `sitio/` —catorce archivos—, así que el PLAN, `precalculo/`, `ensamblado/` y la plantilla no
 llegan nunca al sitio; y publicar no respalda el repositorio. La otra sesión las había juntado en
 una frase, y es el tipo de confusión que acaba publicando de más.
+
+---
+
+### T7.69 — La regresión de LaTeX que publiqué, y por qué no la vio ninguna prueba (2026-09-18)
+
+`gh-pages` de `f139b42` a **`8b92a42`**; `main` en `9e9ec78`. Cuatro archivos.
+
+**Lo que se quita.** La publicación anterior llevaba cuatro preguntas del cap. 3 con el LaTeX roto:
+escritas con **barra simple dentro de un literal de JavaScript**, que se come la barra antes de que
+KaTeX la vea. Se leía `dfrac{963,464,412}{301,953{,}72}sqrt{...}` donde va una fórmula. Lo
+encontró la otra sesión y avisó antes de que lo encontrara nadie más. Y buscando si había más
+apareció **el mismo defecto en el cap. 2**, en cuatro `$\pi_k$` de una retroalimentación sobre
+Horvitz–Thompson, **desde que se escribió**.
+
+**Por qué no lo vio ninguna prueba, medido.** Es lo que hay que guardar de esta tarea:
+
+| caso | `.katex-error` | `.katex` | consola | `$…$` crudo |
+|---|:--:|:--:|:--:|:--:|
+| `\b` (retroceso) | **0** | 0 | error | sí |
+| `\t` (tabulador) | **0** | 1 | muda | no |
+| `pi`, `dfrac` sin barra | **0** | 1 | muda | no |
+
+**`.katex-error` es 0 en todos los casos**: auto-render captura el error, lo escribe en consola y
+deja el texto tal cual. Esa comprobación —que esta sesión usó y dio por buena **tres veces** hoy, una
+de ellas para afirmar que el panel inyectado del motor del quiz renderizaba bien— no sirve para
+nada. Y la familia que más abunda no deja **ninguna** señal: `pi_k` es LaTeX válido, son letras en
+cursiva. KaTeX no falla en silencio; **no falla**. Hace lo que se le pide, y lo que se le pide ya no
+es lo que se escribió.
+
+**La frontera** no es «carácter de control o no», es si KaTeX rechaza el carácter: `\b` da U+0008,
+que rechaza; `\t`, `\n` y `\r` dan blancos, que se traga, así que `\tfrac{1}{2}` queda
+`frac{1}{2}` — válido, igual que `dfrac`.
+
+**Dónde sí se ve: en la fuente.** Y acotado, porque el peligro no está en todos los `$…$`: en los
+módulos `.html` la barra simple es **correcta** —hay **2 665** así y todas están bien—, porque no
+hay literal que parsear. La regla es **dentro de literal JS, `\\`; en texto HTML, `\`**.
+
+**Dos inferencias mal hechas por el camino, una de cada sesión.** La otra concluyó de la consola que
+el defecto avisaba; esta concluyó del DOM que el byte de control estaba en el archivo. Comprobado a
+nivel de bytes: **0 bytes de control** en los diez `.js`, en los módulos y en la página publicada;
+el U+0008 solo existe en memoria. Las dos veces se dedujo algo sobre la fuente mirando lo que había
+**después de parsearla**.
+
+**El recuento estuvo a punto de salir viejo otra vez.** Los tres gráficos nuevos llevan el cap. 3 de
+6 a 9 simuladores y el total de 67 a 70, y la portada seguía en 67 — el mismo defecto que T7.67
+acababa de arreglar. Lo avisó la otra sesión: **el que publica ve lo que cambia, el que escribió
+sabe lo que significa**, y ninguna de las tres puertas mira el recuento.
+
+**Verificado en vivo:** 11 de 11 archivos coinciden con `8b92a42`, los 20 encadenados salen con 0,
+y sobre lo servido: **0 literales con LaTeX sin barra y 0 bytes de control** en los capítulos 2 y 3.
+
+**Pendiente:** meter esa comprobación en `verifica_bloques.py`. Existe como script suelto y se pasó
+a mano antes de empujar; mientras no esté en la puerta, depende de que alguien se acuerde.
