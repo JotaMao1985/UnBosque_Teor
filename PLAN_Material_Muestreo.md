@@ -6258,3 +6258,54 @@ abajo lo enseña ocurriendo», o sea que la referencia existía en un sentido y 
 `<table>`, la caja «Cuál pide cada nube», la tabla que imprime el bloque de código y los cuatro
 interruptores del simulador. La referencia era imposible de resolver por eso, no por la redacción.
 Falta decidir si esa repetición es deliberada o sedimento.
+
+### T7.77 — Tres referencias rotas del cap. 7, y por qué ninguna herramienta las veía (2026-09-18)
+
+`ensamblado/modulos/cap7/modulos_4_6.html`, la página ensamblada y
+`precalculo/referencias_cruzadas.json`. Salieron al revisar a mano las 18 ambiguas, que es lo que
+Javier pidió; **ninguna de las tres estaba entre las 18**.
+
+**Las 18 ambiguas están todas bien**: seis autorreferencias que el verificador marca porque la frase
+nombra otro capítulo antes —el «de este capítulo» del cap. 2, la celda de tabla del cap. 3, el
+«capítulos 10 y 17» que son de Gutiérrez y no del curso— y doce a otro capítulo que aciertan. Las
+dos del cap. 8 se comprobaron contra el CONTENIDO, no contra el título: el sesgo de −19,32 está en
+el M1 del cap. 1 y los 6,3 votantes en el M7. El «6,30» del cap. 8 es la misma cifra con un decimal
+más.
+
+**Las tres rotas**, todas en listas de «Para ampliar» del cap. 7 y todas cortas por uno o dos, que
+es la firma de que el cap. 3 pasara de 12 a 14 módulos:
+
+| decía | cap. 3 M_n es | debía decir |
+|---|---|---|
+| «8 (dominios)» | Un estimador distinto en cada grupo | **M9** Estimación en dominios |
+| «11 (la mediana por Woodruff)» | GREG | **M12** Parámetros no lineales: la mediana |
+| «módulos 6 y 10 … el GREG» | Modelos poblacionales | **M11** GREG |
+
+**La prueba no fue criterio, fue contradicción interna**: el propio cap. 7 dice «los dominios
+(módulo 9)», «con la mediana (módulo 12)» y «regresión general (módulo 11)» en su prosa.
+
+**Por qué no las veía el verificador — dos fallos distintos, y el segundo importa más.**
+
+1. Dos son **invisibles a `REF_RE`**: van en una lista continuada, `módulos 2 y 4 (…), 8 (…) y 11
+   (…)`, y la expresión corta en el paréntesis. Medido: es la **única** lista así en todo el
+   material, así que el agujero es estrecho, pero existe.
+2. La tercera se parsea bien y **la línea base la bendecía**: guardaba `…#10 -> "Modelos
+   poblacionales"`. Al construir la base se registró **lo que había, no lo que debía haber**, y
+   desde entonces el verificador solo comprueba que el destino no cambie. Una referencia ya rota en
+   ese momento quedó certificada para siempre. Es la misma forma que T7.73 y T7.74: una comprobación
+   cuya definición de «correcto» sale de la cosa comprobada.
+
+**El arreglo, y lo que se quitó de la base.** `--anota` **solo añade**: tras corregir el texto, la
+base pasó de 423 a 425 y las dos entradas viejas se quedaron dentro como huérfanas. Se borraron a
+mano, porque no estorban: **mienten**. Si algún día el texto volviera a «6 y 10», el verificador
+diría «ya revisada» y callaría.
+
+**Lo que queda anotado y no se tocó:** la base tiene **12 huérfanas más**, todas del cap. 3 y todas
+con el destino CORRECTO —se quedaron sin dueño al cambiar la prosa de alrededor, que es lo que
+mueve la clave—. Estorban pero no mienten, así que se dejan. La decisión de fondo es si `--anota`
+debe escribir solo el conjunto vivo en vez de acumular. Y `--base` con una ruta fuera del
+repositorio revienta al imprimir (`relative_to`), después de escribir el archivo.
+
+**Después:** cap. 7 con 241/241 cifras, 54 de prosa sin ninguna sin respaldo, 0 LaTeX; referencias
+411 resueltas, 0 nuevas, 0 cambiadas. El reensamblado se comprobó byte a byte **antes** de tocar
+nada, y después el diff de la página es exactamente el de los módulos: tres líneas.
