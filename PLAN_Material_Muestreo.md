@@ -5513,3 +5513,49 @@ oculto. Todo el punto 4 está verificado **por medición del DOM y del estilo ca
 fuerte que una imagen; pero queda dicho que nadie ha mirado el capítulo con los ojos en esta pasada.
 
 **De paso.** `verifica_publicado.py` decía «las 1 páginas»; corregido con un `plural()`.
+
+---
+
+### T7.60 — Las dos decisiones que quedaban del cap. 4, y el plan cerrado (2026-09-18)
+
+Con el visto bueno de Javier, aplicar las dos recomendaciones que quedaban abiertas. Las dos eran
+«no», así que **el capítulo no cambia ni un byte**: lo que se cierra es el plan, no el material.
+
+**D5 — la $\sqrt f$ acumulada (Dalenius–Hodges) para fijar los cortes: NO.**
+
+La razón que tenía anotada era «Lohr 3.ª ed. no la trae», y venía de mi memoria, no de la fuente.
+Comprobada contra el epub de la 3.ª edición (342 742 palabras):
+
+| término | apariciones |
+|---|---:|
+| `Hodges` | **0** |
+| `cumulative square root` | **0** |
+| `stratum boundaries` (en el cap. del estratificado) | **0** |
+| `Dalenius` | 2 — y **ninguna es ésta**: un artículo de 1977 sobre error ajeno al muestreo, citado en el cap. 16 y en la bibliografía |
+
+Un estudiante no podría contrastar la regla con el libro del curso. Pero la razón de peso es la
+segunda, y sale del propio capítulo: **la regla tiene el defecto que el capítulo ya mide**. Fija los
+cortes óptimos para **una** variable, y el M4 y el M6 demuestran con `agpop` que lo óptimo para una
+es malo para otra —`acres92` y `farms92` correlan 0,147, y la Neyman de la primera deja a la segunda
+en **deff 1,1190**, peor que un MAS—. Enseñar una receta de cortes con ese mismo defecto
+contradiría la lección que el capítulo acaba de medir. Queda anotada en «fuera de alcance» con su
+fuente (Cochran §5A.7) y con su límite dicho, por si otro curso la quiere.
+
+**D4 — `college.csv` en el material: NO.** No aparece en ninguna página ni en ninguna cadena, así
+que no hay nada que deshacer. El taller puede reutilizarse otro semestre y meter su conjunto en el
+material lo quema; y `agpop` ya da la misma lección, medida y publicada en el `R6B`.
+
+**Una cifra mía que estaba vieja.** Al escribir D4 iba a citar «deff 1,105», que es lo que decía el
+diagnóstico y lo que yo le había dicho a Javier hace un rato. **El plan ya lo había corregido**: con
+las asignaciones redondeadas que se publican, el deff de `farms92` bajo la Neyman de `acres92` es
+**1,1190**, no 1,105 (el 1,105 usaba $n_h$ exactos). Escrito el publicado, que es el que reproduce
+los 0,8224 y 0,5510 del R6.
+
+**Y dos tareas que estaban hechas y sin marcar:** T5.1 (cinco preguntas, `d95722a`, T7.48) y T5.2
+(cuatro ejercicios, `0e89d64`, T7.51). Al cerrarlas quedan escritos los **dos desvíos deliberados**
+del enunciado de T5.2, que hasta ahora solo vivían en su nota: la solución no fue a
+`genera_soluciones.R` —que es solo del cap. 2— sino a `cadena.R`; y el Ej. 3.12 con `college.csv` no
+se escribió, porque D4 lo deja fuera.
+
+**El plan del capítulo 4 queda cerrado: 13 tareas hechas, 0 abiertas; 5 decisiones tomadas, 0
+abiertas.** `PLAN_Cap4_Lohr3e.md` no está versionado, así que ese archivo no entra en el commit.
