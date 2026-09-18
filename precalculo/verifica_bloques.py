@@ -347,35 +347,45 @@ def verifica_prosa(ruta, base):
 # cursiva-: ni consola ni DOM. Ninguna comprobacion del navegador lo ve; solo
 # esta, que mira la FUENTE.
 #
-# Una sola rama, la de la secuencia de escape: en la fuente, dentro de un
-# literal de JS, una barra sola delante de un comando de LaTeX SIEMPRE esta mal.
-# La rama contraria -buscar el comando desnudo, sin barra- haria saltar cada
-# «bar», «times» o «mu» de la prosa, y ese ruido acaba en que nadie mire.
-# Fuera de <script> no se mira: en el texto HTML la barra simple es la CORRECTA
-# (hay 2 665 en los modulos, todas buenas).
-COMANDOS_LATEX = (
-    'pi|rho|sigma|mu|beta|alpha|delta|theta|lambda|hat|bar|frac|dfrac|tfrac|'
-    'sqrt|mathrm|mathbb|mathcal|lvert|rvert|widehat|overline|operatorname|'
-    'displaystyle|infty|approx|cdot|times|neq|leq|geq|quad|qquad|varepsilon|'
-    'Delta|Sigma')
-# La lista es corta a proposito: son los comandos que el material usa de verdad.
-# `(?<!\\)` deja pasar la forma correcta `\\bar`; `(?![A-Za-z])` evita que `\mu`
-# case dentro de `\mumble` y que `\pi` case dentro de `\pierde`.
+# LA REGLA, EN DOS MITADES, Y POR QUE NO ES UNA LISTA
 #
-# La segunda rama, `[,;:!]`, es el espaciado de LaTeX, y esta aqui porque el
-# arreglo de b0dfddb se quedo a medio camino: puso las barras dobles en los
-# comandos de letras y dejo 17 `\,` simples en las mismas cuatro preguntas.
-# El sintoma es peor que el de un comando perdido, porque no parece un error:
-# `963\,464\,412` llega a KaTeX como `963,464,412` y `301\,953{,}72` como
-# `301,953{,}72`, es decir, el separador de millares se convierte en una coma
-# —que en este material es el separador DECIMAL—. Comprobado ejecutando el
-# literal publicado en node, no leyendo la fuente.
-LATEX_BARRA_SIMPLE_RE = re.compile(
-    r'(?<!\\)\\(?:(?:' + COMANDOS_LATEX + r')(?![A-Za-z])|[,;:!])')
+# La primera version buscaba una LISTA de comandos de LaTeX. Se cambio al
+# descubrir por que el arreglo de b0dfddb dejo 17 barras vivas: alli la averia
+# se definio como «comandos sin doblar» y se busco barra seguida de LETRA, de
+# modo que `\,` y `\;` no entraban en la categoria. La busqueda arreglo todo lo
+# que la busqueda buscaba, quedo en verde, y las 17 sobrevivieron.
+#
+# Una lista de comandos es el MISMO tipo de frase: un diagnostico disfrazado de
+# instrumento. Con ella, un `\Phi` o un `\binom` que nadie pensó en listar pasa
+# igual. Las dos —«barra seguida de letra» y «esta lista»— son categorias sobre
+# el CARACTER, y se quedan cortas justo donde se acaba la opinion de quien las
+# escribio. Asi que la regla no opina sobre cual es la averia:
+#
+#   1. Dentro de un tramo `$…$`: CUALQUIER barra simple esta mal. Sin
+#      excepciones y por construccion, porque JS se la come antes de que KaTeX
+#      la vea, sea el comando que sea. Esta mitad es geometria.
+#   2. Fuera: toda barra simple que no sea un escape que ECMAScript defina,
+#      porque JS se la come en silencio y eso nunca es lo que nadie quiso
+#      escribir. Esta mitad la define el lenguaje, no yo.
+#
+# Hacen falta las dos. La primera caza lo que la segunda no puede ver: `\t` de
+# `\tfrac` y `\b` de `\bar` SON escapes legitimos de JS, y son justo la familia
+# medida en T7.69. La segunda caza lo que la primera no alcanza: un `\Phi` o
+# unos delimitadores `\(…\)` fuera de un `$…$` reconocido.
+ESCAPES_JS = set("'\"\\`$nrtbfv0xu\n")
+# El octal heredado (\1-\7) NO esta en el conjunto, y se marca A SABIENDAS de
+# que ECMAScript lo define: esta prohibido en modo estricto y en plantillas, y
+# en este material su aparicion dentro de un literal seria un error mucho antes
+# que una intencion. Es una excepcion razonada, no un hueco.
+BARRA_SUELTA_RE = re.compile(r'(?<!\\)\\(.|\n)', re.S)
+MATE_RE = re.compile(r'\$(?!\{)[^$]*\$')
+# Solo para enseñar el hallazgo entero (`\bar`) en vez de sus dos primeros
+# caracteres.
+TOKEN_RE = re.compile(r'\\[A-Za-z]+|\\.', re.S)
 
 
 def latex_barra_simple(html, es_js=False):
-    """Devuelve (n_literales, [(linea, comando, contexto)]) de la pagina.
+    """Devuelve (n_literales, [(linea, token, motivo, contexto)]) de la pagina.
 
     Con `es_js`, el texto entero se trata como un guion. Sirve para mirar
     `ensamblado/modulos/capN/simuladores.js`, que es DONDE SE ARREGLA: en el
@@ -397,11 +407,25 @@ def latex_barra_simple(html, es_js=False):
             # Se sustituye por espacios en vez de borrarse para no mover las
             # posiciones con las que despues se calcula la linea.
             limpio = INTERPOLACION_RE.sub(lambda x: ' ' * len(x.group()), crudo)
-            for h in LATEX_BARRA_SIMPLE_RE.finditer(limpio):
+            # Un tramo `$…$` SIN ninguna barra no puede contener el fallo, así
+            # que se descarta. Eso deja fuera los precios del cap. 1 («$40-80k»,
+            # «<$40k»), que emparejan `$` falsos, y no puede perder un hallazgo:
+            # todo hallazgo ES una barra, luego su tramo lleva una.
+            tramos = [x.span() for x in MATE_RE.finditer(limpio)
+                      if '\\' in x.group()]
+            for h in BARRA_SUELTA_RE.finditer(limpio):
+                if h.group(1) == '\\':
+                    continue              # la primera de un par correcto
+                en_mate = any(a <= h.start() < b for a, b in tramos)
+                if not en_mate and h.group(1) in ESCAPES_JS:
+                    continue              # escape legítimo de JavaScript
                 pos = inicio + m.start(i) + h.start()
                 ini = max(0, h.start() - 45)
-                hallazgos.append((html.count('\n', 0, pos) + 1, h.group(),
-                                  crudo[ini:h.end() + 45].replace('\n', ' ')))
+                hallazgos.append((
+                    html.count('\n', 0, pos) + 1,
+                    TOKEN_RE.match(limpio, h.start()).group(),
+                    "en $…$" if en_mate else "no es escape de JS",
+                    crudo[ini:h.end() + 45].replace('\n', ' ')))
     # Guarda contra el fallo silencioso, igual que en extrae(): si la pagina
     # trae <script> y no sale de el ni un literal, el marcado cambio y hay que
     # arreglar LITERAL_JS_RE, no dar la pagina por limpia.
@@ -506,8 +530,8 @@ def main():
         lits, sueltos = latex_barra_simple(p.read_text(encoding="utf-8"),
                                            es_js=p.suffix == ".js")
         print(f"LATEX: {lits} literales de JS · {len(sueltos)} con barra simple")
-        for linea, cmd, ctx in sueltos:
-            print(f"    línea {linea}: {cmd}   …{ctx}…")
+        for linea, tok, motivo, ctx in sueltos:
+            print(f"    línea {linea}: {tok}  ({motivo})   …{ctx}…")
         total_latex += len(sueltos)
         if sueltos:
             peor = 1

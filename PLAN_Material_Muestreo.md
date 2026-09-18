@@ -6140,3 +6140,59 @@ cap. 3 porque cuenta también las barras **dobles** correctas y el texto HTML, d
 sí es lo correcto. Y mi primer clasificador dio «0 pares `\\` dentro de `$...$`», un cero
 perfectamente plausible que era un `continue` colocado antes de la comprobación. El reflejo bueno no
 es comprobar la cifra con otra herramienta: es preguntarse qué cuenta exactamente la herramienta.
+
+### T7.74 — La regla en dos mitades, y el párrafo que une los seis fallos del día (2026-09-18)
+
+`precalculo/verifica_bloques.py` y `precalculo/README.md`. Cierra lo que abrieron T7.71 y T7.73.
+
+**Por qué se cambió una regla que daba 0.** Porque daba 0 por el motivo equivocado. La lista de
+comandos de T7.71 es el **mismo tipo de frase** que el «barra seguida de letra» que dejó vivas las 17
+de T7.73: un diagnóstico disfrazado de instrumento. Con ella, un `\Phi` o un `\binom` que nadie
+pensó en listar pasa igual. Las dos son categorías sobre el **carácter**, y se quedan cortas justo
+donde se acaba la opinión de quien las escribió. Lo dijo la otra sesión y tenía razón.
+
+**La regla, que no opina sobre cuál es la avería.**
+
+1. Dentro de un tramo `$…$`: **cualquier** barra simple está mal. Sin excepciones, por construcción.
+   Esta mitad es geometría.
+2. Fuera: toda barra que no sea un escape que **ECMAScript** defina. Esta mitad la define el
+   lenguaje, no yo.
+
+Hacen falta las dos, y esto es lo que no era obvio: `\t` de `\tfrac` y `\b` de `\bar` **son escapes
+legítimos de JS**, así que la mitad 2 no puede verlos —son justo la familia medida en T7.69—; y un
+`\Phi` o unos delimitadores `\(…\)` fuera de un `$…$` reconocido solo los ve la mitad 2.
+
+**Dos detalles medidos, no supuestos.** El octal heredado (`\1`–`\7`) **sí** es escape de JS; se
+marca a sabiendas, porque está prohibido en modo estricto y en plantillas y aquí sería error antes
+que intención. Y un tramo `$…$` **sin ninguna barra** se descarta: eso saca de en medio los precios
+del cap. 1 («$40-80k», «<$40k», 252 literales con `$` desparejado) y **no puede perder un hallazgo**,
+porque todo hallazgo es una barra y su tramo lleva una.
+
+**Cómo se probó.** Igual que la anterior, contra lo roto, más una página sintética con los casos que
+la lista no veía:
+
+| caso | sale |
+|---|:--:|
+| los 8 capítulos de hoy | **0** |
+| `b0dfddb^` (roto) | **40**, igual que la regla vieja |
+| sintética: `\Phi`, `\binom`, `\(`, `\)`, `\tfrac`, `\bar` | **6 de 6** |
+| sintética: `\\sqrt` correcto, precios `$40-80k`, `\n` y `\'` legítimos | **0 falsos positivos** |
+
+**El alcance queda dicho por fin con su razón.** Solo `<script>`, y no por comodidad: los `\n` que la
+otra sesión creyó falsos positivos estaban dentro de `<pre>`, en Python que el cap. 8 **enseña**.
+Estos capítulos publican a propósito código lleno de barras legítimas, así que un detector que mire
+el HTML ensamblado entero no es que dé ruido: no puede funcionar. `<script>` es lo único que separa
+el texto escrito *para KaTeX* del texto que el capítulo *muestra como código*.
+
+**El párrafo del README** («El fallo que hay que temer no es el ruidoso») junta los seis del día:
+`.katex-error` en 0, el separador que se vuelve coma, mis ficheros vacíos por el `:s` de zsh, el
+`grep` de 174, el `continue` que dejaba un contador en 0, y un arreglo en verde que compartía con su
+comprobación la definición del fallo. Al escribirlo puse «cinco de los seis los cazó quien no había
+hecho la comprobación» y **era falso**: son tres y tres. Corregido antes de commitear, y el reparto
+real dice más que el inventado: los tres que cazó su propio autor no salieron de releer el
+resultado, sino de volver al instrumento. Releer un número plausible no lo desmiente nunca.
+
+**Lo que queda escrito además:** que publicar y empujar `main` dejaron de ser acciones
+independientes desde que la invariante de T7.72 ató el árbol publicado a `origin/main:sitio`, y que
+con varias sesiones en el mismo árbol empujar arrastra los commits ajenos que estén debajo —que es
+lo que pasó con `af265ea` y `2be3093` en el push de T7.73—.

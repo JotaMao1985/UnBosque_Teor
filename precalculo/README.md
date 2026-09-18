@@ -69,7 +69,28 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
   `963,464,412`, con el separador de millares convertido en el separador DECIMAL de este material.
   Por eso la comprobación va **en toda ejecución** de `verifica_bloques.py`, no detrás de una
   opción: una comprobación que hay que acordarse de pedir no habría servido aquella tarde. Fuera de
-  `<script>`, en el texto HTML, la barra simple es la CORRECTA y no se mira.
+  `<script>`, en el texto HTML, la barra simple es la CORRECTA y no se mira; y tampoco se mira fuera
+  de `<script>` **porque estos capítulos enseñan R y Python**, es decir, publican a propósito código
+  lleno de barras legítimas. Esa frontera no es una limitación del detector: es lo único que separa
+  el texto escrito *para KaTeX* del texto que el capítulo *muestra como código*.
+- **La regla que busca el fallo no puede ser una opinión sobre cuál es el fallo.** El arreglo de
+  aquellas cuatro preguntas dejó **17 barras vivas** y pasó su propia comprobación. El motivo no fue
+  descuido: se definió la avería como «comandos sin doblar» y se buscó *barra seguida de letra*, así
+  que `\,` y `\;` no entraban en la categoría. La búsqueda arregló todo lo que la búsqueda buscaba y
+  quedó en verde. La primera versión de este detector repetía el error un piso más arriba, con una
+  **lista de comandos**: igual de opinable, y ciega ante un `\Phi` que nadie hubiera listado. La
+  regla de ahora no opina: (1) dentro de un `$…$`, **cualquier** barra simple está mal, por
+  construcción; (2) fuera, toda barra que no sea un escape que **ECMAScript** defina. La primera
+  mitad es geometría y la segunda la define el lenguaje. Hacen falta las dos: `\t` de `\tfrac` y
+  `\b` de `\bar` son escapes legítimos de JS —solo la mitad geométrica los ve—, y un `\Phi` o unos
+  delimitadores `\(…\)` fuera de un `$…$` solo los ve la otra.
+- **Publicar y empujar `main` dejaron de ser dos acciones independientes.** Lo fueron hasta que la
+  invariante ató `origin/gh-pages^{tree}` a `origin/main:sitio`: desde entonces, publicar sin subir
+  `main` deja la comprobación en rojo desde el primer minuto. Es la consecuencia buscada —lo servido
+  es siempre el `sitio/` de un commit que está en el remoto— pero cambia el procedimiento, y con
+  varias sesiones en el mismo árbol significa que al empujar se arrastran los commits ajenos que
+  estén debajo.
+
 - **Las cifras del curso viven en tres sitios, y cada uno se desfasa por su cuenta**: la tabla del
   README, las tarjetas del `index.html` y las **dos metaetiquetas** del `index.html`. Las metas son
   las peligrosas porque no se ven leyendo la página: se publicaron con «67 simuladores» cuando el
@@ -84,14 +105,42 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
   página a página, y caza dos cosas que ninguna otra comprobación miraba —publicar desde un árbol
   local sin subir `main`, y editar `sitio/` a mano sobre `gh-pages`—. Vale mientras el camino corto
   publique el árbol entero; si algún día se publica un subconjunto a propósito, deja de valer.
-- **Una comprobación solo vale si se ha visto fallar.** Las dos de esta tanda se probaron contra el
-  estado ROTO recuperado de git, no solo contra el bueno: el detector de LaTeX sobre `b0dfddb^` da
-  las 40 secuencias que aquel commit documenta, y el cotejo de cifras sobre `9e9ec78` da exactamente
-  las **dos metaetiquetas**. Un verificador que solo se ha probado en verde no ha probado nada; de
-  ahí el `--sitio` de `cuenta_sitio.py`, que existe para poder apuntarlo a un estado pasado.
 - Cuando una comparación es sobre un borde exacto (`F̂(t) >= p` con pesos iguales), va **con
   tolerancia**: `cumsum()/sum()` redondea a un lado en R y al otro en Python, y sin tolerancia las
   dos pestañas del mismo capítulo publican cuantiles distintos.
+
+## El fallo que hay que temer no es el ruidoso
+
+Todo lo de arriba es la misma avería contada seis veces, y conviene verla junta, porque el reflejo
+que pide es antinatural: **lo peligroso no es el error que rompe algo, es el que produce una salida
+plausible.**
+
+| lo que se vio | lo que pasaba |
+|---|---|
+| 0 elementos `.katex-error` | KaTeX no fallaba: hacía lo que se le pedía, y ya no era lo escrito |
+| `301,953,72`, un número bien formado | el separador de millares convertido en el decimal |
+| una prueba que corría y daba resultados razonables | `git show $C:…` con `:s` de zsh había dejado los ficheros **vacíos** |
+| 174 barras contadas con `grep` | contaba también las dobles correctas y las del texto HTML |
+| «0 pares `\\` dentro de `$…$`» | un `continue` antes del contador, que nunca se incrementaba |
+| un arreglo en verde | compartía con su comprobación la definición del fallo |
+
+Ninguno avisó: los seis los cazó alguien al volver a mirar. Y el reparto dice algo más. **Tres los
+cazó la otra sesión** —los tres en los que quien los cometió estaba seguro— y **tres los cazó su
+propio autor**, pero ninguno de esos tres por releer el resultado: los tres salieron de volver al
+instrumento, a su código o a ejecutarlo otra vez. Releer un número plausible no lo desmiente nunca;
+solo lo desmiente mirar qué lo produjo, o mirarlo alguien que no comparta el punto ciego. De ahí
+tres costumbres que valen más que cualquier verificador:
+
+1. **Probar la comprobación contra el caso roto**, recuperándolo de git si hace falta. Un verificador
+   que solo se ha visto en verde no se ha visto. Por eso `cuenta_sitio.py` tiene `--sitio`, que lo
+   apunta a un estado pasado: sobre `9e9ec78` saca exactamente las **dos metaetiquetas**, que es el
+   fallo que se escapó dos veces. Y por eso el detector de LaTeX se mide contra `b0dfddb^`, donde
+   debe dar **40**: las 23 que aquel commit documenta y las 17 que dejó vivas.
+2. **Preguntarse qué cuenta exactamente el instrumento**, no si el número parece razonable. El `grep`
+   de 174 y el `grep -o 'language-r'` de 32 fallaron los dos así: la expresión respondía a una
+   pregunta ligeramente distinta de la que había.
+3. **Que mire alguien que no hizo el diagnóstico.** No es cortesía entre sesiones: es la única
+   comprobación que no comparte el punto ciego con lo comprobado.
 
 ## Qué NO cuadra con el libro, y por qué
 
