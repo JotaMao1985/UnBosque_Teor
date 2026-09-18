@@ -4823,7 +4823,7 @@ nadie lo habría notado nunca leyendo el capítulo 4 solo: **las deudas entre ca
 rastro en el capítulo que las debe**. La auditoría que las encuentra hay que hacerla desde fuera, y
 por eso valió la pena que el diagnóstico las buscara con `grep` en vez de releyendo.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con las fases 4 y 5: ver el final de T7.51.
 
 ### T7.47 — La fase 4 del capítulo 3: las citas a Lohr, los dominios y el quiz (2026-09-17)
 
@@ -4969,7 +4969,7 @@ sin commitear. Se devolvió el archivo a como estaba: **una herramienta de diagn
 en disco puede ensuciar el árbol compartido, y conviene mirar el diff antes de dar por propio lo
 que aparezca modificado.**
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con las fases 4 y 5: ver el final de T7.51.
 
 ---
 
@@ -5016,7 +5016,7 @@ porque el nombre del archivo no lo dice. La segunda, sobre la propia revisión: 
 con el libro conviene cotejar el capítulo consigo mismo**, que es más barato y encuentra otra clase
 de error.
 
-**Pendiente:** el visto bueno de Javier para publicar. Afecta a material ya publicado (fase 1).
+**Publicado el 2026-09-17** con el visto bueno de Javier, junto con las fases 4 y 5: ver el final de T7.51. Afecta a material ya publicado (fase 1).
 
 ### T7.48 — La auditoría del capítulo 3, y dos defectos que solo se ven ejecutando (2026-09-17)
 
@@ -5161,7 +5161,13 @@ entera, con su preámbulo, así que siempre funcionó; el verificador compara ci
 salida real, y las cifras estaban bien. **Lo que se publica no es lo que se ejecuta**, y hasta hoy
 nadie había ejecutado lo que se publica. La prueba que faltaba no era más fina: era otra.
 
-**Pendiente:** el visto bueno de Javier para publicar.
+**Publicado el 2026-09-17** con el visto bueno de Javier: las fases 4 y 5 enteras más el
+reetiquetado de citas (T7.47 del cap. 4, T7.48, T7.49 y T7.51), commit `9c0d430` de `main` →
+gh-pages `7913210`. Solo cambió el capítulo 4; las otras nueve páginas quedaron en la versión
+servida, porque lo que `main` tiene sobre ellas es de la sesión del cap. 3 y tiene su propio visto
+bueno. Verificado en vivo: md5 `f5a863ab24684a9f0a894362144b9520`. **Se publicó antes que la fase 6
+a propósito**: el código que no arrancaba es lo único del capítulo que impedía *usarlo*, y esperar a
+una auditoría no lo mejoraba.
 
 ### T7.49 — El código publicado de todo el sitio arranca (2026-09-17)
 
