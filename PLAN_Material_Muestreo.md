@@ -5213,3 +5213,38 @@ cap. 4, contados después de su commit.
 **Verificado.** Las diez páginas byte a byte en la segunda pasada; **2 694 cifras de bloques y 805
 de prosa · 0 sin respaldo** en los ocho capítulos; las dos cadenas de las diez páginas con código de
 salida 0.
+
+### T7.50 — La publicación de las fases 4 y 5 del cap. 3, preparada y detenida (2026-09-17)
+
+El commit de `gh-pages` está **construido, comprobado y sin empujar**: el entorno bloquea el `push`
+a `gh-pages` («Production Deploy») y no se busca rodeo. Falta **un comando**, que hay que dar a mano:
+
+```bash
+git push origin 3782180a2c8319627a8900425004348fd0a7de70:gh-pages
+```
+
+**Qué es `3782180`.** Su árbol es **exactamente** `HEAD:sitio` de `22e91e1`
+(`dd6861e8…`, comprobado con `rev-parse`), y su único padre es `7913210`, la punta actual de
+`gh-pages`: **avance rápido**, sin reescribir nada de lo que publicó la sesión del cap. 4.
+
+**Por qué no bastó el `subtree split`.** Dio `626eb6e` y **no** era avance rápido, el mismo caso que
+anotó T7.32. Se resolvió igual: `git commit-tree` del árbol de `sitio/` colgado del `gh-pages` de
+hoy, así la rama avanza en línea recta.
+
+**Y una carrera que conviene recordar.** Entre el `fetch` y el `split`, la sesión del cap. 4 publicó
+`7913210`. El `split` se calculó contra un `origin/gh-pages` ya viejo, y por eso su `diff` decía que
+el cap. 4 «no cambiaba» cuando sí lo había hecho. **En un directorio compartido hay que refrescar
+las referencias justo antes de construir el commit de publicación, no al empezar.** Comprobado
+después: el blob del cap. 4 es idéntico en `gh-pages` y en `HEAD`, así que esta publicación **no lo
+toca**.
+
+**Qué cambia al empujarlo: nueve páginas**, +994 −130.
+
+| página | qué gana |
+|---|---|
+| cap. 3 | las fases 4 y 5 enteras: las diez citas a Lohr, el M8, el ejercicio 2, cinco preguntas |
+| caps. 1, 2, 5, 6, 7, 8 y preparcial | el código que **arranca** y `pre.collapsed` sin recortar |
+| `index.html` | 89 módulos, 67 simuladores, 98 preguntas, 37 ejercicios |
+| cap. 4 | **nada**: ya al día desde `7913210` |
+
+**Pendiente tras publicar:** comprobar sobre **lo servido**, no sobre el disco, como en T7.32.
