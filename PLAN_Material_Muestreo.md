@@ -6228,3 +6228,33 @@ dejado la línea base igual de sin ejecutar. Ahora `--todos` cubre las **9 pági
 
 **Después:** 9 páginas, 224 cifras de prosa respaldadas en el preparcial y **0 sin respaldo en
 total**, 0 secuencias de LaTeX con barra simple.
+
+---
+
+### T7.76 — «Esa tabla» apuntaba a la tabla equivocada (2026-09-18)
+
+`ensamblado/modulos/cap3/modulos_1_4.html` y la página reensamblada. Publicado.
+
+**El fallo.** En el módulo 3, el párrafo que enseña el umbral ocurriendo empezaba con «La última línea
+de **esa tabla**». Lo que tiene justo encima no es una tabla, sino la caja `definition` «Cuál pide
+cada nube», que es una **lista** y cuya última línea es la **expansión**. La `<table>` de verdad está
+más arriba en el mismo módulo, y su última fila es la **diferencia**. No era solo ambiguo: en la
+lectura natural mandaba a la fila equivocada, y el párrafo habla del umbral expansión-vs-razón.
+
+**Por qué el lector iba a la tabla.** Porque en ese módulo «la tabla» estaba ya tomada, y bien: la
+nota de debajo dice «la tabla no ordena por calidad», el simulador dice «las cuatro **filas** de la
+tabla» y la quinta salida dice «los cuatro estimadores de la tabla». Tres usos correctos y uno
+prestado. Lo detectó Javier leyendo, no una comprobación.
+
+**El arreglo, y por qué no fue calificar la palabra.** Añadir «de la caja de arriba» habría dejado dos
+tablas compitiendo en el mismo módulo. Se quitó el término y se nombró **el contenido**: «La última
+de esas cuatro líneas —la expansión, cuando la correlación no llega al umbral—». La caja ya llamaba
+«líneas» a sus puntos («el umbral de la primera línea»), así que la distinción líneas/filas ya
+existía en el texto. Nombrar el contenido y no el contenedor sobrevive a que cambie la maquetación,
+que es justo lo que aquí falló. Y cierra el circuito: esa última línea terminaba en «el párrafo de
+abajo lo enseña ocurriendo», o sea que la referencia existía en un sentido y ahora en los dos.
+
+**Lo que queda abierto.** El módulo 3 enumera los mismos cuatro estimadores en **cuatro sitios**: la
+`<table>`, la caja «Cuál pide cada nube», la tabla que imprime el bloque de código y los cuatro
+interruptores del simulador. La referencia era imposible de resolver por eso, no por la redacción.
+Falta decidir si esa repetición es deliberada o sedimento.
