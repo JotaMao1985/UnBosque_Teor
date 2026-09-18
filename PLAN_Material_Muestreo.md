@@ -6037,3 +6037,53 @@ dos cosas que hoy no caza nada —publicar desde un árbol local sin subir `main
 directamente en `gh-pages`— y vale mientras el camino corto publique el árbol entero. Y un dato
 suyo: `taller-1` no se publica porque **no está en git**, no por una exclusión; un `git add -A`
 distraído lo publicaría sin que nada chistara.
+
+### T7.72 — Contar no bastaba: `cuenta_sitio.py` ahora coteja, y el árbol publicado tiene invariante (2026-09-18)
+
+`precalculo/cuenta_sitio.py`, `precalculo/verifica_publicado.py` y `precalculo/README.md`. Tampoco
+se publica: son herramientas.
+
+**El agujero.** `cuenta_sitio.py` contaba bien desde hacía meses y **nadie comparaba** su salida con
+las cifras escritas a mano. Viven en tres sitios: la tabla del README, las tarjetas del `index.html`
+y las **dos metaetiquetas** del `index.html`. Las metas son las peligrosas porque no se leen mirando
+la página: se publicaron con «67 simuladores» con el texto visible ya en 70, y se escaparon **dos
+veces el mismo día**, la segunda después de revisar la página entera.
+
+**El ámbito, que es donde estaba la trampa.** El README dice «Ocho capítulos», así que sus totales
+**no** incluyen el preparcial; comparar contra el total general daría un falso positivo por línea, y
+un verificador que grita siempre se ignora. Y el ámbito de cada cifra se decide por el **elemento que
+la contiene**, no por el enlace más cercano: con «el último enlace anterior» —que fue lo primero que
+probé— el «91 módulos · 70 simuladores» de la cabecera se leía como cifra del cap. 1, porque encima
+lleva un «Comenzar» que apunta allí. Dos falsos positivos a la primera. La regla buena es
+estructural: dentro de un `<a class="chapter-card">` la cifra es de esa página; fuera, del curso.
+
+**Se probó contra lo roto, no contra lo bueno.** Para eso está el nuevo `--sitio`: apunta el cotejo
+a un estado pasado del README y del index, con los capítulos de hoy como verdad.
+
+| estado | desajustes | qué encuentra |
+|---|:--:|---|
+| hoy | **0** de 48 cifras | — |
+| `9e9ec78` | **2** | `index.html:8` y `:15`: las dos `<meta>` en 67 |
+| `d0437f8` | **15** | los seis totales del README, la fila del cap. 4, las cuatro apariciones del index y la tarjeta del cap. 3 |
+
+El caso de `9e9ec78` da **exactamente** las dos metaetiquetas: es el fallo que se escapó dos veces,
+reproducido y cazado. Un verificador probado solo en verde no ha probado nada.
+
+**Lo que NO comprueba, dicho en voz alta.** Las «2 786 cifras contrastadas» del README salen de
+`verifica_bloques.py` y este guion no sabe calcularlas. En vez de callarlo, las imprime como «sin
+cotejar» con su archivo y su línea: una cifra a mano en medio de las comprobadas es justo como se
+cuela la siguiente. No cuenta como fallo —un rojo permanente es tan inútil como no comprobar nada—.
+
+**La invariante del árbol**, que aporta la otra sesión y es mejor que el md5 página a página:
+`origin/gh-pages^{tree}` == `origin/main:sitio`. Lo servido tiene que ser el `sitio/` de un commit
+**que ya está en el remoto**. Caza dos cosas que no miraba nada: publicar desde un árbol local sin
+subir `main`, y editar `sitio/` a mano sobre `gh-pages`. Hoy ambas dan `b023ea2`; con la punta
+anterior de `gh-pages` la comprobación dispara, que es como se verificó. Vale mientras el camino
+corto publique el árbol entero; el día que se publique un subconjunto a propósito, deja de valer.
+
+**El tropiezo de zsh, por tercera vez en el día.** Al sacar los estados pasados con
+`git show $C:sitio/muestreo/index.html` zsh leyó `:s` como modificador de historia y dio
+`9e9ec78ndex.html`. Es el mismo fallo del que yo había avisado a la otra sesión veinte minutos
+antes. **Siempre `${VAR}:ruta` con llaves.** Y lo que lo hizo peligroso no fue el error, que era
+ruidoso: fue que el `>` dejó los archivos **vacíos** y la prueba siguió corriendo y dando resultados
+con pinta de buenos. Los primeros números de la prueba A eran basura y casi los reporto.

@@ -145,6 +145,28 @@ def blobs_de_la_rama():
     return fuera
 
 
+def arboles_del_remoto(punta):
+    """(árbol de gh-pages, árbol de main:sitio), o (None, None) si no se puede.
+
+    La invariante: lo servido tiene que ser EXACTAMENTE el `sitio/` de un commit
+    que ya está en el remoto. Es más barata y más fuerte que comparar md5 página
+    a página, y caza dos cosas que ninguna otra comprobación mira: publicar
+    desde un árbol local sin subir `main`, y editar `sitio/` directamente sobre
+    `gh-pages`. Vale mientras el camino corto publique el árbol entero
+    (`git commit-tree $(git rev-parse HEAD:sitio)`), que es lo que se hace hoy;
+    el día que se publique un subconjunto a propósito, dejará de valer y habrá
+    que decirlo aquí.
+    """
+    if subprocess.run(["git", "fetch", "-q", "origin", "main"], cwd=RAIZ,
+                      capture_output=True).returncode != 0:
+        return None, None
+    def hash_de(ref):
+        r = subprocess.run(["git", "rev-parse", ref], cwd=RAIZ,
+                           capture_output=True, text=True)
+        return r.stdout.strip() if r.returncode == 0 else None
+    return hash_de(f"{punta}^{{tree}}"), hash_de("origin/main:sitio")
+
+
 # --------------------------------------------------------------------------
 # Los bloques
 # --------------------------------------------------------------------------
@@ -271,6 +293,7 @@ def main():
                     help="compara lo servido con la rama y no ejecuta nada")
     args = ap.parse_args()
 
+    desajuste_arbol = False
     base = None if args.local else base_del_sitio()
     rama = None if args.local else blobs_de_la_rama()
     locales = paginas_locales()
@@ -282,6 +305,19 @@ def main():
         lista = [n for n in rama if n != "__punta__"]
         print(f"Fuente: {base}")
         print(f"Contrastado con origin/{RAMA} en {rama['__punta__'][:7]}")
+        arbol_rama, arbol_main = arboles_del_remoto(rama["__punta__"])
+        if arbol_rama and arbol_main:
+            if arbol_rama == arbol_main:
+                print(f"Árbol: origin/{RAMA} y origin/main:sitio coinciden "
+                      f"({arbol_rama[:7]})")
+            else:
+                print(f"Árbol: NO COINCIDEN  origin/{RAMA} {arbol_rama[:7]} · "
+                      f"origin/main:sitio {arbol_main[:7]}")
+                print("    Lo servido no es el sitio/ de ningún commit subido: "
+                      "o se publicó sin subir main, o se editó gh-pages a mano.")
+                desajuste_arbol = True
+        else:
+            print("Árbol: no pude leer origin/main; me salto la invariante.")
         # Informativo, no un fallo: que una página esté en sitio/ y no se
         # publique puede ser deliberado (el taller 1 lo absorbió el preparcial).
         solo_local = sorted(set(locales) - set(lista))
@@ -348,7 +384,9 @@ def main():
         print(f"Huella comprobada en {plural(len(lista))}.")
     else:
         print(f"Arranca el código de {plural(len(lista))}.")
-    return 0 if not sin_huella else 1
+    if desajuste_arbol:
+        print(f"Árbol de origin/{RAMA} distinto de origin/main:sitio.")
+    return 0 if not (sin_huella or desajuste_arbol) else 1
 
 
 if __name__ == "__main__":

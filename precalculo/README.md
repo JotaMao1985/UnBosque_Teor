@@ -29,7 +29,8 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 | `genera_cap3.R` | `salidas/cap3_datos.json` | razón, regresión, diferencia, sesgo simulado, dominios, GREG, mediana |
 | `genera_soluciones.R` | consola | soluciones de los ejercicios guiados del cap. 2 |
 | `verifica_bloques.py` | consola | contrasta cada cifra `#>` de un capítulo con la salida real; con `--prosa`, también las del texto; y **siempre** el LaTeX con barra simple dentro de los literales de JS |
-| `verifica_publicado.py` | consola | ejecuta el código **del sitio vivo**, sin anteponerle nada; comprueba además que lo servido coincida con `gh-pages` |
+| `verifica_publicado.py` | consola | ejecuta el código **del sitio vivo**, sin anteponerle nada; comprueba además que lo servido coincida con `gh-pages` y que `origin/gh-pages^{tree}` sea `origin/main:sitio` |
+| `cuenta_sitio.py` | consola | cuenta lo que hay de verdad en las páginas publicadas **y lo coteja** contra las cifras escritas a mano del README y del `index.html`, metaetiquetas incluidas |
 | `verifica_referencias.py` | consola | comprueba que cada «capítulo C, módulo N» apunte al módulo que la frase dice; `referencias_cruzadas.json` es su línea base |
 | `anota_salidas.py` | reescribe la cadena | anota en cada grupo `#>` la salida real de SUS sentencias; aborta si no puede colocarla (ver el docstring: los dos estilos de anotación) |
 | `pruebas/prueba_anotador.py` | consola | regresión del anotador; la primera prueba es que no duplique una cadena intercalada |
@@ -69,6 +70,25 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
   Por eso la comprobación va **en toda ejecución** de `verifica_bloques.py`, no detrás de una
   opción: una comprobación que hay que acordarse de pedir no habría servido aquella tarde. Fuera de
   `<script>`, en el texto HTML, la barra simple es la CORRECTA y no se mira.
+- **Las cifras del curso viven en tres sitios, y cada uno se desfasa por su cuenta**: la tabla del
+  README, las tarjetas del `index.html` y las **dos metaetiquetas** del `index.html`. Las metas son
+  las peligrosas porque no se ven leyendo la página: se publicaron con «67 simuladores» cuando el
+  texto visible ya decía 70, y se escaparon **dos veces el mismo día**, una de ellas después de
+  revisar la página entera. Por eso `cuenta_sitio.py` ya no solo cuenta: coteja. El ámbito importa
+  —el README dice «Ocho capítulos», así que sus totales **no** incluyen el preparcial— y el ámbito
+  de cada cifra se decide por el elemento que la contiene, no por el enlace más cercano: con «el
+  último enlace anterior» el total de la cabecera se leía como cifra del cap. 1, porque encima lleva
+  un «Comenzar» que apunta allí.
+- **Lo servido tiene que ser el `sitio/` de un commit que ya está en el remoto**:
+  `origin/gh-pages^{tree}` == `origin/main:sitio`. Es más barata y más fuerte que comparar md5
+  página a página, y caza dos cosas que ninguna otra comprobación miraba —publicar desde un árbol
+  local sin subir `main`, y editar `sitio/` a mano sobre `gh-pages`—. Vale mientras el camino corto
+  publique el árbol entero; si algún día se publica un subconjunto a propósito, deja de valer.
+- **Una comprobación solo vale si se ha visto fallar.** Las dos de esta tanda se probaron contra el
+  estado ROTO recuperado de git, no solo contra el bueno: el detector de LaTeX sobre `b0dfddb^` da
+  las 40 secuencias que aquel commit documenta, y el cotejo de cifras sobre `9e9ec78` da exactamente
+  las **dos metaetiquetas**. Un verificador que solo se ha probado en verde no ha probado nada; de
+  ahí el `--sitio` de `cuenta_sitio.py`, que existe para poder apuntarlo a un estado pasado.
 - Cuando una comparación es sobre un borde exacto (`F̂(t) >= p` con pesos iguales), va **con
   tolerancia**: `cumsum()/sum()` redondea a un lado en R y al otro en Python, y sin tolerancia las
   dos pestañas del mismo capítulo publican cuantiles distintos.
