@@ -4573,7 +4573,15 @@ módulos y abriendo cada derivación plegable:
 | cap. 7 | 9 | 1 |
 | cap. 8 | 10 | 4 |
 | preparcial | 0 | 0 |
-| **total** | **111** | **49** |
+| **total (lo reensamblado aquí)** | **111** | **49** |
+| cap. 4 — medido y reensamblado por su propia sesión (commit `9675b07`) | 20 | 18 |
+| **total del sitio** | **131** | **67** |
+
+La fila del capítulo 4 la midió esa sesión con el mismo `scrollWidth`/`clientWidth` tras reensamblar
+sobre esta plantilla: **18 de 20**, y **0 recortadas** en vertical con los sumatorios del M3, M4, M5
+y M7 abiertos, que eran el caso que preocupaba. Su HTML salió **+153/−7**, de las cuales 16 añadidas
+son este CSS y el resto es su propia tarea: la predicción del diff sirvió para separar las dos cosas
+en la revisión.
 
 **El arreglo,** en `plantilla/plantilla-capitulo-muestreo.html`: `overflow-x: auto` en
 `.katex-display`, con `-webkit-overflow-scrolling: touch` —la misma pareja que `.formula` ya usaba—,
@@ -4588,7 +4596,7 @@ peor del capítulo, se comprobó además que los 134 px que antes se perdían **
 (`scrollLeft` llega a 133,5). Y la página sigue sin ganar scroll horizontal: no se escapa nada al
 documento.
 
-**Nueve páginas reensambladas**, las diez menos el capítulo 4. Cada una **byte a byte** en la segunda
+**Nueve páginas reensambladas**, las diez menos el capítulo 4 —que quedó al día ese mismo día en `9675b07`—. Cada una **byte a byte** en la segunda
 pasada: los once archivos del sitio con el mismo SHA-256. El diff de todo `sitio/muestreo/` es
 **+16 líneas por archivo y 0 borradas**, todas del bloque de CSS — ni una cifra, ni un bloque de
 código, ni una línea de texto cambió en ninguna parte. El verificador de prosa, 0 sin respaldo en los
