@@ -697,8 +697,8 @@
           { texto: 'Que el diseño sea de tamaño de muestra fijo.', correcta: false },
           { texto: 'Que la variable $y$ tenga distribución aproximadamente normal.', correcta: false }
         ],
-        retroAcierto: 'Solo que $\pi_k > 0$ para toda unidad y que las $\pi_k$ sean conocidas. Nada más: ni tamaño fijo, ni normalidad, ni independencia. Esa generalidad es lo que convierte al HT en el estimador de referencia de todo el curso.',
-        retroFallo: 'Solo hacen falta $\pi_k > 0$ y que las $\pi_k$ sean conocidas. El tamaño fijo se necesita para la <em>forma de Sen–Yates–Grundy de la varianza</em>, no para la insesgadez; y la normalidad no aparece por ningún lado, porque los $y_k$ son constantes.'
+        retroAcierto: 'Solo que $\\pi_k > 0$ para toda unidad y que las $\\pi_k$ sean conocidas. Nada más: ni tamaño fijo, ni normalidad, ni independencia. Esa generalidad es lo que convierte al HT en el estimador de referencia de todo el curso.',
+        retroFallo: 'Solo hacen falta $\\pi_k > 0$ y que las $\\pi_k$ sean conocidas. El tamaño fijo se necesita para la <em>forma de Sen–Yates–Grundy de la varianza</em>, no para la insesgadez; y la normalidad no aparece por ningún lado, porque los $y_k$ son constantes.'
       },
       {
         tipo: 'opcion',
