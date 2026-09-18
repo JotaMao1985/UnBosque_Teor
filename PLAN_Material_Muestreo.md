@@ -5929,3 +5929,53 @@ y sobre lo servido: **0 literales con LaTeX sin barra y 0 bytes de control** en 
 
 **Pendiente:** meter esa comprobación en `verifica_bloques.py`. Existe como script suelto y se pasó
 a mano antes de empujar; mientras no esté en la puerta, depende de que alguien se acuerde.
+
+---
+
+### T7.67 — Los gráficos que le faltaban al capítulo 3, y un LaTeX que publiqué roto (2026-09-18)
+
+Bloques 4 y 5 de la revisión, commits `b0dfddb`, `8f1885b`/`48e2a8d` y `4f94c6b`.
+
+**Lo primero, porque fue un defecto publicado.** Los cuatro ítems que añadí al banco en el bloque 3
+llevaban el LaTeX con **barras simples** —`'$\bar{x}$'` en vez de `'$\\bar{x}$'`—, y JavaScript se las
+come antes de que KaTeX las vea. Cuatro preguntas del capítulo 3 estuvieron en la página viva
+mostrando `ar{x} = 301 953,72`. Buscando si había más apareció **la misma rotura en el capítulo 2**,
+cuatro `$\pi_k$` en la retro de la pregunta sobre Horvitz–Thompson, que llevaban ahí desde que se
+escribieron.
+
+**Por qué ninguna verificación lo veía, medido con la configuración real de la página:**
+
+| rotura | `.katex-error` | `.katex` | `$…$` crudo | consola |
+|---|:--:|:--:|:--:|:--:|
+| `\b` — control **no** blanco | 0 | 0 | **sí** | **sí** |
+| `\t` `\n` `\r` — control blanco | 0 | 1 | no | no |
+| `\pi` `\hat` `\dfrac` — pierde la barra | 0 | 1 | no | no |
+
+`.katex-error` **no se crea nunca**. Y la familia grande es completamente muda, porque quitarle la
+barra a `\pi` deja `pi`, que es LaTeX válido: KaTeX no falla, hace exactamente lo que se le pide, y
+lo que se le pide ya no es lo que se escribió. Eso descarta cualquier comprobación sobre el DOM o la
+consola —las cuatro que las dos sesiones dimos por buenas—. **El único sitio donde se ve es la
+fuente.** Y la regla que acota el detector: dentro de un literal de JavaScript un comando LaTeX
+necesita `\\`; en texto HTML, `\` es lo correcto. Un detector que no distinga marcaría **2 665**
+secuencias correctas de los módulos HTML.
+
+**Tres simuladores nuevos, de 6 a 9.** El **M5** tenía el módulo entero girando en torno a que la
+media de los $z_k$ apunta a otro parámetro que $B$ **sin una sola imagen**; ahora se ve el pico, la
+cola izquierda que arrastra la media simple y las dos verticales separadas. La ventana sale de los
+cuantiles: con tramos de 0,1 un tramo se llevaba el 53 % y, peor, $B$ y la media caían en el **mismo
+tramo**, así que las verticales se superponían y la brecha —todo el contenido del gráfico— no se
+veía. El **M3** gana los residuos contra $x$, que enseñan la tercera condición de la razón, hasta
+ahora afirmada y nunca mostrada; y la **frontera del umbral (D4)** con los cuatro pares reales, donde
+`cherry` cae en lo más alto de la zona ganadora y aun así la razón es el estimador equivocado.
+
+**Hallazgo al construir el histograma:** de los 3 053 cocientes de `agpop`, **once son negativos** —
+condados con `acres87 > 0` y `acres92 = −99`—, porque el filtro mira el denominador y no el numerador.
+Mueven la media de cocientes un **1,11 %** (0,9530 → 0,9636) y a $B$ no la tocan. Se mantiene el
+0,9530, que es la política del capítulo, y se dice: es el mejor argumento que tiene el módulo.
+
+**Y lo que queda anotado para quien siga:** la `<meta name="description">` del índice publicado dice
+«67 simuladores» donde el texto visible dice 70 — reportado a la otra sesión, es la única cifra
+desfasada de las `<meta>` de las nueve páginas—; y los ejes de Chart.js siguen en inglés, que en los
+gráficos con cifras de cinco dígitos se lee mal **por un factor de mil** (`100,000` leído como cien).
+Eso vive en la plantilla y va en su propio commit, para que la comparación de huellas entre las ocho
+páginas ajenas siga sirviendo.
