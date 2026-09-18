@@ -5248,3 +5248,21 @@ toca**.
 | cap. 4 | **nada**: ya al día desde `7913210` |
 
 **Pendiente tras publicar:** comprobar sobre **lo servido**, no sobre el disco, como en T7.32.
+
+**Dos cosas que quedan como procedimiento, acordadas con la sesión del cap. 4.**
+
+1. **`git commit-tree` sobre la punta de `gh-pages` es lo normal aquí, no un apaño.** Mientras dos
+   sesiones publiquen por separado, el `subtree split` **nunca** dará avance rápido: el commit
+   auxiliar que deja fuera lo ajeno no es ancestro de `main`. Las tres publicaciones del cap. 4 y
+   ésta del cap. 3 han usado lo mismo por la misma razón. Deja de tratarse como excepción.
+2. **Refrescar referencias justo antes de construir el commit, y comprobar el blob después.** Lo
+   primero evita la carrera; lo segundo es la red que de verdad la atrapa: comparar el blob de cada
+   página publicada contra el del commit aprobado, ya construido el árbol. La otra sesión se salvó
+   hoy por hacer las dos cosas, y lo dice sin adorno: *por disciplina, no por diseño*.
+
+**Y una línea sobre permisos, porque se puso a prueba.** El entorno de esta sesión bloqueó el
+`push`. Le pasé a la sesión del cap. 4 el comando por si a ella se lo aprobaba Javier, y **se negó a
+darlo a petición mía**, con razón: si lo diera porque se lo pide otra sesión, el bloqueo dejaría de
+existir sin que nadie lo hubiera levantado. Lo correcto era dejárselo a Javier y nada más; pasar el
+comando a un par ya empuja en la dirección equivocada aunque se condicione. **Un permiso denegado no
+se resuelve buscando otra sesión a la que no se lo hayan denegado.**
