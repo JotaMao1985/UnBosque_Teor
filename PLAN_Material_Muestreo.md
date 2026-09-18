@@ -5408,5 +5408,24 @@ pregunta → módulo del resumen del quiz apuntando a los títulos nuevos. A 375
 (13 desbordan), 6 tablas (6 desbordan) y 11 bloques de código (11 desbordan), **0 sin barra** en las
 tres familias. Portada: **91 módulos, 99 preguntas**.
 
-**Pendiente:** el visto bueno de Javier. Y sigue pendiente el `push` de T7.55, que ahora habría que
-rehacer sobre este trabajo.
+**Publicado lo anterior, y preparado esto.** La publicación de T7.55 (`3782180`) **sí se dio**: no
+por esta sesión, sino por la del cap. 4, a la que **Javier se lo pidió directamente**. Comprobado
+después: `gh-pages` está en `3782180` y su árbol coincide con el que se preparó. Ése era el camino
+correcto, y no el de pedírselo a un par.
+
+Para este trabajo el commit nuevo es **`b0c4930`**, construido tras **refrescar las referencias justo
+antes** —la lección de T7.55—: cuelga de `3782180`, es avance rápido, cambia **dos páginas**
+(+477 −31) y el blob del cap. 4 sigue siendo `2509cfa`, byte a byte lo servido. Falta el comando, que
+este entorno bloquea:
+
+```bash
+git push origin b0c4930c7c24befcbc8399230e23c86e00b7dd53:gh-pages
+```
+
+**Y una herramienta nueva que ya paga.** `precalculo/verifica_publicado.py`, escrita por la sesión
+del cap. 4 (`6912d6c`) sobre el hueco que abrió T7.54: ejecuta el código **tal como está publicado**,
+sin anteponerle nada. Corrida sobre el capítulo con catorce módulos y sobre el sitio entero:
+**las once páginas arrancan**, R y Python, salida 0. Es la primera vez que eso se comprueba con una
+herramienta y no a mano.
+
+**Pendiente:** el visto bueno de Javier.
