@@ -4927,3 +4927,46 @@ Una cita corrida una sección se nota al abrirla; un tema que deja de existir, n
 sección que sí existe y trata de otra cosa.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.48 — Cinco preguntas nuevas en el cap. 4, y el M1 deja de estar en cero (2026-09-17)
+
+Primera tarea de la fase 5 del plan del capítulo 4 con Lohr 3.ª ed. (T5.1). *(El número T7.47 quedó
+usado dos veces, por esta sesión y por la del cap. 3, que escribieron a la vez; como con el T7.34
+duplicado, se deja constancia en vez de renumerar.)*
+
+**El hueco del M1.** Estaba anotado desde T7.18 y era el único módulo de contenido del capítulo sin
+una sola pregunta. La nueva no pregunta la definición: pone un marco que trae nombre, dirección y
+teléfono, un censo que da los $N_h$, y obliga a separar las **dos** condiciones del módulo —la
+variable unidad por unidad *antes* de sortear, y los $N_h$—. Falta la primera, así que la respuesta
+es postestratificar, y la pregunta enlaza el M1 con el M10. El distractor más útil es «estratificar
+por dirección»: la idea es buena y el M6 la respalda, pero responde a otra pregunta.
+
+**Una por cada contenido de prioridad 1**, todas sobre cifras que el capítulo publica:
+- **B1 (M5)**: dos variables piden 506 y 214 condados; manda el mayor. El distractor del promedio,
+  360, da pie a decir que repartir el incumplimiento es incumplir.
+- **B2 (M4)**: la Neyman de `acres92` deja a `farms92` en deff 1,1190; marcar las salidas
+  razonables. La falsa —«calcula la Neyman de `farms92`»— es el mismo error con la camiseta
+  cambiada, que es justo lo que T7.41 encontró en el módulo.
+- **B4 (M10)**: qué hace la postestratificación con $\hat N_h = 1\,097{,}82$ frente a 1 054. Un
+  distractor sostiene que la columna es decorativa, y la retro lo desmonta mostrando que $N_h/n_h$
+  **es** el peso viejo por $N_h/\hat N_h$.
+- **B3 (M12)**: 40 estratos de 4 unidades con todos los $t_{xh}$ conocidos. La falsa es «más
+  información, luego menos error», que la simulación del módulo desmiente con el 7,195 % contra
+  3,734 %.
+
+El capítulo pasa de **11 a 16 preguntas** y los doce módulos de contenido tienen al menos una. Se
+corrigieron las dos menciones a «Once preguntas» del M13.
+
+**Verificado.** Byte a byte; 16 preguntas registradas por el ensamblador; **437 de 437** cifras de
+bloques y **149 de prosa · 0 sin respaldo**. En el navegador: 0 `.katex-error`, y se respondió una
+pregunta de opción y una múltiple comprobando que devuelven su retroalimentación.
+
+**Un efecto colateral deshecho.** Al consultar `inventario_items.py` se regeneró
+`inventario_items.json`, y el diff resultó ser de un enunciado del capítulo 2 que otra sesión tiene
+sin commitear. Se devolvió el archivo a como estaba: **una herramienta de diagnóstico que escribe
+en disco puede ensuciar el árbol compartido, y conviene mirar el diff antes de dar por propio lo
+que aparezca modificado.**
+
+**Pendiente:** el visto bueno de Javier para publicar.

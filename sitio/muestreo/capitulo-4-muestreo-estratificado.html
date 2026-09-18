@@ -6005,7 +6005,7 @@ print(pd.DataFrame(
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas repartidas por los módulos del capítulo y cuatro
+            <p class="text-gray-600 text-sm" style="margin:0;">Dieciséis preguntas repartidas por los módulos del capítulo y cuatro
               ejercicios de diseño resueltos con el código real del capítulo.</p>
           </div>
         </div>
@@ -6017,7 +6017,7 @@ print(pd.DataFrame(
 
       <div class="quiz" data-quiz="cap4">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 4</h4>
-        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+        <p class="text-sm" style="margin-bottom:0;">Dieciséis preguntas. Cada opción trae su propia retroalimentación,
           también las incorrectas: leerlas cuando aciertas también enseña.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
@@ -9092,6 +9092,82 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
           { texto: 'La varianza no se puede estimar, como pasaba con el sistemático.', correcta: false,
             retro: 'Al revés: en el sistemático había pares con $\\pi_{kl} = 0$ dentro del soporte del diseño. Aquí todas las $\\pi_{kl}$ son positivas y la varianza se estima sin apuros.' }
         ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 1,
+        pregunta: 'Un instituto quiere estratificar una encuesta de hogares por nivel socioeconómico, pero su marco solo trae nombre, dirección y teléfono. Sí conoce, por el censo, cuántos hogares hay de cada nivel. ¿Qué puede hacer?',
+        pista: 'El módulo pide dos condiciones para estratificar. ¿Cuál de las dos le falta a este marco?',
+        opciones: [
+          { texto: 'Estratificar no puede: le falta la variable en el marco. Pero como conoce los $N_h$, puede postestratificar después de sortear.', correcta: true,
+            retro: 'Exacto, y esa es la frontera que vertebra el capítulo. Estratificar exige las <strong>dos</strong> condiciones: la variable unidad por unidad <em>antes</em> de sortear, y los $N_h$. Aquí solo tiene la segunda, que es justo lo que pide la postestratificación del módulo 10: se sortea a ciegas y se corrigen los pesos después.' },
+          { texto: 'Puede estratificar igualmente: basta con preguntar el nivel socioeconómico durante la entrevista y agrupar por él al analizar.', correcta: false,
+            retro: 'Eso no es estratificar, es postestratificar — y la diferencia no es de nombre. Estratificar fija los $n_h$ antes del sorteo; preguntar después deja los $n_h$ al azar, y con ellos un término de varianza extra que el módulo 10 mide.' },
+          { texto: 'No puede hacer nada: sin la variable en el marco, la muestra es un MAS y punto.', correcta: false,
+            retro: 'Demasiado derrotista. Un MAS bien analizado con los $N_h$ conocidos da la postestratificación, que en <code>agsrs</code> bajaba el error estándar de 18 898 a 17 513. La información del censo no se desperdicia.' },
+          { texto: 'Puede estratificar por dirección, que es un sustituto del nivel socioeconómico y sí está en el marco.', correcta: false,
+            retro: 'Esta es la más interesante de las tres falsas, porque la idea es buena y el módulo 6 la respalda: estratificar por una variable <em>correlacionada</em> con la de interés. Pero entonces se estratifica por zona, no por nivel, y los $N_h$ que hacen falta son los de las zonas. La opción correcta responde a lo que se preguntaba.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 5,
+        pregunta: 'Con asignación proporcional, el 10 % de error relativo sobre <code>acres92</code> pide 506 condados; el mismo 10 % sobre <code>farms92</code> se consigue con 214. La encuesta mide las dos. ¿Qué tamaño se usa?',
+        pista: '¿Qué pasa con la variable exigente si te quedas en el tamaño que le basta a la otra?',
+        opciones: [
+          { texto: '506, el mayor: el tamaño lo fija la variable más exigente, y las demás salen mejor estimadas de lo que se pidió.', correcta: true,
+            retro: 'Eso es. Con 214 condados <code>farms92</code> cumpliría y <code>acres92</code> se quedaría muy por encima del 10 % prometido. Al revés no hay problema: con 506, <code>farms92</code> sale bastante mejor que su objetivo. Por eso Lohr cierra §3.4.5 diciendo que el tamaño debe cubrir todas las variables clave.' },
+          { texto: '214, el menor: es el que cumple el objetivo con menos costo.', correcta: false,
+            retro: 'Cumple el objetivo <em>de una</em> variable. Con 214 condados el error de <code>acres92</code> se va muy por encima del 10 % que la encuesta prometió, y esa promesa también hay que cumplirla.' },
+          { texto: 'El promedio de los dos, 360, que reparte el incumplimiento entre las dos variables.', correcta: false,
+            retro: 'Repartir el incumplimiento es incumplir. Si las dos precisiones se prometieron, las dos hay que darlas; si una de las dos es negociable, se dice cuál y se justifica — pero eso es una decisión de diseño, no un promedio.' },
+          { texto: 'No se puede decidir sin saber la correlación entre las dos variables.', correcta: false,
+            retro: 'No hace falta: el tamaño necesario de cada variable ya se calculó por separado con su propia $v$, y la regla del máximo no mira la correlación. La correlación importa para <em>otra</em> decisión, la de qué asignación usar (módulo 4).' }
+        ]
+      },
+      {
+        tipo: 'multiple',
+        modulo: 4,
+        pregunta: 'La asignación de Neyman calculada para <code>acres92</code> deja a <code>farms92</code> con deff 1,1190, peor que un MAS. Marca <strong>todo</strong> lo que sea una salida razonable.',
+        pista: 'El módulo mide dos familias de compromiso. ¿Qué tienen en común?',
+        opciones: [
+          { texto: 'Usar la proporcional, que con deff 0,8224 y 0,9723 no gana en ninguna vara pero no pierde en ninguna.', correcta: true },
+          { texto: 'Interpolar con $n_h \\propto N_h S_h^{\\alpha}$: con $\\alpha = 0{,}25$ salen 0,6919 y 0,9237, mejor que la proporcional en las dos a la vez.', correcta: true },
+          { texto: 'Poner un mínimo por estrato y repartir el resto proporcionalmente.', correcta: true },
+          { texto: 'Calcular la Neyman de <code>farms92</code> y quedarse con ella, que para esa variable es la óptima.', correcta: false }
+        ],
+        retroAcierto: 'Las tres primeras son compromisos: renuncian a ser óptimas para una variable a cambio de no ser malas para ninguna. La cuarta es el mismo error con la camiseta cambiada — sería óptima para <code>farms92</code> y mala para <code>acres92</code>, que es exactamente el problema del enunciado.',
+        retroFallo: 'La falsa es la última: cambiar de variable favorita no resuelve nada, solo elige otra víctima. Las otras tres son las dos familias de compromiso del módulo, y la de la potencia llega a ganarle a la proporcional en las dos varas a la vez.'
+      },
+      {
+        tipo: 'opcion',
+        modulo: 10,
+        pregunta: 'En el módulo 10, la muestra <code>agsrs</code> estima $\\hat{N}_h = 1\\,097{,}82$ condados en el Norte-Centro, cuando el marco dice que son 1 054. ¿Qué hace la postestratificación con ese desajuste?',
+        pista: 'El peso pasa de 10,26 a 9,8505. ¿Por cuánto se multiplicó?',
+        opciones: [
+          { texto: 'Multiplica el peso de partida por $N_h/\\hat{N}_h$, que aquí encoge los pesos del Norte-Centro porque el sorteo trajo esa región de más.', correcta: true,
+            retro: 'Eso es: $10{,}26 \\times 1054/1097{,}82 = 9{,}8505$. Y así con cada región, de modo que los pesos ajustados reproducen los $N_h$ exactos y su suma da $N = 3\\,078$ de propina. Es estimación por razón dentro de cada postestrato, con el indicador de pertenencia como variable auxiliar.' },
+          { texto: 'Descarta los condados sobrantes del Norte-Centro hasta que $\\hat{N}_h$ coincida con 1 054.', correcta: false,
+            retro: 'Nunca se tiran observaciones: cada una costó dinero y todas son insesgadas. Lo que se corrige es el <strong>peso</strong>, que es lo que dice a cuántos condados representa cada uno.' },
+          { texto: 'No hace nada con él: $\\hat{N}_h$ es solo informativo, y el peso postestratificado sale de $N_h/n_h$ sin mirarlo.', correcta: false,
+            retro: 'El peso sí sale de $N_h/n_h$, pero eso <em>es</em> el viejo corregido por $N_h/\\hat{N}_h$: como $\\hat{N}_h = w_0 n_h$, se tiene $N_h/n_h = (N_h/\\hat{N}_h)\\,w_0$. La columna no es decorativa, es el factor de calibración escrito aparte.' },
+          { texto: 'Estratifica de nuevo la muestra por región y vuelve a sortear dentro de cada una.', correcta: false,
+            retro: 'No se puede volver a sortear lo ya sorteado — y no hace falta. Toda la corrección es de escritorio: cambiar los pesos. Esa es la gracia de la postestratificación frente a la estratificación del módulo 1.' }
+        ]
+      },
+      {
+        tipo: 'multiple',
+        modulo: 12,
+        pregunta: 'Una encuesta estratificada tiene 40 estratos y unas 4 unidades en cada uno. Conoces los $t_{xh}$ de todos. Marca <strong>todo</strong> lo que sea cierto sobre usar la razón separada.',
+        pista: 'Tienes la información que la separada pide. ¿Basta con eso?',
+        opciones: [
+          { texto: 'Tener los $t_{xh}$ es necesario pero no suficiente: con 4 por estrato estás por debajo del cruce, donde la separada aún no gana.', correcta: true },
+          { texto: 'La separada comete el sesgo del cociente 40 veces y los suma, mientras que la combinada lo comete una sola vez.', correcta: true },
+          { texto: 'La combinada es la opción sensata aquí, y además es la que calcula por defecto casi todo el software.', correcta: true },
+          { texto: 'Como la separada aprovecha más información, su error cuadrático medio será menor sean cuales sean los $n_h$.', correcta: false }
+        ],
+        retroAcierto: 'Las tres verdaderas son la regla del módulo: hacen falta los $t_{xh}$, <em>y</em> $n_h$ holgados, <em>y</em> razones que de verdad cambien entre estratos. Aquí falla la segunda. La cuarta es la trampa: más información no es automáticamente menos error cuando esa información se usa con estimadores sesgados.',
+        retroFallo: 'La falsa es la última. La simulación del módulo la desmiente con datos: con 3 por estrato el error cuadrático medio de la separada es 7,195 % contra 3,734 % de la combinada. Aprovechar más información y hacerlo mejor no son lo mismo.'
       },
       {
         tipo: 'numerica',
