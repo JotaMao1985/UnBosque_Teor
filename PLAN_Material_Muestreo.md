@@ -5349,6 +5349,23 @@ convenciones para que no se vuelvan a solapar.
 > para reservarlo cuando otra sesión tiene el suyo sin commitear. Antes de numerar, mirar también lo
 > que hay **en el árbol sin commitear**.
 >
+> **Y lo que hay que hacer antes de commitear este archivo, que es lo que el apunte de arriba no
+> decía.** Describir el fallo no lo evita: se repitió **dos veces más** después de escribirlo, en
+> `57cddc4` y `25e85e6`, los dos commits de esta sesión, que se llevaron dentro correcciones de la
+> otra que esperaban visto bueno. El texto llegó íntegro y no hubo que deshacer nada, pero llegó por
+> accidente. **La regla de «commitear solo lo propio» se aplica también a los párrafos, no solo a las
+> rutas:**
+>
+> ```bash
+> git diff PLAN_Material_Muestreo.md      # ¿hay párrafos que no escribí?
+> git add -p PLAN_Material_Muestreo.md    # si los hay, dejarlos fuera hunk a hunk
+> ```
+>
+> Nunca `git add` del archivo entero sin mirar el `diff` antes. Y la causa de fondo no es el
+> descuido: es que **los ritmos no encajan**. Una sesión que no commitea hasta tener el visto bueno
+> deja su prosa en el árbol un rato largo, y en ese rato se la lleva quien commitee. Mientras eso sea
+> así, el `add -p` es lo que lo tapa **desde este lado**.
+>
 > **Y cómo se resuelve una disputa de autoría, que hoy hicieron falta tres veces:** `git` **no
 > distingue** las dos sesiones. Las dos commitean como *Javier Mauricio Sierra
 > &lt;javier37649@gmail.com&gt;*, con el mismo *committer* y el mismo `Co-Authored-By`. El único
