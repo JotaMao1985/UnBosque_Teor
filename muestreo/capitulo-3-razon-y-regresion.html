@@ -4195,12 +4195,13 @@ print(pd.DataFrame(
           <strong>diseño</strong> en lugar de en la estimación —estratificar por el tamaño de $x$ (capítulo 4), o
           dar a cada unidad una probabilidad de selección proporcional a $x$ (capítulo 6)—. Se decide antes de salir
           a campo, no supone nada sobre la forma de la nube y se combina sin estorbo con cualquiera de los cuatro
-          estimadores de la tabla.</p>
+          estimadores.</p>
       </div>
 
       <div class="simulador" data-simulador="nube-razon-regresion">
         <h4><i class="fas fa-chart-line" aria-hidden="true"></i> Las cuatro rectas sobre la misma nube</h4>
-        <p class="simulador-intro">Los cuatro interruptores son las cuatro filas de la tabla. Empieza por
+        <p class="simulador-intro">Los cuatro interruptores son los cuatro estimadores: expansión, razón,
+          regresión y diferencia. Empieza por
           <code>agsrs</code>: la horizontal de la expansión ignora la nube entera —por eso pierde—, mientras que la
           recta por el origen y la de intercepto libre se superponen, porque el intercepto es $-2\,548$ sobre un
           rango de más de un millón de acres, prácticamente cero. Pasa después a <code>cherry</code>: ahí el
@@ -4216,7 +4217,7 @@ print(pd.DataFrame(
 
       <div class="simulador" data-simulador="frontera">
         <h4><i class="fas fa-bullseye" aria-hidden="true"></i> Dónde cae cada caso del capítulo</h4>
-        <p class="simulador-intro">La regla de la caja de arriba es una recta en el plano
+        <p class="simulador-intro">El umbral $\rho > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$ es una recta en el plano
           $\big(\text{CV}(x)/\text{CV}(y),\ \rho\big)$, y los cuatro pares que el capítulo usa están
           repartidos por el texto en párrafos distintos. Aquí están los cuatro a la vez. Tres caen en la zona
           sombreada y uno no —<code>farms92</code> con <code>acres87</code>, que se queda muy por debajo y en
@@ -4249,8 +4250,9 @@ print(pd.DataFrame(
       </div>
 
       <div class="warning">
-        <p><strong>Correlación alta no es lo mismo que recta por el origen.</strong> Y el umbral de la caja
-          anterior tampoco lo detecta: en <code>cherry</code> vale <strong>0,2174</strong> frente a una correlación
+        <p><strong>Correlación alta no es lo mismo que recta por el origen.</strong> Y el umbral
+          $\rho > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$
+          tampoco lo detecta: en <code>cherry</code> vale <strong>0,2174</strong> frente a una correlación
           de <strong>0,9671</strong>, así que la regla se cumple de sobra. No hay contradicción — dice que la razón
           le gana a la expansión, y aquí también es verdad; lo que no dice, porque no es su pregunta, es que no haya
           nada mejor que las dos. Los cerezos tienen
