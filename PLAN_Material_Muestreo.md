@@ -6309,3 +6309,52 @@ repositorio revienta al imprimir (`relative_to`), después de escribir el archiv
 **Después:** cap. 7 con 241/241 cifras, 54 de prosa sin ninguna sin respaldo, 0 LaTeX; referencias
 411 resueltas, 0 nuevas, 0 cambiadas. El reensamblado se comprobó byte a byte **antes** de tocar
 nada, y después el diff de la página es exactamente el de los módulos: tres líneas.
+
+---
+
+### T7.78 — La repetición del módulo 3 era deliberada; lo frágil eran los nombres (2026-09-18)
+
+`ensamblado/modulos/cap3/modulos_1_4.html` y la página reensamblada. Viene de T7.76.
+
+**La pregunta.** Tras arreglar «esa tabla», quedaba decidir si que el módulo 3 enumere los mismos
+cuatro estimadores en varios sitios es diseño o sedimento.
+
+**Primero, un dato mío que estaba mal.** En T7.76 escribí «cuatro sitios» contando la tabla que
+imprime el bloque R4. Esa tabla tiene **dos filas** —`agsrs` y `cherry`, con `r` y `umbral`—: va de
+nubes y umbrales, no de estimadores. **Son tres**, no cuatro.
+
+**Deliberada, y la prueba es el commit.** `4cc851f` (2026-09-10) introdujo la `<table>` y la caja
+«Cuál pide cada nube» **en el mismo commit**, y en ese mismo commit le añadió al simulador —que era
+de julio— su cuarta recta, la horizontal de la expansión, para que los tres coincidieran. Los tres
+trabajos son distintos y no se solapan:
+
+| | qué hace |
+|---|---|
+| tabla | qué **es** cada una: la recta que traza, lo que supone, dónde se construye |
+| caja | **cuándo** pide cada nube cuál, con el umbral |
+| simulador | **verlas** las cuatro sobre datos reales |
+
+La tabla dice qué supone cada estimador; la caja, qué aspecto deben tener los datos para que ese
+supuesto se sostenga. Complemento, no copia.
+
+**Lo que sí estaba mal era cómo se las nombra.** El módulo señalaba estas estructuras **por el
+continente** cinco veces, y cuatro cruzaban material intermedio:
+
+| línea | decía | apuntaba a | en medio |
+|---|---|---|---|
+| 345 | «La tabla no ordena por calidad» | tabla | nada — **la única segura** |
+| 508 | «los cuatro estimadores de la tabla» | tabla | la caja, que también tiene cuatro |
+| 513 | «las cuatro filas de la tabla» | tabla | la caja, que también tiene cuatro |
+| 528 | «La regla de la caja de arriba» | caja | la derivación, una nota y un simulador |
+| 562 | «el umbral de la caja anterior» | caja | tres simuladores |
+
+Ninguna estaba equivocada como la 437 de T7.76 —todas se resolvían buscando—, pero las cuatro
+morían con la maquetación. En la 513, además, lo único que separaba «filas» de «líneas» era una
+convención que el lector no tiene por qué haber captado. Arregladas nombrando el contenido: los
+cuatro estimadores por su nombre, y el umbral escrito como
+$\rho > \tfrac{1}{2}\,\text{CV}(x)/\text{CV}(y)$ en vez de «la caja». Quedan en pie las dos que ya
+eran sólidas: la 345 está pegada al `</table>` y la 490 va calificada, «la tabla **del bloque de
+arriba**».
+
+**Un instrumento más que mintió.** El barrido con que comprobé que no quedaban referencias era
+sensible a mayúsculas y se dejó fuera «**La** tabla». Da cero por la razón equivocada. Van seis hoy.
