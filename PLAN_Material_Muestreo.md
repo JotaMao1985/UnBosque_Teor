@@ -6087,3 +6087,56 @@ corto publique el árbol entero; el día que se publique un subconjunto a propó
 antes. **Siempre `${VAR}:ruta` con llaves.** Y lo que lo hizo peligroso no fue el error, que era
 ruidoso: fue que el `>` dejó los archivos **vacíos** y la prueba siguió corriendo y dando resultados
 con pinta de buenos. Los primeros números de la prueba A eran basura y casi los reporto.
+
+---
+
+### T7.73 — Las 17 barras que sobrevivieron a mi arreglo *y* a mi verificación (2026-09-18)
+
+`ensamblado/modulos/cap3/simuladores.js` y la página reensamblada. Publicado en `gh-pages`.
+
+**Qué estaba roto, y por qué era peor que lo de antes.** En las cuatro preguntas del banco del
+cap. 3 quedaban **17 barras simples** de espaciado —15 de `\,` y 2 de `\;`— dentro de literales de
+JS. JavaScript se las come antes de que KaTeX las vea, así que el separador de millares se
+convertía en **coma**, que en este material es el separador **decimal**. Lo que recibía KaTeX,
+ejecutado en node y no deducido leyendo:
+
+    Con $t_x = 963,464,412$, $\bar{x} = 301,953{,}72$, $s_e = 31,657{,}22$
+
+El estudiante leía «301,953,72» donde el capítulo dice 301 953,72. El fallo anterior (T7.70) se
+**veía** roto —«ar{x}»—; éste parece un número bien escrito y no lo es, y un ejercicio calculado con
+esas cifras da mal sin que nada avise.
+
+**Por qué sobrevivió al arreglo de `b0dfddb` y a su comprobación.** No fue que faltara el caso roto
+para probar: estaban delante, `\,` simple **tres veces en la misma línea** donde doblé `\bar`. Fue
+que diagnostiqué la avería como «comandos de LaTeX sin doblar» y escribí la búsqueda como **barra
+seguida de letra**. Con ese diagnóstico, `\,` y `\;` no son el fallo: no entran en la categoría. Y
+la comprobación salió de la misma frase, así que confirmó el arreglo.
+
+> **La regla, que es lo que hay que conservar de esto:** un arreglo que pasa su propia comprobación
+> **no está verificado**, porque comparte con ella la definición del fallo. Lo que cazó las 17 fue un
+> instrumento escrito por quien no había hecho ese diagnóstico.
+
+**El criterio del detector, acordado con la otra sesión (ver T7.71).** Ni mi «barra seguida de letra»
+ni una lista de comandos: las dos son categorías sobre el **carácter**, y las dos se quedan cortas
+justo donde se acaba la opinión de quien las escribió. Va en dos mitades, y **ninguna es un
+diagnóstico sobre cuál es la avería**:
+
+- **Dentro de `$...$`**: cualquier barra simple es fallo, por construcción. Es geometría.
+- **Fuera**: cualquier barra que no sea un escape que defina ECMAScript. La lista la pone el
+  lenguaje, no nosotros.
+
+**Y solo dentro de `<script>`**, que resultó ser lo decisivo y no una limitación: estos capítulos
+**enseñan** R y Python, o sea que publican a propósito código lleno de barras legítimas. Un detector
+que mire el HTML ensamblado entero no da ruido, es que no puede funcionar aquí. Medido en los ocho
+capítulos: las 17 averías **todas** dentro de `$...$`; las 42 legítimas —16 `\'`, 24 `\2XXX` de CSS
+en `<style>`, 2 `\n` de un `print()` de Python dentro de `<pre>`— **todas** fuera.
+
+**Comprobado.** Detector 17 → 0; el diff son cuatro líneas y solo dobla barras ante `,` y `;`;
+283/283 cifras de los bloques, 212 de prosa sin ninguna sin respaldo, 411 referencias sin cambios,
+los 15 bloques de R y 4 de Python arrancan solos.
+
+**Dos instrumentos que mintieron por el camino, los dos míos.** `grep '\\[,;]'` me dio 174 en el
+cap. 3 porque cuenta también las barras **dobles** correctas y el texto HTML, donde la barra simple
+sí es lo correcto. Y mi primer clasificador dio «0 pares `\\` dentro de `$...$`», un cero
+perfectamente plausible que era un `continue` colocado antes de la comprobación. El reflejo bueno no
+es comprobar la cifra con otra herramienta: es preguntarse qué cuenta exactamente la herramienta.
