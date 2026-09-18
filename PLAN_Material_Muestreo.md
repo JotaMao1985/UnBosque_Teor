@@ -5457,3 +5457,59 @@ y no a mano. *Con una precisión sobre el recuento, que apuntó la sesión del c
 `sitio/` pero lo ignora el `.gitignore` y no se publica.
 
 **Pendiente:** el visto bueno de Javier.
+
+---
+
+### T7.59 — La fase 6 del cap. 4: el protocolo entero, y tres medidas mías que fallaron (2026-09-18)
+
+**T6.1**, la última tarea del plan del capítulo 4: el protocolo de verificación punto por punto, el
+recuento de `cuenta_sitio.py` y la portada. Primera tarea con el método nuevo —esta nota vive fuera
+del repositorio hasta el visto bueno, y entra en el archivo y en el commit en el mismo paso—.
+
+**Regla de oro.** `ensambla_cap4.py` reproduce la página publicada byte a byte: md5
+`f5a863ab24684a9f0a894362144b9520` antes y después de reensamblar.
+
+**El protocolo, punto por punto.**
+
+| # | Qué pide | Resultado |
+|:--:|---|---|
+| 1 | cada cifra `#>` contra la salida real | **528 de 528**, 0 discrepancias; prosa **172 respaldadas, 0 sin respaldo** |
+| 2 | bloques autónomos o encadenados de verdad | 30 de R y 5 de Python, salida 0 **sin anteponer nada** (`verifica_publicado.py`) |
+| 3 | doble vía en toda varianza | **16 de 16** contrastes «a mano ↔ `survey`/teórica» pasan, más 5 `stop()` de guarda; el JSON se regenera **idéntico** |
+| 4 | navegador: consola, KaTeX, pestañas, simuladores, gráficos | 0 errores de consola y de JS; **0 errores de KaTeX en 338 fórmulas**; pestañas conmutan; **21 deslizadores a mínimo y máximo + las dos esquinas de cada simulador, sin una salida no finita**; los gráficos se destruyen al cambiar de módulo (tras recorrer los 13, quedan vivos 1, no 13) |
+| 5 | CSS contra la plantilla, y geometría real | **196 clases con estilo en cada uno, conjuntos idénticos en los dos sentidos**; 122 elementos de bloque en 36 contenedores: ninguno de tamaño cero, ninguno solapado, ninguno desbordando sin barra |
+| 6 | JSON incrustado válido | `DATOS_CAP4` parsea y es **idéntico** al JSON del precálculo (11 secciones) |
+| 7 | auditoría reportada | esta nota |
+
+**A 375 px**, con estilo calculado —la prueba buena, no `scrollLeft`—: 35 bloques, 31 desbordan,
+**0 inalcanzables**; 20 fórmulas, 11 desbordan, 0 inalcanzables; 2 tablas, 1 desborda, 0
+inalcanzables; **0 px de scroll horizontal de página**.
+
+**Recuento.** `cuenta_sitio.py`: el cap. 4 tiene **13 módulos, 9 simuladores, 1 tabla-ranking, 16
+preguntas, 8 ejercicios, 30 bloques de R y 5 de Python, 222 cifras `#>`**. La portada **ya está
+bien** en `b0c4930`: sus 91 módulos, 67 simuladores, 99 preguntas y 37 ejercicios son exactamente el
+total sin el preparcial (104−13, 158−59, 42−5). Es tarea del T5.1 del plan del cap. 3 y cuadra.
+
+**Tres medidas mías que fallaron, y ninguna era un defecto del capítulo.** Es lo que más enseña de
+esta tarea, porque las tres tenían la misma forma: *el instrumento estaba mal, no lo medido*.
+
+1. Conté los bloques con `grep -o 'language-r'`: 32 frente a los 30 del verificador. Las tres
+   menciones de sobra están **dentro del `<script>`** que envuelve los bloques.
+2. Di por «no usadas» las 11 secciones de `DATOS_CAP4` buscando `DATOS_CAP4.<clave>`. Están
+   aliasadas: `const D4 = DATOS_CAP4`. Usadas 8 de 11; `meta`, `agstrat` y `peq` viajan sin que nada
+   las lea —~600 bytes de 432 KB, y comprobado que **ningún simulador las recalcula a mano**—.
+3. Medí la geometría en el archivo local y salió todo a cero. El viewport era **0×0**: la vista
+   previa carga el archivo como instantánea estática. Repetido sobre la página servida —byte a byte
+   la misma— con viewport forzado a 1280×900.
+
+Y una cuarta, de interpretación: di por roto el «⇅» de la tabla-ranking porque el segundo clic no
+invierte. No invierte **a propósito**, y el código lo dice: «toda columna ordenable ordena de *mejor*
+a *peor*, así que el sentido depende de `mejor` y no del signo del número». El `⇅` es «ordenable» y
+el `▲` «ordenando por esta»; `aria-sort` se mueve con ellos y una región viva anuncia el nuevo orden.
+Un ranking invertido enseñaría el peor diseño primero.
+
+**Lo que no se pudo ver.** La captura de pantalla sale en blanco porque el panel del navegador está
+oculto. Todo el punto 4 está verificado **por medición del DOM y del estilo calculado**, que es más
+fuerte que una imagen; pero queda dicho que nadie ha mirado el capítulo con los ojos en esta pasada.
+
+**De paso.** `verifica_publicado.py` decía «las 1 páginas»; corregido con un `plural()`.

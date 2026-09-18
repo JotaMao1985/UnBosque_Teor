@@ -238,6 +238,10 @@ def corre(bloques, lang, nombre_pagina):
 # Informe
 # --------------------------------------------------------------------------
 
+def plural(n):
+    return "1 página" if n == 1 else f"las {n} páginas"
+
+
 def informa_ejecucion(res):
     etiqueta = "R" if res["lang"] == "r" else "Python"
     if res["aviso"]:
@@ -341,9 +345,9 @@ def main():
               f"{', '.join(sorted(set(malas)))}")
         return 1
     if args.solo_huella:
-        print(f"Huella comprobada en {len(lista)} páginas.")
+        print(f"Huella comprobada en {plural(len(lista))}.")
     else:
-        print(f"Arranca el código de las {len(lista)} páginas.")
+        print(f"Arranca el código de {plural(len(lista))}.")
     return 0 if not sin_huella else 1
 
 
