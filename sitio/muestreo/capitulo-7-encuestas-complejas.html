@@ -529,6 +529,22 @@
       }
     }
 
+    /* Fórmulas en bloque ($$…$$). KaTeX no le pone desbordamiento a
+       .katex-display, y .formula solo desborda si el HIJO no cabe —no si se
+       sale el contenido del hijo—, así que en pantallas estrechas la fórmula se
+       salía de su caja sin barra y sin que la página ganara scroll horizontal:
+       nada avisaba de que faltaba texto. Medido a 375 px en el capítulo 3:
+       catorce fórmulas en nueve de los doce módulos; a 1 280 px, ninguna, que
+       es por lo que no se había visto. La barra aparece solo cuando hace falta,
+       y el relleno deja sitio para que no tape los subíndices de abajo. */
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-top: 0.2rem;
+      padding-bottom: 0.4rem;
+    }
+
     .diagram {
       background-color: #f8fafc;
       border: 2px dashed #cbd5e1;

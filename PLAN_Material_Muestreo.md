@@ -4547,3 +4547,64 @@ el material hereda el resultado pero no el entendimiento**: aquí bastó imprimi
 `var()` da por supuesta para que el $n_h-1$ dejara de ser un detalle que memorizar.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.44 — Las fórmulas que se salían de la pantalla: una línea de CSS y nueve páginas (2026-09-17)
+
+Sale del hallazgo que T7.42 midió y dejó anotado. No es de ningún capítulo: es del **componente**.
+
+**El defecto.** KaTeX no le pone desbordamiento a `.katex-display`, y la caja `.formula` solo desborda
+si el **hijo** no cabe, no si se sale el **contenido** del hijo. Resultado: en pantallas estrechas la
+fórmula en bloque se salía de su caja **sin barra de desplazamiento** y **sin que la página ganara
+scroll horizontal** — es decir, sin ninguna señal de que faltara texto. A 1 280 px no desborda casi
+nada, que es por lo que llevaba meses sin verse.
+
+**Cuánto era, medido.** Barrido a **375 px** sobre las ocho páginas accesibles, recorriendo todos los
+módulos y abriendo cada derivación plegable:
+
+| Página | Fórmulas en bloque | Más anchas que su caja |
+|---|---:|---:|
+| cap. 1 | 7 | 3 |
+| cap. 2 | 43 | 16 |
+| cap. 3 | 29 | 15 |
+| cap. 5 | 9 | 6 |
+| cap. 6 | 4 | 4 |
+| cap. 7 | 9 | 1 |
+| cap. 8 | 10 | 4 |
+| preparcial | 0 | 0 |
+| **total** | **111** | **49** |
+
+**El arreglo,** en `plantilla/plantilla-capitulo-muestreo.html`: `overflow-x: auto` en
+`.katex-display`, con `-webkit-overflow-scrolling: touch` —la misma pareja que `.formula` ya usaba—,
+`overflow-y: hidden` y un relleno de 0,2 rem arriba y 0,4 rem abajo para que la barra no tape los
+subíndices. Nada de partir fórmulas a mano: son 49, están bien escritas, y la regla las cubre todas.
+
+**Comprobado, no supuesto.** Tras el arreglo, las **49** desbordadas tienen `overflow-x: auto` y
+**ninguna de las 111** se recorta en vertical (`scrollHeight == clientHeight` en las 111). La
+advertencia de que `overflow-y` recorta raíces y fracciones altas era pertinente —la levantó la
+sesión del capítulo 4— y el relleno la desactiva. Sobre la fórmula del sesgo del M4 del cap. 3, la
+peor del capítulo, se comprobó además que los 134 px que antes se perdían **ahora se alcanzan**
+(`scrollLeft` llega a 133,5). Y la página sigue sin ganar scroll horizontal: no se escapa nada al
+documento.
+
+**Nueve páginas reensambladas**, las diez menos el capítulo 4. Cada una **byte a byte** en la segunda
+pasada: los once archivos del sitio con el mismo SHA-256. El diff de todo `sitio/muestreo/` es
+**+16 líneas por archivo y 0 borradas**, todas del bloque de CSS — ni una cifra, ni un bloque de
+código, ni una línea de texto cambió en ninguna parte. El verificador de prosa, 0 sin respaldo en los
+ocho capítulos. `index.html` no lleva KaTeX y no necesita la regla.
+
+**Lo que quedó fuera, y por qué.** El **capítulo 4** lo estaba editando otra sesión en ese momento.
+Se acordó por mensaje: yo commiteo la plantilla y los otros nueve; esa sesión hace `git pull`,
+reensambla el capítulo 4 con la plantilla nueva y lo commitea dentro de su propio trabajo, ya
+verificado por ella. Así el arreglo llega igual al capítulo 4 sin hornear trabajo ajeno a medias.
+`taller-1-preparacion-parcial-1.html` tiene la regla pero **no se pudo abrir en el navegador** para
+medirlo; está fuera del control de versiones por la lista blanca.
+
+**Lo que enseña.** El defecto no lo encontró nadie leyendo: apareció midiendo
+`scrollWidth`/`clientWidth` de cada `.katex-display`, una comprobación de tres líneas que no estaba en
+el protocolo. Un fallo que **no deja rastro visible** —sin barra, sin scroll, sin error en consola—
+no lo encuentra la revisión humana ni el verificador de cifras; hace falta preguntarle al navegador
+por una medida concreta. Conviene añadir esa medición al protocolo de publicación.
+
+**Pendiente:** el visto bueno de Javier para publicar.
