@@ -5663,3 +5663,49 @@ del cap. 3: avisada la otra sesión, no se toca desde aquí.
 la pasada sale limpia y cualquier renumeración que mueva un destino salta sola. La regla que queda
 escrita en el docstring sigue siendo la importante: **`--anota` solo después de mirar**, porque
 sembrar sin revisar graba los errores y la herramienta deja de servir para siempre.
+
+---
+
+### T7.63 — La publicación de los capítulos 3, 4, 5 y 7 (2026-09-18)
+
+Con el visto bueno de Javier, publicar la tanda entera. `main` en `12e2bd9`, `gh-pages` de
+`3782180` a **`a550483`**.
+
+**Qué entra.** Cinco archivos:
+
+| página | qué lleva |
+|---|---|
+| cap. 3 | las contradicciones internas deshechas, el ejemplo 7.9 de Portela y el formulario: catorce módulos |
+| cap. 4 | la fase 6 auditada entera, más las cuatro referencias cruzadas renumeradas |
+| cap. 5 | una referencia: *Modelos poblacionales* pasó de M9 a M10 |
+| cap. 7 | dos referencias en la misma frase: dominios M8→M9 y la mediana M11→M12 |
+| índice | 91 módulos · 67 simuladores · 99 preguntas · 37 ejercicios |
+
+Los otros cinco publicados se quedan **byte a byte** como estaban.
+
+**La puerta de verificación, las cuatro comprobaciones antes de empujar.**
+
+1. Los cuatro capítulos **reensamblan byte a byte** desde sus módulos, y el árbol queda limpio.
+2. `verifica_bloques.py --todos --prosa`: sin discrepancias y **0 cifras de prosa sin respaldo**.
+3. `verifica_publicado.py --local`: **las 11 páginas arrancan**, R y Python, sin anteponerles nada.
+4. `verifica_referencias.py`: **406 referencias, 0 cambios de destino**. Primera publicación con esta
+   comprobación puesta, y es la que faltaba: las cuatro referencias del cap. 4 y las tres de los
+   caps. 5 y 7 que entran hoy llevaban rotas desde que el cap. 3 creció, y ninguna de las otras
+   herramientas las veía.
+
+**El procedimiento, más corto de lo que venía siendo.** No hizo falta ni worktree separado ni
+restaurar páginas ajenas: **todo lo que había cambiado estaba aprobado**, y el árbol versionado de
+`sitio/` es exactamente lo que `gh-pages` debe tener —sin `taller-1`, sin `.DS_Store`, sin
+`launch.json`, que solo existen en disco—. Así que el árbol a publicar sale directo de
+`git rev-parse HEAD:sitio`, sin `subtree split`, y encima de la punta con `git commit-tree`. Queda
+anotado: **cuando no hay nada ajeno que excluir, la publicación son dos órdenes.**
+
+**Coordinación.** La otra sesión iba a preparar ella el commit; se le avisó a tiempo para que no
+empujáramos los dos, y **congeló el árbol** durante la verificación para no romper el «byte a byte»
+a mitad. Confirmó que no tenía nada sin commitear.
+
+**Lo que viene, anotado por ella y que afecta a las nueve páginas.** El motor del quiz vive en la
+plantilla y **no enseña nunca la retroalimentación de los distractores**, aunque el material promete
+que sí: al acertar solo se ve la de la correcta, y al fallar, la pista. De las 39 retros de
+distractor escritas para el cap. 3, un estudiante lee cero o una. Arreglarlo toca la plantilla, así
+que se retropropaga a las nueve y hay que coordinar quién reensambla y quién verifica.
