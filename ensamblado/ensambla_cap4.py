@@ -129,7 +129,7 @@ def main():
       modules: [
         { id: 1, title: "¿Por qué estratificar?", shortTitle: "Por qué", duration: "18 min" },
         { id: 2, title: "La teoría en el marco π", shortTitle: "Teoría", duration: "25 min" },
-        { id: 3, title: "Pesos y estimación", shortTitle: "Pesos", duration: "22 min" },
+        { id: 3, title: "Pesos y estimación", shortTitle: "Pesos", duration: "27 min" },
         { id: 4, title: "Asignación de observaciones", shortTitle: "Asignación", duration: "35 min" },
         { id: 5, title: "Asignación óptima con costos", shortTitle: "Costos", duration: "28 min" },
         { id: 6, title: "Definición de estratos", shortTitle: "Definir estratos", duration: "18 min" },

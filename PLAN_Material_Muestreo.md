@@ -4497,3 +4497,53 @@ faltaba era otra cosa. Y una aserción escrita para adornar un cálculo acabó t
 había dado por evidente; si no la hubiera puesto, la frase se publica.
 
 **Pendiente:** el visto bueno de Javier para publicar.
+
+---
+
+### T7.43 — La letra pequeña de la proporción y los grados de libertad: el M3 del cap. 4 (2026-09-17)
+
+Tercera tarea de la fase 3 del plan del capítulo 4 con Lohr 3.ª ed. (tareas B6 y B7).
+
+**El defecto.** El M3 estimaba una proporción y seguía: la calculaba a mano y con `survey`, comparaba
+las dos cifras y pasaba de página. Nunca escribía **la fórmula** —las ecs. 3.7 y 3.8 de Lohr— ni el
+**total** de unidades con la característica, y dejaba el «convenio del ±1,96» dicho sin contrapunto.
+
+**El hallazgo que amarra el $n_h-1$.** La 3.8 lleva $\hat p_h(1-\hat p_h)/(n_h-1)$, y eso suele
+enseñarse como una corrección más que memorizar. No lo es: **es la que `var()` ya venía aplicando sin
+decirlo**. La varianza muestral de una 0/1 *es* exactamente $\frac{n_h}{n_h-1}\hat p_h(1-\hat p_h)$
+—las cuatro regiones lo confirman al sexto decimal— y al dividirla entre $n_h$ aparece el $n_h-1$ de
+la fórmula. Escrita literal, la 3.8 devuelve el mismo **0,02479456** que el bloque R5 ya imprimía. El
+módulo pasa de usar la fórmula a entenderla, sin cambiar una sola cifra de lo que ya publicaba.
+
+**El total, que no estaba en ninguna parte del capítulo.** No el 51 % de condados que siembran poco,
+sino **1 581,8** condados con ee **76,318**, confirmado por `svytotal`. Los decimales recuerdan que
+es una estimación y no un conteo.
+
+**B7, en una nota nueva.** `degf()` da **296** = 300 − 4, con la explicación de por qué son $n-H$ y
+no $n-1$: cada estrato gasta uno en su propia media. Con la $t$ el intervalo pasa de
+0,46532–0,56251 a 0,46512–0,56271, invisible — lo que **justifica** el convenio del material en vez
+de solo declararlo. Y la tabla de cuantiles dice cuándo deja de ser invisible: **1,225 %** más ancho
+con 100 gl, **6,429 %** con 20, **13,683 %** con 10.
+
+**Un enlace que apareció solo.** El M6 recomienda, citando a Lohr §3.5, «cuanta más información,
+más estratos», hasta dejar dos unidades por estrato. **Ese es exactamente el diseño donde la $t$
+importa**: 150 estratos de dos unidades dan 150 gl, no 299. Los dos módulos llevaban meses
+publicados sin que nadie cruzara la recomendación de uno con la advertencia que le faltaba al otro.
+La nota nueva lo dice con esas palabras.
+
+**Verificado.** Byte a byte; **389 de 389** cifras de bloques (eran 348) y **123 de prosa · 0 sin
+respaldo** (eran 113); `anota_salidas.py --check` sin diferencias. En el navegador: 20 expresiones
+KaTeX en el M3, 0 `.katex-error`, cinco bloques, ningún `$` suelto y consola limpia. M3 pasa de 22 a
+**27 min**. Comprobado antes de tocar: el quiz del M3 va de pesos y promedio bruto, así que nada de
+lo nuevo lo contradice, y no hay banco del Quiz 2 en el repositorio.
+
+**Calendario:** M3 se dicta el **24 de septiembre junto con el Quiz 2**, así que el cambio entra una
+semana antes, que es lo que R2 permite. El quiz vive fuera del repositorio: si sus preguntas tocan
+proporciones, ahora hay fórmula y total publicados que antes no estaban.
+
+**Lo que enseña.** Un módulo puede tener todas las cifras correctas y aun así no enseñar la fórmula,
+porque la biblioteca la aplica por dentro. **Cuando una función hace lo correcto sin que se vea,
+el material hereda el resultado pero no el entendimiento**: aquí bastó imprimir la identidad que
+`var()` da por supuesta para que el $n_h-1$ dejara de ser un detalle que memorizar.
+
+**Pendiente:** el visto bueno de Javier para publicar.

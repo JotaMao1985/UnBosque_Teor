@@ -103,6 +103,52 @@ svymean(~menor200k, dis)
 #>              mean     SE
 #> menor200k 0.51391 0.0248
 
+cat("\n###BLOQUE-R5B###\n")
+# Por que la formula de Lohr (3.8) lleva n_h - 1 y no n_h: porque var() de
+# una variable 0/1 ES exactamente n_h/(n_h - 1) * p_h (1 - p_h).
+round(rbind(var_R   = v_h,
+            formula = as.numeric(nh) / (as.numeric(nh) - 1) * p_h * (1 - p_h)), 6)
+#>              NC       NE        S        W
+#> var_R   0.21245 0.047619 0.221338 0.212195
+#> formula 0.21245 0.047619 0.221338 0.212195
+
+# Escrita literal, la 3.8 da la misma cifra que el bloque anterior:
+V_38 <- sum((1 - fh) * Wh^2 * p_h * (1 - p_h) / (as.numeric(nh) - 1))
+round(c(ec_3.8 = sqrt(V_38), bloque_R5 = sqrt(V_p)), 8)
+#>     ec_3.8  bloque_R5
+#> 0.02479456 0.02479456
+
+# El TOTAL de unidades con la caracteristica es sum(N_h p_h), y su error
+# estandar es N veces el de la proporcion (Lohr: V(t) = N^2 V(p)).
+round(c(condados = sum(as.numeric(Nh) * p_h), ee = N * sqrt(V_p)), 3)
+#> condados       ee
+#> 1581.830   76.318
+svytotal(~menor200k, dis)
+#>            total     SE
+#> menor200k 1581.8 76.318
+
+# Los grados de libertad de un estratificado son n - H, no n - 1: cada
+# estrato gasta uno en su propia media.
+c(degf = degf(dis), n_menos_H = nrow(agstrat) - length(Nh))
+#>      degf n_menos_H
+#>       296       296
+# El intervalo con la normal (el convenio del material) y con la t:
+round(rbind(normal = confint(svymean(~menor200k, dis))[1, ],
+            t_296  = confint(svymean(~menor200k, dis), df = degf(dis))[1, ]), 5)
+#>          2.5 %  97.5 %
+#> normal 0.46532 0.56251
+#> t_296  0.46512 0.56271
+
+# Cuando SI importa la t: cuando quedan pocos gl, o sea muchos estratos
+# chicos. El exceso es cuanto mas ancho sale el intervalo que con la normal.
+gl  <- c(296, 100, 50, 20, 10)
+cua <- rbind(t = qt(0.975, gl), exceso_pct = 100 * (qt(0.975, gl) / qnorm(0.975) - 1))
+colnames(cua) <- paste0("gl=", gl)
+round(cua, 3)
+#>            gl=296 gl=100 gl=50 gl=20  gl=10
+#> t           1.968  1.984 2.009 2.086  2.228
+#> exceso_pct  0.411  1.225 2.479 6.429 13.683
+
 cat("\n###BLOQUE-R6###\n")
 # Como repartir n = 300 entre los estratos? Todo sale de la poblacion:
 # los tamanos N_h y las desviaciones S_h.

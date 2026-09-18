@@ -3845,7 +3845,8 @@ svytotal(~acres92, dis)
           corrección por población finita de cada estrato. Si se omite <code>strata=</code>, survey cree que hubo
           urna única y el error estándar sale mal — casi siempre <em>más grande</em> de lo que corresponde, como en
           el capítulo 2 pasaba al olvidar el fpc. El intervalo usa la normal ($\pm 1{,}96\,$ee), el convenio de
-          todo el material.</p>
+          todo el material — al final del módulo se ve qué cambiaría usando la $t$, que es lo que hace casi
+          todo el software de encuestas.</p>
       </div>
 
       <p>Una proporción no necesita teoría nueva: es la media de una variable 0/1. La proporción de condados que
@@ -3873,6 +3874,97 @@ svymean(~menor200k, dis)
 #&gt;              mean     SE
 #&gt; menor200k 0.51391 0.0248</code></pre>
         </div>
+      </div>
+
+      <p>Que no haga falta teoría nueva no significa que la fórmula no tenga letra pequeña. Escrita para
+        proporciones, con $\hat{p}_h$ la proporción muestral del estrato $h$, queda así:</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Proporciones y totales en el estratificado</p>
+        $$\hat{p}_{\text{str}} = \sum_{h=1}^{H} \frac{N_h}{N}\,\hat{p}_h
+        \qquad
+        \hat{V}(\hat{p}_{\text{str}}) = \sum_{h=1}^{H}\left(1 - \frac{n_h}{N_h}\right)
+        \left(\frac{N_h}{N}\right)^{\!2} \frac{\hat{p}_h(1-\hat{p}_h)}{n_h - 1}$$
+        <p style="margin-bottom:0;">Y para el <strong>número</strong> de unidades con la característica, no su
+          proporción: $\hat{t}_{\text{str}} = \sum_h N_h \hat{p}_h$, con
+          $\hat{V}(\hat{t}_{\text{str}}) = N^2\,\hat{V}(\hat{p}_{\text{str}})$. Fíjate en el denominador:
+          <strong>$n_h - 1$, no $n_h$</strong>.</p>
+      </div>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="La fórmula de la proporción, el total y los grados de libertad">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r"># Por que la formula de Lohr (3.8) lleva n_h - 1 y no n_h: porque var() de
+# una variable 0/1 ES exactamente n_h/(n_h - 1) * p_h (1 - p_h).
+round(rbind(var_R   = v_h,
+            formula = as.numeric(nh) / (as.numeric(nh) - 1) * p_h * (1 - p_h)), 6)
+#&gt;              NC       NE        S        W
+#&gt; var_R   0.21245 0.047619 0.221338 0.212195
+#&gt; formula 0.21245 0.047619 0.221338 0.212195
+
+# Escrita literal, la 3.8 da la misma cifra que el bloque anterior:
+V_38 &lt;- sum((1 - fh) * Wh^2 * p_h * (1 - p_h) / (as.numeric(nh) - 1))
+round(c(ec_3.8 = sqrt(V_38), bloque_R5 = sqrt(V_p)), 8)
+#&gt;     ec_3.8  bloque_R5
+#&gt; 0.02479456 0.02479456
+
+# El TOTAL de unidades con la caracteristica es sum(N_h p_h), y su error
+# estandar es N veces el de la proporcion (Lohr: V(t) = N^2 V(p)).
+round(c(condados = sum(as.numeric(Nh) * p_h), ee = N * sqrt(V_p)), 3)
+#&gt; condados       ee
+#&gt; 1581.830   76.318
+svytotal(~menor200k, dis)
+#&gt;            total     SE
+#&gt; menor200k 1581.8 76.318
+
+# Los grados de libertad de un estratificado son n - H, no n - 1: cada
+# estrato gasta uno en su propia media.
+c(degf = degf(dis), n_menos_H = nrow(agstrat) - length(Nh))
+#&gt;      degf n_menos_H
+#&gt;       296       296
+# El intervalo con la normal (el convenio del material) y con la t:
+round(rbind(normal = confint(svymean(~menor200k, dis))[1, ],
+            t_296  = confint(svymean(~menor200k, dis), df = degf(dis))[1, ]), 5)
+#&gt;          2.5 %  97.5 %
+#&gt; normal 0.46532 0.56251
+#&gt; t_296  0.46512 0.56271
+
+# Cuando SI importa la t: cuando quedan pocos gl, o sea muchos estratos
+# chicos. El exceso es cuanto mas ancho sale el intervalo que con la normal.
+gl  &lt;- c(296, 100, 50, 20, 10)
+cua &lt;- rbind(t = qt(0.975, gl), exceso_pct = 100 * (qt(0.975, gl) / qnorm(0.975) - 1))
+colnames(cua) &lt;- paste0("gl=", gl)
+round(cua, 3)
+#&gt;            gl=296 gl=100 gl=50 gl=20  gl=10
+#&gt; t           1.968  1.984 2.009 2.086  2.228
+#&gt; exceso_pct  0.411  1.225 2.479 6.429 13.683</code></pre>
+        </div>
+      </div>
+
+      <p>Ese $n_h - 1$ no es una corrección aparte que haya que recordar: es la que <code>var()</code> ya venía
+        aplicando sin decirlo. La varianza muestral de una variable 0/1 <em>es</em>
+        $\frac{n_h}{n_h-1}\hat{p}_h(1-\hat{p}_h)$ —las cuatro regiones lo confirman al sexto decimal— y al
+        dividirla entre $n_h$ aparece el $n_h - 1$ de la fórmula. Escrita literal, la ecuación de Lohr devuelve
+        el mismo <strong>0,02479456</strong> del bloque anterior.</p>
+
+      <p>El total se lee en las unidades en que se decide: no el 51 % de condados que siembran poco, sino
+        <strong>1 581,8</strong> condados, con error estándar <strong>76,318</strong>. Que salga con decimales
+        recuerda lo que es — una estimación, no un conteo—, y <code>svytotal</code> confirma las dos cifras.</p>
+
+      <div class="note">
+        <p><strong>Los grados de libertad de un estratificado son $n - H$, no $n - 1$.</strong> Cada estrato gasta
+          uno en estimar su propia media: aquí <code>degf()</code> da <strong>296</strong>, que son los 300 condados
+          menos las 4 regiones. La mayoría del software de encuestas construye el intervalo con el percentil de una
+          $t$ de $n-H$ grados de libertad en vez del $1{,}96$ de la normal. ¿Cuánto cambia? Con 296 grados de
+          libertad, de <strong>0,46532</strong>–<strong>0,56251</strong> a
+          <strong>0,46512</strong>–<strong>0,56271</strong>: nada que se pueda ver.</p>
+        <p style="margin-bottom:0;">Pero la última tabla dice cuándo sí importa, y es un caso real: los diseños con
+          <strong>muchos estratos chicos</strong>, que son justo los que el módulo 6 va a recomendar. Con 100 grados
+          de libertad el intervalo se ensancha un <strong>1,225 %</strong>; con 20, un <strong>6,429 %</strong>; con
+          10, un <strong>13,683 %</strong>. Un diseño con dos unidades por estrato y 150 estratos tiene 150 grados
+          de libertad, no 299: usar la normal ahí es declarar una precisión que no se tiene.</p>
       </div>
 
       <p>Queda la advertencia más importante del módulo. La asignación de <code>agstrat</code> es casi proporcional,
@@ -5717,7 +5809,7 @@ round(100 * c(cv_stsi_Taxes = as.numeric(cv_stsi), cv_ppt_Income = cv_ppt), 2)
       modules: [
         { id: 1, title: "¿Por qué estratificar?", shortTitle: "Por qué", duration: "18 min" },
         { id: 2, title: "La teoría en el marco π", shortTitle: "Teoría", duration: "25 min" },
-        { id: 3, title: "Pesos y estimación", shortTitle: "Pesos", duration: "22 min" },
+        { id: 3, title: "Pesos y estimación", shortTitle: "Pesos", duration: "27 min" },
         { id: 4, title: "Asignación de observaciones", shortTitle: "Asignación", duration: "35 min" },
         { id: 5, title: "Asignación óptima con costos", shortTitle: "Costos", duration: "28 min" },
         { id: 6, title: "Definición de estratos", shortTitle: "Definir estratos", duration: "18 min" },
