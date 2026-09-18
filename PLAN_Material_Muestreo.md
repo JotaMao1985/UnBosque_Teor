@@ -5835,3 +5835,44 @@ no. La diferencia es que la portada la revisa alguien cada vez que cambia un cap
 no lo mira nadie: ninguna de las cuatro herramientas lo toca —`verifica_bloques` y
 `verifica_publicado` solo leen `.html`, `verifica_referencias` también, y `cuenta_sitio`
 cuenta pero no contrasta—. **Es el único archivo publicado sin ninguna verificación encima.**
+
+---
+
+### T7.68 — El motor del quiz publicado, y `main` deja de vivir en un solo disco (2026-09-18)
+
+Con el visto bueno de Javier, las dos acciones que estaban paradas y que **no son la misma**:
+
+- **`gh-pages`: `a550483` → `f139b42`.** Once archivos.
+- **`main`: `d49429c` → `354655b`** en `origin`. Diez commits que hasta ahora solo existían en este
+  disco: los tres bloques de la otra sesión y los siete de ésta.
+
+**Qué se arregla para el estudiante.** El motor cerraba cada pregunta **sin enseñar nunca la
+retroalimentación de las opciones que no eligió**: al acertar veía solo la de la correcta, y al
+fallar, la pista. De las 39 retros de distractor escritas para el cap. 3, un estudiante leía **cero
+o una**; lo mismo en los otros ocho capítulos. Ahora se despliega «Por qué las demás» con todas, con
+su letra, y marcando la correcta si no dio con ella. Es la mitad del valor didáctico del banco, que
+llevaba escrita desde el principio y no se leía.
+
+Van además el banco del cap. 3 rehecho (17 → 21 preguntas), el índice a 103, la tarjeta del cap. 3
+que decía 5 000 réplicas donde son 200 000, y el README publicado puesto al día.
+
+**El reparto que funcionó, y por qué.** Retropropagó la otra sesión, verificó ésta. La comprobación
+que hace útil ese reparto no es repetir sus pruebas: es la que **solo puede hacer quien no escribió
+el cambio**. Extraje las líneas añadidas y quitadas de mis siete capítulos y del preparcial y
+comparé sus huellas: **las ocho idénticas** (`94b74c54…`). Eso descarta que se colara contenido en
+un cambio de plantilla, y el «+76 −5 en cada una» que ella reportó no lo descarta —el recuento
+coincide aunque el contenido difiera—.
+
+**Y la que nadie había mirado.** El panel se construye con `innerHTML` **después** del render, que
+es el sitio clásico donde la matemática se queda sin procesar. No se queda: 4 expresiones, 0
+`.katex-error`, ningún `$…$` crudo. La otra sesión lo dijo claro: «ése era el riesgo real y yo no lo
+había mirado».
+
+Probados los cuatro caminos sobre el cap. 4 —ella probó el 3 y el 6—: acierto a la primera, fallo y
+luego acierto, fallar sin acertar (marca «era la correcta») y selección múltiple, que no despliega
+panel porque sus opciones no llevan retro propia.
+
+**Anotado para la próxima: publicar y empujar `main` son dos cosas distintas.** `gh-pages` solo
+lleva `sitio/` —catorce archivos—, así que el PLAN, `precalculo/`, `ensamblado/` y la plantilla no
+llegan nunca al sitio; y publicar no respalda el repositorio. La otra sesión las había juntado en
+una frase, y es el tipo de confusión que acaba publicando de más.
