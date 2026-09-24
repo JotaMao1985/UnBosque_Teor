@@ -6726,3 +6726,9 @@ prosa 15 de 15 · bloques y prosa 0 sin respaldo, LaTeX 0 en 9 páginas · refer
 0 nuevas, 0 cambiadas · `cuenta_sitio.py` 0 cifras desajustadas · en el navegador, el M14 con la
 pregunta nueva y el M15 del simulacro, 0 `.katex-error` y consola limpia. `main` avanzó por avance
 rápido. **Sin push y sin publicar:** `origin/main` y `gh-pages` esperan el visto bueno de Javier.
+
+**El push.** Javier aprobó subir `ecd7c95` a `origin/main` el mismo 2026-09-24, pero ya estaba arriba: se
+había ido a las 18:38 con la anotación de la publicación de T7.83 (`e77b204`, véase su «Un error de esta
+publicación»). El visto bueno cierra ese push después de hecho. `gh-pages` (`1c79cd5`) **no** lo lleva:
+difiere de `origin/main:sitio` justo en las dos páginas de esta tarea (14 y 12 líneas), y sigue esperando
+la aprobación de la publicación.
