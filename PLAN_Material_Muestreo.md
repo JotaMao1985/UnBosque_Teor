@@ -6460,3 +6460,39 @@ la suya dio **0** y la mía **2**. La suya exigía glosa; la mía la hacía opci
 primer número. Misma conclusión por caminos distintos, que es la forma fuerte de coincidir.
 
 **Después:** 424 resueltas, 424 revisadas, 0 nuevas, 0 cambiadas, salida 0.
+
+### T7.81 — «5 a 8» era el nombre de un archivo, no un rango de módulos (2026-09-23)
+
+`ensamblado/modulos/cap4/modulos_10_12.html` (M12, «Para ampliar este módulo»), la página ensamblada
+del cap. 4 y la línea base de referencias. Javier: «Arregla la referencia».
+
+**Lo que T7.80 preguntó mal.** Planteé la duda como «¿qué quiso decir el M8?», y a esa pregunta
+Javier contestó —vía la otra sesión, párrafo «Decidido» de T7.80— que el módulo 8 sirve. Pero la
+frase era «módulos 5 a 8: **el estimador de razón** de donde sale todo esto», y el estimador de razón
+del cap. 3 nunca estuvo en 5–8: ni cuando se escribió (`ea718be^`: M5 proporciones, M6 regresión, M7
+diferencia, M8 dominios) ni hoy. Está en **M2–M4**: el estimador, cuándo gana, y el sesgo que el
+propio M12 invoca («es el sesgo que el capítulo 3 midió para un solo estimador de razón»).
+
+**De dónde salía el «5 a 8».** La promesa que el M12 cumple —«dentro de cada estrato o sobre el
+conjunto»— vivía en `modulos_5_8.html` del cap. 3, en su M5. El rango copió **el nombre del
+archivo** donde estaba la promesa, no los módulos que la glosa describe. Hoy ese archivo se llama
+`modulos_5_7.html` y la promesa sigue en el M5.
+
+**El arreglo, que respeta lo decidido.** Dos entradas en vez de una: «módulos 2 a 4» para el
+estimador —con «el 4 es donde se mide su sesgo»— y «módulo 8» aparte, porque sí sirve: estima cada
+región por separado y suma, y la separada es el caso en que todos los estimadores son de razón. El
+M8 del cap. 3 ya apuntaba de vuelta al M12 del cap. 4; ahora la referencia va en los dos sentidos.
+Lo que sale es M5–M7, que nadie había defendido.
+
+**Lo que solo se vio en la página.** El primer texto repetía casi palabra por palabra la entrada de
+Lohr §4.1.2 que tiene justo encima («que la separada comete $H$ veces»). En el diff eran dos líneas
+correctas; renderizadas, eran dos viñetas seguidas diciendo lo mismo. Se reescribió antes de
+commitear.
+
+**Línea base.** `--anota` añadió las cuatro nuevas (cap. 3 M2, M3, M4, M8), revisadas antes de
+anotar; las cuatro claves de «5 a 8» se quitaron a mano, y la del M8 otra vez tras la reescritura,
+porque su clave lleva el texto que la precede. 436 claves, 0 huérfanas.
+
+**Después:** referencias 424 resueltas, 424 revisadas, 0 nuevas, 0 cambiadas, salida 0; LaTeX 0 en 9
+páginas; cotejo de cifras 0 desajustadas; reensamblado del cap. 4 idéntico byte a byte antes de
+editar; KaTeX de la lista comprobado en el navegador. Sin publicar.
