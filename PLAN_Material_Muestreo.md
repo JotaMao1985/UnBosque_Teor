@@ -6431,6 +6431,10 @@ para un módulo sobre razón separada, «un estimador distinto en cada grupo» e
 falta. Por eso no se tocó: no es un error que corregir, es una decisión sobre qué se quiso decir, y
 es de Javier.
 
+**Decidido (2026-09-23).** Javier: «Déjalo como está, el módulo 8 sirve». La frase no se toca, y
+la línea base no necesita nada: ya registra el `#8` con el título de hoy, «Un estimador distinto en
+cada grupo», así que lo que queda aceptado es lo que el lector encuentra al seguir la referencia.
+
 **Las once nuevas, revisadas antes de anotar** —no después, que es de lo que va la casa—:
 
 | dónde | qué añade | por qué es correcta |
