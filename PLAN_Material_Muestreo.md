@@ -6706,3 +6706,15 @@ prosa 15 de 15 · bloques y prosa 0 sin respaldo, LaTeX 0 en 9 páginas · refer
 0 nuevas, 0 cambiadas · `cuenta_sitio.py` 0 cifras desajustadas · en el navegador, el M14 con la
 pregunta nueva y el M15 del simulacro, 0 `.katex-error` y consola limpia. `main` avanzó por avance
 rápido. **Sin push y sin publicar:** `origin/main` y `gh-pages` esperan el visto bueno de Javier.
+
+**Publicado el 2026-09-24.** `main` avanzó de `980bae0` a `2481090` y se subió; `gh-pages` pasó de `b858ef9`
+a `1c79cd5`, construido con `git commit-tree` del árbol `2481090:sitio` sobre la punta, sin `subtree split`
+porque no había nada ajeno que excluir. El diff de `gh-pages` fue la página del cap. 3, la portada y el README.
+El invariante `origin/gh-pages^{tree}` = `origin/main:sitio` está en verde, y `verifica_publicado.py --local`
+del cap. 3 arrancó antes de empujar (15 bloques de R, 4 de Python). Sobre **lo servido**:
+- el cap. 3 es byte a byte el de `2481090` (`cmp`), su código arranca, y la huella coincide en las 10 páginas;
+- en el navegador, a 375 px: 18 preguntas, 113 fórmulas, 0 errores, sin desborde y con la consola limpia.
+
+Una trampa nueva de zsh: en `git push origin "$PAG:refs/heads/gh-pages"`, el `:r` es un modificador de zsh
+(quita la extensión) y se come la `r` de `refs`. El push murió sin publicar nada. Va con llaves:
+`"${PAG}:refs/heads/gh-pages"`.
