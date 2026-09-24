@@ -1,0 +1,78 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 15 · Simulacro del quiz del capítulo 3                -->
+  <!-- ============================================================ -->
+  <template id="module-15">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 15</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Simulacro del quiz <span
+            class="text-gray-400 font-normal text-2xl">/ Mock quiz</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Medir, con el reloj puesto, si las decisiones de este
+              capítulo —y las de los módulos 7 a 9 del capítulo 2— salen solas cuando las pide un quiz, y dejar por
+              escrito las respuestas para contrastarlas después.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este módulo no añade contenido: es un ensayo. El quiz del capítulo 3 se presenta en Brightspace y dura
+        <strong>setenta minutos</strong>. Tiene <strong>dieciocho preguntas</strong> de un punto: las tres primeras
+        son de los módulos 7, 8 y 9 del <a href="capitulo-2-diseno-mas-sistematico.html"
+          class="text-primary underline" target="_blank" rel="noopener">capítulo 2</a> —tamaño de muestra, Bernoulli y con reemplazo, sistemático— y
+        las quince siguientes, de este capítulo. Hay siete de selección con una sola respuesta, cuatro de varias
+        respuestas, dos de verdadero o falso, dos que piden una cifra, una con dos espacios para rellenar, una de
+        ordenar y una de emparejar. Va una pregunta por página, y a una pregunta ya pasada no se puede volver.</p>
+
+      <p>Abajo está un simulacro con esa misma forma: las mismas dieciocho preguntas, en el mismo orden, con los
+        mismos tipos y el mismo reloj. <strong>No es el quiz</strong>: es una versión aparte, con otras situaciones
+        y otros datos, todos construidos, que no se usa en Brightspace. Cada pregunta de aquí es del mismo módulo y
+        del mismo tema que la del mismo número en el quiz, aunque a veces lo mire desde otro ángulo, así que
+        memorizar sus cifras o sus respuestas no sirve de nada. Lo que se repite es la
+        <em>decisión</em> —contra quién compara el umbral del módulo 3, qué criterio descarta la razón y cuál la
+        regresión, cuándo un cociente es una razón, qué fórmula del MAS falla en un sistemático— y esa es la que
+        conviene tener automatizada antes de entrar.</p>
+
+      <div class="warning">
+        <p><strong>Aquí no se corrige.</strong> El simulacro no trae la clave ni la retroalimentación, y no las trae a
+          propósito: esta página es pública, y una clave incrustada en ella la lee cualquiera desde el código fuente.
+          Responde, anota lo que respondiste —el resumen de abajo lo escribe por ti— y contrástalo con el material:
+          cada pregunta dice de qué módulo sale. Las veintiuna preguntas del <strong>módulo 14</strong> sí llevan pista
+          y explicación de cada opción.</p>
+      </div>
+
+      <div class="simulacro" data-simulador="cap3-simulacro">
+        <h4><i class="fas fa-stopwatch" aria-hidden="true"></i> Simulacro del quiz · capítulo 3</h4>
+        <p class="text-sm" style="margin-bottom:0;">Dieciocho preguntas, setenta minutos. Se responde y se
+          cronometra; no se corrige.</p>
+        <div class="simulacro-mandos">
+          <button type="button" class="simulacro-empezar"></button>
+          <span class="simulacro-reloj" role="timer" aria-live="off"></span>
+          <span class="simulacro-conteo" aria-live="polite"></span>
+          <button type="button" class="simulacro-borrar">Borrar</button>
+        </div>
+        <div class="simulacro-preguntas"></div>
+        <p class="simulacro-resumen"></p>
+      </div>
+
+      <div class="note">
+        <p><strong>Cómo aprovecharlo.</strong> Hazlo una vez con el reloj y sin abrir nada, en orden y sin volver
+          atrás, como en Brightspace: lo que falle ahí es lo que hay que repasar. Después repítelo con el material
+          delante y mira cuánto cuesta cada consulta, porque en el quiz ese tiempo sale del mismo presupuesto. Las que
+          más se demoran son las que traen una tabla o una salida de R: se abrevian sabiendo de antemano qué cifra
+          decide cada cosa.</p>
+        <p>Teclea las cifras como las teclearías en Brightspace: con los decimales que pide cada pregunta, con punto
+          decimal y <strong>sin separador de miles</strong>. En las de ordenar y emparejar se elige en un desplegable
+          por fila, también como allá. En las de varias respuestas, cada marca equivocada resta lo que suma una
+          acertada: Brightspace las califica «correctas menos incorrectas».</p>
+        <p style="margin-bottom:0;">El reloj sigue corriendo si sales a otro módulo, igual que el del salón, y lo
+          respondido se conserva mientras no cierres la pestaña, aunque recargues la página.
+          <strong>Borrar</strong> lo devuelve todo al principio; pide un segundo clic para que no se pierda nada
+          por accidente.</p>
+      </div>
+    </div>
+  </template>

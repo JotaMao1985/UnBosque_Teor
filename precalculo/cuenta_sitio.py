@@ -16,9 +16,12 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 SITIO = RAIZ / "sitio" / "muestreo"
 
+# El simulacro de un quiz (el módulo 15 del cap. 3) se engancha al registro SIMULADORES para que
+# loadModule() lo arranque, pero no es un simulador: es un examen de práctica, sin gráfico ni
+# deslizadores. No entra en la cuenta, y el README y la portada no lo suman a los simuladores.
 CAMPOS = [
     ("módulos",      lambda h: h.count("<template id=\"module-")),
-    ("simuladores",  lambda h: len(re.findall(r"\n    SIMULADORES\['", h))),
+    ("simuladores",  lambda h: len(re.findall(r"\n    SIMULADORES\['(?![\w-]*-simulacro')", h))),
     ("t-ranking",    lambda h: len(re.findall(r"\n    TABLAS_RANKING\['", h))),
     ("preguntas",    lambda h: len(re.findall(r"\n        tipo: ", h))),
     ("ejercicios",   lambda h: h.count('class="ejercicio-guiado"')),

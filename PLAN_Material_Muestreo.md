@@ -6566,3 +6566,77 @@ ajeno que excluir. El diff de `gh-pages` fue solo la página del cap. 2 (+15 −
 arrancó antes de empujar (23 bloques de R, 7 de Python). Sobre **lo servido**, con Pages ya
 construido en `b858ef9`: el cap. 2 coincide con la rama y su código arranca, y la huella coincide
 en las 10 páginas.
+
+### T7.83 — El simulacro del quiz del cap. 3: módulo 15, sin clave (2026-09-24)
+
+Javier pidió un simulacro del quiz del capítulo 3 «tal como se hizo con series de tiempo y diseño de
+experimentos», con otra variante y al final del capítulo. También decidió cuándo y cómo:
+- Se publica **antes** del quiz, y por eso es **todo distinto**: cada pregunta evalúa lo mismo que la del
+  mismo número en el quiz, con otra situación, otros datos y otras opciones.
+- Tiene las **18 preguntas del quiz, en su orden, y 70 minutos**.
+- Todas las cifras son construidas, con semilla fija. No se usa ninguna población de Lohr, para no gastarle
+  al Parcial 2 las que `verifica_poblacion_nueva.py` da por libres.
+
+**Qué entra en el repositorio.**
+- `ensamblado/modulos/cap3/modulo_15_simulacro.html`: el ensayo, con el aviso «Aquí no se corrige».
+- `ensamblado/modulos/cap3/simulacro.js`: el widget y el registro `SIMULACROS['cap3-simulacro']`, entre dos
+  marcadores. El widget está injertado del de Diseño, con dos formas de responder nuevas porque el quiz tiene
+  siete tipos: varias casillas en una pregunta (la de rellenar espacios) y un desplegable por fila (ordenar y
+  emparejar).
+- `ensamblado/modulos/cap3/simulacro.css`: el componente. La tabla de un enunciado se desplaza dentro de su
+  caja, y una salida de R larga no se corta a 300 px.
+- `ensamblado/ensambla_cap3.py`:
+  - añade el módulo 15 a courseData (70 min), el CSS y el JS;
+  - exige que cada pieza aparezca una sola vez;
+  - aborta si el registro trae «correcta», «retro», «Correcto.» u otra pista de la clave;
+  - valida el registro con una **lista blanca**: JSON, solo los campos de cada tipo de pregunta, las 18 en orden
+    y 70 minutos. Un campo nuevo, se llame como se llame, para el ensamblado en vez de publicarse.
+
+**Qué NO entra.** La clave, el banco con las explicaciones y el precálculo viven en `quiz_cap3/`, fuera de
+git, con el quiz. Lo publicado es solo enunciados y opciones.
+
+**Herramientas que cambian.**
+- `precalculo/cuenta_sitio.py` y el resumen del ensamblador dejan de contar como simulador el registro
+  `*-simulacro`: se engancha a `SIMULADORES` para que `loadModule()` lo arranque, pero es un examen de
+  práctica. La portada y el README quedan en **15 módulos · 9 simuladores** para el cap. 3 y **92 módulos ·
+  70 simuladores** en total, y el cotejo queda en 0 desajustadas.
+- `precalculo/cifras_prosa.json` gana 36 entradas: las cifras de los enunciados y las opciones del simulacro.
+  - Tres no son cifras: son dos celdas contiguas de una tabla que el extractor lee juntas.
+  - Llevan una justificación común que **no dice cuál es la clave**, porque este archivo es público.
+  - Salen del precálculo del simulacro, y las contrasta su prueba, fuera del repositorio.
+- `precalculo/referencias_cruzadas.json` gana las 8 referencias nuevas del módulo 15, revisadas a ojo: los
+  módulos 7 a 9 del cap. 2, el 3 y el 14.
+
+**Verificado.**
+- Bloques: `verifica_bloques.py` da 283 de 283 cifras anunciadas en el cap. 3.
+- Prosa: `--todos --prosa` queda en 0 sin respaldo; LaTeX, en 0 con barra simple.
+- Referencias: 432 resueltas, 0 nuevas y 0 cambiadas.
+- `verifica_tabla.py` da 6 en verde, y `node --check` pasa sobre el motor.
+- Pruebas: `prueba_prosa` 15/15 y `prueba_cadenas` 3/3.
+- `prueba_bancos` da 7 fallos: «la retroalimentación nombra posiciones y la página baraja», en cap3[7], [16]
+  y [19] y en cap4[1], [3], [5] y [8]. Salen **idénticos con la página del cap. 3 de antes**, así que no son
+  de esta tarea.
+- En el navegador:
+  - se pintan las 18 preguntas, con 113 fórmulas y 0 `.katex-error`;
+  - el reloj, lo respondido y el resumen sobreviven a ir al módulo 9 y volver, y también a recargar la página;
+    Borrar pide un segundo clic y deja todo en cero, y a 0:00 el simulacro avisa;
+  - en móvil (375 px) no hay desborde de página;
+  - la consola queda limpia.
+
+**Auditoría (el mismo día).** Javier pidió auditarlo con varios agentes antes de publicarlo: una resolución a
+ciegas, un auditor por cada bloque de preguntas, uno de confidencialidad y uno del código. Las 18 claves estaban
+bien y lo público no traía nada del quiz. Se corrigió lo que dejaba adivinar una respuesta sin leer la
+pregunta, y el comportamiento del widget:
+- las filas de la pregunta de emparejar ahora se barajan;
+- en las de varias respuestas, las correctas ya no se separan de las falsas por el largo ni por traer cifras, y
+  el generador lo comprueba;
+- varias preguntas se reescribieron con otros hechos del mismo módulo;
+- el widget guarda lo respondido en `sessionStorage` (con try/catch; sin él funciona igual), Borrar pide un
+  segundo clic, y a 0:00 lo dice y el botón pasa a «Reiniciar el reloj»;
+- accesibilidad: cada desplegable nombra su fila y las casillas llevan su rótulo visible; 16 px en móvil;
+- el enlace al capítulo 2 del módulo abre en otra pestaña, para no perder lo respondido;
+- los comentarios públicos ya no nombran los archivos privados.
+
+**Aprobado por Javier** el mismo día, después de la auditoría. Antes del commit se quitaron de
+`cifras_prosa.json` tres entradas que había dejado la tabla antigua de la pregunta 11: ya no estaban en la
+página, y nombraban los archivos privados.

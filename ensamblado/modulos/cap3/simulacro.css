@@ -1,0 +1,322 @@
+    /* ------------------------------------------------------------------
+       Componente .simulacro — un examen de práctica que se responde y se
+       cronometra, pero NO se corrige. Publica las preguntas de un quiz cuya
+       clave no puede viajar en la página, porque el capítulo es público.
+
+       Injertado del Módulo 13 del capítulo 5 de Diseño de Experimentos
+       (2026-09-23), que viene del 11 del capítulo 3 de Series de Tiempo,
+       sin tocar una declaración: los cursos comparten paleta. Quita la caja
+       del caso, que aquí no hay, y añade al final lo que pide un quiz con
+       siete tipos de pregunta: varias casillas en una misma pregunta, las
+       filas con desplegable de emparejar y ordenar, y las tablas y salidas
+       de R dentro de un enunciado. Lo usa el módulo 15 y lo inserta
+       ensamblado/ensambla_cap3.py.
+       ------------------------------------------------------------------ */
+    .simulacro {
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Sin el degradado ni el borde naranja del h4 global, como en .simulador. */
+    .simulacro h4 {
+      color: #012820;
+      margin-top: 0;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border-left: none;
+      padding: 0;
+    }
+
+    .simulacro > h4 + p {
+      margin-top: 0.6rem;
+    }
+
+    .simulacro-mandos {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1rem 0 0.5rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .simulacro-empezar,
+    .simulacro-borrar {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .simulacro-empezar {
+      color: white;
+      background: #012820;
+      border: none;
+    }
+
+    /* Un naranja más oscuro que el #FF6600 de la marca: con letra blanca de
+       13px, ese no llega al contraste de 4,5:1. */
+    .simulacro-empezar:hover {
+      background: #c2410c;
+    }
+
+    .simulacro-borrar {
+      color: #012820;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.25);
+    }
+
+    .simulacro-borrar:hover {
+      background: #f1f5f9;
+    }
+
+    .simulacro-reloj {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #012820;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .simulacro-reloj.acabado {
+      color: #b91c1c;
+    }
+
+    .simulacro-conteo {
+      font-size: 0.8125rem;
+      color: #475569;
+    }
+
+    .simulacro-pregunta {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1.1rem 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .simulacro-etiqueta {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #475569;
+      background: #f1f5f9;
+      border-radius: 50px;
+      padding: 0.15rem 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .simulacro-enunciado {
+      color: #1f2937;
+    }
+
+    .simulacro-opciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+    }
+
+    .simulacro-opcion {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      color: #1f2937;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .simulacro-opcion:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .simulacro-opcion:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 1px;
+    }
+
+    .simulacro-opcion.marcada {
+      border-color: #012820;
+      background: #ecfdf5;
+    }
+
+    .simulacro-letra {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #475569;
+      flex: none;
+    }
+
+    .simulacro-opcion.marcada .simulacro-letra {
+      color: #012820;
+    }
+
+    .simulacro-resumen {
+      font-size: 0.8125rem;
+      color: #475569;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .simulacro-resumen code {
+      font-family: 'Fira Code', monospace;
+      font-size: inherit;
+      font-weight: 700;
+      color: #012820;
+      background: none;
+      padding: 0;
+    }
+
+    .simulacro-respuesta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .simulacro-numero {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9375rem;
+      color: #1f2937;
+      width: 10rem;
+      max-width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      padding: 0.45rem 0.7rem;
+    }
+
+    .simulacro-numero:focus-visible,
+    .simulacro-eleccion:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 1px;
+    }
+
+    /* Lo propio del capítulo 3 de Muestreo. */
+
+    /* Las tablas y las salidas de R van DENTRO del enunciado. El `table`
+       del curso ocupa todo el ancho y deja 2rem debajo, y el `pre` corta a
+       300px con barra: una salida de veinticinco líneas quedaría partida en
+       dos, y la pregunta es justamente leerla entera. El script que
+       escribe el registro quita los estilos en línea que el quiz necesita
+       en Brightspace, para que manden estas reglas. */
+    /* `display: block` para que el overflow-x del curso funcione: la tabla
+       de las tres regiones tiene ocho columnas, y en un teléfono, o en una
+       ventana a media pantalla, se salía por la derecha. */
+    /* `position: relative` porque KaTeX deja en cada fórmula una copia en
+       MathML con `position: absolute`: sin un ancestro posicionado, la de
+       la cabecera del umbral se escapa del desplazamiento de la tabla y
+       ensancha la página entera. */
+    .simulacro-enunciado table {
+      position: relative;
+      display: block;
+      width: auto;
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 0.75rem 0;
+      font-size: 0.875rem;
+    }
+
+    .simulacro-enunciado table th,
+    .simulacro-enunciado table td {
+      padding: 0.35rem 0.75rem;
+      text-align: right;
+    }
+
+    .simulacro-enunciado pre {
+      max-height: none;
+      padding: 1rem !important;
+      margin: 0.75rem 0;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+    }
+
+    .simulacro-casillas {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 1.5rem;
+    }
+
+    .simulacro-filas {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+    }
+
+    .simulacro-fila {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .simulacro-eleccion {
+      flex: none;
+      font-family: inherit;
+      font-size: 0.875rem;
+      color: #1f2937;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.375rem;
+      padding: 0.3rem 0.5rem;
+      min-width: 7.5rem;
+    }
+
+    .simulacro-fila-texto {
+      font-size: 0.9375rem;
+      color: #1f2937;
+      padding-top: 0.2rem;
+    }
+
+    @media (max-width: 640px) {
+      .simulacro {
+        padding: 1rem;
+      }
+
+      .simulacro-pregunta {
+        padding: 0.9rem 1rem;
+      }
+
+      .simulacro-fila {
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+
+      /* Por debajo de 16px, Safari en iOS acerca la página al tocar la
+         casilla o el desplegable. */
+      .simulacro-numero,
+      .simulacro-eleccion {
+        font-size: 16px;
+      }
+    }
+    /* ------------------- fin del componente .simulacro ------------------- */
