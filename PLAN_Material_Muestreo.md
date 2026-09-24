@@ -6434,6 +6434,7 @@ es de Javier.
 **Decidido (2026-09-23).** Javier: «Déjalo como está, el módulo 8 sirve». La frase no se toca, y
 la línea base no necesita nada: ya registra el `#8` con el título de hoy, «Un estimador distinto en
 cada grupo», así que lo que queda aceptado es lo que el lector encuentra al seguir la referencia.
+(Ver T7.81: la frase sí se tocó, y el M8 se quedó.)
 
 **Las once nuevas, revisadas antes de anotar** —no después, que es de lo que va la casa—:
 
@@ -6444,7 +6445,8 @@ cada grupo», así que lo que queda aceptado es lo que el lector encuentra al se
 | cap. 4 «módulos 1 a 8» | M2–M7 | «Estrato (módulos 1 a 8, con agstrat)»: el bloque de estrato acaba en M8 porque el M9 ya es PPT |
 | cap. 4 «cap. 3, módulos 5 a 8» | M6, M7 | esos dos **no** se movieron en la renumeración |
 
-Anotadas: 425 → 436 claves, 11 añadidas, **0 huérfanas**. No las hubo porque este cambio no toca
+Anotadas: 425 → 436 claves, 11 añadidas, **ninguna huérfana nueva** —la base ya arrastraba 12 del
+cap. 3; ver T7.81—. No las hubo porque este cambio no toca
 `REF_RE`: el texto de la referencia no crece, así que ninguna clave se mueve. La otra sesión sí tuvo
 dos y las borró a mano; se comprobó el delta en vez de suponerlo.
 
@@ -6491,8 +6493,19 @@ commitear.
 
 **Línea base.** `--anota` añadió las cuatro nuevas (cap. 3 M2, M3, M4, M8), revisadas antes de
 anotar; las cuatro claves de «5 a 8» se quitaron a mano, y la del M8 otra vez tras la reescritura,
-porque su clave lleva el texto que la precede. 436 claves, 0 huérfanas.
+porque su clave lleva el texto que la precede. 436 claves; este cambio no deja ninguna huérfana, pero
+la base arrastra **12**, todas del cap. 3 y ya presentes en `7cee2bd`.
+
+**Corrección, de la otra sesión.** La primera versión de esta nota decía «436 claves, 0 huérfanas»,
+y T7.80 lo mismo. Las 12 las conocía; lo que medí fue el delta —las claves antes y después de
+anotar— y lo escribí como si fuera el total. La otra sesión lo midió de la única forma que da el
+total: `--anota` contra una base vacía en el scratchpad y resta de conjuntos. 424 claves hoy, 436
+en la base, 0 sin anotar. Lo repetí yo por el mismo camino y da lo mismo. Avisó también de una
+trampa: 42 claves son de `taller-1-preparacion-parcial-1.html`, que está en `.gitignore`, así que
+contra un `git archive` salen 54 huérfanas falsas; hay que medir contra el directorio de trabajo.
+Limpiar las 12 es tarea aparte, de Javier.
 
 **Después:** referencias 424 resueltas, 424 revisadas, 0 nuevas, 0 cambiadas, salida 0; LaTeX 0 en 9
 páginas; cotejo de cifras 0 desajustadas; reensamblado del cap. 4 idéntico byte a byte antes de
-editar; KaTeX de la lista comprobado en el navegador. Sin publicar.
+editar; KaTeX de la lista comprobado en el navegador. Publicado como `gh-pages` `1bf6d6a`, desde
+`96de42f`: lo servido coincide byte a byte en las 10 páginas y su código arranca.
