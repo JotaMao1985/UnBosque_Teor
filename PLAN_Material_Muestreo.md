@@ -6558,5 +6558,11 @@ nuevo) y bien, y se abrió «Por qué las demás».
 también entra en la página del cap. 2. Quien fusione segundo debe **reensamblar** el cap. 2, no
 resolver el HTML a mano.
 
-**No publicado.** Queda en la rama `claude/determined-ramanujan-e6050e`, pendiente del visto bueno
-de Javier.
+**Publicado el 2026-09-24** con el visto bueno de Javier. `main` avanzó por avance rápido de
+`a3a0e1c` a `cf42058` y se subió; `gh-pages` pasó de `1bf6d6a` a `b858ef9`, construido con
+`git commit-tree` del árbol `cf42058:sitio` sobre la punta, sin `subtree split` porque no había nada
+ajeno que excluir. El diff de `gh-pages` fue solo la página del cap. 2 (+15 −8); invariante
+`origin/gh-pages^{tree}` = `origin/main:sitio` en verde, y `verifica_publicado.py --local` del cap. 2
+arrancó antes de empujar (23 bloques de R, 7 de Python). Sobre **lo servido**, con Pages ya
+construido en `b858ef9`: el cap. 2 coincide con la rama y su código arranca, y la huella coincide
+en las 10 páginas.
