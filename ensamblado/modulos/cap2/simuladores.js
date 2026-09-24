@@ -787,13 +787,13 @@
       {
         tipo: 'opcion',
         modulo: 8,
-        pregunta: 'En el diseño Bernoulli con $\\pi = 0{,}02$ sobre <code>agpop</code>, el estimador de Hájek tiene un CV de 0,170 frente a 0,208 del de Horvitz–Thompson. ¿Por qué gana Hájek si es el estimador <em>sesgado</em>?',
+        pregunta: 'En el diseño Bernoulli con $\\pi = 0{,}02$ sobre <code>agpop</code>, el estimador de Hájek tiene un CV de 0,170 frente a 0,208 del de Horvitz–Thompson. ¿De dónde sale la ventaja de Hájek?',
         pista: 'Piensa en qué hace cada uno cuando el sorteo entrega menos unidades de las esperadas.',
         opciones: [
           { texto: 'Porque divide entre el tamaño de muestra realmente obtenido, y así absorbe buena parte de la variabilidad de $n_s$.', correcta: true,
-            retro: 'Eso es. HT divide siempre entre $\\pi$ fijo, así que una muestra corta produce una estimación baja; Hájek se ajusta solo. Es el primer canje sesgo–varianza del curso, y el estimador de razón del capítulo 3 es su forma general.' },
-          { texto: 'Porque el sesgo de Hájek compensa exactamente el error de HT.', correcta: false,
-            retro: 'No hay tal compensación: el sesgo de Hájek es pequeño y va en la dirección que toque. Lo que gana es en <em>varianza</em>, y por eso el error cuadrático medio total le sale menor.' },
+            retro: 'Eso es. HT divide siempre entre $\\pi$ fijo, así que una muestra corta produce una estimación baja; Hájek se ajusta solo. Y no lo paga en sesgo: con la misma $\\pi$ para todas las unidades es $N\\bar{y}$, y dado el tamaño obtenido la muestra es un MAS. El estimador de razón del capítulo 3 es su forma general.' },
+          { texto: 'Porque acepta un poco de sesgo a cambio de mucha menos varianza.', correcta: false,
+            retro: 'Es la lectura general —con $\\pi_k$ desiguales Hájek sí tiene un sesgo pequeño—, pero aquí no aplica. Con la misma $\\pi$ para todas las unidades es $N\\bar{y}$, y dado el tamaño obtenido la muestra es un MAS de ese tamaño: es insesgado. Gana en <em>varianza</em> sin pagar nada en sesgo.' },
           { texto: 'Porque Hájek usa las $\\pi_{kl}$ y HT no.', correcta: false,
             retro: 'Ninguno de los dos usa $\\pi_{kl}$ en su forma puntual; en Bernoulli, además, $\\pi_{kl} = \\pi^2$ y todos los términos cruzados se anulan.' },
           { texto: 'Porque el diseño Bernoulli es de tamaño fijo.', correcta: false,

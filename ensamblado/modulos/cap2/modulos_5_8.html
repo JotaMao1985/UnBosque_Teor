@@ -468,10 +468,17 @@
         <p>En lugar de dividir por $\pi$, se divide por la suma de los pesos efectivamente observados:</p>
         $$\hat{t}_{\text{Hájek}} = N\,\frac{\sum_{k \in s} y_k / \pi_k}{\sum_{k \in s} 1/\pi_k}
           = N \cdot \frac{\hat{t}_\pi}{\hat{N}}$$
-        <p style="margin-bottom:0;">Es un cociente de dos estimadores, así que <strong>no es exactamente insesgado</strong>,
-          pero su varianza suele ser bastante menor. Es el primer ejemplo del curso de un cambio que se acepta a
-          propósito: un poco de sesgo a cambio de mucha varianza. En el <strong>capítulo 3</strong>, el estimador de
-          razón es la versión general de esta misma idea.</p>
+        <p>En general es un cociente de dos estimadores, y un cociente <strong>no es exactamente insesgado</strong>.
+          En el Bernoulli, sin embargo, todas las unidades comparten la misma $\pi$, los pesos se cancelan y queda la
+          media muestral expandida, $\hat{t}_{\text{Hájek}} = N\bar{y}$. Además, una vez que se sabe cuántas unidades
+          salieron, $n_s = m$, todos los conjuntos de $m$ unidades tenían la misma probabilidad, $\pi^m(1-\pi)^{N-m}$:
+          la muestra es un <strong>MAS de tamaño $m$</strong>. Por eso $E(\hat{t}_{\text{Hájek}} \mid n_s = m) = t$
+          para todo $m \geq 1$, y Hájek es <strong>insesgado dado el tamaño obtenido</strong>; solo queda sin definir
+          si no sale ninguna unidad.</p>
+        <p style="margin-bottom:0;">Aquí Hájek no paga nada en sesgo: su ventaja es de varianza, porque no se desplaza
+          con $n_s$ como HT. El sesgo aparece cuando las $\pi_k$ son desiguales, y entonces sí es un cambio que se
+          acepta a propósito: un sesgo pequeño a cambio de menos varianza. En el <strong>capítulo 3</strong>, el
+          estimador de razón es la versión general de esta misma idea.</p>
       </div>
 
       <div class="simulador" data-simulador="bernoulli">

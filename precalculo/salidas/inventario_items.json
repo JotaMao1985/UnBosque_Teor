@@ -315,7 +315,7 @@
       "modulo": 8,
       "dimension": "concepto",
       "dimension_deducida": true,
-      "enunciado": "en el diseño bernoulli con $\\pi = 0{,}02$ sobre agpop , el estimador de hájek tiene un cv de 0,170 frente a 0,208 del de horvitz–thompson. ¿por qué gana hájek si es el estimador sesgado ?"
+      "enunciado": "en el diseño bernoulli con $\\pi = 0{,}02$ sobre agpop , el estimador de hájek tiene un cv de 0,170 frente a 0,208 del de horvitz–thompson. ¿de dónde sale la ventaja de hájek?"
     },
     {
       "fuente": "cap2",

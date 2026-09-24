@@ -6509,3 +6509,54 @@ Limpiar las 12 es tarea aparte, de Javier.
 páginas; cotejo de cifras 0 desajustadas; reensamblado del cap. 4 idéntico byte a byte antes de
 editar; KaTeX de la lista comprobado en el navegador. Publicado como `gh-pages` `1bf6d6a`, desde
 `96de42f`: lo servido coincide byte a byte en las 10 páginas y su código arranca.
+
+### T7.82 — Hájek no es sesgado en el Bernoulli del módulo 8 (2026-09-24)
+
+`ensamblado/modulos/cap2/modulos_5_8.html` (Definición 2.8), la pregunta del M8 en
+`ensamblado/modulos/cap2/simuladores.js`, la página ensamblada del cap. 2 y una línea de
+`precalculo/salidas/inventario_items.json`. Javier: la definición decía «es un cociente de dos
+estimadores, así que no es exactamente insesgado» en el contexto donde no es verdad.
+
+**El error.** Con $\pi_k = \pi$ para todas, $\hat t_{\text{Hájek}} = N\bar y$; y dado $n_s = m$
+todas las muestras de tamaño $m$ tienen probabilidad $\pi^m(1-\pi)^{N-m}$, así que la muestra es
+un MAS y $E(\hat t_{\text{Hájek}} \mid n_s = m) = t$ para todo $m \ge 1$. Solo falla $n_s = 0$,
+que no define el estimador. «No es exactamente insesgado» vale con $\pi_k$ desiguales. Enumerado
+sobre los cinco condados del M1 ($t = 150$): con $\pi = 0{,}3$ y $0{,}4$, $E(\text{Hájek} \mid
+n \ge 1) = 150$ exacto; con $\pi_k = 0{,}2, \dots, 0{,}6$ (Poisson), **167,65**. De propina, la
+varianza de HT con $\pi = 0{,}4$ sale 8 553, la del `.warning` del M3: la misma población.
+
+**Qué dependía de la frase.** El simulador no: `genera_cap2.R` calcula Hájek como
+`N * mean(y)` y el simulador solo pinta CV, que con los dos insesgados es la comparación justa.
+Los `sesgoRelHajek` del JSON (−0,0003 a +0,0019) son ruido de Monte Carlo del mismo orden que los
+de HT. Sí dependían: (1) la definición, que lo vendía como «el primer ejemplo del curso» de canje
+sesgo–varianza, y (2) la pregunta del M8, cuyo enunciado preguntaba «¿por qué gana Hájek si es el
+estimador *sesgado*?» y cuya retro correcta repetía «el primer canje sesgo–varianza». Ningún otro
+capítulo cita ese canje ni el sesgo de Hájek (el cap. 6 menciona el Bernoulli, no Hájek); el
+exportador a Brightspace solo lleva el preparcial, que no tiene ítems de Hájek. `quiz_cap3/` no se
+abrió: si alguno de sus tres ítems del cap. 2 es este, hay que revisarlo a mano.
+
+**El arreglo.** La definición dice ahora en general que es un cociente y no es exactamente
+insesgado; en el Bernoulli, $N\bar y$, MAS de tamaño $m$ dado $n_s = m$, insesgado dado el tamaño
+obtenido y sin definir si no sale ninguna unidad. El canje sesgo–varianza se reserva para $\pi_k$
+desiguales, y se conserva el enlace con el estimador de razón del cap. 3. En la pregunta, el
+enunciado pasa a «¿De dónde sale la ventaja de Hájek?», la retro correcta añade «y no lo paga en
+sesgo», y el distractor «el sesgo de Hájek compensa exactamente el error de HT» —que presuponía el
+sesgo— se cambia por el error que el material enseñaba: «acepta un poco de sesgo a cambio de mucha
+menos varianza», con una retro que explica por qué aquí no aplica.
+
+**El inventario.** `inventario_items.py` regenerado cambia dos líneas: la mía y la de la pregunta
+del sistemático («1 en $k$» → «1 en $a$»), que la fuente ya decía antes de esta tarea. Se commitea
+solo la mía; el JSON sigue desfasado en esa otra línea, y regenerarlo entero es tarea aparte.
+
+**Verificado.** Reensamblado idéntico byte a byte **antes** de editar; después, `node --check` del
+motor, 495 de 495 cifras de bloques, **108 de prosa · 0 sin respaldo**, LaTeX 0 con barra simple,
+referencias 382 resueltas · 0 nuevas · 0 cambiadas, `verifica_tabla.py` 6 en verde. En el
+navegador: 0 `.katex-error`, 0 errores de consola; la pregunta se contestó mal (el distractor
+nuevo) y bien, y se abrió «Por qué las demás».
+
+**Riesgo al fusionar.** Otra sesión tiene sin commitear `ensamblado/codigo/cap2/cadena.R`, que
+también entra en la página del cap. 2. Quien fusione segundo debe **reensamblar** el cap. 2, no
+resolver el HTML a mano.
+
+**No publicado.** Queda en la rama `claude/determined-ramanujan-e6050e`, pendiente del visto bueno
+de Javier.
