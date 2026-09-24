@@ -166,8 +166,13 @@ ORDINAL = re.compile(
 # Solo entran ítems CON opciones: desde el 2026-09-12 los que no tienen ninguna
 # no llegan a la comprobación, y por eso salió de aquí `cap5[3]` («la primera
 # unidad del conglomerado»), que era un `numerica` sin un solo botón que mover.
+#
+# La clave es la POSICIÓN del ítem en su banco, y un ítem insertado delante la
+# corre. Así murió `("cap3", 8)`, «hasta la última cifra»: el ítem del GREG pasó
+# al 19 cuando el cap. 3 creció, la excepción se quedó en el 8 —un `numerica`
+# que ni llega aquí— y el 19 empezó a fallar. El 2026-09-24 la frase pasó a
+# «cifra por cifra» y la excepción salió.
 POSICIONALES_REVISADAS = {
-    ("cap3", 8): "«hasta la última cifra» — un dígito",
     ("cap5", 6): "«la PRIMERA etapa» — una etapa del diseño",
     ("cap6", 8): "«PPT en la primera etapa» — una etapa",
     ("cap7", 1): "«la primera comprobación que se hace» — un hábito",

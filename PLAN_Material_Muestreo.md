@@ -6640,3 +6640,69 @@ pregunta, y el comportamiento del widget:
 **Aprobado por Javier** el mismo día, después de la auditoría. Antes del commit se quitaron de
 `cifras_prosa.json` tres entradas que había dejado la tabla antigua de la pregunta 11: ya no estaban en la
 página, y nombraban los archivos privados.
+
+### T7.84 — Las siete retros que nombraban posiciones en los caps. 3 y 4 (2026-09-24)
+
+`ensamblado/modulos/cap3/simuladores.js`, `ensamblado/modulos/cap4/simuladores.js`, sus dos páginas
+ensambladas y `precalculo/pruebas/prueba_bancos.py`. `prueba_bancos.py` daba 7 fallos «la
+retroalimentación nombra posiciones y la página baraja» —cap3[7], [16], [19] y cap4[1], [3], [5],
+[8]—, ya presentes antes del simulacro del M15 (T7.83). Desde T7.21 (2026-09-12) estaba en cero:
+entraron con los ítems nuevos de los dos capítulos.
+
+**Solo tres de los siete señalaban opciones.** cap4[3] («Las tres primeras», «La cuarta», «la
+última»), cap4[5] («La cuarta», «la última») y cap4[8] («la primera dice de acres92») nombraban la
+opción por su sitio; con `barajaEstable` esa opción puede estar en cualquier otro. En el navegador,
+cap4[5] cayó con la falsa en cuarto lugar: el viejo «la última» habría acertado por casualidad con
+esa semilla y fallado con otra. Los otros cuatro usaban ordinales que no son opciones: dos unidades
+(cap3[7]), las dos fórmulas del total de dominio (cap3[16], y en los **textos** de tres opciones,
+no en la retro), las dos condiciones de estratificar (cap4[1]) y el dígito de «hasta la última
+cifra» (cap3[19]). Se reescribieron igual en vez de sumarlos a `POSICIONALES_REVISADAS`: nombrar
+por contenido cuesta pocas palabras, y un «la segunda» dentro de una opción barajada se lee como
+«la segunda opción».
+
+**El arreglo, con el criterio de `arregla_retro_posicional.py`** (nombrar por contenido), pero en
+la fuente y reensamblando, no con el guion: sus `CAMBIOS` son un lote cerrado del 2026-09-02.
+- cap4[3]: «Las tres salidas razonables…», «La Neyman de `farms92` es el mismo error…» y «La falsa
+  es la de quedarse con la Neyman de `farms92`».
+- cap4[5]: «La del error cuadrático medio menor "sean cuales sean los $n_h$" es la trampa» y «La
+  falsa es la que promete…»; «Aquí falla la segunda» (la segunda *condición*) pasa a «Aquí son los
+  $n_h$ los que no alcanzan».
+- cap4[8]: «la del óptimo dice *de acres92*». cap4[1]: «Aquí solo tiene los $N_h$».
+- cap3[7]: «Tómense dos unidades, una con… y otra con…» (de paso, «Tómese» con plural).
+- cap3[16]: el **enunciado** nombra ahora las dos fórmulas —escalar la media del dominio, o expandir
+  $u_k = y_k\delta_k$— y pregunta «qué cuesta la de $u_k$»; las opciones dicen «la de $u_k$» y «la
+  de la media». Antes «la segunda» dependía de recordar en qué orden las presentó el M9. No se
+  escribió $N_d\hat{\bar y}_d$ en el enunciado porque delataba la correcta («si se conoce $N_d$»).
+- cap3[19]: «que es $\hat B$ cifra por cifra».
+
+**La excepción que se había quedado apuntando a otro ítem.** `POSICIONALES_REVISADAS` tenía
+`("cap3", 8)`: «hasta la última cifra», el ítem del GREG. La clave es la *posición* en el banco;
+cuando el cap. 3 creció, el GREG pasó al 19 y empezó a fallar, y el 8 actual es un `numerica` que ni
+llega a la comprobación. La excepción estaba muerta, y con otro ítem de opciones en el 8 habría
+tapado un defecto de verdad. Salió, con su motivo escrito en el comentario. Las otras seis siguen
+apuntando a su ítem (comprobado una a una). **Pendiente, no hecho:** si el banco vuelve a crecer
+por delante de cap5[6], cap6[8], cap7[1], cap7[7], cap8[10] o simulacro[17], les pasará lo mismo;
+guardar con cada excepción el fragmento que la justifica y fallar si ya no está lo detectaría.
+
+**Verificado.** Reensamblados el 3 y el 4 idénticos byte a byte **antes** de editar; después, el
+diff de cada página replica el de su fuente (14 y 12 líneas) · `node --check` de las dos fuentes ·
+`prueba_bancos.py` **sin fallos mecánicos**, también con `--corte1` · `prueba_barajado.py` 4 de 4 ·
+`prueba_prosa.py` 15 de 15 · `verifica_bloques.py --todos --prosa` **0 cifras sin respaldo**, LaTeX
+0 con barra simple en 9 páginas (cap. 3: 283 de 283 cifras de bloques y 212 de prosa; cap. 4: 528 de 528 y 172)
+· `verifica_referencias.py` 382 resueltas, 0 nuevas, 0 cambiadas, **salida idéntica a la de HEAD**
+(las 18 «sin capítulo claro» ya estaban). En el navegador, servido desde el worktree en su propio
+puerto —el 8767 era de otra sesión y servía el checkout principal—: cap3[16] contestada mal (sale la
+pista), luego bien, y «Por qué las demás» con las letras del orden barajado; cap4[5] fallada dos
+veces (sale la retroFallo nueva) y, recargada, acertada (sale la retroAcierto nueva). 0
+`.katex-error` y consola limpia en los dos.
+
+**La fusión.** Hecho en la rama `claude/distracted-agnesi-4d037a` mientras el simulacro (T7.83)
+seguía sin commitear en el checkout principal; Javier pidió fusionar cuando lo estuviera. Entró
+como `2481090`, y la rama se **rebasó** sobre él —historial lineal, como siempre en `main`—. Solo
+chocó este plan (las dos entradas al final: T7.83 y luego T7.84). La página del cap. 3 la fusionó
+git sola, y se comprobó que es **byte a byte** la que da `ensambla_cap3.py` con el M15 y las retros
+nuevas. Sobre lo fusionado: `prueba_bancos.py` sin fallos (también `--corte1`) · barajado 4 de 4 ·
+prosa 15 de 15 · bloques y prosa 0 sin respaldo, LaTeX 0 en 9 páginas · referencias 390 resueltas,
+0 nuevas, 0 cambiadas · `cuenta_sitio.py` 0 cifras desajustadas · en el navegador, el M14 con la
+pregunta nueva y el M15 del simulacro, 0 `.katex-error` y consola limpia. `main` avanzó por avance
+rápido. **Sin push y sin publicar:** `origin/main` y `gh-pages` esperan el visto bueno de Javier.

@@ -9374,7 +9374,7 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         pista: 'El módulo pide dos condiciones para estratificar. ¿Cuál de las dos le falta a este marco?',
         opciones: [
           { texto: 'Estratificar no puede: le falta la variable en el marco. Pero como conoce los $N_h$, puede postestratificar después de sortear.', correcta: true,
-            retro: 'Exacto, y esa es la frontera que vertebra el capítulo. Estratificar exige las <strong>dos</strong> condiciones: la variable unidad por unidad <em>antes</em> de sortear, y los $N_h$. Aquí solo tiene la segunda, que es justo lo que pide la postestratificación del módulo 10: se sortea a ciegas y se corrigen los pesos después.' },
+            retro: 'Exacto, y esa es la frontera que vertebra el capítulo. Estratificar exige las <strong>dos</strong> condiciones: la variable unidad por unidad <em>antes</em> de sortear, y los $N_h$. Aquí solo tiene los $N_h$, que es justo lo que pide la postestratificación del módulo 10: se sortea a ciegas y se corrigen los pesos después.' },
           { texto: 'Puede estratificar igualmente: basta con preguntar el nivel socioeconómico durante la entrevista y agrupar por él al analizar.', correcta: false,
             retro: 'Eso no es estratificar, es postestratificar — y la diferencia no es de nombre. Estratificar fija los $n_h$ antes del sorteo; preguntar después deja los $n_h$ al azar, y con ellos un término de varianza extra que el módulo 10 mide.' },
           { texto: 'No puede hacer nada: sin la variable en el marco, la muestra es un MAS y punto.', correcta: false,
@@ -9410,8 +9410,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
           { texto: 'Poner un mínimo por estrato y repartir el resto proporcionalmente.', correcta: true },
           { texto: 'Calcular la Neyman de <code>farms92</code> y quedarse con ella, que para esa variable es la óptima.', correcta: false }
         ],
-        retroAcierto: 'Las tres primeras son compromisos: renuncian a ser óptimas para una variable a cambio de no ser malas para ninguna. La cuarta es el mismo error con la camiseta cambiada — sería óptima para <code>farms92</code> y mala para <code>acres92</code>, que es exactamente el problema del enunciado.',
-        retroFallo: 'La falsa es la última: cambiar de variable favorita no resuelve nada, solo elige otra víctima. Las otras tres son las dos familias de compromiso del módulo, y la de la potencia llega a ganarle a la proporcional en las dos varas a la vez.'
+        retroAcierto: 'Las tres salidas razonables son compromisos: renuncian a ser óptimas para una variable a cambio de no ser malas para ninguna. La Neyman de <code>farms92</code> es el mismo error con la camiseta cambiada — sería óptima para <code>farms92</code> y mala para <code>acres92</code>, que es exactamente el problema del enunciado.',
+        retroFallo: 'La falsa es la de quedarse con la Neyman de <code>farms92</code>: cambiar de variable favorita no resuelve nada, solo elige otra víctima. Las otras tres son las dos familias de compromiso del módulo, y la de la potencia llega a ganarle a la proporcional en las dos varas a la vez.'
       },
       {
         tipo: 'opcion',
@@ -9440,8 +9440,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
           { texto: 'La combinada es la opción sensata aquí, y además es la que calcula por defecto casi todo el software.', correcta: true },
           { texto: 'Como la separada aprovecha más información, su error cuadrático medio será menor sean cuales sean los $n_h$.', correcta: false }
         ],
-        retroAcierto: 'Las tres verdaderas son la regla del módulo: hacen falta los $t_{xh}$, <em>y</em> $n_h$ holgados, <em>y</em> razones que de verdad cambien entre estratos. Aquí falla la segunda. La cuarta es la trampa: más información no es automáticamente menos error cuando esa información se usa con estimadores sesgados.',
-        retroFallo: 'La falsa es la última. La simulación del módulo la desmiente con datos: con 3 por estrato el error cuadrático medio de la separada es 7,195 % contra 3,734 % de la combinada. Aprovechar más información y hacerlo mejor no son lo mismo.'
+        retroAcierto: 'Las tres verdaderas son la regla del módulo: hacen falta los $t_{xh}$, <em>y</em> $n_h$ holgados, <em>y</em> razones que de verdad cambien entre estratos. Aquí son los $n_h$ los que no alcanzan. La del error cuadrático medio menor «sean cuales sean los $n_h$» es la trampa: más información no es automáticamente menos error cuando esa información se usa con estimadores sesgados.',
+        retroFallo: 'La falsa es la que promete menor error cuadrático medio sean cuales sean los $n_h$. La simulación del módulo la desmiente con datos: con 3 por estrato el error cuadrático medio de la separada es 7,195 % contra 3,734 % de la combinada. Aprovechar más información y hacerlo mejor no son lo mismo.'
       },
       {
         tipo: 'numerica',
@@ -9480,7 +9480,7 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
           { texto: 'El estimador nacional queda sesgado por abandonar así una región.', correcta: false },
           { texto: 'Si el objetivo fueran comparaciones entre regiones, convendría la asignación igual.', correcta: true }
         ],
-        retroAcierto: 'Las tres verdaderas dibujan el conflicto real del diseño: óptimo global, subgrupos pobres, y la asignación depende del objetivo. Fíjate en que la primera dice <em>de acres92</em>: esa misma asignación deja el deff de <code>farms92</code> en 1,1190, peor que un MAS. Sesgo no hay nunca: 5 entrevistas con peso 44 son pocas, pero son insesgadas.',
+        retroAcierto: 'Las tres verdaderas dibujan el conflicto real del diseño: óptimo global, subgrupos pobres, y la asignación depende del objetivo. Fíjate en que la del óptimo dice <em>de acres92</em>: esa misma asignación deja el deff de <code>farms92</code> en 1,1190, peor que un MAS. Sesgo no hay nunca: 5 entrevistas con peso 44 son pocas, pero son insesgadas.',
         retroFallo: 'Son todas menos la del estimador sesgado. Esa es falsa: ninguna asignación con $n_h \\geq 1$ y pesos correctos sesga el estimador — asignar mal cuesta varianza (global o por subgrupo), no validez.'
       },
       {
