@@ -9897,7 +9897,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
           { texto: 'Converge a $B$, pero con bastante más varianza.', correcta: false,
             retro: 'Si sólo fuera varianza, más muestra lo resolvería. El problema es que el límite es otro: $0{,}9530$ en vez de $0{,}9797$. Ningún tamaño de muestra corrige un objetivo equivocado.' },
           { texto: 'Da exactamente lo mismo: es la misma cantidad reordenada.', correcta: false,
-            retro: 'Sólo coinciden si todos los $x_k$ son iguales. Tómese dos unidades, la primera con $x = 1$ e $y = 2$, la segunda con $x = 6$ e $y = 6$: la razón de medias vale $8/7 = 1{,}14$ y la media de cocientes vale $\\tfrac12(2 + 1) = 1{,}50$. Los mismos datos, dos números.' },
+            retro: 'Sólo coinciden si todos los $x_k$ son iguales. Tómense dos unidades, una con $x = 1$ e $y = 2$ y otra con $x = 6$ e $y = 6$: la razón de medias vale $8/7 = 1{,}14$ y la media de cocientes vale $\\tfrac12(2 + 1) = 1{,}50$. Los mismos datos, dos números.' },
           { texto: 'Falla sólo si la muestra trae algún valor atípico.', correcta: false,
             retro: 'Los atípicos lo empeoran, pero el problema es anterior: apunta a otro parámetro aunque no haya ninguno. Y hay un fallo más brusco: donde $x_k = 0$ el cociente no existe. En <code>agpop</code> son 2 condados con cero acres, más 23 con el código de faltante $-99$, que dan cociente negativo: 25 unidades que hay que amputar, y con ellas se acaba describiendo otra población.' }
         ]
@@ -10023,17 +10023,17 @@ round(c(media_muestral_y = mean(deadtrees$field),
       {
         tipo: 'opcion',
         modulo: 9,
-        pregunta: 'Para estimar el <strong>total</strong> de un dominio hay dos fórmulas. ¿Qué decide cuál se usa, y qué cuesta la segunda?',
+        pregunta: 'Para estimar el <strong>total</strong> de un dominio hay dos fórmulas: escalar la media del dominio, o expandir $u_k = y_k\\delta_k$, que vale cero fuera de él. ¿Qué decide cuál se usa, y qué cuesta la de $u_k$?',
         pista: 'Con la media basta una fórmula. Con el total hay un dato que el diseño no siempre tiene.',
         opciones: [
           { texto: 'Si se conoce $N_d$; no conocerlo sube el error estándar relativo.', correcta: true,
             retro: 'Correcto. Con $N_d$ conocido, $\\hat t_{yd} = N_d\\,\\hat{\\bar y}_d$; sin él hay que pasar por $u_k = y_k\\delta_k$ y estimar $N\\bar u$, que arrastra la incertidumbre sobre el tamaño del dominio. En el dominio de los condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al <strong>9,29 %</strong>.' },
-          { texto: 'Si $n_d$ es grande; con $n_d$ pequeño la segunda es más estable.', correcta: false,
+          { texto: 'Si $n_d$ es grande; con $n_d$ pequeño la de $u_k$ es más estable.', correcta: false,
             retro: 'El tamaño de $n_d$ afecta a la precisión de las dos por igual. Lo que separa las fórmulas es si $N_d$ —el tamaño <em>poblacional</em> del dominio— se conoce, no cuántas unidades cayeron en la muestra.' },
-          { texto: 'Si el dominio es un estrato; la segunda vale solo para estratos.', correcta: false,
+          { texto: 'Si el dominio es un estrato; la de $u_k$ vale solo para estratos.', correcta: false,
             retro: 'Al revés: si fuera un estrato, $n_h$ sería fijo y no haría falta nada de este módulo. Las dos fórmulas son para dominios, y la que se usa depende de $N_d$.' },
-          { texto: 'Si la variable es continua; con indicadoras solo sirve la primera.', correcta: false,
-            retro: 'La naturaleza de $y$ no interviene. De hecho la segunda fórmula funciona convirtiendo en ceros las unidades de fuera, que es exactamente trabajar con una indicadora.' }
+          { texto: 'Si la variable es continua; con indicadoras solo sirve la de la media.', correcta: false,
+            retro: 'La naturaleza de $y$ no interviene. De hecho la fórmula de $u_k$ funciona convirtiendo en ceros las unidades de fuera, que es exactamente trabajar con una indicadora.' }
         ]
       },
       {
@@ -10079,7 +10079,7 @@ round(c(media_muestral_y = mean(deadtrees$field),
           { texto: 'Añadir intercepto al modelo da el estimador de regresión.', correcta: true },
           { texto: '$v_k = x_k^2$ da el estimador de expansión.', correcta: false }
         ],
-        retroAcierto: 'Todas menos la de $v_k = x_k^2$, y las tres verdaderas se comprueban en el bloque de R del módulo: con $v_k = x_k$ la pendiente sale 0,98656524, que es $\\hat{B}$ hasta la última cifra.',
+        retroAcierto: 'Todas menos la de $v_k = x_k^2$, y las tres verdaderas se comprueban en el bloque de R del módulo: con $v_k = x_k$ la pendiente sale 0,98656524, que es $\\hat{B}$ cifra por cifra.',
         retroFallo: 'Son las tres que no usan $v_k = x_k^2$. Con esa elección sale la media de las razones individuales $\\frac{1}{n}\\sum y_k/x_k$, que es otro estimador —consistente, pero distinto— y desde luego no el de expansión.'
       },
       {
