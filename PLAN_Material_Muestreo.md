@@ -6782,4 +6782,6 @@ sesión. Una sesión anterior, lanzada para esto, se detuvo al empezar sin dejar
   - la pregunta da la pista al fallar, y al acertar la retro y «Por qué las demás»;
   - la consola queda limpia.
 
-**Sin commitear ni publicar**: falta la revisión de Javier.
+**Publicado** el 2026-09-24 con el visto bueno de Javier («sí, commitea y publica en gh-pages»): `main` `7dd1442`,
+`gh-pages` `7d91773`. Lo servido coincide byte a byte con la rama, y `verifica_publicado.py --solo-huella` da la
+huella de las 10 páginas.
