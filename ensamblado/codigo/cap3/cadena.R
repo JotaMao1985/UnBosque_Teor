@@ -342,16 +342,17 @@ F_hat <- cumsum(w[orden]) / sum(w)
 # unidad. En Python el redondeo cae al otro lado, asi que sin esto las dos
 # pestanas de este capitulo publicarian cuantiles distintos.
 mediana_mano <- agsrs$acres92[orden][which(F_hat >= 0.5 - 1e-9)[1]]
-# La mediana muestral no es unica cuando F alcanza 0.5 EXACTAMENTE, que pasa
-# siempre que n*p es entero: la unidad 150 y la 151 valen las dos de mediana
-# segun el convenio. survey lo resuelve con `qrule`, y su valor por defecto
-# ("math") elige la 151.
-c(a_mano      = mediana_mano,
-  survey_hf4  = as.numeric(coef(svyquantile(~acres92, dis, 0.5, qrule = "hf4"))),
-  survey_math = as.numeric(coef(svyquantile(~acres92, dis, 0.5, qrule = "math"))),
-  real        = as.numeric(quantile(agpop$acres92, 0.5, type = 1)))
-#>      a_mano  survey_hf4 survey_math        real
-#>      196701      196701      196733      191486
+# svyquantile usa por defecto la misma definicion (qrule = "math"), pero
+# compara sin tolerancia: en la unidad 150 ve 0.4999999999, no llega a 0.5, y
+# salta a la 151. Es el redondeo, no otro convenio: con pesos 1 no hay
+# redondeo y da la 150. La mediana no depende de la escala de los pesos.
+dis_1 <- svydesign(id = ~1, weights = rep(1, n), fpc = rep(N, n), data = agsrs)
+c(a_mano  = mediana_mano,
+  survey  = as.numeric(coef(svyquantile(~acres92, dis, 0.5, qrule = "math"))),
+  pesos_1 = as.numeric(coef(svyquantile(~acres92, dis_1, 0.5, qrule = "math"))),
+  real    = as.numeric(quantile(agpop$acres92, 0.5, type = 1)))
+#>  a_mano  survey pesos_1    real
+#>  196701  196733  196701  191486
 cat("\n###BLOQUE-S1###\n")
 # Ejercicio 1 - El total de GRANJAS con la auxiliar farms87.
 tx_f <- sum(agpop$farms87)

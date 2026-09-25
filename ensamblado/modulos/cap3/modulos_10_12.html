@@ -301,15 +301,19 @@
       </div>
 
       <div class="warning">
-        <p><strong>Una trampa que cuesta media tarde.</strong> $\hat{F}$ vale <em>exactamente</em> 0,5 en la unidad
-          150 de 300, y ahí la mediana muestral <strong>no está definida de forma única</strong>: la unidad 150 vale
-          196 701 y la 151 vale 196 733, y las dos son legítimas según el convenio. <code>svyquantile</code> ofrece
-          doce en su argumento <code>qrule</code> —nueve de ellos los de Hyndman y Fan—; el de por defecto
-          (<code>"math"</code>) da 196 733 y
-          <code>"hf4"</code> da 196 701, que es el de la definición $\inf\{\cdot\}$ de arriba. Son 32 acres sobre
-          197 000 —un 0,016 %—, pero conviene saberlo antes de pasar la tarde buscando un error que no existe. Este
-          material usa <code>hf4</code> para que el cálculo a mano y <code>survey</code> coincidan de verdad y no
-          solo en apariencia.</p>
+        <p><strong>Una trampa que cuesta media tarde.</strong> Con pesos iguales, $\hat{F}$ vale <em>exactamente</em>
+          0,5 en la unidad 150 de 300, así que la definición $\inf\{\cdot\}$ de arriba da la unidad 150: 196 701.
+          <code>svyquantile</code> da 196 733, que es la unidad 151, aunque su convenio por defecto
+          (<code>qrule = "math"</code>) es <strong>esa misma definición</strong>. La diferencia es de redondeo:
+          calcula $\hat{F}$ con los mismos <code>cumsum()</code> y <code>sum()</code> del bloque, le queda un pelo
+          por debajo de 0,5 en la unidad 150 —en la decimoquinta cifra decimal— y, como compara sin tolerancia, salta
+          a la siguiente. Con los pesos iguales a 1 no hay redondeo y da 196 701, porque la mediana no depende de la
+          escala de los pesos. Pasa cuando $\hat{F}$ cae en $p$ justo sobre un dato, que con pesos iguales es cuando
+          $n\,p$ es entero. Son 32 acres sobre 197 000 —un 0,016 %—, pero conviene saberlo antes de pasar la tarde
+          buscando un error que no existe. Y no lo arregles con <code>qrule = "hf4"</code>: aquí también da
+          196 701, pero por casualidad. <code>hf4</code> interpola entre dos valores consecutivos de la muestra, y
+          con otros datos, o en los extremos de un intervalo de confianza, da valores que la definición de arriba no
+          da nunca.</p>
       </div>
 
       <div class="simulador" data-simulador="mediana">

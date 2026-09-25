@@ -568,9 +568,10 @@
       // Los dos cuantiles NO se recalculan aquí: se leen de la tabla que el
       // precálculo construye sobre las curvas completas, con la definición
       // inf{t : F̂(t) >= p} y `quantile(type = 1)`. Recorrer la curva dibujada
-      // era lo que hacía este simulador, y publicaba 196 733 en p = 0,5 —el
-      // convenio `math` que el módulo declara que no usa— porque la curva iba
-      // adelgazada y se saltaba la unidad 150.
+      // era lo que hacía este simulador, y publicaba 196 733 en p = 0,5 —lo que
+      // da `svyquantile` por el redondeo, no la definición— porque la curva iba
+      // adelgazada y se saltaba la unidad 150. El IC también es el de la
+      // definición: `math` con pesos 1, contrastado con el Woodruff a mano.
       const CS = M.cuantilesSlider;
       const fila = p => CS.reduce((a, r) => Math.abs(r.p - p) < Math.abs(a.p - p) ? r : a, CS[0]);
       // El eje llega hasta donde llega el deslizador: con 900 000 fijos, el
@@ -992,14 +993,14 @@
         pregunta: 'La mediana estimada de <code>acres92</code> sale 196 701 con la definición $\\inf\\{t: \\hat{F}(t) \\ge 0{,}5\\}$ y 196 733 con el convenio por defecto de <code>svyquantile</code>. ¿Qué está pasando?',
         pista: '¿Cuánto vale $\\hat{F}$ exactamente en la unidad 150 de 300?',
         opciones: [
-          { texto: 'Que $\\hat{F}$ vale exactamente 0,5 en una unidad: hay dos medianas.', correcta: true,
-            retro: 'Correcto: ahí la mediana muestral no está definida de forma única, y los dos valores son legítimos según el convenio. Pasa siempre que $n\\,p$ es entero y los pesos son iguales. Son 32 acres sobre 197 000 —un 0,016 %—, pero conviene saber que el desacuerdo existe antes de pasar media tarde buscando un error que no está.' },
-          { texto: 'Que <code>svyquantile</code> trae un error en su implementación.', correcta: false,
-            retro: 'No: <code>svyquantile</code> ofrece doce convenios distintos en su argumento <code>qrule</code> —nueve de ellos los de Hyndman y Fan—, y con <code>qrule = "hf4"</code> devuelve exactamente 196 701. Es una elección documentada, no un fallo.' },
+          { texto: 'Que $\\hat{F}$ vale justo 0,5 en la unidad 150, y <code>svyquantile</code> la redondea por debajo.', correcta: true,
+            retro: 'Exacto: el convenio por defecto, <code>qrule = "math"</code>, es la misma definición $\\inf$: la diferencia está en la decimoquinta cifra decimal de $\\hat{F}$, y como <code>svyquantile</code> compara sin tolerancia, salta a la unidad 151. Con los pesos iguales a 1 no hay redondeo y da 196 701. Pasa cuando $\\hat{F}$ cae en 0,5 justo sobre un dato, que con pesos iguales es cuando $n\\,p$ es entero. Son 32 acres sobre 197 000 —un 0,016 %—, pero conviene saberlo antes de pasar media tarde buscando un error que no está.' },
+          { texto: 'Que el convenio por defecto de <code>svyquantile</code> es otra definición de cuantil, distinta de la de arriba.', correcta: false,
+            retro: 'No: el de por defecto, <code>qrule = "math"</code>, es justamente la definición $\\inf$, y con los pesos iguales a 1 da 196 701. Con <code>qrule = "hf4"</code> también sale 196 701, pero por casualidad: <code>hf4</code> interpola entre dos valores consecutivos de la muestra, y con otros datos da valores que la definición no da nunca.' },
           { texto: 'Que la muestra tiene valores repetidos cerca de la mediana.', correcta: false,
-            retro: 'El desacuerdo aparecería igual sin ningún valor repetido: lo que lo produce es que la función escalonada alcance el nivel 0,5 justo en un escalón.' },
+            retro: 'El desacuerdo aparecería igual sin ningún valor repetido: lo que lo produce es que la función escalonada alcance el nivel 0,5 justo en un escalón, y que el redondeo la deje un pelo por debajo.' },
           { texto: 'Que la mediana real es 191 486 y las dos estimaciones están mal.', correcta: false,
-            retro: 'Las dos estimaciones son de la <em>muestra</em>, y las dos sobrestiman la mediana poblacional en torno a un 2,7 %. Eso es error de muestreo, que es otra cosa distinta del desacuerdo entre convenios.' }
+            retro: 'Las dos estimaciones son de la <em>muestra</em>, y las dos sobrestiman la mediana poblacional en torno a un 2,7 %. Eso es error de muestreo, y no tiene nada que ver con este desacuerdo, que es de redondeo.' }
         ]
       }
     ];

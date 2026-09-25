@@ -665,25 +665,39 @@ F_hat <- cumsum(w[orden]) / sum(w)
 TOL_F <- 1e-9
 cuantil_F <- function(p) y_ord[which(F_hat >= p - TOL_F)[1]]
 mediana_manual <- cuantil_F(0.5)
-# HALLAZGO DE LA AUDITORÍA (2026-07-27): la mediana muestral NO está definida
-# de forma única cuando F̂ alcanza 0,5 exactamente, que es lo que pasa siempre
-# que n·p es entero y los pesos son iguales. Aquí, la unidad 150 vale 196 701 y
-# la 151 vale 196 733, y las dos son "la mediana" según qué convenio se use:
-#   qrule = "math" (el de por defecto en survey 4.5) -> 196 733
-#   qrule = "hf4" y la definición inf{t : F̂(t) >= p} -> 196 701
-# Son 32 acres sobre 197 000: un 0,016 %. El material publica la definición
-# inf{...}, que es la que se deriva en el módulo 12, y usa `hf4` para que las
-# dos vías coincidan de verdad en vez de aparentarlo. El capítulo explica el
-# desacuerdo en una caja, porque es exactamente el tipo de detalle que
-# desconcierta a quien compara su código con el de otro.
-sv_med      <- svyquantile(~acres92, dis, quantiles = 0.5, ci = TRUE, qrule = "hf4")
-sv_med_math <- svyquantile(~acres92, dis, quantiles = 0.5, ci = TRUE, qrule = "math")
+# Con la definición inf{t : F̂(t) >= p} la mediana es la unidad 150, 196 701:
+# con pesos iguales, F̂ vale exactamente 150/300 = 0,5 ahí. El convenio por
+# defecto de survey, qrule = "math" (igual que "hf1"), es ESA MISMA definición,
+# pero da la unidad 151, 196 733, por el redondeo: calcula F̂ con los mismos
+# cumsum()/sum(), y en la unidad 150 le queda 0,49999999999999628 < 0,5.
+# Con pesos 1 no hay redondeo y "math" da 196 701. No es un convenio distinto.
+#
+# CORRECCIÓN (2026-09-24). Hasta hoy esto decía que las dos unidades eran «la
+# mediana» según el convenio, y que `hf4` era la definición inf{...}; el
+# material usaba `hf4` para que las dos vías coincidieran. No lo es: `hf4`
+# interpola entre dos valores consecutivos de la muestra, y aquí da 196 701
+# solo porque F̂ cae en 0,5 justo sobre un dato. Con otra muestra da un valor
+# que no es de la muestra, y su intervalo de confianza ya salía interpolado:
+# [144 828, 221 693], que el simulador publicaba. El intervalo de la
+# definición inf{...} es [144 858, 223 429]: se calcula con "math" sobre el
+# mismo diseño con pesos 1 (la mediana y su intervalo no dependen de la escala
+# de los pesos) y se contrasta abajo con el Woodruff a mano.
+dis_1 <- svydesign(id = ~1, weights = rep(1, n), fpc = rep(N, n), data = agsrs)
+sv_med      <- svyquantile(~acres92, dis_1, quantiles = 0.5, ci = TRUE, qrule = "math")
+sv_med_math <- svyquantile(~acres92, dis,   quantiles = 0.5, ci = TRUE, qrule = "math")
 mediana_sv      <- as.numeric(coef(sv_med))
 mediana_sv_math <- as.numeric(coef(sv_med_math))
-cat(sprintf("mediana: a mano %.0f, survey(hf4) %.0f, survey(math) %.0f, real %.0f\n",
+cat(sprintf("mediana: a mano %.0f, survey(math, pesos 1) %.0f, survey(math, pesos N/n) %.0f, real %.0f\n",
             mediana_manual, mediana_sv, mediana_sv_math, mediana_real))
-igual(mediana_manual, mediana_sv, 1e-10, "mediana (a mano ↔ survey con qrule = hf4)")
+igual(mediana_manual, mediana_sv, 1e-10, "mediana (a mano ↔ survey con qrule = math y pesos 1)")
+# Lo que dice la caja del módulo 12, comprobado: el salto a la 151 es el redondeo.
+stopifnot(F_hat[150] < 0.5, mediana_sv_math == y_ord[151], mediana_manual == y_ord[150])
 ic_med <- as.numeric(confint(sv_med))
+# Woodruff a mano: el IC de F̂ en la mediana, 0,5 ± z·EE, invertido con la
+# misma definición inf{...} (y la misma tolerancia).
+ee_F <- sqrt((1 - n / N) * 0.5 * 0.5 * n / (n - 1) / n)
+ic_mano <- sapply(0.5 + c(-1, 1) * qnorm(0.975) * ee_F, cuantil_F)
+for (i in 1:2) igual(ic_med[i], ic_mano[i], 1e-10, "IC de la mediana (survey ↔ Woodruff a mano)")
 
 # La curva F_hat, entera. Antes iba adelgazada una de cada tres unidades para
 # el gráfico; 300 pares de números no le pesan a Chart.js, y el adelgazamiento

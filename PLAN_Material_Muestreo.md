@@ -6743,3 +6743,43 @@ Sobre **lo servido**, con Pages ya construido en `249cae9`:
 - las siete frases nuevas están en vivo y ninguna de las posicionales;
 - en el navegador, a 375 px: el M14 del cap. 3 con la pregunta 17 del dominio y el M13 del cap. 4, 0 `.katex-error`,
   sin desborde y con la consola limpia.
+
+### T7.85 — `hf4` no es la definición por ínfimo: el M12 del cap. 3 (2026-09-24)
+
+La auditoría del simulacro (T7.83) encontró que el módulo 12 decía algo falso sobre `svyquantile`. Según el
+módulo, la unidad 150 (196 701) y la 151 (196 733) eran «dos medianas» según el convenio, y `qrule = "hf4"` era la
+definición $\inf\{t : \hat F(t) \ge p\}$; por eso el material usaba `hf4`. Javier pidió corregirlo en esta
+sesión. Una sesión anterior, lanzada para esto, se detuvo al empezar sin dejar cambios.
+
+**Qué es verdad** (comprobado con survey 4.5, leyendo `survey:::qs` y las reglas):
+- `"math"` (la de por defecto) y `"hf1"` **son** la definición por ínfimo.
+- Dan 196 733 solo por el redondeo: calculan $\hat F$ con `cumsum(w)/sum(w)`, que en la unidad 150 queda en
+  0,49999999999999628, y comparan sin tolerancia. Con pesos 1 no hay redondeo, y `"math"` da 196 701. No hay dos
+  medianas: con la definición del módulo, la mediana es 196 701.
+- `"hf4"` interpola entre dos valores consecutivos. Aquí da 196 701 por casualidad, porque $\hat F$ cae en 0,5
+  justo sobre un dato. Con otros datos da valores que no son de la muestra, y su intervalo ya los daba.
+
+**Qué cambió.**
+- La caja del M12 cuenta lo anterior y avisa que `hf4` no arregla nada.
+- El bloque R11 compara la mediana a mano (196 701), `"math"` (196 733) y `"math"` con pesos 1 (196 701). `hf4`
+  ya no aparece en él.
+- La pregunta del M12 en la autoevaluación tiene una correcta nueva: $\hat F$ vale justo 0,5 y `svyquantile` la
+  redondea por debajo. El distractor viejo, «un error de implementación», pasa a ser «otra definición de
+  cuantil», con la aclaración sobre `hf4`. La correcta ya no es la opción más larga: el banco del cap. 3 queda
+  en 0 de 15.
+- **El intervalo del simulador de la mediana cambia de [144 828, 221 693] a [144 858, 223 429].** El anterior
+  era el de `hf4`, con extremos interpolados. Ahora `genera_cap3.R` lo calcula con `"math"` sobre el mismo diseño
+  con pesos 1 y lo contrasta con un Woodruff a mano, con la misma tolerancia. También comprueba que el salto a
+  la 151 es el redondeo: `F_hat[150] < 0.5`. Del JSON solo cambian los dos extremos del intervalo.
+
+**Verificado.**
+- `verifica_bloques`: 283 de 283 cifras en el cap. 3. Prosa y LaTeX en 0 en las 9 páginas.
+- Referencias: 432, 0 nuevas. `cuenta_sitio`: 0 desajustadas.
+- `prueba_bancos`: sin fallos mecánicos. Pasan también las demás pruebas de `precalculo/pruebas/`.
+- `verifica_publicado --local` del cap. 3: arranca (15 bloques de R, 4 de Python).
+- En el navegador a 375 px:
+  - la caja, el bloque y el intervalo nuevo se ven sin errores de fórmulas y sin desborde;
+  - la pregunta da la pista al fallar, y al acertar la retro y «Por qué las demás»;
+  - la consola queda limpia.
+
+**Sin commitear ni publicar**: falta la revisión de Javier.
