@@ -6732,3 +6732,14 @@ había ido a las 18:38 con la anotación de la publicación de T7.83 (`e77b204`,
 publicación»). El visto bueno cierra ese push después de hecho. `gh-pages` (`1c79cd5`) **no** lo lleva:
 difiere de `origin/main:sitio` justo en las dos páginas de esta tarea (14 y 12 líneas), y sigue esperando
 la aprobación de la publicación.
+
+**Publicado el 2026-09-24** con el visto bueno de Javier. `gh-pages` pasó de `1c79cd5` a `249cae9`, construido
+con `git commit-tree` del árbol `acf4307:sitio` sobre la punta, sin `subtree split` porque no había nada ajeno
+que excluir. El diff fue solo las dos páginas (+13 −13), y los blobs son los de `acf4307`. Antes de empujar,
+`verifica_publicado.py --local` de las dos páginas arrancó (cap. 3: 15 bloques de R y 4 de Python; cap. 4: 30 y 5).
+El invariante `origin/gh-pages^{tree}` = `origin/main:sitio`, roto a propósito desde T7.83, vuelve a estar en verde.
+Sobre **lo servido**, con Pages ya construido en `249cae9`:
+- la huella coincide con la rama en las 10 páginas, y el código de las dos arranca;
+- las siete frases nuevas están en vivo y ninguna de las posicionales;
+- en el navegador, a 375 px: el M14 del cap. 3 con la pregunta 17 del dominio y el M13 del cap. 4, 0 `.katex-error`,
+  sin desborde y con la consola limpia.
