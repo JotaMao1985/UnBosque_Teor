@@ -6818,7 +6818,8 @@ los ensaya.
   publica cada enunciado.
 - En el navegador a 375 px: 18 preguntas, 119 fórmulas sin error, sin desborde de la página, y la consola limpia.
 
-**Sin commitear ni publicar**: falta la revisión de Javier.
+**Publicado** el 2026-09-25 con T7.87, en el mismo commit, con el visto bueno de Javier («sí, commitea y publica
+en gh-pages»): `main` `108e8c4`, `gh-pages` `4aa1b46`.
 
 ### T7.87 — El M14 del cap. 3, con los criterios del quiz: 22 preguntas y cuatro ejercicios corregidos (2026-09-25)
 
@@ -6907,4 +6908,6 @@ imprimía ningún bloque). Anotado con `anota_salidas.py`: solo cambiaron esos t
 - Los archivos de esta tarea se cruzan con los de T7.86. El M15 lleva los dos cambios: el recuento de tipos y
   «veintidós preguntas del módulo 14». La página del cap. 3 también los lleva. Van juntos o no van.
 
-**Sin commitear ni publicar**: falta la revisión de Javier.
+**Publicado** el 2026-09-25 junto con T7.86, con el visto bueno de Javier («sí, commitea y publica en
+gh-pages»): `main` `108e8c4`, `gh-pages` `4aa1b46`. Lo servido coincide byte a byte con la rama, y
+`verifica_publicado.py --solo-huella` da la huella de las 10 páginas.
