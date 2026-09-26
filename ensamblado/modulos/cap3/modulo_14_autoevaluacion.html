@@ -14,7 +14,7 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Veintiuna preguntas sobre los doce módulos de
+            <p class="text-gray-600 text-sm" style="margin:0;">Veintidós preguntas sobre los doce módulos de
               contenido —el 13 es el formulario— y cuatro ejercicios con los datos de Lohr, resueltos en R.</p>
           </div>
         </div>
@@ -26,9 +26,11 @@
 
       <div class="quiz" data-quiz="cap3">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 3</h4>
-        <p class="text-sm" style="margin-bottom:0;">Veintiuna preguntas. Cada opción trae su propia
+        <p class="text-sm" style="margin-bottom:0;">Veintidós preguntas. Cada opción trae su propia
           retroalimentación, también las incorrectas: al cerrar cada pregunta se despliegan bajo
-          <em>«Por qué las demás»</em>, y leerlas cuando aciertas también enseña.</p>
+          <em>«Por qué las demás»</em>, y leerlas cuando aciertas también enseña. Las tres últimas son de los
+          módulos 10 a 12, que son de ampliación. En las que piden una cifra, escríbela con coma o punto decimal
+          y sin separador de miles.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
         <div class="quiz-resumen" role="status" hidden></div>
@@ -41,16 +43,15 @@
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
         <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro se resuelven con los datos oficiales de Lohr que
-          ya están cargados en los bloques anteriores. Las cifras de las soluciones salen de
-          <code>ensamblado/codigo/cap3/cadena.R</code>, que se ejecuta de verdad y cuyas salidas se contrastan una a
-          una.</p>
+          ya están cargados en los bloques anteriores. Las cifras de las soluciones salen de la misma cadena de R
+          del capítulo, que se ejecuta de verdad y cuyas salidas se contrastan una a una.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>agsrs</code>, estima el
             <strong>total de granjas</strong> en 1992 (<code>farms92</code>) usando como auxiliar el número de granjas
             de 1987 (<code>farms87</code>), cuyo total poblacional se conoce. Da el estimador de razón y el de
-            expansión con sus errores estándar, y compáralos con el total real. ¿Cuánto se gana aquí frente a lo que
-            se ganaba con <code>acres92</code>?</p>
+            expansión con sus errores estándar, y compáralos con el total real. ¿Cuánto se gana aquí, en varianza, frente a
+            lo que se ganaba con <code>acres92</code>?</p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e1-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -70,12 +71,13 @@
               1 925 300, y la razón se queda a un 0,29 % de él con una varianza <em>68 veces</em> menor.</strong></p>
             <pre><code class="language-r">⟦S1⟧</code></pre>
             <p>La correlación es 0,9933, algo menor que el 0,9958 de las superficies, y la ganancia también es algo
-              menor: la varianza se divide por 68 en vez de por 110. <strong>Ojo al comparar con el módulo 3</strong>,
-              que para esta misma pareja da 0,9944 y «9,4 veces mejor»: aquellas cifras son las
-              <em>verdaderas</em>, calculadas sobre <code>agpop</code> entero porque es un censo; éstas son
-              <em>estimaciones</em> hechas con los 300 de la muestra, que es lo único que hay en una encuesta de
-              verdad. Las dos son correctas, y la distancia entre ellas es el error de muestreo del propio error
-              estándar.</p>
+              menor: la varianza se divide por 68 en vez de por 110, y el error estándar por 8,27.
+              <strong>Ojo al comparar con el módulo 3</strong>, que para esta misma pareja da 0,9944 y «9,4 veces
+              mejor». Ese 9,4 es un cociente de <em>errores estándar</em>, no de varianzas, así que se compara con
+              el 8,27, no con el 68. Y es el <em>verdadero</em>, calculado sobre <code>agpop</code> entero porque es
+              un censo; el 8,27 es una <em>estimación</em> hecha con los 300 de la muestra, que es lo único que hay en
+              una encuesta de verdad. Las dos cifras son correctas, y la distancia entre ellas es el error de
+              muestreo del propio error estándar.</p>
             <p>Lo que sí coincide en las dos versiones es la relación que el módulo 3 anticipa: la eficiencia del
               estimador de razón depende de lo pequeños que sean los residuos, y eso lo gobierna la
               correlación.</p>
@@ -125,18 +127,21 @@
             <p style="margin-bottom:0;">La razón de fondo es geométrica: el volumen de un tronco crece
               aproximadamente con el <em>cuadrado</em> del diámetro por la altura, no linealmente con el diámetro.
               Una recta ajusta bien dentro del rango observado —de ahí el $R^2$ alto— y no tiene por qué pasar por el
-              origen. La solución correcta para este bosque es usar $x = \text{diámetro}^2$ como auxiliar, o el
-              estimador de regresión con el diámetro; el de razón, no. Es exactamente el punto del módulo 3:
-              <strong>correlación alta no es lo mismo que recta por el origen</strong>.</p>
+              origen. La salida para este bosque es la regresión, con el diámetro o, mejor, con
+              $x = \text{diámetro}^2$ como auxiliar. Cambiar a $\text{diámetro}^2$ acerca mucho la recta al origen,
+              pero el contraste sigue rechazándolo ($p = 0{,}0248$, módulo 3), así que el de razón no queda
+              justificado ni así. Es exactamente el punto del módulo 3: <strong>correlación alta no es lo mismo que
+              recta por el origen</strong>.</p>
           </div>
         </div>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Estima la superficie sembrada media
-            de los condados del <strong>Oeste</strong> a partir de <code>agsrs</code>, con su error estándar. El valor
+            en 1992 (<code>acres92</code>) de los condados del <strong>Oeste</strong> a partir de
+            <code>agsrs</code>, con su error estándar. El valor
             real se puede calcular con <code>agpop</code>: ¿cae la estimación cerca? Explica por qué el error estándar
-            de este dominio es tan grande comparado con el de la media global, y qué se podría haber hecho al diseñar
-            la muestra para evitarlo.</p>
+            de este dominio es tan grande comparado con el de la media global, qué se podría haber hecho al diseñar
+            la muestra para evitarlo, y qué se puede hacer todavía con la muestra ya tomada.</p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e3-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -161,12 +166,16 @@
               La segunda: el Oeste es con diferencia la región más dispersa, con una desviación típica de 835 639
               acres frente a los 79 365 del Nordeste. Poca muestra sobre lo más variable es la peor combinación
               posible.</p>
-            <p style="margin-bottom:0;">Qué se podría haber hecho: <strong>estratificar por región</strong>. Si el
+            <p>Qué se podría haber hecho: <strong>estratificar por región</strong>. Si el
               Oeste hubiera sido un estrato, $n_W$ lo habría fijado el diseño en vez del azar, y se le habrían podido
               asignar más unidades precisamente por ser el más variable —que es la asignación de Neyman del capítulo
-              4—. Con la muestra ya tomada no hay vuelta atrás para el diseño, pero sí para el análisis: la
-              postestratificación del capítulo 4 y la calibración del capítulo 7 permiten recuperar parte de la
-              precisión usando los $N_h$ conocidos.</p>
+              4—.</p>
+            <p style="margin-bottom:0;">Con la muestra ya tomada no hay vuelta atrás para el diseño, pero sí para el
+              análisis: <code>acres87</code> se conoce para todos los condados del Oeste, y el estimador de razón
+              <em>dentro del dominio</em> da <strong>719 855</strong> acres con error estándar <strong>10 127</strong>,
+              7,7 veces menos que la media sola. Es el remedio de este capítulo aplicado a un dominio, con
+              <code>subset()</code> sobre el diseño como pide el módulo 9. Conocer $N_W$, o postestratificar por
+              región, no mejora la <em>media</em> del dominio: eso ayuda al <em>total</em>.</p>
           </div>
         </div>
 
@@ -176,7 +185,7 @@
             cada una: la media por fotografía de las 100 parcelas es <strong>11,3</strong>. La fotografía se equivoca,
             así que se visitan 25 parcelas elegidas al azar y se cuentan en campo (<code>deadtrees</code>). Estima la
             media poblacional de árboles muertos por parcela con el estimador de diferencia y con el de regresión.
-            ¿Cuál usarías, y por qué la media muestral de campo sola no sirve?</p>
+            ¿Cuál usarías, y qué se pierde quedándose con la media de campo sola?</p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap3-e4-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -188,13 +197,15 @@
           <div class="ejercicio-panel pista" id="cap3-e4-pista" hidden>
             <p style="margin:0;">Empieza por comprobar si las 25 parcelas visitadas tienen una media fotográfica igual
               a la de las 100. Si no la tienen, ya sabes por qué la media de campo sola se queda corta, y en qué
-              dirección. Para elegir entre diferencia y regresión, el módulo 7 dice con qué hay que comparar la
-              pendiente ajustada: no con la correlación, y no con lo que midan las dos variables.</p>
+              dirección. Para elegir entre diferencia y regresión, piensa en qué paga la diferencia por fijar la
+              pendiente en 1, y mira cuánto vale la pendiente ajustada: el módulo 7 dice que ni la correlación ni lo
+              que midan las dos variables deciden nada.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap3-e4-sol" hidden>
             <p><strong>Por diferencia, 12,26 árboles por parcela con EE 0,457; por regresión, 11,99 con EE 0,417.
-              Gana la regresión. La media de campo sola daría 11,56, y se queda corta porque las 25 parcelas
-              visitadas resultaron ser algo más vacías que la media en la fotografía.</strong></p>
+              Gana la regresión. La media de campo sola daría 11,56: es insesgada, pero no aprovecha la foto, y se
+              queda corta porque las 25 parcelas visitadas resultaron ser algo más vacías que la media en la
+              fotografía.</strong></p>
             <pre><code class="language-r">⟦S4⟧</code></pre>
             <p>La media fotográfica de las 25 visitadas es 10,6 frente a los 11,3 de las 100: la muestra cayó 0,7
               árboles por debajo. Ese defecto se arrastra a la media de campo, y los dos estimadores con auxiliar lo
@@ -202,18 +213,21 @@
             <p><strong>Y aquí es donde este ejercicio se gana su sitio.</strong> La tentación es decir que la
               diferencia está especialmente justificada porque las dos variables cuentan lo mismo —árboles muertos en
               la misma parcela—. Es exactamente el argumento que el módulo 7 desarma: esa condición la cumplen también
-              las cuatro parejas de <code>agpop</code>, y en dos de ellas la diferencia pierde. Lo que decide es
-              <strong>con cuál de los dos valores, $B$ o 1, se parece más la pendiente</strong>, y la pendiente aquí
-              vale <strong>0,6133</strong>. No está cerca de 1: fijarla en 1 cuesta precisión, y por eso el error
-              estándar de la diferencia, 0,457, es un <strong>9,6 % mayor</strong> que el de la regresión, 0,417.</p>
+              las cuatro parejas de <code>agpop</code>, y en dos de ellas la diferencia pierde. Entre diferencia y
+              regresión, además, no hay regla que aplicar: la regresión es el mínimo de la parábola del módulo 7, y
+              la diferencia paga por fijar la pendiente en 1 un término proporcional a $(1 - \hat b_1)^2 s_x^2$.
+              Con la pendiente en <strong>0,6133</strong>, lejos de 1, ese término pesa, y por eso el error estándar
+              de la diferencia, 0,457, es un <strong>9,6 % mayor</strong> que el de la regresión, 0,417.</p>
+            <p>La regla de la pendiente sí decide frente a la <em>razón</em>, y aquí la diferencia le gana: la
+              pendiente, 0,6133, dista menos de 1 que de $\hat B = 1{,}0906$.</p>
             <p style="margin-bottom:0;">Que el estimador de diferencia sea <em>exactamente</em> insesgado no cambia la
               decisión: el módulo 4 enseña a elegir por error cuadrático medio, y el sesgo de la regresión es
               despreciable frente a esta diferencia de varianza. Cuidado también con la correlación: vale
               <strong>0,6242</strong>, muy lejos de los 0,996 a los que acostumbra este capítulo, así que <em>ninguno</em>
-              de los dos estimadores va a hacer aquí el milagro que hacía en <code>agsrs</code>. Lo que sí es este
-              ejercicio es el diseño clásico de <em>doble muestreo</em>: una medición barata y sesgada en toda la
-              población, y una cara y correcta en una submuestra. Lohr lo resuelve por regresión, y con estos números
-              se ve por qué.</p>
+              de los dos estimadores va a hacer aquí el milagro que hacía en <code>agsrs</code>. El planteamiento se parece
+              al <em>doble muestreo</em>, en el que la medición barata se hace en una primera muestra grande; aquí se
+              hizo en toda la población, y la cara y correcta en una muestra de ella. Lohr lo resuelve por regresión,
+              y con estos números se ve por qué.</p>
           </div>
         </div>
       </div>

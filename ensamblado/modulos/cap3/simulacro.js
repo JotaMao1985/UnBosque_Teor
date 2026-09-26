@@ -521,36 +521,41 @@
         },
         {
           "n": 13,
-          "etiqueta": "cap. 3 · mód. 10 · Modelo y diseño",
-          "enunciado": "<p>Un analista escribe el modelo $\\xi:\\ y_k = \\beta x_k + \\varepsilon_k$, con $E_\\xi(\\varepsilon_k) = 0$ y $V_\\xi(\\varepsilon_k) = \\sigma^2 v_k$, para decidir cómo estimar un total. Marca todas las afirmaciones correctas sobre ese modelo y sobre las tres posturas de inferencia.</p>",
-          "tipo": "multiple",
+          "etiqueta": "cap. 3 · mód. 6 · El error estándar de la media por regresión",
+          "enunciado": "<p>Una empresa administra 180 edificios de oficinas (ejemplo construido). El área de cada uno (m²) está en su registro, y el consumo de energía del mes (MWh) solo se midió en un MAS de $n = 9$ edificios. Como un edificio gasta energía aunque esté vacío (ascensores, bombas, vigilancia), se estima con regresión. En la muestra, $\\bar y = 42{,}50$ MWh, $s_y = 9{,}11$ MWh, $\\bar x = 1\\,394{,}0$ m² y $r = 0{,}8585$; el registro da $\\bar x_U = 1\\,355{,}9$ m². Si la varianza de los residuos lleva el divisor $n - 2$, ¿qué error estándar estimado tiene $\\hat{\\bar y}_{\\text{reg}}$, el consumo medio por edificio?</p>",
+          "tipo": "opcion",
           "opciones": [
-            "Basada en el diseño: es la que menos supone, y por eso es la que usan las agencias estadísticas para las cifras oficiales.",
-            "Basada en el modelo: si el modelo se ajusta bien en el rango observado de $x$, la muestra garantiza que también vale fuera de él.",
-            "Los mínimos cuadrados ponderados de $\\xi$ pesan cada observación por su varianza, $\\sigma^2 v_k$, y no por su inverso.",
-            "Basada en el modelo: se predicen los $y_k$ de las unidades que no salieron en la muestra y se suman a los observados.",
-            "El estimador de diferencia sale del mismo modelo con $v_k = 1$, la dispersión constante.",
-            "Asistida por modelos: ante un modelo sobre registros administrativos que promete sustituir la encuesta, lo usa para construir el estimador y deja la garantía al diseño."
+            "3,16 MWh.",
+            "1,52 MWh.",
+            "1,62 MWh.",
+            "532,76 MWh.",
+            "2,96 MWh."
           ]
         },
         {
           "n": 14,
-          "etiqueta": "cap. 3 · mód. 11 · Los pesos del GREG",
-          "enunciado": "<p>Bajo MAS, en el estimador de razón escrito como GREG —una auxiliar, sin intercepto y con $v_k = x_k$—, todas las unidades de la muestra reciben el mismo peso calibrado, $w_k = (N/n)\\,t_x/\\hat t_{x,\\pi}$.</p>",
+          "etiqueta": "cap. 3 · mód. 7 · El error estándar de la diferencia",
+          "enunciado": "<p>Una bodega maneja 900 referencias (ejemplo construido). El sistema de inventario da las unidades de cada referencia ($x$) para todas, y el conteo físico ($y$) solo se hizo en un MAS de $n = 30$. El conteo físico mide lo mismo que el sistema y suele quedarse unas pocas unidades por debajo en cada referencia (la merma), así que el total se estima con el estimador de diferencia. En la muestra, $\\bar y = 68{,}67$, $\\bar x = 71{,}47$, $s_y = 27{,}36$, $s_x = 27{,}79$, y la covarianza muestral de los dos conteos es $s_{xy} = 753{,}51$. ¿Qué error estándar estimado tiene el total de unidades en bodega?</p>",
           "tipo": "opcion",
           "opciones": [
-            "Verdadero",
-            "Falso"
+            "6 300 unidades.",
+            "1 150 unidades.",
+            "4 475 unidades.",
+            "8 890 unidades.",
+            "601 unidades."
           ]
         },
         {
           "n": 15,
-          "etiqueta": "cap. 3 · mód. 12 · Mediana y cuartil con pesos",
-          "enunciado": "<p>Ocho trabajadores de una encuesta estratificada por zona (ejemplo construido). La tabla da el tiempo de viaje al trabajo de cada uno, $y$, y su peso, $w_k$, con $\\sum w_k = 100$:</p><table><tr><th>Persona</th><th>Zona</th><th>y (minutos)</th><th>w<sub>k</sub></th></tr><tr><td>1</td><td>rural</td><td>67</td><td>26</td></tr><tr><td>2</td><td>rural</td><td>25</td><td>26</td></tr><tr><td>3</td><td>periferia</td><td>34</td><td>10</td></tr><tr><td>4</td><td>periferia</td><td>51</td><td>10</td></tr><tr><td>5</td><td>centro</td><td>12</td><td>6</td></tr><tr><td>6</td><td>centro</td><td>27</td><td>6</td></tr><tr><td>7</td><td>centro</td><td>23</td><td>6</td></tr><tr><td>8</td><td>periferia</td><td>35</td><td>10</td></tr></table><p>Con $\\hat F(t) = \\sum_{k \\in s} w_k\\,\\mathbb{1}(y_k \\le t)\\big/\\sum_{k \\in s} w_k$ y $\\hat Q(p) = \\inf\\{t : \\hat F(t) \\ge p\\}$, estima la mediana y el primer cuartil. Escribe cada respuesta en minutos, como en la tabla, solo con cifras.</p>",
-          "tipo": "numero",
-          "casillas": [
-            "La mediana estimada",
-            "El primer cuartil, $\\hat Q(0{,}25)$"
+          "etiqueta": "cap. 3 · mód. 9 · El error estándar de una media de dominio",
+          "enunciado": "<p>Un municipio tiene 3 200 hogares (ejemplo construido). En un MAS de $n = 150$ se midió el consumo de agua del último mes, en m³. Que el hogar tenga o no niños menores de 12 años no entró en el diseño: de los 150 hogares de la muestra, $n_d = 44$ tienen niños, y su consumo medio es $\\hat{\\bar y}_d = 23{,}72$ m³. El residuo linealizado $u_k = \\delta_k\\,(y_k - \\hat{\\bar y}_d)$, que vale cero fuera del dominio, tiene varianza muestral $s_u^2 = 42{,}78$ sobre los 150 hogares. ¿Qué error estándar estimado tiene $\\hat{\\bar y}_d$, el consumo medio de los hogares con niños?</p>",
+          "tipo": "opcion",
+          "opciones": [
+            "0,15 m³.",
+            "0,52 m³.",
+            "0,96 m³.",
+            "1,78 m³.",
+            "3,28 m³."
           ]
         },
         {

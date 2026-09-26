@@ -686,16 +686,16 @@
         tipo: 'opcion',
         modulo: 1,
         pregunta: 'Para que una variable $x$ sirva como auxiliar en la estimación de razón, ¿qué hace falta?',
-        pista: '¿Dónde entra $t_x$ en la fórmula $\\hat{t}_r = \\hat{B}\\,t_x$?',
+        pista: 'Escribe el estimador de razón del total. ¿Qué hay en él, además de lo que sale de la muestra?',
         opciones: [
-          { texto: 'Conocer $x_k$ en la muestra y el total $t_x$ en la población.', correcta: true,
-            retro: 'Exacto. Las dos cosas: sin $x_k$ en la muestra no hay $\\hat{B}$, y sin $t_x$ no hay a qué multiplicarla. Ese doble requisito es lo que limita en la práctica qué variables se pueden usar como auxiliares.' },
-          { texto: 'Basta con conocer $x_k$ en las unidades sorteadas de la muestra.', correcta: false,
-            retro: 'Entonces no habría nada que aportar: toda la información nueva está en $t_x$, que es justo lo que la muestra no sabe. Con solo $x_k$ se puede calcular $\\hat{B}$, pero no hay a qué aplicarla.' },
-          { texto: 'Que $x$ e $y$ estén medidas en las mismas unidades físicas.', correcta: false,
-            retro: 'Eso hace falta para el estimador de <em>diferencia</em>, no para el de razón. La razón funciona con unidades distintas: bushels por acre, por ejemplo, o toneladas por plantación.' },
-          { texto: 'Conocer $N$, el número de unidades de la población.', correcta: false,
-            retro: 'No hace falta para el estimador puntual: $\\hat{t}_r = \\hat{B}\\,t_x$ no contiene $N$ por ningún lado, y de ahí sale el camión de cestas de fresas del módulo 1, que se pesa sin saber cuántas cestas lleva. Sí aparece en el error estándar, dentro de la corrección por población finita.' }
+          { texto: 'Que $x_k$ se observe en la muestra y que se conozca el total $t_x$.', correcta: true,
+            retro: 'Las dos cosas: sin $x_k$ en la muestra no hay $\\hat{B}$, y sin $t_x$ no hay a qué multiplicarla. Ese doble requisito es lo que limita en la práctica qué variables se pueden usar como auxiliares.' },
+          { texto: 'Que $x_k$ se observe en la muestra y que su correlación con $y$ sea alta.', correcta: false,
+            retro: 'La correlación decide si la auxiliar <em>paga</em>, que es la pregunta del módulo 3, no si se puede usar. Sin $t_x$ no hay a qué aplicar $\\hat{B}$, por alta que sea la correlación.' },
+          { texto: 'Que $x_k$ se observe en la muestra y que $x$ e $y$ tengan las mismas unidades.', correcta: false,
+            retro: 'Eso importa para el estimador de <em>diferencia</em>, que resta $x$ de $y$. La razón funciona con unidades distintas: la superficie por granja, por ejemplo, que el módulo 5 estima con <code>svyratio</code>.' },
+          { texto: 'Que $x_k$ se observe en la muestra y que se conozca el tamaño $N$.', correcta: false,
+            retro: 'No hace falta para el estimador puntual: $\\hat{t}_r = \\hat{B}\\,t_x$ no contiene $N$ por ningún lado. $\\hat{B}$ sale de la muestra y $t_x$ del censo anterior, y con eso está hecho. $N$ sí aparece en el error estándar, dentro de la corrección por población finita.' }
         ]
       },
       {
@@ -704,8 +704,8 @@
         pregunta: 'Con $\\bar{y} = 297\\,897{,}05$ y $\\bar{x} = 301\\,953{,}72$, ¿cuánto vale $\\hat{B}$? Da cuatro decimales.',
         pista: 'Es una división y nada más. El resultado tiene que salir cerca de 1, porque las dos variables miden lo mismo con cinco años de diferencia.',
         respuesta: 0.9866,
-        tolerancia: 0.0006,
-        retroAcierto: '$297\\,897{,}05 / 301\\,953{,}72 = 0{,}9866$. La superficie sembrada cayó un 1,3 % entre 1987 y 1992, y eso es exactamente lo que el estimador de razón traslada al total conocido de 1987.',
+        tolerancia: 0.00015,
+        retroAcierto: '$297\\,897{,}05 / 301\\,953{,}72 = 0{,}9866$: la superficie media de la muestra en 1992 es el 98,66 % de la de 1987, y el estimador de razón traslada esa proporción al total conocido de 1987.',
         retroFallo: 'Es $\\bar{y}/\\bar{x} = 0{,}9866$. Un error típico es dividir al revés y dar 1,0136: $\\hat{B}$ estima $t_y/t_x$, así que la $y$ va arriba.'
       },
       {
@@ -716,16 +716,16 @@
         respuesta: 5.54,
         tolerancia: 0.03,
         unidad: 'millones de acres',
-        retroAcierto: 'Correcto: <strong>5,54 millones</strong>. Es la cifra insignia del capítulo, y conviene haberla calculado una vez a mano: el factor $t_x/\\bar{x}$ lleva el error estándar a escala de total, la raíz es la corrección por población finita, y todo el trabajo de la variable auxiliar está metido dentro de $s_e$.',
-        retroFallo: 'Es $\\dfrac{963\\,464\\,412}{301\\,953{,}72}\\sqrt{1-300/3078}\\;\\dfrac{31\\,657{,}22}{\\sqrt{300}} = 5\\,540\\,376$, es decir 5,54 millones. El fallo más común es usar la desviación de $y$ ($344\\,829{,}6$) en vez de la de los residuos: con ella sale 60,3 millones, que es el orden de la expansión.'
+        retroAcierto: '<strong>5,54 millones</strong>, la cifra insignia del capítulo, y conviene haberla calculado una vez a mano: el factor $t_x/\\bar{x}$ lleva el error estándar a escala de total, la raíz es la corrección por población finita, y todo el trabajo de la variable auxiliar está metido dentro de $s_e$.',
+        retroFallo: 'Es $\\dfrac{963\\,464\\,412}{301\\,953{,}72}\\sqrt{1-300/3078}\\;\\dfrac{31\\,657{,}22}{\\sqrt{300}} = 5\\,540\\,376$, es decir 5,54 millones. El fallo más común es usar la desviación de $y$ (344 552, la del módulo 3) en vez de la de los residuos: con ella sale 60,3 millones, del orden del error estándar de la expansión.'
       },
       {
         tipo: 'grafico',
         modulo: 3,
         alto: 230,
-        descripcionGrafico: 'Volumen frente a diámetro en los 31 cerezos, con la recta por el origen y la recta con intercepto',
-        pregunta: 'En estos 31 cerezos, ¿conviene el estimador de razón?',
-        pista: 'Mira dónde corta cada recta al eje vertical y compáralo con el rango de los volúmenes.',
+        descripcionGrafico: 'Volumen frente a diámetro en los 31 cerezos, con la recta de la razón, por el origen, y la recta libre de la regresión',
+        pregunta: 'En estos 31 cerezos, ¿conviene el estimador de razón o el de regresión, y qué lo decide?',
+        pista: '¿Qué tiene que cumplir la nube para que la recta por el origen la describa? Compáralo con lo que enseña el gráfico.',
         dibujar: canvas => {
           const c = DATOS_CAP3.cherry;
           const xMax = Math.max(...c.x) * 1.05;
@@ -739,46 +739,75 @@
           ], { tituloX: 'diámetro (pulgadas)', tituloY: 'volumen (pies cúbicos)', xMin: 0, xMax: xMax });
         },
         opciones: [
-          { texto: 'No: el intercepto ajustado está lejos de cero, en −36,9.', correcta: true,
-            retro: 'Correcto, y se ve además en la forma de la nube: la recta por el origen se aleja de ella en los dos extremos. Un árbol de diámetro cero no tiene volumen cero <em>según este ajuste lineal</em>, porque la relación real entre volumen y diámetro es cuadrática. Cuando el intercepto no es despreciable, la regresión gana.' },
-          { texto: 'Sí: la correlación entre diámetro y volumen es altísima.', correcta: false,
-            retro: 'La correlación alta ($R^2 = 0{,}935$) dice que hay una relación fuerte, no que pase por el origen. Son dos cosas distintas y confundirlas es el error más común del capítulo.' },
-          { texto: 'Sí: el volumen no puede ser negativo, así que pasa por 0.', correcta: false,
-            retro: 'Que $y$ sea positiva no obliga a la recta a pasar por el origen. Aquí la recta ajustada corta el eje en −36,9, y eso no es un problema en sí: solo significa que no hay que extrapolar a diámetros pequeños.' },
-          { texto: 'Da igual: con $n$ pequeño los dos estimadores coinciden.', correcta: false,
-            retro: 'No coinciden nunca salvo por casualidad; y con $n$ pequeño la diferencia entre ellos es <em>mayor</em>, no menor, porque cada uno estima su recta con menos información.' }
+          { texto: 'La regresión, por el intercepto: −36,9 es más de medio rango de volúmenes.', correcta: true,
+            retro: 'Y se ve en la nube: la recta por el origen se aleja de ella en los dos extremos. El gráfico enseña la magnitud; el contraste del módulo 6 lo confirma sin discusión, y es lo que pide el ejercicio 2. El volumen crece con el cuadrado del diámetro, y por eso la recta que ajusta bien en el rango observado no se prolonga hasta el origen.' },
+          { texto: 'La regresión, por el sesgo: con 31 árboles la razón sale demasiado sesgada.', correcta: false,
+            retro: 'El sesgo no es lo que descarta la razón aquí: la cota del módulo 4, $\\mathrm{CV}(\\hat{\\bar x})$, sale pequeña con estos diámetros. La descarta que la recta no pase por el origen, y eso no lo arregla ningún tamaño de muestra.' },
+          { texto: 'La razón, por la correlación: 0,9671 entre diámetro y volumen es altísima.', correcta: false,
+            retro: 'La correlación alta ($R^2 = 0{,}935$) dice que hay una relación fuerte, no que pase por el origen. Son dos cosas distintas, y confundirlas es el error más común del capítulo.' },
+          { texto: 'La razón, por el cruce: en el centro del rango las dos rectas casi coinciden.', correcta: false,
+            retro: 'Se cruzan dentro del rango, pero la razón aplica la misma pendiente, $\\hat{B} = 2{,}2773$, a todos los árboles: sobrestima el volumen de los delgados y subestima el de los gruesos. Coincidir en un punto no es describir la nube.' }
         ]
       },
       {
         tipo: 'opcion',
         modulo: 3,
-        pregunta: 'La regla del módulo 3 dice que conviene la razón si $\\rho > \\tfrac12\\,\\mathrm{CV}(x)/\\mathrm{CV}(y)$. En <code>agsrs</code> sale $0{,}9958$ contra un umbral de $0{,}4937$. ¿Qué se ha demostrado con eso?',
-        pista: 'La desigualdad salió de comparar dos errores cuadráticos medios. ¿Cuáles dos?',
+        pregunta: 'La regla del módulo 3 dice que conviene la razón si $\\rho > \\tfrac12\\,\\mathrm{CV}(x)/\\mathrm{CV}(y)$. En <code>agsrs</code> sale $0{,}9958$ contra un umbral de $0{,}4937$. ¿Qué permite concluir eso?',
+        pista: 'La desigualdad salió de comparar dos varianzas. ¿De qué dos estimadores?',
         opciones: [
-          { texto: 'Que la razón le gana a la expansión, y a nadie más.', correcta: true,
-            retro: 'Exacto, y es el matiz que más se pierde. La desigualdad se obtuvo de $\\mathrm{ECM}(\\hat{\\bar y}_r) \\le \\mathrm{ECM}(\\bar y)$: su rival es el estimador que ignora $x$. La regresión nunca entró en la cuenta, y de hecho es siempre al menos tan buena como la razón.' },
-          { texto: 'Que la razón es el mejor de los cuatro estimadores.', correcta: false,
-            retro: 'No. La regla solo compara con la expansión. El módulo 7 demuestra que la regresión tiene varianza menor o igual que la razón <em>siempre</em>, pase lo que pase con esta desigualdad.' },
-          { texto: 'Que la recta de regresión libre pasa por el origen.', correcta: false,
-            retro: 'Ésa es otra pregunta y otro criterio: el contraste sobre el intercepto del módulo 6. Una correlación altísima es perfectamente compatible con un intercepto muy distinto de cero — los cerezos del ejercicio 2 lo enseñan.' },
+          { texto: 'Que la razón tiene menos varianza que la expansión.', correcta: true,
+            retro: 'Y es el matiz que más se pierde. La desigualdad sale de $V(\\hat{\\bar y}_r) \\le V(\\bar y)$, con la varianza aproximada de la razón: su rival es el estimador que ignora $x$. La regresión no entró en la cuenta.' },
+          { texto: 'Que la razón tiene menos varianza que la regresión.', correcta: false,
+            retro: 'La regresión no entró en la cuenta, y el módulo 7 demuestra lo contrario: con la pendiente poblacional, la regresión nunca tiene más varianza que la razón. Esta desigualdad compara la razón con la expansión, y con nadie más.' },
           { texto: 'Que el sesgo de $\\hat{B}$ es despreciable en esta muestra.', correcta: false,
-            retro: 'Eso lo dice la cota del módulo 4, $\\lvert\\mathrm{Sesgo}\\rvert/\\sigma \\le \\mathrm{CV}(\\hat{\\bar x})$, que en <code>agsrs</code> vale 0,0626. Son dos criterios distintos y ninguno implica al otro.' }
+            retro: 'Eso lo dice otra cota, la del módulo 4, que se calcula con $\\mathrm{CV}(\\hat{\\bar x})$ y no con la correlación. Son dos criterios distintos, y ninguno implica al otro.' },
+          { texto: 'Que la relación entre $x$ e $y$ es lineal.', correcta: false,
+            retro: 'Tampoco: una correlación alta convive con curvatura —la de los cerezos es 0,9671, y su volumen crece con el cuadrado del diámetro—, y el umbral solo compara dos varianzas.' }
+        ]
+      },
+      {
+        tipo: 'grafico',
+        modulo: 3,
+        alto: 230,
+        descripcionGrafico: 'Residuos de la recta libre frente al conteo por fotografía en las 25 parcelas de árboles muertos, con la línea del cero',
+        pregunta: 'La nube son los residuos de la recta libre en las 25 parcelas de <code>deadtrees</code>, frente al conteo por fotografía. ¿Se cumple la condición de la dispersión que pide la razón en el módulo 3, y por qué?',
+        pista: 'La condición no es sobre dónde está el centro de la nube, sino sobre su anchura. Compara la de la izquierda con la de la derecha.',
+        dibujar: canvas => {
+          const d = DATOS_CAP3.deadtrees;
+          const res = d.x.map((v, i) => ({ x: v, y: d.y[i] - (d.b0 + d.b1 * v) }));
+          const xMin = Math.min(...d.x) - 1, xMax = Math.max(...d.x) + 1;
+          return crearGraficoXY(canvas, [
+            { type: 'scatter', label: '25 parcelas', data: res,
+              backgroundColor: 'rgba(1,40,32,0.5)', pointRadius: 4 },
+            { type: 'line', label: 'cero', data: [{ x: xMin, y: 0 }, { x: xMax, y: 0 }],
+              borderColor: '#FF6600', borderWidth: 2, pointRadius: 0, fill: false }
+          ], { tituloX: 'árboles muertos en la foto', tituloY: 'residuo (campo − recta)', xMin: xMin, xMax: xMax });
+        },
+        opciones: [
+          { texto: 'No: la nube tiene más o menos la misma anchura en todo el rango.', correcta: true,
+            retro: 'Las parcelas con pocos árboles en la foto se desvían de la recta tanto como las que tienen muchos: la dispersión no crece con $x$. Esa condición de la razón no se cumple, y el módulo 3 cuenta la dispersión constante entre los casos que piden la regresión.' },
+          { texto: 'No: los residuos no se reparten alrededor de cero, y la razón lo exige.', correcta: false,
+            retro: 'Sí se reparten: los residuos de una recta con intercepto suman cero por construcción. La condición que enseña el gráfico es otra, cómo cambia la anchura de la nube con $x$.' },
+          { texto: 'Sí: la nube se abre hacia la derecha, como supone la razón.', correcta: false,
+            retro: 'Mira la anchura a cada lado: las parcelas con pocos árboles en la foto se desvían tanto como las que tienen muchos. Abrirse hacia la derecha es lo que pasa con las superficies de <code>agsrs</code>, donde la dispersión crece con $x$ (módulo 6).' },
+          { texto: 'Sí: la correlación entre foto y campo es positiva, y con eso basta.', correcta: false,
+            retro: 'La correlación es otra de las tres condiciones, y aquí es floja: 0,6242. Además no basta sola, porque las tres tienen que cumplirse a la vez; la de la dispersión es la que enseña este gráfico.' }
         ]
       },
       {
         tipo: 'opcion',
         modulo: 4,
         pregunta: 'Con $n = 300$ el sesgo de $\\hat{t}_r$ vale $-38\\,963$ acres y su error estándar 7,11 millones. ¿Qué justifica <em>aceptar</em> un estimador sesgado?',
-        pista: 'El capítulo 1 dejó la herramienta que suma las dos cosas en un solo número.',
+        pista: 'Un sesgo no se juzga solo: ¿con qué otra cantidad hay que compararlo, y dónde se suman las dos?',
         opciones: [
-          { texto: 'Que el sesgo al cuadrado desaparece dentro del ECM.', correcta: true,
-            retro: 'Exacto: $\\text{ECM} = \\text{Sesgo}^2 + V$, y aquí el sesgo es <strong>182 veces</strong> menor que el error estándar, así que su cuadrado aporta tres cienmilésimas del ECM. Se cambia insesgadez por un error estándar diez veces menor: es una ganga, y está medida.' },
+          { texto: 'Que dentro del ECM su cuadrado pesa una fracción despreciable.', correcta: true,
+            retro: '$\\text{ECM} = \\text{Sesgo}^2 + V$, y aquí el sesgo es <strong>182 veces</strong> menor que el error estándar: su cuadrado aporta tres cienmilésimas del ECM. Se cambia insesgadez por un error estándar diez veces menor, y el precio está medido.' },
           { texto: 'Que el sesgo medido salió negativo en los nueve tamaños.', correcta: false,
             retro: 'El signo es un hecho de esta población —el estimador subestima aquí—, no un argumento. Un sesgo pequeño se acepta por su tamaño relativo, nunca por su dirección.' },
-          { texto: 'Que con 200 000 réplicas el sesgo deja de poder medirse.', correcta: false,
-            retro: 'Al revés: con 5 000 réplicas el sesgo era ruido, y con 200 000 la incertidumbre de Monte Carlo bajó a 15 900 y el sesgo <em>por fin</em> se distinguió de cero. Más réplicas lo hacen visible, no lo eliminan.' },
+          { texto: 'Que el sesgo es menor que el error de Monte Carlo de la simulación.', correcta: false,
+            retro: 'Al revés: con 200 000 réplicas la incertidumbre de Monte Carlo bajó a 15 900 y el sesgo <em>por fin</em> se distinguió de cero. Que se pueda medir no dice si importa; eso lo dice su tamaño frente al error estándar.' },
           { texto: 'Que el sesgo se anula si el muestreo es aleatorio simple.', correcta: false,
-            retro: 'No se anula con ningún diseño: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas. Lo que lo hace pequeño es $n$, no la forma de sortear.' }
+            retro: 'Bajo m.a.s. no se anula: viene de que $\\hat{B}$ es un cociente de dos variables aleatorias, y la esperanza de un cociente no es el cociente de las esperanzas. Lo que lo achica son los tres factores de la cota del módulo 4, no la forma de sortear.' }
         ]
       },
       {
@@ -788,7 +817,7 @@
         pista: 'Con $f = n/N = 300/3\\,078$. Es una sola cuenta, y el resultado tiene que quedar muy por debajo de 0,1.',
         respuesta: 0.0626,
         tolerancia: 0.0004,
-        retroAcierto: 'Correcto: $0{,}0626$. La regla de Kish pide que esté por debajo de 0,1–0,2 para dar el sesgo por despreciable, y aquí sobra margen. Lo notable es que esta cifra sale de <strong>una sola muestra</strong>: la simulación de 200 000 réplicas confirma lo mismo, pero en la vida real no se tiene.',
+        retroAcierto: '$\\widehat{\\mathrm{CV}}(\\hat{\\bar x}) = 0{,}0626$. La regla de Kish pide que esté por debajo de 0,1–0,2 para dar el sesgo por despreciable, y aquí sobra margen. Lo notable es que esta cifra sale de <strong>una sola muestra</strong>: la simulación de 200 000 réplicas confirma lo mismo, pero en la vida real no se tiene.',
         retroFallo: 'Es $\\sqrt{(1 - 300/3078)/300} \\times 344\\,829{,}6/301\\,953{,}7 = 0{,}0626$. Los dos fallos típicos: olvidar la corrección por población finita, u olvidar dividir por $\\bar{x}$ —la cota es un <em>coeficiente de variación</em>, no una desviación típica—.'
       },
       {
@@ -797,41 +826,57 @@
         pregunta: 'Un estudiante estima $B$ con la media de los cocientes, $\\frac1n\\sum y_k/x_k$, en vez de $\\bar{y}/\\bar{x}$. Con muestra suficiente, ¿qué le pasa?',
         pista: 'Pregúntate a qué número converge cada una de las dos fórmulas cuando $n \\to N$.',
         opciones: [
-          { texto: 'No converge a $B$: converge a la media de los cocientes.', correcta: true,
-            retro: 'Ése es el fondo del asunto. No es un estimador peor de lo mismo: es un estimador de <em>otra cosa</em>. En <code>agpop</code> esa media de cocientes vale $0{,}9530$ frente a $B = 0{,}9797$, un desvío del 2,73 %. Por eso aumentar $n$ no lo arregla: lo hace converger, con más precisión, al número equivocado.' },
-          { texto: 'Converge a $B$, pero con bastante más varianza.', correcta: false,
-            retro: 'Si sólo fuera varianza, más muestra lo resolvería. El problema es que el límite es otro: $0{,}9530$ en vez de $0{,}9797$. Ningún tamaño de muestra corrige un objetivo equivocado.' },
-          { texto: 'Da exactamente lo mismo: es la misma cantidad reordenada.', correcta: false,
-            retro: 'Sólo coinciden si todos los $x_k$ son iguales. Tómense dos unidades, una con $x = 1$ e $y = 2$ y otra con $x = 6$ e $y = 6$: la razón de medias vale $8/7 = 1{,}14$ y la media de cocientes vale $\\tfrac12(2 + 1) = 1{,}50$. Los mismos datos, dos números.' },
-          { texto: 'Falla sólo si la muestra trae algún valor atípico.', correcta: false,
-            retro: 'Los atípicos lo empeoran, pero el problema es anterior: apunta a otro parámetro aunque no haya ninguno. Y hay un fallo más brusco: donde $x_k = 0$ el cociente no existe. En <code>agpop</code> son 2 condados con cero acres, más 23 con el código de faltante $-99$, que dan cociente negativo: 25 unidades que hay que amputar, y con ellas se acaba describiendo otra población.' }
+          { texto: 'No converge a $B$: converge a la media poblacional de los cocientes.', correcta: true,
+            retro: 'No es un estimador peor de lo mismo: es un estimador de <em>otra cosa</em>. En <code>agpop</code> esa media de cocientes vale $0{,}9530$ frente a $B = 0{,}9797$, un desvío del 2,73 %. Por eso aumentar $n$ no lo arregla: lo hace converger, con más precisión, al número equivocado.' },
+          { texto: 'Converge a $B$, pero con bastante más varianza que $\\bar{y}/\\bar{x}$.', correcta: false,
+            retro: 'Si solo fuera varianza, más muestra lo resolvería. El problema es que el límite es otro: $0{,}9530$ en vez de $0{,}9797$. Ningún tamaño de muestra corrige un objetivo equivocado.' },
+          { texto: 'Da lo mismo: la media de los cocientes es $\\bar{y}/\\bar{x}$ reordenada.', correcta: false,
+            retro: 'Coinciden solo en casos especiales —si todos los $x_k$ son iguales, o si todos los cocientes $y_k/x_k$ lo son—, no en general. Tómense dos unidades, una con $x = 1$ e $y = 2$ y otra con $x = 6$ e $y = 6$: la razón de medias vale $8/7 = 1{,}14$ y la media de cocientes $\\tfrac12(2 + 1) = 1{,}50$. Los mismos datos, dos números.' },
+          { texto: 'Falla solo si la muestra trae algún valor atípico en los cocientes.', correcta: false,
+            retro: 'Los atípicos lo empeoran, pero el problema es anterior: apunta a otro parámetro aunque no haya ninguno. Y hay un fallo más brusco: donde $x_k = 0$ el cociente no existe. En <code>agpop</code> hay 2 condados con cero acres en 1987 y 23 más con el código de faltante $-99$: para promediar cocientes hay que dejar fuera los 25, y con ellos se acaba describiendo otra población.' }
         ]
       },
       {
         tipo: 'numerica',
         modulo: 6,
-        pregunta: 'Con $\\bar{y} = 297\\,897{,}05$, $\\hat b_1 = 0{,}995004$, $\\bar{x} = 301\\,953{,}72$ y $\\bar{x}_U = 313\\,016{,}38$, calcula la media por regresión $\\hat{\\bar y}_{\\text{reg}} = \\bar{y} + \\hat b_1(\\bar{x}_U - \\bar{x})$. Da el resultado en acres, redondeado a la unidad.',
+        pregunta: 'Con $\\bar{y} = 297\\,897{,}05$, $\\hat b_1 = 0{,}995004$, $\\bar{x} = 301\\,953{,}72$ y $\\bar{x}_U = 313\\,016{,}38$, calcula la media por regresión $\\hat{\\bar y}_{\\text{reg}} = \\bar{y} + \\hat b_1(\\bar{x}_U - \\bar{x})$. Da el resultado en miles de acres, con dos decimales.',
         pista: 'La muestra se quedó corta en $x$, así que $\\bar{x}_U - \\bar{x}$ es positivo y la corrección <em>sube</em> la media.',
-        respuesta: 308904,
-        tolerancia: 3,
-        unidad: 'acres',
-        retroAcierto: '$297\\,897{,}05 + 0{,}995004 \\times 11\\,062{,}66 = 308\\,904$. Multiplicado por $N = 3\\,078$ da 950 807 843, que es el total por regresión del módulo 6 hasta la última cifra.',
-        retroFallo: 'Es $297\\,897{,}05 + 0{,}995004 \\times (313\\,016{,}38 - 301\\,953{,}72) = 308\\,904$. Dos fallos típicos: restar al revés dentro del paréntesis —la corrección sube, no baja, porque la muestra se quedó corta en $x$— y multiplicar por $N$, que da el total y no la media.'
+        respuesta: 308.9,
+        tolerancia: 0.015,
+        unidad: 'miles de acres',
+        retroAcierto: '$297\\,897{,}05 + 0{,}995004 \\times 11\\,062{,}66 = 308\\,904$ acres, es decir 308,90 miles. Multiplicado por $N = 3\\,078$ da unos 950,8 millones: el total por regresión del módulo 6.',
+        retroFallo: 'Es $297\\,897{,}05 + 0{,}995004 \\times (313\\,016{,}38 - 301\\,953{,}72) = 308\\,904$ acres, 308,90 miles. Dos fallos típicos: restar al revés dentro del paréntesis —la corrección sube, no baja, porque la muestra se quedó corta en $x$— y multiplicar por $N$, que da el total y no la media.'
       },
       {
         tipo: 'opcion',
         modulo: 6,
-        pregunta: 'Para decidir entre razón y regresión se contrasta $H_0: a = 0$ en la recta libre. En <code>agsrs</code> sale $p = 0{,}2942$ por MCO. ¿Qué conviene hacer antes de darlo por bueno?',
+        pregunta: 'Para decidir entre razón y regresión se contrasta que el intercepto de la recta libre sea cero. En <code>agsrs</code> sale $p = 0{,}2942$ con <code>lm()</code>. ¿Qué conviene hacer antes de darlo por bueno?',
         pista: 'Piensa en qué supone <code>lm()</code> sobre cómo se obtuvieron las observaciones.',
         opciones: [
-          { texto: 'Repetir el contraste con <code>svyglm()</code>, que sí usa el diseño.', correcta: true,
-            retro: 'Correcto, y es el aviso que el propio criterio no trae. Aquí da igual —bajo m.a.s. las dos estimaciones del intercepto coinciden y el p-valor pasa de 0,2942 a 0,3378, misma conclusión—, pero con estratos o conglomerados el error estándar de <code>lm()</code> puede quedarse muy corto y volver significativo lo que no lo era.' },
-          { texto: 'Nada: un p-valor es un p-valor, venga del método que venga.', correcta: false,
-            retro: 'El p-valor depende del error estándar, y el de <code>lm()</code> se calcula suponiendo observaciones independientes e idénticamente distribuidas. Eso es cierto bajo m.a.s. y falso en casi cualquier otro diseño del curso.' },
+          { texto: 'Repetir el contraste con <code>svyglm()</code>, que usa el diseño.', correcta: true,
+            retro: 'Es el aviso que el propio criterio no trae. Aquí ya se nota: el error estándar de diseño del intercepto sale 2 654 frente a los 2 425 de <code>lm()</code>, porque la dispersión crece con $x$, aunque la conclusión no cambie (0,2942 frente a 0,3378). Con estratos o conglomerados la diferencia puede ser mucho mayor, y volver significativo lo que no lo era.' },
+          { texto: 'Repetir el contraste con <code>lm()</code> y pesos $N/n$, que usa los pesos.', correcta: false,
+            retro: 'Con pesos iguales, como los del m.a.s., <code>lm()</code> da el mismo p-valor: los pesos no son el problema. Lo que no cambia es cómo calcula el error estándar, suponiendo observaciones independientes y de varianza constante. Aquí ya falla lo segundo, y en casi cualquier otro diseño del curso falla también lo primero.' },
           { texto: 'Comprobar antes que el $R^2$ del ajuste sea suficientemente alto.', correcta: false,
             retro: 'El $R^2$ no interviene en esta decisión. En los cerezos vale 0,9353 y aun así la razón está descartada: son preguntas distintas.' },
           { texto: 'Rechazar la razón, porque $p > 0{,}05$ no demuestra nada.', correcta: false,
-            retro: 'Al revés. $p > 0{,}05$ significa que no se puede rechazar que la recta pase por el origen, y entonces se prefiere la razón <em>por ser el modelo más simple</em>. Lo que descarta la razón es un p-valor pequeño, como el $7{,}6\\times10^{-12}$ de los cerezos.' }
+            retro: 'Al revés. $p > 0{,}05$ significa que no se puede rechazar que la recta pase por el origen, y eso deja en pie la razón. Lo que la descarta es un p-valor pequeño, como el $7{,}6\\times10^{-12}$ de los cerezos.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 6,
+        pregunta: 'En los cerezos, cambiar la auxiliar por $\\text{diámetro}^2$ baja el intercepto de $-36{,}9435$ a $-3{,}3551$ —del 55,30 % al 5,02 % del rango de los volúmenes— y sube el $R^2$ a 0,9594. El contraste sobre el intercepto da $p = 0{,}0248$. ¿Queda justificado el estimador de razón con esa auxiliar?',
+        pista: 'El módulo 6 da un criterio para decidir si la recta pasa por el origen. ¿Qué dice aquí ese criterio?',
+        opciones: [
+          { texto: 'No: el contraste sigue rechazando que pase por el origen.', correcta: true,
+            retro: 'El cambio mejora mucho el problema, pero no lo cierra: con $p = 0{,}0248$ el intercepto se distingue de cero. La magnitud, un 5 % del rango, es la lectura informal; la que decide es el contraste. Para este bosque la salida sigue siendo la regresión.' },
+          { texto: 'No: la relación sigue siendo curva, y la razón exige una recta.', correcta: false,
+            retro: 'Con $\\text{diámetro}^2$ la nube ya es casi recta: el $R^2$ sube a 0,9594. Lo que falla es otra cosa: esa recta no pasa por el origen, y el contraste lo dice.' },
+          { texto: 'Sí: un intercepto del 5 % del rango ya es despreciable.', correcta: false,
+            retro: 'Ésa es la lectura informal, la de la magnitud, y aquí se queda corta: el contraste, con $p = 0{,}0248$, dice que ese 5 % no es ruido. La magnitud basta cuando la distancia al origen es enorme, como el 55,30 % con el diámetro; en los casos dudosos decide el contraste.' },
+          { texto: 'Sí: con $p < 0{,}05$ no se puede rechazar que pase por el origen.', correcta: false,
+            retro: 'Es al revés: un p-valor pequeño es el que <em>rechaza</em>. Con $p = 0{,}0248$, por debajo de 0,05, se rechaza que la recta pase por el origen; en <code>agsrs</code>, con $p = 0{,}2942$, no se rechazaba.' }
         ]
       },
       {
@@ -840,10 +885,10 @@
         pregunta: 'El total auxiliar es $t_x = 963\\,464\\,412$ y la media de las diferencias $y_k - x_k$ en la muestra es $-4\\,056{,}677$. Con $N = 3\\,078$, ¿cuánto vale el estimador de diferencia? Da el resultado en millones, con un decimal.',
         pista: '$\\hat{t}_d = t_x + N\\,(\\bar{y} - \\bar{x})$, y la media de las diferencias ya es $\\bar{y} - \\bar{x}$.',
         respuesta: 951.0,
-        tolerancia: 0.15,
+        tolerancia: 0.1,
         unidad: 'millones de acres',
-        retroAcierto: '$963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961$, es decir 951,0 millones. La corrección es de −12,5 millones sobre el total de 1987.',
-        retroFallo: 'Es $963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) = 950\\,977\\,961 \\approx 951{,}0$ millones. El error frecuente es olvidar multiplicar por $N$: la media de diferencias hay que llevarla a escala poblacional.'
+        retroAcierto: '$963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) \\approx 951{,}0$ millones: 950 977 961 con la media sin redondear, la del bloque R6. La corrección es de −12,5 millones sobre el total de 1987.',
+        retroFallo: 'Es $963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) \\approx 951{,}0$ millones. El error frecuente es olvidar multiplicar por $N$: la media de diferencias hay que llevarla a escala poblacional.'
       },
       {
         tipo: 'opcion',
@@ -852,23 +897,23 @@
         pista: 'Escribe la recta de regresión $y = b_0 + b_1 x$ y pregúntate qué vale $b_0$ cuando $b_1$ coincide con $B = \\bar{y}_U/\\bar{x}_U$.',
         opciones: [
           { texto: 'Que la recta de regresión libre pasa por el origen.', correcta: true,
-            retro: 'Exacto: es el mismo criterio del módulo 6, dicho en varianzas, y eso une los tres módulos: $b_1 = B$ equivale a $b_0 = 0$. Cuando la recta pasa por el origen, la razón no pierde nada frente a la regresión; cuando no, la regresión gana justo lo que mide el cuadrado $(B S_x - \\rho S_y)^2$.' },
-          { texto: 'Que la correlación entre $x$ e $y$ vale exactamente 1.', correcta: false,
-            retro: 'Con $\\rho = 1$ las dos varianzas se anulan y el empate es trivial. Pero la igualdad se da mucho antes: basta que la recta pase por el origen, con cualquier correlación.' },
-          { texto: 'Que la muestra es lo bastante grande para que dé igual.', correcta: false,
-            retro: 'El teorema es sobre varianzas poblacionales aproximadas; no hay ningún $n$ que lo active o lo desactive. El tamaño influye en si la <em>tabla estimada</em> deja ver el orden, no en si el orden existe.' },
-          { texto: 'Que los cuatro estimadores del capítulo coinciden.', correcta: false,
-            retro: 'No: $B = b_1$ empata razón y regresión, y deja fuera a la expansión y a la diferencia. Que la diferencia empate exige otra cosa, $b_1 = 1$, y la expansión $b_1 = 0$.' }
+            retro: 'Es el mismo criterio del módulo 6, dicho en varianzas, y eso une los tres módulos: $b_1 = B$ equivale a $b_0 = 0$. Cuando la recta pasa por el origen, la razón no pierde nada frente a la regresión; cuando no, la regresión gana justo lo que mide el cuadrado $(B S_x - \\rho S_y)^2$.' },
+          { texto: 'Que la correlación entre $x$ e $y$ es muy alta.', correcta: false,
+            retro: 'La correlación no decide la igualdad. Con $\\rho = 1$, incluso, se anula la varianza de la regresión, pero la de la razón no, salvo que además la recta pase por el origen: el hueco es $\\tfrac{1-f}{n}(B S_x - \\rho S_y)^2$, y con $\\rho = 1$ solo es cero si $B = b_1$. La correlación perfecta no es ni necesaria ni suficiente.' },
+          { texto: 'Que la muestra es lo bastante grande para que la aproximación valga.', correcta: false,
+            retro: 'El teorema es sobre varianzas poblacionales aproximadas, y la condición de igualdad no depende de $n$. El tamaño influye en si la <em>tabla estimada</em> deja ver el orden, no en si el orden existe.' },
+          { texto: 'Que la razón y la diferencia dan el mismo resultado.', correcta: false,
+            retro: 'No: $B = b_1$ empata la razón con la regresión. Que la diferencia empate con la regresión exige otra cosa, $b_1 = 1$.' }
         ]
       },
       {
         tipo: 'opcion',
         modulo: 7,
-        pregunta: 'En <code>agpop</code>, para <code>largef92 ~ largef87</code> salen $B = 1{,}0240$ y $b_1 = 0{,}9714$. Las dos variables son la misma cosa medida dos veces. ¿Qué estimador gana?',
+        pregunta: 'En <code>agpop</code>, para <code>largef92 ~ largef87</code> salen $B = 1{,}0240$ y $b_1 = 0{,}9714$. Las dos variables son la misma cosa medida dos veces. Entre la razón y la diferencia, ¿cuál gana y qué lo decide?',
         pista: 'El cuadrado perfecto $(b\\,S_x - \\rho\\,S_y)^2$ premia al $b$ más próximo a un número concreto. ¿A cuál?',
         opciones: [
           { texto: 'La diferencia: $b_1$ queda más cerca de 1 que de $B$.', correcta: true,
-            retro: 'Exacto: $\\lvert b_1 - 1\\rvert = 0{,}0286$ contra $\\lvert b_1 - B\\rvert = 0{,}0526$. La diferencia gana un <strong>6,82 %</strong>, y la regla acierta en las cuatro parejas de <code>agpop</code>.' },
+            retro: '$\\lvert b_1 - 1\\rvert = 0{,}0286$ contra $\\lvert b_1 - B\\rvert = 0{,}0526$. La diferencia gana un <strong>6,82 %</strong>, y la regla acierta en las cuatro parejas de <code>agpop</code>.' },
           { texto: 'La razón: $B$ está más cerca de 1 que la pendiente ajustada.', correcta: false,
             retro: 'Lo que hay que comparar con $b_1$ no es 1 con $B$, sino cada candidato con $b_1$, que es donde la parábola tiene el mínimo. Y $b_1 = 0{,}9714$ dista menos de 1 que de $B = 1{,}0240$.' },
           { texto: 'La diferencia: $x$ e $y$ son la misma variable medida dos veces.', correcta: false,
@@ -881,14 +926,14 @@
         tipo: 'opcion',
         modulo: 8,
         pregunta: 'En el ejemplo de los tomates se usa regresión en la región I, la media muestral en la II y razón en la III, y luego se suman los tres totales <strong>y las tres varianzas</strong>. ¿Qué permite sumar las varianzas sin términos cruzados?',
-        pista: 'No es una propiedad de los estimadores elegidos. Es una propiedad del <em>diseño</em>.',
+        pista: 'Piensa en cómo se sortearon las tres muestras, no en qué se hizo después con ellas.',
         opciones: [
           { texto: 'Que el sorteo de cada estrato es independiente de los demás.', correcta: true,
-            retro: 'Exacto, y es lo único que el módulo toma prestado del capítulo 4. Como los tres sorteos son independientes, las covarianzas entre estratos son cero y $\\hat V(\\hat t) = \\sum_h N_h^2 \\hat V(\\hat{\\bar y}_h)$. Eso es lo que hace legítimo mezclar tres estimadores distintos en una sola cuenta.' },
+            retro: 'Es lo que el módulo toma prestado del capítulo 4, junto con el m.a.s. dentro de cada región. Como los tres sorteos son independientes, las covarianzas entre estratos son cero y $\\hat V(\\hat t) = \\sum_h N_h^2 \\hat V(\\hat{\\bar y}_h)$. Eso es lo que hace legítimo mezclar tres estimadores distintos en una sola cuenta.' },
           { texto: 'Que los tres estimadores elegidos resultan ser insesgados.', correcta: false,
             retro: 'Ni siquiera es cierto: la razón y la regresión son sesgadas, y el módulo lo avisa. Y aunque lo fueran, el insesgamiento no dice nada sobre covarianzas.' },
-          { texto: 'Que las tres regiones tienen el mismo tamaño de muestra $n_h$.', correcta: false,
-            retro: 'No lo tienen —20, 13 y 27, por afijación proporcional— y daría igual: la independencia no depende de que los $n_h$ coincidan.' },
+          { texto: 'Que dentro de cada región el sorteo fue un m.a.s.', correcta: false,
+            retro: 'Es la otra cosa que el módulo toma prestada, y autoriza las fórmulas de varianza <em>dentro</em> de cada región. Los términos cruzados son otra cuestión: desaparecen porque los tres sorteos son independientes, se haga como se haga cada uno.' },
           { texto: 'Que en cada región se eligió el estimador de menor varianza.', correcta: false,
             retro: 'Eso es lo que hace pequeña a la suma, no lo que permite sumarla. Aunque se hubiera elegido el peor estimador en cada estrato, las varianzas seguirían sumándose igual.' }
         ]
@@ -896,49 +941,49 @@
       {
         tipo: 'opcion',
         modulo: 8,
-        pregunta: 'En la región III de los tomates la constante ajustada vale 0,88 con $p = 0{,}9844$. ¿Por qué se elige ahí la razón y no la regresión?',
-        pista: 'El teorema del módulo 7 dice cuándo las dos empatan. Si empatan, ¿qué desempata?',
+        pregunta: 'En la región II de los tomates la razón pierde contra la expansión: $r = 0{,}12$ frente a un umbral de 0,2079. ¿Por qué se descarta también la regresión?',
+        pista: 'El umbral del módulo 3 solo habla de la razón. ¿Qué cifras de la región II dicen algo de la regresión?',
         opciones: [
-          { texto: 'Porque la recta pasa por el origen y cuesta un parámetro menos.', correcta: true,
-            retro: 'Eso es. Con $p = 0{,}9844$ no hay ninguna razón para creer que la constante no sea cero, y el teorema del módulo 7 dice que ahí la razón no pierde nada frente a la regresión. Empatando, se prefiere el modelo más simple: una recta por el origen tiene un parámetro en vez de dos.' },
-          { texto: 'Porque el teorema del módulo 7 prohíbe usar la regresión aquí.', correcta: false,
-            retro: 'El teorema no prohíbe nada: dice que la regresión nunca tiene <em>más</em> varianza verdadera que la razón. Lo que pasa en esta región es que las iguala, y entonces el criterio pasa a ser otro.' },
-          { texto: 'Porque su $R^2$, 0,6889, es el más alto de las tres regiones.', correcta: false,
-            retro: 'Volver al $R^2$ es el error más frecuente del capítulo. Que la relación sea fuerte no dice nada sobre si pasa por el origen, y la región I tiene la constante más significativa de las tres con un $R^2$ de solo 0,2025.' },
-          { texto: 'Porque la expansión y la razón dan la misma varianza estimada ahí.', correcta: false,
-            retro: 'No la dan: en la región III la expansión sale con 940,35 y la razón con 292,59, tres veces menos. Las dos que casi coinciden son la razón y la regresión, y ése es justo el punto.' }
+          { texto: 'Porque su varianza estimada supera a la del m.a.s.: la pendiente cuesta más de lo que aporta.', correcta: true,
+            retro: 'La tabla lo dice: 717,62 frente a 667,43. Con $R^2 = 0{,}0144$ la pendiente no se distingue de cero, y estimarla con 13 plantaciones gasta varianza sin reducir nada. El teorema del módulo 7 no lo impide: habla de varianzas aproximadas, con la pendiente poblacional.' },
+          { texto: 'Porque el umbral del módulo 3 la descarta también a ella, al compararla con la expansión.', correcta: false,
+            retro: 'El umbral solo compara la razón con la expansión; de la regresión no dice nada. El propio módulo 3 avisa de no extender esa conclusión a los otros estimadores.' },
+          { texto: 'Porque su $R^2$, 0,0144, no llega al umbral del módulo 3, que es 0,2079.', correcta: false,
+            retro: 'El umbral es para $\\rho$, no para $R^2$, y compara la razón con la expansión. Lo que descarta la regresión es su propia varianza estimada.' },
+          { texto: 'Porque, si la razón pierde con la expansión, el teorema del módulo 7 dice que la regresión también.', correcta: false,
+            retro: 'El teorema dice lo contrario: con la pendiente poblacional, la regresión no pierde ni contra la razón ni contra la expansión. Lo que la hunde aquí es tener que estimar esa pendiente con una relación que no existe.' }
         ]
       },
       {
         tipo: 'opcion',
         modulo: 9,
-        pregunta: 'Al estimar la media de un dominio, ¿por qué no sirve la fórmula del error estándar del MAS?',
-        pista: '¿Qué cantidad de la fórmula del MAS es fija por diseño, y qué pasa con su equivalente aquí?',
+        pregunta: 'La media de un dominio es $\\hat{\\bar y}_d = \\sum_{k\\in s} y_k\\delta_k \\big/ \\sum_{k\\in s}\\delta_k$. ¿Por qué el capítulo la trata como una razón y no como una media corriente?',
+        pista: 'En una media del capítulo 2 el denominador es $n$, y lo fija el diseño. ¿Quién fija el de ésta?',
         opciones: [
-          { texto: 'Porque $n_d$ es aleatorio: cambia de una muestra a otra.', correcta: true,
-            retro: 'Correcto: $n_d$, el número de unidades de la muestra que caen en el dominio, no lo fija el diseño. La media de dominio pasa a ser una <em>razón</em> —suma de $y$ por el indicador sobre suma del indicador—, y su varianza se obtiene linealizando, igual que la de $\\hat{B}$.' },
-          { texto: 'Porque un dominio no es un estrato del diseño muestral.', correcta: false,
-            retro: 'Cierto que no lo es, pero la razón de fondo es el carácter aleatorio de $n_d$: en un estrato $n_h$ lo fija el diseño, y en un dominio $n_d$ sale de la muestra. Esa es la diferencia que rompe la fórmula, no el nombre.' },
-          { texto: 'Porque el tamaño poblacional del dominio $N_d$ se conoce.', correcta: false,
-            retro: 'Conocer $N_d$ no cambia nada aquí: el error estándar de la <em>media</em> de dominio no lo contiene. Donde sí decide es en el <em>total</em>, que tiene una fórmula si $N_d$ se conoce y otra, más cara, si no.' },
-          { texto: 'Porque la media de dominio es un estimador sesgado.', correcta: false,
-            retro: 'Lo es, ligeramente, por ser una razón; pero eso no es lo que invalida la fórmula del error estándar.' }
+          { texto: 'Porque su denominador, $n_d$, cambia de una muestra a otra.', correcta: true,
+            retro: '$n_d = \\sum_{k\\in s}\\delta_k$ no lo fija el diseño: depende de cuántas unidades del dominio cayeron en la muestra. Un cociente con denominador aleatorio es una razón, y su varianza sale de linealizar, como la de $\\hat{B}$. Lohr añade el matiz práctico: bajo m.a.s. y con $n_d$ grande, la fórmula de siempre aplicada a las $n_d$ unidades da casi lo mismo; con estratos o conglomerados, no.' },
+          { texto: 'Porque bajo m.a.s. la media de un dominio es un estimador sesgado.', correcta: false,
+            retro: 'Bajo m.a.s. no lo es: dado $n_d \\ge 1$, las unidades del dominio son un m.a.s. de $U_d$, y su media es insesgada. Ser una razón pesa en la varianza, no en el sesgo.' },
+          { texto: 'Porque $N_d$, el tamaño del dominio en la población, no se conoce.', correcta: false,
+            retro: '$N_d$ no aparece en la fórmula de la media: el cociente solo usa lo que cayó en la muestra.' },
+          { texto: 'Porque las unidades del dominio no son independientes entre sí.', correcta: false,
+            retro: 'Tampoco lo son en un m.a.s. sin reposición, y eso lo recoge la corrección por población finita: no es lo que convierte la media en una razón.' }
         ]
       },
       {
         tipo: 'opcion',
         modulo: 9,
         pregunta: 'Para estimar el <strong>total</strong> de un dominio hay dos fórmulas: escalar la media del dominio, o expandir $u_k = y_k\\delta_k$, que vale cero fuera de él. ¿Qué decide cuál se usa, y qué cuesta la de $u_k$?',
-        pista: 'Con la media basta una fórmula. Con el total hay un dato que el diseño no siempre tiene.',
+        pista: 'Escribe las dos fórmulas del total: ¿qué dato necesita una y la otra no?',
         opciones: [
-          { texto: 'Si se conoce $N_d$; no conocerlo sube el error estándar relativo.', correcta: true,
-            retro: 'Correcto. Con $N_d$ conocido, $\\hat t_{yd} = N_d\\,\\hat{\\bar y}_d$; sin él hay que pasar por $u_k = y_k\\delta_k$ y estimar $N\\bar u$, que arrastra la incertidumbre sobre el tamaño del dominio. En el dominio de los condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al <strong>9,29 %</strong>.' },
-          { texto: 'Si $n_d$ es grande; con $n_d$ pequeño la de $u_k$ es más estable.', correcta: false,
-            retro: 'El tamaño de $n_d$ afecta a la precisión de las dos por igual. Lo que separa las fórmulas es si $N_d$ —el tamaño <em>poblacional</em> del dominio— se conoce, no cuántas unidades cayeron en la muestra.' },
-          { texto: 'Si el dominio es un estrato; la de $u_k$ vale solo para estratos.', correcta: false,
-            retro: 'Al revés: si fuera un estrato, $n_h$ sería fijo y no haría falta nada de este módulo. Las dos fórmulas son para dominios, y la que se usa depende de $N_d$.' },
-          { texto: 'Si la variable es continua; con indicadoras solo sirve la de la media.', correcta: false,
-            retro: 'La naturaleza de $y$ no interviene. De hecho la fórmula de $u_k$ funciona convirtiendo en ceros las unidades de fuera, que es exactamente trabajar con una indicadora.' }
+          { texto: 'Si se conoce $N_d$; sin él, el error estándar relativo sube.', correcta: true,
+            retro: 'Con $N_d$ conocido, $\\hat t_{yd} = N_d\\,\\hat{\\bar y}_d$; sin él hay que pasar por $u_k = y_k\\delta_k$ y estimar $N\\bar u$, que arrastra la incertidumbre sobre el tamaño del dominio. En el dominio de los condados con 600 granjas o más, el error estándar relativo pasa del <strong>6,81 %</strong> al <strong>9,29 %</strong>.' },
+          { texto: 'Si se conoce $N_d$; sin él, la de $u_k$ sale sesgada.', correcta: false,
+            retro: 'Lo de $N_d$ es cierto, pero $N\\bar u$ es exactamente insesgado: es la expansión de $u$. Lo que cuesta es varianza, no sesgo.' },
+          { texto: 'Si $n_d$ es grande; con $n_d$ pequeño, el error estándar relativo sube.', correcta: false,
+            retro: 'El tamaño de $n_d$ afecta a la precisión de las dos fórmulas por igual. Lo que las separa es si $N_d$ —el tamaño <em>poblacional</em> del dominio— se conoce, no cuántas unidades cayeron en la muestra.' },
+          { texto: 'Si $n_d$ es grande; con $n_d$ pequeño, la de $u_k$ sale sesgada.', correcta: false,
+            retro: 'Ni lo uno ni lo otro: lo que separa las fórmulas es si se conoce $N_d$, y la de $u_k$ es la expansión de una variable más, exactamente insesgada. Lo que cuesta es varianza.' }
         ]
       },
       {
@@ -947,45 +992,35 @@
         pregunta: 'El enfoque asistido por modelos usa un modelo para construir el estimador. ¿Qué pasa si el modelo está mal especificado?',
         pista: '¿De qué depende la insesgadez del GREG: del modelo o del diseño?',
         opciones: [
-          { texto: 'Sigue siendo insesgado por diseño; lo que se pierde es eficiencia.', correcta: true,
-            retro: 'Exacto, y esa es toda la gracia del enfoque asistido por modelos: el modelo se usa para <em>construir</em> el estimador, pero la inferencia se apoya en el diseño. Un modelo malo cuesta precisión, no validez.' },
-          { texto: 'Se vuelve sesgado y deja de servir para hacer inferencia válida.', correcta: false,
-            retro: 'Eso ocurriría con un enfoque puramente basado en modelos, donde la inferencia depende de que el modelo sea correcto. El GREG no: su insesgadez asintótica es de diseño.' },
-          { texto: 'El error estándar deja de poder calcularse con los residuos del modelo.', correcta: false,
-            retro: 'Se calcula igual, con los residuos del modelo. Si el modelo ajusta mal, los residuos son grandes y el error estándar sale grande: el método avisa.' },
-          { texto: 'No pasa nada: el modelo es del todo irrelevante para el resultado.', correcta: false,
-            retro: 'Sí pasa: la eficiencia depende por completo del modelo. Con $r = 0{,}996$ se gana un factor 110; con una auxiliar sin relación con $y$, el GREG no gana nada y puede incluso perder.' }
-        ]
-      },
-      {
-        tipo: 'opcion',
-        modulo: 11,
-        pregunta: 'En el GREG $\\hat{t}_{\\text{GREG}} = \\hat{t}_\\pi + \\beta\\,(t_x - \\hat{t}_{x,\\pi})$, ¿qué se obtiene con $\\beta = 0$?',
-        pista: 'Sustituye y mira qué queda.',
-        opciones: [
-          { texto: 'El de expansión: la corrección se anula y la auxiliar no se usa.', correcta: true,
-            retro: 'Eso es. El GREG es una familia de estimadores indexada por $\\beta$, y el de expansión es el miembro que renuncia a la información auxiliar. El simulador del módulo lo enseña como el extremo izquierdo de la curva.' },
-          { texto: 'El de razón: la corrección se aplica con la pendiente estimada $\\hat{B}$.', correcta: false,
-            retro: 'La razón es otro punto de la misma curva: $\\beta = \\hat{B} = 0{,}9866$, no cero. Con $\\beta = 0$ el paréntesis entero desaparece y no queda corrección ninguna.' },
-          { texto: 'El de diferencia: la corrección se aplica con la pendiente fijada en 1.', correcta: false,
-            retro: 'La diferencia es $\\beta = 1$, el otro punto notable de la curva: traslada íntegro el desvío observado en $x$. Con $\\beta = 0$ no se traslada nada.' },
-          { texto: 'Un estimador sesgado: se pierde la corrección que lo centraba.', correcta: false,
-            retro: 'El de expansión es <em>insesgado</em>, y exactamente, igual que el de diferencia: los que llevan un sesgo pequeño son el de razón y el de regresión. Lo que le pasa es que su error estándar es diez veces mayor.' }
+          { texto: 'Sigue aproximadamente insesgado por diseño; lo que pierde es eficiencia.', correcta: true,
+            retro: 'El modelo se usa para <em>construir</em> el estimador, pero la inferencia se apoya en el diseño: un modelo malo cuesta precisión, no validez. «Aproximadamente» porque el GREG, como la razón y la regresión, lleva un sesgo de orden $1/n$ (módulo 4).' },
+          { texto: 'Sigue aproximadamente insesgado, pero su error estándar ya no avisa de la pérdida.', correcta: false,
+            retro: 'Sí avisa: se calcula con los residuos del modelo, y con un modelo malo los residuos crecen, y el error estándar con ellos.' },
+          { texto: 'Sigue aproximadamente insesgado, pero su intervalo de confianza deja de valer.', correcta: false,
+            retro: 'El intervalo se apoya en el diseño, no en el modelo, y sigue valiendo: sale más ancho, que es la forma honesta de cobrar el mal ajuste.' },
+          { texto: 'Se vuelve sesgado por diseño, tanto más cuanto peor ajuste el modelo.', correcta: false,
+            retro: 'Eso le pasaría al enfoque basado en el modelo, donde la inferencia depende de que el modelo sea correcto. En el asistido, la insesgadez aproximada viene del diseño, y un modelo malo no la toca.' }
         ]
       },
       {
         tipo: 'multiple',
         modulo: 11,
-        pregunta: 'El GREG con modelo $y_k = \\beta x_k + \\varepsilon_k$ y varianza $V(\\varepsilon_k) = \\sigma^2 v_k$. Marca <strong>las correspondencias correctas</strong>.',
-        pista: 'La pendiente sale de mínimos cuadrados ponderados con peso $1/v_k$. Sustituye cada $v_k$ y simplifica.',
+        pregunta: 'El GREG es $\\hat{t}_{\\text{GREG}} = \\hat{t}_\\pi + \\beta\\,(t_x - \\hat{t}_{x,\\pi})$. La pendiente $\\beta$ puede fijarse de antemano o salir del modelo $y_k = \\beta x_k + \\varepsilon_k$, con $V(\\varepsilon_k) = \\sigma^2 v_k$. Marca <strong>las afirmaciones correctas</strong>.',
+        pista: 'Con $\\beta$ fijada, sustituye y mira qué queda. Con el modelo, la pendiente sale de mínimos cuadrados ponderados con peso $1/v_k$: sustituye cada $v_k$ y simplifica.',
         opciones: [
-          { texto: '$v_k = x_k$ da exactamente el estimador de razón.', correcta: true },
-          { texto: '$\\beta = 1$ da el estimador de diferencia.', correcta: true },
-          { texto: 'Añadir intercepto al modelo da el estimador de regresión.', correcta: true },
-          { texto: '$v_k = x_k^2$ da el estimador de expansión.', correcta: false }
+          { texto: 'Con $\\beta = 0$ queda el estimador de expansión.', correcta: true,
+            retro: 'La corrección se anula y la auxiliar no se usa: es el extremo izquierdo de la curva del simulador. Es insesgado, y exactamente, igual que el de diferencia; los que llevan un sesgo pequeño son el de razón y el de regresión.' },
+          { texto: 'Con $v_k = x_k$ la pendiente es $\\hat{B}$, y queda el de razón.', correcta: true,
+            retro: 'Con peso $1/x_k$ la pendiente de mínimos cuadrados ponderados es $\\sum y_k / \\sum x_k = \\hat{B}$, y el GREG se reduce a $\\hat{B}\\,t_x$. En el bloque del módulo sale 0,98656524, que es $\\hat{B}$ cifra por cifra.' },
+          { texto: 'Con $\\beta$ fijada en 1 queda el estimador de diferencia.', correcta: true,
+            retro: 'La diferencia no estima nada: fija $\\beta = 1$ y traslada íntegro a $y$ el desvío observado en $x$.' },
+          { texto: 'Con $v_k = 1$ también queda el de razón.', correcta: false,
+            retro: 'Con $v_k = 1$ la pendiente es $\\sum x_k y_k / \\sum x_k^2$, que en <code>agsrs</code> vale 0,991335 frente a los 0,986565 de $\\hat{B}$: sale otro GREG, que no es ninguno de los cuatro del capítulo.' },
+          { texto: 'La regresión sale de la razón cambiando solo $v_k$.', correcta: false,
+            retro: 'Hacen falta las dos palancas del módulo 10: la regresión cambia la recta —le añade un intercepto— y además supone dispersión constante. Cambiar solo $v_k$ deja la recta por el origen: con $v_k = 1$ sale el GREG homocedástico, no la regresión.' }
         ],
-        retroAcierto: 'Todas menos la de $v_k = x_k^2$, y las tres verdaderas se comprueban en el bloque de R del módulo: con $v_k = x_k$ la pendiente sale 0,98656524, que es $\\hat{B}$ cifra por cifra.',
-        retroFallo: 'Son las tres que no usan $v_k = x_k^2$. Con esa elección sale la media de las razones individuales $\\frac{1}{n}\\sum y_k/x_k$, que es otro estimador —consistente, pero distinto— y desde luego no el de expansión.'
+        retroAcierto: 'Las tres verdaderas son tres puntos de la misma familia: $\\beta = 0$, $\\beta = \\hat{B}$ —que es lo que da $v_k = x_k$— y $\\beta = 1$. La regresión es el cuarto, y pide cambiar además la recta.',
+        retroFallo: 'Las verdaderas son la de $\\beta = 0$ (expansión), la de $v_k = x_k$ (razón) y la de $\\beta = 1$ (diferencia). De las otras dos, una lleva la pendiente a un sitio que no es ninguno de los cuatro estimadores, y la otra pide un solo cambio donde hacen falta dos.'
       },
       {
         tipo: 'opcion',
@@ -994,7 +1029,7 @@
         pista: '¿Cuánto vale $\\hat{F}$ exactamente en la unidad 150 de 300?',
         opciones: [
           { texto: 'Que $\\hat{F}$ vale justo 0,5 en la unidad 150, y <code>svyquantile</code> la redondea por debajo.', correcta: true,
-            retro: 'Exacto: el convenio por defecto, <code>qrule = "math"</code>, es la misma definición $\\inf$: la diferencia está en la decimoquinta cifra decimal de $\\hat{F}$, y como <code>svyquantile</code> compara sin tolerancia, salta a la unidad 151. Con los pesos iguales a 1 no hay redondeo y da 196 701. Pasa cuando $\\hat{F}$ cae en 0,5 justo sobre un dato, que con pesos iguales es cuando $n\\,p$ es entero. Son 32 acres sobre 197 000 —un 0,016 %—, pero conviene saberlo antes de pasar media tarde buscando un error que no está.' },
+            retro: 'El convenio por defecto, <code>qrule = "math"</code>, es la misma definición $\\inf$: la diferencia está en la decimoquinta cifra decimal de $\\hat{F}$, y como <code>svyquantile</code> compara sin tolerancia, salta a la unidad 151. Con los pesos iguales a 1 no hay redondeo y da 196 701. Pasa cuando $\\hat{F}$ cae en 0,5 justo sobre un dato, que con pesos iguales es cuando $n\\,p$ es entero. Son 32 acres sobre 197 000 —un 0,016 %—, pero conviene saberlo antes de pasar media tarde buscando un error que no está.' },
           { texto: 'Que el convenio por defecto de <code>svyquantile</code> es otra definición de cuantil, distinta de la de arriba.', correcta: false,
             retro: 'No: el de por defecto, <code>qrule = "math"</code>, es justamente la definición $\\inf$, y con los pesos iguales a 1 da 196 701. Con <code>qrule = "hf4"</code> también sale 196 701, pero por casualidad: <code>hf4</code> interpola entre dos valores consecutivos de la muestra, y con otros datos da valores que la definición no da nunca.' },
           { texto: 'Que la muestra tiene valores repetidos cerca de la mediana.', correcta: false,

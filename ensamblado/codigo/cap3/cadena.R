@@ -365,6 +365,12 @@ round(c(total_real = sum(agpop$farms92),
         correlacion = cor(agsrs$farms87, agsrs$farms92)), 4)
 #>   total_real    expansion ee_expansion        razon     ee_razon  correlacion
 #> 1925300.0000 1843906.6800   67908.3073 1930836.4997    8208.1013       0.9933
+# Cuanto se gana, en las dos metricas: el cociente de errores estandar y el de
+# varianzas, que es su cuadrado. El modulo 3 da el primero, no el segundo.
+veces_ee <- as.numeric(SE(expf_sv)[1]) / (as.numeric(SE(razf_sv)[1]) * tx_f)
+round(c(veces_ee = veces_ee, veces_varianza = veces_ee^2), 2)
+#>       veces_ee veces_varianza
+#>           8.27          68.45
 cat("\n###BLOQUE-S2###\n")
 # Ejercicio 2 - Cerezos: volumen a partir del diametro. Aqui la recta por el
 # origen NO sirve, y el intercepto dice por que.
@@ -396,6 +402,15 @@ round(c(n_dominio = n_W, media_estimada = ybar_W, ee = ee_W,
         cv_pct = 100 * ee_W / ybar_W), 4)
 #>      n_dominio media_estimada             ee     media_real         cv_pct
 #>        39.0000    598680.5897     77636.5841    723343.9645        12.9679
+# Con la muestra ya tomada todavia queda el analisis: acres87 se conoce para
+# todos los condados del Oeste, y la razon DENTRO del dominio la aprovecha.
+# subset() sobre el diseno, no sobre el data.frame (modulo 9).
+xbarU_W <- mean(agpop$acres87[agpop$region == "W"])
+raz_W <- svyratio(~acres92, ~acres87, subset(dis, region == "W"))
+round(c(razon_en_dominio = as.numeric(coef(raz_W)) * xbarU_W,
+        ee = as.numeric(SE(raz_W)) * xbarU_W), 4)
+#> razon_en_dominio               ee
+#>        719854.90         10126.87
 cat("\n###BLOQUE-S4###\n")
 # Ejercicio 4 - Arboles muertos (Lohr): 100 parcelas fotografiadas (censo de x)
 # y 25 verificadas en campo (y). La media por foto de las 100 es 11.3.
@@ -419,3 +434,9 @@ round(c(media_muestral_y = mean(deadtrees$field),
 #>          11.5600          12.2600           0.4568          11.9893
 #>     ee_regresion        pendiente      correlacion
 #>           0.4168           0.6133           0.6242
+# La razon, para ver la regla de la pendiente del modulo 7 donde si decide
+# -razon frente a diferencia-, y la media por foto de las 25 visitadas.
+round(c(B_razon = mean(deadtrees$field) / mean(deadtrees$photo),
+        media_foto_muestra = mean(deadtrees$photo)), 4)
+#>            B_razon media_foto_muestra
+#>             1.0906            10.6000

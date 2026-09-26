@@ -151,7 +151,37 @@ def revisa(p, ids_modulo):
     if ids_modulo is not None and p["modulo"] not in ids_modulo:
         f.append(f"{d}: modulo {p['modulo']} no existe en el capítulo "
                  f"— el resumen manda a repasar algo que no está")
+
+    if len(p["opciones"]) > len(LETRAS):
+        f.append(f"{d}: {len(p['opciones'])} opciones y el motor solo tiene {len(LETRAS)} letras "
+                 f"— en «Por qué las demás» la que sobra sale como «undefined)»")
+
+    if p["banco"] in SIN_ECO:
+        acierto = [p["retroAcierto"]] + [o["retro"] for o in p["opciones"] if o["correcta"]]
+        for v in acierto:
+            m = ECO.match(re.sub(r"<[^>]+>", "", v or ""))
+            if m:
+                f.append(f"{d}: la retro del acierto abre con «{m.group(1)}» y el motor ya antepone "
+                         f"«Correcto.» — el estudiante lee el eco")
     return f
+
+
+# El motor abre la retro del acierto con «Correcto.» (o «Correcto, en el segundo intento.»), y
+# `sinEco` solo limpia la lista de «Por qué las demás». Una retro que empieza por «Correcto» o
+# «Exacto» se lee «Correcto. Correcto: 5,54 millones». La auditoría del M14 del cap. 3
+# (2026-09-25) contó 16 en ese banco, y el cap. 3 quedó limpio; los demás bancos tienen el mismo
+# eco y siguen pendientes, así que la comprobación va banco a banco, según se limpien.
+SIN_ECO = {"cap3"}
+ECO = re.compile(r"^\s*(Correct[oa]|Exact[oa]|Eso es|Ésa es|Esa es|Así es|Cierto)\b", re.I)
+
+# Las letras con las que el motor rotula las opciones en «Por qué las demás». Se leen de la
+# plantilla, no se copian: el 2026-09-25 un ítem de seis opciones del cap. 3 salió en el
+# navegador con «undefined)» delante de la sexta, y ninguna prueba lo había visto.
+_M = re.search(r"const LETRAS = \[([^\]]*)\]",
+               (B.RAIZ / "plantilla" / "plantilla-capitulo-muestreo.html").read_text(encoding="utf-8"))
+LETRAS = re.findall(r"'([a-z])'", _M.group(1)) if _M else []
+if not LETRAS:
+    sys.exit("FALLO: no encuentro `const LETRAS` en la plantilla del capítulo")
 
 
 ORDINAL = re.compile(

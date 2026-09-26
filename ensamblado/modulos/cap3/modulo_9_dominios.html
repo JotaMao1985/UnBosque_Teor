@@ -45,7 +45,9 @@
       </div>
 
       <p>es un cociente con <strong>denominador aleatorio</strong>: es una razón, y su error estándar sale de
-        linealizarla igual que en el módulo 4. El residuo linealizado es $u_k = \delta_k\,(y_k - \hat{\bar{y}}_d)$,
+        linealizarla igual que en el módulo 4. Lo que no hereda de la razón es el sesgo: bajo m.a.s., dado
+        $n_d \ge 1$, las unidades del dominio que cayeron en la muestra son un m.a.s. de $U_d$, y su media es
+        insesgada. El residuo linealizado es $u_k = \delta_k\,(y_k - \hat{\bar{y}}_d)$,
         y con él la varianza se escribe como la de cualquier media, bajo m.a.s.:</p>
 
       <div class="formula">
@@ -132,8 +134,11 @@
 
       <div class="warning">
         <p><strong>El error que se paga caro.</strong> Filtrar el <code>data.frame</code> y volver a declarar el
-          diseño sobre el subconjunto <em>no</em> es lo mismo que <code>svyby</code>: al filtrar se trata $n_d$ como
-          si fuera fijo, y el error estándar sale mal. En <code>survey</code>, la forma correcta es
+          diseño sobre el subconjunto <em>no</em> es lo mismo que <code>svyby</code>: el diseño declarado ya no es
+          el que se sorteó, y el error estándar sale mal. Bajo m.a.s. y para una media el daño es pequeño —casi
+          todo viene de la corrección por población finita, que al filtrar se calcula con $n_d$ en vez de con
+          $n$—; con estratos o conglomerados, el subconjunto pierde parte del diseño, y el error puede salir muy
+          lejos del bueno sin que nada lo avise. En <code>survey</code>, la forma correcta es
           <code>svyby()</code> o <code>subset()</code> sobre el objeto de diseño, que conservan la información del
           diseño completo.</p>
       </div>

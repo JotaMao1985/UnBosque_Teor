@@ -6785,3 +6785,126 @@ sesión. Una sesión anterior, lanzada para esto, se detuvo al empezar sin dejar
 **Publicado** el 2026-09-24 con el visto bueno de Javier («sí, commitea y publica en gh-pages»): `main` `7dd1442`,
 `gh-pages` `7d91773`. Lo servido coincide byte a byte con la rama, y `verifica_publicado.py --solo-huella` da la
 huella de las 10 páginas.
+
+### T7.86 — El simulacro del M15, preguntas 13–15: de los módulos 10–12 a los módulos 6, 7 y 9 (2026-09-25)
+
+Las preguntas 13, 14 y 15 del simulacro del módulo 15 practicaban los módulos 10, 11 y 12 (modelos poblacionales,
+GREG y cuantiles con pesos). Esos módulos no se dieron en clase: el plan del Taller 2 los dejó fuera del alcance
+evaluable del Corte 2. Javier decidió el 2026-09-25 que el quiz no los evalúe, así que el simulacro tampoco
+los ensaya.
+
+**Qué cambió.**
+- Las tres pasan a ser de cálculo, de selección única, sobre ejemplos construidos:
+  - la 13, el error estándar de la media por regresión (M6), con el factor $(n-1)/(n-2)$ del formulario;
+  - la 14, el error estándar del estimador de diferencia (M7), con la covarianza muestral;
+  - la 15, el error estándar de una media de dominio (M9): la razón del módulo, con el denominador $(n_d/n)^2$,
+    a partir de la varianza del residuo linealizado.
+- Cada opción es una cuenta sobre las cifras que imprime el enunciado, y cada distractor, un error con nombre.
+- Ninguna repite una pregunta del M14: allí se practican la media por regresión, el total por diferencia y la
+  regla de la pendiente, y la pregunta de dominios es conceptual (por qué la media de dominio es una razón, desde
+  T7.87), no de cálculo.
+- El M15 corrige el recuento de tipos: diez de selección única, tres de varias respuestas, una de verdadero o
+  falso, dos que piden una cifra, una de ordenar y una de emparejar. Ya no hay ninguna con espacios para rellenar.
+- `precalculo/cifras_prosa.json`: entran las 28 cifras de las preguntas nuevas, con la justificación común del
+  simulacro. Van **todas las opciones**, no solo las que el verificador no respaldaba solo: con esas, en una
+  pregunta la lista dejaba fuera justo dos opciones.
+
+**Verificado.**
+- `verifica_bloques --todos --prosa`: 0 cifras sin respaldo y 0 secuencias de LaTeX con barra simple en las 9
+  páginas.
+- Referencias: 432, 0 nuevas. `cuenta_sitio`: 0 desajustadas. `prueba_bancos`, prosa, cadenas y barajado en verde.
+- `verifica_publicado --local` del cap. 3: arranca.
+- La prueba del simulacro, fuera del repositorio porque lleva la clave, rehace las tres claves desde lo que
+  publica cada enunciado.
+- En el navegador a 375 px: 18 preguntas, 119 fórmulas sin error, sin desborde de la página, y la consola limpia.
+
+**Sin commitear ni publicar**: falta la revisión de Javier.
+
+### T7.87 — El M14 del cap. 3, con los criterios del quiz: 22 preguntas y cuatro ejercicios corregidos (2026-09-25)
+
+Javier pidió revisar y mejorar el módulo 14 «usando criterios similares a los aplicados para la creación de este
+quiz», y aprobó las recomendaciones («sí a lo recomendado»). Dos agentes, en solo lectura: una **resolución a
+ciegas** con el material del capítulo, que acertó **12 de las 16 cerradas por la forma**, y una **auditoría ítem por
+ítem** con las cuentas rehechas en R. Los informes están en el scratchpad de la sesión (`m14/`). Los números de
+pregunta son los que ve el estudiante, ya con la numeración nueva.
+
+**Lo grave: una retro o un enunciado decía algo falso.**
+- La pregunta del M9 sobre la media de dominio partía de que «no sirve la fórmula del MAS», y Lohr dice que con
+  $n_d$ grande da casi lo mismo. Además una retro la llamaba sesgada, y bajo m.a.s. no lo es, y un distractor («un
+  dominio no es un estrato») era verdadero. Se reescribió (18): por qué el capítulo la trata como una razón.
+- La retro de «correlación 1» (14) decía que con $\rho = 1$ se anulan las dos varianzas: solo la de la regresión.
+- La de «da lo mismo» (9) decía que las dos cuentas «solo» coinciden con los $x_k$ iguales, y la de los atípicos, que
+  los 23 condados con $-99$ dan cociente negativo. Ahora: casos especiales, y los 25 que hay que amputar, como el M5.
+- La retro del EE de la razón (3) llamaba $s_y$ a 344 829,6, que es $s_x$. **La justificación de `"60,3"` en
+  `cifras_prosa.json` tenía el mismo error**; las dos usan ya 344 551,9.
+- La clave del M10 (20) decía «insesgado»: ahora «aproximadamente insesgado», con cuatro opciones de la misma forma.
+- Ejercicio 4: aplicaba la regla de la pendiente entre diferencia y regresión, y esa regla decide frente a la razón.
+  Ahora explica lo que paga la diferencia, un término proporcional a $(1-\hat b_1)^2 s_x^2$, y aplica la regla donde
+  sí decide: frente a la razón, la diferencia gana, porque 0,6133 dista menos de 1 que de $\hat B = 1{,}0906$.
+- Ejercicio 1: comparaba un cociente de varianzas (68) con uno de errores estándar (el 9,4 del M3). Ahora compara el
+  9,4 con el 8,27 de la muestra, en la misma métrica.
+- Ejercicio 3: decía que postestratificar recupera precisión para la media del dominio, y no la cambia. Ahora da el
+  remedio del capítulo: la razón dentro del dominio, 719 855 con EE 10 127, 7,7 veces menos.
+
+**Estructura: de 21 a 22 preguntas.**
+- Las dos del GREG se fusionan en una de varias respuestas (21), con tres verdaderas, dos falsas y retro por opción.
+  Antes una daba dos de las verdaderas de la otra, y las opciones no traían retro.
+- Dos nuevas: la **6**, un gráfico con los residuos de `deadtrees` para la condición de la dispersión (no tenía
+  ninguna pregunta), y la **12**, el contraste con $\text{diámetro}^2$ en los cerezos, que decide aunque el intercepto
+  sea el 5 % del rango. Las cifras de las dos ya estaban publicadas.
+- La **17** pasa de la región III de los tomates a la II: por qué se descarta también la regresión. La regla de la
+  región II no se evaluaba en ninguna parte, y dos retros anteriores daban la respuesta de la III.
+- El texto del M14 dice que **las tres últimas son de los módulos 10 a 12, de ampliación**. No dice si entran en el
+  parcial: eso lo decide Javier.
+
+**Las pistas de forma, pregunta por pregunta.** La correcta repetía el enunciado, era la única moderada entre
+absolutos, la única con una cifra o contenía a otra opción. Ahora las opciones comparten forma: «Que $x_k$ se
+observe en la muestra y…» en la 1; dos «La regresión» y dos «La razón», cada una con su porqué, en la 4; dos
+«Si se conoce $N_d$» y dos «Si $n_d$ es grande» en la 19. Dos enunciados preguntan además «qué lo decide», porque
+dos opciones nombraban al mismo ganador. Las fugas entre preguntas, cortadas: la retro del umbral ya no da la cifra
+de la cota, y la del m.a.s. ya no da la respuesta de la región III. **En el banco, la correcta es la más larga en 0
+de 16** (el cociente con la mediana de las otras va de 0,85 a 1,22).
+
+**El motor, en su versión mínima** (el arreglo en la plantilla queda para otra tarea):
+- ninguna retro del acierto abre con «Correcto» o «Exacto», que el motor ya antepone;
+- la numérica del M6 se pide en miles de acres con dos decimales (308,90), así que ninguna cifra necesita
+  separador de miles, y el M14 avisa de cómo teclearlas;
+- las tolerancias se ajustan: $\hat B$ ±0,00015 (aceptaba 0,9871) y el total por diferencia ±0,1.
+- **Encontrado en el navegador:** el motor solo tiene cinco letras (`LETRAS`), y la fusión del GREG salió con seis
+  opciones: la sexta aparecía como «undefined)» en «Por qué las demás». Quedó en cinco.
+
+**El capítulo, no solo el M14.** El M5 decía que las razones «son sesgadas», y el M9 que la media de dominio es
+una razón: juntos daban a entender que es sesgada. El M5 dice ahora que llevan, en general, un sesgo de orden $1/n$,
+y el M9 añade que la media de dominio bajo m.a.s. es insesgada. El aviso del filtrado precisa que bajo m.a.s., para
+una media, el daño es pequeño (casi todo es la corrección por población finita) y que con estratos o conglomerados
+puede ser grande. El M14 ya no cita la ruta interna de `cadena.R`.
+
+**`cadena.R`**: S1 imprime el cociente de errores estándar y el de varianzas (8,27 y 68,45), S3 la razón dentro del
+Oeste con `subset()` sobre el diseño y S4 $\hat B$ y la media fotográfica de las 25 parcelas (antes el 10,6 no lo
+imprimía ningún bloque). Anotado con `anota_salidas.py`: solo cambiaron esos tres bloques.
+
+**Dos guardas nuevas en `prueba_bancos.py`**, las dos probadas con el defecto inyectado:
+- una retro de acierto que abre con «Correcto», «Exacto», «Eso es»… Va solo para el cap. 3, que es el que está
+  limpio: los otros nueve bancos del sitio tienen el mismo eco (entre 5 y 21 cada uno) y siguen **pendientes**;
+- un ítem con más opciones que letras en la plantilla, que se leen de `const LETRAS`.
+
+**Verificado.**
+- `prueba_bancos` sin fallos, también con `--corte1`. Prosa 15 de 15, cadenas 3 de 3, barajado 4 de 4.
+- `verifica_bloques --todos --prosa`: **0 cifras sin respaldo** y 0 secuencias de LaTeX con barra simple. En el
+  cap. 3 hay ahora 289 cifras de bloques. Entraron tres cifras derivadas en `cifras_prosa.json`: 7,7, 308,90 y 950,8.
+- Referencias: 438, y las 10 nuevas revisadas a ojo. `cuenta_sitio`: 0 desajustadas, tras pasar el README y el
+  `index.html` de 103 a 104 preguntas.
+- `verifica_publicado --local` del cap. 3: arranca (15 bloques de R, 4 de Python).
+- En el navegador, a escritorio y a 375 px:
+  - 22 preguntas, los dos gráficos dibujados, 0 `.katex-error` y la consola limpia;
+  - la 6 fallada (sale la pista) y luego acertada, con «Por qué las demás»;
+  - la 10 con «308,90», la 13 rechazando el total por regresión y la 21 con cinco letras;
+  - las soluciones de E1, E3 y E4 con sus cifras nuevas, y sin desborde de la página.
+
+**Pendiente, no hecho.**
+- El motor en la plantilla: letras, «Casi», las cifras con punto al fallar y el eco en los demás bancos.
+- El README dice «2 786 cifras contrastadas» y hoy son 2 989. Ya estaba desfasado, y `cuenta_sitio` no lo cuenta.
+- Los archivos de esta tarea se cruzan con los de T7.86. El M15 lleva los dos cambios: el recuento de tipos y
+  «veintidós preguntas del módulo 14». La página del cap. 3 también los lleva. Van juntos o no van.
+
+**Sin commitear ni publicar**: falta la revisión de Javier.
