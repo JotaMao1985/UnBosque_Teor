@@ -7033,4 +7033,6 @@ desfasado desde antes de T7.87.
 - Las demás cifras del README ya estaban al día: `cuenta_sitio` da 0 desajustadas. La de cifras contrastadas
   sigue como «sin cotejar», porque ese guion no la calcula.
 
-**Sin commitear ni publicar**: falta la revisión de Javier.
+**Publicado** el 2026-09-25 con el visto bueno de Javier («sí, commitea y publica en gh-pages»):
+`main` `b249d4d`, `gh-pages` `dca4f00`. El README servido coincide byte a byte con la rama, el árbol de
+`gh-pages` es el `sitio/` de `main`, y `verifica_publicado.py --solo-huella` da la huella de las 10 páginas.
