@@ -7018,3 +7018,19 @@ cuantiles con pesos) **entran en el Parcial 2**.
 Verificado con T7.88, en la misma página. **Publicado** el 2026-09-25 junto con T7.88, con el visto bueno de
 Javier («sí, commitea y publica en gh-pages»): `main` `1effe8c`, `gh-pages` `cecd259`. Lo servido coincide byte
 a byte con la rama en las nueve páginas, y `verifica_publicado.py --solo-huella` da la huella de las 10.
+
+### T7.90 — La cifra de cifras contrastadas del README: 2 786 → 2 792 (2026-09-25)
+
+Javier aprobó el pendiente de T7.87 y T7.88 («sí, actualiza la cifra del README»).
+`sitio/muestreo/README.md` se publica, y su «2 786 cifras contrastadas contra la salida real» llevaba
+desfasado desde antes de T7.87.
+
+- **Cómo se cuenta**, igual que cuando se puso (T7.67, `354655b`): la suma de lo que `verifica_bloques --todos`
+  contrasta en los ocho capítulos, **sin el preparcial**, que el README no cuenta en ninguna de sus cifras.
+  Hoy: 303 + 495 + 289 + 528 + 163 + 315 + 241 + 458 = **2 792**, todas con 0 discrepancias.
+- **Corrige una nota propia.** T7.87 anotó «hoy son 2 989». Esa cifra sumaba también las 197 del preparcial,
+  y con la definición del README no vale.
+- Las demás cifras del README ya estaban al día: `cuenta_sitio` da 0 desajustadas. La de cifras contrastadas
+  sigue como «sin cotejar», porque ese guion no la calcula.
+
+**Sin commitear ni publicar**: falta la revisión de Javier.
