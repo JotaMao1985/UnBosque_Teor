@@ -6994,8 +6994,8 @@ Con el motor viejo falla por cinco motivos. Probada también con nueve defectos 
 
 **Pendiente, no hecho.** El README sigue con «2 786 cifras contrastadas», y `cuenta_sitio` no lo cuenta.
 
-**Sin commitear ni publicar**: falta la revisión de Javier. Toca las nueve páginas publicadas y va con T7.89 en el
-mismo commit, porque la página del cap. 3 lleva las dos.
+**Publicado** el 2026-09-25 con T7.89, en el mismo commit, con el visto bueno de Javier («sí, commitea y publica
+en gh-pages»): `main` `1effe8c`, `gh-pages` `cecd259`.
 
 ### T7.89 — Los módulos 10 a 12 del cap. 3 entran en el Parcial 2 (2026-09-25)
 
@@ -7015,4 +7015,6 @@ cuantiles con pesos) **entran en el Parcial 2**.
   - la D17 del plan del quiz.
 - La frase del M14 no menciona el quiz.
 
-Verificado con T7.88, en la misma página. **Sin commitear ni publicar**: falta la revisión de Javier.
+Verificado con T7.88, en la misma página. **Publicado** el 2026-09-25 junto con T7.88, con el visto bueno de
+Javier («sí, commitea y publica en gh-pages»): `main` `1effe8c`, `gh-pages` `cecd259`. Lo servido coincide byte
+a byte con la rama en las nueve páginas, y `verifica_publicado.py --solo-huella` da la huella de las 10.
