@@ -843,6 +843,7 @@
         pista: 'La muestra se quedó corta en $x$, así que $\\bar{x}_U - \\bar{x}$ es positivo y la corrección <em>sube</em> la media.',
         respuesta: 308.9,
         tolerancia: 0.015,
+        decimales: 2,
         unidad: 'miles de acres',
         retroAcierto: '$297\\,897{,}05 + 0{,}995004 \\times 11\\,062{,}66 = 308\\,904$ acres, es decir 308,90 miles. Multiplicado por $N = 3\\,078$ da unos 950,8 millones: el total por regresión del módulo 6.',
         retroFallo: 'Es $297\\,897{,}05 + 0{,}995004 \\times (313\\,016{,}38 - 301\\,953{,}72) = 308\\,904$ acres, 308,90 miles. Dos fallos típicos: restar al revés dentro del paréntesis —la corrección sube, no baja, porque la muestra se quedó corta en $x$— y multiplicar por $N$, que da el total y no la media.'
@@ -886,6 +887,7 @@
         pista: '$\\hat{t}_d = t_x + N\\,(\\bar{y} - \\bar{x})$, y la media de las diferencias ya es $\\bar{y} - \\bar{x}$.',
         respuesta: 951.0,
         tolerancia: 0.1,
+        decimales: 1,
         unidad: 'millones de acres',
         retroAcierto: '$963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) \\approx 951{,}0$ millones: 950 977 961 con la media sin redondear, la del bloque R6. La corrección es de −12,5 millones sobre el total de 1987.',
         retroFallo: 'Es $963\\,464\\,412 + 3\\,078 \\times (-4\\,056{,}677) \\approx 951{,}0$ millones. El error frecuente es olvidar multiplicar por $N$: la media de diferencias hay que llevarla a escala poblacional.'

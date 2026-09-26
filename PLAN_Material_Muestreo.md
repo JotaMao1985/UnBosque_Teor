@@ -6911,3 +6911,108 @@ imprimía ningún bloque). Anotado con `anota_salidas.py`: solo cambiaron esos t
 **Publicado** el 2026-09-25 junto con T7.86, con el visto bueno de Javier («sí, commitea y publica en
 gh-pages»): `main` `108e8c4`, `gh-pages` `4aa1b46`. Lo servido coincide byte a byte con la rama, y
 `verifica_publicado.py --solo-huella` da la huella de las 10 páginas.
+
+### T7.88 — El motor de la autoevaluación, en la plantilla y en las nueve páginas: ocho letras, sin «Casi», cifras en español y sin eco (2026-09-25)
+
+Javier aprobó el arreglo que T7.87 dejó pendiente («sí, arregla el motor en la plantilla»). Lo hace
+`ensamblado/retropropaga_motor_quiz.py`, idempotente: 10 parches en la plantilla y 9 en cada página.
+
+**Qué cambió en el motor.**
+- `LETRAS`: de cinco a ocho, como el simulacro del M15.
+- **«Casi»**: la pista abre ahora con «Todavía no. Una pista:». En las de varias respuestas, «Todavía no.» y la
+  cuenta: «La que marcaste está en la respuesta», «ninguna está»… Cuando no falta ninguna dice «pero sobra 1», y
+  ya no «te faltan 0».
+- **Las cifras, al leerlas**: `leeCifra()` quita los espacios, también el duro y el fino, y acepta el «−». Con coma y
+  punto a la vez, el último es el decimal. Antes `parseFloat("308 904")` daba 308. Con un solo separador, ese es
+  el decimal, como en el resto del curso, así que el punto de miles sigue sin valer, y el M14 lo avisa.
+- **Las cifras, al enseñarlas**: `escribeCifra()` escribe con coma, espacio de miles desde cuatro cifras y «−»,
+  y usa el campo nuevo `decimales`. Lo necesitaban seis numéricas: las que piden más decimales de los que tiene el
+  número de JavaScript.
+  - cap. 1: 52,0;
+  - cap. 3: 308,90 y 951,0;
+  - cap. 8: 1,50 y 2,50;
+  - simulacro del Corte 1: 170,40.
+- **El eco**: `sinEco()` sale del cierre de «Por qué las demás» y se aplica también a la retro principal del
+  acierto, y a cada trozo en las de varias respuestas.
+  - Ahora pide un signo detrás de la palabra. Antes se comía «Eso es » de «Eso es lo que hay que leer aquí».
+  - Pone mayúscula a lo que queda. Antes salía «era la correcta. las dos campanas…».
+  - En los diez bancos quita el eco de **74 retros**. Otras cuatro abren con frases del tipo «Esa es la trampa»,
+    que no son eco, y se quedan como están.
+- La numérica de muestra de la plantilla declara `decimales: 3`.
+
+**Los bancos no se reescriben.** Las 74 retros conservan su «Exacto.» en la fuente, y el motor lo quita al
+enseñarlas. Sale la guarda de eco de `prueba_bancos.py`, que iba solo para el cap. 3: su comentario decía que el
+motor no lo quitaba. `extrae_items.py` ya conoce el campo `decimales`.
+
+**Ensamblado.** Antes de tocar nada, los nueve ensambladores reproducían su página byte a byte. Tras el parche,
+reensamblar desde la plantilla da la página parcheada más solo dos cosas: los `decimales` y la frase del M14
+(T7.89). El parche y el ensamblado dicen lo mismo. La página del Taller 1, retirada y fuera de git, también.
+
+**Encontrado al verificar.** Los comentarios del motor citaban «308 904» de ejemplo. Como el motor va en todas
+las páginas, `verifica_bloques --prosa` dio 8 cifras sin respaldo, una por página. Los comentarios ya no llevan
+cifras, y dicen por qué.
+
+**`precalculo/pruebas/prueba_motor.py`, nueva.**
+1. El motor de cada página es el de la plantilla, carácter a carácter.
+2. No queda «Casi», ni el `parseFloat` del campo, ni `${p.respuesta}` crudo, ni el `sinEco` local.
+3. `leeCifra` (15 casos), `escribeCifra` (11) y `sinEco` (11) se extraen de la plantilla y se prueban.
+4. En los diez bancos, con el código publicado:
+   - la respuesta que se enseña al fallar tiene los decimales que pide el enunciado y, releída, cae dentro de la
+     tolerancia (38 numéricas);
+   - ninguna retro del acierto queda con eco ni empieza en minúscula;
+   - ninguna abre con un eco que `sinEco` no sepa quitar.
+
+Con el motor viejo falla por cinco motivos. Probada también con nueve defectos inyectados, y salta en todos:
+- una página con el motor viejo;
+- el `parseFloat` de vuelta;
+- `leeCifra` sin quitar espacios;
+- el `sinEco` sin signo;
+- un `decimales` que falta;
+- una cifra fuera de tolerancia;
+- «Correcto porque…»;
+- una minúscula;
+- un eco que queda.
+
+**Verificado.**
+- Sin fallos:
+  - `prueba_motor`;
+  - `prueba_bancos`, también con `--corte1`;
+  - prosa 15 de 15, cadenas 3 de 3, barajado 4 de 4;
+  - el banco del Taller 1, 5 de 5;
+  - Brightspace;
+  - el anotador, 8 de 8.
+- `verifica_bloques --todos --prosa`: 0 cifras sin respaldo y 0 secuencias de LaTeX con barra simple.
+  Referencias: 438, 0 nuevas. `cuenta_sitio`: 0 desajustadas. `node --check` del motor de las doce páginas.
+- En el navegador:
+  - la 13 del M14, fallada dos veces, enseña «Todavía no. Una pista:» y luego «La respuesta es 951,0 millones de
+    acres»;
+  - la 10, «308,90 miles de acres» a 375 px, sin desborde y con 0 `.katex-error`;
+  - la 21, «Todavía no. La que marcaste está en la respuesta, y te faltan 2.»;
+  - el preparcial acepta «6 782 857,14», y su retro dice «Correcto. 320 000/0,50…», no «Correcto. Correcto:»;
+  - la 1 del cap. 1: «Correcto, en el segundo intento. Duplicar las papeletas…», sin el «Exacto.»;
+  - la consola, limpia.
+
+**Pendiente, no hecho.** El README sigue con «2 786 cifras contrastadas», y `cuenta_sitio` no lo cuenta.
+
+**Sin commitear ni publicar**: falta la revisión de Javier. Toca las nueve páginas publicadas y va con T7.89 en el
+mismo commit, porque la página del cap. 3 lleva las dos.
+
+### T7.89 — Los módulos 10 a 12 del cap. 3 entran en el Parcial 2 (2026-09-25)
+
+Javier contestó la pregunta que T7.87 dejó abierta: los módulos 10 a 12 del cap. 3 (modelos poblacionales, GREG y
+cuantiles con pesos) **entran en el Parcial 2**.
+
+- El M14 decía que las tres últimas preguntas eran «de ampliación». Ahora dice que son de módulos que «también
+  entran en el Parcial 2».
+- En la misma frase, el aviso de las cifras pasa a lo que acepta el motor desde T7.88: el decimal con coma o con
+  punto, y los miles sin separar o con un espacio, nunca con punto.
+- Ninguna otra página los daba por excluidos. El enunciado del Taller 2 dice lo que no entra *en el taller*, y eso
+  sigue siendo cierto.
+- Anotado en los planes privados:
+  - el del Taller 2: una nota tras el alcance evaluable, y la T5.1, el simulacro del Parcial 2, tiene que cubrirlos;
+  - su matriz de contenidos;
+  - la D7 del plan del cap. 3;
+  - la D17 del plan del quiz.
+- La frase del M14 no menciona el quiz.
+
+Verificado con T7.88, en la misma página. **Sin commitear ni publicar**: falta la revisión de Javier.

@@ -7813,7 +7813,9 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
     //
     //   'opcion'   (por defecto) una sola respuesta correcta
     //   'multiple' varias correctas; se corrige al pulsar "Comprobar"
-    //   'numerica' campo de entrada; se acepta |respuesta - dada| <= tolerancia
+    //   'numerica' campo de entrada; se acepta |respuesta - dada| <= tolerancia.
+    //              `decimales` (opcional) son los que pide el enunciado, y
+    //              con ellos se escribe la respuesta al revelarla
     //   'grafico'  como 'opcion', pero dibuja un Chart.js sobre el enunciado
     //
     // Campos comunes: {pregunta, pista, modulo}. `pista` se muestra tras el
@@ -7821,7 +7823,75 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
     // respuesta. `modulo` alimenta el resumen final de "qué repasar".
     // ================================================================
     const AUTOEVALUACIONES = {};
-    const LETRAS = ['a', 'b', 'c', 'd', 'e'];
+    // Ocho letras. Con cinco, la sexta opción de una pregunta salía como
+    // «undefined)» (el M14 del cap. 3, al fusionar las dos del GREG).
+    // prueba_bancos.py lee esta lista para avisar de un ítem que no quepa.
+    const LETRAS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+
+    // ================================================================
+    // Las cifras de una numérica, al leerlas y al enseñarlas
+    //
+    // leeCifra() acepta lo que teclea el estudiante: coma o punto decimal,
+    // espacios de miles y el «−» tipográfico. Antes, parseFloat se paraba en
+    // el primer espacio, y la cifra escrita como la escribe el capítulo, con
+    // los miles separados, contaba como fallo. Con un solo separador y sin
+    // espacios, la coma o el punto es el decimal, como en el resto del curso.
+    // Con los dos, el último es el decimal.
+    //
+    // escribeCifra() enseña la respuesta como la escribe el capítulo —coma
+    // decimal, espacio de miles desde cuatro cifras, «−»— y con los
+    // `decimales` que declara la pregunta. Antes se pintaba el número de
+    // JavaScript, con punto y sin los ceros finales que pedía el enunciado.
+    // Sin `decimales`, los del propio número.
+    //
+    // En los comentarios del motor no va ninguna cifra de ejemplo: el motor
+    // está en todas las páginas, y verifica_bloques --prosa las leería como
+    // cifras sin respaldo.
+    // ================================================================
+    function leeCifra(texto) {
+      let s = String(texto).replace(/\s/g, '').replace(/−/g, '-');
+      const comas = (s.match(/,/g) || []).length;
+      const puntos = (s.match(/\./g) || []).length;
+      if (comas && puntos) {
+        const decimal = s.lastIndexOf(',') > s.lastIndexOf('.') ? ',' : '.';
+        s = s.split(decimal === ',' ? '.' : ',').join('').replace(decimal, '.');
+      } else if (comas > 1 || puntos > 1) {
+        s = s.replace(/[.,]/g, '');
+      } else {
+        s = s.replace(',', '.');
+      }
+      return parseFloat(s);
+    }
+
+    function escribeCifra(valor, decimales) {
+      let d = decimales;
+      if (!Number.isInteger(d)) {
+        const m = /\.(\d+)$/.exec(String(Math.abs(valor)));
+        d = m ? m[1].length : 0;
+      }
+      const partes = Math.abs(valor).toFixed(d).split('.');
+      const entero = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      const signo = valor < 0 && Number(partes.join('.')) !== 0 ? '−' : '';
+      return signo + entero + (partes[1] ? ',' + partes[1] : '');
+    }
+
+    // ================================================================
+    // El eco del acierto
+    //
+    // El motor abre la retro del acierto con «Correcto.», y muchas retros de
+    // la correcta abren a su vez con «Exacto.», «Correcto:» o «Eso es.»: el
+    // estudiante leía el juicio dos veces. En los diez bancos eran 74.
+    // sinEco() quita esa palabra donde va detrás de un juicio del
+    // motor —la retro del acierto, y «era la correcta» en «Por qué las
+    // demás»— y pone la mayúscula a lo que queda. Solo si la sigue un signo:
+    // «Eso es lo que hay que leer» o «Esa es la trampa» son frases, no ecos.
+    // ================================================================
+    function sinEco(texto) {
+      if (!texto) return texto;
+      const s = texto.replace(
+        /^\s*(?:Exact[oa]|Correct[oa]|Eso es|Ésa es|Esa es|Así es|Cierto|Sí)\s*[.,:;!—–]\s*/, '');
+      return s === texto ? texto : s.replace(/^[a-záéíóúüñ]/, c => c.toUpperCase());
+    }
     // ================================================================
     // Barajado estable de las opciones de la autoevaluación
     //
@@ -7968,7 +8038,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         // Defensivo: las preguntas de seleccion multiple no declaran
         // `retroAcierto`, y sin esta guarda el estudiante veia la palabra
         // "undefined" detras de "Correcto". (Bug encontrado auditando el cap. 6.)
-        retro.innerHTML = encabezado + (textoRetro || '');
+        // Detrás de «Correcto.» no se repite «Exacto.»: ver sinEco().
+        retro.innerHTML = encabezado + (acierto ? sinEco(textoRetro || '') : (textoRetro || ''));
         const yaVistas = new Set(vistas || []);
         const otras = (opcs || [])
           .map((o, j) => ({ o: o, j: j }))
@@ -7976,9 +8047,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         if (otras.length) {
           const det = document.createElement('details');
           det.className = 'quiz-otras';
-          // La retro de la correcta suele abrir con «Exacto.» o «Correcto.», que
-          // dentro de esta lista va detrás de «era la correcta» y suena a eco.
-          const sinEco = s => s.replace(/^(Exacto|Correcto|Eso es|Ésa es|Así es|Cierto)[.,:]?\s*/, '');
+          // Aquí la retro de la correcta va detrás de «era la correcta», y
+          // su «Exacto.» sonaría a eco: se quita con sinEco(), arriba.
           det.innerHTML = '<summary>Por qué las demás</summary><ul>' + otras.map(x =>
             `<li><span class="quiz-otras-letra">${LETRAS[x.j]})</span> ` +
             (x.o.correcta ? '<strong>era la correcta.</strong> ' + sinEco(x.o.retro) : x.o.retro) + '</li>'
@@ -7993,7 +8063,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
       function mostrarPista(i, bloque) {
         const pista = bloque.querySelector('.quiz-pista');
         if (pista && preguntas[i].pista) {
-          pista.innerHTML = `<strong>Casi. Una pista:</strong> ${preguntas[i].pista}`;
+          // Sin «Casi»: se decía ante cualquier fallo, también el más lejano.
+          pista.innerHTML = `<strong>Todavía no. Una pista:</strong> ${preguntas[i].pista}`;
           pista.hidden = false;
           katexEn(pista);
         }
@@ -8059,8 +8130,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
 
           function comprobarNumerica() {
             if (estado[i].resuelta) return;
-            // Se acepta coma o punto como separador decimal
-            const dada = parseFloat(String(input.value).trim().replace(',', '.'));
+            // Coma o punto decimal, y espacios de miles: ver leeCifra()
+            const dada = leeCifra(input.value);
             if (!isFinite(dada)) {
               pista.innerHTML = '<strong>Escribe un número</strong> antes de comprobar.';
               pista.hidden = false;
@@ -8076,7 +8147,7 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
             } else {
               input.disabled = true; boton.disabled = true;
               cerrar(i, bloque, false,
-                `La respuesta es <strong>${p.respuesta}${p.unidad ? ' ' + p.unidad : ''}</strong>. ${p.retroFallo}`);
+                `La respuesta es <strong>${escribeCifra(p.respuesta, p.decimales)}${p.unidad ? ' ' + p.unidad : ''}</strong>. ${p.retroFallo}`);
             }
           }
           boton.addEventListener('click', comprobarNumerica);
@@ -8141,13 +8212,22 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
               // declaran `retroAcierto`: se junta la retroalimentacion de las
               // opciones correctas, que ya estaba escrita y no se mostraba.
               cerrar(i, bloque, true, p.retroAcierto || opcs
-                .filter(o => o.correcta).map(o => o.retro).filter(Boolean).join(' '),
+                .filter(o => o.correcta).map(o => sinEco(o.retro)).filter(Boolean).join(' '),
                 opcs, opcs.map((o, j) => o.correcta ? j : -1).filter(j => j >= 0));
             } else if (estado[i].intentos === 1) {
               const bien = [...marcadas].filter(j => correctas.has(j)).length;
-              pista.innerHTML = `<strong>Casi.</strong> De las ${marcadas.size} que marcaste, ` +
-                `${bien} ${bien === 1 ? 'está' : 'están'} en la respuesta, y te ` +
-                `${correctas.size - bien === 1 ? 'falta' : 'faltan'} ${correctas.size - bien}. ` +
+              // Sin «Casi», que se decía también a quien no acertaba ninguna.
+              // Y si no falta ninguna, lo que hay que decir es cuántas
+              // sobran, no «te faltan 0».
+              const faltan = correctas.size - bien;
+              const sobran = marcadas.size - bien;
+              const cuenta = marcadas.size === 1
+                ? `La que marcaste ${bien ? 'está' : 'no está'} en la respuesta`
+                : `De las ${marcadas.size} que marcaste, ` +
+                  `${bien === 0 ? 'ninguna está' : bien === 1 ? '1 está' : bien + ' están'} en la respuesta`;
+              pista.innerHTML = `<strong>Todavía no.</strong> ${cuenta}` +
+                (faltan ? `, y te ${faltan === 1 ? 'falta 1' : 'faltan ' + faltan}. `
+                        : `, pero ${sobran === 1 ? 'sobra 1' : 'sobran ' + sobran}. `) +
                 (p.pista || '');
               pista.hidden = false;
               katexEn(pista);

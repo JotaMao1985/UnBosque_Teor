@@ -774,6 +774,7 @@
         pista: 'Es un producto de dos factores: $(1-R)$ por la brecha.',
         respuesta: 1.5,
         tolerancia: 0.02,
+        decimales: 2,
         retroAcierto: '$(1-0{,}40)\\times 2{,}5 = 1{,}50$ horas. Nótese que $n$ no aparece por ningún lado: la fórmula es una identidad sobre la población finita, no un resultado asintótico.',
         retroFallo: 'Es $(1 - R)(\\bar y_R - \\bar y_{NR}) = 0{,}60 \\times 2{,}5 = 1{,}50$. Si te salió 1,00 multiplicaste por $R$ en vez de por $1-R$: el factor es la proporción que FALTA.'
       },
@@ -800,6 +801,7 @@
         pista: 'El ajuste es $1/\\hat\\phi_c$ con $\\hat\\phi_c$ la proporción que respondió en la clase.',
         respuesta: 2.5,
         tolerancia: 0.02,
+        decimales: 2,
         retroAcierto: '$\\hat\\phi_c = 80/200 = 0{,}40$, luego el factor es $1/0{,}40 = 2{,}50$. Cada respondiente carga con el peso de dos personas y media: el suyo y el de los que no contestaron.',
         retroFallo: 'El factor es $1/\\hat\\phi_c = 200/80 = 2{,}50$. Si respondiste 0,40 diste la propensión, que es el denominador del ajuste, no el ajuste.'
       },

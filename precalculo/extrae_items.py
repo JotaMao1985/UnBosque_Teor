@@ -37,9 +37,11 @@ SALIDAS = B.RAIZ / "precalculo" / "salidas"
 # `semana` y `unidad` son del simulacro: la primera es la semana del taller (su
 # `modulo` ya la lleva) y la segunda es la unidad que el motor pinta junto a la
 # caja de respuesta de un `numerica`. Una unidad que no case con el enunciado es
-# un defecto auditable, así que se transcriben las dos.
+# un defecto auditable, así que se transcriben las dos. `decimales` son los que
+# pide el enunciado de una numérica, y con ellos enseña el motor la respuesta al
+# fallar; `prueba_motor.py` exige que casen.
 CONOCIDOS = """tipo modulo ancla dimension pregunta pista opciones respuesta
-tolerancia retroAcierto retroFallo respuestaModelo comprobacion
+tolerancia decimales retroAcierto retroFallo respuestaModelo comprobacion
 descripcionGrafico dibujar alto semana unidad bloque""".split()
 
 VUELCA = """
@@ -60,6 +62,7 @@ process.stdout.write(JSON.stringify(BANCO.map((p, i) => {
     })),
     respuesta: (p.respuesta === undefined ? null : p.respuesta),
     tolerancia: (p.tolerancia === undefined ? null : p.tolerancia),
+    decimales: (p.decimales === undefined ? null : p.decimales),
     unidad: p.unidad || null,
     semana: (p.semana === undefined ? null : p.semana),
     retroAcierto: p.retroAcierto || null,

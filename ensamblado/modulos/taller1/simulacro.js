@@ -336,6 +336,7 @@
         pista: 'Semiancho $= 1{,}96 \\times \\text{EE}$. Súmaselo a la media muestral.',
         respuesta: 170.40,
         tolerancia: 0.02,
+        decimales: 2,
         retroAcierto: 'Correcto: $168{,}94 + 1{,}96 \\times 0{,}7429 = 170{,}40$ cm, y el intervalo completo es $[167{,}48;\\ 170{,}40]$. La media poblacional verdadera es 168,616 cm, así que este intervalo sí la cubre — pero eso solo se sabe aquí, donde la población entera está sobre la mesa.',
         retroFallo: 'Es 170,40 cm. El semiancho es $1{,}96 \\times 0{,}7429 = 1{,}46$ cm. Los dos errores típicos son usar $1{,}64$ (que es el 90 %) y multiplicar por $s$ en vez de por el error estándar, que da un intervalo absurdamente ancho: $\\pm 21{,}7$ cm.'
       },

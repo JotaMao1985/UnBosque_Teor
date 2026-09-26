@@ -766,6 +766,7 @@
         pista: '$\\bar{y}_U = r\\,\\bar{y}_R + (1-r)\\,\\bar{y}_M$. Los pesos son las fracciones de cada grupo, no 50 y 50.',
         respuesta: 52.0,
         tolerancia: 0.15,
+        decimales: 1,
         retroAcierto: '$0{,}3 \\times 80 + 0{,}7 \\times 40 = 52{,}0$ %. Publicar el 80 % habría sido equivocarse en 28 puntos con una encuesta impecable por lo demás.',
         retroFallo: 'Es $0{,}3 \\times 80 + 0{,}7 \\times 40 = 52{,}0$ %. El error típico es promediar 80 y 40 sin pesos y dar 60: los que no responden son la mayoría y pesan más.'
       },
