@@ -7036,3 +7036,25 @@ desfasado desde antes de T7.87.
 **Publicado** el 2026-09-25 con el visto bueno de Javier («sí, commitea y publica en gh-pages»):
 `main` `b249d4d`, `gh-pages` `dca4f00`. El README servido coincide byte a byte con la rama, el árbol de
 `gh-pages` es el `sitio/` de `main`, y `verifica_publicado.py --solo-huella` da la huella de las 10 páginas.
+
+### T7.91 — El preparcial del Corte II: módulo 14 del cap. 4 (2026-10-14)
+
+Pedido de Javier: el preparcial del Corte 2, con el mismo contenido del Taller II, al final del cap. 4.
+Decisiones suyas: módulo 14 del cap. 4; alcance cap. 3 M1–M12 y cap. 4 M1–M10 (con M7 y M9; fuera M11, M12
+y cuotas); el Parcial 2 es como el Parcial 1 (presencial, 90 min, formulario y calculadora, jueves 22 oct);
+tabla de especificaciones aprobada tal cual; población construida de fincas cafeteras; el formulario lo trae
+cada estudiante. El plan detallado (`PLAN_Preparcial_Corte2.md`) y las auditorías quedan fuera de git.
+
+- **Datos:** `precalculo/genera_preparcial2.R` (semilla 20261022) construye la población con criterios de
+  aceptación y todas las cifras del banco y de los problemas → `precalculo/salidas/preparcial2_datos.json`.
+  Ninguna cifra tecleada: el módulo usa marcadores `⟦c|m|p|e:ruta:d⟧` que rellena `ensambla_cap4.py`.
+- **Instrumento:** 32 ítems en cuatro bloques (A conceptos 10, B cálculo 11, C interpretación 6, D gráficos 5),
+  `ensamblado/modulos/cap4/preparcial2.js`; tabla de especificaciones en
+  `precalculo/tabla_especificaciones_corte2.json`; cuatro problemas con solución; diagnóstico por objetivo.
+- **Auditoría:** `precalculo/pruebas/prueba_preparcial2.py` (9 de 9 defectos inyectados cazados, 11 claves
+  numéricas por segunda vía); tres rondas de auditoría experta (la última, 0 graves) y tres pruebas ciegas de
+  forma, la última con vocabulario cifrado. Batería completa en verde; a 375 px sin desborde ni errores KaTeX.
+- **Lo que hay que recordar:** una prueba ciega con vocabulario real no mide la forma (el agente sabe la
+  materia); hay que cifrar el vocabulario y barajar las opciones. Y la prueba de repetición contra los ítems
+  previos hay que correrla después de cada reescritura: cazó una opción nueva de R07 que copiaba ocho palabras.
+- El README no cuenta el preparcial en sus cifras contrastadas: siguen en **2 792**.

@@ -212,6 +212,8 @@ def baraja(banco):
         ruta = B.SITIO / "taller-1-preparacion-parcial-1.html"
     elif banco == "preparcial":
         ruta = B.SITIO / "preparcial-corte-1.html"
+    elif banco == "preparcial2":
+        ruta = B.CAPITULOS["cap4"]      # el preparcial del Corte II es el módulo 14 del cap. 4
     else:
         ruta = B.CAPITULOS.get(banco)
     return bool(ruta and ruta.exists() and "barajaEstable" in ruta.read_text(encoding="utf-8"))
@@ -303,7 +305,7 @@ def main():
     print("¿En qué POSICIÓN cae la opción correcta, en la fuente?")
     tot = {}
     tot_n = 0
-    for banco in list(claves) + ["simulacro", "preparcial"]:
+    for banco in list(claves) + ["simulacro", "preparcial", "preparcial2"]:
         n, cuenta = posicion_de_la_correcta(items, banco)
         if not n:
             continue
@@ -319,7 +321,7 @@ def main():
             aviso = "  ← la página no baraja"
         print(f"  {banco:10s} n={n:2d}   {detalle}{aviso}")
     if tot_n:
-        sin_barajar = [b for b in list(claves) + ["simulacro", "preparcial"] if not baraja(b)]
+        sin_barajar = [b for b in list(claves) + ["simulacro", "preparcial", "preparcial2"] if not baraja(b)]
         print(f"  (orden de la fuente; al azar serían {tot_n / 4:.1f} en cada posición)")
         if sin_barajar:
             pendientes = [f"{p['banco']}[{p['i']}]" for p in items
@@ -331,7 +333,7 @@ def main():
 
     print("La correcta, ¿es la opción más larga? (defecto de banco, no de ítem)")
     tot_n = tot_larga = 0
-    for banco in list(claves) + ["simulacro", "preparcial"]:
+    for banco in list(claves) + ["simulacro", "preparcial", "preparcial2"]:
         r = pista_de_longitud(items, banco)
         if not r:
             continue

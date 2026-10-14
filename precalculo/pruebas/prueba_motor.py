@@ -172,6 +172,7 @@ process.stdout.write(JSON.stringify(BANCO.map((p, i) => {
         items += [dict(p, banco=clave) for p in B.banco_capitulo(clave, vuelca)]
     items += [dict(p, banco="simulacro") for p in B.banco_simulacro(vuelca)]
     items += [dict(p, banco="preparcial") for p in B.banco_preparcial(vuelca)]
+    items += [dict(p, banco="preparcial2") for p in B.banco_preparcial2(vuelca)]
     return items
 
 

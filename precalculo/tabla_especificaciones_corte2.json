@@ -1,0 +1,363 @@
+{
+  "_": "Tabla de especificaciones del Parcial 2 — Corte II, Muestreo Estadístico (20939) 2026-II.",
+  "__": "Los pesos son DEL PARCIAL. El preparcial (módulo 14 del capítulo 4) reparte sus 32 ítems en la misma proporción. Aprobada por Javier el 2026-10-07 (Checkpoint A). La comprueba precalculo/pruebas/prueba_preparcial2.py contra el banco escrito, no contra este texto.",
+  "___": "Dimensiones: concepto · procedimiento · interpretacion · grafico. Tipos del motor: opcion · multiple · numerica · grafico. Versión 2 del 2026-10-07: R10 pasa de interpretación a procedimiento (11 + 6 en vez de 10 + 7).",
+  "fecha": "2026-10-07",
+  "parcial": "2026-10-22",
+  "condiciones": "Presencial, 90 minutos, con formulario propio y calculadora, sin computador.",
+  "alcance": {
+    "dentro": [
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.4",
+      "3.5",
+      "3.6",
+      "3.7",
+      "3.8",
+      "3.9",
+      "3.10",
+      "3.11",
+      "3.12",
+      "4.1",
+      "4.2",
+      "4.3",
+      "4.4",
+      "4.5",
+      "4.6",
+      "4.7",
+      "4.8",
+      "4.9",
+      "4.10"
+    ],
+    "fuera": [
+      "4.11",
+      "4.12",
+      "muestreo por cuotas"
+    ]
+  },
+  "objetivos": [
+    {
+      "id": "O1",
+      "peso": 20,
+      "titulo": "Usar una variable auxiliar con el estimador de razón: cuándo sirve, cuándo gana a la expansión, su sesgo y su error estándar",
+      "modulos": [
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5"
+      ]
+    },
+    {
+      "id": "O2",
+      "peso": 12,
+      "titulo": "Elegir entre razón, regresión y diferencia, también grupo a grupo, y justificarlo con una cifra",
+      "modulos": [
+        "3.6",
+        "3.7",
+        "3.8"
+      ]
+    },
+    {
+      "id": "O3",
+      "peso": 15,
+      "titulo": "Estimar en dominios y leer la estimación asistida por modelos: modelos poblacionales, GREG y la mediana",
+      "modulos": [
+        "3.9",
+        "3.10",
+        "3.11",
+        "3.12"
+      ]
+    },
+    {
+      "id": "O4",
+      "peso": 18,
+      "titulo": "Estimar en un estratificado en el marco π: por qué gana, pesos, total, varianza y el modelo que lo explica",
+      "modulos": [
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.7"
+      ]
+    },
+    {
+      "id": "O5",
+      "peso": 20,
+      "titulo": "Asignar la muestra —proporcional, Neyman, óptima con costos— y definir los estratos",
+      "modulos": [
+        "4.4",
+        "4.5",
+        "4.6"
+      ]
+    },
+    {
+      "id": "O6",
+      "peso": 15,
+      "titulo": "Medir la ganancia con el deff y corregir después del sorteo: PPT por estrato y postestratificación",
+      "modulos": [
+        "4.8",
+        "4.9",
+        "4.10"
+      ]
+    }
+  ],
+  "items_nuevos": [
+    {
+      "id": "R01",
+      "objetivo": "O1",
+      "modulo": "3.1",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "El área del registro de 2019 y las entregas del año anterior: cuáles sirven como auxiliar (las dos; que no sean de este año no importa)."
+    },
+    {
+      "id": "R02",
+      "objetivo": "O1",
+      "modulo": "3.2",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "La media por razón, B̂·t_x/N, desde ȳ, x̄, t_x y N; error con nombre: dar la media muestral."
+    },
+    {
+      "id": "R03",
+      "objetivo": "O1",
+      "modulo": "3.2",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "El error estándar del total por razón desde s_y, s_x, r y la fpc; errores con nombre: s_y en vez del residuo y olvidar la fpc."
+    },
+    {
+      "id": "R04",
+      "objetivo": "O1",
+      "modulo": "3.3",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "La misma auxiliar (el área) para dos variables —la producción y las personas que viven en la finca—, en una nube relativa a la media: para cuál gana la razón."
+    },
+    {
+      "id": "R05",
+      "objetivo": "O1",
+      "modulo": "3.4",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "La cota de Kish con una muestra de 15: qué dice de verdad la cota del sesgo relativo y qué no."
+    },
+    {
+      "id": "R06",
+      "objetivo": "O1",
+      "modulo": "3.5",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "El rendimiento de la finca típica frente al del departamento: qué parámetro contesta cada pregunta y cómo se estima la media de los cocientes."
+    },
+    {
+      "id": "R07",
+      "objetivo": "O2",
+      "modulo": "3.6",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Una salida de lm con solo 10 fincas y el intercepto sin rechazar: no rechazar no es demostrar."
+    },
+    {
+      "id": "R08",
+      "objetivo": "O2",
+      "modulo": "3.6",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "¿Cuántas fincas necesita la expansión para igualar a la regresión con n = 40? Con 1 − ρ² y la fpc."
+    },
+    {
+      "id": "R09",
+      "objetivo": "O2",
+      "modulo": "3.7",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Las entregas del año anterior como auxiliar con pendiente 0,843: por qué la diferencia pierde contra la regresión aunque sea «la misma variable»."
+    },
+    {
+      "id": "R10",
+      "objetivo": "O2",
+      "modulo": "3.8",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "El error estándar del total cuando cada subregión usa su propio estimador: se suman las varianzas, no los errores estándar."
+    },
+    {
+      "id": "R11",
+      "objetivo": "O3",
+      "modulo": "3.9",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "El error estándar del total de un dominio (fincas certificadas) cuando N_d no se conoce; las cifras del dominio sobran."
+    },
+    {
+      "id": "R12",
+      "objetivo": "O3",
+      "modulo": "3.10",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Una nube con intercepto y dispersión constante: qué modelo poblacional la describe y qué estimador le corresponde."
+    },
+    {
+      "id": "R13",
+      "objetivo": "O3",
+      "modulo": "3.11",
+      "dimension": "concepto",
+      "tipo": "multiple",
+      "pregunta": "GREG calibrado a N, al área y al área en levante: qué impone la calibración sobre los pesos y qué no."
+    },
+    {
+      "id": "R14",
+      "objetivo": "O3",
+      "modulo": "3.11",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "Salidas de svytotal antes y después de calibrate: por qué subió la producción estimada."
+    },
+    {
+      "id": "R15",
+      "objetivo": "O3",
+      "modulo": "3.12",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "La función de distribución estimada con pesos desiguales, en escalones: leer la mediana con la definición por ínfimo."
+    },
+    {
+      "id": "R16",
+      "objetivo": "O4",
+      "modulo": "4.1",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "Cuántas fincas del Sur caen en 2 000 MAS: el histograma y las garantías por subgrupo del estratificado."
+    },
+    {
+      "id": "R17",
+      "objetivo": "O4",
+      "modulo": "4.1",
+      "dimension": "concepto",
+      "tipo": "multiple",
+      "pregunta": "Las razones legítimas para estratificar (precisión, garantías por subgrupo, logística) frente a dos que no lo son."
+    },
+    {
+      "id": "R18",
+      "objetivo": "O4",
+      "modulo": "4.2",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Con asignación proporcional exacta todas las π_k valen n/N: ¿es un MAS?"
+    },
+    {
+      "id": "R19",
+      "objetivo": "O4",
+      "modulo": "4.3",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "El error estándar del total estratificado desde una tabla por estrato; errores con nombre: sin la fpc y con N² global."
+    },
+    {
+      "id": "R20",
+      "objetivo": "O4",
+      "modulo": "4.3",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "La misma muestra con y sin strata= en svydesign: cuál error estándar corresponde al diseño."
+    },
+    {
+      "id": "R21",
+      "objetivo": "O4",
+      "modulo": "4.7",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "Barras de SSB y SSW para tres particiones: cuál gana más y cuál puede perder contra el MAS."
+    },
+    {
+      "id": "R22",
+      "objetivo": "O5",
+      "modulo": "4.4",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "La asignación de Neyman de un estrato; errores con nombre: la proporcional y N_h S_h²."
+    },
+    {
+      "id": "R23",
+      "objetivo": "O5",
+      "modulo": "4.4",
+      "dimension": "concepto",
+      "tipo": "multiple",
+      "pregunta": "Proporcional frente a Neyman: cuándo coinciden, qué pasa si se pide más de lo que hay, de dónde salen las S_h y para qué variable es óptima."
+    },
+    {
+      "id": "R24",
+      "objetivo": "O5",
+      "modulo": "4.5",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "La asignación óptima con costos a presupuesto fijo: cuántas fincas se visitan; error con nombre: dividir entre c_h."
+    },
+    {
+      "id": "R25",
+      "objetivo": "O5",
+      "modulo": "4.5",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "El estrato de certeza: censar las muy grandes con 100 y con 250 fincas; quita varianza pero cuesta muestra."
+    },
+    {
+      "id": "R26",
+      "objetivo": "O5",
+      "modulo": "4.6",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Fincas en el estrato equivocado por un registro viejo: qué le pasa al estimador y a su error estándar."
+    },
+    {
+      "id": "R27",
+      "objetivo": "O5",
+      "modulo": "4.6",
+      "dimension": "grafico",
+      "tipo": "grafico",
+      "pregunta": "El deff al subir el número de estratos por cuantiles del área: rendimientos decrecientes, no nulos."
+    },
+    {
+      "id": "R28",
+      "objetivo": "O6",
+      "modulo": "4.8",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Del deff al tamaño, sin fpc: cuántas fincas bastan con el estratificado de Neyman para la precisión de un MAS de 300."
+    },
+    {
+      "id": "R29",
+      "objetivo": "O6",
+      "modulo": "4.8",
+      "dimension": "interpretacion",
+      "tipo": "opcion",
+      "pregunta": "El deff es de cada variable: el mismo diseño con deff 0,42 para la producción y casi 1 para las personas."
+    },
+    {
+      "id": "R30",
+      "objetivo": "O6",
+      "modulo": "4.9",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "Hansen–Hurwitz en el estrato de las muy grandes con cuatro extracciones; error con nombre: tratarlas como un MAS."
+    },
+    {
+      "id": "R31",
+      "objetivo": "O6",
+      "modulo": "4.10",
+      "dimension": "procedimiento",
+      "tipo": "numerica",
+      "pregunta": "La media postestratificada por tenencia con los N_h del censo; errores con nombre: los pesos de la muestra y el promedio simple."
+    },
+    {
+      "id": "R32",
+      "objetivo": "O6",
+      "modulo": "4.10",
+      "dimension": "concepto",
+      "tipo": "opcion",
+      "pregunta": "Postestratificar por tamaño un MAS de 60 con una celda que espera una finca: fusionarla."
+    }
+  ]
+}

@@ -330,7 +330,7 @@ def objetivos_para_el_diagnostico():
         "    // Los objetivos del Corte I y los módulos que los enseñan, para el\n"
         "    // diagnóstico. Generado desde precalculo/tabla_especificaciones.json.\n"
         "    // ================================================================\n"
-        "    const OBJETIVOS_CORTE1 = %s;\n\n"
+        "    const OBJETIVOS_DIAGNOSTICO = %s;\n\n"
         "    const CAPITULOS_HREF = %s;\n"
         % (json.dumps(objetivos, ensure_ascii=False, separators=(",", ":")),
            json.dumps({str(k): v for k, v in CAPITULOS.items()}, ensure_ascii=False))

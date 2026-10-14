@@ -224,7 +224,10 @@ def numeros_del_universo(html):
     # Y con finditer, no con search: el preparcial incrusta DOS JSON -el suyo y
     # el del simulacro que absorbe- y `search` se quedaba con el primero,
     # dejando fuera del universo la mitad de las cifras de la pagina.
-    for m in re.finditer(r'const DATOS_(?:CAP\d+|TALLER1|PREPARCIAL) = (\{.*?\});\n', html, re.S):
+    #
+    # PREPARCIAL2 es el del preparcial del Corte II, que vive dentro del cap. 4
+    # (su modulo 14): sin el, sus cifras saldrian sin respaldo.
+    for m in re.finditer(r'const DATOS_(?:CAP\d+|TALLER1|PREPARCIAL2?) = (\{.*?\});\n', html, re.S):
         universo.update(NUM_RE.findall(m.group(1)))
     return sorted({float(x) for x in universo if x not in ('-', '.')},)
 

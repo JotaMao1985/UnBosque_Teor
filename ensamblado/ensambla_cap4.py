@@ -62,6 +62,180 @@ def bloques_de(ruta):
     return out
 
 
+# ============================================================================
+# El preparcial del Corte II (módulo 14)
+#
+# Vive dentro de este capítulo por decisión de Javier (2026-10-07), así que
+# este ensamblador gana cuatro cosas que los demás capítulos no tienen: el
+# banco del preparcial y sus datos, el componente de diagnóstico, la tabla de
+# especificaciones y los marcadores de cifras del módulo 14.
+# ============================================================================
+PREP2_DATOS = RAIZ / "precalculo" / "salidas" / "preparcial2_datos.json"
+PREP2_TABLA = RAIZ / "precalculo" / "tabla_especificaciones_corte2.json"
+PREP2_BANCO = RAIZ / "ensamblado" / "modulos" / "cap4" / "preparcial2.js"
+COMPONENTES = RAIZ / "ensamblado" / "componentes"
+CAPITULOS_HREF = {3: "capitulo-3-razon-y-regresion.html", 4: "capitulo-4-muestreo-estratificado.html"}
+
+
+def inserta_antes(html, ancla, nuevo, que):
+    """`nuevo` justo antes de un ancla que tiene que ser única."""
+    if html.count(ancla) != 1:
+        sys.exit(f"ABORTA: el ancla de {que} aparece {html.count(ancla)} veces, esperaba 1")
+    return html.replace(ancla, nuevo + ancla, 1)
+
+
+def inserta_despues(html, ancla, nuevo, que):
+    if html.count(ancla) != 1:
+        sys.exit(f"ABORTA: el ancla de {que} aparece {html.count(ancla)} veces, esperaba 1")
+    return html.replace(ancla, ancla + nuevo, 1)
+
+
+def cifra_es(x, d):
+    """La cifra como la escribe el capítulo (y escribeCifra() del motor):
+    coma decimal, espacio de miles desde cuatro cifras y «−»."""
+    s = f"{abs(x):,.{d}f}"
+    entero, _, frac = s.partition(".")
+    signo = "−" if x < 0 and float(f"{abs(x):.{d}f}") != 0 else ""
+    return signo + entero.replace(",", " ") + ("," + frac if frac else "")
+
+
+def cifra_mat(x, d):
+    """La misma cifra dentro de una fórmula de KaTeX: {,} y \\,."""
+    s = f"{abs(x):,.{d}f}"
+    entero, _, frac = s.partition(".")
+    signo = "-" if x < 0 and float(f"{abs(x):.{d}f}") != 0 else ""
+    return signo + entero.replace(",", "\\,") + ("{,}" + frac if frac else "")
+
+
+def dato(D, ruta):
+    v = D
+    for parte in ruta.split("."):
+        if isinstance(v, list):
+            if not parte.isdigit() or int(parte) >= len(v):
+                sys.exit(f"ABORTA: la ruta {ruta!r} no existe en preparcial2_datos.json")
+            v = v[int(parte)]
+        elif isinstance(v, dict) and parte in v:
+            v = v[parte]
+        else:
+            sys.exit(f"ABORTA: la ruta {ruta!r} no existe en preparcial2_datos.json")
+    return v
+
+
+MARCA_DATO_RE = re.compile(r"⟦([cmpe]):([^:⟧]+)(?::(\d+))?⟧")
+
+
+def rellena_datos(html, D):
+    """Sustituye ⟦c:ruta:d⟧, ⟦m:ruta:d⟧, ⟦p:ruta:d⟧ y ⟦e:ruta⟧ por la cifra del
+    JSON. Así el módulo 14 no lleva una sola cifra tecleada."""
+    def sustituye(m):
+        clase, ruta, dec = m.group(1), m.group(2), m.group(3)
+        v = dato(D, ruta)
+        if clase == "e":
+            if isinstance(v, float) and v.is_integer():
+                v = int(v)
+            return str(v)
+        if dec is None:
+            sys.exit(f"ABORTA: el marcador {m.group(0)} necesita sus decimales")
+        d = int(dec)
+        if clase == "c":
+            return cifra_es(float(v), d)
+        if clase == "m":
+            return cifra_mat(float(v), d)
+        return cifra_es(100 * float(v), d) + " %"
+    html = MARCA_DATO_RE.sub(sustituye, html)
+    if re.search(r"⟦[cmpe]:", html):
+        sys.exit("ABORTA: quedó un marcador de dato mal formado en el módulo 14")
+    return html
+
+
+def tabla_corte2():
+    """La tabla de especificaciones del Parcial 2, desde su JSON. Se publica."""
+    d = json.loads(PREP2_TABLA.read_text(encoding="utf-8"))
+    total = sum(o["peso"] for o in d["objetivos"])
+    if total != 100:
+        sys.exit(f"ABORTA: los pesos de la tabla del Corte II suman {total}, no 100")
+    cuenta = {o["id"]: 0 for o in d["objetivos"]}
+    for it in d["items_nuevos"]:
+        cuenta[it["objetivo"]] += 1
+
+    def enlace(m):
+        cap, mod = (int(x) for x in m.split("."))
+        if cap == 4:
+            return f'<a href="#" onclick="loadModule({mod}); return false;">{m}</a>'
+        return f'<a href="{CAPITULOS_HREF[cap]}" target="_blank" rel="noopener">{m}</a>'
+    filas = "\n".join(
+        f'          <tr>\n'
+        f'            <td><strong>{o["id"]}</strong></td>\n'
+        f'            <td>{o["titulo"]}</td>\n'
+        f'            <td>{", ".join(enlace(m) for m in o["modulos"])}</td>\n'
+        f'            <td style="text-align:right;"><strong>{o["peso"]} %</strong></td>\n'
+        f'            <td style="text-align:right;">{cuenta[o["id"]]}</td>\n'
+        f'          </tr>' for o in d["objetivos"])
+    return (
+        '<table>\n'
+        '        <caption class="sr-only">Los seis objetivos del Corte II con los módulos donde están '
+        'enseñados, su peso en el Parcial 2 y las preguntas de este módulo</caption>\n'
+        '        <thead>\n          <tr>\n'
+        '            <th scope="col">#</th>\n            <th scope="col">Objetivo</th>\n'
+        '            <th scope="col">Módulos</th>\n'
+        '            <th scope="col" style="text-align:right;">Peso</th>\n'
+        '            <th scope="col" style="text-align:right;">Preguntas</th>\n'
+        '          </tr>\n        </thead>\n        <tbody>\n' + filas + '\n'
+        '        </tbody>\n      </table>')
+
+
+def ficha_poblacion(D):
+    """La población en una sola tabla: subregiones, estratos de tamaño y tenencia.
+
+    Una tabla y no tres en columnas: en tres columnas, a 800 px de ancho, «muy
+    grande (8 ha o más)» se partía en cuatro líneas (visto en el navegador).
+    """
+    p, e, ten = D["poblacion"], D["estratos"], D["tenencia"]
+    cortes = e["cortes"]
+    rango = [f"menos de {cifra_es(cortes[0], 0)} ha",
+             f"de {cifra_es(cortes[0], 0)} a menos de {cifra_es(cortes[1], 0)} ha",
+             f"de {cifra_es(cortes[1], 0)} a menos de {cifra_es(cortes[2], 0)} ha",
+             f"{cifra_es(cortes[2], 0)} ha o más"]
+    grupos = [
+        ("Subregión", "registro", list(p["Nsub"].items())),
+        ("Tamaño por área en café", "registro",
+         [(f"{h} ({rango[i]})", e["Nh"][i]) for i, h in enumerate(e["nombres"])]),
+        ("Tenencia", "censo agropecuario, no el registro",
+         [(h, ten["Nh"][i]) for i, h in enumerate(ten["nombres"])]),
+    ]
+    filas = []
+    for titulo, fuente, items in grupos:
+        for k, (g, n) in enumerate(items):
+            cab = (f'<td rowspan="{len(items)}" style="vertical-align:top;"><strong>{titulo}</strong>'
+                   f'<br><span class="text-xs text-gray-500">{fuente}</span></td>') if k == 0 else ""
+            filas.append(f'<tr>{cab}<td>{g}</td><td style="text-align:right;">{cifra_es(n, 0)}</td></tr>')
+    return ('<table style="font-size:0.9rem;">\n'
+            '        <caption class="sr-only">Las fincas del preparcial por subregión, por tamaño y por tenencia</caption>\n'
+            '        <thead><tr><th scope="col">Clasificación</th><th scope="col">Grupo</th>'
+            '<th scope="col" style="text-align:right;">Fincas</th></tr></thead>\n'
+            '        <tbody>' + "".join(filas) + '</tbody>\n      </table>')
+
+
+def objetivos_corte2():
+    d = json.loads(PREP2_TABLA.read_text(encoding="utf-8"))
+    objetivos = [{"id": o["id"], "titulo": o["titulo"], "peso": o["peso"], "modulos": o["modulos"]}
+                 for o in d["objetivos"]]
+    return (
+        "\n    // ================================================================\n"
+        "    // El preparcial del Corte II (módulo 14): sus datos, generados por\n"
+        "    // precalculo/genera_preparcial2.R, y los objetivos del diagnóstico,\n"
+        "    // desde precalculo/tabla_especificaciones_corte2.json.\n"
+        "    // ================================================================\n"
+        "    const DATOS_PREPARCIAL2 = %s;\n\n"
+        "    const OBJETIVOS_DIAGNOSTICO = %s;\n\n"
+        "    const CAPITULOS_HREF = %s;\n\n"
+        "    const CAPITULO_ACTUAL = 4;\n"
+        % (json.dumps(json.loads(PREP2_DATOS.read_text(encoding="utf-8")), ensure_ascii=False,
+                      separators=(",", ":")),
+           json.dumps(objetivos, ensure_ascii=False, separators=(",", ":")),
+           json.dumps({str(k): v for k, v in CAPITULOS_HREF.items()}, ensure_ascii=False)))
+
+
 def main():
     html = PLANTILLA.read_text(encoding="utf-8")
 
@@ -73,7 +247,7 @@ def main():
          'content="Capítulo 4 del material de Muestreo Estadístico (Universidad El Bosque): '
          'muestreo estratificado en el marco π, asignación proporcional, de Neyman y con costos, '
          'definición de estratos, estratificado PPT, postestratificación y estratificación en '
-         'machine learning, con simuladores y código en R y Python."'),
+         'machine learning, con simuladores, código en R y Python y el preparcial del Corte II."'),
         ('<meta name="keywords" content="muestreo estadístico, muestreo probabilístico, '
          'Horvitz-Thompson, probabilidades de inclusión, estratificado, conglomerados, PPT, survey, '
          'R, Python, UnBosque">',
@@ -115,7 +289,14 @@ def main():
     modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap4" / f).read_text(encoding="utf-8")
                       for f in ["modulos_1_3.html", "modulos_4_6.html",
                                 "modulos_7_9.html", "modulos_10_12.html",
-                                "modulo_13.html"])
+                                "modulo_13.html", "modulo_14_preparcial.html"])
+    datos_prep2 = json.loads(PREP2_DATOS.read_text(encoding="utf-8"))
+    modulos = modulos.replace("      ⟦TABLA_CORTE2⟧", "      " + tabla_corte2())
+    modulos = modulos.replace("      ⟦FICHA_POBLACION⟧", "      " + ficha_poblacion(datos_prep2))
+    for marcador in ("⟦TABLA_CORTE2⟧", "⟦FICHA_POBLACION⟧"):
+        if marcador in modulos:
+            sys.exit(f"ABORTA: el marcador {marcador} quedó sin sustituir")
+    modulos = rellena_datos(modulos, datos_prep2)
     antes, despues = corta(
         html,
         "  <!-- ============================================================ -->\n  <!-- MÓDULO 1 · Cajas y tipografía",
@@ -140,7 +321,8 @@ def main():
         { id: 10, title: "Postestratificación", shortTitle: "Postestratificación", duration: "20 min" },
         { id: 11, title: "Estratificación en machine learning", shortTitle: "Machine learning", duration: "18 min" },
         { id: 12, title: "Razón en el estratificado", shortTitle: "Razón estratificada", duration: "24 min" },
-        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "50 min" }
+        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "50 min" },
+        { id: 14, title: "Preparcial del Corte II", shortTitle: "Preparcial", duration: "120 min" }
       ]
     };
 
@@ -150,7 +332,7 @@ def main():
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
     const DATOS_CAP4 = %s;
-""" % (datos["meta"]["semilla"], json.dumps(datos, ensure_ascii=False, separators=(",", ":")))
+""" % (datos["meta"]["semilla"], json.dumps(datos, ensure_ascii=False, separators=(",", ":"))) + objetivos_corte2()
 
     antes, despues = corta(
         html,
@@ -166,7 +348,24 @@ def main():
         "    // ================================================================\n    // Simuladores de demostración",
         "  </script>\n\n</body>",
         "los simuladores de demostración")
-    html = antes + sims + "\n" + despues
+    banco_prep2 = PREP2_BANCO.read_text(encoding="utf-8")
+    html = antes + sims + "\n" + banco_prep2 + "\n" + despues
+
+    # ---------------------------------------------------------------- diagnóstico
+    # El componente del preparcial del Corte I, el mismo archivo. El orden de
+    # las dos llamadas importa: vigilarQuizzes registra lo que haya en pantalla
+    # ANTES de que iniciarDiagnosticos pinte.
+    html = inserta_antes(html, "  </style>\n</head>",
+                         (COMPONENTES / "diagnostico.css").read_text(encoding="utf-8"),
+                         "el CSS del diagnóstico")
+    html = inserta_antes(html,
+                         "    // ================================================================\n"
+                         "    // Autoevaluación (v2)",
+                         (COMPONENTES / "diagnostico.js").read_text(encoding="utf-8"),
+                         "el motor del diagnóstico")
+    html = inserta_despues(html, "        iniciarAutoevaluaciones();\n",
+                           "        vigilarQuizzes();\n        iniciarDiagnosticos();\n",
+                           "las llamadas del diagnóstico en loadModule")
 
     # ---------------------------------------------------------------- código
     codigo = {}

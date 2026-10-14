@@ -115,6 +115,17 @@ def recoge(claves):
         p["fuente"] = str(B.PREPARCIAL.relative_to(B.RAIZ))
         p["modulo_titulo"] = None  # en el preparcial `modulo` es el bloque
         items.append(p)
+    # El preparcial del Corte II solo entra cuando se miran todos los capítulos:
+    # con --corte1 se audita lo del Parcial 1, y este banco es del 2.
+    if "cap4" in claves:
+        crudos = B.banco_preparcial2(VUELCA)
+        if not crudos:
+            raise B.Fallo("preparcial2: el banco carga pero devuelve 0 ítems")
+        for p in crudos:
+            p["banco"] = "preparcial2"
+            p["fuente"] = str(B.PREPARCIAL2.relative_to(B.RAIZ))
+            p["modulo_titulo"] = None  # aquí `modulo` es siempre 14; el módulo real va en `ancla`
+            items.append(p)
     return items
 
 

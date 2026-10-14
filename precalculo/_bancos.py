@@ -217,6 +217,39 @@ def banco_preparcial(vuelca):
     return corre_node(guion, str(DATOS_PREPARCIAL))
 
 
+# El banco del preparcial del Corte II vive dentro del capítulo 4 (su módulo 14),
+# con sus datos en DATOS_PREPARCIAL2. Se carga desde su fuente, igual que el del
+# Corte I, y con el JSON que el ensamblador incrusta.
+PREPARCIAL2 = RAIZ / "ensamblado" / "modulos" / "cap4" / "preparcial2.js"
+DATOS_PREPARCIAL2 = RAIZ / "precalculo" / "salidas" / "preparcial2_datos.json"
+
+
+def banco_preparcial2(vuelca):
+    """Ejecuta BANCO_PREPARCIAL2 sobre el JSON real del precálculo.
+
+    A diferencia de los otros bancos, este llama a `escribeCifra` del motor AL
+    DEFINIRSE (sus enunciados son plantillas con cifras), así que la función se
+    extrae del capítulo 4 y va delante.
+    """
+    if not PREPARCIAL2.exists() or not DATOS_PREPARCIAL2.exists():
+        raise Fallo(f"falta el banco o su JSON: {PREPARCIAL2} / {DATOS_PREPARCIAL2}")
+    escribe = funcion(CAPITULOS["cap4"].read_text(encoding="utf-8"), "escribeCifra")
+    if not escribe:
+        raise Fallo("no encuentro escribeCifra en el capítulo 4")
+    guion = (
+        paleta() + "\n"
+        "const fs = require('fs');\n"
+        "const DATOS_PREPARCIAL2 = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));\n"
+        "const AUTOEVALUACIONES = {};\n"
+        + escribe + "\n"
+        + ayudantes(CAPITULOS['cap4'])
+        + PREPARCIAL2.read_text(encoding="utf-8")
+        + "\nconst BANCO = BANCO_PREPARCIAL2;\n"
+        + vuelca
+    )
+    return corre_node(guion, str(DATOS_PREPARCIAL2))
+
+
 def modulos(clave, ruta=None):
     """Los módulos del capítulo, leídos de courseData: (id, título)."""
     ruta = ruta or CAPITULOS[clave]

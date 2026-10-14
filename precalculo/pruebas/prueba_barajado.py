@@ -90,6 +90,9 @@ process.stdout.write(JSON.stringify(BANCO.map(p => {
                 items += _bancos.banco_preparcial(vuelca)
             else:
                 items += _bancos.banco_capitulo(f"cap{f.name.split('-')[1]}", vuelca, f)
+                # El capítulo 4 lleva además el banco del preparcial del Corte II.
+                if f.name.startswith("capitulo-4-"):
+                    items += _bancos.banco_preparcial2(vuelca)
         except Exception as e:                      # noqa: BLE001
             fallos.append(f"{f.name}: no pude leer su banco ({str(e)[:120]})")
     return items

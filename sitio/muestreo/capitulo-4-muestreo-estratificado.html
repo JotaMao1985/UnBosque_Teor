@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Capítulo 4 del material de Muestreo Estadístico (Universidad El Bosque): muestreo estratificado en el marco π, asignación proporcional, de Neyman y con costos, definición de estratos, estratificado PPT, postestratificación y estratificación en machine learning, con simuladores y código en R y Python.">
+    content="Capítulo 4 del material de Muestreo Estadístico (Universidad El Bosque): muestreo estratificado en el marco π, asignación proporcional, de Neyman y con costos, definición de estratos, estratificado PPT, postestratificación y estratificación en machine learning, con simuladores, código en R y Python y el preparcial del Corte II.">
   <meta name="author" content="Javier Mauricio Sierra">
   <meta name="keywords" content="muestreo estratificado, asignación de Neyman, asignación proporcional, asignación óptima con costos, efecto de diseño, deff, postestratificación, calibración, StratifiedKFold, Hansen-Hurwitz, STPPS, BigLucy, survey, R, Python, Lohr, Gutiérrez, UnBosque">
   <title>Capítulo 4 · Muestreo estratificado — Muestreo Estadístico</title>
@@ -3460,6 +3460,169 @@
       border-color: #fbbf24;
       color: #78350f;
     }
+    /* ================================================================
+       Diagnóstico por objetivo (componente propio del preparcial)
+
+       El termómetro que convierte un puntaje en una ruta de estudio.
+       Una fila por objetivo del Corte I, con lo que pesa en el parcial,
+       cuántas preguntas de esta página le corresponden, cuántas se han
+       acertado — y, debajo, los módulos exactos donde se falló, con el
+       enlace puesto.
+
+       No se colorea por «nota». Se colorea por lo que hay que hacer:
+       gris = todavía sin datos, rojo = ahí es donde hay que ir,
+       naranja = a medio camino, verde = no gastes más tiempo aquí.
+       ================================================================ */
+    .diagnostico {
+      margin: 1.75rem 0;
+    }
+
+    .diagnostico-global {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem 1.25rem;
+      padding: 0.85rem 1.1rem;
+      margin-bottom: 1.25rem;
+      background: #012820;
+      color: white;
+      border-radius: 0.75rem;
+    }
+
+    .diagnostico-global strong {
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .diagnostico-global span {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .diagnostico-fila {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .diagnostico-cabecera {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.6rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .diagnostico-id {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: white;
+      background: #012820;
+      border-radius: 0.35rem;
+      padding: 0.12rem 0.45rem;
+    }
+
+    .diagnostico-titulo {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 0.95rem;
+      flex: 1 1 14rem;
+    }
+
+    .diagnostico-peso {
+      font-size: 0.78rem;
+      color: #6B7280;
+      white-space: nowrap;
+    }
+
+    .diagnostico-cifras {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .diagnostico-barra {
+      height: 0.5rem;
+      border-radius: 0.25rem;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .diagnostico-barra-relleno {
+      height: 100%;
+      border-radius: 0.25rem;
+      transition: width 0.3s ease;
+    }
+
+    .diagnostico-estado {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: #374151;
+    }
+
+    .diagnostico-fila[data-nivel="flojo"] .diagnostico-barra-relleno { background: #DC2626; }
+    .diagnostico-fila[data-nivel="medio"] .diagnostico-barra-relleno { background: #FF6600; }
+    .diagnostico-fila[data-nivel="solido"] .diagnostico-barra-relleno { background: #012820; }
+    .diagnostico-fila[data-nivel="vacio"] .diagnostico-barra-relleno { background: #94a3b8; }
+
+    .diagnostico-fila[data-nivel="flojo"] .diagnostico-cifras { color: #DC2626; }
+    .diagnostico-fila[data-nivel="medio"] .diagnostico-cifras { color: #c2410c; }
+    .diagnostico-fila[data-nivel="solido"] .diagnostico-cifras { color: #012820; }
+    .diagnostico-fila[data-nivel="vacio"] .diagnostico-cifras { color: #6B7280; }
+
+    .diagnostico-repasar {
+      margin: 0.6rem 0 0;
+      padding: 0.6rem 0.85rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #FF6600;
+      border-radius: 0.4rem;
+      list-style: none;
+    }
+
+    .diagnostico-repasar li {
+      font-size: 0.85rem;
+      color: #374151;
+      margin: 0.2rem 0;
+    }
+
+    .diagnostico-repasar a {
+      color: #012820;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .diagnostico-empezar {
+      margin-top: 1.25rem;
+      padding: 0.9rem 1.1rem;
+      border-radius: 0.75rem;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+    }
+
+    .diagnostico-empezar p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #7c2d12;
+    }
+
+    .diagnostico-vacio {
+      padding: 1.1rem;
+      border: 1px dashed #cbd5e1;
+      border-radius: 0.75rem;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 0.92rem;
+    }
+
+    .diagnostico-vacio p:last-child { margin-bottom: 0; }
   </style>
 </head>
 
@@ -6429,6 +6592,451 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
       </div>
     </div>
   </template>
+  <!-- ============================================================ -->
+  <!-- MÓDULO 14 · Preparcial del Corte II                          -->
+  <!--                                                              -->
+  <!-- Las cifras de este módulo NO se escriben aquí: van como       -->
+  <!-- marcadores entre corchetes blancos con una clase —c (prosa),  -->
+  <!-- m (dentro de una fórmula), p (porcentaje), e (entero o texto)—, -->
+  <!-- la ruta en el JSON y los decimales, y los rellena             -->
+  <!-- ensambla_cap4.py desde precalculo/salidas/preparcial2_datos.json. -->
+  <!-- Aborta si una ruta no existe.                                 -->
+  <!-- ============================================================ -->
+  <template id="module-14">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 14</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Preparcial del Corte II <span
+            class="text-gray-400 font-normal text-2xl">/ Midterm practice</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Saber, antes del Parcial 2, qué módulo de los
+              capítulos 3 y 4 le falta a cada uno, cuando todavía hay tiempo de releerlo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este módulo no enseña nada nuevo y no tiene nota. Son <strong>32 preguntas</strong> sobre los dos capítulos
+        del Corte II, con pista y retroalimentación en cada opción, un <strong>diagnóstico</strong> que reparte lo
+        que vaya respondiendo entre los seis objetivos del parcial y le dice qué módulo releer, y
+        <strong>cuatro problemas tipo parcial</strong> resueltos paso a paso con calculadora. Se puede hacer en
+        varias sentadas y repetir cuantas veces quiera: lo que importa no es la cifra final, sino la lista de
+        módulos que sale al final.</p>
+
+      <p>No es un ensayo de noventa minutos, y conviene no tomarlo así: con las retroalimentaciones leídas con
+        calma son unas dos horas. El reloj del parcial se ensaya mejor con los cuatro problemas del final.</p>
+
+      <div class="note">
+        <p style="margin-bottom:0.5rem;"><strong>En este módulo:</strong></p>
+        <ul style="margin-bottom:0;">
+          <li><a href="#prep2-condiciones" class="text-primary underline">Las condiciones del Parcial 2 y qué
+              entra</a></li>
+          <li><a href="#prep2-tabla" class="text-primary underline">La tabla de especificaciones</a></li>
+          <li><a href="#prep2-poblacion" class="text-primary underline">La población del preparcial</a></li>
+          <li><a href="#prep2-a" class="text-primary underline">Bloque A · Conceptos</a> ·
+            <a href="#prep2-b" class="text-primary underline">B · Procedimientos</a> ·
+            <a href="#prep2-c" class="text-primary underline">C · Interpretación</a> ·
+            <a href="#prep2-d" class="text-primary underline">D · Análisis gráfico</a></li>
+          <li><a href="#prep2-diagnostico" class="text-primary underline">Tu diagnóstico</a></li>
+          <li><a href="#prep2-problemas" class="text-primary underline">Cuatro problemas tipo parcial</a></li>
+          <li><a href="#prep2-formulario" class="text-primary underline">Qué llevar en el formulario</a></li>
+        </ul>
+      </div>
+
+      <h3 id="prep2-condiciones">Las condiciones del Parcial 2, y qué entra</h3>
+
+      <p>El Parcial 2 es el <strong>jueves 22 de octubre</strong>, presencial, de <strong>90 minutos</strong>, con
+        <strong>calculadora</strong> y con un <strong>formulario que trae cada uno</strong>. No hay computador. Eso
+        decide qué tipo de pregunta vale la pena ensayar: con las fórmulas delante, recordarlas no vale puntos. Lo
+        que vale es <strong>elegir</strong> la que corresponde al diseño, montarla sobre las cifras correctas y saber
+        qué dice el resultado. Por eso las preguntas de cálculo de abajo dan resúmenes y salidas impresas, nunca un
+        archivo de datos, y las salidas de R hay que leerlas como en el parcial: en papel.</p>
+
+      <p><strong>Entran:</strong> los <a href="capitulo-3-razon-y-regresion.html" class="text-primary underline"
+          target="_blank" rel="noopener">doce módulos de contenido del capítulo 3</a> —razón, regresión, diferencia,
+        un estimador por grupo, dominios, modelos poblacionales, GREG y la mediana— y los
+        <strong>módulos 1 a 10 de este capítulo</strong>, incluidos el 7 (el modelo del estratificado) y el 9
+        (el estratificado con probabilidades proporcionales). <strong>No entran:</strong> el módulo 11 (machine
+        learning), el 12 (la razón en el estratificado) y el muestreo por cuotas, que el material no enseña.</p>
+
+      <h3 id="prep2-tabla">La tabla de especificaciones</h3>
+
+      <p>Es la misma que hereda el Parcial 2: seis objetivos, con lo que pesa cada uno. Las 32 preguntas de este
+        módulo están repartidas en la misma proporción, para que el ensayo se parezca al examen; la última columna
+        dice cuántas le tocan a cada objetivo.</p>
+
+      <table>
+        <caption class="sr-only">Los seis objetivos del Corte II con los módulos donde están enseñados, su peso en el Parcial 2 y las preguntas de este módulo</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Objetivo</th>
+            <th scope="col">Módulos</th>
+            <th scope="col" style="text-align:right;">Peso</th>
+            <th scope="col" style="text-align:right;">Preguntas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>O1</strong></td>
+            <td>Usar una variable auxiliar con el estimador de razón: cuándo sirve, cuándo gana a la expansión, su sesgo y su error estándar</td>
+            <td><a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.1</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.2</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.3</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.4</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.5</a></td>
+            <td style="text-align:right;"><strong>20 %</strong></td>
+            <td style="text-align:right;">6</td>
+          </tr>
+          <tr>
+            <td><strong>O2</strong></td>
+            <td>Elegir entre razón, regresión y diferencia, también grupo a grupo, y justificarlo con una cifra</td>
+            <td><a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.6</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.7</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.8</a></td>
+            <td style="text-align:right;"><strong>12 %</strong></td>
+            <td style="text-align:right;">4</td>
+          </tr>
+          <tr>
+            <td><strong>O3</strong></td>
+            <td>Estimar en dominios y leer la estimación asistida por modelos: modelos poblacionales, GREG y la mediana</td>
+            <td><a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.9</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.10</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.11</a>, <a href="capitulo-3-razon-y-regresion.html" target="_blank" rel="noopener">3.12</a></td>
+            <td style="text-align:right;"><strong>15 %</strong></td>
+            <td style="text-align:right;">5</td>
+          </tr>
+          <tr>
+            <td><strong>O4</strong></td>
+            <td>Estimar en un estratificado en el marco π: por qué gana, pesos, total, varianza y el modelo que lo explica</td>
+            <td><a href="#" onclick="loadModule(1); return false;">4.1</a>, <a href="#" onclick="loadModule(2); return false;">4.2</a>, <a href="#" onclick="loadModule(3); return false;">4.3</a>, <a href="#" onclick="loadModule(7); return false;">4.7</a></td>
+            <td style="text-align:right;"><strong>18 %</strong></td>
+            <td style="text-align:right;">6</td>
+          </tr>
+          <tr>
+            <td><strong>O5</strong></td>
+            <td>Asignar la muestra —proporcional, Neyman, óptima con costos— y definir los estratos</td>
+            <td><a href="#" onclick="loadModule(4); return false;">4.4</a>, <a href="#" onclick="loadModule(5); return false;">4.5</a>, <a href="#" onclick="loadModule(6); return false;">4.6</a></td>
+            <td style="text-align:right;"><strong>20 %</strong></td>
+            <td style="text-align:right;">6</td>
+          </tr>
+          <tr>
+            <td><strong>O6</strong></td>
+            <td>Medir la ganancia con el deff y corregir después del sorteo: PPT por estrato y postestratificación</td>
+            <td><a href="#" onclick="loadModule(8); return false;">4.8</a>, <a href="#" onclick="loadModule(9); return false;">4.9</a>, <a href="#" onclick="loadModule(10); return false;">4.10</a></td>
+            <td style="text-align:right;"><strong>15 %</strong></td>
+            <td style="text-align:right;">5</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>La mitad para cada capítulo, y dentro de cada uno, más peso a lo que más decide: la elección del
+        estimador en el capítulo 3 y la asignación en el 4.</p>
+
+      <h3 id="prep2-poblacion">La población del preparcial</h3>
+
+      <p>Todas las preguntas con cifras usan la misma población: las <strong>1 836 fincas cafeteras
+          de un departamento</strong>. El registro cafetero conoce de cada finca su subregión, su altitud, su
+        <strong>área en café</strong> —3 612,7 hectáreas en total— y su área en levante (renovada hace
+        menos de dos años, que todavía no produce); la cooperativa conoce sus entregas del año anterior. Lo que solo
+        se mide en la muestra es la <strong>producción del año</strong>, en cargas de café pergamino seco de
+        125 kg.</p>
+
+      <table style="font-size:0.9rem;">
+        <caption class="sr-only">Las fincas del preparcial por subregión, por tamaño y por tenencia</caption>
+        <thead><tr><th scope="col">Clasificación</th><th scope="col">Grupo</th><th scope="col" style="text-align:right;">Fincas</th></tr></thead>
+        <tbody><tr><td rowspan="3" style="vertical-align:top;"><strong>Subregión</strong><br><span class="text-xs text-gray-500">registro</span></td><td>Norte</td><td style="text-align:right;">700</td></tr><tr><td>Centro</td><td style="text-align:right;">680</td></tr><tr><td>Sur</td><td style="text-align:right;">456</td></tr><tr><td rowspan="4" style="vertical-align:top;"><strong>Tamaño por área en café</strong><br><span class="text-xs text-gray-500">registro</span></td><td>pequeña (menos de 1 ha)</td><td style="text-align:right;">542</td></tr><tr><td>mediana (de 1 a menos de 3 ha)</td><td style="text-align:right;">962</td></tr><tr><td>grande (de 3 a menos de 8 ha)</td><td style="text-align:right;">299</td></tr><tr><td>muy grande (8 ha o más)</td><td style="text-align:right;">33</td></tr><tr><td rowspan="3" style="vertical-align:top;"><strong>Tenencia</strong><br><span class="text-xs text-gray-500">censo agropecuario, no el registro</span></td><td>propietario</td><td style="text-align:right;">916</td></tr><tr><td>arrendatario</td><td style="text-align:right;">550</td></tr><tr><td>aparcero</td><td style="text-align:right;">370</td></tr></tbody>
+      </table>
+
+      <div class="warning">
+        <p><strong>Es una población construida, y se dice.</strong> La simuló en R el precálculo de este módulo,
+          con semilla fija, para que cada fenómeno del corte aparezca donde tiene que aparecer: una subregión
+          donde la producción es proporcional al área, otra con intercepto y otra donde el área casi no ayuda;
+          un tamaño que separa mucho y una subregión que separa poco. Ninguna población de Lohr reúne en un solo
+          censo todos los fenómenos que este preparcial necesita. La ventaja es la de siempre con un censo: la verdad se conoce, y varias
+          retroalimentaciones la usan para contrastar.</p>
+      </div>
+
+      <h3 id="prep2-a">Bloque A · Conceptos</h3>
+
+      <p>Diez preguntas que se contestan razonando, no calculando: qué hace auxiliar a una variable, qué
+        parámetro contesta cada pregunta, qué modelo pide cada nube, qué impone la calibración, por qué
+        estratificar, qué hacer con una celda casi vacía. Las de varias respuestas piden marcar todas las
+        verdaderas, y no siempre son las mismas en número.</p>
+
+      <div class="quiz" data-quiz="preparcial2-a">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Bloque A · diez preguntas</h4>
+        <p class="text-sm" style="margin-bottom:0;">Cada opción trae su propia retroalimentación, también las
+          incorrectas: leerlas cuando acierta también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <h3 id="prep2-b">Bloque B · Procedimientos con calculadora</h3>
+
+      <p>Once cálculos como los del parcial: cada pregunta da exactamente las cifras que hacen falta —a veces una
+        de más, a propósito— y pide una sola. Teclee el resultado con los decimales que se piden; el decimal puede
+        ir con coma o con punto, y los miles sin separar o con un espacio, nunca con punto. Si falla, la pista dice
+        qué fórmula; si vuelve a fallar, la retroalimentación nombra el error más probable con su cifra.</p>
+
+      <div class="quiz" data-quiz="preparcial2-b">
+        <h4><i class="fas fa-calculator" aria-hidden="true"></i> Bloque B · once cálculos</h4>
+        <p class="text-sm" style="margin-bottom:0;">Las cifras de cada enunciado ya vienen redondeadas como en un
+          examen, y la respuesta se calculó con ellas.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <h3 id="prep2-c">Bloque C · Interpretación</h3>
+
+      <p>Seis preguntas que piden leer una cifra, una tabla o una salida de R —de <code>lm</code>,
+        <code>calibrate</code>, <code>svytotal</code>— sin ejecutar nada. La pregunta casi nunca es qué número sale, sino qué prueba ese número y
+        qué no.</p>
+
+      <div class="quiz" data-quiz="preparcial2-c">
+        <h4><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Bloque C · seis lecturas</h4>
+        <p class="text-sm" style="margin-bottom:0;">Las salidas son de R, tal como las imprime; en el parcial
+          llegarían igual, en papel.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <h3 id="prep2-d">Bloque D · Análisis gráfico</h3>
+
+      <p>Cinco gráficos, y en cada uno la respuesta está en el dibujo, no en un número escrito al lado: qué nube
+        sigue a la recta de la razón, dónde corta la escalera de $\hat F$, qué tan ancho es un histograma, qué
+        parte de la variabilidad queda entre estratos, qué curva se aplana.</p>
+
+      <div class="quiz" data-quiz="preparcial2-d">
+        <h4><i class="fas fa-chart-line" aria-hidden="true"></i> Bloque D · cinco gráficos</h4>
+        <p class="text-sm" style="margin-bottom:0;">Pase el cursor por el gráfico para leer los valores exactos.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Sobre el resumen de cada bloque.</strong> Al terminar un bloque, su
+          resumen dice «módulo 14» en vez de nombrar el módulo que le costó: las preguntas son de dos capítulos, y
+          ese resumen solo sabe nombrar los de esta página. El que sí lo dice, con el enlace puesto, es el
+          diagnóstico de abajo.</p>
+      </div>
+
+      <h3 id="prep2-diagnostico">Tu diagnóstico</h3>
+
+      <p><strong>Un «20 de 32» no le sirve a nadie para estudiar esta noche.</strong> Lo que sirve es saber que de
+        las seis preguntas de asignación lleva dos, y que las que falló son del módulo de la óptima con costos. Eso
+        es lo que hay debajo: sus respuestas repartidas por los seis objetivos, cada uno con lo que pesa en el
+        parcial y con el módulo exacto donde está lo que se le escapó. Se actualiza solo, cada vez que cierra una
+        pregunta de cualquiera de los cuatro bloques.</p>
+
+      <div class="diagnostico" data-diagnostico></div>
+
+      <p>Los colores no son una nota sino una instrucción: <strong>rojo</strong>, menos de tres de cada cinco, ahí
+        hay que ir; <strong>naranja</strong>, un repaso corto del módulo que falló; <strong>verde</strong>, por
+        encima del 80 %, no gaste más tiempo ahí; <strong>gris</strong>, todavía sin datos. La lista de módulos
+        incluye también lo que acertó al segundo intento: cuenta como acierto, pero en el parcial no hay segundo
+        intento ni pista. Y la línea del final no señala el porcentaje más bajo, sino <strong>el que más caro
+          sale</strong>: lo que falla multiplicado por lo que pesa. <em>Reiniciar</em> en un bloque borra también
+        sus respuestas de aquí.</p>
+
+      <h3 id="prep2-problemas">Cuatro problemas tipo parcial</h3>
+
+      <p>Así es probable que se vea una pregunta del parcial: un problema con varias partes, las cifras en el
+        enunciado y una decisión al final. Hágalos con calculadora y con su formulario delante, y con reloj: unos
+        veinte minutos cada uno. La solución está escondida debajo; ábrala después, no antes.</p>
+
+      <div class="ejercicios">
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Un MAS de
+            $n = 50$ de las $N = 1\,836$ fincas da $\bar y = 14{,}95$
+            cargas, $\bar x = 1{,}642$ ha, $s_y = 14{,}39$, $s_x = 1{,}896$
+            y $r = 0{,}8902$. El registro da $t_x = 3\,612{,}7$ ha, y la salida de
+            <code>lm(y ~ area)</code> da un intercepto de 3,856 con $p = 0{,}0033$.
+            <strong>(a)</strong> Estime la producción total por expansión, por razón y por regresión.
+            <strong>(b)</strong> Calcule el error estándar de cada una. <strong>(c)</strong> ¿Cuál reportaría, y
+            por qué?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Las tres usan la misma muestra y difieren en la recta que trazan. Para la regresión hace falta
+              $\bar x_U = t_x/N$ y la pendiente $\hat b_1 = r\,s_y/s_x$; para su error estándar, el factor
+              $(n-1)/(n-2)$ del formulario. La decisión no se toma por el error estándar más pequeño a secas: se
+              toma con dos criterios: la regla del módulo 3 del capítulo 3, que decide contra la expansión, y el
+              contraste del intercepto del módulo 6 del capítulo 3, que decide entre razón y regresión.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> Expansión: $N\bar y = 27\,448{,}2$. Razón:
+              $\hat B = \bar y/\bar x = 9{,}1048$ y $\hat t_r = \hat B\,t_x = 32\,892{,}7$.
+              Regresión: $\bar x_U = 1{,}9677$, $\hat b_1 = 6{,}7563$,
+              $\hat{\bar y}_{\text{reg}} = \bar y + \hat b_1(\bar x_U - \bar x) = 17{,}1505$ y
+              $\hat t_{\text{reg}} = N\hat{\bar y}_{\text{reg}} = 31\,488{,}4$.</p>
+            <p><strong>(b)</strong> Con $f = n/N = 0{,}0272$:</p>
+            <ul>
+              <li>Expansión: $N\sqrt{(1-f)/n}\;s_y = 3\,685{,}1$.</li>
+              <li>Razón: la varianza del residuo es $s_y^2 + \hat B^2 s_x^2 - 2\hat B\,r\,s_x s_y =
+                62{,}8025$, y $\mathrm{EE} = \frac{t_x}{\bar x}\sqrt{\frac{1-f}{n}\cdot
+                62{,}8025} = 2\,432{,}0$.</li>
+              <li>Regresión: $N\sqrt{\frac{1-f}{n}\cdot\frac{n-1}{n-2}\,(1-r^2)\,s_y^2} =
+                1\,696{,}2$.</li>
+            </ul>
+            <p><strong>(c)</strong> La regresión, por dos criterios que conviene separar. Frente a la expansión,
+              la auxiliar paga: $r = 0{,}8902$ supera con holgura el umbral del módulo 3 del capítulo 3. Frente a la
+              razón, decide el intercepto: $p = 0{,}0033$, así que la recta no pasa por el origen y la
+              razón impone una que sí pasa. Por eso el error estándar de la razón queda entre los otros dos. Como la
+              población es construida, se puede mirar la verdad: 31 458 cargas. Que la regresión
+              quede también más cerca no es el motivo para elegirla —con otra muestra podría no pasar—: el motivo
+              son los criterios, y el error estándar lo confirma.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Un MAS de
+            $n = 80$ fincas trae 19 del Sur, y el registro sí dice cuántas hay en
+            el Sur: $N_d = 456$ de las $N = 1\,836$. Las fincas del Sur de la
+            muestra producen en promedio $\bar y_d = 13{,}011$ cargas, y con
+            $u_k = \delta_k(y_k - \bar y_d)$ la muestra da $s_u = 3{,}5787$.
+            <strong>(a)</strong> El error estándar de $\bar y_d$. <strong>(b)</strong> Un intervalo del 95 % para la
+            producción media por finca del Sur. <strong>(c)</strong> La producción total del Sur con su error
+            estándar, usando $N_d$.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>La media de dominio es una razón: su varianza es la de cualquier media, con el residuo linealizado y
+              el factor $(n_d/n)^2$ en el denominador. Con $N_d$ conocido, el total escala esa media.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> $\widehat V(\bar y_d) = \frac{1-f}{n}\cdot\frac{s_u^2}{(n_d/n)^2}$, y
+              $\mathrm{EE} = 1{,}6476$ cargas por finca.</p>
+            <p><strong>(b)</strong> $13{,}011 \pm 1{,}96 \times 1{,}6476$, es
+              decir $[9{,}78;\ 16{,}24]$. Con solo 19 fincas del Sur es
+              ancho, y es lo que motiva estratificar cuando un dominio importa.</p>
+            <p><strong>(c)</strong> $\hat t_{yd} = N_d\,\bar y_d = 5\,933{,}0$, con
+              $\mathrm{EE} = N_d \cdot 1{,}6476 = 751{,}3$. Si el registro no
+              trajera la subregión, habría que estimar el total de $y_k\delta_k$ con toda la muestra, y saldría más
+              caro: se pagaría también la incertidumbre sobre cuántas fincas del Sur hay.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Se quiere un estratificado por
+            tamaño con $n = 100$ fincas y asignación de Neyman. Las desviaciones se toman de un
+            piloto de 10 fincas por estrato: 4,49, 3,96,
+            11,99 y 26,79 cargas para las pequeñas, medianas,
+            grandes y muy grandes, que son 542, 962,
+            299 y 33 fincas. <strong>(a)</strong> Reparta las
+            $n$ con Neyman y compare con la proporcional. <strong>(b)</strong> Con la muestra sorteada así, las
+            medias por estrato salen 8,27, 14,90, 31,59 y
+            74,42, y las desviaciones 4,72, 6,68,
+            15,09 y 14,85. Estime la producción total con su intervalo del 95 %.
+            <strong>(c)</strong> ¿Cuánto pesa una finca muy grande de la muestra, y por qué tan poco?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Neyman: $n_h = n\,N_hS_h/\sum_g N_gS_g$, redondeando al final. El total es $\sum N_h\bar y_h$ y su
+              varianza suma estrato a estrato, cada uno con su $N_h^2$ y su fpc. El peso es $N_h/n_h$.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> Neyman da 22,72, 35,56,
+              33,47 y 8,25, es decir 23, 36,
+              33 y 8 fincas. La proporcional habría dado
+              29,52, 52,40, 16,29 y
+              1,80: Neyman dobla las grandes y multiplica por más de cuatro las muy grandes, donde está la
+              dispersión, y recorta las medianas, que son muchas pero parecidas entre sí.</p>
+            <p><strong>(b)</strong> $\hat t = \sum N_h\bar y_h = 30\,717{,}41$ y
+              $\mathrm{EE} = \sqrt{\sum N_h^2(1 - n_h/N_h)\,s_h^2/n_h} = 1\,395{,}78$. El intervalo es
+              $[27\,981{,}7;\ 33\,453{,}1]$. La verdad, 31 458 cargas, cae
+              dentro.</p>
+            <p><strong>(c)</strong> $N_h/n_h = 4{,}125$: cada muy grande de la muestra representa
+              a algo más de cuatro fincas, mientras que una mediana representa a 26,72. No es un error:
+              Neyman manda muestra a donde está la varianza, así que cada unidad de ese estrato representa a pocas.
+              Promediar la muestra sin pesos daría demasiado peso a las grandes.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Un MAS de
+            $n = 100$ fincas se postestratifica por tenencia con los $N_h$ del censo agropecuario:
+            916 propietarios, 550 arrendatarios y 370
+            aparceros. La muestra trae 46, 32 y 22, con
+            medias 23,44, 15,27 y 11,26 cargas y desviaciones
+            14,58, 10,44 y 6,07; en toda la muestra,
+            $\bar y = 18{,}14$ y $s_y = 12{,}84$. <strong>(a)</strong> Calcule la media
+            postestratificada. <strong>(b)</strong> Su error estándar con la aproximación de Lohr, el del MAS y el
+            deff. <strong>(c)</strong> <code>survey</code> da otro error estándar. ¿Está mal alguno de los dos, y
+            cuánto hay que fiarse de cualquiera de ellos con estas celdas?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>La media postestratificada es la del estratificado con los $n_h$ que salieron. La aproximación de
+              Lohr del módulo 10 es la varianza de la asignación proporcional, $(1 - n/N)\sum_h W_h s_h^2/n$, y el
+              mismo módulo dice con cuántos casos esperados por celda se puede dar por buena.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> Con $W_h = N_h/N$ —0,4989, 0,2996 y
+              0,2015—, $\bar y_{\text{post}} = \sum W_h\bar y_h = 18{,}54$
+              cargas, frente a la media muestral de 18,14.</p>
+            <p><strong>(b)</strong> Lohr: $\sqrt{(1-f)\sum W_h s_h^2/n} = 1{,}1755$. MAS:
+              $\sqrt{(1-f)/n}\;s_y = 1{,}2485$. El deff estimado es
+              $(1{,}1755/1{,}2485)^2 = 0{,}8864$: un ahorro estimado del
+              11 % de la varianza sin una sola finca nueva. La tenencia separa menos que el tamaño,
+              y se nota.</p>
+            <p><strong>(c)</strong> Ninguno está mal. <code>survey</code> da 1,1916 porque trata
+              la postestratificación como una calibración y estima la varianza de diseño con los $n_h$ que salieron
+              como datos; la de Lohr es una aproximación, la de la asignación proporcional. Son los «tres errores
+              estándar para el mismo estimador» del módulo 10, y con el de <code>survey</code> el ahorro estimado
+              sería del 9 %. Sobre cuánto fiarse: en un MAS de 100 se
+              esperan 49,9, 30,0 y 20,2
+              fincas por celda, y el módulo 10 pide del orden de 30 para dar por buena la aproximación: la de los
+              aparceros se queda corta, así que las dos cifras son orientativas. Aquí, además, la población es
+              construida y se puede ver la verdad: con las $S_h$ del censo, el deff de la postestratificación por
+              tenencia es 0,955, un ahorro de solo 4,5 %.
+              Las dos estimaciones salieron optimistas en esta muestra: un deff estimado con una celda tan chica
+              cambia mucho de una muestra a otra.</p>
+          </details>
+        </div>
+      </div>
+
+      <h3 id="prep2-formulario">Qué llevar en el formulario</h3>
+
+      <p>El formulario lo trae cada uno, así que vale la pena armarlo pensando en las preguntas de arriba. El del
+        capítulo 3 ya existe: es el <a href="capitulo-3-razon-y-regresion.html" class="text-primary underline"
+          target="_blank" rel="noopener">módulo 13 del capítulo 3</a>, y le faltan, como él mismo avisa, el
+        GREG y la calibración, los dominios, la mediana, la cota del sesgo y el umbral de la razón. Del capítulo 4
+        no hay uno hecho; esto es lo mínimo:</p>
+      <ul>
+        <li>El total y la media estratificados, $\sum N_h\bar y_h$ y $\sum W_h\bar y_h$, con su varianza:
+          $\sum N_h^2(1 - n_h/N_h)s_h^2/n_h$. Y el peso $N_h/n_h$, con la comprobación de que los pesos suman $N$.</li>
+        <li>Las tres asignaciones: proporcional ($n_h \propto N_h$), Neyman ($n_h \propto N_hS_h$) y la óptima con
+          costos ($n_h \propto N_hS_h/\sqrt{c_h}$, con $\sum c_hn_h = C$).</li>
+        <li>El tamaño total a partir del margen de error, con $v = \sum W_h^2S_h^2/a_h$.</li>
+        <li>El deff, $V_{\text{diseño}}/V_{\text{MAS}}$, y el tamaño efectivo $n/\text{deff}$; y, para la
+          proporcional con estratos grandes, $\text{deff} \approx 1 - \text{SSB}/\text{SST}$.</li>
+        <li>Hansen–Hurwitz dentro de un estrato: $\frac{1}{m_h}\sum y_{k_i}/\psi_{k_i}$, con
+          $\psi_k = x_k/\sum_{U_h}x_l$.</li>
+        <li>La media postestratificada, $\sum W_h\bar y_h$ con los $n_h$ que salieron, y la aproximación de Lohr
+          a su varianza.</li>
+      </ul>
+      <p>Y una regla que no es una fórmula pero vale puntos: antes de entregar un número, comprobar que tiene sentido
+        —que los pesos suman $N$, que un error estándar no es mayor que la estimación sin motivo, que una
+        asignación no pide más fincas de las que tiene un estrato—.</p>
+    </div>
+  </template>
 
   <script>
     // ================================================================
@@ -6456,7 +7064,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         { id: 10, title: "Postestratificación", shortTitle: "Postestratificación", duration: "20 min" },
         { id: 11, title: "Estratificación en machine learning", shortTitle: "Machine learning", duration: "18 min" },
         { id: 12, title: "Razón en el estratificado", shortTitle: "Razón estratificada", duration: "24 min" },
-        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "50 min" }
+        { id: 13, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "50 min" },
+        { id: 14, title: "Preparcial del Corte II", shortTitle: "Preparcial", duration: "120 min" }
       ]
     };
 
@@ -6466,6 +7075,19 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
     const DATOS_CAP4 = {"meta":{"generado":"precalculo/genera_cap4.R","semilla":2026,"replicas":10000,"rVersion":"4.4.1"},"poblacion":{"N":3078,"media":306676.97141001,"S2":180358776382.88388,"total":943951718,"Nh":[1054,220,1382,422],"negativos92":19},"agstrat":{"n":300,"ybar":295560.76523455,"se":16379.8727264,"total":909736035.391957,"seTotal":50417248.25185139,"ic":[263456.80461947,327664.72584964],"icTotal":[810920044.6187134,1008552026.1652007],"ybarSrs":297897.04666667,"seSrs":18898.43442803},"peq":{"y":[14,18,27,33,58],"t":150,"muestras":[{"s":[1,2,4],"t":114},{"s":[1,2,5],"t":164},{"s":[1,3,4],"t":127.5},{"s":[1,3,5],"t":177.5},{"s":[2,3,4],"t":133.5},{"s":[2,3,5],"t":183.5}],"V":691.5},"asignaciones":{"n":300,"regiones":["NC","NE","S","W"],"nombres":["Norte-Centro","Nordeste","Sur","Oeste"],"Nh":[1054,220,1382,422],"Sh":[271303.40626531,79365.44747428,243956.35049719,835638.9004829],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"prop":[103,21,135,41],"igual":[75,75,75,75],"neyman":[86,5,102,107],"V":{"mas":542599827.5846344,"prop":446220740.1494037,"igual":402368663.20543766,"neyman":298971216.82428384},"deff":{"prop":0.82237538,"igual":0.74155693,"neyman":0.55099763}},"costos":{"ch":{"NC":10,"NE":6,"S":8,"W":18},"C":3000,"optimo":{"nh":[79.86433275,6.29557693,105.2766817,73.40943096],"V":357827437.113399,"n":264.84602234},"propMismoCosto":{"nh":[103.63135815,21.63083377,135.88096487,41.49187205],"V":441294188.731976,"n":302.63502884}},"constructor":{"opciones":[{"etiqueta":"Región (la de Lohr)","H":4,"Nh":[1054,220,1382,422],"mediaH":[325950.9573055,90618.96363636,199140.43704776,723343.96445498],"V":445592925.3770826,"deff":0.82121833},{"etiqueta":"Cuartiles de acres87","H":4,"Nh":[770,769,770,769],"mediaH":[42625.73506494,130146.34070221,267942.27662338,786387.27308192],"V":292813664.7377756,"deff":0.53964939},{"etiqueta":"Cuartiles de farms92","H":4,"Nh":[775,767,767,769],"mediaH":[226180.63612903,316003.73402868,323880.43676662,361340.13784135],"V":535678377.2804061,"deff":0.98724391},{"etiqueta":"Cuartiles de largef92","H":4,"Nh":[773,779,765,761],"mediaH":[54038.32988357,147999.53786906,295187.96078431,737279.44678055],"V":337458776.4390231,"deff":0.62192938},{"etiqueta":"4 grupos al azar","H":4,"Nh":[770,770,769,769],"mediaH":[306455.58441558,310205.08701299,304396.55656697,305646.35760728],"V":543115221.8756696,"deff":1.00094986}],"barridoH":[{"H":2,"V":396649380.0226766,"deff":0.73101641},{"H":3,"V":332887636.8290658,"deff":0.61350487},{"H":4,"V":292813664.7377756,"deff":0.53964939},{"H":5,"V":264603727.74538517,"deff":0.48765907},{"H":6,"V":243175525.5188122,"deff":0.44816735},{"H":7,"V":225578598.63066012,"deff":0.41573658},{"H":8,"V":210216021.51957548,"deff":0.38742368},{"H":9,"V":197025433.5042602,"deff":0.3631137},{"H":10,"V":185216383.12030464,"deff":0.34134987}],"R2region":0.18002427,"SSB":99906979069126.19,"SST":554963954930133.44},"distribucion":{"replicas":10000,"mas":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[3,3,17,23,46,72,129,139,246,337,352,475,612,586,713,742,745,695,673,624,541,472,393,326,278,211,162,132,72,61,35,27,18,13,14,6,4,1,1,1],"ancho":4257.33646334},"estratificado":{"centros":[236589.00969821,240846.34616155,245103.68262488,249361.01908822,253618.35555156,257875.69201489,262133.02847823,266390.36494157,270647.7014049,274905.03786824,279162.37433158,283419.71079491,287677.04725825,291934.38372158,296191.72018492,300449.05664826,304706.39311159,308963.72957493,313221.06603827,317478.4025016,321735.73896494,325993.07542828,330250.41189161,334507.74835495,338765.08481829,343022.42128162,347279.75774496,351537.09420829,355794.43067163,360051.76713497,364309.1035983,368566.44006164,372823.77652498,377081.11298831,381338.44945165,385595.78591499,389853.12237832,394110.45884166,398367.795305,402625.13176833],"conteo":[1,2,4,16,24,46,76,118,187,291,409,483,594,696,762,795,789,782,760,655,555,503,375,334,208,184,115,83,52,40,23,17,8,2,6,2,1,2,0,0],"ancho":4257.33646334},"varMas":543022487.7064464,"varStr":437069992.40986055,"coberturaMas":0.9313,"coberturaStr":0.9335,"media":306676.97141001},"ppt":{"mh":{"Big":60,"Medium":120,"Small":200},"estratos":[{"nivel":"Big","Nh":2905,"totalIncome":3629710,"totalEmployees":401135,"mediaIncome":1249.46987952},{"nivel":"Medium","Nh":25795,"totalIncome":17057285,"totalEmployees":2087505,"mediaIncome":661.26322931},{"nivel":"Small","Nh":56596,"totalIncome":15947738,"totalEmployees":2903352,"mediaIncome":281.7820694}],"tIncome":36634733,"estimacion":35887479.67260976,"se":920763.21578284,"porEstrato":{"t":[3518947.76176422,17175653.73433934,15192878.1765062],"se":[93910.11109418,542313.15732217,738161.38477185]},"seStsi":582345.93380524,"psiDeciles":[[0.00018946,0.00022187,0.00024929,0.00028669,0.00030414,0.00033156,0.00036147,0.00039388,0.00040635,0.00045371,0.00065564],[1.15e-05,2.156e-05,2.635e-05,3.114e-05,3.497e-05,3.928e-05,4.311e-05,4.599e-05,4.982e-05,5.605e-05,7.234e-05],[3.44429473e-07,6.19973052e-06,8.9551663e-06,1.171e-05,1.447e-05,1.757e-05,2.067e-05,2.377e-05,2.652e-05,2.928e-05,3.617e-05]],"ratioEmpleados":263},"postestratificacion":{"conteos":[107,24,130,39],"w0":10.26,"primaEeProp":21109.07211076,"primaEePost":21272.24289456,"primaPct":0.7729889,"primaEeSim":21298.79635533,"primaEeSimMc":33.67635395,"primaReplicas":200000,"wPost":[9.85046729,9.16666667,10.63076923,10.82051282],"ybarSrs":297897.04666667,"seSrs":18898.43442803,"ybarPost":299778.1127586,"sePost":17513.44781603,"sePostCond":17635.00095587,"Nh":[1054,220,1382,422],"Wh":[0.34243015,0.07147498,0.44899285,0.13710201],"ybarH":[350292.00934579,71970.83333333,206246.35384615,598680.58974359],"s2H":[86857007373.06596,4225007608.579709,76969408653.4242,266418735738.24835]},"razonEstratificada":{"nh":[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"cruce":5,"pctIndefinida":0.23,"replicas":20000,"sesgoComb":[-0.13206736,-0.0844334,-0.06052853,-0.08798844,-0.06520802,-0.06690422,-0.07677805,-0.02467729,-0.05710908,-0.05041093,-0.0230144,-0.0286779,-0.03599687,-0.01443777,-0.00381275,-0.0105897,-0.02625791,-0.03189555],"sesgoSep":[-0.29521635,-0.2705896,-0.19655531,-0.20637102,-0.16916378,-0.14930436,-0.15156114,-0.09483012,-0.12035992,-0.10051196,-0.07120126,-0.07937097,-0.07995079,-0.05605012,-0.0438442,-0.04335485,-0.06079168,-0.06371892],"ecmComb":[3.73439744,3.29159768,3.02056697,2.79930179,2.54518897,2.46050492,2.30569849,2.18735108,2.09427303,2.02248366,1.88631768,1.8321667,1.78703186,1.70231927,1.64875831,1.62989007,1.59291174,1.55401394],"ecmSep":[7.19514095,3.27616553,2.88655421,2.66333083,2.45063744,2.32328649,2.20742642,2.11439468,2.01421802,1.95517364,1.83098541,1.77730988,1.73945582,1.66628551,1.60695779,1.59961343,1.55596446,1.52780558],"difMedia":[0.00378243,-1.014e-05,-7.916e-05,-7.428e-05,-4.724e-05,-6.564e-05,-4.435e-05,-3.138e-05,-3.289e-05,-2.677e-05,-2.057e-05,-1.98e-05,-1.678e-05,-1.214e-05,-1.361e-05,-9.77784987e-06,-1.163e-05,-8.07694208e-06],"difMc":[0.00306769,3.46e-05,1.829e-05,1.275e-05,8.73861408e-06,7.72255474e-06,6.31127117e-06,4.53426653e-06,4.01447956e-06,3.55569911e-06,2.90024136e-06,2.54089654e-06,2.24704513e-06,2.00840406e-06,1.65658941e-06,1.62930185e-06,1.51906212e-06,1.58502818e-06],"Bh":[0.97506657,0.89560729,0.99354831,1.01197448],"regiones":["NC","NE","S","W"]}};
+
+    // ================================================================
+    // El preparcial del Corte II (módulo 14): sus datos, generados por
+    // precalculo/genera_preparcial2.R, y los objetivos del diagnóstico,
+    // desde precalculo/tabla_especificaciones_corte2.json.
+    // ================================================================
+    const DATOS_PREPARCIAL2 = {"meta":{"script":"precalculo/genera_preparcial2.R","semilla":20261022,"poblacion":"fincas cafeteras de un departamento (construida)","r":"4.4.1","survey":"4.5","kish":0.2},"poblacion":{"N":1836,"Nsub":{"Norte":700,"Centro":680,"Sur":456},"tx":3612.7,"xbarU":1.96770153,"ty":31458,"ybarU":17.13398693,"Sy":14.04604222,"Sx":1.81993124,"rho":0.83510823,"B":8.7076148,"cvx":0.92490208,"cvy":0.81977664,"tlev":399,"Ntam":{"pequeña":542,"mediana":962,"grande":299,"muy grande":33},"Nten":{"propietario":916,"arrendatario":550,"aparcero":370},"Ncert":354,"mediana_y":14.4,"media_area":1.96770153,"mediana_area":1.4,"max_area":15.2,"rho_alt":-0.09096577,"rho_pers":0.05705232},"porsub":{"Norte":{"sub":"Norte","N":700,"rho":0.96233003,"umbral":0.46685858,"B":8.4951855,"b0":-0.52526504,"p0":0.0452449,"b1":8.75551227,"ybar":17.14085714},"Centro":{"sub":"Centro","N":680,"rho":0.94040491,"umbral":0.68334124,"B":10.25344522,"b0":6.10887845,"p0":9.09399079e-95,"b1":7.05532578,"ybar":19.58558824},"Sur":{"sub":"Sur","N":456,"rho":0.40886708,"umbral":0.84878735,"B":6.81295762,"b0":10.22383664,"p0":1.33427917e-74,"b1":1.64092577,"ybar":13.46754386}},"items":{"R01":{"rho_area":0.84,"rho_yant":0.97,"rho_alt":-0.09},"R02":{"n":60,"ybar":21.41,"xbar":2.295,"tx":3612.7,"N":1836,"Bhat":9.32897603,"xbarU":1.96770153,"respuesta":18.35664037,"respuesta_total":33702.79172113,"expansion":39308.76,"sin_tx":17128},"R03":{"n":60,"N":1836,"ybar":16.45,"xbar":1.968,"sy":15.7,"sx":1.987,"r":0.7976,"tx":3612.7,"Bhat":8.35873984,"se2":106.38095184,"respuesta":2404.07636046,"texto":2404.44102784,"con_sy":3660.00641311,"sin_fpc":2444.34844781,"ee_svyratio":2402.96328206},"R04":{"n_puntos":300,"n_ee":60,"area":[1.1,0.6,3.3,1.7,0.7,1.1,2.4,1.1,1,1.1,0.7,1.1,1.1,1.1,0.3,3.7,1,3,2.3,0.5,0.8,2,8.1,1.6,3.4,2.9,2,6.1,1.1,0.7,0.7,0.8,3.4,1.9,2.2,2.4,1.7,1.3,1.2,0.7,1.8,0.3,7,1.1,1,3.6,1.4,2.6,3.1,0.9,7,0.6,0.6,0.8,2.9,1.8,1.6,2.9,3.1,1,3.3,2.4,3.6,1.4,0.5,0.3,2.3,8.4,0.7,1.8,1.5,11.4,3,1.4,1.9,0.5,1.5,0.8,2.6,1.4,0.4,0.9,2.9,2.4,1.3,0.8,2.5,1.5,5.2,1.8,4.2,0.7,2.3,1.9,2.6,0.9,2.4,3,0.9,1.2,1.8,0.7,0.3,0.5,1,4.7,0.7,1.3,0.6,2.1,4,3.4,2.3,1.9,2.3,2.5,2.2,0.4,1.2,0.8,0.5,4.4,1.2,3.7,1.3,2.5,1.3,1.5,1.2,2.8,2.2,1.1,1.7,0.7,2.2,7.7,0.5,1.7,4.5,3.3,2.2,3,1.8,0.5,0.3,0.6,0.9,0.7,0.3,2,0.3,2.5,0.6,1.3,1.2,0.5,1.5,0.5,1.1,3.4,0.8,0.7,0.7,1.3,1.2,3.7,2.1,0.6,1.5,4.5,2.1,2,1.1,1,1.1,0.7,0.3,0.3,1.6,0.7,1,2.7,1.5,0.5,2,1.5,3.5,1.1,1.1,3.1,0.8,3.8,2.3,0.7,1.7,1.3,2.6,6.1,2.8,0.7,0.8,0.5,1.2,1.4,5,1.1,1.5,3.2,1.1,2,1,2.5,2.4,4.9,0.8,1.2,0.7,5.7,1.5,4.4,2.6,0.4,0.9,1.6,1.9,2.2,2.2,1.5,1,5.8,1.9,1.5,0.3,1,3.5,0.9,1.3,9.3,0.8,1,0.8,2.1,0.4,0.6,1.3,0.7,5.9,0.9,1,0.6,0.3,1.8,1,4.3,4.8,0.3,3.9,2.8,1,3.8,1.2,0.9,4.8,0.9,1.3,1.3,1.1,1.2,1,0.9,3,0.4,2.2,3.4,2.4,3.1,1,1.2,0.4,1.4,3.1,0.6,1,0.9,3.3,4.8,6.9,1.1,2.7,1.2,2.2,1,0.4,0.5,0.4,0.3,4.8,3.3,4,0.6],"y":[9.4,8.9,21.6,8.9,9,5.8,25.3,7.6,10.9,6.8,6.7,11.1,10.8,10.3,3,37.7,2.9,26.7,13.7,2.4,10,9.2,46.6,8.5,30.5,29,10,61.9,8.3,7.6,6,4.1,19.1,16,20.1,21.6,16.8,12.4,6.6,5.1,13.3,0.5,65.9,13.4,7.2,31,9.4,9.8,17.7,11.6,73.1,1.7,8,6.3,29.6,11.1,13.2,29.2,25.6,8.7,30.3,19.3,34.5,15,4.4,2.7,21.4,62.1,4.3,15.5,16.8,64.5,21.3,6.8,10,4.7,17.8,7.4,20.9,3.5,0.6,9.8,23.4,24.1,14.6,6.3,17.6,6.3,35.8,13.7,37.4,5.1,13.2,8.5,22.9,12.4,27.7,28.3,10.8,9.9,14.6,4.8,0.7,7,6.3,43.5,5,5.7,7.8,18.3,40.4,20.5,23.1,18.8,18.7,12.3,19.5,3.4,7.6,8.6,9.3,41.8,13.1,39.4,12.9,26,14.3,11.7,10.1,31.1,20.3,14,20.4,13.5,23.1,73.3,8,21.4,39.3,29.7,23,31.6,16.1,2.6,6.3,7.8,14,10.4,11.9,19.4,5.4,25.9,13.5,16.3,22,9.4,16.2,12.1,13.1,28.5,7.1,15.5,14.3,13.6,17.9,28.5,23.6,8.1,20.5,33.8,15.2,16.5,7.6,12.3,19.5,12.6,8.1,11.8,15.6,8.8,16.1,16.1,14.5,6.8,16.4,19.1,28.8,17.1,5.7,29.3,10.4,35.6,19.9,12.5,15.7,20.2,23.1,60.2,20.2,15,5.5,9.7,9.9,10.7,19.4,12.5,18.1,33.6,15.3,15.5,13,24.4,23.6,39.6,15.5,14.6,5.9,50.5,20.1,38.5,24.9,11.1,9.4,11.8,18,25.1,30.3,17.5,9.5,50.9,27,22.6,15,7.5,22.5,13,12.4,27.4,4.2,23.3,11.5,16.6,16.2,9.9,14.2,13.9,27.2,15.5,24.9,10.3,8.2,14.7,10.1,13.1,22.1,23.2,17.5,0.3,17.5,23.7,20.7,6.7,20.2,18,16.9,18.9,0,6.3,17.7,8.6,6.2,14.3,16.4,7.3,32.8,18.8,16.1,19.1,17.2,11.7,10.7,13.9,11.5,7,7.7,18,29.4,7.5,9.4,0,17.7,5.8,0,14.9,8,6.1,18.1,5.9,19.3,14],"personas":[2,3,2,3,4,6,4,2,4,4,5,4,6,2,3,3,3,3,4,5,2,3,5,5,3,4,4,5,4,3,5,2,6,3,3,3,4,4,1,4,3,2,4,6,5,4,4,1,7,9,4,4,4,2,8,4,1,8,7,3,3,2,7,5,3,3,4,7,3,3,5,5,3,3,5,5,6,2,4,2,2,2,2,4,3,2,3,2,4,1,5,6,4,5,1,4,6,3,6,5,4,2,3,3,5,6,4,2,4,3,5,4,6,4,2,4,3,3,2,3,5,3,1,4,6,5,1,4,4,5,2,5,2,6,4,6,3,5,2,5,5,5,3,3,4,3,3,3,1,2,4,3,4,3,1,3,4,4,2,5,3,3,3,5,3,2,5,1,7,5,4,3,4,5,5,3,3,5,1,3,4,5,6,2,2,1,7,3,2,5,5,4,3,2,2,3,5,2,2,7,4,2,5,3,4,3,4,2,3,7,6,1,4,4,4,2,7,3,3,4,4,5,3,5,4,3,5,3,1,3,11,4,2,3,3,3,3,6,3,5,5,1,4,5,4,2,5,2,4,5,5,7,4,7,4,5,2,4,6,2,4,2,6,2,5,2,3,4,5,4,5,3,3,4,5,4,1,3,4,2,2,2,2,3,1,3,7,4,2,4,7,6,4,5,4,4,5,3,4,4],"prod":{"rho":0.8351,"cvx":0.9249,"cvy":0.8198,"umbral":0.5641,"ee_exp":3274.43341409,"ee_raz":2040.99545796},"pers":{"rho":0.0571,"cvx":0.9249,"cvy":0.4287,"umbral":1.0788,"media":3.77,"ee_exp":376.53295176,"ee_raz":875.73617152}},"R05":{"n":15,"N":1836,"sx":1.909,"xbar":2.067,"cv_xbar":0.23748624,"sesgo_rel":0.10961332,"replicas":40000,"mc":0.005,"cota_verdadera":0.23783116},"R06":{"B":8.71,"media_cocientes":10.84},"R07":{"n":10,"salida":"            Estimate Std. Error t value Pr(>|t|)    \n(Intercept)    3.747      2.733   1.371    0.208    \narea           8.168      1.125   7.262 8.71e-05 ***\n---\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1","b0":3.747,"p0":0.208,"b1":8.168,"b0_pob":6.11},"R08":{"N":680,"n":40,"rho":0.9404,"respuesta":239,"exacto":238.56590122,"sin_fpc":346,"con_rho":349},"R09":{"b1":0.843,"B":0.895,"rho":0.9714,"Sx":16.18,"paga":6.45},"R10":{"tabla":{"Norte":{"sub":"Norte","n":20,"b0":0.42,"p0":0.6911,"b1":8.789,"p1":0,"B":9.035,"r":0.977,"umbral":0.502},"Centro":{"sub":"Centro","n":20,"b0":5.87,"p0":0,"b1":7.987,"p1":0,"B":10.613,"r":0.99,"umbral":0.658},"Sur":{"sub":"Sur","n":15,"b0":17.82,"p0":0,"b1":-0.67,"p1":0.626,"B":9.306,"r":-0.137,"umbral":0.953}},"factor_sur":1.05671031,"est":{"Norte":{"sub":"Norte","N":700,"n":20,"estimador":"razón","media":18.23,"ee":0.8},"Centro":{"sub":"Centro","N":680,"n":20,"estimador":"regresión","media":21.13,"ee":0.662},"Sur":{"sub":"Sur","N":456,"n":15,"estimador":"expansión","media":16.63,"ee":1.394}},"total":34712.68,"respuesta":959.32932119,"suma_ee":1645.824,"con_N":3191.40953907},"R11":{"n":80,"N":1836,"nd":14,"ubar":4.773,"su":14.412,"ybar_d":27.27,"sy_d":24.52,"total":8763.228,"respuesta":2893.19598789,"como_fijo":2059.1742129},"R13":{"replicas":4000,"n":50,"ee_greg":1856.58551399,"ee_razon":2223.70777511,"sesgo_greg":-109.30136112},"R14":{"n":50,"antes":"       total      SE\narea 2820.10 351.161\nlev   348.84  90.097","despues":"      total SE\narea 3612.7  0\nlev   399.0  0","y_antes":"  total     SE\ny 25979 2880.6","y_despues":"  total   SE\ny 31621 1415","suma_pesos":1836,"tx":3612.7,"tlev":399,"ty":31458,"ee_y_antes":2880.55872833,"y_total_antes":25979.4,"y_total_despues":31620.83975074,"area_antes":2820.096,"ee_y_despues":1414.95996068},"R15":{"p":0.5,"por_estrato":4,"y":[2.7,5.1,5.9,6.3,9.6,15.1,17.5,17.9,20.2,21.5,23.3,26.5,34.9,46.6,62.1,118.4],"w":[135.5,135.5,135.5,240.5,135.5,240.5,74.75,240.5,74.75,240.5,74.75,8.25,74.75,8.25,8.25,8.25],"F":[0.07380174,0.14760349,0.22140523,0.35239651,0.42619826,0.55718954,0.59790305,0.72889434,0.76960784,0.90059913,0.94131264,0.9458061,0.98651961,0.99101307,0.99550654,1],"mediana":15.1,"mediana_sin_pesos":19.05,"mediana_inf_sin_pesos":17.9,"media_pond":14.73,"mediana_pob":14.4},"R16":{"n":60,"replicas":2000,"conteo":{"0":0,"1":0,"2":0,"3":0,"4":0,"5":0,"6":3,"7":8,"8":26,"9":39,"10":84,"11":129,"12":168,"13":186,"14":243,"15":241,"16":247,"17":202,"18":156,"19":116,"20":75,"21":42,"22":18,"23":14,"24":2,"25":1},"esperado":14.90196078,"frac_menos10":0.038,"min":6,"max":25,"prop":[23,22,15]},"R19":{"Nh":[542,962,299,33],"nh":[35,63,20,2],"yh":[9.66,16.28,33.45,58.95],"sh":[5.59,7.36,15.66,61.87],"total":32843.98,"respuesta":1992.43920739,"sin_N2":78133.21954686,"sin_fpc":2058.76362476},"R20":{"bien":"  total     SE\ny 31958 1229.9","mal":"  total     SE\ny 31958 1798.8","ee_bien":1229.8595459,"ee_mal":1798.75467752,"total":31958.34103175},"R21":{"tamaño":{"particion":"tamaño","H":4,"SSB":213491.24511199,"SSW":148538.2941037,"R2":0.5897067,"deff":0.41895261},"subregión":{"particion":"subregión","H":3,"SSB":10216.98931615,"SSW":351812.54989954,"R2":0.02822142,"deff":0.97207469},"azar":{"particion":"azar","H":4,"SSB":560.61681918,"SSW":361468.92239651,"R2":0.00154854,"deff":1.00008648},"n":120,"SST":362029.53921569},"R22":{"n":150,"Nh":[542,962,299,33],"Sh":[4.9,6.33,14.21,33.94],"NS":[2655.8,6089.46,4248.79,1120.02],"ney":[28.22502652,64.71691015,45.15483486,11.90322848],"prop":[44.28104575,78.59477124,24.42810458,2.69607843],"NS2":[13.01789065,38.55952404,60.39604731,38.026538],"respuesta":45},"R24":{"C":9000,"costo":[45,60,95,150],"Nh":[542,962,299,33],"Sh":[4.9,6.33,14.21,33.94],"nh":[29.6645969,58.90504586,32.66275439,6.85219147],"n_total":128.08458863,"con_c":[37.63336869,64.71691015,28.51884307,4.76129139],"respuesta":128},"R25":[{"n":100,"nA":[30,52,16,2],"nB":[20,36,11,33],"ee_A":1598.04655043,"ee_B":1706.42361975},{"n":250,"nA":[74,131,41,4],"nB":[65,116,36,33],"ee_A":991.13079185,"ee_B":904.26525661}],"R27":{"n":120,"H":[2,3,4,5,6,7,8],"area":[0.75397256,0.66241602,0.61017801,0.56740133,0.53526595,0.52589729,0.49534929],"alt":[0.9898383,0.98815671,0.99041685,0.98969486,0.985847,0.98787275,0.98515745]},"R28":{"n":150,"ee_mas":2105.6,"ee_str":1152.3,"n0":300,"deff":0.29948797,"respuesta":90,"con_ee":165,"dividir":1002},"R29":{"n":120,"nh":[35,63,20,2],"deff_y":0.41895261,"deff_pers":0.99547644,"nef_y":286.4285773,"nef_pers":120.54529406},"R30":{"Nh":33,"sum_area":354.8,"m":4,"area":[11.6,14.1,12.3,14.1],"y":[29.3,141.9,104.7,141.9],"psi":[0.03269448,0.0397407,0.03466742,0.0397407],"respuesta":2764.39907709,"t_verdadero":2507.4,"expansion":3446.85},"R31":{"n":80,"Nh":[916,550,370],"nh":[49,23,8],"yh":[21.03,15.2,15.41],"respuesta":18.1509695,"bruta":18.791875,"iguales":17.21333333},"R32":{"n":170,"esperadas":3.05555556,"esperadas_fusion":30.74074074,"p_vacia":0.03931623,"Nh":[542,962,299,33]}},"problemas":{"P1":{"n":50,"N":1836,"tx":3612.7,"ybar":14.95,"xbar":1.642,"sy":14.39,"sx":1.896,"r":0.8902,"b0":3.856,"p0":0.0033,"ee_exp":3685.13037713,"t_exp":27448.2,"ee_reg":1696.23229766,"t_reg":31488.3967955,"ybar_reg":17.15054292,"b1":6.75631751,"ee_r":2432.01627928,"se2_r":62.80246489,"t_r":32892.73142509,"B":9.1047503,"f":0.02723312,"xbarU":1.96770153,"ty":31458},"P2":{"n":80,"N":1836,"Nd":456,"nd":19,"ybar_d":13.011,"su":3.5787,"ubar":3.09,"su2":6.6219,"ee_desconocido":1329.34044631,"t_desconocido":5673.24,"ee_conocido":751.28971912,"t_conocido":5933.016,"ee_media":1.64756517,"f":0.04357298,"ybar_d_pob":13.46754386,"razon_ee":1.7694112,"li":9.78177226,"ls":16.24022774,"cubre":true},"P3":{"n":100,"Nh":[542,962,299,33],"Sh_piloto":[4.49,3.96,11.99,26.79],"ney":[22.71787815,35.56250922,33.46667065,8.25294198],"nh":[23,36,33,8],"prop":[29.52069717,52.39651416,16.28540305,1.79738562],"yh":[8.27,14.9,31.59,74.42],"sh":[4.72,6.68,15.09,14.85],"t":30717.41,"ee":1395.7755757,"li":27981.68987163,"ls":33453.13012837,"pesos":[23.56521739,26.72222222,9.06060606,4.125],"ty":31458,"cubre":true},"P4":{"n":100,"N":1836,"celdas":["propietario","arrendatario","aparcero"],"Nh":[916,550,370],"nh":[46,32,22],"esperadas":[49.89106754,29.95642702,20.15250545],"yh":[23.44,15.27,11.26],"sh":[14.58,10.44,6.07],"ybar":18.14,"sy":12.84,"deff":0.88637286,"ee_mas":1.24854312,"ee_post":1.1754706,"ybar_post":18.53798475,"f":0.05446623,"W":[0.49891068,0.29956427,0.20152505],"ybarU":17.13398693,"deff_verdadero":0.95543702,"ahorro_verdadero":0.04456298,"ee_survey":1.19162739,"deff_survey":0.91090664,"ahorro":0.11362714,"ahorro_survey":0.08909336}},"costos":{"pequeña":45,"mediana":60,"grande":95,"muy grande":150},"estratos":{"nombres":["pequeña","mediana","grande","muy grande"],"cortes":[1,3,8],"Nh":[542,962,299,33],"Ybar":[8.83616236,15.42172557,31.18963211,75.98181818],"Sh":[4.9,6.33,14.21,33.94]},"tenencia":{"nombres":["propietario","arrendatario","aparcero"],"Nh":[916,550,370]}};
+
+    const OBJETIVOS_DIAGNOSTICO = [{"id":"O1","titulo":"Usar una variable auxiliar con el estimador de razón: cuándo sirve, cuándo gana a la expansión, su sesgo y su error estándar","peso":20,"modulos":["3.1","3.2","3.3","3.4","3.5"]},{"id":"O2","titulo":"Elegir entre razón, regresión y diferencia, también grupo a grupo, y justificarlo con una cifra","peso":12,"modulos":["3.6","3.7","3.8"]},{"id":"O3","titulo":"Estimar en dominios y leer la estimación asistida por modelos: modelos poblacionales, GREG y la mediana","peso":15,"modulos":["3.9","3.10","3.11","3.12"]},{"id":"O4","titulo":"Estimar en un estratificado en el marco π: por qué gana, pesos, total, varianza y el modelo que lo explica","peso":18,"modulos":["4.1","4.2","4.3","4.7"]},{"id":"O5","titulo":"Asignar la muestra —proporcional, Neyman, óptima con costos— y definir los estratos","peso":20,"modulos":["4.4","4.5","4.6"]},{"id":"O6","titulo":"Medir la ganancia con el deff y corregir después del sorteo: PPT por estrato y postestratificación","peso":15,"modulos":["4.8","4.9","4.10"]}];
+
+    const CAPITULOS_HREF = {"3": "capitulo-3-razon-y-regresion.html", "4": "capitulo-4-muestreo-estratificado.html"};
+
+    const CAPITULO_ACTUAL = 4;
 
     // ================================================================
     // Estado y elementos del DOM
@@ -6517,6 +7139,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         initCodeTabs();
         iniciarSimuladores();
         iniciarAutoevaluaciones();
+        vigilarQuizzes();
+        iniciarDiagnosticos();
         iniciarEjerciciosGuiados();
         iniciarDerivaciones();
         iniciarCiclos();
@@ -7805,6 +8429,249 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
             'Reescribe tu respuesta incluyéndolo antes de pasar a la siguiente: releer la modelo no es lo mismo que haberla escrito.');
       });
     }
+    // ================================================================
+    // Diagnóstico por objetivo — el producto del preparcial (D10)
+    //
+    // Un «38 de 59» no le sirve a nadie para estudiar. «O3 · Marco π:
+    // 4 de 13, y fallaste las dos de Horvitz–Thompson» con el enlace al
+    // módulo puesto, sí. Esto es lo segundo.
+    //
+    // DÓNDE VIVE EL RESULTADO, Y POR QUÉ AQUÍ. El motor del quiz guarda
+    // `estado` en el cierre de `renderAutoevaluacion`, y `loadModule`
+    // hace `mainContent.innerHTML = ''` cada vez que se cambia de
+    // módulo: al salir del bloque A, su estado muere con el DOM. Un
+    // diagnóstico que leyera solo lo que hay en pantalla marcaría
+    // siempre cero, porque cuando se abre este módulo los demás ya no
+    // existen. Así que lleva su propio registro, que sobrevive al cambio
+    // de módulo aunque el quiz se repinte en blanco.
+    //
+    // CÓMO SE ENTERA. No reimplementa la corrección: OBSERVA la que hace
+    // el motor. `cerrar()` escribe `class="quiz-retro bien|mal"` y quita
+    // el `hidden`; un MutationObserver sobre esos dos atributos recoge
+    // el veredicto sin duplicar una sola regla. Si el motor cambiara ese
+    // marcado, esto dejaría de registrar — y por eso `iniciarDiagnosticos`
+    // avisa por consola cuando encuentra bloques sin `.quiz-retro`.
+    // ================================================================
+    // LOS DATOS LOS PONE EL ENSAMBLADOR DE CADA PÁGINA: OBJETIVOS_DIAGNOSTICO
+    // (de la tabla de especificaciones de su corte) y CAPITULOS_HREF. Si la
+    // página es un capítulo, declara además CAPITULO_ACTUAL, y los módulos de
+    // ese capítulo se abren aquí mismo en vez de enlazar a otra página: el
+    // preparcial del Corte II vive dentro del capítulo 4.
+    const RESULTADOS_QUIZ = {};
+    const observadoresQuiz = [];
+
+    function registraQuiz(raiz) {
+      const clave = raiz.dataset.quiz;
+      const banco = AUTOEVALUACIONES[clave];
+      if (!banco) return;
+      const registro = RESULTADOS_QUIZ[clave] || (RESULTADOS_QUIZ[clave] = []);
+      raiz.querySelectorAll('.quiz-pregunta').forEach((bloque, i) => {
+        const retro = bloque.querySelector('.quiz-retro');
+        // Sin responder todavía: no se borra lo que ya estaba registrado de
+        // una visita anterior a este módulo.
+        if (!retro || retro.hidden) return;
+        // Acertar a la segunda no es acertar. El motor lo distingue en su
+        // propio resumen (`intentos > 1 || !acierto`) y aquí se recoge por
+        // la vía estructural, no leyendo el texto de la retro: la pista solo
+        // se destapa tras un primer fallo, así que verla visible al cerrar
+        // significa que hubo uno.
+        const pista = bloque.querySelector('.quiz-pista');
+        registro[i] = {
+          acierto: retro.classList.contains('bien'),
+          dudo: !!(pista && !pista.hidden)
+        };
+      });
+    }
+
+    function vigilarQuizzes() {
+      while (observadoresQuiz.length) observadoresQuiz.pop().disconnect();
+      avisaSiCambioElMarcado();
+      mainContent.querySelectorAll('[data-quiz]').forEach(raiz => {
+        if (!AUTOEVALUACIONES[raiz.dataset.quiz]) return;
+        registraQuiz(raiz);
+        // Repintar también: en el Corte II el diagnóstico está en el MISMO
+        // módulo que los bloques, y sin esto se quedaba con lo que había al
+        // abrir el módulo. Solo se observa el quiz, no la caja del
+        // diagnóstico, así que repintarla no vuelve a disparar el observador.
+        const obs = new MutationObserver(() => { registraQuiz(raiz); iniciarDiagnosticos(); });
+        obs.observe(raiz, { subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] });
+        observadoresQuiz.push(obs);
+        // Reiniciar es «empezar de cero», y el diagnóstico tiene que
+        // enterarse: si no, seguiría contando los fallos que el estudiante
+        // acaba de borrar de la pantalla.
+        const reiniciar = raiz.querySelector('.quiz-reiniciar');
+        if (reiniciar) {
+          reiniciar.addEventListener('click', () => { RESULTADOS_QUIZ[raiz.dataset.quiz] = []; });
+        }
+      });
+    }
+
+    // --- El cálculo -------------------------------------------------
+    // Cada ítem lleva en `ancla` el módulo del capítulo donde está
+    // enseñado; la tabla de especificaciones dice a qué objetivo
+    // pertenece cada módulo. De ahí sale todo, sin una segunda lista que
+    // mantener en paralelo.
+    function calculaDiagnostico() {
+      const deModulo = new Map();
+      OBJETIVOS_DIAGNOSTICO.forEach(o => o.modulos.forEach(m => deModulo.set(m, o.id)));
+
+      const porObjetivo = new Map(OBJETIVOS_DIAGNOSTICO.map(o => [o.id, {
+        id: o.id, titulo: o.titulo, peso: o.peso,
+        total: 0, respondidas: 0, aciertos: 0, fallos: new Map()
+      }]));
+
+      Object.keys(AUTOEVALUACIONES).forEach(clave => {
+        AUTOEVALUACIONES[clave].forEach((p, i) => {
+          if (!p.ancla) return;
+          const modulo = p.ancla.cap + '.' + p.ancla.modulo;
+          const objetivo = porObjetivo.get(deModulo.get(modulo));
+          if (!objetivo) return;
+          objetivo.total++;
+          const r = (RESULTADOS_QUIZ[clave] || [])[i];
+          if (!r) return;
+          objetivo.respondidas++;
+          if (r.acierto) objetivo.aciertos++;
+          if (r.acierto && !r.dudo) return;
+          const previo = objetivo.fallos.get(modulo) ||
+            objetivo.fallos.set(modulo, { fallos: 0, dudas: 0, ancla: p.ancla }).get(modulo);
+          if (r.acierto) previo.dudas++; else previo.fallos++;
+        });
+      });
+
+      return [...porObjetivo.values()].map(o => {
+        const tasa = o.respondidas ? o.aciertos / o.respondidas : null;
+        return Object.assign(o, {
+          tasa: tasa,
+          nivel: tasa === null ? 'vacio' : tasa < 0.6 ? 'flojo' : tasa < 0.8 ? 'medio' : 'solido'
+        });
+      });
+    }
+
+    const TEXTO_NIVEL = {
+      vacio: 'Todavía sin datos: no has respondido ninguna de sus preguntas.',
+      flojo: 'Aquí es donde hay que ir. Menos de tres de cada cinco.',
+      medio: 'A medio camino. Merece un repaso corto antes que un repaso entero.',
+      solido: 'Sólido. No inviertas más tiempo aquí.'
+    };
+
+    function enlaceModulo(ancla) {
+      const nombre = `capítulo ${ancla.cap}, módulo ${ancla.modulo} · ${ancla.titulo}`;
+      if (typeof CAPITULO_ACTUAL !== 'undefined' && ancla.cap === CAPITULO_ACTUAL) {
+        return `<a href="#" onclick="loadModule(${ancla.modulo}); return false;">${nombre}</a>`;
+      }
+      const href = CAPITULOS_HREF[ancla.cap];
+      return href ? `<a href="${href}">${nombre}</a>` : nombre;
+    }
+
+    function pintaDiagnostico(caja) {
+      const filas = calculaDiagnostico();
+      const total = filas.reduce((a, o) => a + o.total, 0);
+      const respondidas = filas.reduce((a, o) => a + o.respondidas, 0);
+      const aciertos = filas.reduce((a, o) => a + o.aciertos, 0);
+
+      if (!respondidas) {
+        caja.innerHTML =
+          '<div class="diagnostico-vacio">' +
+          '<p><strong>Todavía no hay nada que diagnosticar.</strong> Responde algunas preguntas de ' +
+          'los bloques y vuelve aquí: esto no puntúa, calcula qué te falta.</p>' +
+          `<p>Cuando lo hagas verás, objetivo por objetivo, cuántas de sus ${total} preguntas ` +
+          'acertaste y en qué módulo del material está lo que se te escapó.</p>' +
+          '</div>';
+        return;
+      }
+
+      const cuerpo = filas.map(o => {
+        const ancho = o.tasa === null ? 0 : Math.round(o.tasa * 100);
+        // «0 de 5» en un objetivo sin responder se lee como cinco fallos. Las
+        // cifras son SIEMPRE aciertos sobre respondidas; cuando no hay
+        // respondidas no hay cociente que enseñar, y se dice con palabras.
+        const cifras = o.respondidas ? `${o.aciertos} de ${o.respondidas}` : 'sin responder';
+        const repasar = [...o.fallos.values()]
+          .sort((a, b) => (b.fallos * 2 + b.dudas) - (a.fallos * 2 + a.dudas))
+          .map(f => {
+            const partes = [];
+            if (f.fallos) {
+              partes.push(`Fallaste ${f.fallos} ${f.fallos === 1 ? 'pregunta' : 'preguntas'}`);
+            }
+            if (f.dudas) {
+              partes.push(`${f.fallos ? 'a' : 'A'}certaste ${f.dudas} al segundo intento`);
+            }
+            return `<li>${partes.join(' y ')} del ${enlaceModulo(f.ancla)}` +
+                   `${f.ancla.lohr ? ` (Lohr ${f.ancla.lohr})` : ''}.</li>`;
+          })
+          .join('');
+        return `
+          <div class="diagnostico-fila" data-nivel="${o.nivel}">
+            <div class="diagnostico-cabecera">
+              <span class="diagnostico-id">${o.id}</span>
+              <span class="diagnostico-titulo">${o.titulo}</span>
+              <span class="diagnostico-peso">${o.peso} % del parcial · ${o.total} preguntas aquí</span>
+              <span class="diagnostico-cifras">${cifras}</span>
+            </div>
+            <div class="diagnostico-barra" role="img"
+                 aria-label="${o.id}: ${o.respondidas ? `${cifras} preguntas acertadas` : 'sin responder'}">
+              <div class="diagnostico-barra-relleno" style="width:${ancho}%"></div>
+            </div>
+            <span class="diagnostico-estado">${TEXTO_NIVEL[o.nivel]}${
+              o.respondidas < o.total
+                ? ` Te quedan ${o.total - o.respondidas} sin responder de este objetivo.`
+                : ''}</span>
+            ${repasar ? `<ul class="diagnostico-repasar">${repasar}</ul>` : ''}
+          </div>`;
+      }).join('');
+
+      // Por dónde empezar: no el peor porcentaje, sino el que más caro sale
+      // — lo que falla multiplicado por lo que pesa en el parcial.
+      const candidatos = filas.filter(o => o.respondidas && o.tasa < 0.8)
+        .sort((a, b) => b.peso * (1 - b.tasa) - a.peso * (1 - a.tasa));
+      const sinTocar = filas.filter(o => !o.respondidas);
+
+      let empezar;
+      if (candidatos.length) {
+        const o = candidatos[0];
+        empezar = `<strong>Empieza por ${o.id}.</strong> No es el porcentaje más bajo de la tabla ` +
+          `necesariamente: es el que más caro sale, porque pesa el ${o.peso} % del parcial y ahí ` +
+          `llevas ${o.aciertos} de ${o.respondidas}. Los módulos están enlazados justo arriba.`;
+      } else if (sinTocar.length) {
+        empezar = `<strong>Lo que llevas respondido va bien.</strong> Lo que falta es cobertura: ` +
+          `${sinTocar.map(o => o.id).join(', ')} ${sinTocar.length === 1 ? 'sigue' : 'siguen'} ` +
+          `sin ninguna pregunta respondida, así que de ${sinTocar.length === 1 ? 'ese objetivo' : 'esos objetivos'} ` +
+          `todavía no sabes nada.`;
+      } else {
+        empezar = '<strong>Los seis objetivos por encima del 80 %.</strong> Con la tabla de ' +
+          'especificaciones delante, esto es lo más parecido a estar listo que un preparcial ' +
+          'puede decir. Lo que queda es hacer las que dejaste sin responder.';
+      }
+
+      caja.innerHTML = `
+        <div class="diagnostico-global">
+          <strong>${aciertos} de ${respondidas}</strong>
+          <span>respondidas ${respondidas} de las ${total} preguntas de la página</span>
+        </div>
+        ${cuerpo}
+        <div class="diagnostico-empezar"><p>${empezar}</p></div>`;
+    }
+
+    function iniciarDiagnosticos() {
+      mainContent.querySelectorAll('[data-diagnostico]').forEach(pintaDiagnostico);
+    }
+
+    // Guarda contra el fallo silencioso: si el motor dejara de escribir
+    // `.quiz-retro`, el registro se quedaría vacío y el diagnóstico diría
+    // «no has respondido nada» a alguien que respondió cincuenta. Se
+    // comprueba al vigilar, que es cuando los bloques están en pantalla.
+    // El `:has()` va en try/catch porque un navegador que no lo entienda
+    // lanza al parsear el selector, y una comprobación no puede tumbar la
+    // página que comprueba.
+    function avisaSiCambioElMarcado() {
+      try {
+        if (mainContent.querySelectorAll('.quiz-pregunta:not(:has(.quiz-retro))').length) {
+          console.warn('Diagnóstico: hay bloques de pregunta sin .quiz-retro; el marcado del ' +
+                       'motor cambió y el registro del diagnóstico puede estar incompleto.');
+        }
+      } catch (e) { /* navegador sin :has(); no es motivo para romper nada */ }
+    }
+
     // ================================================================
     // Autoevaluación (v2)
     //
@@ -9679,6 +10546,679 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         ]
       }
     ];
+
+    // ================================================================
+    // Banco del Preparcial del Corte II (módulo 14 del capítulo 4)
+    //
+    // 32 ítems, repartidos por la tabla de especificaciones del Parcial 2
+    // (precalculo/tabla_especificaciones_corte2.json, aprobada el
+    // 2026-10-07). Cuatro bloques, uno por dimensión:
+    //
+    //   Bloque                       ítems  opcion  multiple  numerica  grafico
+    //   A · Conceptos                  10      7        3         0        0
+    //   B · Procedimientos             11      0        0        11        0
+    //   C · Interpretación              6      6        0         0        0
+    //   D · Análisis gráfico            5      0        0         0        5
+    //
+    // Versión 2 (2026-10-07), tras tres auditorías: la primera la acertó entera por
+    // la forma un resolutor que no sabía muestreo, y la auditoría experta encontró
+    // gemelos con el corpus y con el banco de sustentación, fugas entre ítems y una
+    // clave (R28) que no daba la precisión que prometía. R10 pasó a ser numérica.
+    //
+    // `ancla` es el módulo del material donde se enseña cada ítem, y es lo que
+    // lee el diagnóstico. `modulo` vale 14 en todos: el motor lo usa para el
+    // resumen del bloque y lo busca en el courseData de ESTA página, así que
+    // un ítem del capítulo 3 con su número de módulo nombraría un módulo del 4.
+    //
+    // LAS CIFRAS. Ninguna se escribe a mano: todas se leen de
+    // DATOS_PREPARCIAL2, que escribe precalculo/genera_preparcial2.R. La
+    // población es construida (fincas cafeteras de un departamento) y el
+    // módulo lo dice. Lo que un enunciado imprime viene ya redondeado del
+    // precálculo, y la clave se calculó con eso: quien opera sobre el
+    // enunciado llega a la clave.
+    //
+    // LAS REGLAS DE FORMA, que comprueba precalculo/pruebas/prueba_preparcial2.py:
+    //   1. ninguna retro nombra posiciones: nombra el contenido de la opción;
+    //   2. la correcta no es la opción más larga;
+    //   3. cada distractor es un error con nombre;
+    //   4. ninguna retro del acierto abre con «Correcto» o «Exacto»: el motor
+    //      ya antepone el juicio.
+    // ================================================================
+    const DP2 = DATOS_PREPARCIAL2;
+    const P2 = DP2.poblacion, I2 = DP2.items, E2 = DP2.estratos;
+
+    // Una cifra en la prosa, con el formato del capítulo (coma decimal,
+    // espacio de miles). `m2` es la misma cifra dentro de una fórmula de
+    // KaTeX, donde la coma pide llaves y el espacio de miles es \,.
+    const c2 = (x, d) => escribeCifra(x, d);
+    // escribeCifra separa los miles con un espacio DURO (U+00A0), no con uno
+    // normal: la primera versión solo cambiaba el normal y KaTeX recibía el duro.
+    // Y el orden importa: primero la coma DECIMAL y después los espacios, porque
+    // el espacio fino de LaTeX que dejan los espacios lleva otra coma, y el
+    // reemplazo de la coma decimal la agarraba.
+    const m2 = (x, d) => escribeCifra(x, d).replace(',', '{,}').replace(/[ \u00a0\u202f]/g, '\\,').replace('−', '-');
+    const pct2 = (x, d = 1) => c2(100 * x, d) + ' %';
+    // Las salidas de R se escapan: «< 2e-16» sin escapar se come la línea.
+    const salida2 = t => '<pre><code>' + String(t).replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code></pre>';
+    // Una tabla compacta. Estilo en línea a propósito: una clase nueva sin su
+    // regla en la plantilla no da error, da una tabla sin estilo.
+    // `position: relative` no es decorativo: en el teléfono la tabla se vuelve
+    // desplazable (display: block; overflow-x: auto), y el MathML oculto de
+    // KaTeX, que va con position: absolute, se escapaba del recorte y ensanchaba
+    // la página entera hasta 488 px a 375 (visto en la tabla de R10).
+    const tabla2 = (cab, filas) =>
+      '<table style="margin:0.75rem 0; font-size:0.9rem; position:relative;"><thead><tr>' +
+      cab.map(c => `<th style="padding:0.4rem 0.6rem;">${c}</th>`).join('') +
+      '</tr></thead><tbody>' +
+      filas.map(f => '<tr>' + f.map(c => `<td style="padding:0.4rem 0.6rem;">${c}</td>`).join('') + '</tr>').join('') +
+      '</tbody></table>';
+    const NOMBRES_TAM = E2.nombres;
+
+    const BANCO_PREPARCIAL2 = [
+
+      // ==============================================================
+      // BLOQUE A · Conceptos (10)
+      //
+      // Versión 2 (2026-10-07). La primera la acertó ENTERA, 22 de 22, un
+      // resolutor que solo miraba la forma: los absolutos siempre eran
+      // distractores, «las dos» o «da lo mismo» nunca acertaban, la correcta era
+      // la matizada y la que concedía algo. Ahora todas las opciones de un ítem
+      // comparten plantilla, hay correctas con absolutos y con «las dos» o
+      // «nada», y distractores matizados.
+      // ==============================================================
+      {
+        tipo: 'opcion', id: 'R01', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 3, modulo: 1, titulo: 'Variables auxiliares', lohr: '3.1' },
+        pregunta: 'Para estimar la producción total de este año hay dos candidatas a auxiliar: el <strong>área en café que el registro trae para todas las fincas</strong>, actualizada en 2019, y las <strong>entregas del año anterior</strong>, que la cooperativa conoce de todas las fincas. ¿Qué sirve como auxiliar del estimador de razón: el área, las entregas, las dos o ninguna?',
+        pista: 'Repasa las dos condiciones que el módulo 1 del capítulo 3 le pide a una auxiliar, y comprueba cada candidata contra ellas.',
+        opciones: [
+          { texto: 'Las dos: se conocen para todo el marco y acompañan a la producción, aunque no sean de este año.', correcta: true,
+            retro: `Una variable es auxiliar si se observa en las fincas de la muestra y su total se conoce, y las dos cumplen. Que no sean de este año no importa: el propio capítulo 3 estima la superficie de 1992 con la de 1987. Además las dos acompañan a la producción (correlación ${c2(I2.R01.rho_area, 2)} el área y ${c2(I2.R01.rho_yant, 2)} las entregas), así que ganará la más correlacionada.` },
+          { texto: 'Las dos, siempre que antes se lleven al año de la encuesta con una tasa de crecimiento.', correcta: false,
+            retro: 'No hace falta llevarlas a ningún año: lo que pide la razón es que el $x_k$ de la muestra y el $t_x$ sean la misma variable. Si se usa el área de 2019 en la muestra y el total de 2019, el estimador es válido; corregirlas con una tasa estimada metería un error nuevo.' },
+          { texto: 'Solo el área: las entregas son de otro año, y la razón pide que $x$ e $y$ se midan el mismo año.', correcta: false,
+            retro: 'La razón no pide eso: pide que $x_k$ se observe en la muestra y que $t_x$ se conozca. El capítulo 3 usa acres de 1987 para estimar los de 1992. Y las entregas acompañan a la producción todavía más de cerca que el área.' },
+          { texto: 'Solo las entregas: el área de 2019 está desactualizada y sesgaría el estimador.', correcta: false,
+            retro: 'Desactualizada no quiere decir inválida. Si en la muestra se usa el área que trae el registro, $x$ y $t_x$ son la misma variable y el estimador sigue siendo el de razón; lo único que pierde es correlación.' }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R06', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 3, modulo: 5, titulo: 'Razones y proporciones', lohr: '3.1' },
+        pregunta: 'Un agrónomo quiere el <strong>rendimiento promedio por caficultor</strong>: cuántas cargas por hectárea saca cada caficultor, contando a todos por igual, para comparar con esa cifra cada finca que asesora. Con un MAS de fincas, ¿qué parámetro es ese, y cómo se estima?',
+        pista: 'El módulo 5 del capítulo 3 distingue dos parámetros que se parecen mucho. Pregúntate a cuál de los dos se refiere la pregunta del agrónomo.',
+        opciones: [
+          { texto: 'La media de los cocientes $y_k/x_k$, estimada con las fórmulas del capítulo 2.', correcta: true,
+            retro: `Si cada caficultor cuenta lo mismo, el parámetro es $\\frac1N\\sum_U y_k/x_k$: la media de una variable nueva, $z_k = y_k/x_k$, que se estima con el capítulo 2 sin linealizar nada. En la población vale ${c2(I2.R06.media_cocientes, 2)} cargas por hectárea, frente a ${c2(I2.R06.B, 2)} de la razón: son respuestas a dos preguntas distintas.` },
+          { texto: 'La razón $B = t_y/t_x$, estimada con svyratio y su error estándar linealizado.', correcta: false,
+            retro: `$B$ pondera cada finca por su área: es el rendimiento de la hectárea típica del departamento, ${c2(I2.R06.B, 2)} cargas, que es lo que necesita un informe regional. El agrónomo pregunta por el caficultor, y eso es otra cosa.` },
+          { texto: 'La mediana de los cocientes $y_k/x_k$, porque un caficultor promedio es el del medio.', correcta: false,
+            retro: 'Contar a todos por igual y promediar es una media, no una mediana. La mediana contestaría «el caficultor del medio», que es una tercera pregunta.' },
+          { texto: 'Cualquiera de las dos razones: $\\bar y/\\bar x$ y el promedio de los cocientes estiman el mismo parámetro.', correcta: false,
+            retro: `No estiman lo mismo: $\\bar y/\\bar x$ estima $B$, ${c2(I2.R06.B, 2)}, y el promedio de los cocientes estima ${c2(I2.R06.media_cocientes, 2)}. Coincidirían solo si el rendimiento de cada finca no tuviera relación con su área; por ejemplo, si todas tuvieran la misma área o el mismo rendimiento.` }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R09', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 3, modulo: 7, titulo: 'Estimación de diferencia', lohr: '3.2' },
+        pregunta: `La cooperativa conoce las <strong>entregas del año anterior</strong> de todas las fincas. En la población, la recta de la producción de este año sobre esas entregas tiene pendiente $b_1 = ${m2(I2.R09.b1, 3)}$, con correlación $${m2(I2.R09.rho, 4)}$ y razón poblacional $B = ${m2(I2.R09.B, 3)}$. ¿Qué estimador conviene: diferencia, razón o regresión?`,
+        pista: 'Los tres usan las entregas; cambian en la pendiente que se permiten: fijada en 1, estimada por el origen o estimada libre. Recuerda qué paga cada uno cuando su pendiente no es la de la población.',
+        opciones: [
+          { texto: 'La regresión: la diferencia impone pendiente 1, y aquí la pendiente es claramente menor.', correcta: true,
+            retro: `Restando las varianzas, $V(\\hat{\\bar y}_d) - V(\\hat{\\bar y}_{\\text{reg}}) = \\frac{1-f}{n}(1-b_1)^2S_x^2$: aquí $(1-${m2(I2.R09.b1, 3)})^2 \\cdot ${m2(I2.R09.Sx, 2)}^2 = ${m2(I2.R09.paga, 2)}$ cargas² por cada $(1-f)/n$. Y la razón tampoco puede ganarle a la regresión (teorema del módulo 7 del capítulo 3): la cosecha cayó, y medir lo mismo no basta si la pendiente no es 1.` },
+          { texto: 'La diferencia: es insesgada y la regresión no, y con una correlación tan alta eso es lo que decide.', correcta: false,
+            retro: 'El sesgo de la regresión es de orden $1/n$ y aquí es despreciable; lo que decide es la varianza, y la diferencia paga un término en $(1-b_1)^2S_x^2$ que la regresión no paga.' },
+          { texto: 'La razón: $B$ queda más cerca de $b_1$ que de 1, y eso la pone por delante de las otras dos.', correcta: false,
+            retro: 'Que $B$ quede más cerca de $b_1$ que de 1 dice que la razón le gana a la diferencia, no que gane a la regresión: el teorema del módulo 7 del capítulo 3 da $V(\\hat{\\bar y}_r) \\ge V(\\hat{\\bar y}_{\\text{reg}})$.' },
+          { texto: 'Da lo mismo cuál: con una correlación de 0,97 las tres varianzas son prácticamente iguales.', correcta: false,
+            retro: 'La correlación es la misma, pero las pendientes que cada estimador usa no lo son, y eso es lo que separa sus varianzas: la de la diferencia queda bastante por encima de las otras dos.' }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R12', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 3, modulo: 10, titulo: 'Modelos poblacionales', lohr: '3.4' },
+        pregunta: 'En un grupo de fincas, las que casi no tienen área en café producen igual unas 6 cargas (tienen lotes que el registro no ve), y las fincas grandes se dispersan alrededor de la recta lo mismo que las pequeñas. ¿Qué modelo poblacional describe esa nube, y qué estimador le corresponde?',
+        pista: 'El modelo tiene dos palancas independientes: qué recta y cómo crece la dispersión, $V(\\varepsilon_k) = \\sigma^2 v_k$. Lee cada una en la descripción.',
+        opciones: [
+          { texto: 'Recta con intercepto y dispersión constante: la regresión.', correcta: true,
+            retro: 'Producir algo con área casi nula es un intercepto; dispersarse igual en todo el rango es $v_k$ constante. Las dos cosas apartan a la razón, que supone recta por el origen y dispersión que crece con $x$, y piden la regresión del módulo 6 del capítulo 3.' },
+          { texto: 'Recta por el origen y dispersión proporcional a $x_k$: la razón.', correcta: false,
+            retro: 'Ese es el modelo de otra nube: una que pasa por el origen y se abre al crecer el área. Aquí hay unas 6 cargas con área casi nula, y la nube no se abre.' },
+          { texto: 'Recta con intercepto y dispersión proporcional a $x_k$: la razón, que admite intercepto si la dispersión crece.', correcta: false,
+            retro: 'La razón es la recta por el origen con $v_k = x_k$, y no admite intercepto. Además aquí la dispersión no crece con el área.' },
+          { texto: 'Recta por el origen y dispersión constante: la diferencia.', correcta: false,
+            retro: 'La diferencia fija la pendiente en 1, no la dispersión, y sirve cuando $x$ e $y$ son la misma variable medida dos veces. Aquí son hectáreas y cargas, y la recta no pasa por el origen.' }
+        ]
+      },
+
+      {
+        tipo: 'multiple', id: 'R13', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 3, modulo: 11, titulo: 'El estimador general de regresión (GREG)', lohr: '' },
+        pregunta: 'Con un MAS de fincas se estima la producción total con un GREG calibrado al número de fincas, al <strong>área en café</strong> y al <strong>área en levante</strong> (renovada hace menos de dos años, que todavía no produce). Marca <strong>todas las afirmaciones correctas</strong>.',
+        pista: 'El GREG se escribe como un estimador de Horvitz–Thompson con los pesos retocados, $w_k = g_k/\\pi_k$. Piensa qué impone la calibración sobre esos pesos y qué no.',
+        opciones: [
+          { texto: 'Los totales que se usaron para calibrar se reproducen sin error con los pesos calibrados.', correcta: true,
+            retro: `Es la definición: $\\sum_{k\\in s} w_k\\mathbf x_k = \\mathbf t_x$, que aquí son $N = ${m2(P2.N, 0)}$ fincas y $${m2(P2.tx, 1)}$ y $${m2(P2.tlev, 1)}$ hectáreas.` },
+          { texto: 'Si una finca tiene $g_k > 1$, pesa más en el GREG que en el estimador de expansión.', correcta: true,
+            retro: 'Su peso pasa de $1/\\pi_k = N/n$ a $g_k/\\pi_k$, que es mayor si $g_k > 1$: la calibración la cuenta como si representara a más fincas.' },
+          { texto: 'Si la producción dependiera del área en producción, el GREG con las dos áreas tendría más varianza que la razón.', correcta: false,
+            retro: `Al revés: con el área en levante el GREG descuenta el área que no produce y sus residuos son menores. Medido con ${c2(I2.R13.replicas, 0)} MAS de ${I2.R13.n} fincas: error estándar ${c2(I2.R13.ee_greg, 0)} cargas el GREG contra ${c2(I2.R13.ee_razon, 0)} la razón.` },
+          { texto: 'Con más de una auxiliar, los $g_k$ salen iguales para todas las fincas de la muestra.', correcta: false,
+            retro: 'Los $g_k$ salen iguales para toda la muestra en casos muy particulares, como la razón (una auxiliar, sin intercepto, $v_k = x_k$) o la calibración solo a $N$. Con intercepto y dos áreas, cada finca recibe el suyo.' },
+          { texto: 'Si el área en levante se reproduce sin error, la producción de las fincas que están renovando también.', correcta: false,
+            retro: 'Reproducir el total de una auxiliar no dice nada de la producción de un subgrupo: esa estimación sigue teniendo su error de muestreo.' }
+        ],
+        retroAcierto: 'Las dos verdaderas son lo que la calibración impone (los totales) y lo que hace con cada finca (su peso, a través de $g_k$). Las otras tres le atribuyen al GREG más varianza, pesos iguales o una precisión que no tiene.',
+        retroFallo: 'Las verdaderas son dos: los totales reproducidos sin error y el peso mayor de una finca con $g_k > 1$. El GREG con las dos áreas tiene menos varianza que la razón, no más; los $g_k$ solo salen iguales en casos particulares, como la razón, y calibrar una auxiliar no vuelve exacta ninguna estimación de la producción.'
+      },
+
+      {
+        tipo: 'multiple', id: 'R17', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 4, modulo: 1, titulo: '¿Por qué estratificar?', lohr: '4.1' },
+        pregunta: '¿Cuáles de estas son <strong>razones legítimas para estratificar</strong> la encuesta de fincas cafeteras? Marca <strong>todas</strong> las que lo sean.',
+        pista: 'El módulo 1 de este capítulo da las ganancias de estratificar en orden de importancia práctica. Contrasta cada opción con esa lista y con lo que un MAS ya garantiza.',
+        opciones: [
+          { texto: 'Bajar la varianza, si los estratos separan fincas que producen distinto.', correcta: true,
+            retro: 'Precisión: la varianza del estratificado solo paga la variabilidad dentro de los estratos. Es la ganancia que el módulo 1 pone delante, y es condicional: con estratos que no separan nada no hay ganancia.' },
+          { texto: 'Garantizar siempre un mínimo de fincas del Centro para publicar su cifra.', correcta: true,
+            retro: 'Garantías por subgrupo: con la urna única una subregión puede salir casi vacía en una muestra concreta; estratificando, su $n_h$ lo fija el diseñador, en todas las muestras.' },
+          { texto: 'Organizar el campo con un equipo de encuestadores en cada subregión.', correcta: true,
+            retro: 'Logística y costo: cada estrato puede tener su propio operativo, y el módulo 5 lo convierte en fórmula con un costo por estrato.' },
+          { texto: 'Medir distinto en las fincas muy grandes, donde se aforan los lotes uno por uno.', correcta: true,
+            retro: 'También es logística: cada estrato se sortea y se estima por separado, así que puede tener su propio procedimiento de medición.' },
+          { texto: 'Cubrir las fincas que faltan en el registro, si se estratifica por la subregión donde más faltan.', correcta: false,
+            retro: 'Estratificar reparte la muestra entre las fincas del marco; las que no están en el registro no entran en ningún estrato, por fino que se parta. La cobertura se arregla en el marco, no en el diseño.' },
+          { texto: 'Lograr que el estimador sea insesgado, cosa que el MAS no consigue.', correcta: false,
+            retro: 'El MAS ya es insesgado respecto del diseño. Estratificar no vuelve válido algo que no lo era: lo vuelve más preciso, si los estratos separan.' }
+        ],
+        retroAcierto: 'Las cuatro legítimas son la precisión, las garantías por subgrupo y dos formas de logística. Las dos falsas le piden al estratificado un arreglo de la cobertura y una insesgadez que el MAS ya tiene.',
+        retroFallo: 'Son legítimas cuatro: la precisión, el mínimo del Centro, el equipo por subregión y la medición distinta en las muy grandes. Las falsas son cubrir las fincas que faltan —el diseño no las añade al marco— y la insesgadez, que el MAS ya tiene.'
+      },
+
+      {
+        tipo: 'opcion', id: 'R18', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 4, modulo: 2, titulo: 'La teoría en el marco π', lohr: '4.2' },
+        pregunta: 'Con asignación proporcional exacta, $n_h/N_h = n/N$ en todos los estratos, así que <strong>cada finca tiene $\\pi_k = n/N$</strong>, igual que en un MAS del mismo tamaño. ¿Es entonces un MAS?',
+        pista: 'Un diseño es una distribución $p(s)$ sobre las muestras posibles, y las $\\pi_k$ son solo una parte de lo que de ella se deduce.',
+        opciones: [
+          { texto: 'No: el MAS puede sacar muestras que este diseño nunca saca, aunque las $\\pi_k$ coincidan.', correcta: true,
+            retro: 'Una muestra con todas las fincas de un solo estrato es posible en el MAS e imposible aquí: tienen $p(s)$ distintos. De ahí salen $\\pi_{kl}$ distintas —para dos fincas de estratos distintos, $\\pi_{kl} = \\pi_k\\pi_l$ exactamente— y una varianza distinta.' },
+          { texto: 'Sí: con las mismas $\\pi_k$, dos diseños dan la misma varianza aunque sus muestras posibles cambien.', correcta: false,
+            retro: 'Las $\\pi_k$ no determinan la varianza: la de Horvitz–Thompson depende también de las $\\pi_{kl}$. El capítulo 2 ya mostró diseños con las mismas $\\pi_k$ y varianzas distintas.' },
+          { texto: 'Sí, aunque sus $\\pi_{kl}$ sean algo distintas dentro de cada estrato.', correcta: false,
+            retro: 'Las $\\pi_{kl}$ distintas son justamente la prueba de que no es un MAS. Un diseño con otro $p(s)$ es otro diseño, aunque comparta las $\\pi_k$.' },
+          { texto: 'No: con proporcional las $\\pi_k$ cambian de un estrato a otro, según su $N_h$.', correcta: false,
+            retro: 'Con proporcional exacta no cambian: todas valen $n/N$. Lo que cambia respecto del MAS son las probabilidades conjuntas y las muestras posibles.' }
+        ]
+      },
+
+      {
+        tipo: 'multiple', id: 'R23', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 4, modulo: 4, titulo: 'Asignación de observaciones', lohr: '4.4' },
+        pregunta: 'Sobre la asignación <strong>proporcional</strong> y la de <strong>Neyman</strong>, marca <strong>todas las afirmaciones correctas</strong>.',
+        pista: 'Escribe las dos reglas de reparto, una al lado de la otra, y compáralas: qué usa cada una, de dónde sale y para qué variable se calcula.',
+        opciones: [
+          { texto: 'Neyman reparte en proporción a $N_hS_h$, y la proporcional en proporción a $N_h$.', correcta: true,
+            retro: 'Son las dos reglas del módulo 4: la proporcional mira solo el tamaño de cada estrato; Neyman, el tamaño por la dispersión.' },
+          { texto: 'Si las $S_h$ fueran iguales en todos los estratos, Neyman daría el reparto proporcional.', correcta: true,
+            retro: 'Con $S_h$ constante, $N_hS_h \\propto N_h$. La ganancia de Neyman sobre la proporcional es la dispersión de las dispersiones: sin ella no hay nada que ganar.' },
+          { texto: 'Si Neyman pide más fincas de las que tiene un estrato, ese estrato se censa y el resto de la muestra se vuelve a repartir.', correcta: true,
+            retro: 'Es el recorte y la reoptimización del módulo 5; hecho a propósito, un estrato de certeza, con fpc 0 y sin aporte a la varianza.' },
+          { texto: 'Si un estrato tiene muchas fincas pero muy parecidas, Neyman le da más muestra que la proporcional.', correcta: false,
+            retro: 'Al revés: con $S_h$ pequeña, $N_hS_h$ pesa menos que $N_h$ en relación con los demás, y Neyman le quita muestra. Un estrato homogéneo casi no necesita muestra por grande que sea.' },
+          { texto: 'Si las $S_h$ salen de un piloto y no de la propia encuesta, la asignación de Neyman queda sesgada.', correcta: false,
+            retro: 'Las $S_h$ de la encuesta no se conocen antes de hacerla: se toman de un censo anterior, de un piloto o de una variable correlacionada. Una asignación no es un estimador y no puede estar sesgada; a lo sumo queda algo lejos del óptimo, y cerca del óptimo la varianza es plana.' },
+          { texto: 'La asignación de Neyman calculada para la producción es también la mejor para las demás variables de la encuesta.', correcta: false,
+            retro: 'Óptima, ¿para qué variable? El módulo 4 mide que la Neyman de una variable puede dejar a otra peor que un MAS. La proporcional, igual que la asignación igual, no depende de qué se mida.' }
+        ],
+        retroAcierto: 'Las tres verdaderas son las dos reglas, cuándo coinciden y qué se hace cuando el óptimo pide un imposible. Las tres falsas invierten el efecto de la dispersión, confunden de dónde salen las $S_h$ y para qué variable es óptima Neyman.',
+        retroFallo: 'Son verdaderas tres: las dos reglas, la de las $S_h$ iguales y la del estrato que se censa. Un estrato homogéneo recibe menos con Neyman, no más; las $S_h$ salen de información previa sin sesgar nada; y la Neyman de una variable no es la mejor para las demás.'
+      },
+
+      {
+        tipo: 'opcion', id: 'R26', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 4, modulo: 6, titulo: 'Definición de estratos', lohr: '4.5' },
+        pregunta: 'Se estratificó por tamaño con el área del registro, pero el registro tenía el área de hace siete años y algunas fincas que crecieron quedaron en el estrato de las <strong>pequeñas</strong>. Se sorteó y se estimó con ese diseño, tal cual. ¿Qué pasa con el total estimado y con su EE?',
+        pista: 'Pregúntate con qué probabilidad entró cada finca en la muestra y con qué peso se estima.',
+        opciones: [
+          { texto: 'El total sigue insesgado y su EE sigue bien calculado; solo se pierde precisión.', correcta: true,
+            retro: 'Cada finca entró con la probabilidad del estrato donde estaba, y se pesa con el inverso de esa probabilidad. Las propiedades del diseño dependen de la estratificación que se usó, no de la que se quiso usar; lo que empeora es la separación entre estratos: menos SSB, menos ganancia.' },
+          { texto: 'El total sigue insesgado, pero su EE queda mal calculado, porque la fórmula supone estratos bien formados.', correcta: false,
+            retro: 'La fórmula del EE supone que dentro de cada estrato hubo un MAS y que los sorteos de los estratos son independientes, y las dos cosas se cumplen. Su valor probablemente sale más grande que con estratos limpios, pero bien calculado.' },
+          { texto: 'El total queda sesgado hacia abajo, aunque su EE sigue bien calculado.', correcta: false,
+            retro: 'No hay sesgo: cada finca pesa $N_h/n_h$ del estrato donde se sorteó, que es el inverso de su probabilidad de verdad. Que sean grandes las hace atípicas dentro del estrato, no mal pesadas.' },
+          { texto: 'El total queda sesgado hacia abajo, y su EE también queda mal calculado.', correcta: false,
+            retro: 'Ni una cosa ni la otra: los pesos corresponden a las probabilidades con que se sorteó, y la fórmula del EE solo pide MAS dentro de cada estrato e independencia entre estratos.' }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R32', bloque: 'A', modulo: 14, dimension: 'concepto',
+        ancla: { cap: 4, modulo: 10, titulo: 'Postestratificación', lohr: '4.7' },
+        pregunta: `Un MAS de ${I2.R32.n} fincas se va a postestratificar por tamaño con los $N_h$ del registro. De las ${c2(P2.N, 0)} fincas, ${c2(I2.R32.Nh[2], 0)} son grandes y ${I2.R32.Nh[3]} muy grandes. ¿Qué conviene hacer con las muy grandes?`,
+        pista: 'Calcula cuántas fincas de cada celda se esperan en un MAS de ese tamaño, y compáralo con lo que pide el módulo 10 de este capítulo.',
+        opciones: [
+          { texto: 'Fusionarlas con las grandes y postestratificar con tres celdas.', correcta: true,
+            retro: `El módulo 10 pide del orden de 30 casos esperados por celda para dar por buena la varianza aproximada; las muy grandes solas esperan ${c2(I2.R32.esperadas, 1)}, y fusionadas con las grandes, ${c2(I2.R32.esperadas_fusion, 1)}. Además, solas saldrían vacías en el ${pct2(I2.R32.p_vacia)} de las muestras; con una sola finca no hay con qué estimar la varianza de la celda, y con dos o tres el módulo 10 advierte que los pesos se disparan.` },
+          { texto: 'Postestratificar con las cuatro celdas: con tres fincas esperadas ya se puede calcular su media.', correcta: false,
+            retro: `La media sí, casi siempre; pero con ${c2(I2.R32.esperadas, 1)} casos esperados la varianza de la celda casi no se estima y la aproximación del módulo 10 no es de fiar. Y en el ${pct2(I2.R32.p_vacia)} de las muestras la celda saldría vacía.` },
+          { texto: 'Dejar fuera las muy grandes y postestratificar con las otras tres, porque son muy pocas.', correcta: false,
+            retro: 'Dejarlas fuera es estimar otra población: la de las fincas que no son muy grandes. El total quedaría sesgado hacia abajo, justo en las que más producen.' },
+          { texto: 'No postestratificar por tamaño: con una celda tan chica sale peor que el MAS.', correcta: false,
+            retro: 'El problema es esa celda sola, no postestratificar. Fusionándola, el tamaño sigue separando fincas que producen distinto y la postestratificación gana.' }
+        ]
+      },
+
+      // ==============================================================
+      // BLOQUE B · Procedimientos con calculadora (11)
+      // ==============================================================
+      {
+        tipo: 'numerica', id: 'R02', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 3, modulo: 2, titulo: 'El estimador de razón', lohr: '3.1' },
+        pregunta: `Un MAS de $n = ${I2.R02.n}$ fincas da una producción media de $\\bar y = ${m2(I2.R02.ybar, 2)}$ cargas y un área media de $\\bar x = ${m2(I2.R02.xbar, 3)}$ ha. El registro da el área total, $t_x = ${m2(I2.R02.tx, 1)}$ ha, de las $N = ${m2(I2.R02.N, 0)}$ fincas. Estima la <strong>producción media por finca por razón</strong>, $\\hat{\\bar y}_r$, en cargas y con dos decimales.`,
+        pista: 'El estimador de razón de la media lleva la razón muestral hasta la media poblacional de la auxiliar.',
+        respuesta: Number(I2.R02.respuesta.toFixed(2)), tolerancia: 0.035, decimales: 2, unidad: 'cargas por finca',
+        retroAcierto: `$\\hat B = ${m2(I2.R02.ybar, 2)}/${m2(I2.R02.xbar, 3)} = ${m2(I2.R02.Bhat, 4)}$ cargas por hectárea y $\\bar x_U = t_x/N = ${m2(I2.R02.xbarU, 4)}$ ha, así que $\\hat{\\bar y}_r = \\hat B\\,\\bar x_U = ${m2(I2.R02.respuesta, 2)}$. La media de la muestra, ${c2(I2.R02.ybar, 2)}, era más alta porque a esta muestra le tocaron fincas más grandes que la media: la razón lo corrige.`,
+        retroFallo: `Es $\\hat B\\,\\bar x_U = (${m2(I2.R02.ybar, 2)}/${m2(I2.R02.xbar, 3)}) \\times (${m2(I2.R02.tx, 1)}/${m2(I2.R02.N, 0)}) = ${m2(I2.R02.respuesta, 2)}$. Si te salió ${c2(I2.R02.ybar, 2)}, diste la media muestral, la expansión, sin usar la auxiliar; si te salió una cifra de decenas de miles, calculaste el total $\\hat B\\,t_x$ y no la media.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R03', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 3, modulo: 2, titulo: 'El estimador de razón', lohr: '3.1' },
+        pregunta: `Otra muestra, también un MAS de $n = ${I2.R03.n}$ de las $N = ${m2(I2.R03.N, 0)}$ fincas: $\\bar y = ${m2(I2.R03.ybar, 2)}$, $\\bar x = ${m2(I2.R03.xbar, 3)}$, $s_y = ${m2(I2.R03.sy, 2)}$, $s_x = ${m2(I2.R03.sx, 3)}$ y $r = ${m2(I2.R03.r, 4)}$, con $t_x = ${m2(I2.R03.tx, 1)}$ ha. Calcula el <strong>error estándar de $\\hat t_r$</strong>, en cargas, redondeado a la unidad.`,
+        pista: 'La varianza de la razón no se construye con $s_y^2$ sino con la de los residuos respecto de la recta por el origen, y lleva la fpc. La covarianza sale de $r$.',
+        respuesta: Math.round(I2.R03.respuesta), tolerancia: 3, decimales: 0, unidad: 'cargas',
+        retroAcierto: `Con $\\hat B = ${m2(I2.R03.Bhat, 4)}$ y $s_{xy} = r\\,s_xs_y$, la varianza del residuo es $s_y^2 + \\hat B^2 s_x^2 - 2\\hat B\\,s_{xy} = ${m2(I2.R03.se2, 2)}$, y $\\mathrm{EE}(\\hat t_r) = \\frac{t_x}{\\bar x}\\sqrt{\\frac{1-f}{n}\\cdot ${m2(I2.R03.se2, 2)}} = ${m2(I2.R03.respuesta, 0)}$. Con $N$ en lugar de $t_x/\\bar x$ —la forma del libro— sale ${c2(I2.R03.texto, 0)}: en esta muestra $\\bar x$ quedó casi en $\\bar x_U$ y las dos convenciones coinciden.`,
+        retroFallo: `Es $\\frac{t_x}{\\bar x}\\sqrt{\\frac{1-f}{n}\\,(s_y^2 + \\hat B^2 s_x^2 - 2\\hat B\\,r\\,s_x s_y)} = ${m2(I2.R03.respuesta, 0)}$. Si te salió ${c2(I2.R03.con_sy, 0)}, usaste $s_y$ en vez del residuo: ese es el error estándar de la expansión. Si te salió ${c2(I2.R03.sin_fpc, 0)}, olvidaste la fpc $1 - n/N$.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R08', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 3, modulo: 6, titulo: 'Estimación de regresión', lohr: '3.2' },
+        pregunta: `En el Centro hay $N = ${I2.R08.N}$ fincas, y en la población la correlación entre producción y área es $\\rho = ${m2(I2.R08.rho, 4)}$. Con la regresión y un MAS de $n = ${I2.R08.n}$, ¿cuántas fincas necesitaría un MAS con la <strong>expansión</strong> para tener la misma varianza? Usa las varianzas de diseño, con su fpc, y redondea hacia arriba.`,
+        pista: 'Escribe la varianza de diseño de cada estimador, con su propio tamaño de muestra y su fpc, e iguálalas. El formulario del capítulo 3 dice qué factor separa la de la regresión de la de la expansión.',
+        respuesta: I2.R08.respuesta, tolerancia: 0.5, decimales: 0, unidad: 'fincas',
+        retroAcierto: `La regresión deja la varianza del MAS multiplicada por $1-\\rho^2$, así que $\\frac{1}{n_1} - \\frac{1}{N} = (1-\\rho^2)\\left(\\frac{1}{n_2} - \\frac{1}{N}\\right)$ y $n_1 = ${m2(I2.R08.exacto, 2)}$: ${I2.R08.respuesta} fincas. La regresión con ${I2.R08.n} vale como un MAS de ${I2.R08.respuesta} con la expansión.`,
+        retroFallo: `Despejando $\\frac{1}{n_1} = \\frac{1}{N} + (1-\\rho^2)\\left(\\frac{1}{n_2} - \\frac{1}{N}\\right)$ sale $n_1 = ${m2(I2.R08.exacto, 2)}$, que se redondea a ${I2.R08.respuesta}. Si te salió ${I2.R08.sin_fpc}, ignoraste la fpc: con ${I2.R08.n} sobre ${I2.R08.N} pesa poco, pero el MAS equivalente ya es un tercio de la subregión y ahí pesa mucho. Si te salió ${I2.R08.con_rho}, usaste $1 - \\rho$ en vez de $1 - \\rho^2$.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R10', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 3, modulo: 8, titulo: 'Un estimador distinto en cada grupo', lohr: '' },
+        pregunta: 'Un estratificado por subregión estimó en cada una la producción media por finca con el estimador que le convenía. Calcula el <strong>error estándar del total del departamento</strong>, en cargas, redondeado a la unidad.' +
+          tabla2(['Subregión', '$N_h$', 'Estimador', 'Media estimada', 'EE de la media'],
+            ['Norte', 'Centro', 'Sur'].map(h => { const e = I2.R10.est[h];
+              return [h, c2(e.N, 0), e.estimador, c2(e.media, 2), c2(e.ee, 3)]; })),
+        pista: 'Cada subregión aporta su total, $N_h$ por su media, y su varianza. Recuerda qué se suma cuando los sorteos de las subregiones son independientes.',
+        respuesta: Math.round(I2.R10.respuesta), tolerancia: 2, decimales: 0, unidad: 'cargas',
+        retroAcierto: `$\\widehat V(\\hat t) = \\sum_h N_h^2\\,\\widehat V(\\hat{\\bar y}_h)$, sin términos cruzados porque los tres sorteos son independientes, y la raíz da ${c2(I2.R10.respuesta, 0)} cargas, sobre un total de ${c2(I2.R10.total, 0)}. Es lo que permite mezclar tres estimadores distintos en una sola cuenta: cada sumando es legítimo en su estrato.`,
+        retroFallo: `Se suman las varianzas, no los errores estándar: $\\sqrt{\\sum_h N_h^2\\,\\mathrm{EE}_h^2} = ${m2(I2.R10.respuesta, 0)}$. Si te salió ${c2(I2.R10.suma_ee, 0)}, sumaste los $N_h\\,\\mathrm{EE}_h$; si te salió ${c2(I2.R10.con_N, 0)}, usaste el $N$ del departamento en vez del $N_h$ de cada subregión.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R11', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 3, modulo: 9, titulo: 'Estimación en dominios', lohr: '3.3' },
+        pregunta: `En un MAS de $n = ${I2.R11.n}$ de las $N = ${m2(I2.R11.N, 0)}$ fincas, ${I2.R11.nd} resultaron <strong>certificadas</strong>; el registro no dice cuántas certificadas hay en el departamento. Con $u_k = y_k\\delta_k$ (la producción si la finca es certificada y 0 si no), la muestra da $\\bar u = ${m2(I2.R11.ubar, 3)}$ y $s_u = ${m2(I2.R11.su, 3)}$; entre las certificadas, $\\bar y_d = ${m2(I2.R11.ybar_d, 2)}$ y $s_{yd} = ${m2(I2.R11.sy_d, 2)}$. Calcula el <strong>error estándar del total de producción de las certificadas</strong>, en cargas, redondeado a la unidad.`,
+        pista: 'Sin $N_d$ no hay con qué escalar la media del dominio. Fíjate en qué cifras del enunciado necesitas de verdad.',
+        respuesta: Math.round(I2.R11.respuesta), tolerancia: 3, decimales: 0, unidad: 'cargas',
+        retroAcierto: `$\\hat t_{yd} = N\\bar u = ${m2(I2.R11.total, 0)}$ cargas y $\\mathrm{EE} = N\\sqrt{\\frac{1-f}{n}}\\,s_u = ${m2(I2.R11.respuesta, 0)}$. Las cifras de dentro del dominio sobraban: sirven para la media del dominio, no para el total con $N_d$ desconocido, que paga además la incertidumbre sobre cuántas certificadas hay.`,
+        retroFallo: `Con $N_d$ desconocido, $\\mathrm{EE}(\\hat t_{yd}) = N\\sqrt{(1-f)/n}\\;s_u = ${m2(I2.R11.respuesta, 0)}$. Si te salió ${c2(I2.R11.como_fijo, 0)}, trataste a las ${I2.R11.nd} certificadas como un MAS de tamaño fijo y escalaste con $\\hat N_d$: así se esconde la incertidumbre de no saber cuántas hay, que entra por $s_u$.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R19', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 4, modulo: 3, titulo: 'Pesos y estimación', lohr: '4.2' },
+        pregunta: 'Un estratificado por tamaño con asignación proporcional de 120 fincas da esta tabla. Calcula el <strong>error estándar del total estratificado</strong> de producción, en cargas, redondeado a la unidad.' +
+          tabla2(['Estrato', '$N_h$', '$n_h$', '$\\bar y_h$', '$s_h$'],
+            NOMBRES_TAM.map((h, i) => [h, c2(I2.R19.Nh[i], 0), I2.R19.nh[i], c2(I2.R19.yh[i], 2), c2(I2.R19.sh[i], 2)])),
+        pista: 'Cada estrato aporta su propia varianza, con su $N_h^2$ y su propia fpc. La raíz va al final.',
+        respuesta: Math.round(I2.R19.respuesta), tolerancia: 2, decimales: 0, unidad: 'cargas',
+        retroAcierto: `$\\sqrt{\\sum_h N_h^2\\,(1 - n_h/N_h)\\,s_h^2/n_h} = ${m2(I2.R19.respuesta, 0)}$, sobre un total estimado de ${c2(I2.R19.total, 0)} cargas. Mira de dónde sale: el estrato de las muy grandes, con ${I2.R19.nh[3]} fincas de las ${I2.R19.nh.reduce((a, b) => a + b, 0)} de la muestra, aporta el ${pct2(I2.R19.Nh[3] ** 2 * (1 - I2.R19.nh[3] / I2.R19.Nh[3]) * I2.R19.sh[3] ** 2 / I2.R19.nh[3] / I2.R19.respuesta ** 2, 0)} de la varianza.`,
+        retroFallo: `Es $\\sqrt{\\sum_h N_h^2(1-n_h/N_h)s_h^2/n_h} = ${m2(I2.R19.respuesta, 0)}$. Si te salió ${c2(I2.R19.sin_fpc, 0)}, olvidaste la fpc de cada estrato; si te salió algo del orden de ${c2(I2.R19.sin_N2, 0)}, multiplicaste por $N^2$ global en vez de por cada $N_h^2$.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R22', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 4, modulo: 4, titulo: 'Asignación de observaciones', lohr: '4.4' },
+        pregunta: `Se van a repartir $n = ${I2.R22.n}$ fincas entre los cuatro estratos de tamaño con la asignación de <strong>Neyman</strong>, usando las desviaciones del censo anterior. ¿Cuántas le tocan al estrato de las <strong>grandes</strong>? Redondea al entero más cercano.` +
+          tabla2(['Estrato', '$N_h$', '$S_h$'], NOMBRES_TAM.map((h, i) => [h, c2(I2.R22.Nh[i], 0), c2(I2.R22.Sh[i], 2)])),
+        pista: 'Neyman reparte en proporción al tamaño por la dispersión de cada estrato.',
+        respuesta: I2.R22.respuesta, tolerancia: 0.5, decimales: 0, unidad: 'fincas',
+        retroAcierto: `$n_h = n\\,N_hS_h/\\sum_g N_gS_g = ${I2.R22.n} \\times ${m2(I2.R22.NS[2], 2)}/${m2(I2.R22.NS.reduce((a, b) => a + b, 0), 2)} = ${m2(I2.R22.ney[2], 2)}$. Con la proporcional le tocarían ${Math.round(I2.R22.prop[2])}: Neyman casi duplica las grandes porque son el ${pct2(I2.R22.Nh[2] / P2.N)} de las fincas pero llevan una dispersión que dobla con creces la de las medianas.`,
+        retroFallo: `Es ${I2.R22.n} por la fracción $N_hS_h/\\sum N_gS_g$ del estrato, $${m2(I2.R22.ney[2], 2)}$. Si te salió ${Math.round(I2.R22.prop[2])}, aplicaste la proporcional, que ignora las $S_h$; si te salió ${Math.round(I2.R22.NS2[2])}, usaste $N_hS_h^2$: Neyman va con la desviación, no con la varianza.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R24', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 4, modulo: 5, titulo: 'Asignación óptima con costos', lohr: '4.4' },
+        pregunta: `Visitar una finca cuesta distinto según su tamaño, y hay un presupuesto de $C = ${m2(I2.R24.C, 0)}$ miles de pesos. Con la <strong>asignación óptima con costos</strong>, ¿cuántas fincas se visitan en total? Calcula las $n_h$ sin redondearlas, súmalas y redondea el total al entero más cercano.` +
+          tabla2(['Estrato', '$N_h$', '$S_h$', '$c_h$ (miles de pesos)'],
+            NOMBRES_TAM.map((h, i) => [h, c2(I2.R24.Nh[i], 0), c2(I2.R24.Sh[i], 2), I2.R24.costo[i]])),
+        pista: 'La óptima con costos reparte en proporción a una cantidad por estrato, y la constante de proporcionalidad la fija el presupuesto. Aquí no se fija $n$: se obtiene.',
+        respuesta: I2.R24.respuesta, tolerancia: 0.5, decimales: 0, unidad: 'fincas',
+        retroAcierto: `Con $n_h = k\\,N_hS_h/\\sqrt{c_h}$ y $k = C/\\sum_h N_hS_h\\sqrt{c_h}$, las cuatro asignaciones son ${I2.R24.nh.map(v => c2(v, 1)).join(' · ')}, que suman ${c2(I2.R24.n_total, 2)}: ${I2.R24.respuesta} fincas. El costo entra con raíz: visitar una muy grande cuesta ${c2(I2.R24.costo[3] / I2.R24.costo[0], 2)} veces lo que una pequeña, pero su asignación relativa solo se divide por $\\sqrt{${m2(I2.R24.costo[3] / I2.R24.costo[0], 2)}} = ${m2(Math.sqrt(I2.R24.costo[3] / I2.R24.costo[0]), 2)}$.`,
+        retroFallo: `Las $n_h$ son proporcionales a $N_hS_h/\\sqrt{c_h}$ y gastan exactamente $C$: ${I2.R24.nh.map(v => c2(v, 1)).join(' + ')} = ${c2(I2.R24.n_total, 2)}. Si te salió ${I2.R24.nh.reduce((a, v) => a + Math.round(v), 0)}, redondeaste cada $n_h$ antes de sumar. Si dividiste entre $c_h$ en vez de entre $\\sqrt{c_h}$, castigaste de más los estratos caros: el costo entra con raíz porque sale de la misma cuenta de Lagrange que Neyman.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R28', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 4, modulo: 8, titulo: 'El efecto de diseño', lohr: '7.5' },
+        pregunta: `Con $n = ${I2.R28.n}$ fincas y sin la fpc, el error estándar del total es ${c2(I2.R28.ee_mas, 1)} cargas bajo un MAS y ${c2(I2.R28.ee_str, 1)} bajo el estratificado por tamaño con Neyman. Una encuesta necesitaría $n_0 = ${I2.R28.n0}$ fincas con un MAS para la precisión que se busca. ¿Cuántas necesita con este estratificado, con la misma asignación relativa? Ignora también aquí la fpc y redondea hacia arriba.`,
+        pista: 'El deff es un cociente de varianzas. Y el tamaño efectivo dice cuántas fincas de MAS vale cada una del diseño; aquí se pide el camino inverso.',
+        respuesta: I2.R28.respuesta, tolerancia: 0.5, decimales: 0, unidad: 'fincas',
+        retroAcierto: `$\\text{deff} = (${m2(I2.R28.ee_str, 1)}/${m2(I2.R28.ee_mas, 1)})^2 = ${m2(I2.R28.deff, 4)}$, que sin fpc no depende de $n$, y $n = n_0\\cdot\\text{deff} = ${m2(I2.R28.n0 * I2.R28.deff, 2)}$: ${I2.R28.respuesta} fincas. Es el camino inverso de $n_{\\text{ef}} = n/\\text{deff}$, y es el $v/S^2$ con que el módulo 5 dimensiona la muestra.`,
+        retroFallo: `El deff es el cuadrado del cociente de errores estándar, $${m2(I2.R28.deff, 4)}$, y $n = ${I2.R28.n0}\\times${m2(I2.R28.deff, 4)}$ redondeado hacia arriba: ${I2.R28.respuesta}. Si te salió ${I2.R28.con_ee}, usaste el cociente de errores estándar sin elevarlo; si te salió ${c2(I2.R28.dividir, 0)}, dividiste entre el deff, que es como pedirle al estratificado más fincas que al MAS.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R30', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 4, modulo: 9, titulo: 'Estratificado con probabilidades proporcionales', lohr: '' },
+        pregunta: `En el estrato de las <strong>muy grandes</strong> ($N_h = ${I2.R30.Nh}$ fincas, $${m2(I2.R30.sum_area, 1)}$ ha en total) se hacen $m_h = ${I2.R30.m}$ extracciones <strong>con reemplazo</strong>, cada una con probabilidad proporcional al área: $\\psi_k = x_k/\\sum_{U_h} x_l$. Con lo que salió, estima por <strong>Hansen–Hurwitz</strong> la producción total del estrato, en cargas, redondeada a la unidad.` +
+          tabla2(['Extracción', 'Área $x_k$ (ha)', 'Producción $y_k$ (cargas)'],
+            I2.R30.area.map((a, i) => [i + 1, c2(a, 1), c2(I2.R30.y[i], 1)])),
+        pista: 'Cada extracción, por sí sola, da una estimación del total del estrato. Hansen–Hurwitz las combina.',
+        respuesta: Math.round(I2.R30.respuesta), tolerancia: 2, decimales: 0, unidad: 'cargas',
+        retroAcierto: `$\\hat t_{y,h} = \\frac{1}{m_h}\\sum y_{k_i}/\\psi_{k_i} = \\frac{${m2(I2.R30.sum_area, 1)}}{${I2.R30.m}}\\sum y_{k_i}/x_{k_i} = ${m2(I2.R30.respuesta, 0)}$ cargas, frente a un total verdadero de ${c2(I2.R30.t_verdadero, 1)}.${I2.R30.area.some((a, i) => I2.R30.area.indexOf(a) !== i && I2.R30.y[I2.R30.area.indexOf(a)] === I2.R30.y[i]) ? ' Fíjate en que una finca salió dos veces: con reemplazo puede pasar, y se cuenta dos veces, que es el precio del atajo del módulo 9.' : ''}`,
+        retroFallo: `Es el promedio de los ${I2.R30.m} cocientes $y_k/\\psi_k$, con $\\psi_k = x_k/${m2(I2.R30.sum_area, 1)}$: ${c2(I2.R30.respuesta, 0)}. Si te salió ${c2(I2.R30.expansion, 0)}, trataste las extracciones como un MAS y expandiste con $N_h\\bar y$: con probabilidades desiguales cada finca se pondera por su $1/\\psi_k$, no por $N_h/m_h$.`
+      },
+
+      {
+        tipo: 'numerica', id: 'R31', bloque: 'B', modulo: 14, dimension: 'procedimiento',
+        ancla: { cap: 4, modulo: 10, titulo: 'Postestratificación', lohr: '4.7' },
+        pregunta: `El registro no dice si cada finca es de su dueño, arrendada o en aparcería, pero el censo agropecuario sí da cuántas hay de cada tipo. Un MAS de $n = ${I2.R31.n}$ fincas da esta tabla. Calcula la <strong>producción media por finca postestratificada</strong> por tenencia, en cargas, con dos decimales.` +
+          tabla2(['Tenencia', '$N_h$ (censo)', '$n_h$', '$\\bar y_h$'],
+            DP2.tenencia.nombres.map((h, i) => [h, c2(I2.R31.Nh[i], 0), I2.R31.nh[i], c2(I2.R31.yh[i], 2)])),
+        pista: 'Es la fórmula del estratificado aplicada con los $n_h$ que salieron. Pregúntate con qué pesa cada media de celda.',
+        respuesta: Number(I2.R31.respuesta.toFixed(2)), tolerancia: 0.015, decimales: 2, unidad: 'cargas por finca',
+        retroAcierto: `$\\bar y_{\\text{post}} = \\sum_h W_h\\bar y_h = ${m2(I2.R31.respuesta, 2)}$, con $W_h = N_h/N$. La media muestral sin postestratificar era ${c2(I2.R31.bruta, 2)}: en esta muestra salieron más propietarios de la cuenta, y los propietarios producen más. Ojo con las celdas chicas: en un MAS de ${I2.R31.n}, arrendatarios y aparceros esperan ${c2(I2.R31.n * I2.R31.Nh[1] / P2.N, 1)} y ${c2(I2.R31.n * I2.R31.Nh[2] / P2.N, 1)} casos, por debajo de los 30 del módulo 10. La media se calcula igual, pero su varianza aproximada no sería de fiar.`,
+        retroFallo: `Es $\\sum_h (N_h/N)\\,\\bar y_h = ${m2(I2.R31.respuesta, 2)}$. Si te salió ${c2(I2.R31.bruta, 2)}, ponderaste con los $n_h$ de la muestra, que es la media sin postestratificar; si te salió ${c2(I2.R31.iguales, 2)}, promediaste las tres medias con el mismo peso.`
+      },
+
+      // ==============================================================
+      // BLOQUE C · Interpretación (6)
+      // ==============================================================
+      {
+        tipo: 'opcion', id: 'R05', bloque: 'C', modulo: 14, dimension: 'interpretacion',
+        ancla: { cap: 3, modulo: 4, titulo: 'Sesgo y error cuadrático medio', lohr: '3.1' },
+        pregunta: `Un MAS de solo $n = ${I2.R05.n}$ de las $N = ${m2(I2.R05.N, 0)}$ fincas da $s_x = ${m2(I2.R05.sx, 3)}$ y $\\bar x = ${m2(I2.R05.xbar, 3)}$, y con ellas $\\widehat{\\text{CV}}(\\hat{\\bar x}) = ${m2(I2.R05.cv_xbar, 2)}$. ¿Qué dice esa cifra del sesgo del estimador de razón con esta muestra?`,
+        pista: 'Recuerda qué acota exactamente la cota del módulo 4 del capítulo 3 y con qué umbral la compara la regla de Kish.',
+        opciones: [
+          { texto: `Que no se puede dar por despreciable: la cota pasa del ${c2(DP2.meta.kish, 1)} de Kish.`, correcta: true,
+            retro: `La cota es $|\\text{Sesgo}|/\\text{EE} \\le \\text{CV}(\\hat{\\bar x})$, y aquí pasa del umbral más laxo de la regla de Kish. Se baja con más fincas, con una auxiliar de menor CV o con una relación más cercana a la proporcional. Medido con ${c2(I2.R05.replicas, 0)} réplicas, el sesgo de verdad es ${c2(I2.R05.sesgo_rel, 2)} errores estándar, por debajo de la cota; pero eso solo se sabe con el censo, y con una muestra lo que se tiene es la cota.` },
+          { texto: `Que el sesgo vale ${c2(I2.R05.cv_xbar, 2)} errores estándar, que es lo que da la fórmula.`, correcta: false,
+            retro: `Es una cota, no un valor: dice hasta dónde puede llegar el sesgo, y es conservadora. El medido con ${c2(I2.R05.replicas, 0)} réplicas es ${c2(I2.R05.sesgo_rel, 2)} errores estándar.` },
+          { texto: `Que el estimador probablemente sobrestima el total en torno a un ${c2(100 * I2.R05.cv_xbar, 0)} %.`, correcta: false,
+            retro: 'Un coeficiente de variación no es un sesgo relativo al total, y la cota no dice el signo: acota el tamaño del sesgo medido en errores estándar.' },
+          { texto: 'Que es despreciable, porque el sesgo es de orden $1/n$ y el error estándar de orden $1/\\sqrt n$.', correcta: false,
+            retro: `Esa comparación de órdenes dice que el sesgo pierde peso al crecer $n$, no que sea pequeño con ${I2.R05.n} fincas. Con una muestra tan chica es justo cuando hay que mirar la cota.` }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R07', bloque: 'C', modulo: 14, dimension: 'interpretacion',
+        ancla: { cap: 3, modulo: 6, titulo: 'Estimación de regresión', lohr: '3.2' },
+        pregunta: `Con un MAS de solo ${I2.R07.n} fincas de una zona, la regresión de la producción sobre el área da esta salida. Para elegir entre razón y regresión en esa zona, ¿qué se concluye?` + salida2(I2.R07.salida),
+        pista: 'El módulo 6 del capítulo 3 dice qué decide el contraste del intercepto, y añade tres cosas que el contraste no dice solo.',
+        opciones: [
+          { texto: 'Nada concluyente: no rechazar no prueba que la recta pase por el origen.', correcta: true,
+            retro: `«p = ${c2(I2.R07.p0, 3)}» dice que estos datos no distinguen el intercepto de cero, no que valga cero: con ${I2.R07.n} fincas se estima con mucho ruido (mira su error estándar), y deciden la nube y lo que se sepa de la zona. Y en esta población la zona sí tiene intercepto: ${c2(I2.R07.b0_pob, 2)} cargas, los lotes que el registro no ve.` },
+          { texto: 'La razón: el contraste no rechaza el intercepto nulo, luego la recta pasa por el origen.', correcta: false,
+            retro: 'Es el criterio del módulo 6 del capítulo 3 leído sin su letra pequeña: no rechazar no es demostrar, y con una muestra tan chica el contraste puede no ver un intercepto que existe. Concluir que la recta pasa por el origen es leer de más.' },
+          { texto: 'La expansión: si el intercepto no es significativo, el área no está ayudando.', correcta: false,
+            retro: 'La que dice si el área ayuda es la pendiente, y la pendiente es claramente significativa. El intercepto solo decide qué recta se usa, no si se usa una.' },
+          { texto: 'La regresión: el intercepto estimado es positivo, y eso descarta la recta por el origen.', correcta: false,
+            retro: `Un intercepto positivo con p = ${c2(I2.R07.p0, 3)} es compatible con cero: el signo de una estimación tan ruidosa no decide nada. La regresión puede acabar siendo la buena aquí, pero no por esa razón.` }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R14', bloque: 'C', modulo: 14, dimension: 'interpretacion',
+        ancla: { cap: 3, modulo: 11, titulo: 'El estimador general de regresión (GREG)', lohr: '' },
+        pregunta: `Un MAS de ${I2.R14.n} fincas se calibra con <code>calibrate()</code> al número de fincas, al área total y al área en levante del registro. Antes y después de calibrar, <code>svytotal</code> da esto. La producción estimada pasó de ${c2(I2.R14.y_total_antes, 0)} a ${c2(I2.R14.y_total_despues, 0)} cargas: ¿por qué subió?` +
+          '<p style="margin:0.5rem 0 0;">Las dos áreas, antes de calibrar:</p>' + salida2(I2.R14.antes) +
+          '<p style="margin:0.5rem 0 0;">La producción, antes y después:</p>' + salida2(I2.R14.y_antes + '\n' + I2.R14.y_despues),
+        pista: 'Los pesos calibrados tienen que reproducir los totales del registro. Compara esos totales con lo que la muestra estimaba antes.',
+        opciones: [
+          { texto: 'Porque la muestra se había quedado corta en área, y los pesos la corrigieron hacia arriba.', correcta: true,
+            retro: `La muestra estimó ${c2(I2.R14.area_antes, 1)} ha frente a las ${c2(I2.R14.tx, 1)} del registro: le tocaron pocas fincas grandes. Para cuadrar el área, los pesos de esas fincas suben, y como la producción va con el área, su estimación sube con ellos. La verdad, que aquí se conoce, es ${c2(P2.ty, 0)} cargas.` },
+          { texto: 'Porque la muestra se había pasado de área en levante, y los pesos la corrigieron hacia abajo.', correcta: false,
+            retro: 'La salida dice lo contrario: antes de calibrar, el área en levante estimada estaba por debajo de la del registro, no por encima. Y la que mueve la producción es el área total, que se había quedado corta.' },
+          { texto: 'Porque la calibración corrigió el sesgo que el MAS tenía en esta muestra.', correcta: false,
+            retro: 'El MAS es insesgado: el sesgo es una propiedad del diseño, no de una muestra. Lo que tenía esta muestra era mala suerte —pocas fincas grandes—, y eso es lo que los pesos corrigen.' },
+          { texto: 'Porque al bajar el error estándar la estimación se acercó a la verdad.', correcta: false,
+            retro: 'Un error estándar menor habla de la variabilidad del estimador sobre muchas muestras, no de esta estimación. El cambio de esta cifra lo explican las áreas.' }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R20', bloque: 'C', modulo: 14, dimension: 'interpretacion',
+        ancla: { cap: 4, modulo: 3, titulo: 'Pesos y estimación', lohr: '4.2' },
+        pregunta: 'Sobre la <strong>misma</strong> muestra estratificada por tamaño, dos analistas declaran el diseño con los mismos pesos y con fpc; uno añade <code>strata = ~tam</code> y el otro no. Estas son sus salidas de <code>svytotal</code>, en ese orden:' +
+          salida2(I2.R20.bien) + salida2(I2.R20.mal) + '¿Cuál corresponde al diseño, y qué se afirma con la otra?',
+        pista: 'El total sale igual porque los pesos son los mismos. Lo que cambia es lo que <code>survey</code> cree sobre cómo se sorteó.',
+        opciones: [
+          { texto: 'La que declara los estratos; la que no, está mal.', correcta: true,
+            retro: `Sin <code>strata=</code>, <code>survey</code> calcula la varianza como si las fincas hubieran salido de una sola urna, y mete en el error estándar la distancia entre estratos, que el diseño fijó y no sorteó. Por eso pasa de ${c2(I2.R20.ee_bien, 1)} a ${c2(I2.R20.ee_mal, 1)} sin una sola finca distinta.` },
+          { texto: 'La que declara los estratos; la que no, también vale, solo que es más conservadora.', correcta: false,
+            retro: 'Más grande sí sale, pero no es el error estándar de este diseño: es el de una urna única que no se usó. Que un error salga por exceso no lo vuelve válido, y aquí hace parecer inútil una estratificación que sí ganó.' },
+          { texto: 'La que no los declara; la que sí, está mal.', correcta: false,
+            retro: 'Declarar los estratos es decirle a <code>survey</code> cómo se sorteó, y aquí se sorteó dentro de cada estrato. La que los omite describe un sorteo que no se hizo.' },
+          { texto: 'La que no los declara; la que sí, también vale, solo que es más optimista.', correcta: false,
+            retro: 'No es optimista: es la del diseño que se usó. La otra le añade al error estándar una variabilidad entre estratos que el sorteo no tuvo.' }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R25', bloque: 'C', modulo: 14, dimension: 'interpretacion',
+        ancla: { cap: 4, modulo: 5, titulo: 'Asignación óptima con costos', lohr: '4.4' },
+        pregunta: `Con las mismas fincas en total, se compara la proporcional por tamaño (A) con <strong>censar las ${E2.Nh[3]} muy grandes</strong> y repartir el resto proporcionalmente (B), para dos tamaños de muestra. ¿Qué lectura es la correcta?` +
+          tabla2(['$n$', 'Diseño', ...NOMBRES_TAM, 'EE del total'],
+            I2.R25.flatMap(r => [
+              [r.n, 'A · proporcional', ...r.nA, c2(r.ee_A, 0)],
+              [r.n, 'B · censa las muy grandes', ...r.nB, c2(r.ee_B, 0)]])),
+        pista: 'Un estrato censado tiene fpc igual a 0. Mira también cuántas fincas le quedan a los demás estratos.',
+        opciones: [
+          { texto: `Censar elimina toda la varianza de las muy grandes, pero cuesta ${E2.Nh[3]} fincas: con ${I2.R25[0].n} no compensa, con ${I2.R25[1].n} sí.`, correcta: true,
+            retro: `Un estrato de certeza no aporta nada a la varianza, y aquí las muy grandes son las más dispersas. Pero sus ${E2.Nh[3]} fincas salen del mismo presupuesto: con ${I2.R25[0].n} en total, a los demás estratos les quedan muy pocas y el EE sube de ${c2(I2.R25[0].ee_A, 0)} a ${c2(I2.R25[0].ee_B, 0)}; con ${I2.R25[1].n}, baja de ${c2(I2.R25[1].ee_A, 0)} a ${c2(I2.R25[1].ee_B, 0)}.` },
+          { texto: `Censar gana con ${I2.R25[0].n} y con ${I2.R25[1].n}, aunque con ${I2.R25[0].n} la ventaja es pequeña.`, correcta: false,
+            retro: `Con ${I2.R25[0].n} fincas no gana: el EE sube. El censo se come la muestra de los otros tres estratos.` },
+          { texto: `Censar pierde con ${I2.R25[0].n} y con ${I2.R25[1].n}, porque deja menos muestra al resto.`, correcta: false,
+            retro: `Con ${I2.R25[1].n} fincas gana: la muestra que le quita al resto pesa menos que la varianza que elimina.` },
+          { texto: `Con ${I2.R25[0].n} pierde porque censar sesga el total hacia las grandes; con ${I2.R25[1].n} el sesgo ya pesa menos.`, correcta: false,
+            retro: 'Censar no sesga nada: las muy grandes entran con probabilidad 1 y peso 1, y se representan solo a sí mismas. Lo que pasa con 100 es varianza, por la muestra que les queda a los demás.' }
+        ]
+      },
+
+      {
+        tipo: 'opcion', id: 'R29', bloque: 'C', modulo: 14, dimension: 'interpretacion',
+        ancla: { cap: 4, modulo: 8, titulo: 'El efecto de diseño', lohr: '7.5' },
+        pregunta: `El mismo estratificado proporcional por tamaño, con $n = ${I2.R29.n}$, tiene deff exacto ${c2(I2.R29.deff_y, 3)} para la producción y ${c2(I2.R29.deff_pers, 3)} para el número de personas que viven en la finca. Un informe dice: «el diseño tiene deff ${c2(I2.R29.deff_y, 2)}, así que las ${I2.R29.n} fincas valen como ${c2(I2.R29.nef_y, 0)} de un MAS». ¿Qué es lo correcto?`,
+        pista: 'Repasa la definición del deff en el módulo 8 de este capítulo: qué dos varianzas compara.',
+        opciones: [
+          { texto: `El deff nunca es del diseño a secas: para la producción vale, y para las personas las ${I2.R29.n} valen casi como ${I2.R29.n}.`, correcta: true,
+            retro: `El deff compara la varianza de un estimador con la de un MAS del mismo $n$: es de cada estimación. El tamaño separa mucho la producción y casi nada el número de personas, así que el mismo diseño rinde como ${c2(I2.R29.nef_y, 0)} fincas para una cifra y como ${c2(I2.R29.nef_pers, 0)} para la otra.` },
+          { texto: 'Vale para la producción y para las personas, porque el deff es una propiedad del diseño muestral.', correcta: false,
+            retro: 'El diseño es el mismo para las dos variables y sus deff son muy distintos: el deff depende del diseño y de la variable que se estima.' },
+          { texto: 'Vale para la producción; para las personas el diseño pierde, porque su deff es mayor que el de la producción.', correcta: false,
+            retro: 'Perder es tener un deff mayor que 1. El de las personas está justo por debajo: el diseño casi no gana, pero no pierde.' },
+          { texto: 'No vale para ninguna de las dos: un deff exacto solo se calcula con un MAS real al lado.', correcta: false,
+            retro: 'Con el censo, la varianza del MAS se calcula sin sortear nada, y también la del diseño: eso es un deff exacto. Lo que sí necesita una muestra es un deff estimado.' }
+        ]
+      },
+
+      // ==============================================================
+      // BLOQUE D · Análisis gráfico (5)
+      // ==============================================================
+      {
+        tipo: 'grafico', id: 'R04', bloque: 'D', modulo: 14, dimension: 'grafico',
+        ancla: { cap: 3, modulo: 3, titulo: '¿Cuándo gana la razón?', lohr: '3.1' },
+        alto: 260,
+        descripcionGrafico: `Nube de ${I2.R04.n_puntos} fincas con el área dividida por su media en el eje horizontal y, en el vertical, dos variables divididas cada una por su media: la producción, que sube a lo largo de la diagonal, y el número de personas que viven en la finca, que forma una franja horizontal alrededor de 1. Una diagonal de pendiente 1 marca la recta de la razón.`,
+        pregunta: 'La misma auxiliar, el <strong>área</strong>, para dos variables distintas: la <strong>producción</strong> y el <strong>número de personas que viven en la finca</strong>. Las tres van divididas por su media, así que la recta del estimador de razón es la diagonal. ¿Qué le pasa a la razón frente a la expansión con cada variable?',
+        pista: 'Recuerda contra qué compara la correlación el umbral del módulo 3 del capítulo 3, y qué papel juega en él el CV de cada variable.',
+        dibujar: canvas => {
+          const R = I2.R04, mx = P2.media_area, my = P2.ybarU, mp = R.pers.media;
+          const xs = R.area.map(a => a / mx);
+          const g = crearGraficoXY(canvas, [
+            { type: 'scatter', label: 'Producción / su media', data: xs.map((x, i) => ({ x: x, y: R.y[i] / my })),
+              backgroundColor: COLORES_GRAFICO.primario + 'aa', pointRadius: 2.5 },
+            { type: 'scatter', label: 'Personas / su media', data: xs.map((x, i) => ({ x: x, y: R.personas[i] / mp })),
+              backgroundColor: '#FF6600aa', pointRadius: 2.5 },
+            { type: 'line', label: 'Recta de la razón', data: [{ x: 0, y: 0 }, { x: 6, y: 6 }],
+              borderColor: '#6B7280', borderDash: [6, 4], borderWidth: 1.5, pointRadius: 0, fill: false }
+          ], { tituloX: 'Área / su media', tituloY: 'Variable / su media', xMin: 0, xMax: 6 });
+          g.options.scales.y.max = 6;
+          g.update('none');
+          return g;
+        },
+        opciones: [
+          { texto: 'Gana con la producción y pierde con las personas.', correcta: true,
+            retro: `La producción sube con el área: $\\rho = ${m2(I2.R04.prod.rho, 2)}$ contra un umbral de $${m2(I2.R04.prod.umbral, 2)}$. Las personas casi no cambian con el área ($\\rho = ${m2(I2.R04.pers.rho, 2)}$) y su CV es menos de la mitad del del área: su umbral es ${c2(I2.R04.pers.umbral, 2)}, más que 1, así que ninguna correlación alcanzaría. Con ${I2.R04.n_ee} fincas, la razón baja el EE de la producción de ${c2(I2.R04.prod.ee_exp, 0)} a ${c2(I2.R04.prod.ee_raz, 0)} y sube el de las personas de ${c2(I2.R04.pers.ee_exp, 0)} a ${c2(I2.R04.pers.ee_raz, 0)}.` },
+          { texto: 'Gana con las dos, aunque con las personas gana menos.', correcta: false,
+            retro: 'Una auxiliar no es buena o mala en abstracto: lo es para la variable que se mide. Con las personas la razón no gana menos: pierde, y por mucho.' },
+          { texto: 'Pierde con la producción y gana con las personas.', correcta: false,
+            retro: 'Que una variable varíe poco es justo lo que sube el umbral $\\tfrac12\\,\\text{CV}(x)/\\text{CV}(y)$: la expansión ya es precisa, y forzarla a seguir al área solo le mete la variabilidad del área.' },
+          { texto: 'Pierde con las dos, porque ninguna nube pasa exactamente por el origen.', correcta: false,
+            retro: 'No hace falta que pase exactamente: basta que la recta por el origen describa bien la nube y que la correlación pase del umbral. La producción lo cumple con holgura.' }
+        ]
+      },
+
+      {
+        tipo: 'grafico', id: 'R15', bloque: 'D', modulo: 14, dimension: 'grafico',
+        ancla: { cap: 3, modulo: 12, titulo: 'Parámetros no lineales: la mediana', lohr: '' },
+        alto: 240,
+        descripcionGrafico: `Escalera de la función de distribución estimada con pesos, a partir de ${I2.R15.y.length} fincas de un estratificado por tamaño, con una línea horizontal en ${c2(I2.R15.p, 1)}. Los escalones son de alturas distintas porque las fincas pesan distinto.`,
+        pregunta: `Un estratificado por tamaño con <strong>${I2.R15.por_estrato} fincas por estrato</strong> da esta $\\hat F(t)$ de la producción: cada escalón mide el peso de la finca dividido por la suma de los pesos, y por eso son de alturas distintas. Con la definición del módulo 12 del capítulo 3, $\\hat Q(${m2(I2.R15.p, 1)}) = \\inf\\{t : \\hat F(t) \\ge ${m2(I2.R15.p, 1)}\\}$, ¿cuál es la <strong>mediana estimada</strong>?`,
+        pista: 'La definición pide el ínfimo de un conjunto de valores de $t$. Pregúntate cuáles son esos valores en la escalera.',
+        dibujar: canvas => {
+          const R = I2.R15;
+          const pts = [{ x: 0, y: 0 }];
+          R.y.forEach((v, i) => { pts.push({ x: v, y: i ? R.F[i - 1] : 0 }); pts.push({ x: v, y: R.F[i] }); });
+          pts.push({ x: 120, y: 1 });
+          const g = crearGraficoXY(canvas, [
+            { type: 'line', label: 'F̂(t) con pesos', data: pts, borderColor: COLORES_GRAFICO.primario,
+              borderWidth: 2, pointRadius: 0, fill: false },
+            { type: 'line', label: `p = ${c2(R.p, 1)}`, data: [{ x: 0, y: R.p }, { x: 120, y: R.p }],
+              borderColor: '#FF6600', borderDash: [6, 4], borderWidth: 1.5, pointRadius: 0, fill: false }
+          ], { tituloX: 'Producción (cargas)', tituloY: 'F̂(t)', xMin: 0, xMax: 40 });
+          g.options.scales.y.max = 1;
+          g.update('none');
+          return g;
+        },
+        opciones: [
+          { texto: `${c2(I2.R15.mediana, 1)} cargas`, correcta: true,
+            retro: `Es el primer valor en el que la escalera alcanza ${c2(I2.R15.p, 1)}: justo antes, $\\hat F$ vale ${c2(I2.R15.F[I2.R15.y.indexOf(I2.R15.mediana) - 1], 4)}, y en ${c2(I2.R15.mediana, 1)} salta a ${c2(I2.R15.F[I2.R15.y.indexOf(I2.R15.mediana)], 4)}. Las fincas pequeñas y medianas pesan mucho más que las muy grandes y empujan la mediana hacia abajo.` },
+          { texto: `${c2(I2.R15.mediana_inf_sin_pesos, 1)} cargas`, correcta: false,
+            retro: `Es la mediana de las ${I2.R15.y.length} cifras sin pesos, con la misma definición: trata la muestra como si cada finca representara a las mismas. Aquí una pequeña representa a ${c2(I2.R15.w[0], 2)} fincas y una muy grande a ${c2(I2.R15.w[I2.R15.w.length - 1], 2)}.` },
+          { texto: `${c2(I2.R15.y[I2.R15.y.indexOf(I2.R15.mediana) - 1], 1)} cargas`, correcta: false,
+            retro: `Es el último escalón que se queda por debajo de ${c2(I2.R15.p, 1)}. La definición pide el primero que lo alcanza: el ínfimo de los $t$ con $\\hat F(t) \\ge ${m2(I2.R15.p, 1)}$.` },
+          { texto: `${c2(I2.R15.media_pond, 1)} cargas`, correcta: false,
+            retro: 'Es la media ponderada, no la mediana. Que aquí quede cerca de la mediana es casualidad de esta muestra: con una variable tan asimétrica, lo habitual es que se separen.' }
+        ]
+      },
+
+      {
+        tipo: 'grafico', id: 'R16', bloque: 'D', modulo: 14, dimension: 'grafico',
+        ancla: { cap: 4, modulo: 1, titulo: '¿Por qué estratificar?', lohr: '4.1' },
+        alto: 230,
+        descripcionGrafico: `Histograma del número de fincas del Sur en ${c2(I2.R16.replicas, 0)} muestras aleatorias simples de ${I2.R16.n} fincas, centrado alrededor de ${Math.round(I2.R16.esperado)}, con una cola izquierda que baja hasta ${I2.R16.min} y una derecha que llega a ${I2.R16.max}. Una línea vertical marca el valor esperado.`,
+        pregunta: `En ${c2(I2.R16.replicas, 0)} MAS de ${I2.R16.n} fincas se contó cuántas caían en el <strong>Sur</strong>, donde está una de cada cuatro fincas del departamento. El histograma es el resultado. Un informe regional necesita al menos 10 fincas del Sur. ¿Qué lectura es la correcta?`,
+        pista: 'Mira el ancho del histograma, no solo su centro, y piensa qué haría con esa cuenta un estratificado por subregión.',
+        dibujar: canvas => {
+          const R = I2.R16, ks = Object.keys(R.conteo).map(Number);
+          const alto = Math.max(...Object.values(R.conteo)) * 1.08;
+          return crearGraficoXY(canvas, [
+            serieHistograma({ centros: ks, conteo: ks.map(k => R.conteo[String(k)]) }, 'Muestras', COLORES_GRAFICO.primario),
+            serieVertical(R.esperado, alto, 'Valor esperado', '#FF6600')
+          ], { tituloX: 'Fincas del Sur en la muestra', tituloY: 'Muestras', xMin: 0, xMax: 30 });
+        },
+        opciones: [
+          { texto: `En un MAS la cuenta varía y a veces no llega a 10; estratificando por subregión con asignación proporcional, son ${I2.R16.prop[2]} siempre.`, correcta: true,
+            retro: `En el ${pct2(I2.R16.frac_menos10)} de las ${c2(I2.R16.replicas, 0)} muestras quedaron menos de 10, y el informe regional no habría podido salir. Es una de las razones del módulo 1, las garantías por subgrupo: con la asignación proporcional por subregión, el Sur recibe ${I2.R16.prop[2]} fincas en cualquier muestra.` },
+          { texto: `En un MAS casi siempre llega a 10; estratificando también serían unas ${I2.R16.prop[2]}, aunque podrían variar.`, correcta: false,
+            retro: `Que casi siempre llegue a 10 es cierto (${pct2(1 - I2.R16.frac_menos10)} de las muestras), pero estratificando por subregión el número de fincas del Sur no varía: lo fija el diseñador antes de sortear.` },
+          { texto: `En un MAS sale en promedio de menos de ${I2.R16.prop[2]}; estratificando se corrige ese sesgo y llega siempre a 10.`, correcta: false,
+            retro: `El histograma está centrado en ${c2(I2.R16.esperado, 1)}, que es el valor esperado: en promedio el MAS no se queda ni corto ni largo de fincas del Sur. Es variabilidad, no sesgo.` },
+          { texto: `En un MAS a veces no llega a 10; estratificando también varía, aunque bastante menos, alrededor de ${I2.R16.prop[2]}.`, correcta: false,
+            retro: 'Estratificando por subregión, el número de fincas del Sur lo fija el diseñador antes de sortear: no varía en absoluto.' }
+        ]
+      },
+
+      {
+        tipo: 'grafico', id: 'R21', bloque: 'D', modulo: 14, dimension: 'grafico',
+        ancla: { cap: 4, modulo: 7, titulo: 'Un modelo para el estratificado', lohr: '4.6' },
+        alto: 230,
+        descripcionGrafico: `Barras apiladas al 100 % para tres particiones del marco —por tamaño, por subregión y al azar—, con la parte de la variabilidad total de la producción que queda entre estratos y la que queda dentro. Por tamaño, el ${pct2(I2.R21['tamaño'].R2, 0)} queda entre estratos; por subregión, el ${pct2(I2.R21['subregión'].R2, 0)}; al azar, casi nada.`,
+        pregunta: 'Cada barra parte la variabilidad total de la producción, SST, en la que queda <strong>entre</strong> estratos (SSB) y la que queda <strong>dentro</strong> (SSW), para tres particiones del marco. Con asignación proporcional, ¿qué partición gana más, y cuál puede perder contra un MAS del mismo tamaño?',
+        pista: 'El módulo 7 de este capítulo relaciona el deff de la proporcional con SSW/SST, y da una identidad exacta para saber cuándo pierde.',
+        dibujar: canvas => {
+          const R = I2.R21, ks = ['tamaño', 'subregión', 'azar'];
+          const g = crearGraficoBarras(canvas, ['Por tamaño', 'Por subregión', 'Al azar'],
+            ks.map(k => 100 * R[k].SSB / R.SST),
+            { etiqueta: 'Entre estratos (SSB)', color: '#FF6600', min: 0, max: 100,
+              barrasExtra: [{ etiqueta: 'Dentro de los estratos (SSW)', color: COLORES_GRAFICO.primario,
+                              valores: ks.map(k => 100 * R[k].SSW / R.SST) }] });
+          g.options.scales.x.stacked = true;
+          g.options.scales.y.stacked = true;
+          g.options.scales.y.max = 100;
+          g.data.datasets.forEach(d => { d.barPercentage = 0.6; });
+          g.update('none');
+          return g;
+        },
+        opciones: [
+          { texto: 'Gana más la de tamaño; puede perder la de al azar.', correcta: true,
+            retro: `Por tamaño, SSB es el ${pct2(I2.R21['tamaño'].R2)} de SST, y el deff exacto con ${I2.R21.n} fincas es ${c2(I2.R21['tamaño'].deff, 2)}, casi $1 - R^2$. Al azar, SSB es el ${pct2(I2.R21.azar.R2, 2)} y el deff sale ${c2(I2.R21.azar.deff, 4)}: pierde, por un pelo. La de subregión queda en ${c2(I2.R21['subregión'].deff, 2)}: gana poco, pero gana.` },
+          { texto: 'Gana más la de tamaño; ninguna de las tres puede perder.', correcta: false,
+            retro: 'Casi nunca, que no es nunca. La identidad exacta del módulo 7 dice que la proporcional pierde cuando SSB queda por debajo de $\\sum_h(1 - N_h/N)S_h^2$, y una partición que no separa nada lo consigue.' },
+          { texto: 'Gana más la de subregión; puede perder la de al azar.', correcta: false,
+            retro: 'La ganancia la decide cuánto de la variabilidad queda entre estratos, y por subregión es casi nada; por tamaño, la mayor parte.' },
+          { texto: 'Gana más la de subregión; ninguna de las tres puede perder.', correcta: false,
+            retro: 'Las dos mitades fallan: por subregión casi nada queda entre estratos, y una partición al azar sí puede perder contra el MAS.' }
+        ]
+      },
+
+      {
+        tipo: 'grafico', id: 'R27', bloque: 'D', modulo: 14, dimension: 'grafico',
+        ancla: { cap: 4, modulo: 6, titulo: 'Definición de estratos', lohr: '4.5' },
+        alto: 230,
+        descripcionGrafico: `Dos curvas del deff exacto de la asignación proporcional con ${I2.R27.n} fincas, contra el número de estratos de ${I2.R27.H[0]} a ${I2.R27.H[I2.R27.H.length - 1]}, formados por cuantiles: la del área baja de ${c2(I2.R27.area[0], 2)} a ${c2(I2.R27.area[I2.R27.area.length - 1], 2)}; la de la altitud se queda plana, cerca de ${c2(I2.R27.alt[0], 2)}.`,
+        pregunta: `El deff exacto de la asignación proporcional con ${I2.R27.n} fincas, al partir el marco en $H$ estratos por cuantiles del <strong>área</strong> (y, de referencia, de la altitud). Mira la curva del <strong>área</strong>: ¿qué lectura es la correcta?`,
+        pista: 'El módulo 6 de este capítulo discute cuántos estratos conviene hacer y qué pasa con la ganancia al partir más fino.',
+        dibujar: canvas => {
+          const R = I2.R27;
+          const g = crearGraficoXY(canvas, [
+            { type: 'line', label: 'Estratos por área', data: R.H.map((h, i) => ({ x: h, y: R.area[i] })),
+              borderColor: COLORES_GRAFICO.primario, backgroundColor: COLORES_GRAFICO.primario, pointRadius: 3, borderWidth: 2, fill: false },
+            { type: 'line', label: 'Estratos por altitud', data: R.H.map((h, i) => ({ x: h, y: R.alt[i] })),
+              borderColor: '#FF6600', backgroundColor: '#FF6600', pointRadius: 3, borderWidth: 2, fill: false }
+          ], { tituloX: 'Número de estratos H', tituloY: 'deff', xMin: 2, xMax: 8 });
+          g.options.scales.y.max = 1.05;
+          g.update('none');
+          return g;
+        },
+        opciones: [
+          { texto: `Los primeros cortes ganan mucho más que los últimos, y con H = ${I2.R27.H[I2.R27.H.length - 1]} la curva todavía baja.`, correcta: true,
+            retro: `De ${c2(I2.R27.area[0], 2)} a ${c2(I2.R27.area[I2.R27.area.length - 1], 2)}: rendimientos decrecientes, aunque no parejos de un corte al siguiente, y no nulos, porque el área predice la producción y cada corte separa fincas que de verdad producen distinto. Es la regla de Lohr del módulo 6: cuanta más información trae el marco, más estratos.` },
+          { texto: 'La ganancia se agota hacia H = 3: de ahí en adelante el deff del área apenas se mueve.', correcta: false,
+            retro: `La curva sigue bajando hasta el final: de ${c2(I2.R27.area[1], 2)} en $H = 3$ a ${c2(I2.R27.area[I2.R27.area.length - 1], 2)} en $H = ${I2.R27.H[I2.R27.H.length - 1]}$.` },
+          { texto: 'Cada estrato nuevo gana más o menos lo mismo que el anterior: el deff del área baja casi en línea recta.', correcta: false,
+            retro: `De H = ${I2.R27.H[0]} a H = ${I2.R27.H[1]} el deff baja ${c2(I2.R27.area[0] - I2.R27.area[1], 2)}, y de H = ${I2.R27.H[I2.R27.H.length - 2]} a H = ${I2.R27.H[I2.R27.H.length - 1]}, ${c2(I2.R27.area[I2.R27.area.length - 2] - I2.R27.area[I2.R27.area.length - 1], 2)}: la curva tiende a aplanarse, con algún vaivén de un corte al siguiente.` },
+          { texto: 'Con bastantes estratos el deff del área llegaría casi a 0, porque el área predice bien la producción.', correcta: false,
+            retro: 'Lo que el área no predice se queda dentro de cualquier estrato, por fino que sea: el deff no puede bajar de la parte de la variabilidad que el área no explica.' }
+        ]
+      }
+    ];
+
+    // Los cuatro bloques del módulo 14. El orden de cada uno es el del
+    // material: capítulo 3 primero, y dentro de cada capítulo, por módulo.
+    AUTOEVALUACIONES['preparcial2-a'] = BANCO_PREPARCIAL2.filter(p => p.bloque === 'A');
+    AUTOEVALUACIONES['preparcial2-b'] = BANCO_PREPARCIAL2.filter(p => p.bloque === 'B');
+    AUTOEVALUACIONES['preparcial2-c'] = BANCO_PREPARCIAL2.filter(p => p.bloque === 'C');
+    AUTOEVALUACIONES['preparcial2-d'] = BANCO_PREPARCIAL2.filter(p => p.bloque === 'D');
 
   </script>
 

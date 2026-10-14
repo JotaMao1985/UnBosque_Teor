@@ -1,0 +1,386 @@
+  <!-- ============================================================ -->
+  <!-- MÓDULO 14 · Preparcial del Corte II                          -->
+  <!--                                                              -->
+  <!-- Las cifras de este módulo NO se escriben aquí: van como       -->
+  <!-- marcadores entre corchetes blancos con una clase —c (prosa),  -->
+  <!-- m (dentro de una fórmula), p (porcentaje), e (entero o texto)—, -->
+  <!-- la ruta en el JSON y los decimales, y los rellena             -->
+  <!-- ensambla_cap4.py desde precalculo/salidas/preparcial2_datos.json. -->
+  <!-- Aborta si una ruta no existe.                                 -->
+  <!-- ============================================================ -->
+  <template id="module-14">
+    <div class="animate-fade-in">
+      <div class="border-b border-gray-100 pb-6 mb-6">
+        <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+          <span>Módulo 14</span>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Preparcial del Corte II <span
+            class="text-gray-400 font-normal text-2xl">/ Midterm practice</span></h2>
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+          <span class="text-xl">🎯</span>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+            <p class="text-gray-600 text-sm" style="margin:0;">Saber, antes del Parcial 2, qué módulo de los
+              capítulos 3 y 4 le falta a cada uno, cuando todavía hay tiempo de releerlo.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>Este módulo no enseña nada nuevo y no tiene nota. Son <strong>32 preguntas</strong> sobre los dos capítulos
+        del Corte II, con pista y retroalimentación en cada opción, un <strong>diagnóstico</strong> que reparte lo
+        que vaya respondiendo entre los seis objetivos del parcial y le dice qué módulo releer, y
+        <strong>cuatro problemas tipo parcial</strong> resueltos paso a paso con calculadora. Se puede hacer en
+        varias sentadas y repetir cuantas veces quiera: lo que importa no es la cifra final, sino la lista de
+        módulos que sale al final.</p>
+
+      <p>No es un ensayo de noventa minutos, y conviene no tomarlo así: con las retroalimentaciones leídas con
+        calma son unas dos horas. El reloj del parcial se ensaya mejor con los cuatro problemas del final.</p>
+
+      <div class="note">
+        <p style="margin-bottom:0.5rem;"><strong>En este módulo:</strong></p>
+        <ul style="margin-bottom:0;">
+          <li><a href="#prep2-condiciones" class="text-primary underline">Las condiciones del Parcial 2 y qué
+              entra</a></li>
+          <li><a href="#prep2-tabla" class="text-primary underline">La tabla de especificaciones</a></li>
+          <li><a href="#prep2-poblacion" class="text-primary underline">La población del preparcial</a></li>
+          <li><a href="#prep2-a" class="text-primary underline">Bloque A · Conceptos</a> ·
+            <a href="#prep2-b" class="text-primary underline">B · Procedimientos</a> ·
+            <a href="#prep2-c" class="text-primary underline">C · Interpretación</a> ·
+            <a href="#prep2-d" class="text-primary underline">D · Análisis gráfico</a></li>
+          <li><a href="#prep2-diagnostico" class="text-primary underline">Tu diagnóstico</a></li>
+          <li><a href="#prep2-problemas" class="text-primary underline">Cuatro problemas tipo parcial</a></li>
+          <li><a href="#prep2-formulario" class="text-primary underline">Qué llevar en el formulario</a></li>
+        </ul>
+      </div>
+
+      <h3 id="prep2-condiciones">Las condiciones del Parcial 2, y qué entra</h3>
+
+      <p>El Parcial 2 es el <strong>jueves 22 de octubre</strong>, presencial, de <strong>90 minutos</strong>, con
+        <strong>calculadora</strong> y con un <strong>formulario que trae cada uno</strong>. No hay computador. Eso
+        decide qué tipo de pregunta vale la pena ensayar: con las fórmulas delante, recordarlas no vale puntos. Lo
+        que vale es <strong>elegir</strong> la que corresponde al diseño, montarla sobre las cifras correctas y saber
+        qué dice el resultado. Por eso las preguntas de cálculo de abajo dan resúmenes y salidas impresas, nunca un
+        archivo de datos, y las salidas de R hay que leerlas como en el parcial: en papel.</p>
+
+      <p><strong>Entran:</strong> los <a href="capitulo-3-razon-y-regresion.html" class="text-primary underline"
+          target="_blank" rel="noopener">doce módulos de contenido del capítulo 3</a> —razón, regresión, diferencia,
+        un estimador por grupo, dominios, modelos poblacionales, GREG y la mediana— y los
+        <strong>módulos 1 a 10 de este capítulo</strong>, incluidos el 7 (el modelo del estratificado) y el 9
+        (el estratificado con probabilidades proporcionales). <strong>No entran:</strong> el módulo 11 (machine
+        learning), el 12 (la razón en el estratificado) y el muestreo por cuotas, que el material no enseña.</p>
+
+      <h3 id="prep2-tabla">La tabla de especificaciones</h3>
+
+      <p>Es la misma que hereda el Parcial 2: seis objetivos, con lo que pesa cada uno. Las 32 preguntas de este
+        módulo están repartidas en la misma proporción, para que el ensayo se parezca al examen; la última columna
+        dice cuántas le tocan a cada objetivo.</p>
+
+      ⟦TABLA_CORTE2⟧
+
+      <p>La mitad para cada capítulo, y dentro de cada uno, más peso a lo que más decide: la elección del
+        estimador en el capítulo 3 y la asignación en el 4.</p>
+
+      <h3 id="prep2-poblacion">La población del preparcial</h3>
+
+      <p>Todas las preguntas con cifras usan la misma población: las <strong>⟦c:poblacion.N:0⟧ fincas cafeteras
+          de un departamento</strong>. El registro cafetero conoce de cada finca su subregión, su altitud, su
+        <strong>área en café</strong> —⟦c:poblacion.tx:1⟧ hectáreas en total— y su área en levante (renovada hace
+        menos de dos años, que todavía no produce); la cooperativa conoce sus entregas del año anterior. Lo que solo
+        se mide en la muestra es la <strong>producción del año</strong>, en cargas de café pergamino seco de
+        125 kg.</p>
+
+      ⟦FICHA_POBLACION⟧
+
+      <div class="warning">
+        <p><strong>Es una población construida, y se dice.</strong> La simuló en R el precálculo de este módulo,
+          con semilla fija, para que cada fenómeno del corte aparezca donde tiene que aparecer: una subregión
+          donde la producción es proporcional al área, otra con intercepto y otra donde el área casi no ayuda;
+          un tamaño que separa mucho y una subregión que separa poco. Ninguna población de Lohr reúne en un solo
+          censo todos los fenómenos que este preparcial necesita. La ventaja es la de siempre con un censo: la verdad se conoce, y varias
+          retroalimentaciones la usan para contrastar.</p>
+      </div>
+
+      <h3 id="prep2-a">Bloque A · Conceptos</h3>
+
+      <p>Diez preguntas que se contestan razonando, no calculando: qué hace auxiliar a una variable, qué
+        parámetro contesta cada pregunta, qué modelo pide cada nube, qué impone la calibración, por qué
+        estratificar, qué hacer con una celda casi vacía. Las de varias respuestas piden marcar todas las
+        verdaderas, y no siempre son las mismas en número.</p>
+
+      <div class="quiz" data-quiz="preparcial2-a">
+        <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Bloque A · diez preguntas</h4>
+        <p class="text-sm" style="margin-bottom:0;">Cada opción trae su propia retroalimentación, también las
+          incorrectas: leerlas cuando acierta también enseña.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <h3 id="prep2-b">Bloque B · Procedimientos con calculadora</h3>
+
+      <p>Once cálculos como los del parcial: cada pregunta da exactamente las cifras que hacen falta —a veces una
+        de más, a propósito— y pide una sola. Teclee el resultado con los decimales que se piden; el decimal puede
+        ir con coma o con punto, y los miles sin separar o con un espacio, nunca con punto. Si falla, la pista dice
+        qué fórmula; si vuelve a fallar, la retroalimentación nombra el error más probable con su cifra.</p>
+
+      <div class="quiz" data-quiz="preparcial2-b">
+        <h4><i class="fas fa-calculator" aria-hidden="true"></i> Bloque B · once cálculos</h4>
+        <p class="text-sm" style="margin-bottom:0;">Las cifras de cada enunciado ya vienen redondeadas como en un
+          examen, y la respuesta se calculó con ellas.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <h3 id="prep2-c">Bloque C · Interpretación</h3>
+
+      <p>Seis preguntas que piden leer una cifra, una tabla o una salida de R —de <code>lm</code>,
+        <code>calibrate</code>, <code>svytotal</code>— sin ejecutar nada. La pregunta casi nunca es qué número sale, sino qué prueba ese número y
+        qué no.</p>
+
+      <div class="quiz" data-quiz="preparcial2-c">
+        <h4><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Bloque C · seis lecturas</h4>
+        <p class="text-sm" style="margin-bottom:0;">Las salidas son de R, tal como las imprime; en el parcial
+          llegarían igual, en papel.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <h3 id="prep2-d">Bloque D · Análisis gráfico</h3>
+
+      <p>Cinco gráficos, y en cada uno la respuesta está en el dibujo, no en un número escrito al lado: qué nube
+        sigue a la recta de la razón, dónde corta la escalera de $\hat F$, qué tan ancho es un histograma, qué
+        parte de la variabilidad queda entre estratos, qué curva se aplana.</p>
+
+      <div class="quiz" data-quiz="preparcial2-d">
+        <h4><i class="fas fa-chart-line" aria-hidden="true"></i> Bloque D · cinco gráficos</h4>
+        <p class="text-sm" style="margin-bottom:0;">Pase el cursor por el gráfico para leer los valores exactos.</p>
+        <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
+        <div class="quiz-preguntas"></div>
+        <div class="quiz-resumen" role="status" hidden></div>
+        <div class="quiz-marcador">
+          <span class="quiz-conteo"></span>
+          <button type="button" class="quiz-reiniciar">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Sobre el resumen de cada bloque.</strong> Al terminar un bloque, su
+          resumen dice «módulo 14» en vez de nombrar el módulo que le costó: las preguntas son de dos capítulos, y
+          ese resumen solo sabe nombrar los de esta página. El que sí lo dice, con el enlace puesto, es el
+          diagnóstico de abajo.</p>
+      </div>
+
+      <h3 id="prep2-diagnostico">Tu diagnóstico</h3>
+
+      <p><strong>Un «20 de 32» no le sirve a nadie para estudiar esta noche.</strong> Lo que sirve es saber que de
+        las seis preguntas de asignación lleva dos, y que las que falló son del módulo de la óptima con costos. Eso
+        es lo que hay debajo: sus respuestas repartidas por los seis objetivos, cada uno con lo que pesa en el
+        parcial y con el módulo exacto donde está lo que se le escapó. Se actualiza solo, cada vez que cierra una
+        pregunta de cualquiera de los cuatro bloques.</p>
+
+      <div class="diagnostico" data-diagnostico></div>
+
+      <p>Los colores no son una nota sino una instrucción: <strong>rojo</strong>, menos de tres de cada cinco, ahí
+        hay que ir; <strong>naranja</strong>, un repaso corto del módulo que falló; <strong>verde</strong>, por
+        encima del 80 %, no gaste más tiempo ahí; <strong>gris</strong>, todavía sin datos. La lista de módulos
+        incluye también lo que acertó al segundo intento: cuenta como acierto, pero en el parcial no hay segundo
+        intento ni pista. Y la línea del final no señala el porcentaje más bajo, sino <strong>el que más caro
+          sale</strong>: lo que falla multiplicado por lo que pesa. <em>Reiniciar</em> en un bloque borra también
+        sus respuestas de aquí.</p>
+
+      <h3 id="prep2-problemas">Cuatro problemas tipo parcial</h3>
+
+      <p>Así es probable que se vea una pregunta del parcial: un problema con varias partes, las cifras en el
+        enunciado y una decisión al final. Hágalos con calculadora y con su formulario delante, y con reloj: unos
+        veinte minutos cada uno. La solución está escondida debajo; ábrala después, no antes.</p>
+
+      <div class="ejercicios">
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Un MAS de
+            $n = ⟦e:problemas.P1.n⟧$ de las $N = ⟦m:problemas.P1.N:0⟧$ fincas da $\bar y = ⟦m:problemas.P1.ybar:2⟧$
+            cargas, $\bar x = ⟦m:problemas.P1.xbar:3⟧$ ha, $s_y = ⟦m:problemas.P1.sy:2⟧$, $s_x = ⟦m:problemas.P1.sx:3⟧$
+            y $r = ⟦m:problemas.P1.r:4⟧$. El registro da $t_x = ⟦m:problemas.P1.tx:1⟧$ ha, y la salida de
+            <code>lm(y ~ area)</code> da un intercepto de ⟦c:problemas.P1.b0:3⟧ con $p = ⟦m:problemas.P1.p0:4⟧$.
+            <strong>(a)</strong> Estime la producción total por expansión, por razón y por regresión.
+            <strong>(b)</strong> Calcule el error estándar de cada una. <strong>(c)</strong> ¿Cuál reportaría, y
+            por qué?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Las tres usan la misma muestra y difieren en la recta que trazan. Para la regresión hace falta
+              $\bar x_U = t_x/N$ y la pendiente $\hat b_1 = r\,s_y/s_x$; para su error estándar, el factor
+              $(n-1)/(n-2)$ del formulario. La decisión no se toma por el error estándar más pequeño a secas: se
+              toma con dos criterios: la regla del módulo 3 del capítulo 3, que decide contra la expansión, y el
+              contraste del intercepto del módulo 6 del capítulo 3, que decide entre razón y regresión.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> Expansión: $N\bar y = ⟦m:problemas.P1.t_exp:1⟧$. Razón:
+              $\hat B = \bar y/\bar x = ⟦m:problemas.P1.B:4⟧$ y $\hat t_r = \hat B\,t_x = ⟦m:problemas.P1.t_r:1⟧$.
+              Regresión: $\bar x_U = ⟦m:problemas.P1.xbarU:4⟧$, $\hat b_1 = ⟦m:problemas.P1.b1:4⟧$,
+              $\hat{\bar y}_{\text{reg}} = \bar y + \hat b_1(\bar x_U - \bar x) = ⟦m:problemas.P1.ybar_reg:4⟧$ y
+              $\hat t_{\text{reg}} = N\hat{\bar y}_{\text{reg}} = ⟦m:problemas.P1.t_reg:1⟧$.</p>
+            <p><strong>(b)</strong> Con $f = n/N = ⟦m:problemas.P1.f:4⟧$:</p>
+            <ul>
+              <li>Expansión: $N\sqrt{(1-f)/n}\;s_y = ⟦m:problemas.P1.ee_exp:1⟧$.</li>
+              <li>Razón: la varianza del residuo es $s_y^2 + \hat B^2 s_x^2 - 2\hat B\,r\,s_x s_y =
+                ⟦m:problemas.P1.se2_r:4⟧$, y $\mathrm{EE} = \frac{t_x}{\bar x}\sqrt{\frac{1-f}{n}\cdot
+                ⟦m:problemas.P1.se2_r:4⟧} = ⟦m:problemas.P1.ee_r:1⟧$.</li>
+              <li>Regresión: $N\sqrt{\frac{1-f}{n}\cdot\frac{n-1}{n-2}\,(1-r^2)\,s_y^2} =
+                ⟦m:problemas.P1.ee_reg:1⟧$.</li>
+            </ul>
+            <p><strong>(c)</strong> La regresión, por dos criterios que conviene separar. Frente a la expansión,
+              la auxiliar paga: $r = ⟦m:problemas.P1.r:4⟧$ supera con holgura el umbral del módulo 3 del capítulo 3. Frente a la
+              razón, decide el intercepto: $p = ⟦m:problemas.P1.p0:4⟧$, así que la recta no pasa por el origen y la
+              razón impone una que sí pasa. Por eso el error estándar de la razón queda entre los otros dos. Como la
+              población es construida, se puede mirar la verdad: ⟦c:problemas.P1.ty:0⟧ cargas. Que la regresión
+              quede también más cerca no es el motivo para elegirla —con otra muestra podría no pasar—: el motivo
+              son los criterios, y el error estándar lo confirma.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Un MAS de
+            $n = ⟦e:problemas.P2.n⟧$ fincas trae ⟦e:problemas.P2.nd⟧ del Sur, y el registro sí dice cuántas hay en
+            el Sur: $N_d = ⟦m:problemas.P2.Nd:0⟧$ de las $N = ⟦m:problemas.P2.N:0⟧$. Las fincas del Sur de la
+            muestra producen en promedio $\bar y_d = ⟦m:problemas.P2.ybar_d:3⟧$ cargas, y con
+            $u_k = \delta_k(y_k - \bar y_d)$ la muestra da $s_u = ⟦m:problemas.P2.su:4⟧$.
+            <strong>(a)</strong> El error estándar de $\bar y_d$. <strong>(b)</strong> Un intervalo del 95 % para la
+            producción media por finca del Sur. <strong>(c)</strong> La producción total del Sur con su error
+            estándar, usando $N_d$.</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>La media de dominio es una razón: su varianza es la de cualquier media, con el residuo linealizado y
+              el factor $(n_d/n)^2$ en el denominador. Con $N_d$ conocido, el total escala esa media.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> $\widehat V(\bar y_d) = \frac{1-f}{n}\cdot\frac{s_u^2}{(n_d/n)^2}$, y
+              $\mathrm{EE} = ⟦m:problemas.P2.ee_media:4⟧$ cargas por finca.</p>
+            <p><strong>(b)</strong> $⟦m:problemas.P2.ybar_d:3⟧ \pm 1{,}96 \times ⟦m:problemas.P2.ee_media:4⟧$, es
+              decir $[⟦m:problemas.P2.li:2⟧;\ ⟦m:problemas.P2.ls:2⟧]$. Con solo ⟦e:problemas.P2.nd⟧ fincas del Sur es
+              ancho, y es lo que motiva estratificar cuando un dominio importa.</p>
+            <p><strong>(c)</strong> $\hat t_{yd} = N_d\,\bar y_d = ⟦m:problemas.P2.t_conocido:1⟧$, con
+              $\mathrm{EE} = N_d \cdot ⟦m:problemas.P2.ee_media:4⟧ = ⟦m:problemas.P2.ee_conocido:1⟧$. Si el registro no
+              trajera la subregión, habría que estimar el total de $y_k\delta_k$ con toda la muestra, y saldría más
+              caro: se pagaría también la incertidumbre sobre cuántas fincas del Sur hay.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Se quiere un estratificado por
+            tamaño con $n = ⟦e:problemas.P3.n⟧$ fincas y asignación de Neyman. Las desviaciones se toman de un
+            piloto de 10 fincas por estrato: ⟦c:problemas.P3.Sh_piloto.0:2⟧, ⟦c:problemas.P3.Sh_piloto.1:2⟧,
+            ⟦c:problemas.P3.Sh_piloto.2:2⟧ y ⟦c:problemas.P3.Sh_piloto.3:2⟧ cargas para las pequeñas, medianas,
+            grandes y muy grandes, que son ⟦c:problemas.P3.Nh.0:0⟧, ⟦c:problemas.P3.Nh.1:0⟧,
+            ⟦c:problemas.P3.Nh.2:0⟧ y ⟦c:problemas.P3.Nh.3:0⟧ fincas. <strong>(a)</strong> Reparta las
+            $n$ con Neyman y compare con la proporcional. <strong>(b)</strong> Con la muestra sorteada así, las
+            medias por estrato salen ⟦c:problemas.P3.yh.0:2⟧, ⟦c:problemas.P3.yh.1:2⟧, ⟦c:problemas.P3.yh.2:2⟧ y
+            ⟦c:problemas.P3.yh.3:2⟧, y las desviaciones ⟦c:problemas.P3.sh.0:2⟧, ⟦c:problemas.P3.sh.1:2⟧,
+            ⟦c:problemas.P3.sh.2:2⟧ y ⟦c:problemas.P3.sh.3:2⟧. Estime la producción total con su intervalo del 95 %.
+            <strong>(c)</strong> ¿Cuánto pesa una finca muy grande de la muestra, y por qué tan poco?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>Neyman: $n_h = n\,N_hS_h/\sum_g N_gS_g$, redondeando al final. El total es $\sum N_h\bar y_h$ y su
+              varianza suma estrato a estrato, cada uno con su $N_h^2$ y su fpc. El peso es $N_h/n_h$.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> Neyman da ⟦c:problemas.P3.ney.0:2⟧, ⟦c:problemas.P3.ney.1:2⟧,
+              ⟦c:problemas.P3.ney.2:2⟧ y ⟦c:problemas.P3.ney.3:2⟧, es decir ⟦e:problemas.P3.nh.0⟧, ⟦e:problemas.P3.nh.1⟧,
+              ⟦e:problemas.P3.nh.2⟧ y ⟦e:problemas.P3.nh.3⟧ fincas. La proporcional habría dado
+              ⟦c:problemas.P3.prop.0:2⟧, ⟦c:problemas.P3.prop.1:2⟧, ⟦c:problemas.P3.prop.2:2⟧ y
+              ⟦c:problemas.P3.prop.3:2⟧: Neyman dobla las grandes y multiplica por más de cuatro las muy grandes, donde está la
+              dispersión, y recorta las medianas, que son muchas pero parecidas entre sí.</p>
+            <p><strong>(b)</strong> $\hat t = \sum N_h\bar y_h = ⟦m:problemas.P3.t:2⟧$ y
+              $\mathrm{EE} = \sqrt{\sum N_h^2(1 - n_h/N_h)\,s_h^2/n_h} = ⟦m:problemas.P3.ee:2⟧$. El intervalo es
+              $[⟦m:problemas.P3.li:1⟧;\ ⟦m:problemas.P3.ls:1⟧]$. La verdad, ⟦c:problemas.P3.ty:0⟧ cargas, cae
+              dentro.</p>
+            <p><strong>(c)</strong> $N_h/n_h = ⟦m:problemas.P3.pesos.3:3⟧$: cada muy grande de la muestra representa
+              a algo más de cuatro fincas, mientras que una mediana representa a ⟦c:problemas.P3.pesos.1:2⟧. No es un error:
+              Neyman manda muestra a donde está la varianza, así que cada unidad de ese estrato representa a pocas.
+              Promediar la muestra sin pesos daría demasiado peso a las grandes.</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Un MAS de
+            $n = ⟦e:problemas.P4.n⟧$ fincas se postestratifica por tenencia con los $N_h$ del censo agropecuario:
+            ⟦c:problemas.P4.Nh.0:0⟧ propietarios, ⟦c:problemas.P4.Nh.1:0⟧ arrendatarios y ⟦c:problemas.P4.Nh.2:0⟧
+            aparceros. La muestra trae ⟦e:problemas.P4.nh.0⟧, ⟦e:problemas.P4.nh.1⟧ y ⟦e:problemas.P4.nh.2⟧, con
+            medias ⟦c:problemas.P4.yh.0:2⟧, ⟦c:problemas.P4.yh.1:2⟧ y ⟦c:problemas.P4.yh.2:2⟧ cargas y desviaciones
+            ⟦c:problemas.P4.sh.0:2⟧, ⟦c:problemas.P4.sh.1:2⟧ y ⟦c:problemas.P4.sh.2:2⟧; en toda la muestra,
+            $\bar y = ⟦m:problemas.P4.ybar:2⟧$ y $s_y = ⟦m:problemas.P4.sy:2⟧$. <strong>(a)</strong> Calcule la media
+            postestratificada. <strong>(b)</strong> Su error estándar con la aproximación de Lohr, el del MAS y el
+            deff. <strong>(c)</strong> <code>survey</code> da otro error estándar. ¿Está mal alguno de los dos, y
+            cuánto hay que fiarse de cualquiera de ellos con estas celdas?</p>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>La media postestratificada es la del estratificado con los $n_h$ que salieron. La aproximación de
+              Lohr del módulo 10 es la varianza de la asignación proporcional, $(1 - n/N)\sum_h W_h s_h^2/n$, y el
+              mismo módulo dice con cuántos casos esperados por celda se puede dar por buena.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p><strong>(a)</strong> Con $W_h = N_h/N$ —⟦c:problemas.P4.W.0:4⟧, ⟦c:problemas.P4.W.1:4⟧ y
+              ⟦c:problemas.P4.W.2:4⟧—, $\bar y_{\text{post}} = \sum W_h\bar y_h = ⟦m:problemas.P4.ybar_post:2⟧$
+              cargas, frente a la media muestral de ⟦c:problemas.P4.ybar:2⟧.</p>
+            <p><strong>(b)</strong> Lohr: $\sqrt{(1-f)\sum W_h s_h^2/n} = ⟦m:problemas.P4.ee_post:4⟧$. MAS:
+              $\sqrt{(1-f)/n}\;s_y = ⟦m:problemas.P4.ee_mas:4⟧$. El deff estimado es
+              $(⟦m:problemas.P4.ee_post:4⟧/⟦m:problemas.P4.ee_mas:4⟧)^2 = ⟦m:problemas.P4.deff:4⟧$: un ahorro estimado del
+              ⟦p:problemas.P4.ahorro:0⟧ de la varianza sin una sola finca nueva. La tenencia separa menos que el tamaño,
+              y se nota.</p>
+            <p><strong>(c)</strong> Ninguno está mal. <code>survey</code> da ⟦c:problemas.P4.ee_survey:4⟧ porque trata
+              la postestratificación como una calibración y estima la varianza de diseño con los $n_h$ que salieron
+              como datos; la de Lohr es una aproximación, la de la asignación proporcional. Son los «tres errores
+              estándar para el mismo estimador» del módulo 10, y con el de <code>survey</code> el ahorro estimado
+              sería del ⟦p:problemas.P4.ahorro_survey:0⟧. Sobre cuánto fiarse: en un MAS de ⟦e:problemas.P4.n⟧ se
+              esperan ⟦c:problemas.P4.esperadas.0:1⟧, ⟦c:problemas.P4.esperadas.1:1⟧ y ⟦c:problemas.P4.esperadas.2:1⟧
+              fincas por celda, y el módulo 10 pide del orden de 30 para dar por buena la aproximación: la de los
+              aparceros se queda corta, así que las dos cifras son orientativas. Aquí, además, la población es
+              construida y se puede ver la verdad: con las $S_h$ del censo, el deff de la postestratificación por
+              tenencia es ⟦c:problemas.P4.deff_verdadero:3⟧, un ahorro de solo ⟦p:problemas.P4.ahorro_verdadero:1⟧.
+              Las dos estimaciones salieron optimistas en esta muestra: un deff estimado con una celda tan chica
+              cambia mucho de una muestra a otra.</p>
+          </details>
+        </div>
+      </div>
+
+      <h3 id="prep2-formulario">Qué llevar en el formulario</h3>
+
+      <p>El formulario lo trae cada uno, así que vale la pena armarlo pensando en las preguntas de arriba. El del
+        capítulo 3 ya existe: es el <a href="capitulo-3-razon-y-regresion.html" class="text-primary underline"
+          target="_blank" rel="noopener">módulo 13 del capítulo 3</a>, y le faltan, como él mismo avisa, el
+        GREG y la calibración, los dominios, la mediana, la cota del sesgo y el umbral de la razón. Del capítulo 4
+        no hay uno hecho; esto es lo mínimo:</p>
+      <ul>
+        <li>El total y la media estratificados, $\sum N_h\bar y_h$ y $\sum W_h\bar y_h$, con su varianza:
+          $\sum N_h^2(1 - n_h/N_h)s_h^2/n_h$. Y el peso $N_h/n_h$, con la comprobación de que los pesos suman $N$.</li>
+        <li>Las tres asignaciones: proporcional ($n_h \propto N_h$), Neyman ($n_h \propto N_hS_h$) y la óptima con
+          costos ($n_h \propto N_hS_h/\sqrt{c_h}$, con $\sum c_hn_h = C$).</li>
+        <li>El tamaño total a partir del margen de error, con $v = \sum W_h^2S_h^2/a_h$.</li>
+        <li>El deff, $V_{\text{diseño}}/V_{\text{MAS}}$, y el tamaño efectivo $n/\text{deff}$; y, para la
+          proporcional con estratos grandes, $\text{deff} \approx 1 - \text{SSB}/\text{SST}$.</li>
+        <li>Hansen–Hurwitz dentro de un estrato: $\frac{1}{m_h}\sum y_{k_i}/\psi_{k_i}$, con
+          $\psi_k = x_k/\sum_{U_h}x_l$.</li>
+        <li>La media postestratificada, $\sum W_h\bar y_h$ con los $n_h$ que salieron, y la aproximación de Lohr
+          a su varianza.</li>
+      </ul>
+      <p>Y una regla que no es una fórmula pero vale puntos: antes de entregar un número, comprobar que tiene sentido
+        —que los pesos suman $N$, que un error estándar no es mayor que la estimación sin motivo, que una
+        asignación no pide más fincas de las que tiene un estrato—.</p>
+    </div>
+  </template>

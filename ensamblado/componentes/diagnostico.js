@@ -21,6 +21,11 @@
     // marcado, esto dejaría de registrar — y por eso `iniciarDiagnosticos`
     // avisa por consola cuando encuentra bloques sin `.quiz-retro`.
     // ================================================================
+    // LOS DATOS LOS PONE EL ENSAMBLADOR DE CADA PÁGINA: OBJETIVOS_DIAGNOSTICO
+    // (de la tabla de especificaciones de su corte) y CAPITULOS_HREF. Si la
+    // página es un capítulo, declara además CAPITULO_ACTUAL, y los módulos de
+    // ese capítulo se abren aquí mismo en vez de enlazar a otra página: el
+    // preparcial del Corte II vive dentro del capítulo 4.
     const RESULTADOS_QUIZ = {};
     const observadoresQuiz = [];
 
@@ -53,7 +58,11 @@
       mainContent.querySelectorAll('[data-quiz]').forEach(raiz => {
         if (!AUTOEVALUACIONES[raiz.dataset.quiz]) return;
         registraQuiz(raiz);
-        const obs = new MutationObserver(() => registraQuiz(raiz));
+        // Repintar también: en el Corte II el diagnóstico está en el MISMO
+        // módulo que los bloques, y sin esto se quedaba con lo que había al
+        // abrir el módulo. Solo se observa el quiz, no la caja del
+        // diagnóstico, así que repintarla no vuelve a disparar el observador.
+        const obs = new MutationObserver(() => { registraQuiz(raiz); iniciarDiagnosticos(); });
         obs.observe(raiz, { subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] });
         observadoresQuiz.push(obs);
         // Reiniciar es «empezar de cero», y el diagnóstico tiene que
@@ -73,9 +82,9 @@
     // mantener en paralelo.
     function calculaDiagnostico() {
       const deModulo = new Map();
-      OBJETIVOS_CORTE1.forEach(o => o.modulos.forEach(m => deModulo.set(m, o.id)));
+      OBJETIVOS_DIAGNOSTICO.forEach(o => o.modulos.forEach(m => deModulo.set(m, o.id)));
 
-      const porObjetivo = new Map(OBJETIVOS_CORTE1.map(o => [o.id, {
+      const porObjetivo = new Map(OBJETIVOS_DIAGNOSTICO.map(o => [o.id, {
         id: o.id, titulo: o.titulo, peso: o.peso,
         total: 0, respondidas: 0, aciertos: 0, fallos: new Map()
       }]));
@@ -115,8 +124,11 @@
     };
 
     function enlaceModulo(ancla) {
-      const href = CAPITULOS_HREF[ancla.cap];
       const nombre = `capítulo ${ancla.cap}, módulo ${ancla.modulo} · ${ancla.titulo}`;
+      if (typeof CAPITULO_ACTUAL !== 'undefined' && ancla.cap === CAPITULO_ACTUAL) {
+        return `<a href="#" onclick="loadModule(${ancla.modulo}); return false;">${nombre}</a>`;
+      }
+      const href = CAPITULOS_HREF[ancla.cap];
       return href ? `<a href="${href}">${nombre}</a>` : nombre;
     }
 
@@ -130,7 +142,7 @@
         caja.innerHTML =
           '<div class="diagnostico-vacio">' +
           '<p><strong>Todavía no hay nada que diagnosticar.</strong> Responde algunas preguntas de ' +
-          'los bloques o del simulacro y vuelve aquí: esta página no puntúa, calcula qué te falta.</p>' +
+          'los bloques y vuelve aquí: esto no puntúa, calcula qué te falta.</p>' +
           `<p>Cuando lo hagas verás, objetivo por objetivo, cuántas de sus ${total} preguntas ` +
           'acertaste y en qué módulo del material está lo que se te escapó.</p>' +
           '</div>';
