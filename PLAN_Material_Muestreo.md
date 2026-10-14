@@ -7058,3 +7058,8 @@ cada estudiante. El plan detallado (`PLAN_Preparcial_Corte2.md`) y las auditorí
   materia); hay que cifrar el vocabulario y barajar las opciones. Y la prueba de repetición contra los ítems
   previos hay que correrla después de cada reescritura: cazó una opción nueva de R07 que copiaba ocho palabras.
 - El README no cuenta el preparcial en sus cifras contrastadas: siguen en **2 792**.
+
+**Publicado** el 2026-10-14 con el visto bueno de Javier («publica el preparcial»): `main` `2e253b3`,
+`gh-pages` `4237181`, construido con `git commit-tree` del árbol `2e253b3:sitio` sobre la punta (nada ajeno).
+El árbol de `gh-pages` es el `sitio/` de `main`, `verifica_publicado.py --solo-huella` da la huella de las
+10 páginas, y la página servida del cap. 4 carga el módulo 14 con sus cuatro bloques (10/11/6/5) y 0 errores de KaTeX.
