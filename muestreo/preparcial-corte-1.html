@@ -5934,7 +5934,7 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
     // Los objetivos del Corte I y los módulos que los enseñan, para el
     // diagnóstico. Generado desde precalculo/tabla_especificaciones.json.
     // ================================================================
-    const OBJETIVOS_CORTE1 = [{"id":"O1","titulo":"Distinguir población objetivo, muestreada y marco; unidad y variable de interés","peso":15,"modulos":["1.2","1.3","1.8"]},{"id":"O2","titulo":"Reconocer el sesgo, decir su dirección y situarlo en el error total","peso":20,"modulos":["1.1","1.4","1.5","1.6","1.7","1.9"]},{"id":"O3","titulo":"Manejar el marco π: p(s), π_k, π_kl, Horvitz–Thompson e insesgadez de diseño","peso":23,"modulos":["2.1","2.2","2.3","2.4","2.10"]},{"id":"O4","titulo":"Estimar por MAS con su error estándar, fpc e intervalo, y saber qué no prueba","peso":20,"modulos":["2.5","2.6"]},{"id":"O5","titulo":"Determinar el tamaño de muestra y leer su sensibilidad","peso":7,"modulos":["2.7"]},{"id":"O6","titulo":"Decidir entre sistemático, Bernoulli y con reemplazo, y estimar su varianza","peso":15,"modulos":["2.8","2.9"]}];
+    const OBJETIVOS_DIAGNOSTICO = [{"id":"O1","titulo":"Distinguir población objetivo, muestreada y marco; unidad y variable de interés","peso":15,"modulos":["1.2","1.3","1.8"]},{"id":"O2","titulo":"Reconocer el sesgo, decir su dirección y situarlo en el error total","peso":20,"modulos":["1.1","1.4","1.5","1.6","1.7","1.9"]},{"id":"O3","titulo":"Manejar el marco π: p(s), π_k, π_kl, Horvitz–Thompson e insesgadez de diseño","peso":23,"modulos":["2.1","2.2","2.3","2.4","2.10"]},{"id":"O4","titulo":"Estimar por MAS con su error estándar, fpc e intervalo, y saber qué no prueba","peso":20,"modulos":["2.5","2.6"]},{"id":"O5","titulo":"Determinar el tamaño de muestra y leer su sensibilidad","peso":7,"modulos":["2.7"]},{"id":"O6","titulo":"Decidir entre sistemático, Bernoulli y con reemplazo, y estimar su varianza","peso":15,"modulos":["2.8","2.9"]}];
 
     const CAPITULOS_HREF = {"1": "capitulo-1-encuestas-sesgos.html", "2": "capitulo-2-diseno-mas-sistematico.html"};
 
@@ -7301,6 +7301,11 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
     // marcado, esto dejaría de registrar — y por eso `iniciarDiagnosticos`
     // avisa por consola cuando encuentra bloques sin `.quiz-retro`.
     // ================================================================
+    // LOS DATOS LOS PONE EL ENSAMBLADOR DE CADA PÁGINA: OBJETIVOS_DIAGNOSTICO
+    // (de la tabla de especificaciones de su corte) y CAPITULOS_HREF. Si la
+    // página es un capítulo, declara además CAPITULO_ACTUAL, y los módulos de
+    // ese capítulo se abren aquí mismo en vez de enlazar a otra página: el
+    // preparcial del Corte II vive dentro del capítulo 4.
     const RESULTADOS_QUIZ = {};
     const observadoresQuiz = [];
 
@@ -7333,7 +7338,11 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
       mainContent.querySelectorAll('[data-quiz]').forEach(raiz => {
         if (!AUTOEVALUACIONES[raiz.dataset.quiz]) return;
         registraQuiz(raiz);
-        const obs = new MutationObserver(() => registraQuiz(raiz));
+        // Repintar también: en el Corte II el diagnóstico está en el MISMO
+        // módulo que los bloques, y sin esto se quedaba con lo que había al
+        // abrir el módulo. Solo se observa el quiz, no la caja del
+        // diagnóstico, así que repintarla no vuelve a disparar el observador.
+        const obs = new MutationObserver(() => { registraQuiz(raiz); iniciarDiagnosticos(); });
         obs.observe(raiz, { subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] });
         observadoresQuiz.push(obs);
         // Reiniciar es «empezar de cero», y el diagnóstico tiene que
@@ -7353,9 +7362,9 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
     // mantener en paralelo.
     function calculaDiagnostico() {
       const deModulo = new Map();
-      OBJETIVOS_CORTE1.forEach(o => o.modulos.forEach(m => deModulo.set(m, o.id)));
+      OBJETIVOS_DIAGNOSTICO.forEach(o => o.modulos.forEach(m => deModulo.set(m, o.id)));
 
-      const porObjetivo = new Map(OBJETIVOS_CORTE1.map(o => [o.id, {
+      const porObjetivo = new Map(OBJETIVOS_DIAGNOSTICO.map(o => [o.id, {
         id: o.id, titulo: o.titulo, peso: o.peso,
         total: 0, respondidas: 0, aciertos: 0, fallos: new Map()
       }]));
@@ -7395,8 +7404,11 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
     };
 
     function enlaceModulo(ancla) {
-      const href = CAPITULOS_HREF[ancla.cap];
       const nombre = `capítulo ${ancla.cap}, módulo ${ancla.modulo} · ${ancla.titulo}`;
+      if (typeof CAPITULO_ACTUAL !== 'undefined' && ancla.cap === CAPITULO_ACTUAL) {
+        return `<a href="#" onclick="loadModule(${ancla.modulo}); return false;">${nombre}</a>`;
+      }
+      const href = CAPITULOS_HREF[ancla.cap];
       return href ? `<a href="${href}">${nombre}</a>` : nombre;
     }
 
@@ -7410,7 +7422,7 @@ print(f"personas_distintas_sin={len(np.unique(pos_sin))}  "
         caja.innerHTML =
           '<div class="diagnostico-vacio">' +
           '<p><strong>Todavía no hay nada que diagnosticar.</strong> Responde algunas preguntas de ' +
-          'los bloques o del simulacro y vuelve aquí: esta página no puntúa, calcula qué te falta.</p>' +
+          'los bloques y vuelve aquí: esto no puntúa, calcula qué te falta.</p>' +
           `<p>Cuando lo hagas verás, objetivo por objetivo, cuántas de sus ${total} preguntas ` +
           'acertaste y en qué módulo del material está lo que se te escapó.</p>' +
           '</div>';
