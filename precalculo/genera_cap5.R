@@ -77,7 +77,7 @@ hace_hist <- function(x) {
 }
 cifras$estados <- list(
   NI = NI, nI = nI, nEquiv = n_equiv, replicas = R, Ra2 = Ra2,
-  media = media_U, MiMin = min(Mi_est), MiMax = max(Mi_est),
+  media = media_U, MiMin = min(Mi_est), MiMax = max(Mi_est), Mbar = mean(Mi_est),
   cluster = hace_hist(rep_cluster), mas = hace_hist(rep_mas),
   varCluster = var(rep_cluster), varMas = var(rep_mas), deffEmp = deff_emp,
   nObsMedio = mean(n_obs), nObsMin = min(n_obs), nObsMax = max(n_obs)

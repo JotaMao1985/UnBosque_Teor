@@ -283,43 +283,81 @@
 
     // ---------------------------------------------------------------
     // M4 · La ICC al mando
+    //
+    // El eje x llega hasta el máximo del deslizador (100), para que quepa
+    // el caso de los estados (M̄ ≈ 62). El eje y toma el menor tope «bonito»
+    // que cubre la curva, con marcas regulares y coma decimal. La franja
+    // gris va entre las curvas de ρ = 0,01 y ρ = 0,20.
     // ---------------------------------------------------------------
     SIMULADORES['icc-deff'] = function (raiz) {
-      const params = { rho: 0.04, m: 25 };
+      const A = D5.algebra, E = D5.estados;
+      const M_MAX = 100;
+      const CASOS = [
+        { boton: 'Aulas (algebra)', valores: { rho: Math.round(A.icc * 100) / 100, M: Math.round(A.Mbar) } },
+        { boton: 'Estados (módulo 1)', valores: { rho: Math.round(E.Ra2 * 200) / 200, M: Math.round(E.Mbar) } }
+      ];
+      // [tope del eje y, paso de sus marcas]
+      const TOPES = [[2, 0.5], [3, 0.5], [5, 1], [10, 2], [20, 5], [30, 5], [50, 10], [100, 20]];
+      const params = Object.assign({}, CASOS[0].valores);
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoXY(lienzo, [], {
-        tituloX: 'tamaño del conglomerado m', tituloY: 'deff', xMin: 0, xMax: 52
+        tituloX: 'tamaño medio del conglomerado M̄', tituloY: 'deff', xMin: 0, xMax: M_MAX
+      });
+      Object.assign(g.options.scales.x.ticks, { stepSize: 10, maxTicksLimit: 12, callback: v => fmtNum(v, 0) });
+      Object.assign(g.options.plugins.tooltip, {
+        filter: item => item.datasetIndex >= 2 && item.dataset.label !== '',
+        callbacks: {
+          title: items => 'M̄ = ' + fmtNum(items[0].parsed.x, 0),
+          label: item => item.dataset.label + ': deff ' + fmtNum(item.parsed.y, 2)
+        }
       });
 
+      function curva(rho) {
+        const c = [];
+        for (let m = 1; m <= M_MAX; m++) c.push({ x: m, y: 1 + (m - 1) * rho });
+        return c;
+      }
+
       function pintar() {
-        const curva = [];
-        for (let m = 1; m <= 50; m++) curva.push({ x: m, y: 1 + (m - 1) * params.rho });
-        const deff = 1 + (params.m - 1) * params.rho;
+        const deff = 1 + (params.M - 1) * params.rho;
         g.data.datasets = [
-          { type: 'line', label: 'deff con tu ρ', data: curva,
+          { type: 'line', label: 'valores habituales en encuestas (ρ de 0,01 a 0,20)', data: curva(0.20),
+            borderWidth: 0, pointRadius: 0, backgroundColor: 'rgba(148, 163, 184, 0.22)', fill: '+1' },
+          { type: 'line', label: '', data: curva(0.01), borderWidth: 0, pointRadius: 0, fill: false },
+          { type: 'line', label: 'deff con tu ρ', data: curva(params.rho),
             borderColor: COLORES_GRAFICO.primario, borderWidth: 2, pointRadius: 0, fill: false },
-          { type: 'scatter', label: 'tu diseño', data: [{ x: params.m, y: deff }],
+          { type: 'scatter', label: 'tu diseño', data: [{ x: params.M, y: deff }],
             backgroundColor: COLORES_GRAFICO.secundario, pointRadius: 7 },
-          { type: 'line', label: 'deff = 1 (MAS)', data: [{ x: 0, y: 1 }, { x: 52, y: 1 }],
+          { type: 'line', label: 'deff = 1 (MAS)', data: [{ x: 0, y: 1 }, { x: M_MAX, y: 1 }],
             borderColor: COLORES_GRAFICO.gris, borderDash: [6, 4], borderWidth: 1.5,
             pointRadius: 0, fill: false }
         ];
-        g.options.scales.y.max = Math.max(3, 1 + 49 * params.rho) * 1.05;
+        const alto = 1 + (M_MAX - 1) * params.rho;
+        const [tope, paso] = TOPES.find(([t]) => t >= alto) || TOPES[TOPES.length - 1];
+        Object.assign(g.options.scales.y, { min: 0, max: tope });
+        Object.assign(g.options.scales.y.ticks, { stepSize: paso, callback: v => fmtNum(v, paso < 1 ? 1 : 0) });
         g.update('none');
 
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
-          { etiqueta: 'deff:', valor: fmtNum(deff, 3) },
-          { etiqueta: '1 000 unidades rinden como:', valor: fmtNum(1000 / deff, 0) },
+          { etiqueta: 'deff:', valor: fmtNum(deff, 2) },
+          { etiqueta: '1 000 unidades rinden como:', valor: fmtNum(1000 / deff, 0) +
+            ' — pierdes el ' + fmtNum(100 * (1 - 1 / deff), 0) + ' % de la muestra' },
           { etiqueta: 'referencia algebra:', valor: 'ρ ≈ 0,040, M̄ = 24,9 → deff ≈ 1,95 (empírico: 2,25)' },
-          { etiqueta: 'referencia estados (módulo 1):', valor: 'ρ = 0,475 y M̄ ≈ 62 → el deff 30' }
+          { etiqueta: 'referencia estados (módulo 1):', valor: 'ρ = 0,475, M̄ ≈ 62 → deff ≈ 30 (empírico: 30,4); ' +
+            'con tamaños de 3 a 254, que casi coincidan es en parte casual' }
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const controles = raiz.querySelector('.simulador-controles');
+      const inputs = crearControles(controles, [
         { clave: 'rho', etiqueta: 'Correlación intraclase ρ', min: 0, max: 0.95, paso: 0.005 },
-        { clave: 'm', etiqueta: 'Tamaño del conglomerado m', min: 1, max: 50, paso: 1 }
+        { clave: 'M', etiqueta: 'Tamaño (medio) del conglomerado M̄', min: 1, max: M_MAX, paso: 1 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { rho: 3, M: 0 });
+      const botones = botonesDeCaso(controles, 'Casos reales del capítulo', CASOS, inputs, () => {});
+      botones[0].classList.add('activo');
+      botones[0].setAttribute('aria-pressed', 'true');
       pintar();
       return [g];
     };
