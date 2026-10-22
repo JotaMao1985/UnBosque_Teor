@@ -7100,4 +7100,8 @@ publicada byte a byte antes de empezar, así que el HTML sale del ensamblador.
   que en T7.90: los ocho capítulos, sin el preparcial) pasa de 2 792 a **2 796** = 303 + 495 + 289 + 528 + 167 + 315
   + 241 + 458. `verifica_bloques --todos --prosa`: las nueve páginas en verde.
 
-**Sin publicar**: espera la revisión de Javier.
+**Publicado** el 2026-10-22 con el visto bueno de Javier («publica el capítulo 5 y sube main y despliega»):
+`main` `08ce0ac`, `gh-pages` `fb881d1`, construido con `git commit-tree` del árbol `08ce0ac:sitio` sobre la punta
+(solo cambiaban el cap. 5 y el README). El build de Pages terminó en `built`; el árbol de `gh-pages` es el `sitio/`
+de `main`; `verifica_publicado.py --solo-huella` da la huella de las 10 páginas; el cap. 5 y el README servidos
+coinciden byte a byte con la rama; la página servida carga los módulos 1, 3, 4 y 11 con 0 errores de KaTeX ni de consola.
