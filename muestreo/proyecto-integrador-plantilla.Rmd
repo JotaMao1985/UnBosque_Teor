@@ -1,0 +1,178 @@
+---
+title: "Título del proyecto"
+author: "Nombre Apellido y Nombre Apellido"
+date: "`r hoy <- Sys.Date(); meses <- c('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'); paste(as.integer(format(hoy, '%d')), 'de', meses[as.integer(format(hoy, '%m'))], 'de', format(hoy, '%Y'))`"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+<!--
+  Plantilla del informe del proyecto integrador — Muestreo Estadístico (20939),
+  Universidad El Bosque, 2026-II. La guía del proyecto explica cada sección.
+
+  CÓMO USARLA
+  1. Guárdala como `informe.Rmd` en la raíz del repositorio del proyecto.
+  2. El informe LEE lo que ya existe; no vuelve a seleccionar:
+     - `datos/muestra.csv`, la que escribió `R/seleccion.R`: una fila por unidad
+       seleccionada, con `id`, `estrato`, `N_h`, `pi_k` y `peso`;
+     - `datos/datos.csv`: una fila por unidad seleccionada, también las que no
+       respondieron, con `id`, `respondio` (TRUE/FALSE, 1/0 o sí/no) y tus
+       variables. Si tu CSV sale de Excel con «;», usa read.csv2.
+  3. Mientras no existan esos archivos, la plantilla usa el ejemplo de la guía
+     —las escuelas de `apipop`, del paquete survey— en la memoria de R, sin
+     escribir nada en `datos/`, y el informe lo avisa en grande. Cuando tengas
+     tus datos, borra los bloques marcados «EJEMPLO».
+  4. Cambia `api00` por tu variable y el diseño por el de TU protocolo. Esta
+     plantilla es para un estratificado con aleatorio simple en cada estrato
+     (un aleatorio simple es un solo estrato); con conglomerados o PPT, el
+     svydesign cambia: capítulos 5 a 7.
+  5. Pulsa Knit. Si no corre de principio a fin en un R recién abierto, no
+     está terminado. Sube también el `informe.html` que sale.
+-->
+
+```{r configuracion, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+library(survey)
+con_ejemplo <- !file.exists("datos/muestra.csv")
+con_datos <- con_ejemplo || file.exists("datos/datos.csv")
+coma <- function(x, d = 1) format(round(x, d), nsmall = d, decimal.mark = ",")
+```
+
+```{r aviso-ejemplo, echo = FALSE, results = "asis"}
+if (con_ejemplo) cat("> **ESTE INFORME USA EL EJEMPLO DE LA GUÍA, NO TUS DATOS.** Pon tu muestra en `datos/muestra.csv` y tus respuestas en `datos/datos.csv`, y borra los bloques «EJEMPLO».\n")
+if (!con_datos) cat("> **TODAVÍA NO HAY `datos/datos.csv`:** el informe muestra el diseño, pero no estima nada.\n")
+```
+
+# Resumen
+
+Cinco líneas: qué se estimó, sobre qué población, con qué diseño y qué salió, con su
+incertidumbre.
+
+# Población, marco y objetivo
+
+Qué se quiere estimar y para quién. Qué lista es el marco, de dónde sale, qué unidades de la
+población objetivo no están en ella y hacia dónde sesga esa ausencia.
+
+# El diseño, planeado y ejecutado
+
+## Lo que decía el protocolo
+
+El diseño y por qué ese, comparado con al menos una alternativa por su varianza esperada o su
+costo. El tamaño y su justificación. La probabilidad de inclusión de cada unidad. El guion de
+selección y su comprobación van en los anexos.
+
+```{r muestra}
+if (con_ejemplo) {
+  # EJEMPLO: la muestra que escribe el guion de la guía. Bórralo con tus datos.
+  data(api)
+  marco <- data.frame(id = seq_len(nrow(apipop)), estrato = as.character(apipop$stype))
+  n_h <- c(E = 190, H = 32, M = 44)
+  set.seed(2027)                     # la semilla que publicó el docente
+  ids <- unlist(lapply(names(n_h), function(h) {
+    x <- marco$id[marco$estrato == h]; x[sample(length(x), n_h[[h]])]
+  }))
+  muestra <- marco[match(ids, marco$id), ]
+  N_h <- table(marco$estrato)
+  muestra$N_h <- as.numeric(N_h[muestra$estrato])
+  muestra$pi_k <- as.numeric(n_h[muestra$estrato]) / muestra$N_h
+  muestra$peso <- 1 / muestra$pi_k
+} else {
+  muestra <- read.csv("datos/muestra.csv")
+}
+stopifnot("a datos/muestra.csv le faltan columnas: id, estrato, N_h, pi_k, peso" =
+            all(c("id", "estrato", "N_h", "pi_k", "peso") %in% names(muestra)))
+table(muestra$estrato)
+```
+
+## Lo que pasó en el campo
+
+Cada desviación del protocolo, con lo que cambia en la estimación. Si no hubo ninguna, dilo.
+
+```{r datos, eval = con_datos}
+if (con_ejemplo) {
+  # EJEMPLO: con apipop no hay campo; todas «responden». Bórralo con tus datos.
+  datos <- data.frame(id = muestra$id, respondio = TRUE, api00 = apipop$api00[muestra$id])
+} else {
+  datos <- read.csv("datos/datos.csv")
+}
+stopifnot("datos.csv tiene que tener una fila por cada unidad de la muestra, ni más ni menos" =
+            setequal(datos$id, muestra$id) && !anyDuplicated(datos$id))
+# `respondio` puede venir como TRUE/FALSE, 1/0 o sí/no: se normaliza, y lo que no se
+# entienda detiene el informe en vez de colarse en silencio.
+r <- tolower(trimws(as.character(datos$respondio)))
+si <- c("true", "1", "si", "sí", "verdadero", "x")
+no <- c("false", "0", "no", "falso")
+if (!all(r %in% c(si, no)))
+  stop("valores de respondio que no entiendo: ", paste(unique(r[!r %in% c(si, no)]), collapse = ", "))
+datos$respondio <- r %in% si
+# las columnas del diseño vienen de la muestra, no de datos.csv
+datos <- datos[, setdiff(names(datos), c("estrato", "N_h", "pi_k", "peso")), drop = FALSE]
+todo <- merge(muestra, datos, by = "id")
+round(tapply(todo$respondio, todo$estrato, mean), 3)   # tasa de respuesta por estrato
+mean(todo$respondio)                                   # y en total, sin ponderar
+```
+
+# La estimación
+
+```{r estimacion, eval = con_datos}
+resp <- todo[todo$respondio, ]
+r_h <- table(factor(resp$estrato, levels = unique(muestra$estrato)))
+if (any(r_h < 2))
+  stop("estratos con menos de 2 respuestas: ", paste(names(r_h)[r_h < 2], collapse = ", "),
+       ". Mira el capítulo 8: colapsar estratos, y declararlo como desviación.")
+# AJUSTE POR NO RESPUESTA, dentro de cada estrato: el peso de diseño 1/pi_k se
+# multiplica por (seleccionados / respondieron) del estrato. Supone que, dentro
+# del estrato, quien no respondió se parece a quien sí. Decláralo en «La no
+# respuesta». Si todas respondieron, el ajuste vale 1 y no cambia nada.
+n_sel <- table(muestra$estrato)
+resp$peso_aj <- resp$peso * as.numeric(n_sel[resp$estrato] / r_h[resp$estrato])
+dis <- svydesign(ids = ~1, strata = ~estrato, weights = ~peso_aj, fpc = ~N_h, data = resp)
+est <- svymean(~api00, dis, deff = TRUE)
+est
+confint(est)
+```
+
+```{r segunda-via, eval = con_datos}
+# Segunda vía: la fórmula del estratificado, a mano. Tiene que dar el mismo EE.
+N_h <- tapply(resp$N_h, resp$estrato, unique)
+N <- sum(N_h)
+s2 <- tapply(resp$api00, resp$estrato, var)[names(N_h)]
+r_n <- as.numeric(r_h[names(N_h)])
+c(formula = sqrt(sum((N_h / N)^2 * (1 - r_n / N_h) * s2 / r_n)), survey = SE(est)[1])
+```
+
+`r if (con_datos) paste0("La media estimada es ", coma(coef(est)), ", con un error estándar de ", coma(SE(est)), ".")`
+Las cifras del texto se escriben así, con R en línea: si cambia un dato, cambia también el
+texto.
+
+# La no respuesta
+
+Su tasa, en qué estratos se concentró, el ajuste que se hizo y el supuesto que hace.
+
+# Análisis exploratorio
+
+Solo si lo hay, y marcado como tal: lo que se te ocurrió después de ver los datos.
+
+# Conclusión y límites
+
+En el lenguaje del problema: qué dice la estimación, con su incertidumbre, qué no se puede
+concluir con este diseño y a qué población —y a cuál no— se aplica.
+
+# Declaración de uso de IA
+
+Qué herramienta, para qué, qué te devolvió y qué verificaste o corregiste, con al menos un
+ejemplo concreto. Si no usaste ninguna, dilo.
+
+# Anexos
+
+## El guion de selección y su comprobación
+
+```{r anexo-guion, eval = FALSE, code = if (file.exists("R/seleccion.R")) readLines("R/seleccion.R")}
+```
+
+```{r anexo-comprobacion, eval = FALSE, code = if (file.exists("R/comprobacion.R")) readLines("R/comprobacion.R")}
+```
+
+La bitácora de campo está en `datos/bitacora.md`.
