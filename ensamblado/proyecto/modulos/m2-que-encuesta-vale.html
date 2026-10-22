@@ -1,0 +1,101 @@
+      <p>Casi cualquier población finita a la que tengas acceso sirve. Lo que decide si vale como
+        proyecto no es el tema: es que la encuesta cumpla seis condiciones. Revísalas antes de
+        escribir la ficha, porque un tema que falla en una de ellas no se arregla después con un
+        estimador más sofisticado.</p>
+
+      <h3>Las seis condiciones</h3>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>El diseño es probabilístico.</strong> El criterio operativo es uno solo: para
+            <strong>cada</strong> unidad de la población tienes que poder escribir su probabilidad
+            de inclusión \(\pi_k\). Si no puedes, no es un diseño probabilístico y el trabajo no
+            cumple, por bien redactado que esté: el módulo 10 dice qué pasa entonces. Un formulario
+            difundido por WhatsApp no es una muestra: nadie sabe con qué probabilidad le llegó a
+            cada quien.</li>
+          <li><strong>El marco está identificado y descrito</strong>, con sus huecos: qué unidades
+            de la población objetivo no pueden ser seleccionadas y hacia dónde sesga esa ausencia.
+            Es el error de cobertura del <a href="capitulo-1-encuestas-sesgos.html">capítulo
+            1</a>, aplicado a tu propio trabajo.</li>
+          <li><strong>La selección es reproducible</strong>: un guion de R con semilla fija que,
+            ejecutado por otra persona, da exactamente tu muestra.</li>
+          <li><strong>Al menos @@N_MINIMO@@ unidades finales</strong>, y el tamaño justificado: por
+            una precisión objetivo, por el presupuesto o por los dos. Un tamaño elegido «porque sí»
+            resta, aunque sea grande.</li>
+          <li><strong>Toda estimación va con su error estándar y su intervalo de confianza</strong>,
+            calculados con el diseño que usaste. Un número solo, sin incertidumbre, no cuenta como
+            estimación.</li>
+          <li><strong>El análisis reconoce el diseño.</strong> Si hay estratos, conglomerados o
+            probabilidades desiguales, el estimador y su varianza los tienen en cuenta. Analizar
+            una muestra por conglomerados como si fuera aleatoria simple es el error que más
+            penaliza la rúbrica, porque da intervalos falsamente estrechos.</li>
+        </ol>
+      </div>
+
+      <h3>Qué diseños valen</h3>
+
+      <p>Cualquiera de los del curso que cumpla las seis condiciones. Lo que se califica es que lo
+        <strong>elijas</strong> y defiendas la elección frente a las alternativas, no que uses el
+        más complicado:</p>
+
+      <table>
+        <caption>Los diseños del curso que valen para el proyecto, y dónde están.</caption>
+        <thead>
+          <tr><th scope="col">Diseño</th><th scope="col">Cuándo conviene</th><th scope="col">Material</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Aleatorio simple o sistemático</td><td>El marco es una lista sin información auxiliar útil, o la población es homogénea. Con un solo arranque, la varianza del sistemático no se puede estimar: declara la aproximación que uses</td><td>Capítulo 2</td></tr>
+          <tr><td>Estimador de razón o de regresión, con cualquiera de estos diseños</td><td>Hay una variable auxiliar correlacionada con la de interés, y conoces su total en la población</td><td>Capítulo 3</td></tr>
+          <tr><td>Estratificado</td><td>El estrato de cada unidad está en el marco, y hay grupos que separan la variable de interés o te interesa estimar en cada grupo</td><td>Capítulo 4</td></tr>
+          <tr><td>Por conglomerados, en una o dos etapas</td><td>No hay lista de unidades, pero sí de grupos: salones, estantes, manzanas</td><td>Capítulo 5</td></tr>
+          <tr><td>Con probabilidad proporcional al tamaño (PPT)</td><td>El tamaño de cada unidad está en el marco y la variable que estimas crece en proporción a él (ventas, matrícula); si no, el PPT puede ser peor que un aleatorio simple</td><td>Capítulo 6</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Poblaciones que sirven</h3>
+
+      <ul>
+        <li><strong>Los estudiantes matriculados en un programa</strong> (marco: el listado
+          institucional) → estratificado por semestre.</li>
+        <li><strong>Los establecimientos comerciales de una localidad</strong> (marco: el registro
+          de la cámara de comercio) → PPT por número de empleados.</li>
+        <li><strong>Los libros de una biblioteca</strong> (marco: los estantes) → conglomerados en
+          dos etapas.</li>
+        <li><strong>Los predios de un barrio</strong> (marco: la lista de predios de la
+          cartografía) → sistemático sobre esa lista. Si en cambio sorteas puntos sobre el mapa y
+          tomas el predio donde cae cada uno, cada predio sale con probabilidad proporcional a su
+          área: es un PPT.</li>
+        <li><strong>Un archivo administrativo público</strong>, submuestreado (marco: el propio
+          archivo) → cualquier diseño, con una ventaja que no tiene ninguna otra opción: <strong>el
+          parámetro poblacional es conocido</strong>, así que puedes comprobar si tu intervalo lo
+          contiene. Es la opción que más enseña. El archivo lo consigues tú, y su URL, la fecha de
+          descarga y la versión van en el protocolo: <strong>no valen <code>apipop</code>, que es el
+          ejemplo de esta guía, ni los conjuntos de datos de los capítulos del curso</strong>.</li>
+      </ul>
+
+      <h3>Con personas: consentimiento, y el marco fuera del repositorio</h3>
+
+      <p>Una encuesta a personas vale si cada participante <strong>da su consentimiento</strong>
+        sabiendo qué se le pregunta y que puede no responder; si las respuestas son
+        <strong>anónimas</strong> en los datos; y si el riesgo es <strong>mínimo</strong>: nada que
+        exponga información sensible, y nadie menor de edad. Si el marco es un listado de personas,
+        al repositorio va solo un identificador por unidad, creado para el proyecto (U001, U002…;
+        nunca la cédula ni el código estudiantil), y la selección corre sobre ese archivo. El
+        listado con nombres y la tabla que une cada identificador con su persona se guardan en la
+        carpeta <code>privado/</code>, que no se sube nunca (módulo 3). Usar un listado
+        institucional exige el permiso de quien lo administra: pídelo antes del protocolo.</p>
+
+      <h3>Qué no vale</h3>
+
+      <ul>
+        <li>Una muestra de conveniencia, se le llame como se le llame: un formulario abierto,
+          «quien respondió», los compañeros de clase.</li>
+        <li>Un marco que es en realidad la lista de quienes respondieron.</li>
+        <li>Sustituir a quien no responde por otra unidad «parecida» sin que eso esté en el diseño:
+          cambia las probabilidades de inclusión y ya no sabes cuáles son.</li>
+        <li><strong>Datos inventados</strong>, o presentar como propia una muestra que no se
+          recogió. Es fraude académico y se trata como tal. Si la recolección sale mal —respuesta
+          baja, marco incompleto, unidades que no se encuentran—, <strong>repórtalo</strong>: un
+          proyecto que documenta con honestidad su no respuesta califica mejor que uno con números
+          impecables e inverosímiles.</li>
+      </ul>

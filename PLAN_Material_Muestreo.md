@@ -7105,3 +7105,36 @@ publicada byte a byte antes de empezar, así que el HTML sale del ensamblador.
 (solo cambiaban el cap. 5 y el README). El build de Pages terminó en `built`; el árbol de `gh-pages` es el `sitio/`
 de `main`; `verifica_publicado.py --solo-huella` da la huella de las 10 páginas; el cap. 5 y el README servidos
 coinciden byte a byte con la rama; la página servida carga los módulos 1, 3, 4 y 11 con 0 errores de KaTeX ni de consola.
+
+### T7.93 — La guía del proyecto integrador del Corte III (2026-10-22)
+
+Javier pidió el 21 oct una **modalidad conjunta** del proyecto con Diseño de Experimentos y, el 22,
+la guía del proyecto de Muestreo para el sitio, **calcada de la de Diseño**. Sus decisiones viven
+fuera de git: `PLAN_Proyecto_Conjunto.md` (D1–D16, la conjunta y el Corte III sin examen final),
+`PLAN_Proyecto_Muestreo.md` (DM1–DM12) y `PLAN_Auditoria_Proyecto_Muestreo.md` (la auditoría).
+
+- **El documento:** `sitio/muestreo/proyecto-integrador-corte-iii.html`, diez módulos, y su
+  plantilla `proyecto-integrador-plantilla.Rmd`, con su tarjeta «PI» en la portada. Fuentes en
+  `ensamblado/proyecto/` (`datos.py` es la única fuente de cifras; prosa en `modulos/`), código en
+  `ensamblado/codigo/proyecto/cadena.R` (ejecutado y anotado con `anota_salidas.py`), ensamblador
+  `ensamblado/ensambla_proyecto.py` (`--revisar`; `--con-indice` pone la tarjeta).
+- **Auditoría de contenido** con cinco lectores independientes (estadística, claridad, pedagogía,
+  código y resistencia a la IA): 34 errores objetivos corregidos. El más grave, encontrado por los
+  cinco: la comprobación de π_k comparaba la frecuencia media por estrato, que coincide por
+  construcción con cualquier guion; ahora es unidad por unidad, en el protocolo. El ejemplo se
+  rehízo (piloto estratificado, MAS 286 frente a estratificado proporcional 266, margen 14,4) y muestra
+  a propósito un intervalo que no contiene el parámetro: **no cambiar la semilla**. La medición de la
+  IA, en `ensamblado/proyecto/RESISTENCIA_IA.md`.
+- **Decisiones de Javier sobre la auditoría (22 oct):** cierre del campo el vie 13 nov (release
+  `campo`, sin nota); semilla de la selección publicada por el docente a las 11:05 del cierre del
+  protocolo; no valen `apipop` ni los datos del curso como archivo público; dos preguntas por persona,
+  una de ejecución; un diseño no probabilístico que llega al informe deja lo escrito en 3,0 como
+  máximo; sesiones de retraso = clases de Muestreo (jueves y viernes), y en la conjunta las de Diseño;
+  la regla de desistir de la conjunta, confirmada.
+- **Verificado:** `ensamblado/proyecto/audita_proyecto.py` 221 comprobaciones, 0 fallos (frentes A–G;
+  el E renderiza la plantilla en cuatro escenarios de estudiante); `prueba_audita_proyecto.py` 39 de
+  39 defectos cazados; `ensambla_proyecto.py --revisar` igual; JS sin errores; navegador: diez
+  módulos sin errores de KaTeX ni de consola y sin scroll horizontal; `verifica_publicado.py --local`
+  arranca sus 4 bloques; `verifica_referencias.py --anota` solo para esta página (12 referencias).
+- **Convivencia:** se commitean solo las rutas de esta tarea; los cambios del cap. 4 sin commitear
+  son de otra sesión y no se tocan.

@@ -1,0 +1,105 @@
+      <p>El informe cierra el <strong>@@INFORME_CIERRA@@</strong>, en la semana @@INFORME_SEMANA@@,
+        y vale el <strong>@@PESO_INFORME@@ %</strong> del proyecto: es lo que más pesa. Se entrega
+        con la release <code>@@ETIQUETA_INFORME@@</code>, y en ella tienen que estar tres cosas:
+        <code>informe.Rmd</code>, los datos en <code>datos/</code> y el informe ya renderizado, en
+        HTML o en PDF. Son hasta <strong>@@PAGINAS_INFORME@@ páginas</strong> sin contar los anexos:
+        la brevedad forma parte del encargo, porque un informe de encuesta que nadie lee no sirve
+        de nada.</p>
+
+      <h3>La estructura</h3>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>Resumen.</strong> Cinco líneas: qué se estimó, sobre qué población, con qué
+            diseño y qué salió, con su incertidumbre.</li>
+          <li><strong>Población, marco y objetivo.</strong> Y lo que el marco deja fuera.</li>
+          <li><strong>El diseño, planeado y ejecutado.</strong> Lo que decía el protocolo, por qué
+            ese diseño y no otro, y lo que pasó de verdad en el campo, con cada desviación.</li>
+          <li><strong>La estimación.</strong> Lo planeado, en el orden planeado: el diseño declarado
+            en <code>survey</code>, cada estimación con su error estándar, su intervalo y, cuando
+            el diseño lo pide, su efecto de diseño.</li>
+          <li><strong>La no respuesta</strong>: su tasa, dónde se concentró, qué ajuste se hizo y
+            qué supuesto hace ese ajuste.</li>
+          <li><strong>El análisis exploratorio</strong>, si lo hay, en su propia sección y marcado
+            como tal.</li>
+          <li><strong>La conclusión y sus límites.</strong> En el lenguaje del problema, con lo que
+            el diseño <em>no</em> permite concluir y sin extrapolar fuera de la población
+            muestreada.</li>
+          <li><strong>La declaración de uso de IA.</strong></li>
+          <li><strong>Anexos.</strong> El guion de selección, la comprobación de las probabilidades
+            de inclusión y la bitácora de campo.</li>
+        </ol>
+      </div>
+
+      <h3>La estimación, con el diseño que usaste</h3>
+
+      <p>La estimación se declara en <code>survey</code> con el diseño que de verdad se corrió: los
+        estratos, los conglomerados si los hay, los pesos y la corrección por población finita. El
+        informe lee la muestra que escribió el guion, no la vuelve a seleccionar. En el ejemplo, la
+        media del índice con su error estándar, su efecto de diseño —la varianza con este diseño
+        dividida entre la de un aleatorio simple del mismo tamaño (capítulo 7)— y su intervalo;
+        después, el mismo error estándar por una segunda vía, la fórmula del estratificado a mano;
+        y como el marco es un archivo público, el parámetro, que en una encuesta de verdad nunca se
+        ve:</p>
+
+<pre><code class="language-r">⟦R4⟧</code></pre>
+
+      <p>El error estándar es el mismo por las dos vías, @@EJ_EE@@, y el margen que salió,
+        @@EJ_MARGEN_LOGRADO@@ puntos, cumple los @@EJ_MARGEN@@ que se propuso el protocolo. El efecto
+        de diseño, @@EJ_DEFF@@, casi 1, confirma lo que la comparación del protocolo ya anticipaba:
+        estratificar por tipo de escuela gana muy poco. Y el intervalo, de @@EJ_IC_INF@@ a
+        @@EJ_IC_SUP@@, <strong>no contiene</strong> el promedio verdadero, @@EJ_PARAMETRO@@. No hay
+        ningún error: un intervalo del 95 % deja fuera el parámetro en alrededor de una de cada
+        veinte muestras posibles, y esta es una de ellas. En una encuesta real no lo sabrías nunca;
+        con un archivo público lo ves, y decirlo así, sin cambiar de semilla hasta que el intervalo
+        acierte, es interpretarlo bien.</p>
+
+      <h3>Que corra de principio a fin</h3>
+
+      <p>El informe tiene que salir entero de clonar el repositorio, abrir
+        <code>informe.Rmd</code> en un R recién abierto y pulsar <em>Knit</em>: rutas relativas, la
+        semilla puesta, ningún objeto que exista solo en tu sesión. Y las cifras del texto no se
+        copian a mano de la salida: se escriben con R en línea, como
+        <code>`r format(round(coef(est), 1), decimal.mark = ",")`</code>, para que si cambia un dato
+        cambie también el texto. Es
+        la misma regla con la que se escribe este material.</p>
+
+      <div class="tip-box">
+        <p style="margin:0;"><strong>Hay una plantilla.</strong>
+          <a href="@@PLANTILLA_RMD@@" download>Descarga <code>@@PLANTILLA_RMD@@</code></a> y
+          guárdala como <code>informe.Rmd</code> en la raíz del repositorio: trae la estructura de
+          arriba, los bloques de R que leen la muestra y los datos, estiman con <code>survey</code> y
+          verifican por la segunda vía, y la sección de la declaración de IA.
+          Viene con el ejemplo de esta guía para que la puedas renderizar desde el primer día;
+          bórralo cuando tengas tus datos.</p>
+      </div>
+
+      <h3>La declaración de uso de IA</h3>
+
+      <p>Es obligatoria, también si no usaste ninguna (en ese caso dice eso). Si la usaste, dice
+        cuatro cosas: <strong>qué herramienta</strong>, <strong>para qué</strong>, <strong>qué te
+        devolvió</strong> y <strong>qué verificaste o corregiste</strong>, con al menos un ejemplo
+        concreto. «Le pedí el código de la estimación, analizaba la muestra como aleatoria simple y
+        le añadí los estratos y la corrección por población finita» es una declaración; «se usó IA
+        como apoyo» no lo es.</p>
+
+      <h3>Los errores que más cuestan</h3>
+
+      <ul>
+        <li><strong>Analizar una muestra compleja como si fuera aleatoria simple.</strong> Con
+          conglomerados, los intervalos salen falsamente estrechos, porque las unidades de un mismo
+          grupo se parecen: módulos del <a href="capitulo-5-conglomerados.html">capítulo 5</a> y
+          del <a href="capitulo-7-encuestas-complejas.html">capítulo 7</a>.</li>
+        <li><strong>Pesos de diseño que no son el inverso de la probabilidad de inclusión</strong>,
+          o ajustes por no respuesta que no se declaran, o que se hacen hasta que la estimación
+          cuadra con lo que se esperaba. Un ajuste declarado, con su supuesto, está bien.</li>
+        <li><strong>Olvidar los estratos o la corrección por población finita</strong> en la
+          varianza: el estimador puntual sale bien y su error estándar suele salir demasiado
+          grande; ignorar los conglomerados, en cambio, lo deja demasiado pequeño
+          (<a href="capitulo-4-muestreo-estratificado.html">capítulo 4</a>).</li>
+        <li><strong>Esconder la no respuesta</strong>, o tratar a quienes respondieron como si
+          fueran la muestra seleccionada (<a href="capitulo-8-no-respuesta-ponderacion.html">capítulo
+          8</a>).</li>
+        <li><strong>Extrapolar fuera del marco.</strong> Si el marco eran los matriculados de un
+          programa, la conclusión es sobre ese programa, no sobre «los universitarios».</li>
+      </ul>

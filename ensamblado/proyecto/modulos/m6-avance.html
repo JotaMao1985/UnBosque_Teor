@@ -1,0 +1,66 @@
+      <p>El avance cierra el <strong>@@AVANCE_CIERRA@@</strong>, en la semana @@AVANCE_SEMANA@@, y
+        vale el <strong>@@PESO_AVANCE@@ %</strong> del proyecto. Llega a mitad de camino a
+        propósito: es el momento en que todavía se puede volver a buscar a quien no respondió, y no
+        la víspera del informe. Se entrega con la release <code>@@ETIQUETA_AVANCE@@</code>.</p>
+
+      <h3>Qué se entrega</h3>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>La muestra</strong>, en <code>datos/muestra.csv</code>, tal como la escribió
+            el guion de selección: una fila por unidad seleccionada, con su estrato o conglomerado,
+            su probabilidad de inclusión y su peso.</li>
+          <li><strong>Los datos recogidos</strong>, en <code>datos/datos.csv</code>: una fila por
+            unidad seleccionada —también por las que no respondieron—, con su <code>id</code>, una
+            columna <code>respondio</code> que vale <code>TRUE</code> o <code>FALSE</code>, y tus
+            variables. Con conglomerados, una fila por unidad observada, con la columna de su
+            conglomerado.</li>
+          <li><strong>La bitácora de campo</strong>, en <code>datos/bitacora.md</code>: cada sesión,
+            cada contacto por el identificador de la unidad —nunca por su nombre—, cuántas veces se
+            insistió con cada una y cada incidente.</li>
+          <li><strong>La tasa de respuesta</strong>, en <code>avance.md</code>, en total y por
+            estrato o conglomerado.</li>
+          <li><strong>Las desviaciones del protocolo</strong>, en <code>avance.md</code>, cada una con
+            lo que cambia en la estimación.</li>
+          <li><strong>Un primer resumen</strong> descriptivo de lo recogido, en
+            <code>figuras/</code> y enlazado desde <code>avance.md</code>. Todavía sin
+            intervalos.</li>
+        </ol>
+      </div>
+
+      <p>El avance se califica con el campo que lleves. Lo ideal es llegar con la primera ronda de
+        contactos cerrada y la lista de a quién falta insistir: el avance sirve para decidir esa
+        segunda ronda. Un avance honesto con la mitad de las respuestas vale más que uno completo
+        que esconde que se sustituyó a quien no estaba.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-flag-checkered mr-2" aria-hidden="true"></i>El cierre del campo</h4>
+        <p style="margin-bottom:0;">El campo cierra el <strong>@@CAMPO_CIERRA@@</strong>, con la
+          release <code>@@ETIQUETA_CAMPO@@</code>, que no tiene nota: lo que esté en
+          <code>datos/</code> a esa hora es lo que se estima. Lo que pase después —una respuesta que
+          llega tarde— no entra en la estimación, y el informe lo cuenta.</p>
+      </div>
+
+      <div class="note">
+        <p style="margin:0;"><strong>Si tu marco es un archivo público</strong>, no hay campo, pero
+          sí hay bitácora: registra de dónde y cuándo descargaste el archivo, qué versión es y qué
+          unidades seleccionadas salieron sin dato de tu variable. Esas son tu «no respuesta», y se
+          tratan igual.</p>
+      </div>
+
+      <div class="warning">
+        <p style="margin:0;"><strong>Quien no responde sigue en la muestra.</strong> No lo borres ni
+          lo cambies por otro «parecido»: la muestra seleccionada es la que dijo el guion, y la que
+          respondió es otra cosa. La diferencia entre las dos es la no respuesta, y se reporta con
+          su tasa. Sustituir en silencio cambia las probabilidades de inclusión sin que nadie sepa
+          cuáles quedaron.</p>
+      </div>
+
+      <h3>Si la respuesta sale baja</h3>
+
+      <p>Primero, insiste: una segunda visita o un segundo correo suben la respuesta más que
+        cualquier ajuste posterior. Lo que quede se trata con lo del
+        <a href="capitulo-8-no-respuesta-ponderacion.html">capítulo 8</a> —ajuste de pesos por
+        clases de respuesta, postestratificación— y se dice qué supuesto hace ese ajuste. Y en la
+        bitácora, quién no respondió en cada estrato: si la no respuesta se concentra en uno, es la
+        primera pista de hacia dónde sesga.</p>

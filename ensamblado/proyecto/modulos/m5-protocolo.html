@@ -1,0 +1,160 @@
+      <p>El protocolo cierra el <strong>@@PROTOCOLO_CIERRA@@</strong>, en la semana
+        @@PROTOCOLO_SEMANA@@, y vale el <strong>@@PESO_PROTOCOLO@@ %</strong> del proyecto. Son hasta
+        <strong>@@PAGINAS_PROTOCOLO@@ páginas</strong>. Se escribe <strong>antes de seleccionar una
+        sola unidad</strong>, y esa es toda su gracia.</p>
+
+      <p>Va en <code>protocolo.md</code>, con el guion de selección y su comprobación en
+        <code>R/</code> y el marco en <code>datos/</code>, y se entrega con la release
+        <code>@@ETIQUETA_PROTOCOLO@@</code>. Hasta el cierre puedes corregirlo y publicar otra
+        release, como explica el módulo 3; <strong>desde el cierre no se edita</strong>: lo que
+        cambie en el campo va al avance como desviación.</p>
+
+      <h3>Por qué se escribe antes</h3>
+
+      <p>Con los datos delante, siempre hay una decisión más que tomar: juntar dos estratos que
+        salieron pequeños, recalcular los pesos «para que cuadren», quitar a quien respondió algo
+        raro, reportar solo el subgrupo donde la diferencia se ve. Cada una parece razonable, y
+        juntas fabrican una estimación que dice lo que querías leer. El protocolo separa dos cosas
+        que después se confunden: el <strong>análisis planeado</strong>, que decidiste antes de
+        ver los datos, y el <strong>exploratorio</strong>, que se te ocurrió después y que solo
+        puede sugerir algo para la próxima encuesta.</p>
+
+      <div class="note">
+        <p style="margin:0;"><strong>No es un contrato.</strong> Si en el campo algo cambia —una
+          sección no te deja entrar, la respuesta es más baja de lo que esperabas—, cambias el plan
+          y lo dices. Lo que el protocolo impide no es cambiar: es cambiar sin que se note. Declarar
+          una desviación no te quita puntos por sí mismo; esconderla, sí. Lo que la desviación le
+          haga a la estimación se ve en el análisis.</p>
+      </div>
+
+      <div class="definition">
+        <h4><i class="fas fa-vial mr-2" aria-hidden="true"></i>La única excepción: el piloto</h4>
+        <p style="margin-bottom:0;">Para calcular el tamaño hace falta una idea de la variabilidad,
+          y casi siempre sale de un <strong>piloto</strong>: unas pocas unidades que se miden antes
+          del protocolo. Es la única selección permitida antes de él. Va con su propia semilla, se
+          declara en el protocolo —cuántas unidades, cómo se eligieron y qué variabilidad dio— y sus
+          datos sirven solo para el tamaño: <strong>no entran en la estimación</strong>. Sus
+          unidades siguen en el marco y pueden volver a salir en la muestra.</p>
+      </div>
+
+      <h3>Los diez campos</h3>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>Objetivo y parámetros.</strong> Qué vas a estimar —totales, promedios,
+            proporciones— y para qué población o subpoblaciones.</li>
+          <li><strong>La población objetivo.</strong> Quiénes, dónde y cuándo, sin ambigüedad.</li>
+          <li><strong>El marco y su cobertura.</strong> Qué lista es, de dónde sale, qué unidades de
+            la población objetivo no están en ella y hacia dónde sesga esa ausencia.</li>
+          <li><strong>Unidad de muestreo y unidad de observación.</strong> Qué se selecciona y a
+            quién se le pregunta. Si seleccionas salones y preguntas a los estudiantes, el diseño
+            es por conglomerados, y el análisis también (<a href="capitulo-5-conglomerados.html">capítulo
+            5</a>).</li>
+          <li><strong>El diseño, y por qué ese.</strong> Comparado con al menos una alternativa, con
+            números: la varianza esperada de cada uno, su costo o los dos. «El estratificado es más
+            preciso» no es una justificación; la varianza que esperas con y sin estratos, sí.</li>
+          <li><strong>Las probabilidades de inclusión.</strong> La expresión de \(\pi_k\) para cada
+            unidad, y por tanto su peso \(1/\pi_k\). Es la prueba de que el diseño es
+            probabilístico.</li>
+          <li><strong>El tamaño.</strong> Cuántas unidades, y por qué: qué margen de error buscas,
+            con qué confianza y con qué variabilidad, o qué presupuesto tienes; y el piloto, si lo
+            hubo.</li>
+          <li><strong>La selección y su comprobación.</strong> El guion de R en
+            <code>R/seleccion.R</code>, listo para correr con la semilla que se publique al cierre,
+            y la comprobación de que sortea con las probabilidades que dice, en
+            <code>R/comprobacion.R</code>.</li>
+          <li><strong>El plan de estimación.</strong> Qué estimadores, qué varianza, cómo declaras
+            el diseño en <code>survey</code> y qué subpoblaciones vas a reportar.</li>
+          <li><strong>No respuesta y ética.</strong> Cuántas veces vas a insistir con quien no
+            responde, qué harás con la no respuesta que quede (el
+            <a href="capitulo-8-no-respuesta-ponderacion.html">capítulo 8</a>), y el consentimiento
+            si hay personas.</li>
+        </ol>
+      </div>
+
+      <h3>El tamaño, comparando dos diseños</h3>
+
+      <p>Para estimar un promedio con un margen de error \(e\) y una confianza del 95 %, el tamaño de
+        un <strong>aleatorio simple</strong> sale de la variabilidad \(S^2\) y se corrige por
+        población finita, como en el <a href="capitulo-2-diseno-mas-sistematico.html">capítulo
+        2</a>:</p>
+
+      <div class="formula">
+        $$n_0 = \frac{z^2\,S^2}{e^2}, \qquad n = \frac{n_0}{1 + n_0/N}, \qquad z = 1{,}96$$
+      </div>
+
+      <p>Esa fórmula es la de un aleatorio simple. Si tu diseño es otro, lo que entra en el lugar de
+        \(S^2\) es la varianza de <em>tu</em> diseño: en un estratificado con asignación
+        proporcional, \(\sum_h W_h S_h^2\), con \(W_h = N_h/N\) (el
+        <a href="capitulo-4-muestreo-estratificado.html">capítulo 4</a>). Con conglomerados, la
+        del aleatorio simple multiplicada por el efecto de diseño que esperas. Calcular el tamaño
+        de un diseño con la fórmula de otro es la forma más común de no alcanzar el margen que uno
+        mismo se propuso.</p>
+
+      <p>El ejemplo de esta guía usa un archivo público: las @@EJ_N_POBLACION@@ escuelas de
+        California de <code>apipop</code>, que viene con el paquete <code>survey</code>, con su tipo
+        —primaria (E), básica secundaria (M) y media (H)— y su <code>api00</code>, un índice de
+        rendimiento académico de 200 a 1000. El marco es la lista de escuelas con su tipo; como es
+        la población entera, el parámetro se conoce y al final se puede ver si la estimación lo
+        atrapa. Un piloto de 10 escuelas por tipo da la variabilidad de cada estrato, y con ella
+        se comparan los dos diseños para un margen de @@EJ_MARGEN@@ puntos:</p>
+
+<pre><code class="language-r">⟦R1⟧</code></pre>
+
+      <p>El aleatorio simple pediría @@EJ_N_MAS@@ escuelas y el estratificado proporcional
+        <strong>@@EJ_N@@</strong>: estratificar por tipo ahorra poco, porque los tres tipos tienen
+        promedios parecidos. El protocolo del ejemplo elige el estratificado —cuesta lo mismo de
+        seleccionar y garantiza escuelas de los tres tipos— y lo dice con esos dos números. Un
+        aleatorio simple habría sido igual de defendible: lo que se califica es que la elección se
+        siga del cálculo. Ten presente que diez unidades por estrato dan una variabilidad
+        imprecisa; si te preocupa quedarte corto, redondea hacia arriba y dilo.</p>
+
+      <h3>La selección, con R y una semilla</h3>
+
+      <p>La muestra no se elige a mano ni «más o menos al azar»: la selecciona R, con una semilla
+        para que cualquiera pueda reproducirla. <strong>La semilla no la eliges tú</strong>: a las
+        @@HORA_SEMILLA@@ del cierre del protocolo, el docente publica la de cada equipo
+        @@CANAL_SEMILLA@@, y la selección se corre después, con ella. Así nadie puede probar
+        semillas hasta dar con una muestra cómoda, y al que no lo haría no le cuesta nada. El guion
+        va en <code>R/seleccion.R</code>, se corre en un <strong>R recién abierto</strong>
+        (<em>Session → Restart R</em>) y es autónomo: lee el marco, sortea y escribe
+        <code>datos/muestra.csv</code> con la probabilidad de inclusión y el peso de cada unidad
+        seleccionada. En el ejemplo, la semilla publicada es 2027:</p>
+
+<pre><code class="language-r">⟦R2⟧</code></pre>
+
+      <p>Con asignación proporcional, \(\pi_k = n_h/N_h\) es casi la misma en los tres estratos, y
+        cada escuela seleccionada representa a \(1/\pi_k\) escuelas del marco. En este diseño los
+        pesos suman exactamente el tamaño de la población; en un PPT o con conglomerados de tamaño
+        desigual suman eso solo en promedio. Para los demás diseños del curso, las probabilidades
+        cambian —en un PPT son proporcionales al tamaño, en un conglomerado en dos etapas son el
+        producto de las dos— y el <a href="capitulo-6-probabilidades-desiguales.html">capítulo
+        6</a> tiene las funciones con que se seleccionan.</p>
+
+      <h3>Comprobar el guion, antes del campo</h3>
+
+      <p>No le creas al guion de selección, sobre todo si no lo escribiste tú: compruébalo
+        <strong>antes</strong> de llevar la muestra al campo, que es cuando todavía se puede
+        arreglar. La forma más directa es repetir la selección muchas veces y contar cuántas sale
+        <strong>cada unidad</strong>. Si el guion hace lo que dice el protocolo, la frecuencia de
+        cada una ronda su \(\pi_k\), y solo unas pocas quedan lejos por azar:</p>
+
+<pre><code class="language-r">⟦R3⟧</code></pre>
+
+      <p>Con el guion del ejemplo, @@EJ_FUERA@@ de las @@EJ_N_POBLACION@@ escuelas quedan a más de 3
+        errores de Monte Carlo, que es lo que da el azar, y ninguna sale siempre o nunca. El guion
+        roto, que toma siempre las primeras escuelas de cada estrato, deja fuera de banda a las
+        @@EJ_N_POBLACION@@: @@EJ_ROTO_SIEMPRE@@ salen siempre y el resto, nunca. Fíjate en por qué
+        hay que mirar unidad por unidad: la frecuencia <em>media</em> de un estrato da
+        \(n_h/N_h\) con cualquier guion que tome \(n_h\) unidades del estrato, también con el roto,
+        así que compararla con la teórica no prueba nada.</p>
+
+      <div class="warning">
+        <p style="margin:0;"><strong>La prueba del protocolo es escribir \(\pi_k\).</strong> Si no
+          sabes escribir la probabilidad de inclusión de cada unidad antes de seleccionar, no sabes
+          todavía qué diseño vas a correr, ni cómo vas a estimar: el estimador de Horvitz–Thompson
+          —la suma de \(y_k/\pi_k\) sobre la muestra— sale de ahí. Su varianza necesita además las
+          probabilidades de que dos unidades salgan juntas, \(\pi_{kl}\), o una aproximación que
+          hay que declarar (<a href="capitulo-6-probabilidades-desiguales.html">capítulo 6</a>). Es
+          también donde se ve, a tiempo, una muestra de conveniencia disfrazada de diseño.</p>
+      </div>

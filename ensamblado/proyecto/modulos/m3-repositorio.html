@@ -1,0 +1,118 @@
+      <p>Todo el proyecto vive en un <strong>repositorio privado de GitHub</strong>, uno por equipo:
+        la ficha, el protocolo, el guion de selección, el marco, la muestra, los datos, la bitácora
+        de campo, el código y el informe. No se entrega nada por otro lado. El repositorio es a la
+        vez el canal de entrega y la documentación del caso: quien lo abra tiene que poder entender
+        qué hiciste y reproducirlo sin preguntarte nada.</p>
+
+      <h3>Crearlo, antes de la ficha</h3>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>Créalo privado</strong>, con el nombre <code>@@NOMBRE_REPO@@</code> —el
+            primer apellido de cada integrante, como <code>proyecto-muestreo-perez-gomez</code>, o
+            solo el tuyo si vas solo— y con un <code>README.md</code>.</li>
+          <li><strong>En pareja</strong>, quien lo crea invita al otro como colaborador, y cada uno
+            trabaja con su propia cuenta: el historial dice quién hizo qué.</li>
+          <li><strong>Invita al docente</strong> como colaborador: el usuario
+            <code>@@USUARIO_DOCENTE@@</code>, en <em>Settings → Collaborators → Add people</em>. Sin
+            esa invitación el docente no ve tu repositorio, y lo que no se ve no está
+            entregado.</li>
+        </ol>
+      </div>
+
+      <p>Es privado a propósito: los otros equipos no ven tu trabajo, y lo que recojas de personas
+        no queda a la vista de cualquiera. La ficha es la primera entrega, así que el repositorio
+        tiene que existir, con el docente invitado, antes del <strong>@@FICHA_CIERRA@@</strong>.</p>
+
+      <h3>Cómo se organiza</h3>
+
+      <p>Usa esta estructura: es la que espera la plantilla del informe y la que el docente va a
+        buscar. Abre la carpeta como proyecto de RStudio, con su archivo <code>.Rproj</code>, y
+        todas las rutas quedan relativas a la raíz.</p>
+
+      <table>
+        <caption>Qué va en el repositorio y dónde.</caption>
+        <thead>
+          <tr><th scope="col">Archivo o carpeta</th><th scope="col">Qué es</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>README.md</code></td><td>Qué se estima, sobre qué población, quiénes son y cómo se reproduce todo</td></tr>
+          <tr><td><code>ficha.md</code></td><td>Hito 1</td></tr>
+          <tr><td><code>protocolo.md</code></td><td>Hito 2: el diseño, escrito antes de seleccionar</td></tr>
+          <tr><td><code>avance.md</code></td><td>Hito 3: la no respuesta, las desviaciones y el primer resumen</td></tr>
+          <tr><td><code>informe.Rmd</code></td><td>Hito 4, a partir de la plantilla</td></tr>
+          <tr><td><code>informe.html</code></td><td>El informe ya renderizado</td></tr>
+          <tr><td><code>R/seleccion.R</code></td><td>El guion que selecciona la muestra, con la semilla del protocolo, y la escribe en <code>datos/muestra.csv</code></td></tr>
+          <tr><td><code>R/comprobacion.R</code></td><td>La comprobación, unidad por unidad, de que ese guion sortea con las probabilidades del protocolo</td></tr>
+          <tr><td><code>datos/marco.csv</code></td><td>El marco, con un identificador por unidad y sin datos personales</td></tr>
+          <tr><td><code>datos/muestra.csv</code></td><td>Las unidades que escribió ese guion, con su estrato o conglomerado, su probabilidad de inclusión y su peso</td></tr>
+          <tr><td><code>datos/datos.csv</code></td><td>Las respuestas crudas, tal como se recogieron, también las de quien no respondió</td></tr>
+          <tr><td><code>datos/bitacora.md</code></td><td>Cada sesión de campo y cada contacto</td></tr>
+          <tr><td><code>figuras/</code></td><td>Los gráficos que enlazan los <code>.md</code></td></tr>
+          <tr><td><code>@@NOMBRE_REPO@@.Rproj</code></td><td>El proyecto de RStudio</td></tr>
+          <tr><td><code>privado/</code></td><td>El listado con nombres, la tabla que une cada identificador con su persona y los consentimientos. <strong>Nunca se sube</strong></td></tr>
+          <tr><td><code>.gitignore</code></td><td>Lo que no se sube, empezando por <code>privado/</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Las buenas prácticas</h3>
+
+      <p>Las cuatro primeras entran en la rúbrica, en el criterio de reproducibilidad del informe;
+        las demás son las que hacen que las cuatro primeras se cumplan sin esfuerzo.</p>
+
+      <ul>
+        <li><strong>El README es la puerta.</strong> Dice qué se estima, sobre qué población,
+          quiénes son, qué hay en cada carpeta y cómo se reproduce el informe, paso a paso. Alguien
+          que no te conoce tiene que poder clonar el repositorio, seguir el README y obtener tu
+          informe.</li>
+        <li><strong>Los datos crudos no se tocan a mano.</strong> <code>datos/datos.csv</code> es lo
+          que se recogió. Si hay que corregir algo —un valor mal digitado—, se corrige con código y
+          se anota en la bitácora: así se ve qué cambió y por qué.</li>
+        <li><strong>Lo exploratorio va aparte</strong>, marcado como tal, como explica el módulo del
+          protocolo.</li>
+        <li><strong>Rutas relativas.</strong> Nada de <code>C:/Users/...</code>: con el proyecto de
+          RStudio abierto, los datos son <code>"datos/datos.csv"</code> en cualquier
+          computador.</li>
+        <li><strong>Commits pequeños, con un mensaje que diga qué cambió.</strong> «Añade los
+          contactos de la segunda visita» sirve; «cambios» o «final final», no. Lo que prueba que el
+          protocolo existió antes que la muestra no son las fechas de los commits, que las pone tu
+          computador, sino la hora en que GitHub publicó su release.</li>
+        <li><strong>Nada de datos personales.</strong> Ni nombres, ni documentos de identidad, ni
+          correos, ni los consentimientos firmados: esos van en <code>privado/</code>, que está en
+          el <code>.gitignore</code>. En el marco, en los datos y en la bitácora, cada unidad es un
+          código. Si algo personal se sube por error, avisa: borrarlo después no lo saca del
+          historial del repositorio.</li>
+        <li><strong>Lo que R genera solo no se sube</strong>: <code>.Rhistory</code>,
+          <code>.RData</code> y <code>.Rproj.user/</code> van en el <code>.gitignore</code>, junto
+          con <code>privado/</code>. La
+          excepción es el informe renderizado, que sí se sube: es lo que se lee sin instalar
+          nada.</li>
+      </ul>
+
+      <h3>Cómo se entrega: una release por hito</h3>
+
+      <p>Hacer commits no es entregar. Cada hito se entrega publicando una <strong>release</strong>
+        del repositorio con su etiqueta: @@ETIQUETAS@@. En GitHub es <em>Releases → Draft a new
+        release</em>: escribes la etiqueta, eliges <em>Create new tag</em> y pulsas <em>Publish
+        release</em>. Antes, haz <em>Push</em>: la release toma lo que está en GitHub, no lo que
+        tienes en tu computador, y un commit que no subiste no está entregado.</p>
+
+      <p>La hora de la entrega es la hora en que GitHub publica la release, no la de tus commits, y
+        tiene que ser antes de las <strong>@@HORA_ENTREGA@@</strong> del día de cierre. Si después
+        sigues haciendo commits, la release no cambia: lo entregado es lo que había en GitHub en ese
+        momento. Si antes del cierre ves un error, lo corriges y publicas otra release con un
+        número, como <code>@@ETIQUETA_PROTOCOLO@@-2</code>: se califica la última que llegó a
+        tiempo. Si no llegó ninguna a tiempo, se califica la primera que llegó, con el descuento
+        por entrega tardía que explica el primer módulo.</p>
+
+      <div class="note">
+        <p style="margin:0;"><strong>El cierre congela el protocolo.</strong> Hasta el cierre puedes
+          corregirlo y publicar <code>@@ETIQUETA_PROTOCOLO@@-2</code>,
+          <code>@@ETIQUETA_PROTOCOLO@@-3</code>… Desde el cierre, <code>protocolo.md</code> y el
+          guion de selección no se vuelven a editar —salvo para poner en el guion la semilla que
+          publica el docente (módulo 5)—, y la muestra se selecciona con el guion de la última
+          release: si algo cambia en el campo, va como desviación en el avance. Tampoco se mueve su
+          etiqueta ni se borra la release para volver a crearla: una etiqueta se puede cambiar de
+          commit, y hacerlo después del cierre es reescribir lo entregado. Al cierre de cada hito
+          el docente guarda a qué commit apunta cada etiqueta, así que moverla después se ve.</p>
+      </div>

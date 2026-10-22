@@ -1,0 +1,101 @@
+      <p>Si este semestre cursas también <strong>Diseño de Experimentos</strong>, puedes presentar
+        <strong>un solo proyecto para las dos materias</strong>. Es opcional: si prefieres hacer
+        los dos proyectos por separado, sigue esta guía y la de Diseño cada una por su lado.</p>
+
+      <div class="definition">
+        <h4><i class="fas fa-people-arrows mr-2" aria-hidden="true"></i>Quién puede</h4>
+        <p style="margin-bottom:0;">Individual o en pareja, y solo si <strong>todos los integrantes
+          cursan las dos materias</strong>. Una pareja en la que uno de los dos cursa solo una de
+          ellas hace los proyectos por separado.</p>
+      </div>
+
+      <h3>Qué tiene que ser</h3>
+
+      <p>Un experimento hecho <strong>sobre una muestra probabilística</strong>. El muestreo decide
+        <strong>a quién</strong> se estudia, con una probabilidad de inclusión que puedes escribir
+        para cada unidad de la población, y así el resultado se puede generalizar a ella. El diseño
+        decide <strong>qué tratamiento recibe cada uno</strong>, asignado al azar con R y una
+        semilla, y así se puede hablar de causas. Tienen que estar las dos aleatorizaciones. Hay
+        dos formas:</p>
+
+      <ul>
+        <li><strong>Forma A, la recomendada.</strong> Seleccionas una muestra probabilística de una
+          población finita real y a las unidades seleccionadas les asignas los tratamientos al azar.
+          Por ejemplo, una muestra estratificada de los estudiantes del programa y, a cada persona
+          seleccionada, una de cuatro versiones del cuestionario —un factorial 2 × 2—, con los
+          estratos como bloques.</li>
+        <li><strong>Forma B.</strong> Un experimento computacional sobre el muestreo: los factores
+          son decisiones de diseño muestral —por ejemplo, diseño × tamaño de muestra—, cada
+          población real es un bloque —al menos dos—, cada muestra nueva es una réplica y la
+          respuesta es el error de la estimación o si el intervalo contiene el parámetro. Solo vale
+          si además seleccionas y analizas una muestra concreta de una de esas poblaciones, como
+          pide esta guía.</li>
+      </ul>
+
+      <p>Se cumplen <strong>completos</strong> los requisitos de las dos guías: las seis condiciones
+        del módulo 2 de esta y las del proyecto de Diseño. Por eso aquí <strong>no vale</strong>
+        submuestrear un archivo público para la forma A: Diseño no admite datos que ya existen.
+        Tampoco valen dos estudios independientes en un mismo documento, una muestra de conveniencia
+        con tratamientos al azar ni una muestra probabilística sin nada asignado al azar.</p>
+
+      <h3>La sección de integración</h3>
+
+      <p>El informe lleva una sección de @@CONJ_PAG_INTEG@@ páginas que responde cuatro preguntas:
+        qué te da cada aleatorización y qué no; a qué población se generaliza el efecto que
+        estimaste; cómo entra el diseño muestral en el análisis del experimento —si los estratos o
+        conglomerados hacen de bloque, si estimas el efecto con pesos o sin ellos, y por qué—; y
+        cuánto del error es muestral y cuánto experimental. Esa sección la califican las dos
+        materias: aquí, dentro de los criterios I1 e I4 de la rúbrica.</p>
+
+      <h3>Fechas, canal y extensión</h3>
+
+      <p>La modalidad conjunta sigue el <strong>calendario y el repositorio de Diseño</strong>, no
+        los de esta guía: el repositorio es el de Diseño (<code>@@CONJ_REPO@@</code>), con una
+        release por hito y todas las entregas a las @@HORA_ENTREGA@@. En vez de la ficha y el
+        protocolo de esta guía, se entregan la release de inscripción y el preregistro conjunto. La
+        semilla de la selección de la muestra la publica el docente al cierre del preregistro
+        conjunto, como en el módulo 5, y el campo cierra con la release
+        <code>@@ETIQUETA_CAMPO@@</code> el @@CAMPO_CIERRA@@, como en el módulo 6:</p>
+
+@@TABLA_CONJUNTO@@
+
+      <div class="warning">
+        <p style="margin:0;"><strong>La release <code>conjunto</code> es la que te inscribe.</strong>
+          Lleva la ficha actualizada —tema, población, marco, diseño muestral previsto, factores y
+          unidad experimental, y la forma, A o B— y una línea por integrante que diga que cursa las
+          dos materias. El README empieza con «Modalidad conjunta: Diseño de Experimentos +
+          Muestreo». Si no está publicada a tiempo, el proyecto no es conjunto, y cada materia
+          sigue su propia guía.</p>
+      </div>
+
+      <p>El preregistro conjunto tiene hasta <strong>@@CONJ_PAG_PRE@@ páginas</strong>: el
+        preregistro de Diseño más los diez campos del protocolo de esta guía (módulo 5), en versión
+        breve. No te saltes ninguno de los que califican P1–P3: el marco y lo que deja fuera, el
+        diseño comparado con una alternativa por su varianza esperada o su costo, la probabilidad
+        de inclusión con el guion comprobado, el tamaño justificado, el plan de estimación, el de
+        no respuesta y la ética. El informe, hasta <strong>@@CONJ_PAG_INF@@ páginas</strong> sin
+        anexos, con la sección de integración incluida.</p>
+
+      <h3>Cómo se califica</h3>
+
+      <p>Una entrega y <strong>dos notas</strong>. Cada materia califica el mismo trabajo con su
+        propia rúbrica completa —aquí, la del último módulo—; ninguna nota se copia a la otra, así
+        que el proyecto puede salir sólido en una y flojo en la otra. En las dos materias el
+        proyecto vale el @@PROYECTO_DEL_CORTE@@ % del Corte III. Una release tarde es tarde para
+        las dos: las sesiones de retraso se cuentan en el calendario de clases de Diseño, y el
+        descuento que salga se aplica igual a la nota de esta materia.</p>
+
+      <p>La sustentación va <strong>por separado</strong>: la exposición en la clase de Diseño y la
+        de esta materia en la nuestra, las dos en la semana @@SEMANA_EXPOSICION@@. En cada una te
+        preguntan lo suyo, y en las dos, por la integración. En pareja, los dos responden por todo:
+        no vale repartirse «yo el muestreo, tú la ANOVA».</p>
+
+      <div class="note">
+        <p style="margin:0;"><strong>Si no te sale.</strong> Hasta el @@CONJ_DESISTIR@@ puedes pasar
+          a hacer solo el proyecto de Diseño y el de esta materia aparte. Si desistes, tu preregistro
+          conjunto cuenta como el protocolo de esta materia y tu muestra sigue siendo la misma; el
+          avance y el informe de esta guía se entregan en sus fechas, en el mismo repositorio, como
+          releases <code>avance-muestreo</code> e <code>informe-muestreo</code>. Después de esa
+          fecha, no se puede desistir. Si el diseño muestral resulta no ser probabilístico, la condición del último módulo se
+          aplica solo a la nota de esta materia; la de Diseño sigue por su lado.</p>
+      </div>

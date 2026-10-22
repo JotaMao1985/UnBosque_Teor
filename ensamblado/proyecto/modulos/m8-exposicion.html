@@ -1,0 +1,62 @@
+      <p>La exposición es <strong>en clase, en la semana @@SEMANA_EXPOSICION@@</strong>
+        (@@SEMANA_EXPOSICION_FRASE@@; @@DIA_EXPOSICION@@), y vale el
+        <strong>@@PESO_EXPOSICION@@ %</strong> del proyecto. Cada equipo tiene
+        <strong>@@MINUTOS_EXPOSICION@@ minutos</strong> para contar su encuesta y
+        <strong>@@MINUTOS_PREGUNTAS@@ de preguntas por persona</strong>. El orden de los equipos se
+        sortea al empezar la sesión: prepárate para ir el primero.</p>
+
+      <h3>Un guion que cabe en el tiempo</h3>
+
+      <table>
+        <caption>Un reparto posible de los minutos de la exposición.</caption>
+        <thead>
+          <tr><th scope="col">Qué cuentas</th><th scope="col">Minutos</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Qué se quería estimar, y sobre qué población</td><td>1</td></tr>
+          <tr><td>El marco, lo que deja fuera y el diseño, con por qué ese</td><td>2</td></tr>
+          <tr><td>El campo: cómo se seleccionó, quién respondió y qué salió distinto</td><td>2</td></tr>
+          <tr><td>La estimación, con su incertidumbre, en una figura</td><td>3</td></tr>
+          <tr><td>Qué no se puede concluir</td><td>2</td></tr>
+        </tbody>
+      </table>
+
+      <p>Una figura que muestre el diseño —la población, el marco, los estratos o conglomerados y
+        cuántas unidades salieron de cada uno— dice más que la salida entera de
+        <code>survey</code>. La salida ya está en el informe.</p>
+
+      <h3>Las preguntas</h3>
+
+      <p>Las preguntas no van al equipo: van a una persona. <strong>Cada integrante contesta dos
+        preguntas</strong>, sin ayuda del otro:</p>
+
+      <div class="diagram">
+        <ol>
+          <li><strong>Una de ejecución.</strong> El dado elige una fila de
+            <code>datos/muestra.csv</code> y cuentas qué pasó con esa unidad, con la bitácora
+            delante: cuándo y cómo se la contactó, si respondió y qué se hizo si no. Si tu marco es
+            un archivo, su probabilidad de inclusión, su peso y de qué versión del archivo salió.</li>
+          <li><strong>Una sobre tus decisiones</strong>, del tipo de las de abajo.</li>
+        </ol>
+      </div>
+
+      <p>Son preguntas sobre tu proyecto, y ninguna pide memoria. Las de abajo son del tipo de las
+        que se hacen, no las únicas:</p>
+
+      <ul>
+        <li>¿Cuál es la probabilidad de inclusión de esta unidad, y de dónde sale?</li>
+        <li>¿Qué unidades de la población no podían salir en tu muestra, y qué le hace eso a la
+          estimación?</li>
+        <li>¿Qué habría pasado con el error estándar si no hubieras estratificado, o si hubieras
+          analizado la muestra como aleatoria simple?</li>
+        <li>¿Quién no respondió, y hacia dónde puede sesgar eso tu resultado?</li>
+        <li>¿Qué cambiarías del diseño si la hicieras otra vez?</li>
+      </ul>
+
+      <div class="warning">
+        <p style="margin:0;"><strong>Las preguntas son tuyas, aunque el proyecto sea de dos.</strong>
+          Cada respuesta se califica en los mismos tres niveles —@@NIVELES@@— y tu nota de preguntas
+          es la media de tus dos. Si no llega a @@UMBRAL@@, acota tu nota de lo escrito,
+          como explica el primer módulo. Es la regla de los talleres, y por la misma razón: un
+          proyecto que no puedes defender no se puede saber de quién es.</p>
+      </div>
