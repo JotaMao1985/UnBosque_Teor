@@ -7063,3 +7063,41 @@ cada estudiante. El plan detallado (`PLAN_Preparcial_Corte2.md`) y las auditorí
 `gh-pages` `4237181`, construido con `git commit-tree` del árbol `2e253b3:sitio` sobre la punta (nada ajeno).
 El árbol de `gh-pages` es el `sitio/` de `main`, `verifica_publicado.py --solo-huella` da la huella de las
 10 páginas, y la página servida del cap. 4 carga el módulo 14 con sus cuatro bloques (10/11/6/5) y 0 errores de KaTeX.
+
+### T7.92 — La ICC de `algebra` era casi el R² sin ajustar: el cap. 5 en cinco bloques (2026-10-22)
+
+Pedido de Javier: un documento de revisión del cap. 5 con errores numéricos (prioridad alta) y mejoras de
+redacción y UX en los módulos 1, 3 y 4 y el glosario, un commit por bloque. Todo en las fuentes
+(`ensamblado/modulos/cap5/`, las cadenas y `precalculo/genera_cap5.R`); `ensambla_cap5.py` reproducía la página
+publicada byte a byte antes de empezar, así que el HTML sale del ensamblador.
+
+- **Números** (`2702b39`). La ICC se calculaba como `1 − K/(K−1)·SSW/SST`: con K = 299 es casi el R² sin
+  ajustar. Ahora es la $R_a^2$ de Lohr, `1 − MSW/S²` con `MSW = SSW/(K − n)`: `algebra` pasa de 0,072 a
+  **0,0396** (Kish 2,72 → **1,948**). **`gpa` arrastraba el mismo factor** (no lo decía el documento): de 0,42 a
+  **0,301**. El deff empírico comparaba un ee con fpc contra uno sin ella (2,10); con fpc en los dos lados es
+  **2,245**, igual que `svymean(deff = TRUE)`, y `genera_cap5.R` lo comprueba por doble vía. Con ello cambian
+  la nota de `lmer` del M10 (0,040 frente a 0,043: ya no «visiblemente diferentes»), la pregunta 4 del quiz
+  (2,73 → 1,96) y el ejercicio 1 (1,45 → 1,50 veces, `ee_mas` con fpc).
+- **Módulo 1** (`a6e4940`): objetivo, entrada y recuadro del documento; $R_a \to R_a^2$ en texto, código
+  (`Ra2`) y claves del JSON.
+- **Módulo 3** (`1991381`): widget rehecho con dos intervalos del 95 %, botones «Suites (gpa)» / «Aulas
+  (algebra)», rótulos en los extremos de ρ, frase que se recalcula y fórmulas en una línea pequeña.
+- **Módulo 4** (`cf5c348`, `a0ebddc`): recuadro en tres pasos (en caja `.definition`: en `.formula`, centrada y
+  en Fira Code, se leía mal), widget con ρ = 0,04 y M̄ = 25 de arranque, botones «Aulas» / «Estados», M̄ hasta
+  100, ejes con topes y marcas regulares, coma decimal en ejes, deslizadores y tooltips, y franja ρ 0,01–0,20.
+- **Glosario** (`969dde5`): `fpc = ~N` y `fpc = ~N + Mi`, y $R_a^2$.
+- **Desvíos del documento, dichos a Javier.** (1) Para gpa el documento proponía ρ ≈ 0,38 o «1,50 según la
+  fórmula», las dos sobre el 0,42 erróneo; se usa su $R_a^2$ = 0,30 (fórmula 1,38, observado 1,46), que deja a
+  gpa y algebra en el mismo patrón (1,38/1,40 frente a 1,46/1,50). (2) «Rinden como unas 135–150» es en
+  realidad **entre 133 y 153** (299/2,245 y 299/1,948). (3) La diferencia 1,95 frente a 2,25 no se atribuye
+  solo a los tamaños desiguales: con 12 aulas, las dos cifras son estimaciones ruidosas. (4) $n_{\text{ef}}$
+  se escribe «unidades observadas / deff», porque en este capítulo $n$ cuenta conglomerados.
+- **Verificación:** `verifica_bloques --prosa` del cap. 5 en verde (167 de 167; 0 sin respaldo; 0 LaTeX);
+  `verifica_referencias --pagina capitulo-5 --anota` solo para esta página (sin tocar las del proyecto
+  integrador, de otra sesión); módulos 1, 2, 3, 4, 10 y 11 sin desborde a 375 px y 0 errores de KaTeX.
+
+- **README:** el cap. 5 pasa de 163 a 167 cifras contrastadas, así que la cifra del README (misma definición
+  que en T7.90: los ocho capítulos, sin el preparcial) pasa de 2 792 a **2 796** = 303 + 495 + 289 + 528 + 167 + 315
+  + 241 + 458. `verifica_bloques --todos --prosa`: las nueve páginas en verde.
+
+**Sin publicar**: espera la revisión de Javier.
