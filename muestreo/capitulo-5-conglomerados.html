@@ -3578,30 +3578,39 @@
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Entender el intercambio que define este capítulo:
-              muestrear grupos enteros abarata cada observación y encarece cada unidad de información.</p>
+              cuando se muestrean grupos enteros, cada observación sale más barata, pero aporta menos
+              información.</p>
           </div>
         </div>
       </div>
 
-      <p>Un dato que asusta y que este módulo explica: observar <strong>371</strong> condados repartidos en 6
-        estados enteros produce una <strong>varianza treinta veces</strong> mayor que observar 369 condados sueltos
-        por todo el país —el error estándar, que es su raíz, se multiplica por cinco y medio—. Casi la misma
-        cantidad de datos, treinta veces menos información.
-        Y aun así, las encuestas por conglomerados son la norma, no la excepción.</p>
+      <p>El capítulo 4 y este capítulo empiezan igual: dividen la población en grupos. La diferencia está en qué
+        se sortea. En el muestreo <strong>estratificado</strong>, todos los grupos entran a la muestra y dentro de
+        cada uno se eligen <em>algunas</em> unidades. En el muestreo <strong>por conglomerados</strong> pasa al
+        revés: se sortean <em>algunos grupos</em> y, dentro de los elegidos, se observan <em>todas</em> las
+        unidades. Los grupos que no salen sorteados quedan por fuera.</p>
 
-      <p>El capítulo 4 partió la población en grupos para meter <em>todos</em> los grupos en la muestra, con cuota
-        garantizada. Este capítulo hace exactamente lo contrario: parte la población en grupos y sortea <strong>qué
-        grupos entran, enteros</strong>. La cuchilla es la misma; el filo va al revés, y las consecuencias sobre la
-        varianza también.</p>
+      <p>Ese cambio tiene un costo grande. Con la población del curso, supongamos dos formas de observar unos 370
+        condados: sortearlos sueltos por todo el país, o sortear 6 estados y quedarse con todos sus condados (unos
+        370 en promedio). Con casi la misma cantidad de datos, la segunda estimación es mucho menos precisa: su
+        error estándar es unas 5,5 veces el de la primera. Dicho de otro modo, esos ~370 condados agrupados
+        informan lo mismo que apenas 12 condados sueltos. Aun así, las encuestas por conglomerados son la norma.
+        Este módulo explica por qué.</p>
 
       <div class="definition">
         <h4>Muestreo por conglomerados (una etapa)</h4>
-        <p>La población de unidades de observación está agrupada en $N$ <strong>conglomerados</strong> (unidades
-          primarias de muestreo, UPM) de tamaños $M_1, \dots, M_N$. Se sortea un MAS de $n$ conglomerados y se
-          observan <strong>todas</strong> las unidades de los conglomerados elegidos.</p>
-        <p style="margin-bottom:0;">La diferencia crítica con los estratos: allí el azar corría <em>dentro</em> de
-          cada grupo y todos los grupos estaban representados; aquí el azar corre <em>entre</em> los grupos, y los no
-          sorteados quedan fuera por completo.</p>
+        <p>La población está dividida en $N$ <strong>conglomerados</strong>, también llamados <em>unidades
+          primarias de muestreo</em> (UPM). El conglomerado $i$ contiene $M_i$ unidades, así que la población tiene
+          $K = \sum_{i=1}^{N} M_i$ unidades en total.</p>
+        <p>El diseño tiene dos pasos:</p>
+        <ol class="list-decimal pl-6 space-y-1">
+          <li>Se selecciona un MAS de $n$ conglomerados entre los $N$.</li>
+          <li>En cada conglomerado seleccionado se observan <strong>todas</strong> sus unidades.</li>
+        </ol>
+        <p>El azar actúa solo en el primer paso. Una vez elegido un conglomerado, entra completo a la muestra. Los
+          que no se eligen quedan totalmente por fuera.</p>
+        <p style="margin-bottom:0;"><em>Notación:</em> en este capítulo $N$ y $n$ cuentan
+          <strong>conglomerados</strong>, no unidades. En los capítulos 2 a 4 contaban unidades.</p>
       </div>
 
       <p>¿Por qué aceptar eso? Porque muestrear no cuesta lo mismo por unidad que por grupo. Entrevistar 400 hogares
@@ -3632,19 +3641,19 @@ c(condados = K, estados = N, rango_Mi = range(table(agpop$state)))
 
 # La pregunta clave: cuanto se parecen los condados DEL MISMO estado?
 # La ICC ajustada de Lohr compara la varianza dentro con la total:
-#   R_a = 1 - MSW / S^2.  Cerca de 0: conglomerar casi gratis. Cerca de 1: carisimo.
+#   R_a^2 = 1 - MSW / S^2.  Cerca de 0: conglomerar casi gratis. Cerca de 1: carisimo.
 # La MSW es la suma de cuadrados DENTRO de los conglomerados, dividida entre
 # sus grados de libertad, que son K - N.
 MSW &lt;- sum(tapply(agpop$acres92, agpop$state,
                   function(y) sum((y - mean(y))^2))) / (K - N)
-Ra &lt;- 1 - MSW / var(agpop$acres92)
-round(c(MSW = MSW, S2 = var(agpop$acres92), Ra = Ra), 4)
-#&gt;          MSW           S2           Ra
+Ra2 &lt;- 1 - MSW / var(agpop$acres92)
+round(c(MSW = MSW, S2 = var(agpop$acres92), Ra2 = Ra2), 4)
+#&gt;          MSW           S2          Ra2
 #&gt; 9.464144e+10 1.803588e+11 4.753000e-01</code></pre>
         </div>
       </div>
 
-      <p>Esa $R_a = 0{,}475$ es la <strong>correlación intraclase</strong> que el módulo 4 desarrolla: los condados
+      <p>Esa $R_a^2 = 0{,}475$ es la <strong>correlación intraclase</strong> que el módulo 4 desarrolla: los condados
         del mismo estado se parecen — comparten clima, cultivo y tamaño — y casi la mitad de la estructura de la
         población vive <em>entre</em> estados. Muestrear estados enteros significa comprar información repetida, y
         el precálculo lo midió sorteando <strong>10 000 veces</strong> cada diseño:</p>
@@ -3916,17 +3925,24 @@ round(sqrt((1 - 20 / 400) * var(gpa$gpa) / 20), 4)
 
       <div class="simulador" data-simulador="espejismo-ee">
         <h4><i class="fas fa-mask" aria-hidden="true"></i> Cuánto miente el error estándar ingenuo</h4>
-        <p class="simulador-intro">El factor de mentira es $\sqrt{\text{deff}} = \sqrt{1 + (m-1)\rho}$: depende solo
-          del tamaño del conglomerado y de la correlación intraclase que el módulo 4 formaliza. Mueve los dos y mira
-          las barras: el «ee» que reportaría el análisis ingenuo contra el real. Con los valores de gpa
-          ($m = 4$, $\rho = 0{,}42$) la mentira es modesta; con aulas de 25 como algebra, ya no.</p>
+        <p class="simulador-intro">El error estándar real es $\sqrt{\text{deff}} = \sqrt{1 + (M-1)\rho}$ veces el
+          ingenuo: depende solo de cuántas personas hay en cada grupo ($M$) y de cuánto se parecen entre sí ($\rho$,
+          la correlación intraclase que el módulo 4 formaliza). Elige uno de los dos casos del capítulo o mueve los
+          deslizadores, y compara los dos intervalos del 95 % alrededor de la misma media: el estrecho es el que
+          reportaría el análisis ingenuo; el ancho, el honesto. Los dos casos son situaciones muy distintas —grupos
+          pequeños muy parecidos y grupos grandes poco parecidos— que terminan en el mismo engaño.</p>
         <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">Error estándar reportado por el análisis ingenuo frente al real</p>
-        <div class="grafico-wrapper" style="height:220px;">
-          <canvas aria-label="Comparación del error estándar ingenuo y el real según m y rho" role="img"></canvas>
+        <p class="grafico-etiqueta">Intervalo del 95 % ingenuo frente al honesto, alrededor de la misma media</p>
+        <div class="grafico-wrapper" style="height:170px;">
+          <canvas aria-label="Intervalos del 95 % ingenuo y honesto según el tamaño del grupo y la correlación intraclase" role="img"></canvas>
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <p>Los dos casos, en cifras. En las suites de gpa ($M = 4$, $\rho \approx 0{,}30$) la fórmula da un factor de
+        1,38; en las aulas de algebra ($\bar{M} \approx 25$, $\rho \approx 0{,}04$), de 1,40. Los datos dicen 1,46
+        y 1,50: la fórmula de Kish es una aproximación y se queda algo corta en los dos, pero acierta en lo que
+        importa. Un parecido fuerte en grupos chicos y uno débil en grupos grandes cuestan casi lo mismo.</p>
 
       <div class="note">
         <p><strong>¿Y si $M$ varía?</strong> Todo lo de arriba supone conglomerados del mismo tamaño. En cuanto los
@@ -3967,25 +3983,35 @@ round(sqrt((1 - 20 / 400) * var(gpa$gpa) / 20), 4)
 
       <p>El módulo 3 midió el castigo; este explica su tamaño. La cantidad que gobierna todo el capítulo es la
         <strong>correlación intraclase</strong> (ICC, $\rho$): cuánto más se parecen dos unidades del mismo
-        conglomerado que dos unidades cualesquiera. La versión ANOVA que usa el material — la $R_a$ ajustada de
-        Lohr — compara la variabilidad de dentro con la total:</p>
+        conglomerado que dos unidades cualesquiera. La versión ANOVA que usa el material — la $R_a^2$ ajustada de
+        Lohr — compara la variabilidad de dentro con la total. $R_a^2$ es nuestra estimación de $\rho$.</p>
 
-      <div class="formula">
-        <p class="formula-titulo">ICC y su consecuencia: el efecto de diseño</p>
-        $$R_a = 1 - \frac{\text{MSW}}{S^2}
-        \qquad\qquad
-        \text{deff} \approx 1 + (\bar{M} - 1)\,\rho$$
-        <p>La <strong>MSW</strong> es la variabilidad de <em>dentro</em> de los conglomerados por grado de
-          libertad: la suma de cuadrados dentro —la SSW del capítulo 4, módulo 7— dividida entre $K - N$. Si los
-          conglomerados son internamente homogéneos, esa MSW se queda pequeña frente a $S^2$ y $R_a$ se acerca
-          a 1; si no se parecen en nada, MSW $\approx S^2$ y $R_a$ cae a cero.</p>
-        <p style="margin-bottom:0;">La segunda fórmula, de Kish, es la más citada de la estadística de encuestas:
-          con conglomerados de tamaño medio $\bar{M}$, cada punto de ICC multiplica el exceso de varianza por
-          $\bar{M} - 1$. Basta $\rho = 0{,}05$ con aulas de 25 para que deff $\approx 2{,}2$ — la mitad de la
-          muestra, tirada.</p>
+      <div class="definition">
+        <h4>ICC y su consecuencia: el efecto de diseño</h4>
+        <p><strong>Paso 1 — Medir el parecido.</strong> La correlación intraclase $\rho$ se estima con</p>
+        $$R_a^2 = 1 - \frac{\text{MSW}}{S^2}$$
+        <p>donde</p>
+        <ul class="list-disc pl-6 space-y-1">
+          <li>$S^2$ es la varianza de todas las unidades, sin tener en cuenta los grupos;</li>
+          <li>$\text{MSW} = \dfrac{SSW}{K - N}$ es la varianza <em>dentro</em> de los conglomerados ($SSW$ es la
+            suma de cuadrados dentro —la del capítulo 4, módulo 7—, $K$ el total de unidades y $N$ el número de
+            conglomerados). Con una muestra, la cuenta se hace sobre los $n$ conglomerados observados, como en el
+            código de abajo.</li>
+        </ul>
+        <p>Si los miembros de un conglomerado son casi iguales entre sí, MSW es pequeña y $R_a^2 \to 1$. Si no se
+          parecen más que dos unidades al azar, $\text{MSW} \approx S^2$ y $R_a^2 \to 0$.</p>
+        <p style="margin-top:1rem;"><strong>Paso 2 — Traducirlo a costo (Kish).</strong></p>
+        $$\text{deff} \approx 1 + (\bar{M} - 1)\,\rho$$
+        <p>donde $\bar{M}$ es el tamaño promedio del conglomerado. El «1» es la varianza que tendría un MAS. El
+          término $(\bar{M} - 1)\rho$ es lo que se agrega: cada unidad tiene $\bar{M} - 1$ compañeros de grupo, y
+          cada uno repite una fracción $\rho$ de su información.</p>
+        <p style="margin-top:1rem;"><strong>Paso 3 — Leerlo en observaciones.</strong></p>
+        $$n_{\text{ef}} = \frac{\text{unidades observadas}}{\text{deff}}$$
+        <p style="margin-bottom:0;">Este es el tamaño de un MAS que daría la misma precisión. <em>Ejemplo:</em>
+          aulas de 25 con $\rho = 0{,}05$ dan deff $= 2{,}2$, así que 1 000 estudiantes informan como unos 450.</p>
       </div>
 
-      <p>Con <code>algebra</code> — 12 aulas censadas por dentro — la ICC se calcula a mano en cuatro líneas:</p>
+      <p>Con <code>algebra</code> — 12 aulas censadas por dentro — la ICC se calcula a mano en pocas líneas:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La ICC de algebra por ANOVA">
@@ -3993,31 +4019,33 @@ round(sqrt((1 - 20 / 400) * var(gpa$gpa) / 20), 4)
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># De donde sale ese castigo? De que los companeros de suite se parecen.
+          <pre><code class="language-r"># De donde sale ese castigo? De que los companeros de CLASE se parecen.
 # algebra: 12 clases (de N = 187) con TODOS sus estudiantes medidos.
 algebra &lt;- read.csv("CSV data sets for SDA 3e/algebra.csv")
 K &lt;- nrow(algebra)
+n &lt;- length(unique(algebra$class))
 SSW_a &lt;- sum(tapply(algebra$score, algebra$class, function(y) sum((y - mean(y))^2)))
-SST_a &lt;- sum((algebra$score - mean(algebra$score))^2)
-icc &lt;- 1 - (K / (K - 1)) * SSW_a / SST_a
-Mbar &lt;- mean(tapply(algebra$Mi, algebra$class, unique))
+MSW_a &lt;- SSW_a / (K - n)
+icc   &lt;- 1 - MSW_a / var(algebra$score)          # R_a^2 de Lohr
+Mbar  &lt;- mean(tapply(algebra$Mi, algebra$class, unique))
 round(c(K = K, icc = icc, Mbar = Mbar, deff_teorico = 1 + (Mbar - 1) * icc), 4)
 #&gt;            K          icc         Mbar deff_teorico
-#&gt;     299.0000       0.0720      24.9167       2.7218</code></pre>
+#&gt;     299.0000       0.0396      24.9167       1.9482</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># La ICC por ANOVA, explicita: dentro contra total, y el deff que implica.
+          <pre><code class="language-python"># La ICC por ANOVA, explicita: la varianza DENTRO de las clases contra la
+# total, y el deff que implica.
 algebra = pd.read_csv("CSV data sets for SDA 3e/algebra.csv")
 K = len(algebra)
-media = algebra["score"].mean()
+n = algebra["class"].nunique()
 ssw = algebra.groupby("class")["score"].apply(lambda y: ((y - y.mean())**2).sum()).sum()
-sst = ((algebra["score"] - media)**2).sum()
-icc = 1 - (K / (K - 1)) * ssw / sst
+msw = ssw / (K - n)
+icc = 1 - msw / algebra["score"].var()        # R_a^2 de Lohr; var() divide n-1
 Mbar = algebra.groupby("class")["Mi"].first().mean()
-print(f"ICC = {icc:.4f}   Mbar = {Mbar:.2f}")
-print(f"deff teorico = 1 + (Mbar-1)*ICC = {1 + (Mbar - 1) * icc:.3f}")
-#&gt; ICC = 0.0720   Mbar = 24.92
-#&gt; deff teorico = 1 + (Mbar-1)*ICC = 2.722</code></pre>
+print(f"R_a^2 = {icc:.4f}   Mbar = {Mbar:.2f}")
+print(f"deff teorico = 1 + (Mbar-1)*R_a^2 = {1 + (Mbar - 1) * icc:.3f}")
+#&gt; R_a^2 = 0.0396   Mbar = 24.92
+#&gt; deff teorico = 1 + (Mbar-1)*R_a^2 = 1.948</code></pre>
         </div>
       </div>
 
@@ -4026,39 +4054,45 @@ print(f"deff teorico = 1 + (Mbar-1)*ICC = {1 + (Mbar - 1) * icc:.3f}")
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Con el diseno declarado, survey hace la cuenta correcta:
+          <pre><code class="language-r"># Con el diseno declarado, survey hace la cuenta correcta. deff = TRUE la
+# compara contra un MAS SIN reemplazo del mismo tamano, en la misma
+# poblacion: los dos lados llevan su fpc.
 algebra$peso &lt;- 187 / 12
 algebra$fpc &lt;- 187
 dis_alg &lt;- svydesign(id = ~class, weights = ~peso, fpc = ~fpc, data = algebra)
-svymean(~score, dis_alg)
-#&gt;         mean     SE
-#&gt; score 62.569 1.4916
+svymean(~score, dis_alg, deff = TRUE)
+#&gt;          mean      SE  DEff
+#&gt; score 62.5686  1.4916 2.245
 
-# deff empirico: cuanto peor que un MAS imaginario de 299 estudiantes
-ee_naive &lt;- sd(algebra$score) / sqrt(K)
-round(c(ee_naive = ee_naive, deff = (SE(svymean(~score, dis_alg))[1] / ee_naive)^2), 4)
-#&gt; ee_naive     deff
-#&gt;   1.0291   2.1009</code></pre>
+# La misma cuenta a mano: el ee de ese MAS imaginario de 299 estudiantes
+N_pop    &lt;- sum(weights(dis_alg))                 # ~4660 estudiantes estimados
+ee_mas   &lt;- sqrt((1 - K / N_pop) * var(algebra$score) / K)
+deff_emp &lt;- (SE(svymean(~score, dis_alg))[1] / ee_mas)^2
+round(c(ee_mas = ee_mas, deff = deff_emp), 4)
+#&gt; ee_mas   deff
+#&gt; 0.9955 2.2450</code></pre>
         </div>
       </div>
 
-      <p>Nótese la diferencia entre las dos cifras de deff: la <strong>teórica</strong> de Kish (2,72, con la ICC y
-        el $\bar{M}$ muestrales) y la <strong>empírica</strong> (2,10, comparando errores estándar). La fórmula de
-        Kish es una aproximación para conglomerados iguales sin fpc; con 12 aulas de tamaños 20–34 y una fracción
-        muestral del 6 %, el orden de magnitud coincide y los decimales no. Las dos dicen lo mismo que importa:
-        estas 299 observaciones rinden como unas 140.</p>
+      <p>Compara las dos cifras: el deff <strong>teórico</strong> de Kish (1,95, calculado con la ICC y el
+        $\bar{M}$ de la muestra) y el <strong>empírico</strong> (2,25, que compara errores estándar). Están cerca,
+        y la distancia que queda tiene dos fuentes: las aulas tienen tamaños distintos (17 a 34), mientras que la
+        fórmula de Kish supone conglomerados iguales; y con solo 12 aulas, las dos cifras son estimaciones con
+        bastante ruido. Las dos dicen lo que importa: estas 299 observaciones rinden como entre 133 y 153 de un
+        MAS.</p>
 
       <div class="simulador" data-simulador="icc-deff">
         <h4><i class="fas fa-wave-square" aria-hidden="true"></i> La ICC al mando</h4>
-        <p class="simulador-intro">Mueve $\rho$ y el tamaño del conglomerado $m$. La curva muestra el deff en función
-          de $m$ para tu $\rho$; el punto, tu diseño; la lectura, el tamaño efectivo de una muestra de 1 000
-          unidades. Dos cosas que ver: con $\rho = 0$ el conglomerado sale gratis (deff = 1 para todo $m$), y con
-          cualquier $\rho > 0$ el deff crece <em>linealmente</em> con $m$ — por eso las encuestas reales prefieren
-          muchos conglomerados chicos a pocos grandes.</p>
+        <p class="simulador-intro">Mueve $\rho$ y el tamaño medio del conglomerado $\bar{M}$, o elige uno de los
+          dos casos del capítulo. La curva muestra el deff en función de $\bar{M}$ para tu $\rho$; el punto, tu
+          diseño; la franja gris, los valores habituales en encuestas ($\rho$ entre 0,01 y 0,20); la lectura, el
+          tamaño efectivo de una muestra de 1 000 unidades. Dos cosas que ver: con $\rho = 0$ el conglomerado sale
+          gratis (deff = 1 para todo $\bar{M}$), y con cualquier $\rho > 0$ el deff crece <em>linealmente</em> con
+          $\bar{M}$ — por eso las encuestas reales prefieren muchos conglomerados chicos a pocos grandes.</p>
         <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">deff = 1 + (m − 1)ρ en función del tamaño del conglomerado</p>
+        <p class="grafico-etiqueta">deff = 1 + (M̄ − 1)ρ en función del tamaño medio del conglomerado</p>
         <div class="grafico-wrapper" style="height:260px;">
-          <canvas aria-label="Efecto de diseño en función del tamaño de conglomerado para la ICC elegida" role="img"></canvas>
+          <canvas aria-label="Efecto de diseño en función del tamaño medio del conglomerado para la ICC elegida" role="img"></canvas>
         </div>
         <div class="simulador-lectura"></div>
       </div>
@@ -4074,8 +4108,8 @@ round(c(ee_naive = ee_naive, deff = (SE(svymean(~score, dis_alg))[1] / ee_naive)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §5.2.2: ICC y ANOVA poblacional; la $R_a$ ajustada.</li>
-          <li>Kish, <em>Survey Sampling</em> — §5.4: la fórmula deff = 1 + (m − 1)ρ.</li>
+          <li>Lohr — §5.2.2: ICC y ANOVA poblacional; la $R_a^2$ ajustada.</li>
+          <li>Kish, <em>Survey Sampling</em> — §5.4: la fórmula deff = 1 + (M̄ − 1)ρ.</li>
         </ul>
       </div>
     </div>
@@ -4747,19 +4781,20 @@ vc
 #&gt; 2 Residual 303.68
 round(vc$vcov[1] / sum(vc$vcov), 4)
 #&gt; [1] 0.0426
-# 0.0426 contra 0.0720 del ANOVA: no es un error. lmer estima la ICC de un
-# MODELO de superpoblacion (REML, encogimiento incluido) y el ANOVA describe
-# esta poblacion finita. Dos preguntas distintas, dos numeros distintos.</code></pre>
+# 0.0426 contra 0.0396 de la R_a^2 del modulo 4: cerca, pero no es la misma
+# cifra. lmer estima la ICC de un MODELO de superpoblacion (REML) y la R_a^2,
+# la de la poblacion finita de aulas. Dos preguntas distintas que aqui casi
+# coinciden.</code></pre>
         </div>
       </div>
 
       <div class="note">
-        <p><strong>Dos números, dos preguntas.</strong> El 0,072 del ANOVA describe cuánta estructura de grupo hay
-          <em>en esta población finita</em>; el 0,043 de <code>lmer</code> estima el parámetro de un modelo de
-          superpoblación, con REML encogiendo las medias de aula hacia la global. Ninguno está mal: responden
-          preguntas distintas — la misma distinción diseño/modelo que el material viene marcando desde el módulo 10
-          del capítulo 3, y que aquí por primera vez produce dos cifras visiblemente diferentes con los mismos
-          datos.</p>
+        <p><strong>Dos números, dos preguntas.</strong> El 0,040 de la $R_a^2$ del módulo 4 estima cuánta
+          estructura de grupo hay <em>en la población finita de aulas</em>; el 0,043 de <code>lmer</code> estima el
+          parámetro de un modelo de superpoblación. Aquí casi coinciden, pero responden preguntas distintas — la
+          misma distinción diseño/modelo que el material viene marcando desde el módulo 10 del capítulo 3 — y no
+          son intercambiables: con pocos grupos o tamaños muy desiguales se separan, y la $R_a^2$ puede salir
+          negativa mientras que la de <code>lmer</code> nunca baja de cero.</p>
       </div>
 
       <div class="references">
@@ -4823,25 +4858,27 @@ round(vc$vcov[1] / sum(vc$vcov), 4)
             ¿Cuánto más ancho es el honesto, y qué tiene que ver con el deff del módulo 4?</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
-            <p>El ingenuo usa $s/\sqrt{299}$; el honesto, el ee de <code>svymean</code> con el diseño del módulo 4.
-              La relación de anchos debería recordarte a $\sqrt{2{,}10}$.</p>
+            <p>El ingenuo usa el ee de un MAS de 299 estudiantes —$s/\sqrt{299}$ con su fpc, el
+              <code>ee_mas</code> del módulo 4—; el honesto, el ee de <code>svymean</code> con el diseño. La relación
+              de anchos debería recordarte a $\sqrt{2{,}25}$.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r"># EJERCICIO 1. algebra con el diseno ignorado y con el diseno declarado:
-# cuantifica el optimismo del intervalo ingenuo.
-ic_naive &lt;- mean(algebra$score) + c(-1.96, 1.96) * sd(algebra$score) / sqrt(299)
+# cuantifica el optimismo del intervalo ingenuo. El ingenuo es el del MAS de
+# 299 estudiantes del modulo 4, con su fpc (ee_mas).
+ic_naive &lt;- mean(algebra$score) + c(-1.96, 1.96) * ee_mas
 ic_bueno &lt;- coef(svymean(~score, dis_alg))[1] +
   c(-1.96, 1.96) * SE(svymean(~score, dis_alg))[1]
 round(rbind(ingenuo = ic_naive, con_diseno = ic_bueno), 2)
 #&gt;             [,1]  [,2]
-#&gt; ingenuo    60.55 64.59
+#&gt; ingenuo    60.62 64.52
 #&gt; con_diseno 59.65 65.49
 round((ic_bueno[2] - ic_bueno[1]) / (ic_naive[2] - ic_naive[1]), 2)
-#&gt; [1] 1.45
-# El intervalo honesto es un 45 % mas ancho: la raiz del deff 2.10.</code></pre>
-            <p>[60,55; 64,59] contra [59,65; 65,49]: el honesto es 1,45 veces más ancho — exactamente
-              $\sqrt{\text{deff}} = \sqrt{2{,}10}$. El intervalo ingenuo no es «casi igual de bueno»: su cobertura
+#&gt; [1] 1.5
+# El intervalo honesto es un 50 % mas ancho: la raiz del deff 2.245.</code></pre>
+            <p>[60,62; 64,52] contra [59,65; 65,49]: el honesto es 1,50 veces más ancho — exactamente
+              $\sqrt{\text{deff}} = \sqrt{2{,}245}$. El intervalo ingenuo no es «casi igual de bueno»: su cobertura
               real está muy por debajo del 95 % que promete.</p>
           </details>
         </div>
@@ -4992,7 +5029,7 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
     // semilla 2026. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP5 = {"meta":{"generado":"precalculo/genera_cap5.R","semilla":2026,"replicas":10000,"replicasCombinado":5000,"rVersion":"4.4.1"},"estados":{"NI":50,"nI":6,"nEquiv":369,"replicas":10000,"Ra":0.47526016,"media":306676.97141001,"MiMin":3,"MiMax":254,"cluster":{"centros":[81545.41263927,107612.02081255,133678.62898583,159745.23715912,185811.8453324,211878.45350568,237945.06167896,264011.66985224,290078.27802552,316144.8861988,342211.49437208,368278.10254536,394344.71071864,420411.31889192,446477.92706521,472544.53523849,498611.14341177,524677.75158505,550744.35975833,576810.96793161,602877.57610489,628944.18427817,655010.79245145,681077.40062473,707144.00879802,733210.6169713,759277.22514458,785343.83331786,811410.44149114,837477.04966442,863543.6578377,889610.26601098,915676.87418426,941743.48235754,967810.09053083,993876.69870411,1019943.30687739,1046009.91505067,1072076.52322395,1098143.13139723],"conteo":[41,201,330,488,625,768,883,877,909,890,800,709,644,511,369,284,206,134,105,69,48,24,22,22,11,7,8,3,2,5,2,1,1,0,0,0,0,0,0,1],"ancho":26066.60817328},"mas":{"centros":[81545.41263927,107612.02081255,133678.62898583,159745.23715912,185811.8453324,211878.45350568,237945.06167896,264011.66985224,290078.27802552,316144.8861988,342211.49437208,368278.10254536,394344.71071864,420411.31889192,446477.92706521,472544.53523849,498611.14341177,524677.75158505,550744.35975833,576810.96793161,602877.57610489,628944.18427817,655010.79245145,681077.40062473,707144.00879802,733210.6169713,759277.22514458,785343.83331786,811410.44149114,837477.04966442,863543.6578377,889610.26601098,915676.87418426,941743.48235754,967810.09053083,993876.69870411,1019943.30687739,1046009.91505067,1072076.52322395,1098143.13139723],"conteo":[0,0,0,0,0,0,15,636,3774,4179,1256,134,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"ancho":26066.60817328},"varCluster":12894027753.36156,"varMas":424445161.98856294,"deffEmp":30.37854806,"nObsMedio":370.6695,"nObsMin":95,"nObsMax":797},"gpa":{"N":100,"n":5,"M":4,"ti":[12.16,11.36,8.96,12.96,11.08],"ybar":2.826,"se":0.1636649,"seNaive":0.11215257,"icc":0.41929604,"deff":2.12957339},"algebra":{"N":187,"n":12,"K":299,"Mbar":24.91666667,"Mi":[20,26,24,34,26,28,19,32,17,21,26,26],"ti":[1230,1670,1402,1972,1508,1816,1048,2308,989,1398,1621,1746],"mediasClase":[61.5,64.23076923,58.41666667,58,58,64.85714286,55.15789474,72.125,58.17647059,66.57142857,62.34615385,67.15384615],"ybar":62.56856187,"se":1.49157786,"seNaive":1.02905722,"icc":0.07199069,"iccLmer":0.04260371,"deff":2.1009359,"sigmaEntre":13.51352245,"sigmaDentro":303.67767727},"coots":{"n":184,"huevos":368,"MiMin":5,"MiMax":13,"Mbar":9.55434783,"razon":2.49077822,"se":0.06100091,"seSurvey":0.06100091,"mediaHuevo":2.3333943,"mediaMedias":2.3333943,"Mi":[13,13,6,11,10,13,9,11,12,11,12,11,12,11,11,10,9,10,11,11,10,13,12,10,9,12,10,9,12,11,10,8,10,10,9,9,8,9,8,10,11,7,7,11,10,9,11,9,9,8,10,11,9,10,8,9,10,6,6,6,8,8,8,9,6,7,5,9,8,12,10,9,9,8,13,9,10,8,11,8,7,7,7,5,5,9,10,10,11,9,9,10,7,10,7,6,5,9,11,10,12,5,7,7,9,11,9,9,10,9,10,12,8,8,11,9,10,8,13,11,9,12,10,11,11,10,12,11,9,9,12,10,11,8,11,9,10,10,8,9,11,11,11,12,10,10,9,10,11,11,7,8,9,10,9,10,10,9,9,11,9,8,8,7,10,8,8,6,10,10,10,11,10,12,10,12,10,11,9,9,12,13,13,12],"ybarI":[3.8643033,4.19418285,0.9162504,2.99833462,2.4957075,3.9842595,1.92706898,2.96152642,3.4605792,2.96152642,3.4989084,2.9998683,3.5664408,2.98606522,2.98299788,2.4069825,2.01022965,2.4374025,2.9262519,2.94772335,2.537535,4.26915547,3.7653876,2.5641525,1.96197592,3.4824816,2.5742925,1.95581588,3.4076484,2.95539173,2.50458,1.5599376,2.491905,2.486835,1.98661612,1.92501562,1.4974752,1.9342557,1.5648048,2.41332,2.81889465,1.23407603,1.26078225,3.0305418,2.471625,2.07593685,3.1593705,1.9342557,1.91474887,1.5923856,2.4703575,3.0428112,2.0615634,2.425995,1.5769728,1.9014021,2.6364,0.8779212,0.8783775,0.9025614,1.4942304,1.5972528,1.4974752,2.04205658,0.8135829,1.20426442,0.66005062,2.06464342,1.5477696,3.51351,2.5235925,1.97840272,2.09749703,1.5096432,3.91699835,2.08928363,2.47923,1.585896,3.0357563,1.5785952,1.217307,1.18873755,1.15395735,0.577473,0.64927688,2.11679852,2.4779625,2.34829471,3.01520505,1.98435744,2.03404851,2.4140805,1.18352052,2.545647,1.22662312,0.88038522,0.59414062,1.97860806,2.98790563,2.3669295,3.43028088,0.6167655,1.13482824,1.12004665,1.98743747,3.01183096,2.09277432,1.95971724,2.4110385,1.93199701,2.600403,3.6284976,1.64868288,1.64770944,2.87011939,2.11823586,2.5818975,1.60568928,3.96026826,3.15507621,2.06423275,3.65259024,2.599896,2.92993272,3.05722774,2.521311,3.4970832,2.98514502,1.93240768,2.15355348,3.54161808,2.6528775,2.91060842,1.58654496,2.87533389,2.09770236,2.361606,2.623725,1.57113216,2.04677928,2.87257328,2.88453594,2.9385213,3.73180392,2.5793625,2.6102895,2.03815521,2.608008,3.10477167,2.92594516,1.17383175,1.57178112,1.97142134,2.4262485,1.82481215,2.563392,2.3400585,1.99914156,1.75273956,2.99035951,1.9424691,1.55782848,1.59709056,1.18140887,2.436642,1.65192768,1.60504032,0.8824842,2.385435,2.4830325,2.51472,2.9814642,2.3461425,3.6193716,2.4336,3.7526112,2.527395,3.10109085,1.94041575,1.9465758,3.4532784,4.21988775,4.41481657,3.4843068],"submuestras":[{"n":20,"razon":2.31310488,"ee":0.1540101,"mediaMedias":2.20553467},{"n":40,"razon":2.29811509,"ee":0.13303808,"mediaMedias":2.13910823},{"n":80,"razon":2.48308543,"ee":0.09051314,"mediaMedias":2.31083797},{"n":120,"razon":2.5431846,"ee":0.07834349,"mediaMedias":2.37839651},{"n":184,"razon":2.49077822,"ee":0.06100091,"mediaMedias":2.3333943}]},"schools":{"N":75,"n":10,"m":20,"Mi":[163,180,114,367,109,219,318,259,311,263],"ybarI":[34.75,40.8,37.85,27.95,46.1,32.2,30.6,36.35,35.4,24.6],"s2I":[74.51315789,111.01052632,124.87105263,109.31315789,50.30526316,162.8,86.56842105,141.60789474,97.83157895,69.51578947],"ti":[5664.25,7344,4314.9,10257.65,5024.9,7051.8,9730.8,9414.65,11009.4,6469.8],"total":572116.125,"se":51899.80092909,"vEntre":2671823680.7843747,"vDentro":21765655.6944079,"media":33.12294833,"seMedia":1.66048723},"zonas":{"NI":100,"Mi":[614,330,330,614,1454,1948,446,330,614,1454,1948,446,1454,330,614,1454,1948,446,330,614,1454,1948,446,1948,330,614,1454,1948,446,330,614,1454,1948,446,446,330,614,1454,1948,446,330,614,1454,1948,446,330,330,614,1454,1948,446,330,614,1454,1948,446,614,330,614,1454,1948,446,330,614,1454,1948,446,1454,330,404,1320,1720,223,165,307,727,974,223,1948,165,307,727,974,223,165,307,727,974,223,446,165,307,727,974,223,165,614,1454,1948,446],"S2i":[9501.65837102,12885.8031132,50039.15037303,63736.26490374,47163.3554596,76609.104804,13850.11481836,16988.73220963,22714.16354927,45905.89400907,41425.38516134,107532.98896559,14759.24436753,18215.9937736,83159.99366867,14785.14631683,74219.58604139,14787.1797904,18215.9937736,129529.52109559,45058.80621557,72281.30963843,42572.08171008,72272.25371524,50039.15037303,63736.26490374,15515.13034267,75454.68559406,18872.23769839,12432.92096343,124629.22080493,37863.19977734,73176.56706706,62658.8844712,13847.99490603,164026.67496546,8959.91857209,47053.45614395,72285.02692818,8265.44656623,11467.96500875,20233.81957958,78850.17844407,80225.5336879,8265.44656623,11467.96500875,9809.28968407,50459.25580129,89019.96412725,72192.45745811,13850.11481836,165312.13370176,9013.67056076,47163.3554596,72192.45745811,13850.11481836,129529.52109559,11633.92977802,20340.83685192,83812.47443131,37323.5956236,74783.50769386,9465.33831629,15197.44323852,83812.47443131,37323.5956236,74783.50769386,15515.13034267,49495.31768444,158918.12782227,15367.69435006,81287.56491707,10457.565992,22147.43178123,10992.8376445,16161.38743696,91991.91780961,10457.565992,82172.59647391,10471.60110865,12892.00244832,30696.09302352,106393.02751709,9480.41126328,10471.60110865,12892.00244832,30696.09302352,106393.02751709,9480.41126328,16608.07281705,12928.76215817,155665.90470716,10735.54363947,46165.25312493,11738.877429,12928.76215817,129880.31134326,44844.03581074,72215.43961673,108253.77197561],"S2t":67628281250.91018,"tIncome":36634733,"K":85296,"S2":70695.77323266,"Ra":0.21659362,"Mbar":852.96},"combinado":{"replicas":5000,"nEstados":8,"V":6904943144.029181,"nMedio":467.0754,"VclusterPuro":12894027753.36156,"VmasEquivalente":430181078.0776878,"estadosPorRegion":[12,10,15,13]}};
+    const DATOS_CAP5 = {"meta":{"generado":"precalculo/genera_cap5.R","semilla":2026,"replicas":10000,"replicasCombinado":5000,"rVersion":"4.4.1"},"estados":{"NI":50,"nI":6,"nEquiv":369,"replicas":10000,"Ra2":0.47526016,"media":306676.97141001,"MiMin":3,"MiMax":254,"Mbar":61.56,"cluster":{"centros":[81545.41263927,107612.02081255,133678.62898583,159745.23715912,185811.8453324,211878.45350568,237945.06167896,264011.66985224,290078.27802552,316144.8861988,342211.49437208,368278.10254536,394344.71071864,420411.31889192,446477.92706521,472544.53523849,498611.14341177,524677.75158505,550744.35975833,576810.96793161,602877.57610489,628944.18427817,655010.79245145,681077.40062473,707144.00879802,733210.6169713,759277.22514458,785343.83331786,811410.44149114,837477.04966442,863543.6578377,889610.26601098,915676.87418426,941743.48235754,967810.09053083,993876.69870411,1019943.30687739,1046009.91505067,1072076.52322395,1098143.13139723],"conteo":[41,201,330,488,625,768,883,877,909,890,800,709,644,511,369,284,206,134,105,69,48,24,22,22,11,7,8,3,2,5,2,1,1,0,0,0,0,0,0,1],"ancho":26066.60817328},"mas":{"centros":[81545.41263927,107612.02081255,133678.62898583,159745.23715912,185811.8453324,211878.45350568,237945.06167896,264011.66985224,290078.27802552,316144.8861988,342211.49437208,368278.10254536,394344.71071864,420411.31889192,446477.92706521,472544.53523849,498611.14341177,524677.75158505,550744.35975833,576810.96793161,602877.57610489,628944.18427817,655010.79245145,681077.40062473,707144.00879802,733210.6169713,759277.22514458,785343.83331786,811410.44149114,837477.04966442,863543.6578377,889610.26601098,915676.87418426,941743.48235754,967810.09053083,993876.69870411,1019943.30687739,1046009.91505067,1072076.52322395,1098143.13139723],"conteo":[0,0,0,0,0,0,15,636,3774,4179,1256,134,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"ancho":26066.60817328},"varCluster":12894027753.36156,"varMas":424445161.98856294,"deffEmp":30.37854806,"nObsMedio":370.6695,"nObsMin":95,"nObsMax":797},"gpa":{"N":100,"n":5,"M":4,"ti":[12.16,11.36,8.96,12.96,11.08],"ybar":2.826,"se":0.1636649,"seNaive":0.11215257,"s":0.5145913,"icc":0.30121957,"deff":2.12957339},"algebra":{"N":187,"n":12,"K":299,"Mbar":24.91666667,"Mi":[20,26,24,34,26,28,19,32,17,21,26,26],"ti":[1230,1670,1402,1972,1508,1816,1048,2308,989,1398,1621,1746],"mediasClase":[61.5,64.23076923,58.41666667,58,58,64.85714286,55.15789474,72.125,58.17647059,66.57142857,62.34615385,67.15384615],"ybar":62.56856187,"se":1.49157786,"seMas":0.99549194,"s":17.79406285,"NPop":4659.41666667,"icc":0.03964506,"iccLmer":0.04260371,"deff":2.24500008,"sigmaEntre":13.51352245,"sigmaDentro":303.67767727},"coots":{"n":184,"huevos":368,"MiMin":5,"MiMax":13,"Mbar":9.55434783,"razon":2.49077822,"se":0.06100091,"seSurvey":0.06100091,"mediaHuevo":2.3333943,"mediaMedias":2.3333943,"Mi":[13,13,6,11,10,13,9,11,12,11,12,11,12,11,11,10,9,10,11,11,10,13,12,10,9,12,10,9,12,11,10,8,10,10,9,9,8,9,8,10,11,7,7,11,10,9,11,9,9,8,10,11,9,10,8,9,10,6,6,6,8,8,8,9,6,7,5,9,8,12,10,9,9,8,13,9,10,8,11,8,7,7,7,5,5,9,10,10,11,9,9,10,7,10,7,6,5,9,11,10,12,5,7,7,9,11,9,9,10,9,10,12,8,8,11,9,10,8,13,11,9,12,10,11,11,10,12,11,9,9,12,10,11,8,11,9,10,10,8,9,11,11,11,12,10,10,9,10,11,11,7,8,9,10,9,10,10,9,9,11,9,8,8,7,10,8,8,6,10,10,10,11,10,12,10,12,10,11,9,9,12,13,13,12],"ybarI":[3.8643033,4.19418285,0.9162504,2.99833462,2.4957075,3.9842595,1.92706898,2.96152642,3.4605792,2.96152642,3.4989084,2.9998683,3.5664408,2.98606522,2.98299788,2.4069825,2.01022965,2.4374025,2.9262519,2.94772335,2.537535,4.26915547,3.7653876,2.5641525,1.96197592,3.4824816,2.5742925,1.95581588,3.4076484,2.95539173,2.50458,1.5599376,2.491905,2.486835,1.98661612,1.92501562,1.4974752,1.9342557,1.5648048,2.41332,2.81889465,1.23407603,1.26078225,3.0305418,2.471625,2.07593685,3.1593705,1.9342557,1.91474887,1.5923856,2.4703575,3.0428112,2.0615634,2.425995,1.5769728,1.9014021,2.6364,0.8779212,0.8783775,0.9025614,1.4942304,1.5972528,1.4974752,2.04205658,0.8135829,1.20426442,0.66005062,2.06464342,1.5477696,3.51351,2.5235925,1.97840272,2.09749703,1.5096432,3.91699835,2.08928363,2.47923,1.585896,3.0357563,1.5785952,1.217307,1.18873755,1.15395735,0.577473,0.64927688,2.11679852,2.4779625,2.34829471,3.01520505,1.98435744,2.03404851,2.4140805,1.18352052,2.545647,1.22662312,0.88038522,0.59414062,1.97860806,2.98790563,2.3669295,3.43028088,0.6167655,1.13482824,1.12004665,1.98743747,3.01183096,2.09277432,1.95971724,2.4110385,1.93199701,2.600403,3.6284976,1.64868288,1.64770944,2.87011939,2.11823586,2.5818975,1.60568928,3.96026826,3.15507621,2.06423275,3.65259024,2.599896,2.92993272,3.05722774,2.521311,3.4970832,2.98514502,1.93240768,2.15355348,3.54161808,2.6528775,2.91060842,1.58654496,2.87533389,2.09770236,2.361606,2.623725,1.57113216,2.04677928,2.87257328,2.88453594,2.9385213,3.73180392,2.5793625,2.6102895,2.03815521,2.608008,3.10477167,2.92594516,1.17383175,1.57178112,1.97142134,2.4262485,1.82481215,2.563392,2.3400585,1.99914156,1.75273956,2.99035951,1.9424691,1.55782848,1.59709056,1.18140887,2.436642,1.65192768,1.60504032,0.8824842,2.385435,2.4830325,2.51472,2.9814642,2.3461425,3.6193716,2.4336,3.7526112,2.527395,3.10109085,1.94041575,1.9465758,3.4532784,4.21988775,4.41481657,3.4843068],"submuestras":[{"n":20,"razon":2.31310488,"ee":0.1540101,"mediaMedias":2.20553467},{"n":40,"razon":2.29811509,"ee":0.13303808,"mediaMedias":2.13910823},{"n":80,"razon":2.48308543,"ee":0.09051314,"mediaMedias":2.31083797},{"n":120,"razon":2.5431846,"ee":0.07834349,"mediaMedias":2.37839651},{"n":184,"razon":2.49077822,"ee":0.06100091,"mediaMedias":2.3333943}]},"schools":{"N":75,"n":10,"m":20,"Mi":[163,180,114,367,109,219,318,259,311,263],"ybarI":[34.75,40.8,37.85,27.95,46.1,32.2,30.6,36.35,35.4,24.6],"s2I":[74.51315789,111.01052632,124.87105263,109.31315789,50.30526316,162.8,86.56842105,141.60789474,97.83157895,69.51578947],"ti":[5664.25,7344,4314.9,10257.65,5024.9,7051.8,9730.8,9414.65,11009.4,6469.8],"total":572116.125,"se":51899.80092909,"vEntre":2671823680.7843747,"vDentro":21765655.6944079,"media":33.12294833,"seMedia":1.66048723},"zonas":{"NI":100,"Mi":[614,330,330,614,1454,1948,446,330,614,1454,1948,446,1454,330,614,1454,1948,446,330,614,1454,1948,446,1948,330,614,1454,1948,446,330,614,1454,1948,446,446,330,614,1454,1948,446,330,614,1454,1948,446,330,330,614,1454,1948,446,330,614,1454,1948,446,614,330,614,1454,1948,446,330,614,1454,1948,446,1454,330,404,1320,1720,223,165,307,727,974,223,1948,165,307,727,974,223,165,307,727,974,223,446,165,307,727,974,223,165,614,1454,1948,446],"S2i":[9501.65837102,12885.8031132,50039.15037303,63736.26490374,47163.3554596,76609.104804,13850.11481836,16988.73220963,22714.16354927,45905.89400907,41425.38516134,107532.98896559,14759.24436753,18215.9937736,83159.99366867,14785.14631683,74219.58604139,14787.1797904,18215.9937736,129529.52109559,45058.80621557,72281.30963843,42572.08171008,72272.25371524,50039.15037303,63736.26490374,15515.13034267,75454.68559406,18872.23769839,12432.92096343,124629.22080493,37863.19977734,73176.56706706,62658.8844712,13847.99490603,164026.67496546,8959.91857209,47053.45614395,72285.02692818,8265.44656623,11467.96500875,20233.81957958,78850.17844407,80225.5336879,8265.44656623,11467.96500875,9809.28968407,50459.25580129,89019.96412725,72192.45745811,13850.11481836,165312.13370176,9013.67056076,47163.3554596,72192.45745811,13850.11481836,129529.52109559,11633.92977802,20340.83685192,83812.47443131,37323.5956236,74783.50769386,9465.33831629,15197.44323852,83812.47443131,37323.5956236,74783.50769386,15515.13034267,49495.31768444,158918.12782227,15367.69435006,81287.56491707,10457.565992,22147.43178123,10992.8376445,16161.38743696,91991.91780961,10457.565992,82172.59647391,10471.60110865,12892.00244832,30696.09302352,106393.02751709,9480.41126328,10471.60110865,12892.00244832,30696.09302352,106393.02751709,9480.41126328,16608.07281705,12928.76215817,155665.90470716,10735.54363947,46165.25312493,11738.877429,12928.76215817,129880.31134326,44844.03581074,72215.43961673,108253.77197561],"S2t":67628281250.91018,"tIncome":36634733,"K":85296,"S2":70695.77323266,"Ra2":0.21659362,"Mbar":852.96},"combinado":{"replicas":5000,"nEstados":8,"V":6904943144.029181,"nMedio":467.0754,"VclusterPuro":12894027753.36156,"VmasEquivalente":430181078.0776878,"estadosPorRegion":[12,10,15,13]}};
 
     // ================================================================
     // Estado y elementos del DOM
@@ -7382,81 +7419,257 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
     };
 
     // ---------------------------------------------------------------
+    // Lo que la plantilla no trae y piden los widgets de los módulos 3 y 4:
+    // la cifra del deslizador con coma decimal, rótulos en sus extremos,
+    // botones de casos reales que mueven los deslizadores, y ejes con
+    // marcas regulares que no enseñen el float crudo.
+    // ---------------------------------------------------------------
+
+    // La plantilla escribe la cifra con toFixed (punto decimal). Este
+    // oyente se registra después del suyo, así que corre después y la
+    // reescribe con coma.
+    function comaEnDeslizadores(inputs, decimales) {
+      Object.keys(inputs).forEach(clave => {
+        const input = inputs[clave];
+        const salida = input.parentElement.querySelector('output');
+        const pinta = () => { salida.textContent = fmtNum(parseFloat(input.value), decimales[clave] || 0); };
+        input.addEventListener('input', pinta);
+        pinta();
+      });
+    }
+
+    function rotulosExtremos(input, izquierda, derecha) {
+      const fila = document.createElement('div');
+      fila.style.cssText = 'display:flex; justify-content:space-between; gap:1rem; ' +
+        'font-size:0.75rem; line-height:1.3; color:#6b7280;';
+      const a = document.createElement('span');
+      a.textContent = izquierda;
+      const b = document.createElement('span');
+      b.textContent = derecha;
+      b.style.textAlign = 'right';
+      fila.append(a, b);
+      input.parentElement.appendChild(fila);
+    }
+
+    // Una fila de botones encima de los deslizadores. Al pulsar uno, se
+    // fijan sus valores en los <input> y se dispara 'input', que es el
+    // camino normal: params, la cifra con coma y el repintado.
+    function botonesDeCaso(contenedor, rotulo, casos, inputs, alElegir) {
+      const fila = document.createElement('div');
+      fila.className = 'control-interruptores';
+      fila.style.gridColumn = '1 / -1';
+      fila.setAttribute('role', 'group');
+      fila.setAttribute('aria-label', rotulo);
+      const botones = casos.map(caso => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'control-interruptor';
+        b.textContent = caso.boton;
+        b.setAttribute('aria-pressed', 'false');
+        b.addEventListener('click', () => {
+          botones.forEach(o => {
+            o.classList.toggle('activo', o === b);
+            o.setAttribute('aria-pressed', String(o === b));
+          });
+          alElegir(caso);
+          Object.keys(caso.valores).forEach(clave => {
+            inputs[clave].value = caso.valores[clave];
+            inputs[clave].dispatchEvent(new Event('input'));
+          });
+        });
+        fila.appendChild(b);
+        return b;
+      });
+      contenedor.prepend(fila);
+      return botones;
+    }
+
+    // Un múltiplo del paso, sin la cola de coma flotante (11 × 0,2 da
+    // 2,2000000000000002, y Chart.js se salta marcas con extremos así).
+    function multiploDe(paso, k) { return Number((k * paso).toFixed(10)); }
+
+    // Un paso «bonito» (1, 2, 2,5 o 5 por potencia de 10) y sus decimales.
+    function pasoBonito(bruto) {
+      const pot = Math.pow(10, Math.floor(Math.log10(bruto)));
+      const paso = [1, 2, 2.5, 5, 10].map(f => f * pot).find(p => p >= bruto);
+      const dec = Math.max(0, -Math.floor(Math.log10(paso) + 1e-9)) + (paso / pot === 2.5 ? 1 : 0);
+      return { paso, dec };
+    }
+
+    // ---------------------------------------------------------------
     // M3 · Cuánto miente el error estándar ingenuo
+    //
+    // Dos intervalos del 95 % alrededor de la misma media: el ingenuo, de
+    // un MAS de nM unidades con su fpc, y el honesto, el ingenuo por
+    // √deff de Kish. El caso fija los datos (grupos sorteados n, grupos
+    // en la población N, media y desviación estándar); los deslizadores
+    // mueven M y ρ. El eje es fijo por caso: el intervalo honesto nunca
+    // pasa de 1,96·s·√((1 − n/N)/n), que es el de ρ = 1.
     // ---------------------------------------------------------------
     SIMULADORES['espejismo-ee'] = function (raiz) {
-      const params = { rho: 0.42, m: 4 };
+      const G = D5.gpa, A = D5.algebra;
+      const CASOS = [
+        { boton: 'Suites (gpa)', datos: 'gpa', grupos: 'suites', n: G.n, N: G.N, media: G.ybar, s: G.s,
+          observado: G.se / G.seNaive,
+          valores: { rho: Math.round(G.icc * 100) / 100, M: G.M } },
+        { boton: 'Aulas (algebra)', datos: 'algebra', grupos: 'aulas', n: A.n, N: A.N, media: A.ybar, s: A.s,
+          observado: A.se / A.seMas,
+          valores: { rho: Math.round(A.icc * 100) / 100, M: Math.round(A.Mbar) } }
+      ];
+      let caso = CASOS[0];
+      const params = Object.assign({}, caso.valores);
       const lienzo = raiz.querySelector('canvas');
 
-      const g = crearGraficoBarras(lienzo,
-        ['ee que reporta el ingenuo', 'ee real del diseño'],
-        [1, 1], {
-          etiqueta: 'en unidades del ee ingenuo', color: COLORES_GRAFICO.primario,
-          min: 0, max: 5
-        });
+      const g = crearGraficoXY(lienzo, [], {});
+      g.options.plugins.legend.display = false;
+      g.options.plugins.tooltip.enabled = false;
+      g.options.scales.y = {
+        type: 'linear', min: 0.4, max: 2.6, grid: { display: false },
+        ticks: { stepSize: 1, font: { family: 'Montserrat', size: 12 },
+                 callback: v => (v === 2 ? 'ingenuo' : v === 1 ? 'honesto' : '') }
+      };
 
-      function pintar() {
-        const factor = Math.sqrt(1 + (params.m - 1) * params.rho);
-        g.data.datasets[0].data = [1, factor];
-        g.options.scales.y.max = Math.max(3, factor * 1.2);
-        g.update('none');
-
-        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
-          { etiqueta: 'deff = 1 + (m−1)ρ:', valor: fmtNum(1 + (params.m - 1) * params.rho, 3) },
-          { etiqueta: 'factor de mentira √deff:', valor: fmtNum(factor, 3) },
-          { etiqueta: 'el intervalo honesto es:', valor: fmtPct(factor - 1, 1) + ' más ancho' },
-          { etiqueta: 'referencia gpa (m=4, ρ≈0,42):', valor: '0,1122 → 0,1637 (factor 1,46)' },
-          { etiqueta: 'referencia algebra (m≈25, ρ=0,072):', valor: 'factor ≈ 1,65' }
-        ]);
+      function fijaEje() {
+        const tope = 1.96 * caso.s * Math.sqrt((1 - caso.n / caso.N) / caso.n);
+        const { paso, dec } = pasoBonito(2 * tope / 6);
+        const x = g.options.scales.x;
+        x.min = multiploDe(paso, Math.floor((caso.media - tope) / paso));
+        x.max = multiploDe(paso, Math.ceil((caso.media + tope) / paso));
+        x.title = { display: true, text: 'media estimada (' + caso.datos + ')',
+                    font: { family: 'Montserrat', size: 11 } };
+        x.ticks.stepSize = paso;
+        x.ticks.maxTicksLimit = 12;
+        x.ticks.callback = v => fmtNum(v, dec);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
-        { clave: 'rho', etiqueta: 'Correlación intraclase ρ', min: 0, max: 0.9, paso: 0.01 },
-        { clave: 'm', etiqueta: 'Tamaño del conglomerado m', min: 2, max: 50, paso: 1 }
+      function intervalo(centro, medio, y, color) {
+        return { type: 'line', label: '', data: [{ x: centro - medio, y: y }, { x: centro + medio, y: y }],
+                 borderColor: color, borderWidth: 14, borderCapStyle: 'butt', pointRadius: 0, fill: false };
+      }
+
+      function pintar() {
+        const nObs = caso.n * params.M;
+        const deff = 1 + (params.M - 1) * params.rho;
+        const factor = Math.sqrt(deff);
+        const eeIngenuo = Math.sqrt((1 - caso.n / caso.N) * caso.s * caso.s / nObs);
+        const medioIngenuo = 1.96 * eeIngenuo;
+        const medioHonesto = medioIngenuo * factor;
+        g.data.datasets = [
+          intervalo(caso.media, medioIngenuo, 2, COLORES_GRAFICO.secundario),
+          intervalo(caso.media, medioHonesto, 1, COLORES_GRAFICO.primario),
+          { type: 'line', label: '', data: [{ x: caso.media, y: 0.55 }, { x: caso.media, y: 2.45 }],
+            borderColor: '#1e293b', borderDash: [4, 3], borderWidth: 1.5, pointRadius: 0, fill: false }
+        ];
+        g.update('none');
+
+        const dec = caso.s < 5 ? 2 : 1;
+        raiz.querySelector('.simulador-lectura').innerHTML =
+          `<p style="flex-basis:100%; margin:0; font-family:Montserrat, sans-serif; font-size:0.9rem; line-height:1.5;">` +
+          `Con grupos de <b>${fmtNum(params.M, 0)}</b> personas que se parecen <b>ρ = ${fmtNum(params.rho, 2)}</b>, ` +
+          `tus <b>${fmtNum(nObs, 0)}</b> observaciones informan como <b>~${fmtNum(nObs / deff, 0)} independientes</b>. ` +
+          `El análisis ingenuo diría <b>±${fmtNum(medioIngenuo, dec)}</b>; lo honesto es ` +
+          `<b>±${fmtNum(medioHonesto, dec)}</b> (${fmtNum(100 * (factor - 1), 0)} % más ancho).</p>` +
+          `<span style="font-size:0.75rem; color:#64748b;">deff = 1 + (M − 1)ρ = ${fmtNum(deff, 2)} · ` +
+          `√deff = ${fmtNum(factor, 2)} · ${fmtNum(caso.n, 0)} ${caso.grupos} de ${fmtNum(caso.N, 0)} · ` +
+          `en los datos de ${caso.datos}, el factor observado es ${fmtNum(caso.observado, 2)}</span>`;
+      }
+
+      const controles = raiz.querySelector('.simulador-controles');
+      const inputs = crearControles(controles, [
+        { clave: 'rho', etiqueta: 'Correlación intraclase ρ', min: 0, max: 1, paso: 0.01 },
+        { clave: 'M', etiqueta: 'Personas por grupo M', min: 1, max: 50, paso: 1 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { rho: 2, M: 0 });
+      rotulosExtremos(inputs.rho, '0 = no se parecen más que dos extraños', '1 = son copias');
+      rotulosExtremos(inputs.M, '1 = sin grupos', '50');
+      const botones = botonesDeCaso(controles, 'Casos reales del capítulo', CASOS, inputs, c => {
+        caso = c;
+        fijaEje();
+      });
+      botones[0].classList.add('activo');
+      botones[0].setAttribute('aria-pressed', 'true');
+      fijaEje();
       pintar();
       return [g];
     };
 
     // ---------------------------------------------------------------
     // M4 · La ICC al mando
+    //
+    // El eje x llega hasta el máximo del deslizador (100), para que quepa
+    // el caso de los estados (M̄ ≈ 62). El eje y toma el menor tope «bonito»
+    // que cubre la curva, con marcas regulares y coma decimal. La franja
+    // gris va entre las curvas de ρ = 0,01 y ρ = 0,20.
     // ---------------------------------------------------------------
     SIMULADORES['icc-deff'] = function (raiz) {
-      const params = { rho: 0.072, m: 25 };
+      const A = D5.algebra, E = D5.estados;
+      const M_MAX = 100;
+      const CASOS = [
+        { boton: 'Aulas (algebra)', valores: { rho: Math.round(A.icc * 100) / 100, M: Math.round(A.Mbar) } },
+        { boton: 'Estados (módulo 1)', valores: { rho: Math.round(E.Ra2 * 200) / 200, M: Math.round(E.Mbar) } }
+      ];
+      // [tope del eje y, paso de sus marcas]
+      const TOPES = [[2, 0.5], [3, 0.5], [5, 1], [10, 2], [20, 5], [30, 5], [50, 10], [100, 20]];
+      const params = Object.assign({}, CASOS[0].valores);
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoXY(lienzo, [], {
-        tituloX: 'tamaño del conglomerado m', tituloY: 'deff', xMin: 0, xMax: 52
+        tituloX: 'tamaño medio del conglomerado M̄', tituloY: 'deff', xMin: 0, xMax: M_MAX
+      });
+      Object.assign(g.options.scales.x.ticks, { stepSize: 10, maxTicksLimit: 12, callback: v => fmtNum(v, 0) });
+      Object.assign(g.options.plugins.tooltip, {
+        filter: item => item.datasetIndex >= 2 && item.dataset.label !== '',
+        callbacks: {
+          title: items => 'M̄ = ' + fmtNum(items[0].parsed.x, 0),
+          label: item => item.dataset.label + ': deff ' + fmtNum(item.parsed.y, 2)
+        }
       });
 
+      function curva(rho) {
+        const c = [];
+        for (let m = 1; m <= M_MAX; m++) c.push({ x: m, y: 1 + (m - 1) * rho });
+        return c;
+      }
+
       function pintar() {
-        const curva = [];
-        for (let m = 1; m <= 50; m++) curva.push({ x: m, y: 1 + (m - 1) * params.rho });
-        const deff = 1 + (params.m - 1) * params.rho;
+        const deff = 1 + (params.M - 1) * params.rho;
         g.data.datasets = [
-          { type: 'line', label: 'deff con tu ρ', data: curva,
+          { type: 'line', label: 'zona habitual (ρ 0,01–0,20)', data: curva(0.20),
+            borderWidth: 0, pointRadius: 0, backgroundColor: 'rgba(148, 163, 184, 0.22)', fill: '+1' },
+          { type: 'line', label: '', data: curva(0.01), borderWidth: 0, pointRadius: 0, fill: false },
+          { type: 'line', label: 'deff con tu ρ', data: curva(params.rho),
             borderColor: COLORES_GRAFICO.primario, borderWidth: 2, pointRadius: 0, fill: false },
-          { type: 'scatter', label: 'tu diseño', data: [{ x: params.m, y: deff }],
+          { type: 'scatter', label: 'tu diseño', data: [{ x: params.M, y: deff }],
             backgroundColor: COLORES_GRAFICO.secundario, pointRadius: 7 },
-          { type: 'line', label: 'deff = 1 (MAS)', data: [{ x: 0, y: 1 }, { x: 52, y: 1 }],
+          { type: 'line', label: 'deff = 1 (MAS)', data: [{ x: 0, y: 1 }, { x: M_MAX, y: 1 }],
             borderColor: COLORES_GRAFICO.gris, borderDash: [6, 4], borderWidth: 1.5,
             pointRadius: 0, fill: false }
         ];
-        g.options.scales.y.max = Math.max(3, 1 + 49 * params.rho) * 1.05;
+        const alto = 1 + (M_MAX - 1) * params.rho;
+        const [tope, paso] = TOPES.find(([t]) => t >= alto) || TOPES[TOPES.length - 1];
+        Object.assign(g.options.scales.y, { min: 0, max: tope });
+        Object.assign(g.options.scales.y.ticks, { stepSize: paso, callback: v => fmtNum(v, paso < 1 ? 1 : 0) });
         g.update('none');
 
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
-          { etiqueta: 'deff:', valor: fmtNum(deff, 3) },
-          { etiqueta: '1 000 unidades rinden como:', valor: fmtNum(1000 / deff, 0) },
-          { etiqueta: 'referencia algebra:', valor: 'ρ = 0,072, M̄ = 24,9 → deff ≈ 2,7' },
-          { etiqueta: 'referencia estados (módulo 1):', valor: 'ρ = 0,475 y M̄ ≈ 62 → el deff 30' }
+          { etiqueta: 'deff:', valor: fmtNum(deff, 2) },
+          { etiqueta: '1 000 unidades rinden como:', valor: fmtNum(1000 / deff, 0) +
+            ' — pierdes el ' + fmtNum(100 * (1 - 1 / deff), 0) + ' % de la muestra' },
+          { etiqueta: 'referencia algebra:', valor: 'ρ ≈ 0,040, M̄ = 24,9 → deff ≈ 1,95 (empírico: 2,25)' },
+          { etiqueta: 'referencia estados (módulo 1):', valor: 'ρ = 0,475, M̄ ≈ 62 → deff ≈ 30 (empírico: 30,4); ' +
+            'con tamaños de 3 a 254, que casi coincidan es en parte casual' }
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const controles = raiz.querySelector('.simulador-controles');
+      const inputs = crearControles(controles, [
         { clave: 'rho', etiqueta: 'Correlación intraclase ρ', min: 0, max: 0.95, paso: 0.005 },
-        { clave: 'm', etiqueta: 'Tamaño del conglomerado m', min: 1, max: 50, paso: 1 }
+        { clave: 'M', etiqueta: 'Tamaño (medio) del conglomerado M̄', min: 1, max: M_MAX, paso: 1 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { rho: 3, M: 0 });
+      const botones = botonesDeCaso(controles, 'Casos reales del capítulo', CASOS, inputs, () => {});
+      botones[0].classList.add('activo');
+      botones[0].setAttribute('aria-pressed', 'true');
       pintar();
       return [g];
     };
@@ -7556,7 +7769,7 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
     // M8 · El presupuesto por etapas
     // ---------------------------------------------------------------
     SIMULADORES['presupuesto-mn'] = function (raiz) {
-      const rho = D5.zonas.Ra;
+      const rho = D5.zonas.Ra2;
       const params = { C: 5000, c1: 50, c2: 2, m: 10 };
       const lienzo = raiz.querySelector('canvas');
 
@@ -7754,14 +7967,14 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
       filas: [
         { concepto: 'Conglomerado (UPM)', aqui: 'i', lohr: '\\text{psu } i', gutierrez: 'U_i', r: 'id = ~clutch' },
         { concepto: 'Unidad final (USM)', aqui: 'k', lohr: '\\text{ssu } j', gutierrez: 'k', r: 'una fila' },
-        { concepto: 'Número de conglomerados', aqui: 'N', lohr: 'N', gutierrez: 'N_I', r: 'fpc etapa 1' },
+        { concepto: 'Número de conglomerados', aqui: 'N', lohr: 'N', gutierrez: 'N_I', r: 'fpc = ~N (total de conglomerados; 1.ª componente si hay dos etapas)' },
         { concepto: 'Conglomerados sorteados', aqui: 'n', lohr: 'n', gutierrez: 'n_I', r: 'length(unique(id))' },
         { concepto: 'Tamaño del conglomerado', aqui: 'M_i', lohr: 'M_i', gutierrez: 'N_i', r: 'csize, Mi' },
-        { concepto: 'Unidades submuestreadas', aqui: 'm_i', lohr: 'm_i', gutierrez: 'n_i', r: 'fpc etapa 2' },
+        { concepto: 'Unidades submuestreadas', aqui: 'm_i', lohr: 'm_i', gutierrez: 'n_i', r: 'fpc = ~N + Mi (2.ª componente: los tamaños poblacionales Mᵢ)' },
         { concepto: 'Total de unidades', aqui: 'K = \\sum M_i', lohr: 'M_0', gutierrez: 'N', r: '—' },
         { concepto: 'Total del conglomerado', aqui: 't_i', lohr: 't_i', gutierrez: 't_{y,i}', r: 'tapply(y, id, sum)' },
         { concepto: 'Media por unidad (razón)', aqui: '\\hat{\\bar{y}}_r', lohr: '\\hat{\\bar{y}}_r', gutierrez: '\\hat{\\bar{y}}', r: 'svymean con pesos' },
-        { concepto: 'Correlación intraclase', aqui: '\\rho,\\ R_a', lohr: 'ICC, R_a^2', gutierrez: '\\rho', r: '1 - MSW/S2' },
+        { concepto: 'Correlación intraclase', aqui: '\\rho,\\ R_a^2', lohr: 'ICC, R_a^2', gutierrez: '\\rho', r: '1 - MSW/S2' },
         { concepto: 'Efecto de diseño', aqui: '1 + (\\bar{M}-1)\\rho', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'deff=TRUE' },
         { concepto: 'π de dos etapas', aqui: '\\pi_k = \\frac{n}{N}\\frac{m_i}{M_i}', lohr: '\\pi_{j|i}\\,\\pi_i', gutierrez: '\\pi_k = \\pi_{Ii}\\pi_{k|i}', r: 'id=~psu+ssu' }
       ]
@@ -7816,12 +8029,12 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
       {
         tipo: 'numerica',
         modulo: 4,
-        pregunta: 'Con aulas de $m = 25$ estudiantes y la ICC de algebra ($\\rho = 0{,}072$), ¿cuánto vale el deff de Kish? Dos decimales.',
-        pista: '$\\text{deff} = 1 + (m-1)\\rho$.',
-        respuesta: 2.73,
+        pregunta: 'Con aulas de $\\bar{M} = 25$ estudiantes y la ICC de algebra ($\\rho \\approx 0{,}04$), ¿cuánto vale el deff de Kish? Dos decimales.',
+        pista: '$\\text{deff} = 1 + (\\bar{M}-1)\\rho$.',
+        respuesta: 1.96,
         tolerancia: 0.02,
-        retroAcierto: '$1 + 24 \\times 0{,}072 = 2{,}73$: cada aula de 25 rinde como 9 estudiantes independientes. Una ICC de «solo» 0,07 no tiene nada de inofensiva con conglomerados de ese tamaño.',
-        retroFallo: 'Es $1 + (25-1)\\times 0{,}072 = 2{,}73$. El error típico es olvidar el −1: la primera unidad del conglomerado siempre informa completa; las repetidas son las que descuentan.'
+        retroAcierto: '$1 + 24 \\times 0{,}04 = 1{,}96$: cada aula de 25 rinde como unos 13 estudiantes independientes, y la muestra pierde casi la mitad de su información. Una ICC de «solo» 0,04 no tiene nada de inofensiva con conglomerados de ese tamaño.',
+        retroFallo: 'Es $1 + (25-1)\\times 0{,}04 = 1{,}96$. El error típico es olvidar el −1: la primera unidad del conglomerado siempre informa completa; las repetidas son las que descuentan.'
       },
       {
         tipo: 'multiple',
