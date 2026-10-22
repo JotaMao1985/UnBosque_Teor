@@ -15,30 +15,39 @@
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Entender el intercambio que define este capítulo:
-              muestrear grupos enteros abarata cada observación y encarece cada unidad de información.</p>
+              cuando se muestrean grupos enteros, cada observación sale más barata, pero aporta menos
+              información.</p>
           </div>
         </div>
       </div>
 
-      <p>Un dato que asusta y que este módulo explica: observar <strong>371</strong> condados repartidos en 6
-        estados enteros produce una <strong>varianza treinta veces</strong> mayor que observar 369 condados sueltos
-        por todo el país —el error estándar, que es su raíz, se multiplica por cinco y medio—. Casi la misma
-        cantidad de datos, treinta veces menos información.
-        Y aun así, las encuestas por conglomerados son la norma, no la excepción.</p>
+      <p>El capítulo 4 y este capítulo empiezan igual: dividen la población en grupos. La diferencia está en qué
+        se sortea. En el muestreo <strong>estratificado</strong>, todos los grupos entran a la muestra y dentro de
+        cada uno se eligen <em>algunas</em> unidades. En el muestreo <strong>por conglomerados</strong> pasa al
+        revés: se sortean <em>algunos grupos</em> y, dentro de los elegidos, se observan <em>todas</em> las
+        unidades. Los grupos que no salen sorteados quedan por fuera.</p>
 
-      <p>El capítulo 4 partió la población en grupos para meter <em>todos</em> los grupos en la muestra, con cuota
-        garantizada. Este capítulo hace exactamente lo contrario: parte la población en grupos y sortea <strong>qué
-        grupos entran, enteros</strong>. La cuchilla es la misma; el filo va al revés, y las consecuencias sobre la
-        varianza también.</p>
+      <p>Ese cambio tiene un costo grande. Con la población del curso, supongamos dos formas de observar unos 370
+        condados: sortearlos sueltos por todo el país, o sortear 6 estados y quedarse con todos sus condados (unos
+        370 en promedio). Con casi la misma cantidad de datos, la segunda estimación es mucho menos precisa: su
+        error estándar es unas 5,5 veces el de la primera. Dicho de otro modo, esos ~370 condados agrupados
+        informan lo mismo que apenas 12 condados sueltos. Aun así, las encuestas por conglomerados son la norma.
+        Este módulo explica por qué.</p>
 
       <div class="definition">
         <h4>Muestreo por conglomerados (una etapa)</h4>
-        <p>La población de unidades de observación está agrupada en $N$ <strong>conglomerados</strong> (unidades
-          primarias de muestreo, UPM) de tamaños $M_1, \dots, M_N$. Se sortea un MAS de $n$ conglomerados y se
-          observan <strong>todas</strong> las unidades de los conglomerados elegidos.</p>
-        <p style="margin-bottom:0;">La diferencia crítica con los estratos: allí el azar corría <em>dentro</em> de
-          cada grupo y todos los grupos estaban representados; aquí el azar corre <em>entre</em> los grupos, y los no
-          sorteados quedan fuera por completo.</p>
+        <p>La población está dividida en $N$ <strong>conglomerados</strong>, también llamados <em>unidades
+          primarias de muestreo</em> (UPM). El conglomerado $i$ contiene $M_i$ unidades, así que la población tiene
+          $K = \sum_{i=1}^{N} M_i$ unidades en total.</p>
+        <p>El diseño tiene dos pasos:</p>
+        <ol class="list-decimal pl-6 space-y-1">
+          <li>Se selecciona un MAS de $n$ conglomerados entre los $N$.</li>
+          <li>En cada conglomerado seleccionado se observan <strong>todas</strong> sus unidades.</li>
+        </ol>
+        <p>El azar actúa solo en el primer paso. Una vez elegido un conglomerado, entra completo a la muestra. Los
+          que no se eligen quedan totalmente por fuera.</p>
+        <p style="margin-bottom:0;"><em>Notación:</em> en este capítulo $N$ y $n$ cuentan
+          <strong>conglomerados</strong>, no unidades. En los capítulos 2 a 4 contaban unidades.</p>
       </div>
 
       <p>¿Por qué aceptar eso? Porque muestrear no cuesta lo mismo por unidad que por grupo. Entrevistar 400 hogares
@@ -55,7 +64,7 @@
         </div>
       </div>
 
-      <p>Esa $R_a = 0{,}475$ es la <strong>correlación intraclase</strong> que el módulo 4 desarrolla: los condados
+      <p>Esa $R_a^2 = 0{,}475$ es la <strong>correlación intraclase</strong> que el módulo 4 desarrolla: los condados
         del mismo estado se parecen — comparten clima, cultivo y tamaño — y casi la mitad de la estructura de la
         población vive <em>entre</em> estados. Muestrear estados enteros significa comprar información repetida, y
         el precálculo lo midió sorteando <strong>10 000 veces</strong> cada diseño:</p>

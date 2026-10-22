@@ -281,7 +281,7 @@
     // M8 · El presupuesto por etapas
     // ---------------------------------------------------------------
     SIMULADORES['presupuesto-mn'] = function (raiz) {
-      const rho = D5.zonas.Ra;
+      const rho = D5.zonas.Ra2;
       const params = { C: 5000, c1: 50, c2: 2, m: 10 };
       const lienzo = raiz.querySelector('canvas');
 

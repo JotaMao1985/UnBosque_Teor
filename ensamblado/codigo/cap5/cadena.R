@@ -21,14 +21,14 @@ c(condados = K, estados = N, rango_Mi = range(table(agpop$state)))
 
 # La pregunta clave: cuanto se parecen los condados DEL MISMO estado?
 # La ICC ajustada de Lohr compara la varianza dentro con la total:
-#   R_a = 1 - MSW / S^2.  Cerca de 0: conglomerar casi gratis. Cerca de 1: carisimo.
+#   R_a^2 = 1 - MSW / S^2.  Cerca de 0: conglomerar casi gratis. Cerca de 1: carisimo.
 # La MSW es la suma de cuadrados DENTRO de los conglomerados, dividida entre
 # sus grados de libertad, que son K - N.
 MSW <- sum(tapply(agpop$acres92, agpop$state,
                   function(y) sum((y - mean(y))^2))) / (K - N)
-Ra <- 1 - MSW / var(agpop$acres92)
-round(c(MSW = MSW, S2 = var(agpop$acres92), Ra = Ra), 4)
-#>          MSW           S2           Ra
+Ra2 <- 1 - MSW / var(agpop$acres92)
+round(c(MSW = MSW, S2 = var(agpop$acres92), Ra2 = Ra2), 4)
+#>          MSW           S2          Ra2
 #> 9.464144e+10 1.803588e+11 4.753000e-01
 
 cat("\n###BLOQUE-R2###\n")

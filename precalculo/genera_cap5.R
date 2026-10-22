@@ -40,14 +40,14 @@ Mi_est <- as.numeric(table(agpop$state))   # condados por estado
 media_U <- mean(agpop$acres92)
 S2_U <- var(agpop$acres92)
 
-# ANOVA por estado y la ICC ajustada de Lohr (R_a = 1 - MSW/S^2)
+# ANOVA por estado y la ICC ajustada de Lohr (R_a^2 = 1 - MSW/S^2)
 medias_est <- tapply(agpop$acres92, agpop$state, mean)
 SSW <- sum(tapply(agpop$acres92, agpop$state, function(y) sum((y - mean(y))^2)))
 SST <- sum((agpop$acres92 - media_U)^2)
 MSW <- SSW / (N - NI)
-Ra <- 1 - MSW / S2_U
-cat(sprintf("  NI = %d estados, Mi de %d a %d, R_a = %.4f\n",
-            NI, min(Mi_est), max(Mi_est), Ra))
+Ra2 <- 1 - MSW / S2_U
+cat(sprintf("  NI = %d estados, Mi de %d a %d, R_a^2 = %.4f\n",
+            NI, min(Mi_est), max(Mi_est), Ra2))
 
 # Réplicas: una etapa (6 estados completos, estimador de razón) frente a un
 # MAS de condados con el mismo n esperado.
@@ -76,7 +76,7 @@ hace_hist <- function(x) {
   list(centros = h$mids, conteo = h$counts, ancho = diff(breaks)[1])
 }
 cifras$estados <- list(
-  NI = NI, nI = nI, nEquiv = n_equiv, replicas = R, Ra = Ra,
+  NI = NI, nI = nI, nEquiv = n_equiv, replicas = R, Ra2 = Ra2,
   media = media_U, MiMin = min(Mi_est), MiMax = max(Mi_est),
   cluster = hace_hist(rep_cluster), mas = hace_hist(rep_mas),
   varCluster = var(rep_cluster), varMas = var(rep_mas), deffEmp = deff_emp,
@@ -266,12 +266,12 @@ S2_lucy <- var(BigLucy$Income)
 MSW_z <- sum(tapply(BigLucy$Income, BigLucy$Zone, function(y) sum((y - mean(y))^2))) /
   (nrow(BigLucy) - NI_z)
 Ra_z <- 1 - MSW_z / S2_lucy
-cat(sprintf("  %d zonas, Mi de %d a %d, ICC (R_a) = %.4f\n",
+cat(sprintf("  %d zonas, Mi de %d a %d, ICC (R_a^2) = %.4f\n",
             NI_z, min(Mi_z), max(Mi_z), Ra_z))
 
 cifras$zonas <- list(NI = NI_z, Mi = Mi_z, S2i = S2_z, S2t = S2t_z,
                      tIncome = sum(BigLucy$Income), K = nrow(BigLucy),
-                     S2 = S2_lucy, Ra = Ra_z, Mbar = mean(Mi_z))
+                     S2 = S2_lucy, Ra2 = Ra_z, Mbar = mean(Mi_z))
 
 # =============================================================================
 # 7. Estratos × conglomerados sobre agpop: región = estrato, estado = PSU
