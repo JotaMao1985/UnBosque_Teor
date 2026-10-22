@@ -322,7 +322,7 @@
       function pintar() {
         const deff = 1 + (params.M - 1) * params.rho;
         g.data.datasets = [
-          { type: 'line', label: 'valores habituales en encuestas (ρ de 0,01 a 0,20)', data: curva(0.20),
+          { type: 'line', label: 'zona habitual (ρ 0,01–0,20)', data: curva(0.20),
             borderWidth: 0, pointRadius: 0, backgroundColor: 'rgba(148, 163, 184, 0.22)', fill: '+1' },
           { type: 'line', label: '', data: curva(0.01), borderWidth: 0, pointRadius: 0, fill: false },
           { type: 'line', label: 'deff con tu ρ', data: curva(params.rho),
