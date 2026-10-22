@@ -107,38 +107,176 @@
     };
 
     // ---------------------------------------------------------------
+    // Lo que la plantilla no trae y piden los widgets de los módulos 3 y 4:
+    // la cifra del deslizador con coma decimal, rótulos en sus extremos,
+    // botones de casos reales que mueven los deslizadores, y ejes con
+    // marcas regulares que no enseñen el float crudo.
+    // ---------------------------------------------------------------
+
+    // La plantilla escribe la cifra con toFixed (punto decimal). Este
+    // oyente se registra después del suyo, así que corre después y la
+    // reescribe con coma.
+    function comaEnDeslizadores(inputs, decimales) {
+      Object.keys(inputs).forEach(clave => {
+        const input = inputs[clave];
+        const salida = input.parentElement.querySelector('output');
+        const pinta = () => { salida.textContent = fmtNum(parseFloat(input.value), decimales[clave] || 0); };
+        input.addEventListener('input', pinta);
+        pinta();
+      });
+    }
+
+    function rotulosExtremos(input, izquierda, derecha) {
+      const fila = document.createElement('div');
+      fila.style.cssText = 'display:flex; justify-content:space-between; gap:1rem; ' +
+        'font-size:0.75rem; line-height:1.3; color:#6b7280;';
+      const a = document.createElement('span');
+      a.textContent = izquierda;
+      const b = document.createElement('span');
+      b.textContent = derecha;
+      b.style.textAlign = 'right';
+      fila.append(a, b);
+      input.parentElement.appendChild(fila);
+    }
+
+    // Una fila de botones encima de los deslizadores. Al pulsar uno, se
+    // fijan sus valores en los <input> y se dispara 'input', que es el
+    // camino normal: params, la cifra con coma y el repintado.
+    function botonesDeCaso(contenedor, rotulo, casos, inputs, alElegir) {
+      const fila = document.createElement('div');
+      fila.className = 'control-interruptores';
+      fila.style.gridColumn = '1 / -1';
+      fila.setAttribute('role', 'group');
+      fila.setAttribute('aria-label', rotulo);
+      const botones = casos.map(caso => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'control-interruptor';
+        b.textContent = caso.boton;
+        b.setAttribute('aria-pressed', 'false');
+        b.addEventListener('click', () => {
+          botones.forEach(o => {
+            o.classList.toggle('activo', o === b);
+            o.setAttribute('aria-pressed', String(o === b));
+          });
+          alElegir(caso);
+          Object.keys(caso.valores).forEach(clave => {
+            inputs[clave].value = caso.valores[clave];
+            inputs[clave].dispatchEvent(new Event('input'));
+          });
+        });
+        fila.appendChild(b);
+        return b;
+      });
+      contenedor.prepend(fila);
+      return botones;
+    }
+
+    // Un múltiplo del paso, sin la cola de coma flotante (11 × 0,2 da
+    // 2,2000000000000002, y Chart.js se salta marcas con extremos así).
+    function multiploDe(paso, k) { return Number((k * paso).toFixed(10)); }
+
+    // Un paso «bonito» (1, 2, 2,5 o 5 por potencia de 10) y sus decimales.
+    function pasoBonito(bruto) {
+      const pot = Math.pow(10, Math.floor(Math.log10(bruto)));
+      const paso = [1, 2, 2.5, 5, 10].map(f => f * pot).find(p => p >= bruto);
+      const dec = Math.max(0, -Math.floor(Math.log10(paso) + 1e-9)) + (paso / pot === 2.5 ? 1 : 0);
+      return { paso, dec };
+    }
+
+    // ---------------------------------------------------------------
     // M3 · Cuánto miente el error estándar ingenuo
+    //
+    // Dos intervalos del 95 % alrededor de la misma media: el ingenuo, de
+    // un MAS de nM unidades con su fpc, y el honesto, el ingenuo por
+    // √deff de Kish. El caso fija los datos (grupos sorteados n, grupos
+    // en la población N, media y desviación estándar); los deslizadores
+    // mueven M y ρ. El eje es fijo por caso: el intervalo honesto nunca
+    // pasa de 1,96·s·√((1 − n/N)/n), que es el de ρ = 1.
     // ---------------------------------------------------------------
     SIMULADORES['espejismo-ee'] = function (raiz) {
-      const params = { rho: 0.30, m: 4 };
+      const G = D5.gpa, A = D5.algebra;
+      const CASOS = [
+        { boton: 'Suites (gpa)', datos: 'gpa', grupos: 'suites', n: G.n, N: G.N, media: G.ybar, s: G.s,
+          observado: G.se / G.seNaive,
+          valores: { rho: Math.round(G.icc * 100) / 100, M: G.M } },
+        { boton: 'Aulas (algebra)', datos: 'algebra', grupos: 'aulas', n: A.n, N: A.N, media: A.ybar, s: A.s,
+          observado: A.se / A.seMas,
+          valores: { rho: Math.round(A.icc * 100) / 100, M: Math.round(A.Mbar) } }
+      ];
+      let caso = CASOS[0];
+      const params = Object.assign({}, caso.valores);
       const lienzo = raiz.querySelector('canvas');
 
-      const g = crearGraficoBarras(lienzo,
-        ['ee que reporta el ingenuo', 'ee real del diseño'],
-        [1, 1], {
-          etiqueta: 'en unidades del ee ingenuo', color: COLORES_GRAFICO.primario,
-          min: 0, max: 5
-        });
+      const g = crearGraficoXY(lienzo, [], {});
+      g.options.plugins.legend.display = false;
+      g.options.plugins.tooltip.enabled = false;
+      g.options.scales.y = {
+        type: 'linear', min: 0.4, max: 2.6, grid: { display: false },
+        ticks: { stepSize: 1, font: { family: 'Montserrat', size: 12 },
+                 callback: v => (v === 2 ? 'ingenuo' : v === 1 ? 'honesto' : '') }
+      };
 
-      function pintar() {
-        const factor = Math.sqrt(1 + (params.m - 1) * params.rho);
-        g.data.datasets[0].data = [1, factor];
-        g.options.scales.y.max = Math.max(3, factor * 1.2);
-        g.update('none');
-
-        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
-          { etiqueta: 'deff = 1 + (m−1)ρ:', valor: fmtNum(1 + (params.m - 1) * params.rho, 3) },
-          { etiqueta: 'factor de mentira √deff:', valor: fmtNum(factor, 3) },
-          { etiqueta: 'el intervalo honesto es:', valor: fmtPct(factor - 1, 1) + ' más ancho' },
-          { etiqueta: 'referencia gpa (m=4, ρ≈0,30):', valor: 'observado 0,1122 → 0,1637 (factor 1,46); la fórmula da 1,38' },
-          { etiqueta: 'referencia algebra (m≈25, ρ≈0,04):', valor: 'factor ≈ 1,40 (observado: 1,50)' }
-        ]);
+      function fijaEje() {
+        const tope = 1.96 * caso.s * Math.sqrt((1 - caso.n / caso.N) / caso.n);
+        const { paso, dec } = pasoBonito(2 * tope / 6);
+        const x = g.options.scales.x;
+        x.min = multiploDe(paso, Math.floor((caso.media - tope) / paso));
+        x.max = multiploDe(paso, Math.ceil((caso.media + tope) / paso));
+        x.title = { display: true, text: 'media estimada (' + caso.datos + ')',
+                    font: { family: 'Montserrat', size: 11 } };
+        x.ticks.stepSize = paso;
+        x.ticks.maxTicksLimit = 12;
+        x.ticks.callback = v => fmtNum(v, dec);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
-        { clave: 'rho', etiqueta: 'Correlación intraclase ρ', min: 0, max: 0.9, paso: 0.01 },
-        { clave: 'm', etiqueta: 'Tamaño del conglomerado m', min: 2, max: 50, paso: 1 }
+      function intervalo(centro, medio, y, color) {
+        return { type: 'line', label: '', data: [{ x: centro - medio, y: y }, { x: centro + medio, y: y }],
+                 borderColor: color, borderWidth: 14, borderCapStyle: 'butt', pointRadius: 0, fill: false };
+      }
+
+      function pintar() {
+        const nObs = caso.n * params.M;
+        const deff = 1 + (params.M - 1) * params.rho;
+        const factor = Math.sqrt(deff);
+        const eeIngenuo = Math.sqrt((1 - caso.n / caso.N) * caso.s * caso.s / nObs);
+        const medioIngenuo = 1.96 * eeIngenuo;
+        const medioHonesto = medioIngenuo * factor;
+        g.data.datasets = [
+          intervalo(caso.media, medioIngenuo, 2, COLORES_GRAFICO.secundario),
+          intervalo(caso.media, medioHonesto, 1, COLORES_GRAFICO.primario),
+          { type: 'line', label: '', data: [{ x: caso.media, y: 0.55 }, { x: caso.media, y: 2.45 }],
+            borderColor: '#1e293b', borderDash: [4, 3], borderWidth: 1.5, pointRadius: 0, fill: false }
+        ];
+        g.update('none');
+
+        const dec = caso.s < 5 ? 2 : 1;
+        raiz.querySelector('.simulador-lectura').innerHTML =
+          `<p style="flex-basis:100%; margin:0; font-family:Montserrat, sans-serif; font-size:0.9rem; line-height:1.5;">` +
+          `Con grupos de <b>${fmtNum(params.M, 0)}</b> personas que se parecen <b>ρ = ${fmtNum(params.rho, 2)}</b>, ` +
+          `tus <b>${fmtNum(nObs, 0)}</b> observaciones informan como <b>~${fmtNum(nObs / deff, 0)} independientes</b>. ` +
+          `El análisis ingenuo diría <b>±${fmtNum(medioIngenuo, dec)}</b>; lo honesto es ` +
+          `<b>±${fmtNum(medioHonesto, dec)}</b> (${fmtNum(100 * (factor - 1), 0)} % más ancho).</p>` +
+          `<span style="font-size:0.75rem; color:#64748b;">deff = 1 + (M − 1)ρ = ${fmtNum(deff, 2)} · ` +
+          `√deff = ${fmtNum(factor, 2)} · ${fmtNum(caso.n, 0)} ${caso.grupos} de ${fmtNum(caso.N, 0)} · ` +
+          `en los datos de ${caso.datos}, el factor observado es ${fmtNum(caso.observado, 2)}</span>`;
+      }
+
+      const controles = raiz.querySelector('.simulador-controles');
+      const inputs = crearControles(controles, [
+        { clave: 'rho', etiqueta: 'Correlación intraclase ρ', min: 0, max: 1, paso: 0.01 },
+        { clave: 'M', etiqueta: 'Personas por grupo M', min: 1, max: 50, paso: 1 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { rho: 2, M: 0 });
+      rotulosExtremos(inputs.rho, '0 = no se parecen más que dos extraños', '1 = son copias');
+      rotulosExtremos(inputs.M, '1 = sin grupos', '50');
+      const botones = botonesDeCaso(controles, 'Casos reales del capítulo', CASOS, inputs, c => {
+        caso = c;
+        fijaEje();
+      });
+      botones[0].classList.add('activo');
+      botones[0].setAttribute('aria-pressed', 'true');
+      fijaEje();
       pintar();
       return [g];
     };
