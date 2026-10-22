@@ -7138,3 +7138,10 @@ fuera de git: `PLAN_Proyecto_Conjunto.md` (D1–D16, la conjunta y el Corte III 
   arranca sus 4 bloques; `verifica_referencias.py --anota` solo para esta página (12 referencias).
 - **Convivencia:** se commitean solo las rutas de esta tarea; los cambios del cap. 4 sin commitear
   son de otra sesión y no se tocan.
+
+**Publicado** el 2026-10-22 con el visto bueno de Javier («publicar ya todo»): `main` `afc1eac`,
+`gh-pages` `81aa4c2`, construido con `git commit-tree` del árbol `afc1eac:sitio` sobre la punta (solo
+cambiaban la guía, su plantilla, la portada y el README). El build de Pages terminó en `built`;
+`verifica_publicado.py --solo-huella` da la huella de las **11 páginas**; la guía, la plantilla y la
+portada servidas coinciden byte a byte con la rama; la página servida carga sus diez módulos con 0
+errores de KaTeX ni de consola, la plantilla responde 200 y la tarjeta está en la portada.
