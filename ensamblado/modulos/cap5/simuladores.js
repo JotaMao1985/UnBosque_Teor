@@ -655,14 +655,14 @@
       filas: [
         { concepto: 'Conglomerado (UPM)', aqui: 'i', lohr: '\\text{psu } i', gutierrez: 'U_i', r: 'id = ~clutch' },
         { concepto: 'Unidad final (USM)', aqui: 'k', lohr: '\\text{ssu } j', gutierrez: 'k', r: 'una fila' },
-        { concepto: 'Número de conglomerados', aqui: 'N', lohr: 'N', gutierrez: 'N_I', r: 'fpc etapa 1' },
+        { concepto: 'Número de conglomerados', aqui: 'N', lohr: 'N', gutierrez: 'N_I', r: 'fpc = ~N (total de conglomerados; 1.ª componente si hay dos etapas)' },
         { concepto: 'Conglomerados sorteados', aqui: 'n', lohr: 'n', gutierrez: 'n_I', r: 'length(unique(id))' },
         { concepto: 'Tamaño del conglomerado', aqui: 'M_i', lohr: 'M_i', gutierrez: 'N_i', r: 'csize, Mi' },
-        { concepto: 'Unidades submuestreadas', aqui: 'm_i', lohr: 'm_i', gutierrez: 'n_i', r: 'fpc etapa 2' },
+        { concepto: 'Unidades submuestreadas', aqui: 'm_i', lohr: 'm_i', gutierrez: 'n_i', r: 'fpc = ~N + Mi (2.ª componente: los tamaños poblacionales Mᵢ)' },
         { concepto: 'Total de unidades', aqui: 'K = \\sum M_i', lohr: 'M_0', gutierrez: 'N', r: '—' },
         { concepto: 'Total del conglomerado', aqui: 't_i', lohr: 't_i', gutierrez: 't_{y,i}', r: 'tapply(y, id, sum)' },
         { concepto: 'Media por unidad (razón)', aqui: '\\hat{\\bar{y}}_r', lohr: '\\hat{\\bar{y}}_r', gutierrez: '\\hat{\\bar{y}}', r: 'svymean con pesos' },
-        { concepto: 'Correlación intraclase', aqui: '\\rho,\\ R_a', lohr: 'ICC, R_a^2', gutierrez: '\\rho', r: '1 - MSW/S2' },
+        { concepto: 'Correlación intraclase', aqui: '\\rho,\\ R_a^2', lohr: 'ICC, R_a^2', gutierrez: '\\rho', r: '1 - MSW/S2' },
         { concepto: 'Efecto de diseño', aqui: '1 + (\\bar{M}-1)\\rho', lohr: '\\text{deff}', gutierrez: 'DEFF', r: 'deff=TRUE' },
         { concepto: 'π de dos etapas', aqui: '\\pi_k = \\frac{n}{N}\\frac{m_i}{M_i}', lohr: '\\pi_{j|i}\\,\\pi_i', gutierrez: '\\pi_k = \\pi_{Ii}\\pi_{k|i}', r: 'id=~psu+ssu' }
       ]
