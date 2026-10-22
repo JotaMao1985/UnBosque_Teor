@@ -79,12 +79,12 @@
       </div>
 
       <div class="note">
-        <p><strong>Dos números, dos preguntas.</strong> El 0,072 del ANOVA describe cuánta estructura de grupo hay
-          <em>en esta población finita</em>; el 0,043 de <code>lmer</code> estima el parámetro de un modelo de
-          superpoblación, con REML encogiendo las medias de aula hacia la global. Ninguno está mal: responden
-          preguntas distintas — la misma distinción diseño/modelo que el material viene marcando desde el módulo 10
-          del capítulo 3, y que aquí por primera vez produce dos cifras visiblemente diferentes con los mismos
-          datos.</p>
+        <p><strong>Dos números, dos preguntas.</strong> El 0,040 de la $R_a^2$ del módulo 4 estima cuánta
+          estructura de grupo hay <em>en la población finita de aulas</em>; el 0,043 de <code>lmer</code> estima el
+          parámetro de un modelo de superpoblación. Aquí casi coinciden, pero responden preguntas distintas — la
+          misma distinción diseño/modelo que el material viene marcando desde el módulo 10 del capítulo 3 — y no
+          son intercambiables: con pocos grupos o tamaños muy desiguales se separan, y la $R_a^2$ puede salir
+          negativa mientras que la de <code>lmer</code> nunca baja de cero.</p>
       </div>
 
       <div class="references">
@@ -148,14 +148,15 @@
             ¿Cuánto más ancho es el honesto, y qué tiene que ver con el deff del módulo 4?</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
-            <p>El ingenuo usa $s/\sqrt{299}$; el honesto, el ee de <code>svymean</code> con el diseño del módulo 4.
-              La relación de anchos debería recordarte a $\sqrt{2{,}10}$.</p>
+            <p>El ingenuo usa el ee de un MAS de 299 estudiantes —$s/\sqrt{299}$ con su fpc, el
+              <code>ee_mas</code> del módulo 4—; el honesto, el ee de <code>svymean</code> con el diseño. La relación
+              de anchos debería recordarte a $\sqrt{2{,}25}$.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R15⟧</code></pre>
-            <p>[60,55; 64,59] contra [59,65; 65,49]: el honesto es 1,45 veces más ancho — exactamente
-              $\sqrt{\text{deff}} = \sqrt{2{,}10}$. El intervalo ingenuo no es «casi igual de bueno»: su cobertura
+            <p>[60,62; 64,52] contra [59,65; 65,49]: el honesto es 1,50 veces más ancho — exactamente
+              $\sqrt{\text{deff}} = \sqrt{2{,}245}$. El intervalo ingenuo no es «casi igual de bueno»: su cobertura
               real está muy por debajo del 95 % que promete.</p>
           </details>
         </div>

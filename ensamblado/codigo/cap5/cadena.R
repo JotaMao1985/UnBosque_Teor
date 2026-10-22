@@ -85,32 +85,37 @@ round(sqrt((1 - 20 / 400) * var(gpa$gpa) / 20), 4)
 # intervalos DEMASIADO ESTRECHOS, lo contrario que olvidar el fpc.
 
 cat("\n###BLOQUE-R5###\n")
-# De donde sale ese castigo? De que los companeros de suite se parecen.
+# De donde sale ese castigo? De que los companeros de CLASE se parecen.
 # algebra: 12 clases (de N = 187) con TODOS sus estudiantes medidos.
 algebra <- read.csv("CSV data sets for SDA 3e/algebra.csv")
 K <- nrow(algebra)
+n <- length(unique(algebra$class))
 SSW_a <- sum(tapply(algebra$score, algebra$class, function(y) sum((y - mean(y))^2)))
-SST_a <- sum((algebra$score - mean(algebra$score))^2)
-icc <- 1 - (K / (K - 1)) * SSW_a / SST_a
-Mbar <- mean(tapply(algebra$Mi, algebra$class, unique))
+MSW_a <- SSW_a / (K - n)
+icc   <- 1 - MSW_a / var(algebra$score)          # R_a^2 de Lohr
+Mbar  <- mean(tapply(algebra$Mi, algebra$class, unique))
 round(c(K = K, icc = icc, Mbar = Mbar, deff_teorico = 1 + (Mbar - 1) * icc), 4)
 #>            K          icc         Mbar deff_teorico
-#>     299.0000       0.0720      24.9167       2.7218
+#>     299.0000       0.0396      24.9167       1.9482
 
 cat("\n###BLOQUE-R6###\n")
-# Con el diseno declarado, survey hace la cuenta correcta:
+# Con el diseno declarado, survey hace la cuenta correcta. deff = TRUE la
+# compara contra un MAS SIN reemplazo del mismo tamano, en la misma
+# poblacion: los dos lados llevan su fpc.
 algebra$peso <- 187 / 12
 algebra$fpc <- 187
 dis_alg <- svydesign(id = ~class, weights = ~peso, fpc = ~fpc, data = algebra)
-svymean(~score, dis_alg)
-#>         mean     SE
-#> score 62.569 1.4916
+svymean(~score, dis_alg, deff = TRUE)
+#>          mean      SE  DEff
+#> score 62.5686  1.4916 2.245
 
-# deff empirico: cuanto peor que un MAS imaginario de 299 estudiantes
-ee_naive <- sd(algebra$score) / sqrt(K)
-round(c(ee_naive = ee_naive, deff = (SE(svymean(~score, dis_alg))[1] / ee_naive)^2), 4)
-#> ee_naive     deff
-#>   1.0291   2.1009
+# La misma cuenta a mano: el ee de ese MAS imaginario de 299 estudiantes
+N_pop    <- sum(weights(dis_alg))                 # ~4660 estudiantes estimados
+ee_mas   <- sqrt((1 - K / N_pop) * var(algebra$score) / K)
+deff_emp <- (SE(svymean(~score, dis_alg))[1] / ee_mas)^2
+round(c(ee_mas = ee_mas, deff = deff_emp), 4)
+#> ee_mas   deff
+#> 0.9955 2.2450
 
 cat("\n###BLOQUE-R7###\n")
 # Conglomerados de tamano desigual: coots. 184 nidadas; de cada una se
@@ -247,23 +252,25 @@ vc
 #> 2 Residual 303.68
 round(vc$vcov[1] / sum(vc$vcov), 4)
 #> [1] 0.0426
-# 0.0426 contra 0.0720 del ANOVA: no es un error. lmer estima la ICC de un
-# MODELO de superpoblacion (REML, encogimiento incluido) y el ANOVA describe
-# esta poblacion finita. Dos preguntas distintas, dos numeros distintos.
+# 0.0426 contra 0.0396 de la R_a^2 del modulo 4: cerca, pero no es la misma
+# cifra. lmer estima la ICC de un MODELO de superpoblacion (REML) y la R_a^2,
+# la de la poblacion finita de aulas. Dos preguntas distintas que aqui casi
+# coinciden.
 
 cat("\n###BLOQUE-R15###\n")
 # EJERCICIO 1. algebra con el diseno ignorado y con el diseno declarado:
-# cuantifica el optimismo del intervalo ingenuo.
-ic_naive <- mean(algebra$score) + c(-1.96, 1.96) * sd(algebra$score) / sqrt(299)
+# cuantifica el optimismo del intervalo ingenuo. El ingenuo es el del MAS de
+# 299 estudiantes del modulo 4, con su fpc (ee_mas).
+ic_naive <- mean(algebra$score) + c(-1.96, 1.96) * ee_mas
 ic_bueno <- coef(svymean(~score, dis_alg))[1] +
   c(-1.96, 1.96) * SE(svymean(~score, dis_alg))[1]
 round(rbind(ingenuo = ic_naive, con_diseno = ic_bueno), 2)
 #>             [,1]  [,2]
-#> ingenuo    60.55 64.59
+#> ingenuo    60.62 64.52
 #> con_diseno 59.65 65.49
 round((ic_bueno[2] - ic_bueno[1]) / (ic_naive[2] - ic_naive[1]), 2)
-#> [1] 1.45
-# El intervalo honesto es un 45 % mas ancho: la raiz del deff 2.10.
+#> [1] 1.5
+# El intervalo honesto es un 50 % mas ancho: la raiz del deff 2.245.
 
 cat("\n###BLOQUE-R16###\n")
 # EJERCICIO 2. La longitud media del huevo de focha, con el mismo diseno de

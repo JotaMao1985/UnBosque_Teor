@@ -100,11 +100,14 @@ comprueba("gpa: SE a mano <-> survey", sqrt(V_cl), SE(sv)[1])
 
 # El error de analizarla como si fuera un MAS de 20 estudiantes:
 se_naive <- sqrt((1 - 20 / 400) * var(gpa$gpa) / 20)
-icc_gpa <- 1 - (20 / (20 - 1)) * (sum(tapply(gpa$gpa, gpa$suite, function(y) sum((y - mean(y))^2))) /
-                                    sum((gpa$gpa - mean(gpa$gpa))^2))
+# La ICC es la R_a^2 de Lohr, 1 - MSW/S^2, con MSW = SSW/(K - n). Hasta el
+# 2026-10-22 se calculaba 1 - K/(K-1) * SSW/SST, un factor sin justificación
+# que daba 0,42 en lugar de 0,30 (y 0,072 en lugar de 0,040 en algebra).
+msw_gpa <- sum(tapply(gpa$gpa, gpa$suite, function(y) sum((y - mean(y))^2))) / (n_su * M_su - n_su)
+icc_gpa <- 1 - msw_gpa / var(gpa$gpa)
 cifras$gpa <- list(N = N_su, n = n_su, M = M_su, ti = as.numeric(t_i),
                    ybar = ybar_cl, se = sqrt(V_cl), seNaive = se_naive,
-                   icc = icc_gpa, deff = V_cl / se_naive^2)
+                   s = sd(gpa$gpa), icc = icc_gpa, deff = V_cl / se_naive^2)
 cat(sprintf("  ybar = %.4f, ee = %.4f (naive: %.4f) | ICC = %.4f\n",
             ybar_cl, sqrt(V_cl), se_naive, icc_gpa))
 
@@ -126,27 +129,33 @@ dis_alg <- svydesign(id = ~class, weights = ~peso, fpc = ~fpc, data = algebra)
 sv_alg <- svymean(~score, dis_alg)
 comprueba("algebra: razón a mano <-> survey", ybar_alg, coef(sv_alg)[1])
 
-# La ICC muestral por ANOVA (con tamaño medio ponderado para Mi desiguales)
+# La ICC muestral: la R_a^2 de Lohr, 1 - MSW/S^2, con MSW = SSW/(K - n)
 Mbar_alg <- mean(M_alg)
 SSW_a <- sum(tapply(algebra$score, algebra$class, function(y) sum((y - mean(y))^2)))
-SST_a <- sum((algebra$score - mean(algebra$score))^2)
-icc_alg <- 1 - (K_alg / (K_alg - 1)) * SSW_a / SST_a
-se_naive_alg <- sd(algebra$score) / sqrt(K_alg)
-deff_alg <- (SE(sv_alg)[1] / se_naive_alg)^2
-cat(sprintf("  ybar = %.4f, ee = %.4f | ICC = %.4f | deff = %.2f | 1+(Mbar-1)icc = %.2f\n",
+icc_alg <- 1 - (SSW_a / (K_alg - n_cl)) / var(algebra$score)
+# El deff empírico contra un MAS SIN reemplazo del mismo tamaño en la misma
+# población: los dos lados llevan su fpc. El de antes (2,10) dividía entre
+# s/sqrt(K), sin fpc, y comparaba un lado con fpc contra otro sin ella.
+N_pop_alg <- sum(weights(dis_alg))
+se_mas_alg <- sqrt((1 - K_alg / N_pop_alg) * var(algebra$score) / K_alg)
+deff_alg <- (SE(sv_alg)[1] / se_mas_alg)^2
+comprueba("algebra: deff a mano <-> svymean(deff = TRUE)", deff_alg,
+          deff(svymean(~score, dis_alg, deff = TRUE)))
+cat(sprintf("  ybar = %.4f, ee = %.4f | R_a^2 = %.4f | deff = %.3f | 1+(Mbar-1)R_a^2 = %.3f\n",
             ybar_alg, SE(sv_alg)[1], icc_alg, deff_alg, 1 + (Mbar_alg - 1) * icc_alg))
 
 # lmer (módulo 10): la misma ICC vista como modelo de efectos aleatorios
 m_lmer <- lmer(score ~ (1 | class), data = algebra, REML = TRUE)
 vc <- as.data.frame(VarCorr(m_lmer))
 icc_lmer <- vc$vcov[1] / sum(vc$vcov)
-cat(sprintf("  ICC por lmer = %.4f (ANOVA: %.4f)\n", icc_lmer, icc_alg))
+cat(sprintf("  ICC por lmer = %.4f (R_a^2: %.4f)\n", icc_lmer, icc_alg))
 
 cifras$algebra <- list(N = N_cl, n = n_cl, K = K_alg, Mbar = Mbar_alg,
                        Mi = as.numeric(M_alg), ti = as.numeric(t_alg),
                        mediasClase = as.numeric(tapply(algebra$score, algebra$class, mean)),
                        ybar = ybar_alg, se = as.numeric(SE(sv_alg)[1]),
-                       seNaive = se_naive_alg, icc = icc_alg, iccLmer = icc_lmer,
+                       seMas = se_mas_alg, s = sd(algebra$score), NPop = N_pop_alg,
+                       icc = icc_alg, iccLmer = icc_lmer,
                        deff = as.numeric(deff_alg),
                        sigmaEntre = vc$vcov[1], sigmaDentro = vc$vcov[2])
 

@@ -110,7 +110,7 @@
     // M3 · Cuánto miente el error estándar ingenuo
     // ---------------------------------------------------------------
     SIMULADORES['espejismo-ee'] = function (raiz) {
-      const params = { rho: 0.42, m: 4 };
+      const params = { rho: 0.30, m: 4 };
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoBarras(lienzo,
@@ -130,8 +130,8 @@
           { etiqueta: 'deff = 1 + (m−1)ρ:', valor: fmtNum(1 + (params.m - 1) * params.rho, 3) },
           { etiqueta: 'factor de mentira √deff:', valor: fmtNum(factor, 3) },
           { etiqueta: 'el intervalo honesto es:', valor: fmtPct(factor - 1, 1) + ' más ancho' },
-          { etiqueta: 'referencia gpa (m=4, ρ≈0,42):', valor: '0,1122 → 0,1637 (factor 1,46)' },
-          { etiqueta: 'referencia algebra (m≈25, ρ=0,072):', valor: 'factor ≈ 1,65' }
+          { etiqueta: 'referencia gpa (m=4, ρ≈0,30):', valor: 'observado 0,1122 → 0,1637 (factor 1,46); la fórmula da 1,38' },
+          { etiqueta: 'referencia algebra (m≈25, ρ≈0,04):', valor: 'factor ≈ 1,40 (observado: 1,50)' }
         ]);
       }
 
@@ -147,7 +147,7 @@
     // M4 · La ICC al mando
     // ---------------------------------------------------------------
     SIMULADORES['icc-deff'] = function (raiz) {
-      const params = { rho: 0.072, m: 25 };
+      const params = { rho: 0.04, m: 25 };
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoXY(lienzo, [], {
@@ -173,7 +173,7 @@
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'deff:', valor: fmtNum(deff, 3) },
           { etiqueta: '1 000 unidades rinden como:', valor: fmtNum(1000 / deff, 0) },
-          { etiqueta: 'referencia algebra:', valor: 'ρ = 0,072, M̄ = 24,9 → deff ≈ 2,7' },
+          { etiqueta: 'referencia algebra:', valor: 'ρ ≈ 0,040, M̄ = 24,9 → deff ≈ 1,95 (empírico: 2,25)' },
           { etiqueta: 'referencia estados (módulo 1):', valor: 'ρ = 0,475 y M̄ ≈ 62 → el deff 30' }
         ]);
       }
@@ -541,12 +541,12 @@
       {
         tipo: 'numerica',
         modulo: 4,
-        pregunta: 'Con aulas de $m = 25$ estudiantes y la ICC de algebra ($\\rho = 0{,}072$), ¿cuánto vale el deff de Kish? Dos decimales.',
-        pista: '$\\text{deff} = 1 + (m-1)\\rho$.',
-        respuesta: 2.73,
+        pregunta: 'Con aulas de $\\bar{M} = 25$ estudiantes y la ICC de algebra ($\\rho \\approx 0{,}04$), ¿cuánto vale el deff de Kish? Dos decimales.',
+        pista: '$\\text{deff} = 1 + (\\bar{M}-1)\\rho$.',
+        respuesta: 1.96,
         tolerancia: 0.02,
-        retroAcierto: '$1 + 24 \\times 0{,}072 = 2{,}73$: cada aula de 25 rinde como 9 estudiantes independientes. Una ICC de «solo» 0,07 no tiene nada de inofensiva con conglomerados de ese tamaño.',
-        retroFallo: 'Es $1 + (25-1)\\times 0{,}072 = 2{,}73$. El error típico es olvidar el −1: la primera unidad del conglomerado siempre informa completa; las repetidas son las que descuentan.'
+        retroAcierto: '$1 + 24 \\times 0{,}04 = 1{,}96$: cada aula de 25 rinde como unos 13 estudiantes independientes, y la muestra pierde casi la mitad de su información. Una ICC de «solo» 0,04 no tiene nada de inofensiva con conglomerados de ese tamaño.',
+        retroFallo: 'Es $1 + (25-1)\\times 0{,}04 = 1{,}96$. El error típico es olvidar el −1: la primera unidad del conglomerado siempre informa completa; las repetidas son las que descuentan.'
       },
       {
         tipo: 'multiple',

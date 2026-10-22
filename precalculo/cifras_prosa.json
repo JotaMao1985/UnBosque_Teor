@@ -211,7 +211,9 @@
     "1,46": "0,1637/0,1122 = 1,4590: cuanto crece el error estandar al pasar de una etapa a dos",
     "7,5": "N/n = 75/10: el peso de la primera etapa de schools",
     "18,35": "367/20: el peso de la segunda etapa del aula mas grande de schools",
-    "2,73": "1 + (25-1) x 0,072 = 2,728: el deff de un aula de 25 con ICC 0,072"
+    "1,96": "1 + (25-1) x 0,04 = 1,96: el deff de Kish de un aula de 25 con la R_a^2 de algebra redondeada (0,0396)",
+    "1,38": "sqrt(1 + 3 x 0,3012) = 1,3789: el factor de Kish de gpa con su R_a^2 (gpa.icc)",
+    "1,40": "sqrt(1 + (24,9167 - 1) x 0,0396) = sqrt(1,9482) = 1,3958: el factor de Kish de algebra"
   },
   "capitulo-6-probabilidades-desiguales.html": {
     "1,25": "deff del piPT frente al MAS para counties: 571 878 / 457 576 = 1,2498",

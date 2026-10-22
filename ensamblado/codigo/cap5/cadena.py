@@ -22,18 +22,19 @@ print(f"media = {ybar:.4f}   ee = {V**0.5:.4f}")
 #> media = 2.8260   ee = 0.1637
 
 print("\n###BLOQUE-P2###\n")
-# La ICC por ANOVA, explicita: dentro contra total, y el deff que implica.
+# La ICC por ANOVA, explicita: la varianza DENTRO de las clases contra la
+# total, y el deff que implica.
 algebra = pd.read_csv("CSV data sets for SDA 3e/algebra.csv")
 K = len(algebra)
-media = algebra["score"].mean()
+n = algebra["class"].nunique()
 ssw = algebra.groupby("class")["score"].apply(lambda y: ((y - y.mean())**2).sum()).sum()
-sst = ((algebra["score"] - media)**2).sum()
-icc = 1 - (K / (K - 1)) * ssw / sst
+msw = ssw / (K - n)
+icc = 1 - msw / algebra["score"].var()        # R_a^2 de Lohr; var() divide n-1
 Mbar = algebra.groupby("class")["Mi"].first().mean()
-print(f"ICC = {icc:.4f}   Mbar = {Mbar:.2f}")
-print(f"deff teorico = 1 + (Mbar-1)*ICC = {1 + (Mbar - 1) * icc:.3f}")
-#> ICC = 0.0720   Mbar = 24.92
-#> deff teorico = 1 + (Mbar-1)*ICC = 2.722
+print(f"R_a^2 = {icc:.4f}   Mbar = {Mbar:.2f}")
+print(f"deff teorico = 1 + (Mbar-1)*R_a^2 = {1 + (Mbar - 1) * icc:.3f}")
+#> R_a^2 = 0.0396   Mbar = 24.92
+#> deff teorico = 1 + (Mbar-1)*R_a^2 = 1.948
 
 print("\n###BLOQUE-P3###\n")
 # La varianza de dos etapas, sumando a mano sus dos pisos (schools).
