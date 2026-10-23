@@ -7403,3 +7403,19 @@ ya no cita «2,7» ni ningún otro número.
 - **Trampa del entorno.** El panel del navegador abre los archivos locales como instantánea `data:`:
   `location.reload()` vuelve a mostrar la versión vieja. Hay que navegar otra vez al archivo.
 - **Sin commit ni publicación.**
+
+### T7.98 — La portada y el README enlazan las diapositivas del cap. 5 (2026-10-23)
+
+Pedido de Javier: enlazarlas «como las del cap. 4» (T7.94), sin publicar.
+
+- **Portada:** dos tarjetas `S1` y `S2` al final de la rejilla, después de las del cap. 4 y con su mismo
+  formato.
+  - **Antetítulo:** «Diapositivas del cap. 5 · Sesión N de 2 · 90 min».
+  - **Descripción:** de qué módulos tratan y de su convención; aquí la fuente va al pie de cada
+    diapositiva, no en las notas como en el cap. 4.
+  - **Número de diapositivas:** el mismo criterio que el cap. 4, que cuenta solo las de contenido (sin
+    portada, hoja de ruta ni divisores): 31 y 25.
+- **README:** la frase de lo que enlaza la portada nombra ahora las diapositivas de los caps. 4 y 5.
+- **Comprobado:** los cuatro enlaces de diapositivas de la portada y del README apuntan a archivos que
+  existen. La portada se ve en el navegador sin desborde horizontal.
+- **Sin publicar.**
