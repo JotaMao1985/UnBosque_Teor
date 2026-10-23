@@ -7199,4 +7199,13 @@ las notas** del presentador y **código R en cada sección**.
 build de Pages terminó en `built`; `verifica_publicado.py --solo-huella` da la huella de las 11 páginas; las dos
 presentaciones, una fuente y un gráfico servidos coinciden byte a byte con la rama; servidas, cargan sus 43 y 44
 diapositivas con 0 errores de fórmulas ni de consola, 17 y 18 etapas animadas, y los enlaces «Leer en el material»
-responden 200. No están enlazadas desde la portada ni desde el capítulo (la skill lo deja como pregunta aparte).
+responden 200.
+
+**Enlazado desde la portada** el 2026-10-23, a pedido de Javier («enlaza las dos sesiones desde la portada del curso y
+publícalo»): dos tarjetas al final de la rejilla de `sitio/muestreo/index.html` («S1» y «S2», icono
+`fa-chalkboard-user`, el mismo formato que las demás) y una línea en el README. `main` `f3875b7`, `gh-pages`
+`e064deb`, construido con `git commit-tree` del árbol `f3875b7:sitio` sobre la punta (nada ajeno: solo cambian la
+portada y el README). Build `built`; `verifica_publicado.py --solo-huella` da la huella de las 11 páginas; la
+portada y el README servidos coinciden byte a byte con la rama; servida, la portada tiene 12 tarjetas, las dos
+nuevas responden 200 y la consola está limpia; a 375 px, sin desborde. El capítulo 4 no enlaza las diapositivas:
+se regenera con su cadena, y un enlace escrito a mano se perdería.
