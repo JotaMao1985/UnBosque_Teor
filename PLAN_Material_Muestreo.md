@@ -7193,4 +7193,10 @@ las notas** del presentador y **código R en cada sección**.
   Kohavi (1995) y Gutiérrez §5.3 quedan [SIN VERIFICAR] en las notas (que Kish bautizó el deff sí está en
   Lohr §7.4). La numeración de los divisores no se puede cambiar sin tocar la skill: los títulos dicen
   «Módulo N ·». `revisar.py`: todas caben al 88 % o más.
-- **Sin commit ni publicación**, a la espera de la revisión de Javier.
+**Publicado** el 2026-10-23 con el visto bueno de Javier («pasa el commit a main y publícalas en gh-pages»):
+`main` `ffe47b2`, `gh-pages` `c118e37`, construido con `git commit-tree` del árbol `ffe47b2:sitio` sobre la punta
+(nada ajeno: el árbol de `gh-pages` era el `sitio/` de `main`; solo entran los 17 archivos de las diapositivas). El
+build de Pages terminó en `built`; `verifica_publicado.py --solo-huella` da la huella de las 11 páginas; las dos
+presentaciones, una fuente y un gráfico servidos coinciden byte a byte con la rama; servidas, cargan sus 43 y 44
+diapositivas con 0 errores de fórmulas ni de consola, 17 y 18 etapas animadas, y los enlaces «Leer en el material»
+responden 200. No están enlazadas desde la portada ni desde el capítulo (la skill lo deja como pregunta aparte).
