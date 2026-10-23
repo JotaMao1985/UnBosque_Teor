@@ -1,0 +1,102 @@
+{
+ "tipo": "animado",
+ "titulo": "Peso de un condado de agsrs por región",
+ "x": {
+  "categorias": [
+   "Norte-Centro",
+   "Nordeste",
+   "Sur",
+   "Oeste"
+  ]
+ },
+ "y": {
+  "titulo": "peso (condados que representa)",
+  "min": 0,
+  "max": 12,
+  "marcas": [
+   0,
+   3,
+   6,
+   9,
+   12
+  ]
+ },
+ "base": [
+  {
+   "tipo": "barra",
+   "x": "Norte-Centro",
+   "y": 10.26,
+   "texto": "10,26",
+   "serie": 5,
+   "ancho": 0.36,
+   "desplazamiento": -0.2
+  },
+  {
+   "tipo": "barra",
+   "x": "Nordeste",
+   "y": 10.26,
+   "texto": "10,26",
+   "serie": 5,
+   "ancho": 0.36,
+   "desplazamiento": -0.2
+  },
+  {
+   "tipo": "barra",
+   "x": "Sur",
+   "y": 10.26,
+   "texto": "10,26",
+   "serie": 5,
+   "ancho": 0.36,
+   "desplazamiento": -0.2
+  },
+  {
+   "tipo": "barra",
+   "x": "Oeste",
+   "y": 10.26,
+   "texto": "10,26",
+   "serie": 5,
+   "ancho": 0.36,
+   "desplazamiento": -0.2
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "Norte-Centro",
+    "y": 9.8505,
+    "texto": "9,85",
+    "serie": 2,
+    "ancho": 0.36,
+    "desplazamiento": 0.2
+   },
+   {
+    "tipo": "barra",
+    "x": "Nordeste",
+    "y": 9.1667,
+    "texto": "9,17",
+    "serie": 2,
+    "ancho": 0.36,
+    "desplazamiento": 0.2
+   },
+   {
+    "tipo": "barra",
+    "x": "Sur",
+    "y": 10.6308,
+    "texto": "10,63",
+    "serie": 2,
+    "ancho": 0.36,
+    "desplazamiento": 0.2
+   },
+   {
+    "tipo": "barra",
+    "x": "Oeste",
+    "y": 10.8205,
+    "texto": "10,82",
+    "serie": 2,
+    "ancho": 0.36,
+    "desplazamiento": 0.2
+   }
+  ]
+ ]
+}

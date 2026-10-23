@@ -1,0 +1,56 @@
+{
+ "tipo": "animado",
+ "titulo": "Error estándar verdadero de la media de acres92 con n = 300",
+ "x": {
+  "categorias": [
+   "Estratificado · proporcional",
+   "Postestratificado",
+   "Estratificado · Neyman"
+  ]
+ },
+ "y": {
+  "titulo": "miles de acres",
+  "min": 0,
+  "max": 25,
+  "marcas": [
+   0,
+   5,
+   10,
+   15,
+   20,
+   25
+  ]
+ },
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "Estratificado · proporcional",
+    "y": 21.109,
+    "texto": "21 109",
+    "serie": 1,
+    "ancho": 0.45
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Postestratificado",
+    "y": 21.272,
+    "texto": "≈ 21 272",
+    "serie": 2,
+    "ancho": 0.45
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Estratificado · Neyman",
+    "y": 17.291,
+    "texto": "17 291",
+    "serie": 3,
+    "ancho": 0.45
+   }
+  ]
+ ]
+}

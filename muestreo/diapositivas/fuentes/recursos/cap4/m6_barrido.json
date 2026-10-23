@@ -1,0 +1,96 @@
+{
+ "tipo": "animado",
+ "titulo": "deff al partir agpop en H estratos por cuantiles de acres87",
+ "x": {
+  "titulo": "número de estratos H",
+  "min": 1.5,
+  "max": 10.5,
+  "marcas": [
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ]
+ },
+ "y": {
+  "titulo": "deff",
+  "min": 0,
+  "max": 1.1,
+  "marcas": [
+   0,
+   1
+  ]
+ },
+ "base": [
+  {
+   "tipo": "referencia",
+   "y": 1,
+   "texto": "MAS"
+  },
+  {
+   "tipo": "referencia",
+   "y": 0.8212,
+   "texto": "región (H = 4): 0,8212"
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "linea",
+    "x": [
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "y": [
+     0.731,
+     0.614,
+     0.54,
+     0.488,
+     0.448,
+     0.416,
+     0.387,
+     0.363,
+     0.341
+    ],
+    "serie": 2,
+    "etiquetas": [
+     "0,731",
+     "",
+     "0,540",
+     "",
+     "0,448",
+     "",
+     "",
+     "",
+     "0,341"
+    ],
+    "etiquetas_dy": 30
+   },
+   {
+    "tipo": "flecha",
+    "desde": [
+     6,
+     0.5680000000000001
+    ],
+    "hasta": [
+     10,
+     0.461
+    ],
+    "texto": "de H = 6 a 10: casi ¼ menos de varianza",
+    "serie": 4
+   }
+  ]
+ ]
+}

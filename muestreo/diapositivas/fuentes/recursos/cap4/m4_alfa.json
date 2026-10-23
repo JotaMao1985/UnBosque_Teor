@@ -1,0 +1,113 @@
+{
+ "tipo": "animado",
+ "titulo": "deff de n_h ∝ N_h S_h^α con dos variables",
+ "margen_derecho": 120,
+ "x": {
+  "titulo": "α",
+  "categorias": [
+   "0 · proporcional",
+   "0,25",
+   "0,5",
+   "0,75",
+   "1 · Neyman"
+  ]
+ },
+ "y": {
+  "titulo": "deff",
+  "min": 0.45,
+  "max": 1.2,
+  "marcas": [
+   1
+  ]
+ },
+ "base": [
+  {
+   "tipo": "referencia",
+   "y": 1,
+   "texto": "MAS (deff = 1)"
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "linea",
+    "x": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "y": [
+     0.8224,
+     0.6919,
+     0.6108,
+     0.5667,
+     0.551
+    ],
+    "serie": 1,
+    "nombre": "acres92",
+    "etiquetas": [
+     "0,8224",
+     "",
+     "0,6108",
+     "0,5667",
+     "0,551"
+    ],
+    "etiquetas_dy": 30
+   },
+   {
+    "tipo": "texto",
+    "x": 0.93,
+    "y": 0.6318999999999999,
+    "texto": "0,6919",
+    "ancla": "fin",
+    "serie": 1
+   }
+  ],
+  [
+   {
+    "tipo": "linea",
+    "x": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "y": [
+     0.9723,
+     0.9237,
+     0.9304,
+     0.9802,
+     1.119
+    ],
+    "serie": 2,
+    "nombre": "farms92",
+    "etiquetas": [
+     "0,9723",
+     "",
+     "0,9304",
+     "0,9802",
+     "1,119"
+    ]
+   },
+   {
+    "tipo": "texto",
+    "x": 1.07,
+    "y": 0.9587,
+    "texto": "0,9237",
+    "ancla": "inicio",
+    "serie": 2
+   }
+  ],
+  [
+   {
+    "tipo": "referencia",
+    "x": 1,
+    "texto": "α = 0,25",
+    "serie": 4
+   }
+  ]
+ ]
+}

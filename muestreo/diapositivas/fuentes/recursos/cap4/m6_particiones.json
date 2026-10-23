@@ -1,0 +1,70 @@
+{
+ "tipo": "animado",
+ "titulo": "deff de la asignación proporcional según cómo se parte agpop",
+ "x": {
+  "categorias": [
+   "Al azar",
+   "Cuartiles farms92",
+   "Región",
+   "Cuartiles acres87"
+  ]
+ },
+ "y": {
+  "titulo": "deff",
+  "min": 0,
+  "max": 1.2,
+  "marcas": [
+   0,
+   1
+  ]
+ },
+ "base": [
+  {
+   "tipo": "referencia",
+   "y": 1,
+   "texto": "MAS"
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "Al azar",
+    "y": 1.0009,
+    "texto": "1,0009",
+    "serie": 5,
+    "ancho": 0.5
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Cuartiles farms92",
+    "y": 0.9872,
+    "texto": "0,9872",
+    "serie": 5,
+    "ancho": 0.5
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Región",
+    "y": 0.8212,
+    "texto": "0,8212",
+    "serie": 1,
+    "ancho": 0.5
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Cuartiles acres87",
+    "y": 0.5396,
+    "texto": "0,5396",
+    "serie": 2,
+    "ancho": 0.5
+   }
+  ]
+ ]
+}

@@ -1,0 +1,84 @@
+{
+ "tipo": "animado",
+ "titulo": "Condados necesarios para un error del 10 % sobre acres92",
+ "x": {
+  "categorias": [
+   "MAS",
+   "Proporcional",
+   "Igual",
+   "Neyman",
+   "Certeza + proporcional"
+  ]
+ },
+ "y": {
+  "titulo": "condados (n)",
+  "min": 0,
+  "max": 700,
+  "marcas": [
+   0,
+   200,
+   400,
+   600
+  ]
+ },
+ "base": [
+  {
+   "tipo": "barra",
+   "x": "MAS",
+   "y": 595,
+   "texto": "595",
+   "serie": 5,
+   "ancho": 0.5
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "Proporcional",
+    "y": 506,
+    "texto": "506",
+    "serie": 1,
+    "ancho": 0.5
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Igual",
+    "y": 462,
+    "texto": "462",
+    "serie": 1,
+    "ancho": 0.5
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Neyman",
+    "y": 356,
+    "texto": "356",
+    "serie": 1,
+    "ancho": 0.5
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Certeza + proporcional",
+    "y": 316,
+    "texto": "316",
+    "serie": 2,
+    "ancho": 0.5
+   },
+   {
+    "tipo": "texto",
+    "x": 4.45,
+    "y": 450,
+    "texto": "31 censados + 285 sorteados",
+    "ancla": "fin",
+    "serie": 2
+   }
+  ]
+ ]
+}
