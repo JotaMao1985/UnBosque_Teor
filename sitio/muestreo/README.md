@@ -25,7 +25,9 @@ Ocho capítulos que cubren las 16 semanas del cronograma. **93 módulos, 70 simu
 | 8 | [No respuesta, ponderación e imputación](capitulo-8-no-respuesta-ponderacion.html) | 15–16 | MCAR/MAR/MNAR medidos, la fórmula del sesgo, ajuste por clases de respuesta, calibración contra la ACS, imputación simple y múltiple con reglas de Rubin, R-indicators, taller del proyecto integrador, verificación de salidas de IA | 11 | 8 |
 
 La portada [`index.html`](index.html) enlaza todos los capítulos y la [guía del proyecto integrador
-del Corte III](proyecto-integrador-corte-iii.html), con su [plantilla de informe](proyecto-integrador-plantilla.Rmd). La navegación es siempre por la
+del Corte III](proyecto-integrador-corte-iii.html), con su [plantilla de informe](proyecto-integrador-plantilla.Rmd), y las
+diapositivas de clase del capítulo 4 en dos sesiones ([1](diapositivas/capitulo-4-muestreo-estratificado_sesion1.html) y
+[2](diapositivas/capitulo-4-muestreo-estratificado_sesion2.html)), con sus fuentes en `diapositivas/fuentes/`. La navegación es siempre por la
 portada: los capítulos no enlazan entre sí, aunque sí se citan («esto se trata en el capítulo 5»).
 
 ## Qué trae cada capítulo
