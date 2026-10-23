@@ -7209,3 +7209,197 @@ portada y el README). Build `built`; `verifica_publicado.py --solo-huella` da la
 portada y el README servidos coinciden byte a byte con la rama; servida, la portada tiene 12 tarjetas, las dos
 nuevas responden 200 y la consola está limpia; a 375 px, sin desborde. El capítulo 4 no enlaza las diapositivas:
 se regenera con su cadena, y un enlace escrito a mano se perdería.
+
+### T7.95 — Las diapositivas del cap. 5, en dos sesiones de 90 minutos (2026-10-22)
+
+Javier pidió las diapositivas del cap. 5 con la skill `diapositivas-clase` y las mismas cuatro reglas que
+en T7.94 (nada inventado; cada ejemplo con contexto; cada cifra contrastada y citada, o marcada
+[SIN VERIFICAR]; datos, interpretaciones y opiniones separados), más animaciones donde hagan falta.
+Decidió ese día: **dos presentaciones de 90 min** (semana 10: M1–M5; semana 11: M6–M10); **la fuente
+visible al pie** de cada diapositiva con cifras y **etiquetas** en las afirmaciones; **las cifras del
+capítulo con la cita correcta de Lohr 3.ª**, explicando en las notas dónde difieren; y **cuatro gráficos
+animados**.
+
+- **Los archivos:** `sitio/muestreo/diapositivas/capitulo-5-conglomerados_sesion{1,2}.html` (39 y 33
+  diapositivas: 31 y 25 de contenido, todas con notas); fuentes en
+  `sitio/muestreo/diapositivas/fuentes/cap5_sesion{1,2}.md`; recursos en `fuentes/recursos/cap5/`: la
+  foto del simulador del M1 y cuatro `.json` animados (Kish gpa frente a algebra; la varianza por etapa
+  de schools; la curva del presupuesto del ejercicio 4; el ee de los tres diseños sobre agpop), con sus
+  cifras tal cual, sacadas de `precalculo/salidas/cap5_datos.json` o, la curva, de la fórmula del M8
+  evaluada con los parámetros del ejercicio 4 (el generador no se versiona).
+- **Marcas:** `<mark>Dato</mark>`, `<kbd>Lectura</kbd>` y una caja `::: info Opinión del material`; las
+  definiciones y fórmulas, en sus cajas, son teoría. Una diapositiva al principio de la sesión 1 lo
+  explica. **Distinto del cap. 4** (T7.94 usa cajas `Dato`/`Interpretación`/`Criterio` y la cita en las
+  notas): fueron decisiones distintas de Javier en cada sesión; unificarlas sería otra tarea.
+- **Verificado:** `verifica_bloques.py --prosa` del cap. 5 en verde (167/167 de código, 58 de prosa);
+  recálculo independiente en R 4.4 (framework) desde los CSV de Lohr de todas las cifras proyectadas,
+  y en Python de KFold/GroupKFold (48 y 0); citas contrastadas con el epub de Lohr 3.ª; `revisar.py`:
+  todas caben al 88 % o más; las animaciones, paso a paso en el navegador integrado, sin errores de
+  consola. Después, un **auditor independiente** (subagente, sin ver mis conclusiones) contrastó unas 330
+  cifras y 45 citas a Lohr y repitió la simulación de 10 000 y 5 000 réplicas con la semilla 2026 (sale
+  idéntica). Encontró cuatro errores míos, corregidos: la dirección del 6,7 % de coots (la razón es un
+  6,7 % mayor; la ingenua, un 6,3 % menor), un número de diapositiva en una nota, un «como Lohr» en la
+  ponderación de coots y un título que decía «dispersan 30 veces» de una razón de varianzas.
+- **Problemas del material que encontró (sin corregir: es otra tarea):**
+  1. **Números de ejemplo de Lohr.** El M6 y el M7 llaman a schools «el ejemplo 5.8»; en la 3.ª es el
+     **5.7** (el 5.8 es coots). El M5 sitúa coots en §5.2.2–5.2.3; en la 3.ª está en §5.3. El
+     `Sampling Lohr.pdf` del repositorio es la **1.ª** edición (Duxbury), donde coots es el ej. 5.6.
+  2. **La ICC de gpa.** El capítulo la estima con la varianza muestral de los 20 estudiantes (0,265) y da
+     **0,30**, «la R²a de Lohr»; Lohr (ej. 5.4) usa el estimador insesgado de S² (0,279) y publica
+     **0,337** (ICC 0,335; deff 2,02). Lohr §5.4.2 acepta la versión muestral como punto de partida.
+  3. **El ejercicio guiado 1** construye los intervalos con ±1,96; Lohr pide una t con n − 1 gl
+     (t₁₁ = 2,20 → [59,29; 65,85] en lugar de [59,65; 65,49]). La razón de anchos (1,50) no cambia.
+  4. **La tabla del M9** pone «50» estados visitados para el MAS de 369 condados; el valor esperado
+     exacto es **46,1**.
+  5. **El simulador del M8** rotula el eje con «0.016516318447999997»; el del M4 dibuja una «zona
+     habitual ρ 0,01–0,20» sin fuente.
+  6. **El M7** dice que censar las escuelas multiplica el costo «por ocho»; las 10 escuelas suman 2 303
+     estudiantes (Lohr, tabla 5.7): las entrevistas se multiplicarían por 11,5.
+  7. **El capítulo no dice** que algebra y schools son datos hipotéticos/ficticios (Lohr, ejs. 5.6 y
+     5.7); las diapositivas sí lo dicen.
+  8. **El deff ≈ 16 del combinado (M9)** se calcula contra un MAS de **369** condados (`V_mas_eq` de
+     `genera_cap5.R`), pero el combinado observa 467 en promedio; contra un MAS del mismo n esperado,
+     como dice la propia tabla, sería **21,1**. «Casi la mitad de la varianza» mezcla, además, el efecto
+     del estrato con un 26 % más de condados. Las diapositivas no proyectan el 16.
+  9. **coots, nidada 88 (M5):** el capítulo llama «convención de Lohr» a ponderar cada huevo con su
+     propio `csize`; las cifras de Lohr (Σw = 1 757, 4 375,947) salen de tomar 9 para los dos huevos, y
+     luego Lohr usa 1 758 para M̄. La diferencia es relativa, 8 × 10⁻⁵.
+  10. **El conglomerado último (M7)** «sobreestima un poquito»: con `survey` en schools, declarando solo
+     la etapa 1 **con** fpc sale 51 690 (−0,4 %); sin fpc, 55 524 (+7 %). Lo de sobreestimar vale solo sin fpc.
+  11. **El histograma del M1** rotula el eje con coma de miles (200,000).
+- **Fallo propio:** di por 2.ª edición el PDF de Lohr del repositorio sin mirar la portada, y se lo dije
+  así a Javier; es la 1.ª (Duxbury). Es la misma trampa de T7.49: la edición se comprueba en la portada.
+- **Convivencia:** T7.94 (cap. 4) es de otra sesión y también añade al final del PLAN; al juntar las
+  ramas habrá un conflicto trivial en esta zona del archivo.
+- **Sin commit ni publicación**, a la espera de la revisión de Javier.
+
+### T7.96 — La auditoría del cap. 5 y de sus diapositivas, antes de publicar (2026-10-22)
+
+Javier pidió, antes de publicar las diapositivas de T7.95, «una auditoría como la que acostumbramos»
+y revisar de paso el capítulo. Se hizo como la de la guía del proyecto (T7.93): protocolo mecánico y
+**cinco lectores independientes en solo lectura** sobre una copia congelada. Los lectores fueron
+estadística, claridad con el criterio de contenido, pedagogía, código y **visual**; este último
+sustituye al de resistencia a la IA, que es propio de entregas calificadas. Cada hallazgo aceptado se
+verificó aparte en R o contra Lohr 3.ª. Errores de las diapositivas, corregidos; errores del capítulo
+y mejoras, al informe; nada publicado.
+
+**El informe completo:** `PLAN_Auditoria_Cap5_Diapositivas.md`, en la raíz del worktree
+`chapter-5-slides-5eba43`, fuera de git. Un hook impide escribir en la copia principal desde la
+sesión: conviene moverlo junto a los demás `PLAN_Auditoria_*.md`.
+
+- **Mecánico, capítulo:** todo en verde.
+  - `verifica_bloques --prosa`: 167/167 y 58.
+  - `verifica_publicado --local`: R (18 bloques) y Python (4) arrancan.
+  - `verifica_referencias`: 27 resueltas; una ambigua, que es falsa alarma.
+  - `genera_cap5.R`: regenera `cap5_datos.json` byte a byte.
+- **Lectores:** 25 + 33 + 32 + 14 + 23 hallazgos. CO ejecutó 35 bloques y comparó 126 salidas `#>`, todas
+  iguales. VI recorrió 72 diapositivas y los 8 simuladores a 1280 y 375 px, en es-CO y en-US.
+- **El hallazgo grave (ES-1, verificado en R):** el «99,2 % de la varianza viene de qué escuelas
+  salieron; 0,8 % de qué estudiantes» del M6 y el M7 son los dos **sumandos del estimador** (5.27).
+  El primero estima V₁ más parte de V₂ (Lohr 5.28). Por etapa, sin sesgo: **93,9 % / 6,1 %**. Censar
+  las escuelas ataca ≈ 6 %, no 0,8 %. La lección cualitativa se sostiene.
+- **Corregido en las diapositivas** (unos 30 puntos; tabla en el informe). Entre ellos:
+  - el reparto por etapa, con una animación nueva: primero los sumandos, después las etapas;
+  - fuera el «deff observado» de la animación de Kish: en gpa, la distancia sale del estimador de
+    S², no de la fórmula (con el Ŝ² de Lohr, 2,01 frente a 2,02);
+  - la comparación de 6 contra 8 estados del M9 se dice en pantalla;
+  - fuera el deff 16, mal calculado en el capítulo;
+  - la respuesta sobre las π;
+  - un `library(lme4)` que mi recorte había quitado;
+  - el histograma del M1, redibujado desde el precálculo (la foto tenía ejes en formato inglés y
+    letra de 9 px);
+  - etiquetas Dato/Lectura mal asignadas; la caja de opinión pasa a ámbar;
+  - cinco preguntas movidas antes de la diapositiva que las respondía.
+  
+  `revisar.py`: todas caben al 88 % o más.
+- **Errores del capítulo (C1–C21, sin corregir, decide Javier):**
+  - C1, el reparto por etapa;
+  - el conglomerado último, que con fpc subestima;
+  - el deff 16 del M9 (21,1 contra el n correcto), su tabla de «ocho contra ocho», que compara 6 y 8,
+    y los «50» estados (46,1);
+  - Kish «se queda corta»;
+  - la «convención de Lohr» de coots;
+  - seis citas a Lohr;
+  - «por ocho» (son 11,5);
+  - «superficie sembrada»;
+  - la retro de la pregunta 2;
+  - el diagrama del M2;
+  - comentarios de código;
+  - los ejes de los simuladores del M7 y el M8;
+  - los rótulos a 375 px y el formato de números según el idioma del navegador.
+- **Plantilla de la skill (otro repositorio):** sin cdnjs la presentación no arranca, por una guarda
+  de Prism que lanza un TypeError (`plantilla.html:1184`; el arreglo es una línea). Afecta a todas
+  las presentaciones de todos los cursos.
+- **Sin commit ni publicación**, a la espera de Javier: qué corregir del capítulo y qué mejoras de las
+  diapositivas aplicar.
+
+### T7.97 — Los errores C1–C21 de la auditoría, corregidos en el cap. 5 (2026-10-23)
+
+Pedido de Javier: «corrige en el capítulo los errores C1–C21 con su cadena de ensamblado y sus verificadores, sin
+publicar». La lista y su evidencia están en `PLAN_Auditoria_Cap5_Diapositivas.md` (T7.96).
+
+**La regla que ordenó el trabajo.** Toda cifra nueva de la prosa tiene que tener respaldo en una salida de
+código o en `DATOS_CAP5`; si no, `verifica_bloques --prosa` la marca. Por eso las cifras corregidas entraron
+primero en R y después en el texto. Donde no hacía falta una cifra, se dijo sin ella: la retro de la pregunta 2
+ya no cita «2,7» ni ningún otro número.
+
+- **`genera_cap5.R`.** Las cifras que ya existían salen idénticas: comparado clave a clave. Lo nuevo:
+  - para gpa, Ŝ², ρ̂, Kish y deff a la Lohr, con tres comprobaciones contra el ej. 5.4 (0,279, 0,337 y 2,02);
+  - para algebra, ρ̂ = 0,0427 y Kish 2,02, con M̄ en lugar de M (Lohr 5.4.2);
+  - para schools: el aporte por etapa (93,9 / 6,1 %), el recorte con m = 40 (3,3 %), el atajo del
+    conglomerado último con fpc (51 689,7, igual a √V_entre) y sin fpc (55 523,6, igual a N² s_t²/n), y el
+    factor del censo (2 303 estudiantes, ×11,5);
+  - para el M9: el deff del combinado contra un MAS de 467 (21,08); 8 estados sin estratos, con su propia
+    semilla (V = 9,28 × 10⁹, deff 30,1, los estratos recortan un 25,6 %); y 46,1 estados esperados del MAS.
+  
+  Comentario de coots: la convención es del material, no de Lohr.
+- **Cadenas.**
+  - En R: R10 añade el atajo con `svydesign(id = ~schoolid, weights = ~finalwt)` con y sin fpc. Se corrigen
+    los comentarios de R8 (coots), R9 (los sumandos no son etapas), R11 (572116.13) y R13 (la comparación
+    con 8 estados).
+  - En Python: P1 sin numpy y sin «las dos únicas dependencias». P3 imprime sumandos, etapas y lo que compra
+    cada decisión.
+  - `anota_salidas` las anotó; `--check` da 0.
+- **Módulos.**
+  - M1: superficie en granjas; cita a la introducción de Lohr.
+  - M2: «por primera vez»; «lo que hará el módulo 3».
+  - M3 y M4: la distancia de Kish viene del estimador de S², y la definición lo advierte.
+  - M5: la nota de coots y su cita.
+  - M6: 93,9 / 6,1 en el párrafo inicial; «sumando 1 / sumando 2»; la nota de survey con el atajo; ej. 5.7.
+  - M7: reescrito en torno a sumandos frente a etapas, el atajo con fpc y sin fpc, y el censo (×11,5); el
+    simulador ya no dice que «apila»; citas a §5.3 (5.28–5.29) y §6.3.
+  - M8: «submuestra».
+  - M9: los cuatro diseños, la nota con «una cuarta parte» y deff 21, y la cita a §7.1.
+  - M11: qué preguntas traen retroalimentación por opción.
+- **`simuladores.js`.**
+  - Dos ayudantes del capítulo (`ejesEnEspanol`, `topeBonito`), sin tocar la plantilla. Ejes con coma y
+    espacio de miles en cualquier idioma del navegador; rótulos de categoría en dos líneas y sin salto
+    automático; topes redondos.
+  - M1 y la pregunta 6, en miles de acres.
+  - M8: eje x hasta 60.
+  - M7: ×10¹³.
+  - Coma en los deslizadores del M8 y el M10.
+  - Tabla del M9 con cuatro filas.
+  - Diagrama del M2 (marco, K, «94 %»).
+  - Preguntas 2, 8 y 10.
+- **Verificado.**
+  - Reensamblado byte a byte; `node --check` OK.
+  - `verifica_bloques --prosa`: **177/177** y **68** de prosa, 0 sin respaldo (eran 167 y 58).
+  - `verifica_referencias --anota`: 8 nuevas, revisadas una a una.
+  - `verifica_publicado --local`: R (18) y Python (4) arrancan.
+  - En el navegador: 0 errores de consola y de KaTeX en los 11 módulos. M7, M8 y M10 en sus extremos con ejes
+    redondos y sin errores. A 375 px, sin desborde y con todos los rótulos (los del M2 y el M7, acortados al
+    verlos pisarse).
+- **README:** 2 796 → **2 806** cifras contrastadas (el cap. 5 pasa de 167 a 177).
+- **Diapositivas alineadas.**
+  - Las notas que avisaban de errores del capítulo citan ahora la versión corregida.
+  - El M9 de la sesión 2 tiene cuatro barras, todas del capítulo; ya no hay simulación propia.
+  - La lección de «censar» lleva el ×11,5.
+- **Lo que no se tocó, y por qué.**
+  - Las mejoras del informe: Javier elige.
+  - `cuenta_sitio.py` se cae desde T7.93: su `PAGINA_RE` no reconoce la guía del proyecto. No es del cap. 5.
+  - La tabla ordenable de la plantilla sigue escribiendo «20.602», con el idioma del navegador, en todos
+    los capítulos.
+- **Trampa del entorno.** El panel del navegador abre los archivos locales como instantánea `data:`:
+  `location.reload()` vuelve a mostrar la versión vieja. Hay que navegar otra vez al archivo.
+- **Sin commit ni publicación.**

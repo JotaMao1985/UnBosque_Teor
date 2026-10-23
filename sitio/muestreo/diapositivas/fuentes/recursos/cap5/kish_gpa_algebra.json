@@ -1,0 +1,78 @@
+{
+ "tipo": "animado",
+ "titulo": "deff de Kish para las suites de gpa y las aulas de algebra",
+ "margen_derecho": 40,
+ "x": {
+  "titulo": "tamaño (medio) del conglomerado",
+  "min": 0,
+  "max": 30,
+  "marcas": [
+   1,
+   4,
+   10,
+   20,
+   25,
+   30
+  ]
+ },
+ "y": {
+  "titulo": "deff",
+  "min": 0.6,
+  "max": 2.6,
+  "marcas": [
+   1,
+   2
+  ]
+ },
+ "base": [
+  {
+   "tipo": "referencia",
+   "y": 1,
+   "texto": "MAS: deff = 1",
+   "serie": 5
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "curva",
+    "serie": 2,
+    "polinomio": [
+     0.69878043,
+     0.30121957
+    ],
+    "desde": 1,
+    "hasta": 6
+   },
+   {
+    "tipo": "marca",
+    "serie": 2,
+    "x": 4,
+    "y": 1.9037,
+    "texto": "suites de gpa → 1,90",
+    "lado": "derecha"
+   }
+  ],
+  [
+   {
+    "tipo": "curva",
+    "serie": 1,
+    "polinomio": [
+     0.96035494,
+     0.03964506
+    ],
+    "desde": 1,
+    "hasta": 30
+   },
+   {
+    "tipo": "marca",
+    "serie": 1,
+    "x": 24.92,
+    "y": 1.9482,
+    "texto": "aulas de algebra → 1,95",
+    "lado": "abajo",
+    "texto_dy": 18
+   }
+  ]
+ ]
+}

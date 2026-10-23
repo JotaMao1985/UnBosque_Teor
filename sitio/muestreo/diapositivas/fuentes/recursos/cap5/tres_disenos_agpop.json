@@ -1,0 +1,61 @@
+{
+ "tipo": "animado",
+ "titulo": "Error estándar de la media de acres92 con cuatro diseños",
+ "x": {
+  "categorias": [
+   "MAS de condados",
+   "6 estados",
+   "8 sin estratos",
+   "8, dos por región"
+  ]
+ },
+ "y": {
+  "titulo": "error estándar (miles de acres)",
+  "min": 0,
+  "max": 130,
+  "marcas": [
+   0,
+   40,
+   80,
+   120
+  ]
+ },
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "serie": 1,
+    "x": 0,
+    "y": 20.602,
+    "texto": "20,6 mil"
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "serie": 2,
+    "x": 1,
+    "y": 113.552,
+    "texto": "113,6 mil · deff 30,4"
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "serie": 5,
+    "x": 2,
+    "y": 96.343,
+    "texto": "96,3 mil · deff 30,1"
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "serie": 3,
+    "x": 3,
+    "y": 83.096,
+    "texto": "83,1 mil · deff 21,1"
+   }
+  ]
+ ]
+}
