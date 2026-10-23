@@ -35,7 +35,8 @@
           <li>$\text{MSW} = \dfrac{SSW}{K - N}$ es la varianza <em>dentro</em> de los conglomerados ($SSW$ es la
             suma de cuadrados dentro —la del capítulo 4, módulo 7—, $K$ el total de unidades y $N$ el número de
             conglomerados). Con una muestra, la cuenta se hace sobre los $n$ conglomerados observados, como en el
-            código de abajo.</li>
+            código de abajo. Con pocos conglomerados, la varianza de la muestra subestima $S^2$, y con ella la
+            ICC (Lohr, ej. 5.4); para planear basta, pero conviene saberlo (módulo 3).</li>
         </ul>
         <p>Si los miembros de un conglomerado son casi iguales entre sí, MSW es pequeña y $R_a^2 \to 1$. Si no se
           parecen más que dos unidades al azar, $\text{MSW} \approx S^2$ y $R_a^2 \to 0$.</p>
@@ -76,9 +77,10 @@
 
       <p>Compara las dos cifras: el deff <strong>teórico</strong> de Kish (1,95, calculado con la ICC y el
         $\bar{M}$ de la muestra) y el <strong>empírico</strong> (2,25, que compara errores estándar). Están cerca,
-        y la distancia que queda tiene dos fuentes: las aulas tienen tamaños distintos (17 a 34), mientras que la
-        fórmula de Kish supone conglomerados iguales; y con solo 12 aulas, las dos cifras son estimaciones con
-        bastante ruido. Las dos dicen lo que importa: estas 299 observaciones rinden como entre 133 y 153 de un
+        y la distancia que queda tiene tres fuentes: la ICC se estimó con la varianza de los estudiantes de la
+        muestra, que con 12 aulas se queda corta (con el estimador de Lohr, $\hat{\rho} = 0{,}0427$ y Kish da
+        2,02); las aulas tienen tamaños distintos (17 a 34), mientras que la fórmula de Kish supone conglomerados
+        iguales; y con solo 12 aulas, las dos cifras son estimaciones con bastante ruido. Las dos dicen lo que importa: estas 299 observaciones rinden como entre 133 y 153 de un
         MAS.</p>
 
       <div class="simulador" data-simulador="icc-deff">
@@ -177,7 +179,9 @@
       <div class="note">
         <p><strong>Nota de auditoría del archivo oficial.</strong> La nidada 88 registra <code>csize</code>
           distinto en sus dos huevos (9 y 11): una inconsistencia del archivo publicado con el libro. El material
-          sigue la convención de Lohr — cada huevo pondera con su propio <code>csize</code>/2 — y con ella la vía a
+          pondera cada huevo con su propio <code>csize</code>/2 —convención suya: Lohr, en el ejemplo 5.8, suma los
+          pesos como si los dos huevos fueran de una nidada de 9, y luego usa el otro tamaño para $\bar{M}$— y con
+          ella la vía a
           mano y <code>survey</code> coinciden hasta la última cifra; la primera versión del precálculo, que tomaba
           «el» tamaño de la nidada, difería en la cuarta cifra decimal, y así se encontró la inconsistencia. Ninguna
           de las dos convenciones cambia nada visible (dif. relativa 8 × 10⁻⁵), pero el protocolo del material
@@ -201,7 +205,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §5.2.2–5.2.3: tamaños desiguales y el ejemplo de las fochas (Arnold, 1991).</li>
+          <li>Lohr — §5.2.3: tamaños desiguales; §5.3, ej. 5.8: las fochas (Arnold, 1991), que en el libro son de dos etapas porque de cada nidada se miden dos huevos.</li>
           <li>Capítulo 3 de este material — el estimador de razón, del que este módulo es un caso.</li>
         </ul>
       </div>
@@ -231,9 +235,9 @@
 
       <p>Volvamos a las 75 escuelas. Sorteando 10 y entrevistando a 20 estudiantes de cada una —200 entrevistas en
         total— el total estimado de la prueba de matemáticas sale <strong>572 116</strong> con un error estándar de
-        <strong>51 900</strong>. Lo interesante viene al partir esa varianza en dos: <strong>el 99,2 % procede de
-        qué escuelas salieron</strong> y solo el 0,8 % de a qué estudiantes se entrevistó dentro. Ese desequilibrio
-        gobierna todas las decisiones de diseño del módulo.</p>
+        <strong>51 900</strong>. Lo interesante viene al partir esa varianza por etapas: <strong>casi toda procede
+        de qué escuelas salieron</strong> —el 93,9 %— y solo el 6,1 % de a qué estudiantes se entrevistó dentro (el
+        módulo 7 hace la cuenta). Ese desequilibrio gobierna todas las decisiones de diseño del módulo.</p>
 
       <p>Censar cada conglomerado sorteado (módulos 3–5) desperdicia dinero justo donde menos rinde: el módulo 4
         mostró que, pasadas unas cuantas, las unidades del mismo conglomerado repiten información. La jugada
@@ -244,11 +248,13 @@
         <p class="formula-titulo">El π-estimador de dos etapas y su varianza</p>
         $$\hat{t} = \frac{N}{n} \sum_{i \in s} \hat{t}_i, \quad \hat{t}_i = M_i \bar{y}_i,
         \qquad
-        \widehat{V}(\hat{t}) = \underbrace{N^2\left(1 - \frac{n}{N}\right)\frac{s_t^2}{n}}_{\text{etapa 1: entre}}
-        + \underbrace{\frac{N}{n}\sum_{i \in s} M_i^2\left(1 - \frac{m_i}{M_i}\right)\frac{s_i^2}{m_i}}_{\text{etapa 2: dentro}}$$
-        <p style="margin-bottom:0;">La primera etapa aporta la varianza del módulo 3 — como si los $\hat{t}_i$
-          fueran totales exactos —; la segunda paga el precio de que no lo son: cada escuela sorteada aporta la
-          incertidumbre de estimar su total con $m_i$ de sus $M_i$ estudiantes.</p>
+        \widehat{V}(\hat{t}) = \underbrace{N^2\left(1 - \frac{n}{N}\right)\frac{s_t^2}{n}}_{\text{sumando 1: entre}}
+        + \underbrace{\frac{N}{n}\sum_{i \in s} M_i^2\left(1 - \frac{m_i}{M_i}\right)\frac{s_i^2}{m_i}}_{\text{sumando 2: dentro}}$$
+        <p style="margin-bottom:0;">El primer sumando es la varianza del módulo 3 — como si los $\hat{t}_i$
+          fueran totales exactos —; el segundo paga el precio de que no lo son: cada escuela sorteada aporta la
+          incertidumbre de estimar su total con $m_i$ de sus $M_i$ estudiantes. Ojo: los dos sumandos no son
+          exactamente el aporte de cada etapa, porque $s_t^2$ se calcula con totales estimados y arrastra parte de
+          la segunda (Lohr, ec. 5.28); el módulo 7 los separa.</p>
       </div>
 
       <div class="derivacion">
@@ -312,9 +318,10 @@
       <div class="note">
         <p><strong>Cómo se declara la segunda etapa en survey.</strong> <code>id = ~schoolid + stu</code> dice
           «primero escuelas, luego estudiantes»; <code>fpc = ~fpc1 + Mi</code> da el tamaño del sorteo en cada
-          etapa. Con solo la primera etapa declarada (<code>id = ~schoolid</code>, fpc de 75), survey usaría la
-          aproximación de «conglomerados últimos», que aquí casi no cambia nada — el módulo 7 explica por qué ese
-          atajo suele ser legítimo.</p>
+          etapa. Con solo la primera etapa declarada (<code>id = ~schoolid</code>, con los pesos), survey usa la
+          aproximación de «conglomerados últimos»; el final del bloque la calcula. Con fpc de 75 da 51 690, un poco
+          menos que las dos etapas; sin fpc —la versión con reemplazo que usan casi todos los programas— da
+          55 524, un 7 % más. El módulo 7 explica por qué ese atajo suele bastar.</p>
       </div>
 
       <div class="warning">
@@ -328,7 +335,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §5.3: dos etapas; el ejemplo de las escuelas es el 5.8.</li>
+          <li>Lohr — §5.3: dos etapas; el ejemplo de las escuelas es el 5.7.</li>
           <li>Gutiérrez — §7.2: el diseño SI-SI y <code>E.2SI</code>, que este módulo reproduce.</li>
           <li>Särndal, Swensson y Wretman — cap. 4: la teoría general multietapa.</li>
         </ul>

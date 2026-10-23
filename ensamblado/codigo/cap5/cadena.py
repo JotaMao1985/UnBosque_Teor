@@ -2,7 +2,7 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
-import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+import pandas as pd   # lo usan todos los bloques Python; el modulo 10, ademas, scikit-learn
 
 # El estimador de conglomerados a mano: totales por suite, nada mas.
 gpa = pd.read_csv("CSV data sets for SDA 3e/gpa.csv")
@@ -37,7 +37,8 @@ print(f"deff teorico = 1 + (Mbar-1)*R_a^2 = {1 + (Mbar - 1) * icc:.3f}")
 #> deff teorico = 1 + (Mbar-1)*R_a^2 = 1.948
 
 print("\n###BLOQUE-P3###\n")
-# La varianza de dos etapas, sumando a mano sus dos pisos (schools).
+# La varianza de dos etapas en schools: sus dos sumandos, y el aporte de cada
+# etapa, que NO es lo mismo.
 schools = pd.read_csv("CSV data sets for SDA 3e/schools.csv")
 g = schools.groupby("schoolid")
 Mi, ybar_i, s2_i = g["Mi"].first(), g["math"].mean(), g["math"].var()
@@ -45,12 +46,26 @@ t_i = Mi * ybar_i
 
 N, n, m = 75, 10, 20
 total = N / n * t_i.sum()
-V_entre = N**2 * (1 - n / N) * t_i.var() / n
-V_dentro = N / n * (Mi**2 * (1 - m / Mi) * s2_i / m).sum()
-print(f"total = {total:.1f}   ee = {(V_entre + V_dentro)**0.5:.1f}")
-print(f"la etapa 1 pone el {100 * V_entre / (V_entre + V_dentro):.1f} % de la varianza")
+V_entre = N**2 * (1 - n / N) * t_i.var() / n                 # sumando 1
+V_dentro = N / n * (Mi**2 * (1 - m / Mi) * s2_i / m).sum()   # sumando 2
+V = V_entre + V_dentro
+print(f"total = {total:.1f}   ee = {V**0.5:.1f}")
+print(f"sumandos: {100 * V_entre / V:.1f} % y {100 * V_dentro / V:.1f} %")
+
+# El sumando 1 usa totales ESTIMADOS: su esperanza trae parte de la varianza
+# de la etapa 2 (Lohr, ec. 5.28). Separadas sin sesgo, las dos etapas:
+V2 = N / n * V_dentro
+V1 = V - V2
+print(f"etapa 1: {100 * V1 / V:.1f} %   etapa 2: {100 * V2 / V:.1f} %")
+
+# Lo que compra cada decision: censar las escuelas quita la etapa 2 entera;
+# pasar a m = 40 estudiantes, solo una parte.
+V2_40 = (N / n)**2 * (Mi**2 * (1 - 40 / Mi) * s2_i / 40).sum()
+print(f"censar recorta el {100 * V2 / V:.1f} %; m = 40, el {100 * (V2 - V2_40) / V:.1f} %")
 #> total = 572116.1   ee = 51899.8
-#> la etapa 1 pone el 99.2 % de la varianza
+#> sumandos: 99.2 % y 0.8 %
+#> etapa 1: 93.9 %   etapa 2: 6.1 %
+#> censar recorta el 6.1 %; m = 40, el 3.3 %
 
 print("\n###BLOQUE-P4###\n")
 # La leccion de conglomerados en machine learning: si los datos vienen en

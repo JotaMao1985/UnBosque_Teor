@@ -20,8 +20,10 @@
         </div>
       </div>
 
-      <p>La fórmula del módulo 6 es una suma de dos pisos, y saber cuál pesa más no es curiosidad contable: decide
-        dónde gastar. El cálculo explícito con <code>schools</code>:</p>
+      <p>La fórmula del módulo 6 es una suma de dos sumandos, pero ninguno es exactamente el aporte de una etapa:
+        el primero se calcula con totales estimados y arrastra parte de la varianza de la segunda (Lohr, ec. 5.28).
+        Saber cuánto pone cada etapa no es curiosidad contable: decide dónde gastar. El cálculo explícito con
+        <code>schools</code>:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La descomposición de la varianza a mano">
@@ -32,31 +34,36 @@
         </div>
       </div>
 
-      <p><strong>La etapa 1 pone el 99,2 % de la varianza.</strong> Y no es una rareza de estos datos: los totales
-        escolares $t_i$ varían entre escuelas muchísimo más de lo que varía la estimación de cada total con 20 de
-        sus estudiantes. Es el patrón general de las encuestas multietapa, y deja tres lecciones de diseño:</p>
+      <p><strong>La etapa 1 pone el 93,9 % de la varianza.</strong> El primer sumando decía 99,2 %, pero unos cinco
+        puntos de ese sumando son de la etapa 2: separadas, la segunda pone el 6,1 %, unas siete veces más que el
+        0,8 % del segundo sumando. Aun así, la primera manda: los totales escolares $t_i$ varían entre escuelas
+        mucho más de lo que varía la estimación de cada total con 20 de sus estudiantes. Es el patrón general de
+        las encuestas multietapa, y deja tres lecciones de diseño:</p>
 
       <ul class="list-disc pl-6 space-y-2">
         <li><strong>Más conglomerados, no más unidades por conglomerado.</strong> Si la etapa 1 domina, duplicar
-          $m$ apenas rasca la varianza; duplicar $n$ casi la parte en dos. Es la versión estructural del deff
-          lineal en $m$ del módulo 4, y el módulo 8 le pone precios.</li>
-        <li><strong>El atajo del «conglomerado último» es legítimo.</strong> Estimar la varianza como si los
-          $\hat{t}_i$ fueran una etapa única (lo que hace survey si solo se declara la etapa 1) sobreestima un
-          poquito — ignora que parte del segundo piso ya está contenida en la dispersión de los $\hat{t}_i$ — y
-          con primeras etapas dominantes el error es cosmético. Las encuestas reales del capítulo 7 viven de este
-          atajo.</li>
+          $m$ apenas rasca la varianza (pasar a $m = 40$ la recorta un 3,3 %); duplicar $n$ la parte en dos, o más.
+          Es la versión estructural del deff del módulo 4, que crece con el tamaño del conglomerado, y el módulo 8
+          le pone precios.</li>
+        <li><strong>El atajo del «conglomerado último» suele bastar.</strong> Estimar la varianza como si los
+          $\hat{t}_i$ fueran una etapa única —lo que hace survey si solo se declara la etapa 1— usa solo el primer
+          sumando, que ya trae dentro parte de la segunda etapa. Con fpc da un poco menos que las dos etapas
+          (51 690 frente a 51 900, en el módulo 6); sin fpc —la versión con reemplazo que usan casi todos los
+          programas—, un poco más (55 524). Con primeras etapas dominantes y una fracción $n/N$ chica, el error es
+          pequeño, y las encuestas reales del capítulo 7 viven de este atajo.</li>
         <li><strong>Censar la segunda etapa casi nunca compensa.</strong> Pasar de $m = 20$ a censar las escuelas
-          solo ataca el 0,8 % del problema, multiplicando el costo por ocho.</li>
+          solo ataca la varianza de la etapa 2 —el 6,1 %— y multiplica las entrevistas por 11,5: las 10 escuelas
+          suman 2 303 estudiantes.</li>
       </ul>
 
       <div class="simulador" data-simulador="dos-etapas-varianza">
         <h4><i class="fas fa-chart-column" aria-hidden="true"></i> Los dos pisos de la varianza</h4>
         <p class="simulador-intro">Las 100 zonas de BigLucy como conglomerados, con sus tamaños y varianzas reales.
-          Mueve cuántas zonas sorteas ($n$) y cuántas empresas visitas en cada una ($m$): las barras apilan los dos
-          sumandos exactos de la varianza del total de ingresos. Comprueba las tres lecciones: subir $m$ mueve poco,
+          Mueve cuántas zonas sorteas ($n$) y cuántas empresas visitas en cada una ($m$): las barras muestran la
+          varianza que pone cada etapa —con la fórmula poblacional y las varianzas reales de BigLucy— y su total. Comprueba las tres lecciones: subir $m$ mueve poco,
           subir $n$ mueve mucho, y el piso «dentro» se extingue mientras el «entre» no cede.</p>
         <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">Varianza del total estimado, apilada por etapa</p>
+        <p class="grafico-etiqueta">Varianza del total estimado: lo que pone cada etapa, y el total</p>
         <div class="grafico-wrapper" style="height:260px;">
           <canvas aria-label="Varianza entre y dentro segun el numero de zonas y el submuestreo" role="img"></canvas>
         </div>
@@ -66,7 +73,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §5.3, la discusión tras el ejemplo 5.8; §7.4 para el conglomerado último.</li>
+          <li>Lohr — §5.3, «Simplified variance estimation» (ecs. 5.28 y 5.29), antes del ej. 5.7; §6.3, la varianza con reemplazo del conglomerado último.</li>
           <li>Särndal, Swensson y Wretman — §4.3: la descomposición general por etapas.</li>
         </ul>
       </div>
@@ -104,7 +111,7 @@
         resultado de una elegancia inusual:</p>
 
       <div class="formula">
-        <p class="formula-titulo">El tamaño de subespécimen óptimo</p>
+        <p class="formula-titulo">El tamaño de submuestra óptimo</p>
         $$m_{\text{opt}} = \sqrt{\frac{c_1}{c_2}\cdot\frac{1-\rho}{\rho}}
         \qquad\qquad n_{\text{opt}} = \frac{C}{c_1 + c_2\, m_{\text{opt}}}$$
         <p style="margin-bottom:0;">$m_{\text{opt}}$ <strong>no depende del presupuesto</strong>: el dinero decide
@@ -187,11 +194,13 @@
         </div>
       </div>
 
-      <p>El precálculo repitió ese sorteo 5 000 veces y comparó los tres diseños de conglomerados posibles sobre la
-        misma población. La tabla ordena el resultado:</p>
+      <p>El precálculo repitió ese sorteo 5 000 veces y lo comparó con otros tres diseños sobre la misma población:
+        un MAS de condados, 6 estados enteros y 8 estados enteros sorteados sin estratos. Esa última fila es la que
+        aísla el efecto del estrato, porque visita los mismos 8 estados que el combinado. La tabla ordena el
+        resultado:</p>
 
       <div class="tabla-ranking" data-ranking="estrategias">
-        <p class="tabla-ranking-titulo">Ocho estados de una punta u ocho repartidos: los diseños comparados</p>
+        <p class="tabla-ranking-titulo">Ocho estados de cualquier punta u ocho repartidos: los diseños comparados</p>
         <div class="tabla-ranking-marco" aria-label="Comparación ordenable de estrategias de conglomerados"></div>
         <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
         <p class="tabla-ranking-pie"></p>
@@ -201,8 +210,10 @@
         <p><strong>Por qué funciona.</strong> El deff del conglomerado venía de la varianza <em>entre</em>
           conglomerados (módulo 7); los estratos eliminan de esa varianza su componente entre-regiones (capítulo 4,
           módulo 7). Son los dos teoremas del curso trabajando en serie: el conglomerado paga por juntar el azar,
-          el estrato cobra por confinarlo. La cuenta no vuelve a la del MAS — deff ≈ 16 sigue siendo caro —, pero
-          el diseño ya es operable: ocho desplazamientos en vez de trescientos sesenta y nueve.</p>
+          el estrato cobra por confinarlo. Contra 8 estados sorteados sin estratos, los estratos recortan alrededor
+          de una cuarta parte de la varianza. La cuenta no vuelve a la del MAS —un deff de 21 frente a un MAS del
+          mismo tamaño sigue siendo caro—, pero el diseño ya es operable: ocho estados por visitar en vez de casi
+          todos.</p>
       </div>
 
       <div class="warning">
@@ -216,7 +227,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §5.5 y cap. 7: los diseños complejos como estratos × conglomerados × etapas.</li>
+          <li>Lohr — §7.1 («Assembling Design Components»): los diseños complejos como estratos × conglomerados × etapas.</li>
           <li>Gutiérrez — cap. 7: diseños en dos etapas con estratificación de UPM.</li>
         </ul>
       </div>

@@ -151,7 +151,7 @@ svymean(~volume, dis_coots)
 
 # Nota de auditoria sobre el archivo oficial: la nidada 88 trae csize
 # inconsistente entre sus dos huevos (9 y 11). Se pondera cada huevo con su
-# propio csize, que es la convencion de Lohr con este archivo.
+# propio csize: es convencion de este material, no de Lohr (ver la nota).
 coots[coots$clutch == 88, c("clutch", "csize", "volume")]
 #>     clutch csize   volume
 #> 175     88     9 1.854996
@@ -166,7 +166,8 @@ s2_i <- tapply(schools$math, schools$schoolid, var)
 t_i <- Mi * yb_i                            # total estimado de cada escuela
 t_2e <- 75 / 10 * sum(t_i)
 
-# La varianza tiene DOS sumandos, uno por etapa:
+# La varianza estimada tiene DOS sumandos. Ojo: no son exactamente el aporte
+# de cada etapa (el primero incluye parte de la segunda); el modulo 7 los separa.
 V_entre  <- 75^2 * (1 - 10 / 75) * var(t_i) / 10
 V_dentro <- 75 / 10 * sum(Mi^2 * (1 - 20 / Mi) * s2_i / 20)
 round(c(total = t_2e, ee = sqrt(V_entre + V_dentro)), 1)
@@ -189,6 +190,17 @@ svymean(~math, dis_sc)
 #>        mean     SE
 #> math 33.123 1.6605
 
+# El atajo del «conglomerado ultimo»: declarar solo la etapa 1. Con fpc da un
+# poco menos que las dos etapas; sin fpc (la version con reemplazo que usan casi
+# todos los programas), mas. El modulo 7 explica por que.
+dis_ult <- svydesign(id = ~schoolid, fpc = ~fpc1, weights = ~finalwt, data = schools)
+dis_ult_cr <- svydesign(id = ~schoolid, weights = ~finalwt, data = schools)
+round(c(dos_etapas = SE(svytotal(~math, dis_sc))[[1]],
+        ultimo_fpc = SE(svytotal(~math, dis_ult))[[1]],
+        ultimo_sin_fpc = SE(svytotal(~math, dis_ult_cr))[[1]]), 1)
+#>     dos_etapas     ultimo_fpc ultimo_sin_fpc
+#>        51899.8        51689.7        55523.6
+
 cat("\n###BLOQUE-R11###\n")
 # La tercera via, de Gutierrez: E.2SI hace el mismo estimador SI-SI.
 res <- E.2SI(75, 10, as.numeric(Mi), 20, schools$math,
@@ -196,7 +208,7 @@ res <- E.2SI(75, 10, as.numeric(Mi), 20, schools$math,
 round(res[, "y"], 2)
 #>     Estimation Standard Error            CVE           DEFF
 #>      572116.13       51899.80           9.07          13.69
-# Identico al calculo a mano y a survey: 572116.12 con ee 51899.80.
+# Identico al calculo a mano y a survey: 572116.13 con ee 51899.80.
 
 cat("\n###BLOQUE-R12###\n")
 # El costo optimo por etapas (Lohr 5.4): con costo c1 por conglomerado y c2
@@ -235,9 +247,10 @@ round(c(estimacion = sum(Wh * medias_h), condados = n_total), 1)
 #> estimacion   condados
 #>   332542.6      495.0
 
-# El precalculo repitio esto 5000 veces: la varianza del combinado es casi
-# la MITAD de la del conglomerado puro (6.9e9 contra 12.9e9). Los estratos
-# no dejan que el azar concentre los 8 estados en una sola punta del pais.
+# El precalculo repitio esto 5000 veces (la tabla del modulo). El efecto del
+# estrato se ve contra 8 estados sorteados SIN estratos: los estratos recortan
+# una cuarta parte de la varianza, porque no dejan que el azar concentre los
+# 8 estados en una sola punta del pais.
 
 cat("\n###BLOQUE-R14###\n")
 # La misma ICC del modulo 4, vista como modelo mixto (conexion con ciencia

@@ -105,9 +105,22 @@ se_naive <- sqrt((1 - 20 / 400) * var(gpa$gpa) / 20)
 # que daba 0,42 en lugar de 0,30 (y 0,072 en lugar de 0,040 en algebra).
 msw_gpa <- sum(tapply(gpa$gpa, gpa$suite, function(y) sum((y - mean(y))^2))) / (n_su * M_su - n_su)
 icc_gpa <- 1 - msw_gpa / var(gpa$gpa)
+# El s^2 de los 20 estudiantes subestima S^2 cuando hay pocos conglomerados
+# (Lohr, ej. 5.4). El estimador insesgado sale de la tabla ANOVA poblacional
+# estimada, S2_hat = ((N-1) MSB + N(M-1) MSW) / (NM - 1). Con el, la formula de
+# Kish y el deff estimado coinciden; con s^2, la formula parecia quedarse corta.
+msb_gpa <- var(t_i) / M_su
+s2_lohr_gpa <- ((N_su - 1) * msb_gpa + N_su * (M_su - 1) * msw_gpa) / (N_su * M_su - 1)
+icc_lohr_gpa <- 1 - msw_gpa / s2_lohr_gpa
+comprueba("gpa: S2 estimada <-> Lohr ej. 5.4 (0,279)", s2_lohr_gpa, 0.279, 2e-3)
+comprueba("gpa: R_a^2 con S2 estimada <-> Lohr ej. 5.4 (0,337)", icc_lohr_gpa, 0.337, 2e-3)
+comprueba("gpa: deff MSB/S2 <-> Lohr ej. 5.4 (2,02)", msb_gpa / s2_lohr_gpa, 2.02, 2e-3)
 cifras$gpa <- list(N = N_su, n = n_su, M = M_su, ti = as.numeric(t_i),
                    ybar = ybar_cl, se = sqrt(V_cl), seNaive = se_naive,
-                   s = sd(gpa$gpa), icc = icc_gpa, deff = V_cl / se_naive^2)
+                   s = sd(gpa$gpa), icc = icc_gpa, deff = V_cl / se_naive^2,
+                   s2Lohr = s2_lohr_gpa, iccLohr = icc_lohr_gpa,
+                   kishLohr = 1 + (M_su - 1) * icc_lohr_gpa,
+                   deffLohr = msb_gpa / s2_lohr_gpa)
 cat(sprintf("  ybar = %.4f, ee = %.4f (naive: %.4f) | ICC = %.4f\n",
             ybar_cl, sqrt(V_cl), se_naive, icc_gpa))
 
@@ -133,6 +146,11 @@ comprueba("algebra: razón a mano <-> survey", ybar_alg, coef(sv_alg)[1])
 Mbar_alg <- mean(M_alg)
 SSW_a <- sum(tapply(algebra$score, algebra$class, function(y) sum((y - mean(y))^2)))
 icc_alg <- 1 - (SSW_a / (K_alg - n_cl)) / var(algebra$score)
+# Con S^2 estimada como en Lohr (ej. 5.4), y Mbar en lugar de M (Lohr 5.4.2):
+msw_alg <- SSW_a / (K_alg - n_cl)
+msb_alg <- sum(M_alg * (tapply(algebra$score, algebra$class, mean) - ybar_alg)^2) / (n_cl - 1)
+s2_lohr_alg <- ((N_cl - 1) * msb_alg + N_cl * (Mbar_alg - 1) * msw_alg) / (N_cl * Mbar_alg - 1)
+icc_lohr_alg <- 1 - msw_alg / s2_lohr_alg
 # El deff empírico contra un MAS SIN reemplazo del mismo tamaño en la misma
 # población: los dos lados llevan su fpc. El de antes (2,10) dividía entre
 # s/sqrt(K), sin fpc, y comparaba un lado con fpc contra otro sin ella.
@@ -156,6 +174,8 @@ cifras$algebra <- list(N = N_cl, n = n_cl, K = K_alg, Mbar = Mbar_alg,
                        ybar = ybar_alg, se = as.numeric(SE(sv_alg)[1]),
                        seMas = se_mas_alg, s = sd(algebra$score), NPop = N_pop_alg,
                        icc = icc_alg, iccLmer = icc_lmer,
+                       iccLohr = icc_lohr_alg,
+                       kishLohr = 1 + (Mbar_alg - 1) * icc_lohr_alg,
                        deff = as.numeric(deff_alg),
                        sigmaEntre = vc$vcov[1], sigmaDentro = vc$vcov[2])
 
@@ -166,9 +186,10 @@ cat("== 4. coots ==\n")
 coots <- lee_lohr("coots")
 n_nid <- length(unique(coots$clutch))
 # HALLAZGO DE AUDITORIA sobre el archivo oficial: la nidada 88 trae csize
-# inconsistente entre sus dos huevos (9 y 11). La convencion de Lohr es
-# ponderar CADA huevo con su propio csize/2, y esa es la que se sigue aqui
-# a mano y en survey; el capitulo lo declara en una nota.
+# inconsistente entre sus dos huevos (9 y 11). El material pondera CADA huevo
+# con su propio csize/2, a mano y en survey, y el capitulo lo declara en una
+# nota. Es convencion del material, no de Lohr: sus cifras del ej. 5.8 (suma de
+# pesos 1757) salen de tomar 9 para los dos huevos, y despues usa 1758 para Mbar.
 coots$w <- coots$csize / 2
 res_nid <- do.call(rbind, lapply(split(coots, coots$clutch), function(d) {
   data.frame(clutch = d$clutch[1], Mi = sum(d$w), ybar_i = mean(d$volume),
@@ -238,17 +259,45 @@ e2si <- E.2SI(N_sc, n_sc, as.numeric(Mi_sc), m_sc, schools$math,
 comprueba("schools: total <-> E.2SI", t_2e, e2si["Estimation", "y"])
 comprueba("schools: SE <-> E.2SI", sqrt(V_2e), e2si["Standard Error", "y"])
 
+# Los dos sumandos NO son el aporte de cada etapa: s_t^2 se calcula con totales
+# ESTIMADOS y su esperanza incluye parte de la varianza de la etapa 2 (Lohr,
+# ec. 5.28). La etapa 2 se estima con (N/n) * V_dentro; la etapa 1, el resto.
+# Hasta el 2026-10-22 el capitulo leia el 99,2 % del primer sumando como el
+# aporte de la etapa 1.
+V_etapa2 <- N_sc / n_sc * V_dentro
+V_etapa1 <- V_2e - V_etapa2
+comprueba("schools: etapa 1 <-> V_entre - (N/n - 1) V_dentro", V_etapa1,
+          V_entre - (N_sc / n_sc - 1) * V_dentro)
+V_etapa2_m40 <- (N_sc / n_sc)^2 * sum(Mi_sc^2 * (1 - 40 / Mi_sc) * s2_sc / 40)
+# El atajo del «conglomerado ultimo»: survey con solo la etapa 1 declarada.
+# Con fpc devuelve exactamente sqrt(V_entre) (subestima un poco); sin fpc, la
+# varianza con reemplazo N^2 s_t^2 / n (Lohr 5.29), que sobreestima.
+dis_ult <- svydesign(id = ~schoolid, fpc = ~fpc1, weights = ~finalwt, data = schools)
+dis_ult_cr <- svydesign(id = ~schoolid, weights = ~finalwt, data = schools)
+se_ult <- SE(svytotal(~math, dis_ult))[[1]]
+se_ult_cr <- SE(svytotal(~math, dis_ult_cr))[[1]]
+comprueba("schools: ultimo con fpc <-> sqrt(V_entre)", se_ult, sqrt(V_entre))
+comprueba("schools: ultimo sin fpc <-> N^2 s_t^2 / n", se_ult_cr^2, N_sc^2 * var(ti_sc) / n_sc)
+
 # La media por estudiante es una razón (K desconocido): survey la da directa
 sv_media <- svymean(~math, dis_sc)
-cat(sprintf("  t = %.1f (ee %.1f) | entre %.0f%% / dentro %.0f%% | media = %.2f (ee %.3f)\n",
+cat(sprintf("  t = %.1f (ee %.1f) | sumandos %.1f%% / %.1f%% | etapas %.1f%% / %.1f%% | media = %.2f (ee %.3f)\n",
             t_2e, sqrt(V_2e), 100 * V_entre / V_2e, 100 * V_dentro / V_2e,
+            100 * V_etapa1 / V_2e, 100 * V_etapa2 / V_2e,
             coef(sv_media)[1], SE(sv_media)[1]))
+cat(sprintf("  conglomerado ultimo: ee %.1f con fpc, %.1f sin fpc | m = 40 recorta %.1f%%\n",
+            se_ult, se_ult_cr, 100 * (V_etapa2 - V_etapa2_m40) / V_2e))
 
 cifras$schools <- list(N = N_sc, n = n_sc, m = m_sc,
                        Mi = as.numeric(Mi_sc), ybarI = as.numeric(yb_sc),
                        s2I = as.numeric(s2_sc), ti = as.numeric(ti_sc),
                        total = t_2e, se = sqrt(V_2e),
                        vEntre = V_entre, vDentro = V_dentro,
+                       vEtapa1 = V_etapa1, vEtapa2 = V_etapa2,
+                       pctEtapa1 = 100 * V_etapa1 / V_2e, pctEtapa2 = 100 * V_etapa2 / V_2e,
+                       pctRecorteM40 = 100 * (V_etapa2 - V_etapa2_m40) / V_2e,
+                       seUltimo = se_ult, seUltimoSinFpc = se_ult_cr,
+                       nAlumnos = sum(Mi_sc), factorCenso = sum(Mi_sc) / (n_sc * m_sc),
                        media = as.numeric(coef(sv_media)[1]),
                        seMedia = as.numeric(SE(sv_media)[1]))
 
@@ -303,10 +352,39 @@ for (r in seq_len(R2)) {
 cat(sprintf("  combinado: V = %.0f | n medio = %.0f | vs cluster puro V = %.0f\n",
             var(rep_comb), mean(n_comb), var(rep_cluster)))
 
+# El deff del combinado contra un MAS del MISMO n esperado (467 condados), no
+# contra el de 369 del conglomerado puro. Hasta el 2026-10-22 la tabla dividia
+# entre V_mas_eq (n = 369) y llamaba a eso deff ~ 16.
+V_mas_comb <- (1 - mean(n_comb) / N) * S2_U / mean(n_comb)
+
+# La comparacion justa del efecto del estrato: 8 estados sorteados SIN
+# estratos (el conglomerado puro de la tabla tiene 6).
+set.seed(SEMILLA)
+rep_8 <- numeric(R2); n_8 <- numeric(R2)
+for (r in seq_len(R2)) {
+  filas <- unlist(idx_est[sample(NI, 8)], use.names = FALSE)
+  rep_8[r] <- mean(agpop$acres92[filas])
+  n_8[r] <- length(filas)
+}
+V_mas_8 <- (1 - mean(n_8) / N) * S2_U / mean(n_8)
+
+# Estados distintos que toca, en promedio, un MAS de 369 condados (exacto,
+# hipergeometrico). La tabla decia 50, escrito a mano.
+estados_mas <- sum(1 - exp(lchoose(N - Mi_est, n_equiv) - lchoose(N, n_equiv)))
+cat(sprintf("  deff combinado (MAS de %.0f) = %.2f | 8 estados sin estratos: V = %.0f (n %.0f, deff %.2f) | estratos recortan %.1f%% | MAS toca %.1f estados\n",
+            mean(n_comb), var(rep_comb) / V_mas_comb, var(rep_8), mean(n_8),
+            var(rep_8) / V_mas_8, 100 * (1 - var(rep_comb) / var(rep_8)), estados_mas))
+
 cifras$combinado <- list(replicas = R2, nEstados = 8, V = var(rep_comb),
                          nMedio = mean(n_comb),
                          VclusterPuro = var(rep_cluster),
                          VmasEquivalente = V_mas_eq,
+                         VmasMismoN = V_mas_comb,
+                         deffMismoN = var(rep_comb) / V_mas_comb,
+                         V8sinEstratos = var(rep_8), nMedio8 = mean(n_8),
+                         deff8 = var(rep_8) / V_mas_8,
+                         recorteEstratosPct = 100 * (1 - var(rep_comb) / var(rep_8)),
+                         estadosMas = estados_mas,
                          estadosPorRegion = as.numeric(n_est_reg))
 
 # =============================================================================

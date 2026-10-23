@@ -21,6 +21,30 @@
 
     function fmtPct(x, d = 1) { return fmtNum(100 * x, d) + ' %'; }
 
+    // Los ejes en el formato del curso, sea cual sea el idioma del navegador
+    // (Chart.js usa el del navegador: en inglés salían «0.2» y «200,000»), y
+    // sin que Chart.js esconda rótulos de categoría en pantallas estrechas.
+    // Los constructores de la plantilla no lo hacen; se arregla aquí, para
+    // este capítulo, sin tocar la plantilla que comparten los demás.
+    function ejesEnEspanol(g, decX, decY) {
+      const x = g.options.scales.x, y = g.options.scales.y;
+      if (x.type === 'linear') {
+        x.ticks = Object.assign({}, x.ticks, { callback: v => fmtNum(v, decX) });
+      } else {
+        x.ticks = Object.assign({}, x.ticks, { autoSkip: false, maxRotation: 0 });
+      }
+      y.ticks = Object.assign({}, y.ticks, { callback: v => fmtNum(v, decY) });
+    }
+
+    // Un tope de eje redondo para un máximo cualquiera, con sus marcas: así el
+    // eje no enseña el flotante crudo (0.016516318447999997, 7,370.9).
+    function topeBonito(g, maximo) {
+      const { paso, dec } = pasoBonito(maximo / 5);
+      g.options.scales.y.max = multiploDe(paso, Math.ceil(maximo / paso - 1e-9));
+      g.options.scales.y.ticks.stepSize = paso;
+      g.options.scales.y.ticks.callback = v => fmtNum(v, dec);
+    }
+
     // ---------------------------------------------------------------
     // M1 · Seis estados enteros contra 369 condados sueltos
     // ---------------------------------------------------------------
@@ -31,19 +55,20 @@
       const NOMBRES = ['los dos diseños', 'solo estados enteros', 'solo MAS de condados'];
 
       const g = crearGraficoXY(lienzo, [], {
-        tituloX: 'media estimada (acres)', tituloY: 'réplicas por caja'
+        tituloX: 'media estimada (miles de acres)', tituloY: 'réplicas por caja'
       });
+      ejesEnEspanol(g, 0, 0);
 
       function pintar() {
         const alto = Math.max(...E.cluster.conteo, ...E.mas.conteo) * 1.05;
         const datasets = [];
         if (params.mostrar !== 2) {
-          datasets.push(serieHistograma(E.cluster, '6 estados enteros', COLORES_GRAFICO.secundario));
+          datasets.push(serieHistograma(E.cluster, '6 estados enteros', COLORES_GRAFICO.secundario, 1e-3));
         }
         if (params.mostrar !== 1) {
-          datasets.push(serieHistograma(E.mas, 'MAS de ' + E.nEquiv + ' condados', COLORES_GRAFICO.primario));
+          datasets.push(serieHistograma(E.mas, 'MAS de ' + E.nEquiv + ' condados', COLORES_GRAFICO.primario, 1e-3));
         }
-        datasets.push(serieVertical(E.media, alto, 'media verdadera', COLORES_GRAFICO.gris));
+        datasets.push(serieVertical(E.media / 1000, alto, 'media verdadera', COLORES_GRAFICO.gris));
         g.data.datasets = datasets;
         g.update('none');
 
@@ -74,10 +99,11 @@
       const N = 75;
 
       const g = crearGraficoBarras(lienzo,
-        ['π₁ (su escuela sale)', 'π₂ (él sale en su escuela)', 'π = π₁ · π₂'],
+        [['π₁', '(escuela)'], ['π₂', '(dentro)'], ['π', '(producto)']],
         [0, 0, 0], {
           etiqueta: 'probabilidad', color: COLORES_GRAFICO.primario, min: 0, max: 1
         });
+      ejesEnEspanol(g, 0, 1);
 
       function pintar() {
         const pi1 = params.n / N;
@@ -371,7 +397,7 @@
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoBarras(lienzo,
-        ['estimador de razón', 'media ingenua'],
+        [['estimador', 'de razón'], ['media', 'ingenua']],
         [0, 0], {
           etiqueta: 'volumen medio del huevo', color: COLORES_GRAFICO.primario,
           min: 2.0, max: 2.8,
@@ -380,6 +406,7 @@
             { valor: C.mediaMedias, etiqueta: 'ingenua con las 184: 2,33', color: '#94a3b8' }
           ]
         });
+      ejesEnEspanol(g, 0, 1);
 
       function pintar() {
         const s = C.submuestras[params.idx - 1];
@@ -411,10 +438,11 @@
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoBarras(lienzo,
-        ['etapa 1: entre zonas', 'etapa 2: dentro', 'total'],
+        [['etapa 1', '(entre)'], ['etapa 2', '(dentro)'], ['total']],
         [0, 0, 0], {
-          etiqueta: 'varianza del total (×10¹⁰)', color: COLORES_GRAFICO.primario, min: 0, max: 100
+          etiqueta: 'varianza del total (×10¹³)', color: COLORES_GRAFICO.primario, min: 0, max: 100
         });
+      ejesEnEspanol(g, 0, 0);
 
       function calcula(n, m) {
         const N = Z.NI;
@@ -431,9 +459,9 @@
 
       function pintar() {
         const v = calcula(params.n, params.m);
-        const esc = 1e10;
+        const esc = 1e13;
         g.data.datasets[0].data = [v.entre / esc, v.dentro / esc, (v.entre + v.dentro) / esc];
-        g.options.scales.y.max = Math.max(20, 1.15 * (v.entre + v.dentro) / esc);
+        topeBonito(g, 1.1 * (v.entre + v.dentro) / esc);
         g.update('none');
 
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
@@ -441,7 +469,7 @@
           { etiqueta: 'empresas visitadas (aprox.):', valor: fmtNum(params.n * params.m, 0) },
           { etiqueta: 'ee del total:', valor: fmtNum(Math.sqrt(v.entre + v.dentro), 0) },
           { etiqueta: 'la etapa 1 pone el:', valor: fmtPct(v.entre / (v.entre + v.dentro)) },
-          { etiqueta: 'referencia schools:', valor: 'la etapa 1 ponía el 99,2 %' }
+          { etiqueta: 'referencia schools:', valor: 'la etapa 1 pone el 93,9 % (módulo 7)' }
         ]);
       }
 
@@ -462,8 +490,9 @@
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoXY(lienzo, [], {
-        tituloX: 'unidades por conglomerado m', tituloY: 'varianza relativa', xMin: 0, xMax: 62
+        tituloX: 'unidades por conglomerado m', tituloY: 'varianza relativa', xMin: 0, xMax: 60
       });
+      ejesEnEspanol(g, 0, 3);
 
       function Vrel(m, c1, c2, C) {
         const n = C / (c1 + c2 * m);
@@ -484,7 +513,7 @@
           { type: 'scatter', label: 'm óptimo', data: [{ x: mOpt, y: vOpt }],
             backgroundColor: '#7c3aed', pointRadius: 6 }
         ];
-        g.options.scales.y.max = Math.min(vTu, curva[curva.length - 1].y) * 4;
+        topeBonito(g, Math.min(vTu, curva[curva.length - 1].y) * 4);
         g.update('none');
 
         const n = params.C / (params.c1 + params.c2 * params.m);
@@ -497,12 +526,13 @@
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'C', etiqueta: 'Presupuesto total C', min: 2000, max: 20000, paso: 500 },
         { clave: 'c1', etiqueta: 'Costo por conglomerado c₁', min: 20, max: 300, paso: 10 },
         { clave: 'c2', etiqueta: 'Costo por unidad c₂', min: 1, max: 10, paso: 1 },
         { clave: 'm', etiqueta: 'Tu m', min: 2, max: 60, paso: 1 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { C: 0, c1: 0, c2: 0, m: 0 });
       pintar();
       return [g];
     };
@@ -515,16 +545,17 @@
       const lienzo = raiz.querySelector('canvas');
 
       const g = crearGraficoBarras(lienzo,
-        ['tamaño nominal', 'tamaño informativo'],
+        [['tamaño', 'nominal'], ['tamaño', 'informativo']],
         [0, 0], {
           etiqueta: 'ejemplos', color: COLORES_GRAFICO.primario, min: 0, max: 260
         });
+      ejesEnEspanol(g, 0, 0);
 
       function pintar() {
         const deff = 1 + (params.m - 1) * params.rho;
         const efectivo = params.m / deff;
         g.data.datasets[0].data = [params.m, efectivo];
-        g.options.scales.y.max = Math.max(80, params.m * 1.15);
+        topeBonito(g, Math.max(80, params.m * 1.1));
         g.update('none');
 
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
@@ -536,10 +567,11 @@
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'rho', etiqueta: 'Correlación intra-grupo ρ', min: 0, max: 0.9, paso: 0.01 },
         { clave: 'm', etiqueta: 'Tamaño del minibatch', min: 1, max: 256, paso: 1 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { rho: 2, m: 0 });
       pintar();
       return [g];
     };
@@ -551,34 +583,35 @@
       const E = D5.estados;
       const C = D5.combinado;
       return {
-        descripcion: 'Tres maneras de gastar un presupuesto parecido sobre agpop, medidas con ' +
-          '10 000 réplicas (5 000 el combinado). El deff se calcula contra el MAS del mismo n ' +
-          'esperado. Pulsa cualquier cabecera para reordenar.',
+        descripcion: 'Cuatro maneras de gastar un presupuesto parecido sobre agpop, medidas con ' +
+          '10 000 réplicas (5 000 las de 8 estados). El deff de cada fila se calcula contra un MAS ' +
+          'con el mismo número esperado de condados. Pulsa cualquier cabecera para reordenar.',
         columnas: [
           { clave: 'diseno', titulo: 'Diseño', tipo: 'texto' },
-          { clave: 'desplaz', titulo: 'Estados visitados', decimales: 0, mejor: 'menor' },
+          { clave: 'desplaz', titulo: 'Estados visitados (promedio)', decimales: 0, mejor: 'menor' },
           { clave: 'condados', titulo: 'Condados (promedio)', decimales: 0 },
           { clave: 'ee', titulo: 'Error estándar', decimales: 0, mejor: 'menor' },
           { clave: 'deff', titulo: 'deff', decimales: 1, mejor: 'menor' }
         ],
         filas: [
-          { diseno: 'MAS de condados', desplaz: 50, condados: E.nEquiv,
+          { diseno: 'MAS de condados', desplaz: C.estadosMas, condados: E.nEquiv,
             ee: Math.sqrt(E.varMas), deff: 1 },
           { diseno: 'Conglomerados: 6 estados', desplaz: 6, condados: E.nObsMedio,
             ee: Math.sqrt(E.varCluster), deff: E.deffEmp },
+          { diseno: 'Conglomerados: 8 estados, sin estratos', desplaz: 8, condados: C.nMedio8,
+            ee: Math.sqrt(C.V8sinEstratos), deff: C.deff8 },
           { diseno: 'Estratos × conglomerados: 2 estados por región', desplaz: 8,
-            condados: C.nMedio, ee: Math.sqrt(C.V),
-            deff: C.V / C.VmasEquivalente }
+            condados: C.nMedio, ee: Math.sqrt(C.V), deff: C.deffMismoN }
         ],
         inicial: 'ee',
         destacada: 'Estratos × conglomerados: 2 estados por región',
-        pie: 'El MAS gana en varianza y pierde en logística: sus ~369 condados tocan casi los 50 ' +
-          'estados. El conglomerado puro reduce los desplazamientos a 6 y paga deff 30. El ' +
-          'combinado, con 8 desplazamientos, corta esa varianza a casi la mitad — los estratos le ' +
-          'quitan al azar la posibilidad de concentrar los estados en una sola punta — aunque ' +
-          'observa más condados en promedio (467) porque fija dos estados en las regiones grandes. ' +
-          'Ninguna maravilla: deff ≈ 16 sigue siendo caro, y por eso las encuestas reales añaden ' +
-          'las armas del capítulo 6 (PPT) y del 7.'
+        pie: 'El MAS gana en varianza y pierde en logística: sus ~369 condados caen, en promedio, ' +
+          'en 46 de los 50 estados. El conglomerado puro reduce los estados a 6 y paga un deff de 30. ' +
+          'Con 8 estados sin estratos el deff sigue en 30, aunque hay más condados. El combinado ' +
+          'visita también 8 estados, pero dos por región, y frente a esos 8 sin estratos recorta una ' +
+          'cuarta parte de la varianza: los estratos le quitan al azar la posibilidad de concentrar ' +
+          'los estados en una sola punta. Ninguna maravilla: un deff de 21 sigue siendo caro, y por ' +
+          'eso las encuestas reales añaden las armas del capítulo 6 (PPT) y del 7.'
       };
     };
 
@@ -596,16 +629,17 @@
           etiqueta: 'Población',
           unidad: '75 escuelas, $K$ estudiantes',
           icono: 'fa-school',
-          resumen: 'El marco lista las 75 escuelas con sus tamaños M_i. El total de estudiantes ' +
-            'K = ΣM_i ni siquiera hace falta conocerlo para estimar totales — y no se conoce.',
-          cifras: [{ k: 'N', v: '75 escuelas' }, { k: 'M_i', v: 'de 109 a 367' }]
+          resumen: 'El marco lista las 75 escuelas. Sus tamaños M_i solo se averiguan en las ' +
+            'sorteadas, así que el total de estudiantes K = ΣM_i no se conoce — y para estimar ' +
+            'totales ni siquiera hace falta.',
+          cifras: [{ k: 'N', v: '75 escuelas' }, { k: 'M_i (sorteadas)', v: 'de 109 a 367' }]
         },
         {
           etiqueta: 'Etapa 1: escuelas',
           unidad: 'MAS de $n = 10$',
           icono: 'fa-th-large',
           resumen: 'Se sortean 10 escuelas completas: son las unidades primarias (UPM). Aquí vive ' +
-            'el primer piso del azar — y, como muestra el módulo 7, el 99 % de la varianza.',
+            'el primer piso del azar — y, como muestra el módulo 7, casi toda la varianza (el 94 %).',
           pi: '\\pi_{1i} = n/N = 10/75',
           peso: 'N/n = 7{,}5',
           cifras: [{ k: 'π₁', v: '0,1333' }],
@@ -639,8 +673,9 @@
         formula: '\\pi_k = \\frac{n}{N}\\cdot\\frac{m}{M_i} \\qquad ' +
           'w_k = \\frac{N}{n}\\cdot\\frac{M_i}{m} \\qquad ' +
           '\\widehat{V} = \\text{entre} + \\text{dentro}',
-        texto: 'Dos etapas de azar: π es un producto, el peso es un producto, y la varianza es ' +
-          'una suma con un sumando por etapa. Esa triple estructura es todo el capítulo.'
+        texto: 'Dos etapas de azar: π es un producto, el peso es un producto, y la varianza ' +
+          'estimada es una suma de dos sumandos (el módulo 7 muestra que no son exactamente uno por ' +
+          'etapa). Esa triple estructura es todo el capítulo.'
       }
     };
 
@@ -695,8 +730,8 @@
         pista: 'El peso multiplica los de las dos etapas: $(N/n)\\cdot(M_i/m)$.',
         respuesta: 137.6,
         tolerancia: 0.11,
-        retroAcierto: '$7{,}5 \\times 367/20 = 137{,}6$: habla por 137 estudiantes. La columna finalwt del archivo trae exactamente esto, y la cadena del módulo 2 lo comprueba.',
-        retroFallo: 'Es $(75/10)\\cdot(367/20) = 7{,}5 \\times 18{,}35 = 137{,}6$. Si te dio 2,7, dividiste al revés: el peso es el recíproco de π, y π aquí es chica por partida doble.'
+        retroAcierto: '$7{,}5 \\times 367/20 = 137{,}6$: habla por 137,6 estudiantes. La columna finalwt del archivo trae exactamente esto, y la cadena del módulo 2 lo comprueba.',
+        retroFallo: 'Es $(75/10)\\cdot(367/20) = 7{,}5 \\times 18{,}35 = 137{,}6$. Si te dio un número menor que 1, calculaste π y no el peso, que es su recíproco: π aquí es chica por partida doble.'
       },
       {
         tipo: 'opcion',
@@ -748,11 +783,13 @@
         dibujar: canvas => {
           const E = D5.estados;
           const alto = Math.max(...E.cluster.conteo, ...E.mas.conteo) * 1.05;
-          return crearGraficoXY(canvas, [
-            serieHistograma(E.mas, 'diseño A', COLORES_GRAFICO.primario),
-            serieHistograma(E.cluster, 'diseño B', COLORES_GRAFICO.secundario),
-            serieVertical(E.media, alto, 'media verdadera', COLORES_GRAFICO.gris)
-          ], { tituloX: 'media estimada (acres)', tituloY: 'réplicas' });
+          const g = crearGraficoXY(canvas, [
+            serieHistograma(E.mas, 'diseño A', COLORES_GRAFICO.primario, 1e-3),
+            serieHistograma(E.cluster, 'diseño B', COLORES_GRAFICO.secundario, 1e-3),
+            serieVertical(E.media / 1000, alto, 'media verdadera', COLORES_GRAFICO.gris)
+          ], { tituloX: 'media estimada (miles de acres)', tituloY: 'réplicas' });
+          ejesEnEspanol(g, 0, 0);
+          return g;
         },
         opciones: [
           { texto: 'El B (naranja), el disperso: mismo centro, treinta veces más varianza — deff ≈ 30.', correcta: true,
@@ -784,15 +821,15 @@
       {
         tipo: 'opcion',
         modulo: 7,
-        pregunta: 'En schools, la etapa 1 pone el 99,2 % de la varianza. Con presupuesto para 200 entrevistas más, ¿qué conviene?',
+        pregunta: 'En schools, la etapa 1 pone el 93,9 % de la varianza (módulo 7). Con presupuesto para 200 entrevistas más, ¿qué conviene?',
         pista: '¿Cuál de los dos sumandos quieres atacar?',
         opciones: [
           { texto: 'Sortear más escuelas, aunque signifique menos estudiantes por escuela.', correcta: true,
             retro: 'Sí: la varianza vive entre escuelas, y solo aumentar n la ataca. Es la regla práctica más citada del muestreo multietapa: conglomerados, cuantos más mejor; dentro de cada uno, lo justo.' },
           { texto: 'Subir de 20 a 40 estudiantes por escuela: duplica la muestra sin más desplazamientos.', correcta: false,
-            retro: 'Duplica las entrevistas y ataca solo el 0,8 % del problema. Barato y casi inútil: el clásico falso ahorro de las encuestas multietapa.' },
+            retro: 'Duplica las entrevistas y solo ataca la parte de la etapa 2: el módulo 7 mide que pasar a 40 recorta un 3,3 % de la varianza. Barato y casi inútil: el clásico falso ahorro de las encuestas multietapa.' },
           { texto: 'Censar las 10 escuelas sorteadas.', correcta: false,
-            retro: 'Es la versión extrema de la anterior: elimina por completo un sumando que aporta el 0,8 %. Te quedas con el 99,2 % intacto y sin presupuesto.' },
+            retro: 'Es la versión extrema de la anterior: elimina por completo la varianza de la etapa 2, el 6,1 %. Te quedas con el 93,9 % intacto y sin presupuesto.' },
           { texto: 'Da igual: con el mismo total de entrevistas, la varianza es la misma.', correcta: false,
             retro: 'El módulo 1 enterró esa idea con deff 30: mismo n, varianzas radicalmente distintas. La composición n × m importa tanto como el producto.' }
         ]
@@ -818,7 +855,7 @@
           { texto: 'El diseño combinado elimina el efecto de conglomerado por completo.', correcta: false },
           { texto: 'Se necesitan al menos 2 UPM por estrato para poder estimar la varianza.', correcta: true }
         ],
-        retroAcierto: 'Las tres verdaderas. La falsa es la ilusión a evitar: deff ≈ 16 sigue siendo caro — los estratos recortan la parte entre-regiones, pero dentro de cada región los estados siguen siendo bloques homogéneos.',
+        retroAcierto: 'Las tres verdaderas. La falsa es la ilusión a evitar: un deff de 21 sigue siendo caro — los estratos recortan la parte entre-regiones, pero dentro de cada región los estados siguen siendo bloques homogéneos. Y ojo con la segunda: frente a 8 estados sin estratos, el recorte de los estratos es de una cuarta parte; el resto es que se sortean 8 estados y no 6.',
         retroFallo: 'Son todas menos la de eliminar el efecto de conglomerado. Esa exagera: el combinado recorta la varianza casi a la mitad, no la elimina — la ICC dentro de las regiones sigue cobrando.'
       },
       {
