@@ -1,0 +1,72 @@
+{
+ "tipo": "animado",
+ "titulo": "Media de acres92 por condado en cada región (agpop, censo)",
+ "x": {
+  "categorias": [
+   "Norte-Centro",
+   "Nordeste",
+   "Sur",
+   "Oeste"
+  ]
+ },
+ "y": {
+  "titulo": "miles de acres",
+  "min": 0,
+  "max": 800,
+  "marcas": [
+   0,
+   200,
+   400,
+   600,
+   800
+  ]
+ },
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "Nordeste",
+    "y": 90.619,
+    "texto": "90 619",
+    "serie": 3
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Oeste",
+    "y": 723.344,
+    "texto": "723 344",
+    "serie": 2
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Norte-Centro",
+    "y": 325.951,
+    "texto": "325 951",
+    "serie": 1
+   },
+   {
+    "tipo": "barra",
+    "x": "Sur",
+    "y": 199.14,
+    "texto": "199 140",
+    "serie": 1
+   }
+  ],
+  [
+   {
+    "tipo": "referencia",
+    "y": 306.67697141001
+   },
+   {
+    "tipo": "texto",
+    "x": 2,
+    "y": 345,
+    "texto": "media nacional: 306 677"
+   }
+  ]
+ ]
+}

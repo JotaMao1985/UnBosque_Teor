@@ -7145,3 +7145,52 @@ cambiaban la guía, su plantilla, la portada y el README). El build de Pages ter
 `verifica_publicado.py --solo-huella` da la huella de las **11 páginas**; la guía, la plantilla y la
 portada servidas coinciden byte a byte con la rama; la página servida carga sus diez módulos con 0
 errores de KaTeX ni de consola, la plantilla responde 200 y la tarjeta está en la portada.
+
+### T7.94 — Las diapositivas del cap. 4, en dos sesiones de 90 minutos (2026-10-22)
+
+Javier pidió las diapositivas del cap. 4 con la skill `diapositivas-clase`, con cuatro reglas: nada
+inventado, cada ejemplo con su contexto, cada cifra contrastada con la fuente y citada (o marcada
+[SIN VERIFICAR]) y datos, interpretaciones y opiniones bien separados. Decidió ese día: **dos
+sesiones de 90 min** (M1–M5 y M6–M12), **todos** los módulos de contenido, la **cita de cada cifra en
+las notas** del presentador y **código R en cada sección**.
+
+- **Los archivos:** `sitio/muestreo/diapositivas/capitulo-4-muestreo-estratificado_sesion1.html` y
+  `_sesion2.html` (43 y 44 diapositivas: 35 y 34 de contenido, tras las mejoras de la auditoría); fuentes en
+  `sitio/muestreo/diapositivas/fuentes/cap4_sesion{1,2}.md`, y trece gráficos animados en
+  `fuentes/recursos/cap4/*.json`, generados desde las salidas de R del capítulo y desde
+  `precalculo/salidas/cap4_datos.json` (el generador no se versiona: cada JSON lleva sus cifras tal cual).
+- **Rótulos:** `::: ejemplo Dato`, `::: tip Interpretación` y `::: warn Criterio`; lo que no lleva
+  rótulo es teoría o dato. Una diapositiva antes del primer divisor de la sesión 1 explica la convención.
+- **Verificado:** `verifica_bloques.py --prosa` sobre el cap. 4, 528/528 cifras de código y 249/249 de
+  prosa; las de Lohr, contra la 3.ª ed.; un contraste automático de todas las cifras de las dos fuentes
+  contra el capítulo, el precálculo y Lohr deja solo conversiones y cuatro cálculos propios, todos
+  anotados (el valor esperado del promedio bruto con los repartos de `agstrat` y de Neyman: 306 723 y
+  420 650, que es el «sube unos 114 000» del M13). `revisar.py`: todas caben al 88 % o más; las
+  animaciones, paso a paso en el navegador, sin errores de consola.
+- **Problemas del material que encontró (sin corregir: es otra tarea):**
+  1. El M6 presenta `pitcount.csv` como «el conteo de personas sin hogar de Nueva York» (título del
+     bloque, comentario y prosa: «de las 1 000 áreas…», «496 personas»). Lohr (3.ª ed., ejercicio 29
+     del cap. 3, Tabla 3.9) dice que son datos de **una ciudad ficticia** con el mismo tipo de diseño;
+     Nueva York tiene unas 7 000 áreas en 12 estratos (Ej. 3.13). Las diapositivas siguen a Lohr.
+  2. `acres92` se llama «superficie sembrada» desde el cap. 1; Lohr la define como acres dedicados a
+     fincas («acres devoted to farms»). Las diapositivas lo dicen una vez y usan «acres».
+  3. El M10 pide «30 casos **esperados** por celda»; Lohr (§4.4) pide \(n_h\) «razonablemente grande
+     (≥ 30 o así)». Matiz menor. (La auditoría añadió 13 más: ver el informe.)
+  4. Para pensar: según la documentación de `TeachingSampling`, los niveles de `BigLucy` se definen por
+     los impuestos declarados, y el ejercicio guiado 3 estima justamente el total de impuestos.
+- **Auditoría (el mismo día, a pedido de Javier).** Cinco lectores independientes (estadística, fuentes y cifras, claridad, pedagogía y código) dieron 103 hallazgos, todos verificados aparte. Los errores objetivos se corrigieron en las fuentes. Los más serios: la explicación del deff 0,75 frente a 0,82 iba en la dirección contraria; el 13 % se atribuía entero al diseño (el exacto es 9,3 %); «la igual da la misma precisión»; el título de `rsample` recomendaba lo contrario de su documentación; cuatro resaltados de código corridos; y una pregunta que se respondía antes de hacerse. Las mejoras de criterio y 16 errores del capítulo (los más graves: el PPT de BigLucy pierde contra el MAS por estrato, contra lo que dicen el M9 y el ejercicio 4; el M8 dice que a `agsrs` no le tocó ningún gigante y explica el deff al revés; una opción de la autoevaluación del M4 marcada falsa es la mejor) están en `INFORME_Auditoria_Diapositivas_Cap4.md`, fuera de git.
+- **Mejoras de la auditoría, aplicadas todas (2026-10-23, a pedido de Javier).** Unos 12 minutos menos por
+  sesión (pesos fundidos con su pregunta; la t, el caribú, pitcount, «¿puede la proporcional perder?» y los
+  tres errores estándar pasan a las notas; el tamaño, con su fórmula; `rsample`, con su pregunta, que ahora
+  da los pliegues en el enunciado). Neyman ya no se nombra antes de definirse; el estrato de certeza se
+  explica antes de su barra; recordatorio del deff en la sesión 1; tres `.idea` en la sesión 2; el cierre
+  de la sesión 2 retoma BigLucy y ML; títulos que afirman; «Lo que nos llevamos hoy». Gráficos: el Dato del
+  M1 se revela al final, la flecha del barrido va con la curva, rótulos que ya no se cruzan y dos nuevos:
+  la prima de decidir tarde (21 109 → 21 272 → 17 291) y BigLucy en pantalla (ee verdadero del STPPS
+  980 501 frente a 582 346 del MAS por nivel; correlaciones 0,77, 0,44 y 0,19; verificado con R).
+  Notas: «Proyectar» o «Correr en vivo» en cada código, transición en cada diapositiva, minuto previsto y
+  pregunta de arranque en cada divisor; las notas de producción pasan a comentarios del fuente. Kish §8.2,
+  Kohavi (1995) y Gutiérrez §5.3 quedan [SIN VERIFICAR] en las notas (que Kish bautizó el deff sí está en
+  Lohr §7.4). La numeración de los divisores no se puede cambiar sin tocar la skill: los títulos dicen
+  «Módulo N ·». `revisar.py`: todas caben al 88 % o más.
+- **Sin commit ni publicación**, a la espera de la revisión de Javier.

@@ -1,0 +1,117 @@
+{
+ "tipo": "animado",
+ "titulo": "Lo que explica la partición frente a lo que se ahorra",
+ "x": {
+  "categorias": [
+   "Región",
+   "Cuartiles acres87",
+   "Cuartiles farms92",
+   "Al azar"
+  ]
+ },
+ "y": {
+  "titulo": "% de la variabilidad",
+  "min": -3,
+  "max": 60,
+  "marcas": [
+   0,
+   20,
+   40,
+   60
+  ]
+ },
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "Región",
+    "y": 18.0,
+    "texto": "18,00",
+    "serie": 1,
+    "ancho": 0.32,
+    "desplazamiento": -0.17
+   },
+   {
+    "tipo": "barra",
+    "x": "Cuartiles acres87",
+    "y": 46.09,
+    "texto": "46,09",
+    "serie": 1,
+    "ancho": 0.32,
+    "desplazamiento": -0.17
+   },
+   {
+    "tipo": "barra",
+    "x": "Cuartiles farms92",
+    "y": 1.37,
+    "texto": "1,37",
+    "serie": 1,
+    "ancho": 0.32,
+    "desplazamiento": -0.17
+   },
+   {
+    "tipo": "barra",
+    "x": "Al azar",
+    "y": 0.0,
+    "texto": "0,00",
+    "serie": 1,
+    "ancho": 0.32,
+    "desplazamiento": -0.17
+   },
+   {
+    "tipo": "texto",
+    "x": 1.9,
+    "y": 55,
+    "texto": "R^{2} entre estratos = SSB/SST",
+    "ancla": "inicio",
+    "serie": 1
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Región",
+    "y": 17.88,
+    "texto": "17,88",
+    "serie": 2,
+    "ancho": 0.32,
+    "desplazamiento": 0.17
+   },
+   {
+    "tipo": "barra",
+    "x": "Cuartiles acres87",
+    "y": 46.04,
+    "texto": "46,04",
+    "serie": 2,
+    "ancho": 0.32,
+    "desplazamiento": 0.17
+   },
+   {
+    "tipo": "barra",
+    "x": "Cuartiles farms92",
+    "y": 1.28,
+    "texto": "1,28",
+    "serie": 2,
+    "ancho": 0.32,
+    "desplazamiento": 0.17
+   },
+   {
+    "tipo": "barra",
+    "x": "Al azar",
+    "y": -0.09,
+    "texto": "−0,09",
+    "serie": 2,
+    "ancho": 0.32,
+    "desplazamiento": 0.17
+   },
+   {
+    "tipo": "texto",
+    "x": 1.9,
+    "y": 47,
+    "texto": "ahorro de varianza = 1 − deff",
+    "ancla": "inicio",
+    "serie": 2
+   }
+  ]
+ ]
+}

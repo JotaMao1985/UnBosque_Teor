@@ -1,0 +1,61 @@
+{
+ "tipo": "animado",
+ "titulo": "Valor esperado del promedio bruto y del ponderado",
+ "x": {
+  "categorias": [
+   "Ponderado",
+   "Bruto · 41 al Oeste",
+   "Bruto · 107 al Oeste"
+  ]
+ },
+ "y": {
+  "titulo": "miles de acres",
+  "min": 0,
+  "max": 450,
+  "marcas": [
+   0,
+   100,
+   200,
+   300,
+   400
+  ]
+ },
+ "base": [
+  {
+   "tipo": "referencia",
+   "y": 306.67697141001
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "Ponderado",
+    "y": 306.67697141001,
+    "texto": "306 677",
+    "serie": 1,
+    "ancho": 0.45
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Bruto · 41 al Oeste",
+    "y": 306.7234,
+    "texto": "306 723",
+    "serie": 5,
+    "ancho": 0.45
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "Bruto · 107 al Oeste",
+    "y": 420.65,
+    "texto": "420 650",
+    "serie": 6,
+    "ancho": 0.45
+   }
+  ]
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "tipo": "animado",
+ "titulo": "Error estándar verdadero del total de Income en BigLucy (m_{h} = 60/120/200)",
+ "x": {
+  "categorias": [
+   "MAS en cada nivel",
+   "PPT por empleados (STPPS)"
+  ]
+ },
+ "y": {
+  "titulo": "miles",
+  "min": 0,
+  "max": 1200,
+  "marcas": [
+   0,
+   400,
+   800,
+   1200
+  ]
+ },
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "MAS en cada nivel",
+    "y": 582.346,
+    "texto": "582 346",
+    "serie": 1,
+    "ancho": 0.45
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "PPT por empleados (STPPS)",
+    "y": 980.501,
+    "texto": "980 501",
+    "serie": 6,
+    "ancho": 0.45
+   }
+  ]
+ ]
+}

@@ -1,0 +1,2444 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="elbosque">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Presentación de clase: Capítulo 4 (Muestreo estratificado), Muestreo Estadístico.">
+    <meta name="generator" content="diapositivas-clase · construir.py">
+    <title>Diapositivas · Capítulo 4 — Muestreo estratificado · Muestreo Estadístico</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+    <!-- Prism, las mismas gramáticas que carga LP-CORE. `manual` antes del
+         núcleo: el resaltado lo dispara el visor cuando el mazo ya existe. -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script>window.Prism = window.Prism || {}; window.Prism.manual = true;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-r.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-basic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-visual-basic.min.js"></script>
+    <script>
+        window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }, svg: { fontCache: 'global', mtextInheritFont: true } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+    <script>
+        /* Gráfico animado (scripts/animado.py). Con ?todo, ?revisar o «reducir movimiento»
+           del sistema, sin movimiento; con «reducir movimiento», además, el gráfico sale
+           terminado y sus etapas dejan de contar como pasos. */
+        (function () {
+            var q = new URLSearchParams(location.search), raiz = document.documentElement;
+            var reducir = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+            if (q.has('todo') || q.has('revisar') || reducir) raiz.classList.add('ga-quieto');
+            if (reducir) {
+                raiz.classList.add('ga-final');
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.querySelectorAll('.ga .ga-etapa').forEach(function (g) { g.classList.remove('paso'); });
+                });
+            }
+        })();
+    </script>
+    <style>
+        /* ============================================================
+           PALETA LP-CORE — la misma del material del curso
+        ============================================================ */
+        :root {
+            --primary: #3D008D;
+            --primary-rgb: 61, 0, 141;
+            --secondary: #ED1E79;
+            --secondary-rgb: 237, 30, 121;
+            --secondary-texto: #ED1E79;   /* el secundario como texto sobre blanco */
+            --navy: #001A4D;
+            --navy-2: #002868;
+            --gold: #FDB913;
+            --teal: #0E7490;
+            --bg: #F8FAFC;
+            --texto: #1E293B;
+            --tinta: #0F172A;
+            --gris: #64748B;
+            --gris-claro: #94A3B8;
+            --borde: #E2E8F0;
+            --lila: #F5F0FA;
+            --grad: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            --grad-navy: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            --sombra: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --fuente: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --W: 1280px;
+            --H: 720px;
+        }
+
+        /* ============================================================
+           TEMA EL BOSQUE — verde #012820 y naranja #FF6600, como el
+           material de Series de tiempo, Muestreo y Estadística espacial.
+           Mismas tipografías y mismos degradados; solo cambian los colores.
+        ============================================================ */
+        :root[data-tema="elbosque"] {
+            --primary: #012820;
+            --primary-rgb: 1, 40, 32;
+            --secondary: #FF6600;
+            --secondary-rgb: 255, 102, 0;
+            --secondary-texto: #C2410C;   /* #FF6600 sobre blanco no llega a 4.5:1 */
+            --navy: #012820;
+            --navy-2: #001F18;
+            --gold: #FFC24B;
+            --lila: #F0FDF4;
+            --grad: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+            --grad-navy: linear-gradient(180deg, #012820 0%, #001F18 100%);
+        }
+        /* El degradado se reparte en la caja del número: a lo ancho de la
+           diapositiva, a los dígitos solo les tocaría el verde casi negro. */
+        :root[data-tema="elbosque"] .numero-grande { width: fit-content; padding-right: 0.04em; }
+
+        /* ============================================================
+           TEMA UCOMPENSAR — morado #691E7A y naranja #F46201, como el
+           material de Procesamiento de Datos (Esp. Big Data). El ámbar
+           #FAA012 solo sobre morado; el naranja como texto, #B84A00.
+           Su material usa Roboto: la presentación también.
+        ============================================================ */
+        :root[data-tema="ucompensar"] {
+            --primary: #691E7A;
+            --primary-rgb: 105, 30, 122;
+            --secondary: #F46201;
+            --secondary-rgb: 244, 98, 1;
+            --secondary-texto: #B84A00;   /* #F46201 sobre blanco da 3,2:1 */
+            --navy: #3A0F47;
+            --navy-2: #4B1558;
+            --gold: #FAA012;
+            --lila: #F7F0FA;
+            --grad: linear-gradient(140deg, #691E7A 0%, #F46201 100%);
+            --grad-navy: linear-gradient(180deg, #3A0F47 0%, #4B1558 100%);
+            --fuente: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        /* Contraste (WCAG 2.1) e identidad del material de UCompensar: pie en
+           pizarra, etiquetas más opacas, degradado de texto naranja (#B84A00)
+           donde va texto blanco encima, ítem activo morado con filete naranja
+           y títulos en 700 (Roboto no carga el 800). */
+        :root[data-tema="ucompensar"] .numero-grande { width: fit-content; padding-right: 0.04em; }
+        :root[data-tema="ucompensar"] .idea .etq-idea,
+        :root[data-tema="ucompensar"] .ra-caja .etq { color: rgba(var(--primary-rgb), 0.85); }
+        :root[data-tema="ucompensar"] .pie { color: #566B7F; }
+        :root[data-tema="ucompensar"] .cierre .pie { color: rgba(255, 255, 255, 0.62); }
+        :root[data-tema="ucompensar"] .item-seccion.hecha { color: rgba(255, 255, 255, 0.6); }
+        :root[data-tema="ucompensar"] .item-seccion.actual,
+        :root[data-tema="ucompensar"] #indice .item-seccion.actual,
+        :root[data-tema="ucompensar"] #indice .item-seccion.actual:hover {
+            background: linear-gradient(135deg, #691E7A, #8A2E9E);
+            box-shadow: inset 4px 0 0 #F46201, 0 8px 18px rgba(105, 30, 122, 0.3);
+        }
+        :root[data-tema="ucompensar"] .portada .chip-semana,
+        :root[data-tema="ucompensar"] .btn-nav.sig { background: linear-gradient(140deg, #691E7A 0%, #B84A00 100%); }
+        :root[data-tema="ucompensar"] .codigo.con-foco .linea.foco { background: rgba(var(--secondary-rgb), 0.10); }
+        :root[data-tema="ucompensar"] .diapo.idea { background: linear-gradient(135deg, rgba(105, 30, 122, 0.06), rgba(244, 98, 1, 0.08)), #fff; }
+        :root[data-tema="ucompensar"] .portada h1,
+        :root[data-tema="ucompensar"] .principal h2 { font-weight: 700; }
+        :root[data-tema="ucompensar"] .cierre .cuerpo h3 { color: var(--gold); }
+        :root[data-tema="ucompensar"] .caja.warn { border-color: #B84A00; background: #FFF7ED; }
+        :root[data-tema="ucompensar"] .caja.warn .caja-etiqueta { background: #B84A00; }
+        /* Contrastes AA medidos en la auditoría de octubre de 2026: líneas de código no
+           resaltadas (la opacidad 0,42 las dejaba en 2,0–3,6:1), número de página sobre
+           .idea y capítulo de la barra lateral. Símbolos sueltos de MathJax en tablas,
+           al tamaño del texto. */
+        :root[data-tema="ucompensar"] .codigo.con-foco .linea { opacity: 0.85; }
+        :root[data-tema="ucompensar"] .codigo.con-foco .linea.foco { opacity: 1; }
+        :root[data-tema="ucompensar"] .pie .num { color: #566B7F; }
+        :root[data-tema="ucompensar"] .cierre .pie .num { color: rgba(255, 255, 255, 0.7); }
+        :root[data-tema="ucompensar"] .lateral .capitulo span { color: var(--gold); }
+        :root[data-tema="ucompensar"] td mjx-container:not([display="true"]) { font-size: 125%; }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--fuente);
+            color: var(--texto);
+            background: #E9EDF3;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Sin ligaduras: Fira Code dibuja `<=` como «≤» y `!=` como «≠», y un
+           estudiante que copia a mano lo proyectado escribe un carácter que
+           Python no acepta. */
+        code, pre, kbd { font-family: 'Fira Code', monospace; font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+
+        button { font-family: inherit; }
+
+        button:focus-visible, a:focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 4px; }
+
+        .lp-gradient { background: var(--grad); }
+        .lp-header { background: var(--grad-navy); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           ESCENARIO — un lienzo fijo de 1280 × 720 que se escala
+        ============================================================ */
+        #escenario { position: fixed; inset: 0; }
+
+        #mazo {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: var(--W);
+            height: var(--H);
+            transform-origin: center center;
+            box-shadow: 0 20px 60px rgba(0, 26, 77, 0.18);
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .diapo {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            visibility: hidden;
+            opacity: 0;
+            --k: 1;
+        }
+
+        .diapo.activa {
+            visibility: visible;
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .diapo.activa > .marco { animation: fadeIn 0.4s ease-out both; }
+
+        .marco {
+            position: absolute;
+            inset: 0;
+            padding: 42px 72px 58px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Cabecera: la de `SectionHeader` del material ------------- */
+        .cabecera {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--borde);
+            flex-shrink: 0;
+        }
+
+        .ficha-icono {
+            width: 50px;
+            height: 50px;
+            border-radius: 13px;
+            background: var(--grad);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.25);
+            flex-shrink: 0;
+        }
+
+        .ficha-icono svg { width: 26px; height: 26px; }
+
+        .antetitulo {
+            font-size: 12.5px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--secondary-texto);
+            margin-bottom: 4px;
+        }
+
+        .cabecera h2 {
+            margin: 0;
+            font-size: 33px;
+            line-height: 1.18;
+            font-weight: 700;
+            color: var(--tinta);
+            letter-spacing: -0.01em;
+        }
+
+        /* --- Cuerpo ---------------------------------------------------- */
+        /* El cuerpo centra en vertical lo que lleva: una diapositiva corta no
+           se queda colgada del título. El margen negativo con su relleno deja
+           sitio a las sombras de tarjetas y bloques, que `overflow: hidden`
+           cortaría en el borde. */
+        .cuerpo {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            justify-content: safe center;
+            padding: 10px 14px 14px;
+            margin: -10px -14px -14px;
+            font-size: calc(23px * var(--k));
+            line-height: 1.5;
+            color: var(--texto);
+        }
+
+        .diapo.arriba .cuerpo { justify-content: flex-start; }
+
+        /* Ningún bloque cede altura: si no cabe, que desborde y lo vea el
+           ajuste. Con el encogimiento por defecto de flex, un bloque de código
+           se recortaba por abajo en silencio y el cuerpo «cabía». */
+        .cuerpo > * { flex-shrink: 0; }
+
+        .cuerpo > :first-child, .col > :first-child, .caja-cuerpo > :first-child { margin-top: 0; }
+        .cuerpo > :last-child, .col > :last-child, .caja-cuerpo > :last-child { margin-bottom: 0; }
+
+        .cuerpo p { margin: 0 0 0.65em; }
+        .cuerpo strong { color: var(--tinta); font-weight: 700; }
+        .cuerpo em { font-style: italic; }
+        .cuerpo a { color: var(--primary); text-decoration: underline; text-decoration-color: rgba(var(--secondary-rgb), 0.5); text-underline-offset: 3px; }
+
+        .cuerpo h3 {
+            color: var(--secondary-texto);
+            font-weight: 600;
+            font-size: 1.1em;
+            margin: 0.9em 0 0.35em;
+            line-height: 1.25;
+        }
+
+        .cuerpo h4 {
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 0.98em;
+            margin: 0.8em 0 0.3em;
+        }
+
+        .cuerpo ul, .cuerpo ol { margin: 0 0 0.7em; padding-left: 1.25em; }
+        .cuerpo li { margin: 0 0 0.38em; padding-left: 0.2em; }
+        .cuerpo li::marker { color: var(--secondary); font-weight: 700; }
+        .cuerpo li > ul, .cuerpo li > ol { margin: 0.3em 0 0.2em; font-size: 0.9em; }
+
+        .cuerpo code:not(pre code) {
+            background: #F1F5F9;
+            color: var(--tinta);
+            padding: 0.08em 0.36em;
+            border-radius: 5px;
+            font-size: 0.86em;
+        }
+
+        .cuerpo kbd {
+            display: inline-block;
+            padding: 0.05em 0.45em;
+            border: 1px solid #CBD5E1;
+            border-bottom-width: 3px;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 0.8em;
+            color: var(--tinta);
+        }
+
+        .cuerpo mark { background: rgba(253, 185, 19, 0.35); color: inherit; padding: 0 0.15em; border-radius: 3px; }
+
+        .cita {
+            margin: 0.4em 0 0.8em;
+            padding: 0.1em 0 0.1em 0.9em;
+            border-left: 4px solid var(--secondary);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.08em;
+            line-height: 1.4;
+        }
+
+        .cita p { margin: 0 0 0.3em; }
+
+        /* --- Tablas: las de `prose-lp` -------------------------------- */
+        .cuerpo table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82em;
+            margin: 0.2em 0 0.8em;
+            background: #fff;
+        }
+
+        .cuerpo th {
+            background: var(--lila);
+            color: var(--navy);
+            text-align: left;
+            padding: 0.5em 0.75em;
+            border: 1px solid var(--borde);
+            font-weight: 700;
+        }
+
+        .cuerpo td {
+            padding: 0.5em 0.75em;
+            border: 1px solid var(--borde);
+            vertical-align: top;
+        }
+
+        /* --- Columnas -------------------------------------------------- */
+        .columnas {
+            display: grid;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .columnas.centradas { align-items: center; }
+        .col { min-width: 0; }
+
+        /* --- Cajas: `Box` de LP-CORE ----------------------------------- */
+        .caja {
+            border-left: 5px solid var(--primary);
+            background: var(--lila);
+            border-radius: 14px;
+            padding: 0.7em 1em 0.75em;
+            margin: 0.3em 0 0.8em;
+            font-size: 0.9em;
+        }
+
+        .caja-etiqueta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            font-size: 0.6em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            color: #fff;
+            background: var(--primary);
+            border-radius: 5px;
+            padding: 0.25em 0.7em;
+            margin-bottom: 0.55em;
+        }
+
+        .caja.tip { border-color: #15803D; background: #F0FDF4; }
+        .caja.tip .caja-etiqueta { background: #15803D; }
+        .caja.warn { border-color: #B45309; background: #FFFBEB; }
+        .caja.warn .caja-etiqueta { background: #B45309; }
+        .caja.danger { border-color: #B91C1C; background: #FEF2F2; }
+        .caja.danger .caja-etiqueta { background: #B91C1C; }
+        /* Una fórmula en bloque suele ser la idea de la diapositiva: más grande
+           que el texto, para que se lea desde el fondo del aula. */
+        .cuerpo mjx-container[display="true"] { font-size: 138%; margin: 0.5em 0 !important; }
+        .caja mjx-container[display="true"], .tarjeta mjx-container[display="true"], td mjx-container[display="true"] { font-size: 112%; }
+        .caja.definicion { border-color: var(--primary); background: var(--lila); }
+        .caja.definicion .caja-etiqueta { background: var(--primary); }
+        .caja.ejemplo { border-color: var(--teal); background: #F0F9FF; }
+        .caja.ejemplo .caja-etiqueta { background: var(--teal); }
+        .caja p { margin-bottom: 0.4em; }
+
+        /* --- La motivación del material, en pequeño --------------------- */
+        .idea-caja {
+            border-radius: 18px;
+            border: 1px solid rgba(var(--primary-rgb), 0.15);
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.055) 0%, rgba(14, 116, 144, 0.05) 45%, rgba(var(--secondary-rgb), 0.10) 100%);
+            padding: 0.8em 1.1em;
+            margin: 0.3em 0 0.8em;
+            display: flex;
+            gap: 0.8em;
+        }
+
+        .idea-caja .punto {
+            width: 1.7em;
+            height: 1.7em;
+            border-radius: 999px;
+            background: var(--grad);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            flex-shrink: 0;
+            margin-top: 0.1em;
+        }
+
+        .idea-caja .texto { color: var(--primary); font-weight: 600; line-height: 1.4; }
+        .idea-caja .texto p { margin: 0 0 0.3em; }
+
+        /* --- Tarjetas (`lp-card`) y flujo (`Pipeline`) ------------------ */
+        .tarjetas {
+            display: grid;
+            grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+            gap: 22px;
+            margin: 0.2em 0 0.8em;
+        }
+
+        .tarjeta {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: var(--sombra);
+            border: 1px solid #EEF2F7;
+            border-top: 4px solid var(--primary);
+            padding: 0.8em 1em 0.7em;
+            font-size: 0.86em;
+            transition: all 0.3s ease;
+        }
+
+        .tarjeta:nth-child(even) { border-top-color: var(--secondary); }
+        .tarjeta:hover { box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12); transform: translateY(-4px); }
+
+        .tarjeta h3 {
+            color: var(--navy);
+            font-size: 1.1em;
+            font-weight: 700;
+            margin: 0 0 0.45em;
+        }
+
+        .tarjeta ul { padding-left: 1.1em; }
+
+        .flujo {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            margin: 0.3em 0 0.9em;
+        }
+
+        .paso-flujo {
+            flex: 1;
+            min-width: 0;
+            background: #fff;
+            border: 1px solid var(--borde);
+            border-top: 4px solid var(--primary);
+            border-radius: 14px;
+            padding: 0.75em 0.7em 0.7em;
+            text-align: center;
+            font-size: 0.74em;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .paso-flujo .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.7em;
+            height: 1.7em;
+            border-radius: 999px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85em;
+            margin-bottom: 0.35em;
+        }
+
+        .paso-flujo .t { display: block; font-weight: 700; color: var(--navy); margin-bottom: 0.25em; font-size: 1.08em; line-height: 1.25; }
+        .paso-flujo .d { color: #475569; line-height: 1.35; display: block; }
+        .flecha-flujo { align-self: center; color: var(--secondary); font-weight: 800; font-size: 1.1em; }
+
+        /* --- Bloques de código: `lp-code-wrapper` ----------------------- */
+        .codigo {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.25);
+            margin: 0.2em 0 0.8em;
+            background: #1E293B;
+            font-size: calc(18px * var(--k) * var(--kc, 1));
+        }
+
+        .codigo-cabecera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 16px;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            border-bottom: 1px solid #334155;
+        }
+
+        .codigo-cabecera.flotante {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            padding: 0;
+            background: none;
+            border: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .codigo:hover .codigo-cabecera.flotante { opacity: 1; }
+
+        .codigo-titulo {
+            font-family: var(--fuente);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gris-claro);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .codigo-titulo i { margin-right: 8px; }
+        .codigo-titulo .fa-python { color: #FACC15; }
+        .codigo-titulo .fa-terminal { color: #4ADE80; }
+        .codigo-titulo .fa-docker { color: #60A5FA; }
+
+        .btn-copiar {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #CBD5E1;
+            padding: 5px 11px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-copiar:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+        .btn-copiar.copiado { background: rgba(34, 197, 94, 0.3); color: #4ADE80; }
+
+        .codigo pre {
+            margin: 0;
+            padding: 16px 20px;
+            background: #1E293B !important;
+            color: #F3F4F6;
+            font-size: 1em;
+            line-height: 1.55;
+            overflow: hidden;
+            white-space: pre;
+            tab-size: 4;
+        }
+
+        .codigo pre code { font-size: inherit; background: none; padding: 0; color: inherit; text-shadow: none; }
+        .codigo .token { display: inline; }
+        .codigo .linea { display: inline-block; min-width: 100%; }
+        .codigo.con-foco .linea { opacity: 0.42; transition: opacity 0.3s; }
+
+        .codigo.con-foco .linea.foco {
+            opacity: 1;
+            background: rgba(var(--secondary-rgb), 0.16);
+            box-shadow: inset 3px 0 0 var(--secondary);
+            margin: 0 -20px;
+            padding: 0 20px;
+            min-width: calc(100% + 40px);
+        }
+
+        /* Salida dentro del código (`#>`), como en LP-CORE */
+        .lp-salida, .lp-salida .token { color: #7DD3FC !important; font-style: normal !important; }
+        .lp-salida { background: rgba(125, 211, 252, 0.07); }
+
+        /* --- Figuras: diagramas, imágenes y gráficas -------------------- */
+        .figura { margin: 0.1em 0 0.6em; text-align: center; }
+
+        .figura .lienzo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 14px;
+        }
+
+        /* El alto de una figura también se encoge con el ajuste (`--k`): si no,
+           una diapositiva con figura no cabría nunca y el ajuste no podría hacer
+           nada por ella. */
+        .figura svg, .figura img { max-width: 100%; height: auto; max-height: calc(var(--alto, 470px) * var(--k)); }
+        .figura .grafica { width: 100%; height: calc(var(--alto, 440px) * var(--k)); }
+
+        .figura figcaption {
+            margin-top: 0.5em;
+            font-size: 0.66em;
+            color: var(--gris);
+            font-style: italic;
+        }
+
+        /* --- Revelado paso a paso --------------------------------------- */
+        .paso { opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+        .paso.visto { opacity: 1; transform: none; }
+
+        .respuesta { border-left-color: #15803D; background: #F0FDF4; }
+        .respuesta .caja-etiqueta { background: #15803D; }
+
+        /* --- Pie de cada diapositiva ------------------------------------- */
+        .pie {
+            position: absolute;
+            left: 72px;
+            right: 72px;
+            bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            color: var(--gris-claro);
+            letter-spacing: 0.02em;
+        }
+
+        .pie .num { font-weight: 700; color: var(--gris); font-variant-numeric: tabular-nums; }
+        .pie .sello { display: inline-flex; align-items: center; gap: 10px; }
+        .pie .sello::before { content: ''; width: 22px; height: 3px; border-radius: 3px; background: var(--grad); }
+
+        /* ============================================================
+           PORTADA
+        ============================================================ */
+        .diapo.portada { background: var(--grad-navy); color: #fff; }
+
+        .portada .brillo {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(640px 420px at 100% 0%, rgba(var(--secondary-rgb), 0.30), transparent 70%),
+                radial-gradient(560px 480px at 0% 100%, rgba(var(--primary-rgb), 0.55), transparent 70%);
+            pointer-events: none;
+        }
+
+        .portada .marco { padding: 58px 84px 64px; justify-content: space-between; }
+        .portada .institucion { font-size: 13px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+        .portada .asignatura { font-size: 17px; color: rgba(255, 255, 255, 0.72); margin-top: 6px; font-weight: 500; }
+
+        .portada .chip-semana {
+            display: inline-block;
+            background: var(--grad);
+            color: #fff;
+            font-weight: 700;
+            font-size: 13.5px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            padding: 7px 16px;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(var(--secondary-rgb), 0.35);
+        }
+
+        .portada h1 {
+            margin: 22px 0 14px;
+            font-size: 62px;
+            line-height: 1.06;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            max-width: 980px;
+        }
+
+        .portada .subtitulo { font-size: 25px; font-weight: 300; color: rgba(255, 255, 255, 0.82); max-width: 900px; }
+        .portada .temas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+
+        .portada .temas span {
+            font-size: 14.5px;
+            padding: 6px 15px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .portada .base { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+
+        .portada .lema {
+            max-width: 640px;
+            font-size: 17px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.78);
+            border-left: 3px solid var(--secondary);
+            padding-left: 16px;
+            line-height: 1.45;
+        }
+
+        .portada .firma { text-align: right; font-size: 14px; color: rgba(255, 255, 255, 0.62); line-height: 1.5; }
+        .portada .firma strong { color: #fff; font-weight: 600; display: block; font-size: 15.5px; }
+
+        .barra-grad { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: var(--grad); }
+
+        /* ============================================================
+           HOJA DE RUTA y DIVISOR DE SECCIÓN — la barra lateral del material
+        ============================================================ */
+        .dividida .marco { padding: 0; flex-direction: row; }
+
+        .dividida .lateral {
+            width: 410px;
+            flex-shrink: 0;
+            background: var(--grad-navy);
+            color: #fff;
+            padding: 44px 26px 30px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lateral .institucion { font-size: 10.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+        .lateral .asignatura { font-size: 16px; font-weight: 700; margin-top: 4px; line-height: 1.25; }
+        .lateral .capitulo { font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-top: 4px; }
+        .lateral .capitulo span { color: var(--secondary); font-weight: 600; }
+        .lateral hr { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 20px -26px 14px -30px; }
+
+        .lista-secciones { display: flex; flex-direction: column; gap: 5px; flex: 1; min-height: 0; }
+        /* Más de 14 secciones (p. ej., una sesión de 17 módulos): filas más bajas para que quepan todas */
+        .lista-secciones.compacta { gap: 2px; }
+        .lista-secciones.compacta .item-seccion { padding: 4px 11px; font-size: 12.5px; }
+
+        .item-seccion {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            padding: 8px 11px;
+            border-radius: 9px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13.5px;
+            font-weight: 500;
+            line-height: 1.25;
+        }
+
+        .item-seccion svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+        .item-seccion.hecha { color: rgba(255, 255, 255, 0.38); }
+        .item-seccion.actual { background: var(--grad); color: #fff; box-shadow: 0 8px 18px rgba(var(--secondary-rgb), 0.28); }
+
+        .dividida .principal { flex: 1; position: relative; padding: 64px 72px 60px; display: flex; flex-direction: column; justify-content: center; }
+
+        .numero-grande {
+            font-size: 128px;
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 18px;
+        }
+
+        .principal h2 { margin: 0; font-size: 46px; line-height: 1.1; font-weight: 800; color: var(--tinta); letter-spacing: -0.015em; }
+        .principal .gancho { margin-top: 26px; font-size: 22px; line-height: 1.45; color: var(--primary); font-weight: 600; border-left: 3px solid var(--secondary); padding-left: 16px; }
+        .principal .gancho p { margin: 0 0 0.3em; }
+
+        .enlace-material {
+            position: absolute;
+            left: 72px;
+            bottom: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gris);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            margin-left: -12px;
+            border-radius: 999px;
+            transition: all 0.2s;
+        }
+
+        .enlace-material:hover { background: var(--lila); color: var(--primary); }
+
+        .ra-caja { margin-top: 8px; }
+        .ra-caja .etq { font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; font-weight: 700; color: rgba(var(--primary-rgb), 0.62); margin-bottom: 8px; }
+        .ra-caja .ra { font-size: 26px; line-height: 1.35; color: var(--primary); font-weight: 600; border-left: 3px solid var(--secondary); padding-left: 16px; }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+        .chips span { font-size: 14px; padding: 5px 13px; border-radius: 999px; background: rgba(var(--primary-rgb), 0.08); color: var(--primary); font-weight: 500; }
+
+        /* ============================================================
+           IDEA CLAVE, PREGUNTA y CIERRE
+        ============================================================ */
+        .diapo.idea {
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.055) 0%, rgba(14, 116, 144, 0.05) 45%, rgba(var(--secondary-rgb), 0.10) 100%), #fff;
+        }
+
+        .idea .marco { justify-content: center; padding: 60px 110px 70px; }
+        .idea .etq-idea { display: flex; align-items: center; gap: 12px; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.18em; font-weight: 700; color: rgba(var(--primary-rgb), 0.62); margin-bottom: 26px; }
+        .idea .etq-idea .punto { width: 38px; height: 38px; border-radius: 999px; background: var(--grad); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.25); }
+        .idea h2 { margin: 0; font-size: 46px; line-height: 1.2; font-weight: 700; color: var(--primary); border-left: 6px solid var(--secondary); padding-left: 30px; letter-spacing: -0.01em; }
+        .idea .cuerpo { flex: 0 1 auto; margin-top: 28px; padding-left: 36px; color: #475569; font-size: calc(24px * var(--k)); }
+
+        .chip-ejercicio {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 700;
+            color: #fff;
+            border-radius: 6px;
+            padding: 5px 11px;
+            background: var(--primary);
+            margin-bottom: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .pregunta .cabecera h2 { font-size: 31px; }
+
+        .diapo.cierre { background: var(--grad-navy); color: #fff; }
+        .cierre .brillo { position: absolute; inset: 0; background: radial-gradient(700px 400px at 100% 100%, rgba(var(--secondary-rgb), 0.22), transparent 70%); pointer-events: none; }
+        .cierre .cabecera { border-bottom-color: rgba(255, 255, 255, 0.12); }
+        .cierre .cabecera h2 { color: #fff; }
+        .cierre .antetitulo { color: var(--gold); }
+        .cierre .cuerpo { color: rgba(255, 255, 255, 0.88); }
+        .cierre .cuerpo strong { color: #fff; }
+        .cierre .cuerpo h3 { color: #F472B6; }
+        .cierre .cuerpo code:not(pre code) { background: rgba(255, 255, 255, 0.12); color: #fff; }
+        .cierre .cuerpo ul { list-style: none; padding-left: 0; }
+        .cierre .cuerpo ul > li { position: relative; padding-left: 1.7em; margin-bottom: 0.55em; }
+        .cierre .cuerpo ul > li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 0.2em;
+            width: 1.15em;
+            height: 1.15em;
+            border-radius: 999px;
+            background: var(--grad);
+            color: #fff;
+            font-size: 0.72em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cierre .caja { color: var(--texto); }
+        .cierre .pie { color: rgba(255, 255, 255, 0.45); }
+        .cierre .pie .num { color: rgba(255, 255, 255, 0.7); }
+
+        .cierre .firma-cierre { margin-top: auto; padding-top: 18px; font-size: 13.5px; color: rgba(255, 255, 255, 0.6); font-style: italic; flex-shrink: 0; }
+
+        /* Variantes de maquetación que se piden desde la fuente */
+        .diapo.centro .cuerpo { text-align: center; align-items: center; }
+        .diapo.denso .cuerpo { font-size: calc(20px * var(--k)); }
+        .diapo.codigo-grande .codigo { --kc: 1.18; }
+
+        /* ============================================================
+           CONTROLES — los del material: progreso, menú, anterior/siguiente
+        ============================================================ */
+        #progreso { position: fixed; top: 0; left: 0; right: 0; height: 6px; background: rgba(226, 232, 240, 0.7); z-index: 20; }
+        #progreso > div { height: 100%; background: var(--grad); transition: width 0.5s ease; width: 0; }
+
+        .btn-redondo {
+            position: fixed;
+            z-index: 60;
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 0;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.3);
+            transition: transform 0.2s, opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .btn-redondo:hover { transform: scale(1.1); }
+        #btn-menu { top: 16px; left: 16px; }
+
+        #controles {
+            position: fixed;
+            right: 18px;
+            bottom: 16px;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            padding: 6px 6px 6px 16px;
+            border-radius: 999px;
+            box-shadow: 0 6px 22px rgba(0, 26, 77, 0.16);
+            transition: opacity 0.35s;
+        }
+
+        #contador { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--secondary-texto); margin-right: 6px; white-space: nowrap; }
+        #contador span { color: var(--gris); font-weight: 600; }
+
+        .btn-nav {
+            border: 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 999px;
+            transition: all 0.2s;
+        }
+
+        .btn-nav.ant { background: transparent; color: var(--navy); }
+        .btn-nav.ant:hover { background: #F1F5F9; }
+        .btn-nav.sig { background: var(--grad); color: #fff; }
+        .btn-nav.sig:hover { opacity: 0.9; }
+        .btn-nav:disabled { opacity: 0.3; cursor: default; }
+
+        body.quieto #controles, body.quieto #btn-menu { opacity: 0; pointer-events: none; }
+        body.quieto { cursor: none; }
+        body.quieto #controles:focus-within, body.quieto #btn-menu:focus-visible { opacity: 1; pointer-events: auto; }
+
+        /* Índice: la barra lateral del material, como panel */
+        #velo { position: fixed; inset: 0; background: rgba(0, 10, 30, 0.35); z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        #indice {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 21rem;
+            z-index: 50;
+            transform: translateX(-100%);
+            visibility: hidden;
+            transition: transform 0.3s ease, visibility 0s linear 0.3s;
+            overflow-y: auto;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.con-indice #indice { transform: none; visibility: visible; transition: transform 0.3s ease; }
+        body.con-indice #velo { opacity: 1; pointer-events: auto; }
+        #indice .cab { padding: 72px 24px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        #indice nav { padding: 14px; flex: 1; }
+        #indice .item-seccion { cursor: pointer; margin-bottom: 4px; border: 0; background: transparent; width: 100%; text-align: left; font-family: inherit; }
+        #indice .item-seccion:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+        #indice .item-seccion.actual, #indice .item-seccion.actual:hover { background: var(--grad); color: #fff; box-shadow: 0 8px 18px rgba(var(--secondary-rgb), 0.28); }
+        body.con-indice #btn-menu { opacity: 1; pointer-events: auto; }
+        #indice .sub { margin: 2px 0 10px 38px; display: flex; flex-direction: column; gap: 1px; }
+        #indice .sub button { background: none; border: 0; color: rgba(255, 255, 255, 0.55); text-align: left; font-size: 12.5px; padding: 5px 8px; border-radius: 6px; cursor: pointer; line-height: 1.3; }
+        #indice .sub button:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+        #indice .sub button.actual { color: #fff; font-weight: 600; box-shadow: inset 2px 0 0 var(--secondary); }
+        #indice .pie-indice { padding: 16px 24px; font-size: 10.5px; color: rgba(255, 255, 255, 0.42); border-top: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.5; }
+
+        /* Notas del presentador */
+        #notas {
+            position: fixed;
+            left: 50%;
+            bottom: 74px;
+            transform: translate(-50%, 20px);
+            width: min(900px, calc(100vw - 40px));
+            max-height: 34vh;
+            overflow-y: auto;
+            z-index: 35;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 16px;
+            box-shadow: 0 16px 50px rgba(0, 26, 77, 0.25);
+            border-top: 4px solid var(--secondary);
+            padding: 16px 22px;
+            font-size: 15.5px;
+            line-height: 1.55;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        #notas { visibility: hidden; }
+        body.con-notas #notas { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; visibility: visible; }
+        .etq-notas { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; color: var(--secondary-texto); margin-bottom: 6px; }
+        .notas-vacias { color: var(--gris-claro); font-style: italic; }
+        #notas p, .notas p { margin: 0 0 0.55em; }
+        #notas ul, .notas ul { margin: 0 0 0.55em; padding-left: 1.2em; }
+
+        /* Ayuda y pantalla en negro */
+        #ayuda { position: fixed; inset: 0; z-index: 70; background: rgba(0, 10, 30, 0.55); display: none; align-items: center; justify-content: center; }
+        body.con-ayuda #ayuda { display: flex; }
+        #ayuda .tarjeta-ayuda { background: #fff; border-radius: 18px; padding: 26px 30px; width: min(560px, calc(100vw - 32px)); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); border-top: 5px solid var(--primary); }
+        #ayuda h3 { margin: 0 0 14px; color: var(--navy); font-size: 18px; }
+        #ayuda table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        #ayuda td { padding: 6px 4px; border-bottom: 1px solid #F1F5F9; }
+        #ayuda td:first-child { white-space: nowrap; width: 42%; }
+        #ayuda kbd { font-family: 'Fira Code', monospace; font-size: 12px; background: #F1F5F9; border: 1px solid #CBD5E1; border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; margin-right: 3px; }
+
+        #negro { position: fixed; inset: 0; z-index: 80; background: #000; display: none; }
+        body.en-negro #negro { display: block; }
+
+        #ir-a {
+            position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 65;
+            background: var(--navy); color: #fff; font-weight: 700; font-size: 15px; padding: 8px 18px;
+            border-radius: 999px; display: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        body.revision #controles, body.revision #btn-menu { display: none; }
+        body.revision .paso { transition: none; }
+        body.revision .diapo.activa > .marco { animation: none; }
+
+        /* Revisión: diapositivas que no caben */
+        .aviso-revision {
+            position: absolute; top: 10px; right: 10px; z-index: 5;
+            background: #B91C1C; color: #fff; font-size: 12px; font-weight: 700;
+            padding: 4px 10px; border-radius: 6px;
+        }
+
+        /* ============================================================
+           VISTA DEL PRESENTADOR (?presentador)
+        ============================================================ */
+        body.presentador { background: #0B1330; }
+        body.presentador #btn-menu, body.presentador #controles, body.presentador #notas, body.presentador #progreso { display: none; }
+        #panel-presentador { display: none; }
+        body.presentador #panel-presentador {
+            display: grid;
+            position: fixed;
+            inset: 0;
+            grid-template-columns: 1.55fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 18px;
+            padding: 18px;
+            color: #fff;
+            z-index: 10;
+            pointer-events: none;
+        }
+        #panel-presentador .barra { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: rgba(255, 255, 255, 0.7); }
+        #panel-presentador .reloj { font-size: 30px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+        #panel-presentador .reloj small { font-size: 13px; color: var(--gold); font-weight: 600; margin-left: 8px; letter-spacing: 0.1em; text-transform: uppercase; }
+        #panel-presentador .hueco { border-radius: 10px; }
+        #panel-presentador .derecha { display: flex; flex-direction: column; gap: 14px; min-height: 0; pointer-events: auto; }
+        #panel-presentador .etq { font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+        #vista-siguiente { position: relative; aspect-ratio: 16 / 9; background: #fff; border-radius: 10px; overflow: hidden; }
+        #vista-siguiente .diapo { visibility: visible; opacity: 1; transform-origin: top left; width: 1280px; height: 720px; }
+        #vista-siguiente .paso { opacity: 1; transform: none; }
+        #notas-presentador { flex: 1; min-height: 0; overflow-y: auto; background: #fff; color: var(--texto); border-radius: 12px; padding: 16px 20px; font-size: 20px; line-height: 1.5; }
+
+        /* ============================================================
+           IMPRESIÓN — una diapositiva por página, con todo revelado
+        ============================================================ */
+        @media print {
+            @page { size: 1280px 720px; margin: 0; }
+            html, body { overflow: visible; height: auto; background: #fff; }
+            #escenario { position: static; }
+            #mazo { position: static; transform: none !important; box-shadow: none; width: 1280px; height: auto; overflow: visible; }
+            .diapo { position: relative; visibility: visible; opacity: 1; width: 1280px; height: 720px; page-break-after: always; break-after: page; overflow: hidden; }
+            .diapo.activa > .marco { animation: none; }
+            .paso { opacity: 1; transform: none; }
+            #progreso, #btn-menu, #controles, #indice, #velo, #notas, #ayuda, #negro, #ir-a, #panel-presentador, .btn-copiar, .enlace-material, .aviso-revision { display: none !important; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        /* --- Gráfico animado (scripts/animado.py): SVG en línea; cada etapa es un .paso --- */
+        .figura.ga .lienzo { background: transparent; }
+        .ga-svg { overflow: visible; font-family: var(--fuente); }
+        .ga .s0 { --c: var(--texto); }
+        .ga .s1 { --c: var(--primary); }
+        .ga .s2 { --c: var(--secondary); --ct: var(--secondary-texto); }
+        .ga .s3 { --c: var(--teal); }
+        .ga .s4 { --c: var(--gold); --ct: #B45309; }
+        .ga .s5 { --c: var(--gris); }
+        .ga .s6 { --c: #B91C1C; }
+        .ga .ga-rejilla { stroke: var(--borde); stroke-width: 1.5; }
+        .ga .ga-eje { stroke: var(--gris-claro); stroke-width: 2; }
+        .ga .ga-marca-eje { fill: var(--gris); font-size: 19px; font-weight: 500; }
+        .ga .ga-titulo-eje { fill: var(--gris); font-size: 20px; font-weight: 600; }
+        .ga .ga-titulo-panel { fill: var(--texto); font-size: 22px; font-weight: 700; }
+        .ga .ga-sub { font-size: 0.75em; }
+        .ga .ga-trazo { fill: none; stroke: var(--c); stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; }
+        .ga .ga-anillo { stroke-width: 4; }
+        .ga .ga-discontinua { stroke-width: 3; }
+        .ga .ga-pto, .ga .ga-punta { fill: var(--c); stroke: #fff; stroke-width: 2.5; }
+        .ga .ga-barra { fill: var(--c); }
+        .ga .ga-rotulo { fill: var(--ct, var(--c)); font-size: 21px; font-weight: 700; }
+        .ga .ga-etiqueta { fill: var(--ct, var(--c)); font-size: 18px; font-weight: 600; }
+        .ga .ga-valor { font-size: 21px; font-weight: 700; }
+        .ga .ga-nota { fill: var(--ct, var(--c)); font-size: 20px; font-weight: 700; }
+        /* El movimiento: la etapa entra sin el desplazamiento del .paso genérico; la línea se traza,
+           la barra crece desde la base y los rótulos aparecen cuando el trazo ya llegó. */
+        .ga .ga-etapa.paso, .ga .ga-etapa.paso.visto { transform: none; }
+        .ga .ga-etapa .ga-trazo { stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.1s ease-in-out; }
+        .ga .ga-etapa .ga-trazo.ga-discontinua { stroke-dasharray: 0.012 0.012; stroke-dashoffset: 0; transition: none; }
+        .ga .ga-etapa.visto .ga-trazo { stroke-dashoffset: 0; }
+        .ga .ga-etapa .ga-barra { transform: scaleY(0); transform-box: fill-box; transform-origin: 50% 100%; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .ga .ga-etapa.visto .ga-barra { transform: none; }
+        .ga .ga-etapa .ga-retardo { opacity: 0; transition: opacity 0.3s ease-out; }
+        .ga .ga-etapa.visto .ga-retardo { opacity: 1; transition: opacity 0.4s ease-out 0.85s; }
+        .ga .ga-trazo.ga-discontinua { stroke-dasharray: 0.012 0.012; }
+        /* Sin movimiento: ?todo, ?revisar, «reducir movimiento», la vista siguiente y la impresión */
+        html.ga-quieto .ga *, #vista-siguiente .ga * { transition: none !important; }
+        html.ga-final .ga .ga-etapa, #vista-siguiente .ga .ga-etapa { opacity: 1; }
+        html.ga-final .ga .ga-trazo, #vista-siguiente .ga .ga-trazo { stroke-dashoffset: 0; }
+        html.ga-final .ga .ga-barra, #vista-siguiente .ga .ga-barra { transform: none; }
+        html.ga-final .ga .ga-retardo, #vista-siguiente .ga .ga-retardo { opacity: 1; }
+        @media print {
+            .ga * { transition: none !important; }
+            .ga .ga-trazo { stroke-dashoffset: 0 !important; }
+            .ga .ga-barra { transform: none !important; }
+            .ga .ga-retardo { opacity: 1 !important; }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="progreso"><div></div></div>
+
+    <button id="btn-menu" class="btn-redondo lp-gradient" title="Índice (M)" aria-label="Mostrar el índice">
+        <i aria-hidden="true" class="fas fa-bars"></i>
+    </button>
+
+    <div id="velo"></div>
+    <aside id="indice" class="lp-header" aria-label="Índice de la presentación"></aside>
+
+    <main id="escenario">
+        <div id="mazo">
+<section class="diapo portada" data-tipo="portada">
+    <div class="brillo"></div>
+    <div class="marco">
+        <div>
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+        </div>
+        <div>
+            <span class="chip-semana">Sesión 1 de 2 · 90 min</span>
+            <h1>Muestreo estratificado</h1>
+            <div class="subtitulo">Sesión 1 · Por qué estratificar, cómo estimar y cómo repartir la muestra (módulos 1 a 5)</div>
+            <div class="temas"><span>Estratos</span><span>Marco π</span><span>Pesos</span><span>Proporcional</span><span>Neyman</span><span>Costos</span><span>Tamaño de muestra</span></div>
+        </div>
+        <div class="base">
+            <div></div>
+            <div class="firma"><strong>Javier Mauricio Sierra</strong></div>
+        </div>
+    </div>
+    <div class="barra-grad"></div>
+</section>
+<section class="diapo dividida" data-tipo="agenda">
+    <div class="marco">
+        <div class="lateral">
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+            <div class="capitulo">Capítulo 4 · <span>Muestreo estratificado</span></div>
+            <hr>
+            <div class="lista-secciones"><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 1 · ¿Por qué estratificar?</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 2 · La teoría en el marco π</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 3 · Pesos y estimación</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 4 · Asignación de observaciones</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 5 · Asignación óptima con costos</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-award"></i><span>Módulo 13 · Práctica</span></div></div>
+        </div>
+        <div class="principal">
+            <div class="antetitulo">Hoja de ruta</div>
+            <h2 style="margin-bottom:34px">Lo que vamos a construir hoy</h2>
+            <div class="ra-caja"><div class="etq">Objetivo de la sesión</div><div class="ra">Explicar por qué estratificar reduce la varianza, estimar media, total y proporción con los pesos del diseño, y elegir la asignación —proporcional, igual, Neyman o con costos— según la pregunta y el presupuesto.</div></div>
+            <div class="chips"><span>Estratos</span><span>Marco π</span><span>Pesos</span><span>Proporcional</span><span>Neyman</span><span>Costos</span><span>Tamaño de muestra</span></div>
+            <div class="pie" style="left:72px;right:72px"><span></span><span></span><span class="num">2 / 43</span></div>
+        </div>
+    </div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Muestreo estratificado</div><h2>Cómo leer estas diapositivas</h2></div>
+        </div>
+        <div class="cuerpo"><p>Lo que no lleva rótulo es teoría (definiciones y fórmulas) o dato. La fuente de cada cifra va en las notas.</p>
+<div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>Cifras, tablas, gráficas y salidas de R, verificadas contra el código del capítulo o contra Lohr, o calculadas para la diapositiva (lo dicen las notas).</p></div></div>
+<div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Lo que el material concluye de los datos o de una fórmula: se discute con los datos en la mano.</p></div></div>
+<div class="caja warn"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-triangle-exclamation"></i>Criterio</span><div class="caja-cuerpo"><p>Una recomendación o un juicio, del material o de Lohr: razonable, pero opinable.</p></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">3 / 43</span></div>
+</section>
+<section class="diapo dividida seccion" data-tipo="seccion">
+    <div class="marco">
+        <div class="lateral">
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+            <div class="capitulo">Capítulo 4 · <span>Muestreo estratificado</span></div>
+            <hr>
+            <div class="lista-secciones"><div class="item-seccion actual"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 1 · ¿Por qué estratificar?</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 2 · La teoría en el marco π</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 3 · Pesos y estimación</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 4 · Asignación de observaciones</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 5 · Asignación óptima con costos</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-award"></i><span>Módulo 13 · Práctica</span></div></div>
+        </div>
+        <div class="principal">
+            <div class="numero-grande">01</div>
+            <h2>Módulo 1 · ¿Por qué estratificar?</h2>
+            <div class="gancho"><p>El MAS del capítulo 2 sorteó de una sola urna. Es insesgado y honesto, pero trata igual lo que no es igual.</p></div>
+            <a class="enlace-material" href="../capitulo-4-muestreo-estratificado.html#modulo-1" target="_blank" rel="noopener"><i aria-hidden="true" class="fas fa-book-open"></i> Leer en el material: ¿Por qué estratificar? <i aria-hidden="true" class="fas fa-arrow-right"></i></a>
+            <div class="pie" style="left:72px;right:72px"><span></span><span></span><span class="num">4 / 43</span></div>
+        </div>
+    </div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 1 · ¿Por qué estratificar?</div><h2>Casi todo el capítulo trabaja sobre un censo agrícola de 3 078 condados</h2></div>
+        </div>
+        <div class="cuerpo"><div class="tarjetas" style="--n:3">
+<div class="tarjeta"><h3>agpop · la población</h3><p>El Censo Agrícola de EE. UU.: <strong>3 078 condados</strong>, con datos de 1982, 1987 y 1992. Como es un censo, <strong>la verdad se conoce</strong>.</p></div>
+<div class="tarjeta"><h3>agstrat · la muestra estratificada</h3><p>300 condados sorteados <strong>por separado en cada región</strong>, cerca del 10 % de cada una.</p></div>
+<div class="tarjeta"><h3>agsrs · el MAS del capítulo 2</h3><p>300 condados de <strong>una sola urna</strong>. Sirve de contraste.</p></div>
+</div>
+<p><code>acres92</code>: acres dedicados a fincas en 1992 (el material la llama «superficie sembrada»).</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">5 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 1 · ¿Por qué estratificar?</div><h2>Un condado medio del Oeste tiene ocho veces los acres de uno del Nordeste</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 2fr) minmax(0, 1fr)">
+<div class="col"><figure class="figura ga" style="--alto:420px"><div class="lienzo"><svg class="ga-svg" viewBox="0 0 1000 440" width="1000" height="440" role="img" aria-label="Media de acres92 por condado en cada región (agpop, censo)"><title>Media de acres92 por condado en cada región (agpop, censo)</title><g class="ga-ejes"><line class="ga-rejilla" x1="92" y1="390" x2="960" y2="390"/><text class="ga-marca-eje" x="82" y="390" text-anchor="end" dominant-baseline="middle">0</text><line class="ga-rejilla" x1="92" y1="297" x2="960" y2="297"/><text class="ga-marca-eje" x="82" y="297" text-anchor="end" dominant-baseline="middle">200</text><line class="ga-rejilla" x1="92" y1="204" x2="960" y2="204"/><text class="ga-marca-eje" x="82" y="204" text-anchor="end" dominant-baseline="middle">400</text><line class="ga-rejilla" x1="92" y1="111" x2="960" y2="111"/><text class="ga-marca-eje" x="82" y="111" text-anchor="end" dominant-baseline="middle">600</text><line class="ga-rejilla" x1="92" y1="18" x2="960" y2="18"/><text class="ga-marca-eje" x="82" y="18" text-anchor="end" dominant-baseline="middle">800</text><line class="ga-eje" x1="92" y1="390" x2="960" y2="390"/><line class="ga-eje" x1="92" y1="18" x2="92" y2="390"/><line class="ga-eje" x1="200.5" y1="390" x2="200.5" y2="397"/><text class="ga-marca-eje" x="200.5" y="420" text-anchor="middle">Norte-Centro</text><line class="ga-eje" x1="417.5" y1="390" x2="417.5" y2="397"/><text class="ga-marca-eje" x="417.5" y="420" text-anchor="middle">Nordeste</text><line class="ga-eje" x1="634.5" y1="390" x2="634.5" y2="397"/><text class="ga-marca-eje" x="634.5" y="420" text-anchor="middle">Sur</text><line class="ga-eje" x1="851.5" y1="390" x2="851.5" y2="397"/><text class="ga-marca-eje" x="851.5" y="420" text-anchor="middle">Oeste</text><text class="ga-titulo-eje" x="30" y="204" text-anchor="middle" transform="rotate(-90 30 204)">miles de acres</text></g><g class="ga-etapa paso" data-etapa="1"><g class="ga-el ga-barra s3"><rect class="ga-barra" x="363.25" y="347.86" width="108.5" height="42.14" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="417.5" y="335.86" text-anchor="middle">90 619</text></g></g><g class="ga-etapa paso" data-etapa="2"><g class="ga-el ga-barra s2"><rect class="ga-barra" x="797.25" y="53.65" width="108.5" height="336.35" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="851.5" y="41.65" text-anchor="middle">723 344</text></g></g><g class="ga-etapa paso" data-etapa="3"><g class="ga-el ga-barra s1"><rect class="ga-barra" x="146.25" y="238.43" width="108.5" height="151.57" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="200.5" y="226.43" text-anchor="middle">325 951</text></g><g class="ga-el ga-barra s1"><rect class="ga-barra" x="580.25" y="297.4" width="108.5" height="92.6" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="634.5" y="285.4" text-anchor="middle">199 140</text></g></g><g class="ga-etapa paso" data-etapa="4"><g class="ga-el ga-referencia s0"><path class="ga-trazo ga-discontinua" d="M92 247.4 L960 247.4" pathLength="1"/></g><g class="ga-el ga-texto s0"><text class="ga-nota ga-aparece" x="634.5" y="229.57" text-anchor="middle">media nacional: 306 677</text></g></g></svg></div></figure></div>
+<div class="col"><div class="paso"><div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>Medias: Nordeste 90 619, Oeste 723 344.</p>
+<p>Desviaciones: Nordeste 79 365, Oeste 835 639.</p></div></div>
+<div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Una urna única puede traer mucho Oeste o poco. <strong>Toda esa lotería es varianza.</strong></p></div></div></div></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">6 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 1 · ¿Por qué estratificar?</div><h2>En R: la desviación del Oeste es más de diez veces la del Nordeste</h2></div>
+        </div>
+        <div class="cuerpo"><div class="codigo" data-lang="r" data-foco="5-9"><div class="codigo-cabecera"><span class="codigo-titulo"><i aria-hidden="true" class="fas fa-chart-line"></i>La heterogeneidad entre regiones</span><button class="btn-copiar" title="Copiar"><i aria-hidden="true" class="fas fa-copy"></i> Copiar</button></div><pre><code>library(survey)
+agpop   &lt;- read.csv("CSV data sets for SDA 3e/agpop.csv")
+agstrat &lt;- read.csv("CSV data sets for SDA 3e/agstrat.csv")
+N &lt;- nrow(agpop)
+data.frame(
+  Nh    = tapply(agpop$acres92, agpop$region, length),
+  media = round(tapply(agpop$acres92, agpop$region, mean), 0),
+  sd    = round(tapply(agpop$acres92, agpop$region, sd), 0)
+)
+#&gt;      Nh  media     sd
+#&gt; NC 1054 325951 271303
+#&gt; NE  220  90619  79365
+#&gt; S  1382 199140 243956
+#&gt; W   422 723344 835639</code></pre></div>
+<p><code>tapply</code> agrupa por <code>region</code>: el marco trae la región de <strong>cada</strong> condado, y eso es lo que permite estratificar.</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">7 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 1 · ¿Por qué estratificar?</div><h2>Estratificar es sortear por separado dentro de grupos fijados antes</h2></div>
+        </div>
+        <div class="cuerpo"><div class="caja definicion"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-book"></i>Muestreo estratificado</span><div class="caja-cuerpo"><p>La población \(U\) se parte <strong>antes de muestrear</strong> en \(H\) estratos disjuntos y exhaustivos de tamaños conocidos \(N_1,\dots,N_H\). En cada estrato se sortea una muestra <strong>independiente</strong> de tamaño \(n_h\) (aquí, MAS sin reemplazo).</p></div></div>
+<p>Hace falta que el marco traiga la variable de estratificación <strong>para todas las unidades</strong>, y conocer los \(N_h\).</p>
+<div class="paso"><div class="idea-caja"><span class="punto"><i aria-hidden="true" class="fas fa-compass"></i></span><div class="texto"><p>El azar queda <strong>confinado dentro de cada estrato</strong>: la composición de la muestra por regiones ya no es aleatoria, la fija el diseñador.</p></div></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">8 / 43</span></div>
+</section>
+<section class="diapo pregunta">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div><span class="chip-ejercicio" style="background:var(--primary)"><i aria-hidden="true" class="fas fa-circle-question"></i>Pregunta para la clase</span></div><h2>¿Puede estratificar este instituto?</h2></div>
+        </div>
+        <div class="cuerpo"><p>Un instituto quiere estratificar una encuesta de hogares por <strong>nivel socioeconómico</strong>. Su marco trae nombre, dirección y teléfono. Por el censo, sabe <strong>cuántos hogares</strong> hay de cada nivel.</p>
+<div class="paso"><div class="caja respuesta"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-check"></i>Respuesta</span><div class="caja-cuerpo"><p><strong>Estratificar, no</strong>: le falta la variable en el marco. Pero conoce los \(N_h\): puede sortear sin estratos, preguntar el nivel en la entrevista y <strong>postestratificar</strong> con los \(N_h\) del censo (módulo 10).</p></div></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">9 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 1 · ¿Por qué estratificar?</div><h2>Estratificar compra tres cosas</h2></div>
+        </div>
+        <div class="cuerpo"><div class="tarjetas" style="--n:3">
+<div class="tarjeta paso"><h3>Precisión</h3><p>La varianza solo paga la variabilidad <strong>dentro</strong> de los estratos.</p></div>
+<div class="tarjeta paso"><h3>Garantías por subgrupo</h3><p>El Nordeste es el 7 % de los condados. En <code>agstrat</code> tiene <strong>21</strong> garantizados.</p></div>
+<div class="tarjeta paso"><h3>Logística y costo</h3><p>Cada estrato puede tener su propio operativo, su marco y su modo de entrevista.</p></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">10 / 43</span></div>
+</section>
+<section class="diapo dividida seccion" data-tipo="seccion">
+    <div class="marco">
+        <div class="lateral">
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+            <div class="capitulo">Capítulo 4 · <span>Muestreo estratificado</span></div>
+            <hr>
+            <div class="lista-secciones"><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 1 · ¿Por qué estratificar?</span></div><div class="item-seccion actual"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 2 · La teoría en el marco π</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 3 · Pesos y estimación</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 4 · Asignación de observaciones</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 5 · Asignación óptima con costos</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-award"></i><span>Módulo 13 · Práctica</span></div></div>
+        </div>
+        <div class="principal">
+            <div class="numero-grande">02</div>
+            <h2>Módulo 2 · La teoría en el marco π</h2>
+            <div class="gancho"><p>Nada de esto es nuevo: es el π-estimador del capítulo 2 aplicado a un diseño concreto.</p></div>
+            <a class="enlace-material" href="../capitulo-4-muestreo-estratificado.html#modulo-2" target="_blank" rel="noopener"><i aria-hidden="true" class="fas fa-book-open"></i> Leer en el material: La teoría en el marco π <i aria-hidden="true" class="fas fa-arrow-right"></i></a>
+            <div class="pie" style="left:72px;right:72px"><span></span><span></span><span class="num">11 / 43</span></div>
+        </div>
+    </div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 2 · La teoría en el marco π</div><h2>Dentro del estrato, un MAS; entre estratos, independencia</h2></div>
+        </div>
+        <div class="cuerpo"><p>$$\pi_k = \frac{n_h}{N_h}\ \ \text{si } k \in U_h \qquad\qquad \pi_{kl} = \pi_k\,\pi_l\ \ \text{si } k \in U_h,\ l \in U_g,\ h \neq g$$</p>
+<p>Para dos unidades del <strong>mismo</strong> estrato, \(\pi_{kl} = \frac{n_h}{N_h}\cdot\frac{n_h-1}{N_h-1}\), como en el MAS.</p>
+<p>La novedad está en la segunda fórmula: para estratos distintos, \(\pi_{kl} - \pi_k\pi_l = 0\), y ese par <strong>no aporta varianza</strong>.</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">12 / 43</span></div>
+</section>
+<section class="diapo pregunta">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div><span class="chip-ejercicio" style="background:var(--primary)"><i aria-hidden="true" class="fas fa-circle-question"></i>Pregunta para la clase</span></div><h2>¿Cuánto pesa un condado del Nordeste en agstrat?</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 2fr) minmax(0, 3fr)">
+<div class="col"><p>En <code>agstrat</code>, el Nordeste tiene \(N_h = 220\) condados y \(n_h = 21\) en la muestra.</p>
+<p>¿Cuánto vale el peso de diseño \(w_k\) de uno de sus condados? Usa dos decimales.</p>
+<div class="paso"><div class="caja respuesta"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-check"></i>Respuesta</span><div class="caja-cuerpo"><p>\(w_k = N_h/n_h = 220/21 = \) <strong>10,48</strong>. Los de las otras regiones también rondan 10: <code>agstrat</code> es casi <strong>autoponderada</strong>, y los pesos suman \(N = 3\,078\).</p></div></div></div></div>
+<div class="col"><div class="paso"><div class="codigo" data-lang="r" data-foco="9"><div class="codigo-cabecera"><span class="codigo-titulo"><i aria-hidden="true" class="fas fa-chart-line"></i>Probabilidades de inclusión y pesos</span><button class="btn-copiar" title="Copiar"><i aria-hidden="true" class="fas fa-copy"></i> Copiar</button></div><pre><code>Nh &lt;- table(agpop$region)
+nh &lt;- table(agstrat$region)
+data.frame(region = names(Nh),
+           Nh = as.numeric(Nh), nh = as.numeric(nh),
+           pi = round(as.numeric(nh) / as.numeric(Nh), 5),
+           peso = round(as.numeric(Nh) / as.numeric(nh), 5))
+#&gt;   region   Nh  nh      pi     peso
+#&gt; 1     NC 1054 103 0.09772 10.23301
+#&gt; 2     NE  220  21 0.09545 10.47619
+#&gt; 3      S 1382 135 0.09768 10.23704
+#&gt; 4      W  422  41 0.09716 10.29268
+sum(agstrat$strwt)
+#&gt; [1] 3078</code></pre></div></div></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">13 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 2 · La teoría en el marco π</div><h2>El estimador estratificado es el π-estimador agrupado por estratos</h2></div>
+        </div>
+        <div class="cuerpo"><p>$$\hat t_{\pi} = \sum_{k \in s} \frac{y_k}{\pi_k} = \sum_{h=1}^{H} N_h\,\bar y_h \qquad\qquad \bar y_{\text{str}} = \frac{\hat t_\pi}{N} = \sum_{h=1}^{H} W_h\,\bar y_h$$</p>
+<p>\(W_h = N_h/N\) es la fracción de la población que vive en el estrato \(h\).</p>
+<p>La media se pondera por el tamaño <strong>poblacional</strong> de cada estrato, no por el muestral.</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">14 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 2 · La teoría en el marco π</div><h2>La varianza solo paga lo que pasa dentro de cada estrato</h2></div>
+        </div>
+        <div class="cuerpo"><div class="flujo">
+<div class="paso-flujo paso"><span class="num">1</span><span class="t">Sen–Yates–Grundy</span><span class="d">la varianza del π-estimador suma sobre pares \((k, l)\)</span></div>
+<div class="flecha-flujo paso">→</div>
+<div class="paso-flujo paso"><span class="num">2</span><span class="t">Estratos distintos</span><span class="d">\(\pi_{kl} - \pi_k\pi_l = 0\): su término desaparece</span></div>
+<div class="flecha-flujo paso">→</div>
+<div class="paso-flujo paso"><span class="num">3</span><span class="t">Lo que queda</span><span class="d">\(H\) sumas independientes, la varianza de un MAS por estrato</span></div>
+</div>
+<div class="paso"><p>$$V(\bar y_{\text{str}}) = \sum_{h=1}^{H} W_h^2 \left(1 - \frac{n_h}{N_h}\right) \frac{S^2_{y,h}}{n_h}$$</p></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">15 / 43</span></div>
+</section>
+<section class="diapo idea">
+    <div class="marco">
+        <div class="etq-idea"><span class="punto"><i aria-hidden="true" class="fas fa-compass"></i></span>Idea clave</div>
+        <h2>Estratificar mal cuesta precisión, nunca validez</h2>
+        <div class="cuerpo"><p>\(E(\bar y_{\text{str}}) = \sum_h W_h\,\bar y_{U_h} = \bar y_U\), sin ninguna condición sobre cómo se construyeron los estratos. Hay una excepción: <strong>usar los pesos equivocados</strong>.</p></div>
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">16 / 43</span></div>
+</section>
+<section class="diapo dividida seccion" data-tipo="seccion">
+    <div class="marco">
+        <div class="lateral">
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+            <div class="capitulo">Capítulo 4 · <span>Muestreo estratificado</span></div>
+            <hr>
+            <div class="lista-secciones"><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 1 · ¿Por qué estratificar?</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 2 · La teoría en el marco π</span></div><div class="item-seccion actual"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 3 · Pesos y estimación</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 4 · Asignación de observaciones</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 5 · Asignación óptima con costos</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-award"></i><span>Módulo 13 · Práctica</span></div></div>
+        </div>
+        <div class="principal">
+            <div class="numero-grande">03</div>
+            <h2>Módulo 3 · Pesos y estimación</h2>
+            <div class="gancho"><p>Dos vías para la misma cifra, la fórmula a mano y <code>survey</code>. Si no coinciden, algo está mal.</p></div>
+            <a class="enlace-material" href="../capitulo-4-muestreo-estratificado.html#modulo-3" target="_blank" rel="noopener"><i aria-hidden="true" class="fas fa-book-open"></i> Leer en el material: Pesos y estimación <i aria-hidden="true" class="fas fa-arrow-right"></i></a>
+            <div class="pie" style="left:72px;right:72px"><span></span><span></span><span class="num">17 / 43</span></div>
+        </div>
+    </div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 3 · Pesos y estimación</div><h2>A mano, la media estratificada sale 295 561 acres, con ee 16 380</h2></div>
+        </div>
+        <div class="cuerpo"><div class="codigo" data-lang="r" data-foco="5-6"><div class="codigo-cabecera"><span class="codigo-titulo"><i aria-hidden="true" class="fas fa-chart-line"></i>El estimador estratificado a mano</span><button class="btn-copiar" title="Copiar"><i aria-hidden="true" class="fas fa-copy"></i> Copiar</button></div><pre><code>Wh     &lt;- as.numeric(Nh) / N
+ybar_h &lt;- tapply(agstrat$acres92, agstrat$region, mean)
+s2_h   &lt;- tapply(agstrat$acres92, agstrat$region, var)
+fh     &lt;- as.numeric(nh) / as.numeric(Nh)
+ybar_str &lt;- sum(Wh * ybar_h)
+V_str    &lt;- sum(Wh^2 * (1 - fh) * s2_h / as.numeric(nh))
+round(c(media = ybar_str, ee = sqrt(V_str)), 4)
+#&gt;     media        ee
+#&gt; 295560.77  16379.87
+round(c(total = N * ybar_str, ee_total = N * sqrt(V_str)), 0)
+#&gt;     total  ee_total
+#&gt; 909736035  50417248</code></pre></div>
+<p>Las líneas resaltadas son las dos fórmulas del módulo 2, escritas en R.</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">18 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 3 · Pesos y estimación</div><h2>Con survey, tres argumentos definen el diseño</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 3fr) minmax(0, 2fr)">
+<div class="col"><div class="codigo" data-lang="r" data-foco="2-3"><div class="codigo-cabecera"><span class="codigo-titulo"><i aria-hidden="true" class="fas fa-chart-line"></i>El mismo estimador con survey</span><button class="btn-copiar" title="Copiar"><i aria-hidden="true" class="fas fa-copy"></i> Copiar</button></div><pre><code>agstrat$Nh &lt;- as.numeric(Nh[agstrat$region])
+dis &lt;- svydesign(id = ~1, strata = ~region, weights = ~strwt,
+                 fpc = ~Nh, data = agstrat)
+svymean(~acres92, dis)
+#&gt;           mean    SE
+#&gt; acres92 295561 16380
+confint(svymean(~acres92, dis))
+#&gt;            2.5 %   97.5 %
+#&gt; acres92 263456.8 327664.7
+svytotal(~acres92, dis)
+#&gt;             total       SE
+#&gt; acres92 909736036 50417248</code></pre></div></div>
+<div class="col"><ul>
+<li><code>strata=</code>: dónde estaba confinado el azar</li>
+<li><code>weights=</code>: los \(N_h/n_h\)</li>
+<li><code>fpc=</code>: los \(N_h\), para el fpc de cada estrato</li>
+</ul>
+<p>Sin <code>strata=</code>, <code>survey</code> supone una urna única y el error estándar <strong>sale mal</strong>.</p></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">19 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 3 · Pesos y estimación</div><h2>Con estas dos muestras, el estratificado sale con 13 % menos error estándar</h2></div>
+        </div>
+        <div class="cuerpo"><table><thead><tr><th>Muestra</th><th>Diseño</th><th>Media</th><th>ee</th></tr></thead><tbody>
+<tr><td><code>agsrs</code> (capítulo 2)</td><td>MAS</td><td>297 897</td><td>18 898</td></tr>
+<tr><td><code>agstrat</code> (módulo 3)</td><td>Estratificado</td><td>295 561</td><td>16 380</td></tr>
+</tbody></table>
+<div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Apunta a que estratificar ayuda, pero mezcla diseño y azar: con dos muestras distintas no se pueden separar.</p></div></div>
+<div class="caja warn"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-triangle-exclamation"></i>Criterio</span><div class="caja-cuerpo"><p>Son <strong>dos muestras distintas</strong>. Para comparar diseños se cita el deff exacto, calculado sobre la población (módulo 8, sesión 2).</p></div></div>
+<p>Recordatorio: \(\text{deff} = V(\text{diseño}) / V(\text{MAS del mismo } n)\), la Definición 2.10 del capítulo 2. Por debajo de 1, el diseño gana.</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">20 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 3 · Pesos y estimación</div><h2>Una proporción es la media de una variable 0/1</h2></div>
+        </div>
+        <div class="cuerpo"><p>$$\hat p_{\text{str}} = \sum_{h=1}^{H} \frac{N_h}{N}\,\hat p_h \qquad \hat V(\hat p_{\text{str}}) = \sum_{h=1}^{H}\left(1 - \frac{n_h}{N_h}\right)\left(\frac{N_h}{N}\right)^{2}\frac{\hat p_h(1-\hat p_h)}{n_h - 1}$$</p>
+<div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>Condados con menos de 200 000 acres: \(\hat p_{\text{str}} = 0{,}51391\) (ee 0,02479). En número: <strong>1 581,8</strong> condados (ee 76,318).</p></div></div>
+<p>Ojo con el denominador: \(n_h - 1\), no \(n_h\).</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">21 / 43</span></div>
+</section>
+<section class="diapo pregunta">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div><span class="chip-ejercicio" style="background:var(--primary)"><i aria-hidden="true" class="fas fa-circle-question"></i>Pregunta para la clase</span></div><h2>¿Los pesos son un formalismo?</h2></div>
+        </div>
+        <div class="cuerpo"><p>Un analista recibe <code>agstrat</code>, calcula <code>mean(acres92)</code> <strong>sin pesos</strong> y obtiene un número muy parecido al estimador correcto. Concluye que los pesos sobran.</p>
+<p>¿Qué le falta ver?</p>
+<div class="paso"><div class="caja respuesta"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-check"></i>Respuesta</span><div class="caja-cuerpo"><p>Que <code>agstrat</code> sorteó cerca del 10 % de <strong>cada</strong> región: la muestra copia la composición de la población. Con un reparto que manda 107 condados al Oeste en vez de 41, el promedio bruto esperado sube unos <strong>114 000 acres</strong>.</p></div></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">22 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 3 · Pesos y estimación</div><h2>El promedio bruto acierta con toda variable solo si la muestra copia la población</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 2fr) minmax(0, 1fr)">
+<div class="col"><figure class="figura ga" style="--alto:420px"><div class="lienzo"><svg class="ga-svg" viewBox="0 0 1000 440" width="1000" height="440" role="img" aria-label="Valor esperado del promedio bruto y del ponderado"><title>Valor esperado del promedio bruto y del ponderado</title><g class="ga-ejes"><line class="ga-rejilla" x1="92" y1="390" x2="960" y2="390"/><text class="ga-marca-eje" x="82" y="390" text-anchor="end" dominant-baseline="middle">0</text><line class="ga-rejilla" x1="92" y1="307.33" x2="960" y2="307.33"/><text class="ga-marca-eje" x="82" y="307.33" text-anchor="end" dominant-baseline="middle">100</text><line class="ga-rejilla" x1="92" y1="224.67" x2="960" y2="224.67"/><text class="ga-marca-eje" x="82" y="224.67" text-anchor="end" dominant-baseline="middle">200</text><line class="ga-rejilla" x1="92" y1="142" x2="960" y2="142"/><text class="ga-marca-eje" x="82" y="142" text-anchor="end" dominant-baseline="middle">300</text><line class="ga-rejilla" x1="92" y1="59.33" x2="960" y2="59.33"/><text class="ga-marca-eje" x="82" y="59.33" text-anchor="end" dominant-baseline="middle">400</text><line class="ga-eje" x1="92" y1="390" x2="960" y2="390"/><line class="ga-eje" x1="92" y1="18" x2="92" y2="390"/><line class="ga-eje" x1="236.67" y1="390" x2="236.67" y2="397"/><text class="ga-marca-eje" x="236.67" y="420" text-anchor="middle">Ponderado</text><line class="ga-eje" x1="526" y1="390" x2="526" y2="397"/><text class="ga-marca-eje" x="526" y="420" text-anchor="middle">Bruto · 41 al Oeste</text><line class="ga-eje" x1="815.33" y1="390" x2="815.33" y2="397"/><text class="ga-marca-eje" x="815.33" y="420" text-anchor="middle">Bruto · 107 al Oeste</text><text class="ga-titulo-eje" x="30" y="204" text-anchor="middle" transform="rotate(-90 30 204)">miles de acres</text></g><g class="ga-base"><g class="ga-el ga-referencia s0"><path class="ga-trazo ga-discontinua" d="M92 136.48 L960 136.48" pathLength="1"/></g></g><g class="ga-etapa paso" data-etapa="1"><g class="ga-el ga-barra s1"><rect class="ga-barra" x="171.57" y="136.48" width="130.2" height="253.52" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="236.67" y="124.48" text-anchor="middle">306 677</text></g></g><g class="ga-etapa paso" data-etapa="2"><g class="ga-el ga-barra s5"><rect class="ga-barra" x="460.9" y="136.44" width="130.2" height="253.56" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="526" y="124.44" text-anchor="middle">306 723</text></g></g><g class="ga-etapa paso" data-etapa="3"><g class="ga-el ga-barra s6"><rect class="ga-barra" x="750.23" y="42.26" width="130.2" height="347.74" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="815.33" y="30.26" text-anchor="middle">420 650</text></g></g></svg></div></figure></div>
+<div class="col"><div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p><code>agstrat</code> acierta <strong>por casualidad del diseño</strong>, no por una propiedad del estratificado.</p></div></div>
+<p>Las barras son <strong>valores esperados</strong>. La línea discontinua es la media verdadera (306 677): el ponderado no se mueve de ella, sea cual sea el reparto.</p></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">23 / 43</span></div>
+</section>
+<section class="diapo idea">
+    <div class="marco">
+        <div class="etq-idea"><span class="punto"><i aria-hidden="true" class="fas fa-compass"></i></span>Idea clave</div>
+        <h2>Una muestra estratificada se analiza siempre con sus pesos</h2>
+        <div class="cuerpo"><p>Olvidar los pesos no da un error ni un aviso: da un número con aspecto razonable que estima <strong>otra cosa</strong>, la media de una población donde cada estrato pesa lo que pesó en la muestra.</p></div>
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">24 / 43</span></div>
+</section>
+<section class="diapo dividida seccion" data-tipo="seccion">
+    <div class="marco">
+        <div class="lateral">
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+            <div class="capitulo">Capítulo 4 · <span>Muestreo estratificado</span></div>
+            <hr>
+            <div class="lista-secciones"><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 1 · ¿Por qué estratificar?</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 2 · La teoría en el marco π</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 3 · Pesos y estimación</span></div><div class="item-seccion actual"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 4 · Asignación de observaciones</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 5 · Asignación óptima con costos</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-award"></i><span>Módulo 13 · Práctica</span></div></div>
+        </div>
+        <div class="principal">
+            <div class="numero-grande">04</div>
+            <h2>Módulo 4 · Asignación de observaciones</h2>
+            <div class="gancho"><p>Estratificar abre una decisión que el MAS no tenía: ¿cuántas entrevistas van a cada estrato?</p></div>
+            <a class="enlace-material" href="../capitulo-4-muestreo-estratificado.html#modulo-4" target="_blank" rel="noopener"><i aria-hidden="true" class="fas fa-book-open"></i> Leer en el material: Asignación de observaciones <i aria-hidden="true" class="fas fa-arrow-right"></i></a>
+            <div class="pie" style="left:72px;right:72px"><span></span><span></span><span class="num">25 / 43</span></div>
+        </div>
+    </div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 4 · Asignación de observaciones</div><h2>Cada asignación responde a una pregunta distinta</h2></div>
+        </div>
+        <div class="cuerpo"><div class="tarjetas" style="--n:3">
+<div class="tarjeta paso"><h3>Proporcional · \(n_h = n\,W_h\)</h3><p>Una maqueta de la población, con pesos iguales: <strong>autoponderada</strong>.</p></div>
+<div class="tarjeta paso"><h3>Igual · \(n_h = n/H\)</h3><p>El mismo tamaño de muestra en cada estrato: sirve para <strong>comparar</strong> estratos.</p></div>
+<div class="tarjeta paso"><h3>Neyman · \(n_h \propto N_h S_{y,h}\)</h3><p>La menor varianza del <strong>agregado</strong>: más muestra donde hay más unidades y más dispersión.</p></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">26 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 4 · Asignación de observaciones</div><h2>Neyman sale de minimizar la varianza con n fijo</h2></div>
+        </div>
+        <div class="cuerpo"><p>$$\min_{n_1,\dots,n_H}\ \sum_h \frac{W_h^2\,S^2_{y,h}}{n_h}\quad\text{sujeto a}\quad \sum_h n_h = n \qquad\Longrightarrow\qquad n_h = n\,\frac{N_h\,S_{y,h}}{\sum_g N_g\,S_{y,g}}$$</p>
+<div class="paso"><div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Cuenta \(N_h S_{y,h}\): un estrato homogéneo necesita poca muestra para su tamaño; uno disperso, más de la que su tamaño sugiere.</p></div></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">27 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 4 · Asignación de observaciones</div><h2>Neyman vacía el Nordeste y llena el Oeste</h2></div>
+        </div>
+        <div class="cuerpo"><figure class="figura ga" style="--alto:430px"><div class="lienzo"><svg class="ga-svg" viewBox="0 0 1000 440" width="1000" height="440" role="img" aria-label="Tres repartos de n = 300 entre las regiones"><title>Tres repartos de n = 300 entre las regiones</title><g class="ga-ejes"><line class="ga-rejilla" x1="92" y1="390" x2="960" y2="390"/><text class="ga-marca-eje" x="82" y="390" text-anchor="end" dominant-baseline="middle">0</text><line class="ga-rejilla" x1="92" y1="270" x2="960" y2="270"/><text class="ga-marca-eje" x="82" y="270" text-anchor="end" dominant-baseline="middle">50</text><line class="ga-rejilla" x1="92" y1="150" x2="960" y2="150"/><text class="ga-marca-eje" x="82" y="150" text-anchor="end" dominant-baseline="middle">100</text><line class="ga-rejilla" x1="92" y1="30" x2="960" y2="30"/><text class="ga-marca-eje" x="82" y="30" text-anchor="end" dominant-baseline="middle">150</text><line class="ga-eje" x1="92" y1="390" x2="960" y2="390"/><line class="ga-eje" x1="92" y1="18" x2="92" y2="390"/><line class="ga-eje" x1="200.5" y1="390" x2="200.5" y2="397"/><text class="ga-marca-eje" x="200.5" y="420" text-anchor="middle">Norte-Centro</text><line class="ga-eje" x1="417.5" y1="390" x2="417.5" y2="397"/><text class="ga-marca-eje" x="417.5" y="420" text-anchor="middle">Nordeste</text><line class="ga-eje" x1="634.5" y1="390" x2="634.5" y2="397"/><text class="ga-marca-eje" x="634.5" y="420" text-anchor="middle">Sur</text><line class="ga-eje" x1="851.5" y1="390" x2="851.5" y2="397"/><text class="ga-marca-eje" x="851.5" y="420" text-anchor="middle">Oeste</text><text class="ga-titulo-eje" x="30" y="204" text-anchor="middle" transform="rotate(-90 30 204)">entrevistas (n<tspan class="ga-sub" dy="0.3em">h</tspan><tspan dy="-0.3em">&#8203;</tspan>)</text></g><g class="ga-etapa paso" data-etapa="1"><g class="ga-el ga-barra s5"><rect class="ga-barra" x="111.53" y="142.8" width="56.42" height="247.2" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="139.74" y="130.8" text-anchor="middle">103</text></g><g class="ga-el ga-barra s5"><rect class="ga-barra" x="328.53" y="339.6" width="56.42" height="50.4" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="356.74" y="327.6" text-anchor="middle">21</text></g><g class="ga-el ga-barra s5"><rect class="ga-barra" x="545.53" y="66" width="56.42" height="324" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="573.74" y="54" text-anchor="middle">135</text></g><g class="ga-el ga-barra s5"><rect class="ga-barra" x="762.53" y="291.6" width="56.42" height="98.4" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="790.74" y="279.6" text-anchor="middle">41</text></g><g class="ga-el ga-texto s5"><text class="ga-nota ga-aparece" x="109.36" y="30" text-anchor="start">Proporcional</text></g></g><g class="ga-etapa paso" data-etapa="2"><g class="ga-el ga-barra s3"><rect class="ga-barra" x="172.29" y="210" width="56.42" height="180" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="200.5" y="198" text-anchor="middle">75</text></g><g class="ga-el ga-barra s3"><rect class="ga-barra" x="389.29" y="210" width="56.42" height="180" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="417.5" y="198" text-anchor="middle">75</text></g><g class="ga-el ga-barra s3"><rect class="ga-barra" x="606.29" y="210" width="56.42" height="180" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="634.5" y="198" text-anchor="middle">75</text></g><g class="ga-el ga-barra s3"><rect class="ga-barra" x="823.29" y="210" width="56.42" height="180" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="851.5" y="198" text-anchor="middle">75</text></g><g class="ga-el ga-texto s3"><text class="ga-nota ga-aparece" x="109.36" y="58.8" text-anchor="start">Igual</text></g></g><g class="ga-etapa paso" data-etapa="3"><g class="ga-el ga-barra s2"><rect class="ga-barra" x="233.05" y="183.6" width="56.42" height="206.4" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="261.26" y="171.6" text-anchor="middle">86</text></g><g class="ga-el ga-barra s2"><rect class="ga-barra" x="450.05" y="378" width="56.42" height="12" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="478.26" y="366" text-anchor="middle">5</text></g><g class="ga-el ga-barra s2"><rect class="ga-barra" x="667.05" y="145.2" width="56.42" height="244.8" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="695.26" y="133.2" text-anchor="middle">102</text></g><g class="ga-el ga-barra s2"><rect class="ga-barra" x="884.05" y="133.2" width="56.42" height="256.8" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="912.26" y="121.2" text-anchor="middle">107</text></g><g class="ga-el ga-texto s2"><text class="ga-nota ga-aparece" x="109.36" y="87.6" text-anchor="start">Neyman</text></g></g></svg></div></figure>
+<div class="paso"><p>Al Nordeste, que tiene la menor desviación, le tocan <strong>5</strong> entrevistas. Al Oeste, que tiene la mayor, <strong>107</strong>.</p></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">28 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 4 · Asignación de observaciones</div><h2>Neyman recorta un 18 % el error estándar de la proporcional</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 5fr) minmax(0, 3fr)">
+<div class="col"><div class="codigo" data-lang="r" data-foco="14-16"><div class="codigo-cabecera"><span class="codigo-titulo"><i aria-hidden="true" class="fas fa-chart-line"></i>Las tres asignaciones sobre agpop</span><button class="btn-copiar" title="Copiar"><i aria-hidden="true" class="fas fa-copy"></i> Copiar</button></div><pre><code>Sh  &lt;- tapply(agpop$acres92, agpop$region, sd)
+S2h &lt;- tapply(agpop$acres92, agpop$region, var)
+S2U &lt;- var(agpop$acres92)
+V_asig &lt;- function(nh_)
+  sum(Wh^2 * (1 - nh_ / as.numeric(Nh)) * S2h / nh_)
+n_prop   &lt;- round(300 * as.numeric(Nh) / N)
+n_igual  &lt;- rep(75, 4)
+n_neyman &lt;- round(300 * as.numeric(Nh) * Sh /
+                  sum(as.numeric(Nh) * Sh))
+V_mas &lt;- (1 - 300 / N) * S2U / 300
+tabla &lt;- c(MAS = V_mas, proporcional = V_asig(n_prop),
+           igual = V_asig(n_igual), Neyman = V_asig(n_neyman))
+round(rbind(ee = sqrt(tabla), deff = tabla / V_mas), 4)
+#&gt;           MAS proporcional      igual    Neyman
+#&gt; ee   23293.77   21123.9376 20059.1292 17290.784
+#&gt; deff     1.00       0.8224     0.7416     0.551</code></pre></div></div>
+<div class="col"><div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Aquí la igual le gana a la proporcional: <strong>sobremuestrea el Oeste</strong>, en la dirección de Neyman.</p></div></div>
+<p>Estos deff son <strong>exactos</strong>: salen de <code>agpop</code> entera.</p></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">29 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 4 · Asignación de observaciones</div><h2>La asignación óptima lo es para una variable</h2></div>
+        </div>
+        <div class="cuerpo"><div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>deff con <code>acres92</code>: proporcional 0,8224 · igual 0,7416 · Neyman 0,551.</p></div></div>
+<div class="paso"><div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>deff con <code>farms92</code>, el número de granjas: proporcional 0,9723 · igual 1,1540 · Neyman de <code>acres92</code> 1,119.</p></div></div>
+<div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Aquí, la óptima para <code>acres92</code> deja a <code>farms92</code> <strong>peor que un MAS</strong>. La proporcional no es la óptima para ninguna, pero en las dos queda por debajo de 1.</p></div></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">30 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 4 · Asignación de observaciones</div><h2>Entre la proporcional y Neyman hay asignaciones mejores para las dos variables</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 2fr) minmax(0, 1fr)">
+<div class="col"><figure class="figura ga" style="--alto:430px"><div class="lienzo"><svg class="ga-svg" viewBox="0 0 1000 440" width="1000" height="440" role="img" aria-label="deff de n_h ∝ N_h S_h^α con dos variables"><title>deff de n_h ∝ N_h S_h^α con dos variables</title><g class="ga-ejes"><line class="ga-rejilla" x1="92" y1="108.13" x2="880" y2="108.13"/><text class="ga-marca-eje" x="82" y="108.13" text-anchor="end" dominant-baseline="middle">1</text><line class="ga-eje" x1="92" y1="356" x2="880" y2="356"/><line class="ga-eje" x1="92" y1="18" x2="92" y2="356"/><line class="ga-eje" x1="170.8" y1="356" x2="170.8" y2="363"/><text class="ga-marca-eje" x="170.8" y="386" text-anchor="middle">0 · proporcional</text><line class="ga-eje" x1="328.4" y1="356" x2="328.4" y2="363"/><text class="ga-marca-eje" x="328.4" y="386" text-anchor="middle">0,25</text><line class="ga-eje" x1="486" y1="356" x2="486" y2="363"/><text class="ga-marca-eje" x="486" y="386" text-anchor="middle">0,5</text><line class="ga-eje" x1="643.6" y1="356" x2="643.6" y2="363"/><text class="ga-marca-eje" x="643.6" y="386" text-anchor="middle">0,75</text><line class="ga-eje" x1="801.2" y1="356" x2="801.2" y2="363"/><text class="ga-marca-eje" x="801.2" y="386" text-anchor="middle">1 · Neyman</text><text class="ga-titulo-eje" x="486" y="418" text-anchor="middle">α</text><text class="ga-titulo-eje" x="30" y="187" text-anchor="middle" transform="rotate(-90 30 187)">deff</text></g><g class="ga-base"><g class="ga-el ga-referencia s0"><path class="ga-trazo ga-discontinua" d="M92 108.13 L880 108.13" pathLength="1"/><text class="ga-nota ga-retardo" x="874" y="98.13" text-anchor="end">MAS (deff = 1)</text></g></g><g class="ga-etapa paso" data-etapa="1"><g class="ga-el ga-linea s1"><path class="ga-trazo" d="M170.8 188.17 L328.4 246.98 L486 283.53 L643.6 303.41 L801.2 310.48" pathLength="1"/><circle class="ga-pto ga-retardo" cx="170.8" cy="188.17" r="8"/><circle class="ga-pto ga-retardo" cx="328.4" cy="246.98" r="8"/><circle class="ga-pto ga-retardo" cx="486" cy="283.53" r="8"/><circle class="ga-pto ga-retardo" cx="643.6" cy="303.41" r="8"/><circle class="ga-pto ga-retardo" cx="801.2" cy="310.48" r="8"/><text class="ga-etiqueta ga-retardo" x="170.8" y="218.17" text-anchor="middle">0,8224</text><text class="ga-etiqueta ga-retardo" x="486" y="313.53" text-anchor="middle">0,6108</text><text class="ga-etiqueta ga-retardo" x="643.6" y="333.41" text-anchor="middle">0,5667</text><text class="ga-etiqueta ga-retardo" x="801.2" y="340.48" text-anchor="middle">0,551</text><text class="ga-rotulo ga-retardo" x="815.2" y="310.48" dominant-baseline="middle">acres92</text></g><g class="ga-el ga-texto s1"><text class="ga-nota ga-aparece" x="317.37" y="274.02" text-anchor="end">0,6919</text></g></g><g class="ga-etapa paso" data-etapa="2"><g class="ga-el ga-linea s2"><path class="ga-trazo" d="M170.8 120.62 L328.4 142.52 L486 139.5 L643.6 117.06 L801.2 54.5" pathLength="1"/><circle class="ga-pto ga-retardo" cx="170.8" cy="120.62" r="8"/><circle class="ga-pto ga-retardo" cx="328.4" cy="142.52" r="8"/><circle class="ga-pto ga-retardo" cx="486" cy="139.5" r="8"/><circle class="ga-pto ga-retardo" cx="643.6" cy="117.06" r="8"/><circle class="ga-pto ga-retardo" cx="801.2" cy="54.5" r="8"/><text class="ga-etiqueta ga-retardo" x="170.8" y="104.62" text-anchor="middle">0,9723</text><text class="ga-etiqueta ga-retardo" x="486" y="123.5" text-anchor="middle">0,9304</text><text class="ga-etiqueta ga-retardo" x="643.6" y="101.06" text-anchor="middle">0,9802</text><text class="ga-etiqueta ga-retardo" x="801.2" y="38.5" text-anchor="middle">1,119</text><text class="ga-rotulo ga-retardo" x="815.2" y="54.5" dominant-baseline="middle">farms92</text></g><g class="ga-el ga-texto s2"><text class="ga-nota ga-aparece" x="339.43" y="126.75" text-anchor="start">0,9237</text></g></g><g class="ga-etapa paso" data-etapa="3"><g class="ga-el ga-referencia s4"><path class="ga-trazo ga-discontinua" d="M328.4 356 L328.4 18" pathLength="1"/><text class="ga-nota ga-retardo" x="336.4" y="36" text-anchor="start">α = 0,25</text></g></g></svg></div></figure></div>
+<div class="col"><div class="caja warn"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-triangle-exclamation"></i>Criterio</span><div class="caja-cuerpo"><p>Lohr sugiere una asignación <strong>intermedia</strong> entre la proporcional y Neyman, o un <strong>mínimo por estrato</strong> y el resto proporcional.</p></div></div>
+<div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>Con un piso de 20 por estrato: deff 0,75 en <code>acres92</code> y 0,9491 en <code>farms92</code>.</p></div></div></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">31 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 4 · Asignación de observaciones</div><h2>Neyman necesita las desviaciones, y nadie las conoce</h2></div>
+        </div>
+        <div class="cuerpo"><p>Se aproximan con un censo anterior, un piloto o una variable correlacionada (aquí serviría <code>acres87</code>).</p>
+<p>Según el módulo 4, la varianza es <strong>plana cerca del óptimo</strong>: equivocarse moderadamente en las \(S_{y,h}\) cuesta poco (el ejercicio 5 lo mide).</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">32 / 43</span></div>
+</section>
+<section class="diapo pregunta">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div><span class="chip-ejercicio" style="background:var(--primary)"><i aria-hidden="true" class="fas fa-circle-question"></i>Pregunta para la clase</span></div><h2>Neyman le dio al Nordeste 5 de las 300. ¿Qué es cierto?</h2></div>
+        </div>
+        <div class="cuerpo"><ol>
+<li>Para el total nacional de <code>acres92</code>, es la mejor asignación posible con estos estratos.</li>
+<li>El estimador nacional queda sesgado por abandonar así una región.</li>
+<li>Una estimación separada para el Nordeste quedará pésima.</li>
+<li>Si el objetivo fuera comparar regiones, convendría la asignación igual.</li>
+</ol>
+<div class="paso"><div class="caja respuesta"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-check"></i>Respuesta</span><div class="caja-cuerpo"><p>Son ciertas la <strong>1</strong>, la <strong>3</strong> y la <strong>4</strong>. La 2 es falsa: el Nordeste sigue en la muestra con su peso, y el estimador sigue siendo insesgado.</p></div></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">33 / 43</span></div>
+</section>
+<section class="diapo dividida seccion" data-tipo="seccion">
+    <div class="marco">
+        <div class="lateral">
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+            <div class="capitulo">Capítulo 4 · <span>Muestreo estratificado</span></div>
+            <hr>
+            <div class="lista-secciones"><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 1 · ¿Por qué estratificar?</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 2 · La teoría en el marco π</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 3 · Pesos y estimación</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 4 · Asignación de observaciones</span></div><div class="item-seccion actual"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 5 · Asignación óptima con costos</span></div><div class="item-seccion "><i aria-hidden="true" class="fas fa-award"></i><span>Módulo 13 · Práctica</span></div></div>
+        </div>
+        <div class="principal">
+            <div class="numero-grande">05</div>
+            <h2>Módulo 5 · Asignación óptima con costos</h2>
+            <div class="gancho"><p>El presupuesto real de una encuesta no está en entrevistas: está en dinero.</p></div>
+            <a class="enlace-material" href="../capitulo-4-muestreo-estratificado.html#modulo-5" target="_blank" rel="noopener"><i aria-hidden="true" class="fas fa-book-open"></i> Leer en el material: Asignación óptima con costos <i aria-hidden="true" class="fas fa-arrow-right"></i></a>
+            <div class="pie" style="left:72px;right:72px"><span></span><span></span><span class="num">34 / 43</span></div>
+        </div>
+    </div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 5 · Asignación óptima con costos</div><h2>El costo por entrevista entra con raíz cuadrada</h2></div>
+        </div>
+        <div class="cuerpo"><p>$$\min \sum_h \frac{W_h^2 S^2_{y,h}}{n_h}\quad\text{sujeto a}\quad \sum_h c_h\,n_h = C \qquad\Longrightarrow\qquad n_h \;\propto\; \frac{N_h\,S_{y,h}}{\sqrt{c_h}}$$</p>
+<div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Que el Oeste cueste el triple divide su muestra, <strong>en relación con la de los demás estratos</strong>, entre \(\sqrt{3} \approx 1{,}7\), no entre 3. Neyman es el caso en que todos los \(c_h\) son iguales.</p></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">35 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 5 · Asignación óptima con costos</div><h2>Con 3 000 de presupuesto, el óptimo compra menos entrevistas y logra menos varianza</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 3fr) minmax(0, 2fr)">
+<div class="col"><div class="codigo" data-lang="r" data-foco="3,12"><div class="codigo-cabecera"><span class="codigo-titulo"><i aria-hidden="true" class="fas fa-chart-line"></i>La asignación óptima con costos</span><button class="btn-copiar" title="Copiar"><i aria-hidden="true" class="fas fa-copy"></i> Copiar</button></div><pre><code>ch &lt;- c(NC = 10, NE = 6, S = 8, W = 18)
+C  &lt;- 3000
+crudo  &lt;- as.numeric(Nh) * Sh / sqrt(ch)
+nh_opt &lt;- C / sum(ch * crudo) * crudo
+round(rbind(nh_optimo = nh_opt, costo = ch * nh_opt), 1)
+#&gt;              NC   NE     S      W
+#&gt; nh_optimo  79.9  6.3 105.3   73.4
+#&gt; costo     798.6 37.8 842.2 1321.4
+round(c(n_total = sum(nh_opt), costo_total = sum(ch * nh_opt),
+        ee = sqrt(V_asig(nh_opt))), 2)
+#&gt;     n_total costo_total          ee
+#&gt;      264.85     3000.00    18916.33</code></pre></div></div>
+<div class="col"><div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>Con los mismos 3 000, la proporcional compra 302,6 entrevistas y deja una varianza de 441 millones. El óptimo: 264,85 y 358 millones.</p></div></div>
+<div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>El óptimo logra menos varianza con menos entrevistas: las compra <strong>mejor situadas</strong>.</p></div></div></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">36 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 5 · Asignación óptima con costos</div><h2>Para un 10 % de error, el MAS pide 595 condados</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 2fr) minmax(0, 1fr)">
+<div class="col"><div class="codigo" data-lang="r" data-foco="12-13"><div class="codigo-cabecera"><span class="codigo-titulo"><i aria-hidden="true" class="fas fa-chart-line"></i>El tamaño total que pide un margen de error dado</span><button class="btn-copiar" title="Copiar"><i aria-hidden="true" class="fas fa-copy"></i> Copiar</button></div><pre><code>z &lt;- qnorm(0.975)
+e &lt;- 0.10 * mean(agpop$acres92)
+a_rel &lt;- cbind(proporcional = Wh,
+               igual        = rep(1 / 4, 4),
+               Neyman       = Wh * Sh / sum(Wh * Sh),
+               con_costos   = (Wh * Sh / sqrt(ch)) /
+                              sum(Wh * Sh / sqrt(ch)))
+v      &lt;- apply(a_rel, 2, function(ah) sum(Wh^2 * S2h / ah))
+n_str  &lt;- z^2 * v / (e^2 + z^2 * sum(Wh * S2h) / N)
+n_mas  &lt;- z^2 * S2U / (e^2 + z^2 * S2U / N)
+ceiling(c(MAS = n_mas, n_str))
+#&gt;          MAS proporcional        igual       Neyman   con_costos
+#&gt;          595          506          462          356          368</code></pre></div></div>
+<div class="col"><p>Se fija el error \(e\) y se despeja \(n\) con la fórmula del capítulo 2, cambiando \(S^2\) por \(v\) en el numerador:</p>
+<p>$$v = \sum_{h} \frac{W_h^2\, S_{y,h}^2}{a_h}$$</p>
+<p>\(a_h = n_h/n\): \(v\) depende de <strong>cómo</strong> se reparte, no de <strong>cuánto</strong>.</p></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">37 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 5 · Asignación óptima con costos</div><h2>A los condados gigantes no se les sortea: se censan</h2></div>
+        </div>
+        <div class="cuerpo"><div class="columnas centradas" style="grid-template-columns:minmax(0, 1fr) minmax(0, 1fr)">
+<div class="col"><div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato</span><div class="caja-cuerpo"><p>Los 31 condados más grandes <strong>en <code>acres92</code></strong> (a propósito, para ver el mecanismo) son el <strong>1,01 %</strong> del marco y tienen el <strong>9,66 %</strong> de los acres. Sin ellos, la desviación baja de 424 687 a 309 673.</p></div></div>
+<p>Un <strong>estrato de certeza</strong> se censa: peso 1 y fpc 0, así que <strong>no aporta varianza</strong>.</p></div>
+<div class="col"><div class="caja ejemplo"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-flask"></i>Dato · Statistics Canada (Lohr, Ej. 3.8)</span><div class="caja-cuerpo"><p>En su encuesta de empleo, nóminas y horas, unas <strong>800 empresas</strong> están siempre en la muestra.</p></div></div>
+<div class="caja warn"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-triangle-exclamation"></i>Criterio</span><div class="caja-cuerpo"><p>El corte se hace con una variable del <strong>marco</strong> (<code>acres87</code>, correlación 0,9951 con <code>acres92</code>), no con la que se va a medir.</p></div></div></div>
+</div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">38 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div class="antetitulo">Módulo 5 · Asignación óptima con costos</div><h2>Estratificar reduce la muestra que hace falta</h2></div>
+        </div>
+        <div class="cuerpo"><figure class="figura ga" style="--alto:430px"><div class="lienzo"><svg class="ga-svg" viewBox="0 0 1000 440" width="1000" height="440" role="img" aria-label="Condados necesarios para un error del 10 % sobre acres92"><title>Condados necesarios para un error del 10 % sobre acres92</title><g class="ga-ejes"><line class="ga-rejilla" x1="92" y1="390" x2="960" y2="390"/><text class="ga-marca-eje" x="82" y="390" text-anchor="end" dominant-baseline="middle">0</text><line class="ga-rejilla" x1="92" y1="283.71" x2="960" y2="283.71"/><text class="ga-marca-eje" x="82" y="283.71" text-anchor="end" dominant-baseline="middle">200</text><line class="ga-rejilla" x1="92" y1="177.43" x2="960" y2="177.43"/><text class="ga-marca-eje" x="82" y="177.43" text-anchor="end" dominant-baseline="middle">400</text><line class="ga-rejilla" x1="92" y1="71.14" x2="960" y2="71.14"/><text class="ga-marca-eje" x="82" y="71.14" text-anchor="end" dominant-baseline="middle">600</text><line class="ga-eje" x1="92" y1="390" x2="960" y2="390"/><line class="ga-eje" x1="92" y1="18" x2="92" y2="390"/><line class="ga-eje" x1="178.8" y1="390" x2="178.8" y2="397"/><text class="ga-marca-eje" x="178.8" y="420" text-anchor="middle">MAS</text><line class="ga-eje" x1="352.4" y1="390" x2="352.4" y2="397"/><text class="ga-marca-eje" x="352.4" y="420" text-anchor="middle">Proporcional</text><line class="ga-eje" x1="526" y1="390" x2="526" y2="397"/><text class="ga-marca-eje" x="526" y="420" text-anchor="middle">Igual</text><line class="ga-eje" x1="699.6" y1="390" x2="699.6" y2="397"/><text class="ga-marca-eje" x="699.6" y="420" text-anchor="middle">Neyman</text><line class="ga-eje" x1="873.2" y1="390" x2="873.2" y2="397"/><text class="ga-marca-eje" x="873.2" y="420" text-anchor="middle">Certeza + proporcional</text><text class="ga-titulo-eje" x="30" y="204" text-anchor="middle" transform="rotate(-90 30 204)">condados (n)</text></g><g class="ga-base"><g class="ga-el ga-barra s5"><rect class="ga-barra" x="135.4" y="73.8" width="86.8" height="316.2" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="178.8" y="61.8" text-anchor="middle">595</text></g></g><g class="ga-etapa paso" data-etapa="1"><g class="ga-el ga-barra s1"><rect class="ga-barra" x="309" y="121.1" width="86.8" height="268.9" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="352.4" y="109.1" text-anchor="middle">506</text></g></g><g class="ga-etapa paso" data-etapa="2"><g class="ga-el ga-barra s1"><rect class="ga-barra" x="482.6" y="144.48" width="86.8" height="245.52" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="526" y="132.48" text-anchor="middle">462</text></g></g><g class="ga-etapa paso" data-etapa="3"><g class="ga-el ga-barra s1"><rect class="ga-barra" x="656.2" y="200.81" width="86.8" height="189.19" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="699.6" y="188.81" text-anchor="middle">356</text></g></g><g class="ga-etapa paso" data-etapa="4"><g class="ga-el ga-barra s2"><rect class="ga-barra" x="829.8" y="222.07" width="86.8" height="167.93" rx="4"/><text class="ga-etiqueta ga-valor ga-retardo" x="873.2" y="210.07" text-anchor="middle">316</text></g><g class="ga-el ga-texto s2"><text class="ga-nota ga-aparece" x="951.32" y="150.86" text-anchor="end">31 censados + 285 sorteados</text></g></g></svg></div></figure>
+<div class="caja tip"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-lightbulb"></i>Interpretación</span><div class="caja-cuerpo"><p>Estratificar no solo reduce el error de una muestra dada: <strong>reduce la muestra que hace falta</strong> para el mismo error.</p></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">39 / 43</span></div>
+</section>
+<section class="diapo pregunta">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-book-open"></i></div>
+            <div><div><span class="chip-ejercicio" style="background:var(--primary)"><i aria-hidden="true" class="fas fa-circle-question"></i>Pregunta para la clase</span></div><h2>La encuesta mide acres92 y farms92. ¿Qué tamaño se usa?</h2></div>
+        </div>
+        <div class="cuerpo"><p>Con asignación proporcional, un error del 10 % sobre <code>acres92</code> pide <strong>506</strong> condados. Sobre <code>farms92</code>, <strong>214</strong>.</p>
+<div class="paso"><div class="caja respuesta"><span class="caja-etiqueta"><i aria-hidden="true" class="fas fa-check"></i>Respuesta</span><div class="caja-cuerpo"><p><strong>506</strong>: el tamaño lo fija la variable más exigente, y las demás salen mejor estimadas de lo que se pidió. Lohr cierra la §3.4.5 con una regla parecida: el tamaño tiene que cubrir los requisitos de todas (o casi todas) las variables clave.</p></div></div></div></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">40 / 43</span></div>
+</section>
+<section class="diapo dividida seccion" data-tipo="seccion">
+    <div class="marco">
+        <div class="lateral">
+            <div class="institucion">Universidad El Bosque</div>
+            <div class="asignatura">Muestreo Estadístico</div>
+            <div class="capitulo">Capítulo 4 · <span>Muestreo estratificado</span></div>
+            <hr>
+            <div class="lista-secciones"><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 1 · ¿Por qué estratificar?</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 2 · La teoría en el marco π</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 3 · Pesos y estimación</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 4 · Asignación de observaciones</span></div><div class="item-seccion hecha"><i aria-hidden="true" class="fas fa-book-open"></i><span>Módulo 5 · Asignación óptima con costos</span></div><div class="item-seccion actual"><i aria-hidden="true" class="fas fa-award"></i><span>Módulo 13 · Práctica</span></div></div>
+        </div>
+        <div class="principal">
+            <div class="numero-grande">06</div>
+            <h2>Módulo 13 · Práctica</h2>
+            <div class="gancho"><p>Lo que nos llevamos de hoy, y cuatro ejercicios para hacer con el código del capítulo.</p></div>
+            <a class="enlace-material" href="../capitulo-4-muestreo-estratificado.html#modulo-13" target="_blank" rel="noopener"><i aria-hidden="true" class="fas fa-book-open"></i> Leer en el material: Autoevaluación y ejercicios guiados <i aria-hidden="true" class="fas fa-arrow-right"></i></a>
+            <div class="pie" style="left:72px;right:72px"><span></span><span></span><span class="num">41 / 43</span></div>
+        </div>
+    </div>
+</section>
+<section class="diapo cierre">
+    <div class="brillo"></div>
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-award"></i></div>
+            <div><div class="antetitulo">Módulo 13 · Práctica</div><h2>Lo que nos llevamos hoy</h2></div>
+        </div>
+        <div class="cuerpo"><ul>
+<li>Estratificar confina el azar <strong>dentro</strong> de los estratos: la varianza solo paga lo de dentro</li>
+<li>El estimador es el π-estimador con \(\pi_k = n_h/N_h\), y se analiza <strong>siempre</strong> con sus pesos</li>
+<li>Cada asignación responde a una pregunta: proporcional (multipropósito), igual (comparar), Neyman (el agregado)</li>
+<li>Con costos, \(n_h \propto N_h S_{y,h}/\sqrt{c_h}\); y el tamaño total sale del error que se pide</li>
+</ul></div>
+        <div class="firma-cierre">Javier Mauricio Sierra</div>
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">42 / 43</span></div>
+</section>
+<section class="diapo ">
+    
+    <div class="marco">
+        <div class="cabecera">
+            <div class="ficha-icono"><i aria-hidden="true" class="fas fa-award"></i></div>
+            <div><div class="antetitulo">Módulo 13 · Práctica</div><h2>Práctica: cuatro ejercicios guiados del módulo 13</h2></div>
+        </div>
+        <div class="cuerpo"><div class="tarjetas" style="--n:2">
+<div class="tarjeta"><h3>Ejercicio 1</h3><p>El total nacional con <code>agstrat</code> y su intervalo: ¿atrapa la verdad de <code>agpop</code>?</p></div>
+<div class="tarjeta"><h3>Ejercicio 2</h3><p>Con n = 400, Neyman contra la proporcional.</p></div>
+<div class="tarjeta"><h3>Ejercicio 5</h3><p>Neyman con las desviaciones de una muestra: ¿cuánto cuesta no conocer las \(S_{y,h}\)?</p></div>
+<div class="tarjeta"><h3>Ejercicio 7</h3><p>La encuesta del cierre navideño de Arizona State: proporciones estratificadas.</p></div>
+</div>
+<p>Antes de la sesión 2, las tres preguntas de la autoevaluación que no hicimos en clase: las \(\pi_{kl}\) (módulo 2), qué hacer cuando Neyman perjudica a <code>farms92</code> (módulo 4) y el costo con raíz (módulo 5).</p></div>
+        
+    </div>
+    <div class="pie"><span class="sello">Capítulo 4 · Muestreo estratificado</span><span>Muestreo Estadístico · UnBosque</span><span class="num">43 / 43</span></div>
+</section>
+        </div>
+    </main>
+
+    <nav id="controles" aria-label="Navegación">
+        <span id="contador"></span>
+        <button class="btn-nav ant" id="btn-ant" aria-label="Anterior"><i aria-hidden="true" class="fas fa-chevron-left"></i> Anterior</button>
+        <button class="btn-nav sig" id="btn-sig" aria-label="Siguiente">Siguiente <i aria-hidden="true" class="fas fa-chevron-right"></i></button>
+    </nav>
+
+    <aside id="notas" aria-live="polite"></aside>
+    <div id="ir-a"></div>
+    <div id="negro"></div>
+
+    <div id="ayuda">
+        <div class="tarjeta-ayuda">
+            <h3>Atajos del teclado</h3>
+            <table>
+                <tr><td><kbd>→</kbd><kbd>Espacio</kbd><kbd>AvPág</kbd></td><td>Siguiente (y revela lo pendiente)</td></tr>
+                <tr><td><kbd>←</kbd><kbd>RePág</kbd></td><td>Anterior</td></tr>
+                <tr><td><kbd>Inicio</kbd><kbd>Fin</kbd></td><td>Primera · última</td></tr>
+                <tr><td><kbd>12</kbd><kbd>Enter</kbd></td><td>Ir a la diapositiva 12</td></tr>
+                <tr><td><kbd>M</kbd></td><td>Índice por secciones</td></tr>
+                <tr><td><kbd>N</kbd></td><td>Notas del presentador</td></tr>
+                <tr><td><kbd>P</kbd></td><td>Vista del presentador (otra ventana)</td></tr>
+                <tr><td><kbd>F</kbd></td><td>Pantalla completa</td></tr>
+                <tr><td><kbd>B</kbd><kbd>.</kbd></td><td>Pantalla en negro</td></tr>
+                <tr><td><kbd>Esc</kbd></td><td>Cerrar paneles</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="panel-presentador">
+        <div class="barra">
+            <div><span id="p-contador"></span> · <span id="p-titulo"></span></div>
+            <div class="reloj"><span id="p-cronometro">00:00</span><small id="p-hora"></small></div>
+        </div>
+        <div class="hueco" id="p-hueco"></div>
+        <div class="derecha">
+            <div>
+                <div class="etq">A continuación</div>
+                <div id="vista-siguiente"></div>
+            </div>
+            <div class="etq" style="margin-bottom:-8px">Notas</div>
+            <div id="notas-presentador" class="notas"></div>
+        </div>
+    </div>
+
+    <script id="datos-mazo" type="application/json">{"config": {"asignatura": "Muestreo Estadístico", "numero": "4", "titulo": "Muestreo estratificado", "ra": "", "horas": "", "stack": [], "institucion": "Universidad El Bosque", "sigla": "UnBosque", "unidad": "Capítulo", "storageKey": "unbosque_muestreo_estadístico_4"}, "diapos": [{"titulo": "Portada", "seccion": "", "k": -1, "notas": ""}, {"titulo": "Hoja de ruta", "seccion": "", "k": -1, "notas": ""}, {"titulo": "Cómo leer estas diapositivas", "seccion": "", "k": -1, "notas": "<p>Treinta segundos, antes del primer divisor. Lo que no lleva rótulo es teoría (definiciones, fórmulas) o dato. Todas las cifras están verificadas contra el código del capítulo, el precálculo o Lohr (3.ª ed.); la fuente de cada una va al final de la nota de su diapositiva.<\/p>\n<p><strong>Transición:<\/strong> el gancho del módulo 1.<\/p>"}, {"titulo": "Módulo 1 · ¿Por qué estratificar?", "seccion": "Módulo 1 · ¿Por qué estratificar?", "k": 0, "notas": "<p><strong>Minuto 3.<\/strong> Pregunta de arranque: ¿qué le pasa a una urna única cuando la población tiene grupos muy distintos? Dejar que respondan antes de pasar.<\/p>"}, {"titulo": "Casi todo el capítulo trabaja sobre un censo agrícola de 3 078 condados", "seccion": "Módulo 1 · ¿Por qué estratificar?", "k": 0, "notas": "<p><strong>Qué ilustra:<\/strong> es la población de todo el capítulo. <strong>De dónde sale:<\/strong> Lohr, 3.ª ed., Ej. 2.6 (<code>agpop.csv<\/code>: el Census of Agriculture de EE. UU., N = 3 078 condados y equivalentes, datos de 1982, 1987 y 1992), Ej. 2.6 también para <code>agsrs.csv<\/code> (MAS de 300) y Ej. 3.2 para <code>agstrat.csv<\/code> (un MAS en cada una de las cuatro regiones, cerca del 10 % de cada una). <strong>Por qué importa:<\/strong> como <code>agpop<\/code> es un censo, cada estimación se puede contrastar con la verdad, cosa que en una encuesta real nunca pasa. Salvedad: 19 condados traen <code>acres92 = −99<\/code> (código de faltante); por decisión del capítulo 2, la «verdad» del material es la del marco completo con esos códigos (media 306 677, frente a 308 582 con solo los válidos).<\/p>\n<p>Sobre el nombre de la variable: Lohr define <code>acres92<\/code> como los acres dedicados a fincas («acres devoted to farms»); el material la llama «superficie sembrada» desde el capítulo 1. Decirlo de palabra una vez.<\/p>\n<p><strong>Transición:<\/strong> ¿qué tan distintas son las regiones? La gráfica siguiente.<\/p>"}, {"titulo": "Un condado medio del Oeste tiene ocho veces los acres de uno del Nordeste", "seccion": "Módulo 1 · ¿Por qué estratificar?", "k": 0, "notas": "<p>Avanzar etapa por etapa: primero el Nordeste, luego el Oeste (723 344 / 90 619 ≈ 8 veces), luego Norte-Centro y Sur, y al final la media nacional. El último paso muestra las desviaciones. Preguntar: si la urna saca 60 condados del Oeste en vez de 41, ¿hacia dónde se va la estimación?<\/p>\n<p><strong>Fuente:<\/strong> bloque «La heterogeneidad entre regiones» del módulo 1 (salida de R verificada). Media nacional 306 676,97: capítulo 2 y <code>precalculo/salidas/cap4_datos.json<\/code> (<code>distribucion.media<\/code>).<\/p>\n<p><strong>Transición:<\/strong> ¿cómo se sacan esas cifras en R? Tres llamadas a <code>tapply<\/code>.<\/p>"}, {"titulo": "En R: la desviación del Oeste es más de diez veces la del Nordeste", "seccion": "Módulo 1 · ¿Por qué estratificar?", "k": 0, "notas": "<p><strong>Correr en vivo<\/strong>, desde la raíz del repositorio del curso: este bloque carga <code>agpop<\/code> y <code>agstrat<\/code>, que usan todos los demás. 835 639 / 79 365 = 10,5.<\/p>\n<p><strong>Fuente:<\/strong> bloque «La heterogeneidad entre regiones», módulo 1 (verificado: la salida coincide con R 4.4).<\/p>\n<p><strong>Transición:<\/strong> con la región en el marco, ¿qué es exactamente estratificar?<\/p>"}, {"titulo": "Estratificar es sortear por separado dentro de grupos fijados antes", "seccion": "Módulo 1 · ¿Por qué estratificar?", "k": 0, "notas": "<p>La definición y las dos condiciones son las del módulo 1 (caja de definición y nota «Dos condiciones para poder estratificar»). Insistir en «independiente»: lo que salga en el Oeste no afecta lo que salga en el Sur. Si el marco no trae la variable pero sí los N_h, el plan B es postestratificar (módulo 10, sesión 2).<\/p>\n<p><strong>Transición:<\/strong> ¿y si el marco no trae la variable? La pregunta siguiente lo pone a prueba.<\/p>"}, {"titulo": "¿Puede estratificar este instituto?", "seccion": "Módulo 1 · ¿Por qué estratificar?", "k": 0, "notas": "<p>Es la pregunta 2 de la autoevaluación del módulo 13 (módulo 1). Pedir que la escriban antes de revelar. Un distractor del material: «preguntar el nivel en la entrevista y agrupar por él». Eso es postestratificar, no estratificar: los n_h quedan al azar, y eso tiene un costo de varianza que el módulo 10 mide.<\/p>\n<p><strong>Transición:<\/strong> cuando sí se puede estratificar, ¿qué se gana? Tres cosas.<\/p>"}, {"titulo": "Estratificar compra tres cosas", "seccion": "Módulo 1 · ¿Por qué estratificar?", "k": 0, "notas": "<p>El orden es el del módulo 1: de más a menos importancia práctica. Con la urna única, el Nordeste puede salir casi vacío en una muestra concreta; estratificando, sus 21 condados están garantizados.<\/p>\n<p><strong>Fuente:<\/strong> módulo 1. 7 % = 220 / 3 078 (bloque R1); n_h = 21 en el bloque «Probabilidades de inclusión y pesos de agstrat» (módulo 2).<\/p>\n<p><strong>Transición:<\/strong> ¿por qué la varianza solo paga lo de dentro? Lo dice el marco π.<\/p>"}, {"titulo": "Módulo 2 · La teoría en el marco π", "seccion": "Módulo 2 · La teoría en el marco π", "k": 1, "notas": "<p><strong>Minuto 19.<\/strong> Pregunta de arranque: en el capítulo 2, ¿qué hacía falta para escribir la varianza de cualquier diseño? (las \\(\\pi_k\\) y las \\(\\pi_{kl}\\)).<\/p>"}, {"titulo": "Dentro del estrato, un MAS; entre estratos, independencia", "seccion": "Módulo 2 · La teoría en el marco π", "k": 1, "notas": "<p>Fórmula del módulo 2 («Probabilidades de inclusión del diseño estratificado»), partida en dos para proyectarla. El peso de diseño es \\(w_k = 1/\\pi_k = N_h/n_h\\).<\/p>\n<p><strong>Transición:<\/strong> el peso es el inverso de \\(\\pi_k\\). ¿Cuánto vale en el Nordeste?<\/p>"}, {"titulo": "¿Cuánto pesa un condado del Nordeste en agstrat?", "seccion": "Módulo 2 · La teoría en el marco π", "k": 1, "notas": "<p>Pregunta numérica de la autoevaluación del módulo 13 (módulo 2), con tolerancia ±0,011. Pedir la respuesta antes de revelar. Error previsible: dar \\(\\pi_k\\) (0,095) en vez del peso. <strong>Proyectar<\/strong> el bloque, que aparece en el paso siguiente a la respuesta: los pesos son casi iguales porque <code>agstrat<\/code> sorteó cerca del 10 % de cada región. <code>strwt<\/code> es la columna de pesos que trae <code>agstrat.csv<\/code>; Lohr la define como 220/21, 1054/103, 1382/135 y 422/41 (3.ª ed., §3.3).<\/p>\n<p><strong>Fuente:<\/strong> bloque «Probabilidades de inclusión y pesos de agstrat», módulo 2 (verificado): peso 10,47619; suma 3 078.<\/p>\n<p><strong>Transición:<\/strong> con los pesos, el estimador es una suma ponderada.<\/p>"}, {"titulo": "El estimador estratificado es el π-estimador agrupado por estratos", "seccion": "Módulo 2 · La teoría en el marco π", "k": 1, "notas": "<p>Fórmula del módulo 2 («El estimador estratificado es el π-estimador»). Cada unidad representa a \\(N_h/n_h\\) unidades de su estrato; al agrupar por estratos aparece la forma clásica.<\/p>\n<p><strong>Transición:<\/strong> ¿y su varianza? Ahí está la ganancia.<\/p>"}, {"titulo": "La varianza solo paga lo que pasa dentro de cada estrato", "seccion": "Módulo 2 · La teoría en el marco π", "k": 1, "notas": "<p>Derivación del módulo 2, pasos 1 a 3. El paso 4 se dice en voz alta al revelar la fórmula: cada estrato lleva <strong>su propio fpc<\/strong> (un estrato censado aporta varianza cero) y solo aparecen las \\(S^2_{y,h}\\) de <strong>dentro<\/strong>. La distancia entre las medias de los estratos no está en la fórmula: esa es la ganancia, y el módulo 7 (sesión 2) la mide.<\/p>\n<p><strong>Transición:<\/strong> una consecuencia que conviene grabar.<\/p>"}, {"titulo": "Estratificar mal cuesta precisión, nunca validez", "seccion": "Módulo 2 · La teoría en el marco π", "k": 1, "notas": "<p>Nota «Insesgadez sin condiciones» del módulo 2. Una estratificación inútil no sesga; solo deja de ahorrar varianza.<\/p>\n<p><strong>Transición:<\/strong> la excepción, los pesos, abre el módulo 3.<\/p>"}, {"titulo": "Módulo 3 · Pesos y estimación", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p><strong>Minuto 31.<\/strong> Pregunta de arranque: si calculan la misma media a mano y con <code>survey<\/code>, ¿qué tiene que pasar? (que coincidan: si no, hay un error en una de las dos).<\/p>"}, {"titulo": "A mano, la media estratificada sale 295 561 acres, con ee 16 380", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p><strong>Proyectar.<\/strong> El material trae el mismo cálculo en Python (pestaña del módulo 3), con la tabla de aportes \\(W_h \\bar y_h\\) por región; aquí va el de R, que es el principal del curso.<\/p>\n<p><strong>Fuente:<\/strong> bloque «El estimador estratificado a mano», módulo 3 (verificado): media 295 560,77; ee 16 379,87; total 909 736 035; ee del total 50 417 248.<\/p>\n<p><strong>Transición:<\/strong> la misma cifra con <code>survey<\/code>.<\/p>"}, {"titulo": "Con survey, tres argumentos definen el diseño", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p><strong>Correr en vivo<\/strong>: es el patrón que se usa en el resto del curso (necesita <code>Nh<\/code>, del bloque de los pesos; correrlo antes en silencio). Nota «Los tres argumentos que definen el diseño» del módulo 3: si se omite <code>strata=<\/code>, el ee sale mal, «casi siempre más grande de lo que corresponde». El intervalo usa la normal (±1,96 ee), el convenio del material. Si alguien nota que el total termina en 6 y el de la vía a mano en 5: la columna <code>strwt<\/code> del CSV trae los pesos redondeados a 8 decimales (10,23300971 frente a 1054/103), así que los dos totales difieren en 0,2 acres (909 736 035,39 y 909 736 035,61) y redondean a enteros distintos.<\/p>\n<p><strong>Fuente:<\/strong> bloque «El mismo estimador con survey», módulo 3 (verificado). Este objeto <code>dis<\/code> se reutiliza en la sesión 2 (módulo 12).<\/p>\n<p><strong>Transición:<\/strong> ¿ayudó estratificar? Comparemos con el MAS del capítulo 2.<\/p>"}, {"titulo": "Con estas dos muestras, el estratificado sale con 13 % menos error estándar", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p>13 % = 1 − 16 380 / 18 898. La ganancia <strong>exacta<\/strong> del diseño, calculada sobre <code>agpop<\/code>, es menor: 1 − 21 123,94 / 23 293,77 = 9,3 % (deff 0,8224, módulo 4). El módulo 8 vuelve sobre estas dos cifras: su cociente al cuadrado es el deff estimado, 0,75, que no coincide con el exacto, 0,82, y explica por qué.<\/p>\n<p><strong>Fuente:<\/strong> párrafo tras el bloque «El estimador estratificado a mano» (módulo 3): «La del MAS del capítulo 2 era 297 897 con error estándar 18 898»; módulo 8 para el criterio de citar el exacto; la definición del deff, capítulo 2 (Definición 2.10) y módulo 8.<\/p>\n<p><strong>Transición:<\/strong> lo mismo vale para proporciones, porque una proporción es una media.<\/p>"}, {"titulo": "Una proporción es la media de una variable 0/1", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p><strong>Qué ilustra:<\/strong> que una proporción no necesita teoría nueva. <strong>De dónde sale:<\/strong> módulo 3, sobre <code>agstrat<\/code>, con la variable 0/1 «menos de 200 000 acres». <strong>Por qué importa:<\/strong> casi todo lo que publica una encuesta es una proporción o un conteo. El \\(n_h - 1\\) es el que <code>var()<\/code> ya aplica: la varianza muestral de una 0/1 es \\(\\frac{n_h}{n_h-1}\\hat p_h(1-\\hat p_h)\\). Son las ecuaciones 3.7 y 3.8 de Lohr (3.ª ed.). El total sale con decimales porque es una estimación, no un conteo.<\/p>\n<p>Si hay tiempo, los grados de libertad (nota del módulo 3): un estratificado tiene \\(n - H\\), aquí 300 − 4 = 296, porque cada estrato gasta uno en su propia media. Con 296 gl la t y la normal casi coinciden: el intervalo de la proporción pasa de 0,46532–0,56251 (normal) a 0,46512–0,56271 (t). Con muchos estratos chicos sí importa: con 20 estratos de dos unidades hay 20 gl, \\(t_{0,975} = 2{,}086\\), y el intervalo sale un 6,4 % más ancho; usar la normal declararía una precisión que no se tiene. El capítulo pone el ejemplo de 150 estratos de dos unidades, pero con 150 gl el exceso es de apenas un 0,8 %. Los diseños con muchos estratos chicos son justo los que el módulo 6 recomienda (sesión 2).<\/p>\n<p><strong>Fuente:<\/strong> bloques «Proporción estratificada» y «La fórmula de la proporción, el total y los grados de libertad», módulo 3 (verificados), y la nota «Los grados de libertad de un estratificado son n − H». Los cuantiles de t (2,086 con 20 gl) y los porcentajes (6,4 % y 0,8 %) son cálculo con <code>qt<\/code> en R 4.4.<\/p>\n<p><strong>Transición:<\/strong> ¿y si alguien olvida los pesos? La pregunta siguiente.<\/p>"}, {"titulo": "¿Los pesos son un formalismo?", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p>Pregunta de la autoevaluación del módulo 13 (módulo 3). El reparto de los 107 condados es el de Neyman, que llega en el módulo 4; aquí no hace falta nombrarlo. Distractores del material: «el promedio bruto siempre está sesgado» (falso: si la muestra copia exactamente la composición, coinciden en cada muestra) y «había que usar la mediana».<\/p>\n<p><strong>Transición:<\/strong> la gráfica siguiente dibuja la respuesta.<\/p>"}, {"titulo": "El promedio bruto acierta con toda variable solo si la muestra copia la población", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p>Las dos barras del promedio bruto son <strong>cálculos de verificación para esta diapositiva, no cifras escritas en el material<\/strong>: el valor esperado del promedio bruto es \\(\\sum_h (n_h/n)\\,\\bar y_{U_h}\\), con las medias por región del módulo 1. Con el reparto de <code>agstrat<\/code> (103/21/135/41) da 306 723; con el que manda 107 al Oeste (86/5/102/107, el de Neyman del módulo 4), 420 650, es decir, 113 973 por encima de la media verdadera (306 677). El módulo 13 dice «sube unos 114 000 acres»: cuadra. Calculado con R 4.4 sobre <code>agpop<\/code> el 22-oct-2026.<\/p>\n<p>El simulador del módulo 3 («El promedio bruto contra el ponderado») lo muestra moviendo el reparto: abrirlo en vivo si hay tiempo.<\/p>\n<p><strong>Transición:<\/strong> de ahí la regla del módulo.<\/p>"}, {"titulo": "Una muestra estratificada se analiza siempre con sus pesos", "seccion": "Módulo 3 · Pesos y estimación", "k": 2, "notas": "<p>Advertencia «La regla que no admite excepciones» del módulo 3. Es el error silencioso más común en el análisis de encuestas, y el capítulo 7 vuelve sobre él.<\/p>\n<p><strong>Transición:<\/strong> hasta aquí el reparto venía dado. ¿Quién decide cuántas entrevistas van a cada región? El módulo 4.<\/p>"}, {"titulo": "Módulo 4 · Asignación de observaciones", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p><strong>Minuto 49.<\/strong> Pregunta de arranque: con 300 entrevistas y cuatro regiones, ¿cómo las repartirían? Anotar dos o tres propuestas en el tablero: casi siempre aparecen la proporcional y la igual.<\/p>"}, {"titulo": "Cada asignación responde a una pregunta distinta", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p>Definición «Las tres asignaciones» del módulo 4. Ojo: el capítulo dice que la igual «reparte precisión por igual», pero reparte <strong>tamaño<\/strong>: con 75 por región, el error estándar de la media del Oeste es mucho mayor que el del Nordeste, porque su desviación es diez veces mayor. Un aparte: si lo que se pide es una precisión dada <strong>dentro de cada<\/strong> estrato (el Servicio Postal de EE. UU. pedía ±3 puntos porcentuales en cada área, Lohr 3.ª ed., Ej. 3.11), la cuenta es la del tamaño de muestra del capítulo 2 aplicada a cada estrato. Puede coincidir con la igual, pero responde a otra pregunta.<\/p>\n<p><strong>Transición:<\/strong> ¿de dónde sale la de Neyman? De minimizar la varianza.<\/p>"}, {"titulo": "Neyman sale de minimizar la varianza con n fijo", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p>Derivación del módulo 4 con Lagrange: el término del fpc no depende de los n_h y no juega. Con costos (módulo 5) la misma cuenta da la raíz de \\(c_h\\). Si hay tiempo, la expresión cerrada del módulo: la ganancia de Neyman sobre la proporcional es «la dispersión de las dispersiones», \\(\\frac1n\\sum_h W_h(S_{y,h}-\\bar S)^2\\).<\/p>\n<p><strong>Transición:<\/strong> ¿qué hace esa fórmula con <code>agpop<\/code>?<\/p>"}, {"titulo": "Neyman vacía el Nordeste y llena el Oeste", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p>Tres etapas: proporcional (gris), igual (azul), Neyman (naranja). Antes de la tercera, preguntar: «¿cuántas le tocarán al Nordeste con Neyman?». El 5 sorprende.<\/p>\n<p><strong>Fuente:<\/strong> bloque «Las tres asignaciones sobre agpop», módulo 4 (verificado): 103/21/135/41, 75×4 y 86/5/102/107.<\/p>\n<p><strong>Transición:<\/strong> ¿cuánto se gana con cada reparto? El código.<\/p>"}, {"titulo": "Neyman recorta un 18 % el error estándar de la proporcional", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p><strong>Proyectar.<\/strong> 18 % = 1 − 17 291 / 21 124. Lo normal es que la proporcional le gane a la igual; aquí no, porque la proporcional ignora las \\(S_{y,h}\\) y los estratos son muy desiguales en dispersión. La línea que imprime los tres repartos no se proyecta: están en la gráfica anterior.<\/p>\n<p><strong>Fuente:<\/strong> bloque «Las tres asignaciones sobre agpop», módulo 4 (verificado).<\/p>\n<p><strong>Transición:<\/strong> óptima, sí; pero ¿para qué variable?<\/p>"}, {"titulo": "La asignación óptima lo es para una variable", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p><strong>Qué ilustra:<\/strong> que Neyman optimiza una sola variable. <strong>De dónde sale:<\/strong> <code>farms92<\/code> es otra columna de <code>agpop<\/code> (número de granjas en 1992), que una encuesta agrícola también preguntaría; correlaciona apenas 0,147 con <code>acres92<\/code>. <strong>Por qué importa:<\/strong> las encuestas son multipropósito. La proporcional no usa ninguna \\(S_{y,h}\\), así que no necesita saber qué se va a medir.<\/p>\n<p><strong>Fuente:<\/strong> bloque «El deff de cada asignación medido con dos variables», módulo 4 (verificado).<\/p>\n<p><strong>Transición:<\/strong> ¿hay un punto medio que sirva a las dos? Lohr sugiere uno.<\/p>"}, {"titulo": "Entre la proporcional y Neyman hay asignaciones mejores para las dos variables", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p>La familia \\(n_h \\propto N_h S_{y,h}^{\\alpha}\\) es la forma en que el material escribe la sugerencia: \\(\\alpha = 0\\) es la proporcional y \\(\\alpha = 1\\), Neyman. Etapas: <code>acres92<\/code> baja; <code>farms92<\/code> sube al acercarse a Neyman; en \\(\\alpha = 0{,}25\\) las dos mejoran a la vez (0,6919 y 0,9237). El piso de 20 sirve además para que ningún estrato se quede sin poder estimar su \\(s_h^2\\).<\/p>\n<p><strong>Fuente:<\/strong> bloque «El deff de cada asignación medido con dos variables», módulo 4 (verificado). Lohr, 3.ª ed., §3.4.4 y Ej. 3.12: «one might want to consider an allocation that is between the proportional and Neyman […] allocations», y mezclar rasgos de varias asignaciones.<\/p>\n<p><strong>Transición:<\/strong> todo esto supone conocer las \\(S_{y,h}\\). ¿Y si no se conocen?<\/p>"}, {"titulo": "Neyman necesita las desviaciones, y nadie las conoce", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p>Un ejemplo para contar de palabra, el conteo de caribúes (Lohr, 3.ª ed., Ej. 3.10): las desviaciones se aproximaron con el conteo previo de cada estrato. En el estrato B, de 30 unidades, Neyman pedía 4,81; se pusieron 10, porque se exigía al menos 1/3 en los estratos chicos. Planeado: 225; final: 211. <strong>De dónde sale:<\/strong> Siniff y Skoog (1964) estimaron el tamaño del rebaño Nelchina de caribúes de Alaska en febrero de 1962, con seis estratos de unidades de 4 millas cuadradas (Lohr, 3.ª ed., Ej. 3.3; Ej. 3.10 y Tabla 3.7). <strong>Por qué importa:<\/strong> muestra cómo se usa Neyman cuando las desviaciones son conjeturas: como guía, no como orden.<\/p>\n<p>El ejercicio guiado 5 del módulo 13 mide cuánto cuesta usar desviaciones muestrales: dejarlo para la práctica, sin adelantar la cifra.<\/p>\n<p><strong>Transición:<\/strong> una pregunta para cerrar el módulo.<\/p>"}, {"titulo": "Neyman le dio al Nordeste 5 de las 300. ¿Qué es cierto?", "seccion": "Módulo 4 · Asignación de observaciones", "k": 3, "notas": "<p>Pregunta de selección múltiple de la autoevaluación del módulo 13 (módulo 4). Con 5 observaciones apenas hay con qué estimar la varianza del Nordeste. Neyman optimiza el agregado; lo demás lo paga.<\/p>\n<p><strong>Transición:<\/strong> hasta aquí todas las entrevistas costaban lo mismo. El módulo 5 les pone precio.<\/p>"}, {"titulo": "Módulo 5 · Asignación óptima con costos", "seccion": "Módulo 5 · Asignación óptima con costos", "k": 4, "notas": "<p><strong>Minuto 69.<\/strong> Pregunta de arranque: si entrevistar en el Oeste cuesta el triple, ¿le darían un tercio de la muestra?<\/p>"}, {"titulo": "El costo por entrevista entra con raíz cuadrada", "seccion": "Módulo 5 · Asignación óptima con costos", "k": 4, "notas": "<p>Fórmula del módulo 5 («Asignación óptima con costos desiguales»): la misma cuenta de Lagrange con la restricción nueva. Con el presupuesto fijo, la muestra <strong>absoluta<\/strong> del Oeste cae algo más que \\(\\sqrt 3\\): con los costos del módulo y \\(C = 3\\,000\\), pasar \\(c_W\\) de 18 a 54 la baja de 73,4 a 32,0 (factor 2,29), mientras que su cociente con el Norte-Centro cae exactamente \\(\\sqrt 3\\) (cálculo de verificación con R; el capítulo y su autoevaluación lo dicen sin ese matiz). Advertencia del módulo: el óptimo puede pedir \\(n_h &gt; N_h\\) o \\(n_h &lt; 2\\); se truncan esos estratos y se reoptimiza el resto.<\/p>\n<p><strong>Transición:<\/strong> con números del módulo: un presupuesto de 3 000.<\/p>"}, {"titulo": "Con 3 000 de presupuesto, el óptimo compra menos entrevistas y logra menos varianza", "seccion": "Módulo 5 · Asignación óptima con costos", "k": 4, "notas": "<p><strong>Proyectar.<\/strong> <strong>Qué ilustra:<\/strong> la asignación con costos desiguales. <strong>De dónde sale:<\/strong> los costos por entrevista (10, 6, 8 y 18) y el presupuesto de 3 000 son <strong>supuestos ilustrativos del material<\/strong> («entrevistar en el Oeste cuesta más: condados enormes y dispersos»), no datos de una encuesta real. <strong>Por qué importa:<\/strong> con costos distintos, más entrevistas no es más precisión. El Oeste pasa de 107 (Neyman) a 73: el caro se recorta, no se elimina.<\/p>\n<p><strong>Fuente:<\/strong> bloque «La asignación óptima con costos sobre agpop», módulo 5 (verificado). La proporcional con el mismo costo, del precálculo (<code>costos.propMismoCosto<\/code>: n = 302,64; V = 441 294 189) y del primer párrafo del módulo («compra más entrevistas y aun así se queda con más varianza»). Óptimo: V = 357 827 437.<\/p>\n<p><strong>Transición:<\/strong> ¿y de dónde salió el 300 de todo el capítulo?<\/p>"}, {"titulo": "Para un 10 % de error, el MAS pide 595 condados", "seccion": "Módulo 5 · Asignación óptima con costos", "k": 4, "notas": "<p><strong>Proyectar.<\/strong> El objetivo es el del capítulo 2: un error de como mucho el 10 % de la media de <code>acres92<\/code> (los 595 del MAS vienen de allí). Fórmula del módulo 5 («Tamaño total en el estratificado»), ecuaciones 3.16 a 3.18 de Lohr (3.ª ed.): \\(n = z^2 v \\,/\\, (e^2 + z^2 \\sum_h W_h S^2_{y,h}/N)\\); el MAS es el caso \\(H = 1\\), donde \\(v = S^2\\). Como \\(v\\) no depende de \\(n\\), la asignación se puede elegir antes que el tamaño. La de costos (368) no se compara en entrevistas sino en dinero.<\/p>\n<p><strong>Fuente:<\/strong> bloque «El tamaño total que pide un margen de error dado», módulo 5 (verificado). Los 595 del MAS, del capítulo 2.<\/p>\n<p><strong>Transición:<\/strong> queda un truco más para bajar el tamaño: no sortear a los gigantes.<\/p>"}, {"titulo": "A los condados gigantes no se les sortea: se censan", "seccion": "Módulo 5 · Asignación óptima con costos", "k": 4, "notas": "<p><strong>Qué ilustra:<\/strong> los estratos de certeza (<em>take-all<\/em>, <em>certainty stratum<\/em>). <strong>De dónde sale:<\/strong> el bloque del módulo 5 ordena por <code>acres92<\/code> <strong>a propósito<\/strong>, para que se vea el mecanismo; es la misma trampa circular del capítulo 2 con \\(S^2\\). La encuesta canadiense (Lohr, 3.ª ed., Ej. 3.8) sortea unas 15 000 empresas del Business Register, estratificadas por provincia, sector y tamaño; unas 800 están siempre en la muestra. <strong>Por qué importa:<\/strong> con el mismo 10 % de error, censar a los gigantes deja el tamaño en 316 en vez de 506.<\/p>\n<p><strong>Fuente:<\/strong> bloque «Un estrato de certeza con los condados más grandes», módulo 5 (verificado: 1,01 %; 9,66 %; 424 686,68 y 309 673,43). Correlación 0,9951: módulo 6.<\/p>\n<p><strong>Transición:<\/strong> todos los tamaños, juntos en una gráfica.<\/p>"}, {"titulo": "Estratificar reduce la muestra que hace falta", "seccion": "Módulo 5 · Asignación óptima con costos", "k": 4, "notas": "<p>Etapas: proporcional, igual, Neyman y, al final, el estrato de certeza de la diapositiva anterior con el resto repartido proporcionalmente. La barra de certeza se compara con la proporcional (506), que es la misma asignación sin certeza. La de costos (368) queda fuera porque se compara en dinero.<\/p>\n<p><strong>Fuente:<\/strong> bloques «El tamaño total que pide un margen de error dado» y «Un estrato de certeza con los condados más grandes», módulo 5 (verificados): 595, 506, 462, 356; certeza 31 + 285 = 316.<\/p>\n<p><strong>Transición:<\/strong> ¿y si la encuesta mide dos variables? La última pregunta.<\/p>"}, {"titulo": "La encuesta mide acres92 y farms92. ¿Qué tamaño se usa?", "seccion": "Módulo 5 · Asignación óptima con costos", "k": 4, "notas": "<p>Pregunta de la autoevaluación del módulo 13 (módulo 5). Distractores del material: 214 («cumple con menos costo»: incumple la promesa de <code>acres92<\/code>), el promedio 360 («repartir el incumplimiento es incumplir») y «depende de la correlación».<\/p>\n<p><strong>Fuente:<\/strong> bloque «El tamaño total que pide un margen de error dado», módulo 5 (verificado: 506 y 214, manda 506).<\/p>\n<p><strong>Transición:<\/strong> cerramos con lo que nos llevamos y la práctica.<\/p>"}, {"titulo": "Módulo 13 · Práctica", "seccion": "Módulo 13 · Práctica", "k": 5, "notas": "<p><strong>Minuto 85.<\/strong> Si el tiempo apremia, el cierre se lee en un minuto y la práctica se asigna para la casa.<\/p>"}, {"titulo": "Lo que nos llevamos hoy", "seccion": "Módulo 13 · Práctica", "k": 5, "notas": "<p>Retomar los títulos de las diapositivas de la idea, Neyman y el tamaño. La próxima sesión: definir estratos, por qué gana el estratificado (ANOVA), deff, PPT por estrato, postestratificación, ML y razón.<\/p>\n<p><strong>Transición:<\/strong> la práctica.<\/p>"}, {"titulo": "Práctica: cuatro ejercicios guiados del módulo 13", "seccion": "Módulo 13 · Práctica", "k": 5, "notas": "<p><strong>Ejercicio 7, contexto:<\/strong> en enero de 1995, la oficina de evaluación de Arizona State University preguntó a profesores y personal si querrían repetir el cierre de la universidad durante las vacaciones de invierno de 1994; la muestra es estratificada en cuatro tipos de empleado (<code>winter.csv<\/code>; Lohr, 3.ª ed., ejercicio 23 del cap. 3). Se analiza solo a quienes respondieron, con las ecuaciones 3.7 y 3.8.<\/p>\n<p>Las soluciones están en el módulo 13, con el código real del capítulo: pedir que las intenten antes de abrir la pista. Las otras cinco preguntas de la autoevaluación de los módulos 1 a 5 ya se hicieron en clase.<\/p>\n<p><strong>Aviso para el docente:<\/strong> en la pregunta del módulo 4 de la autoevaluación, la opción «Calcular la Neyman de farms92 y quedarse con ella» está marcada como falsa, y con estos datos es la mejor en las dos variables (deff 0,6305 en <code>acres92<\/code> y 0,8992 en <code>farms92<\/code>). Es un error del capítulo, pendiente de corregir: avisarlo al asignar la tarea.<\/p>"}], "secciones": [{"titulo": "Módulo 1 · ¿Por qué estratificar?", "icono": "fa-book-open", "primera": 3, "diapos": [3, 4, 5, 6, 7, 8, 9]}, {"titulo": "Módulo 2 · La teoría en el marco π", "icono": "fa-book-open", "primera": 10, "diapos": [10, 11, 12, 13, 14, 15]}, {"titulo": "Módulo 3 · Pesos y estimación", "icono": "fa-book-open", "primera": 16, "diapos": [16, 17, 18, 19, 20, 21, 22, 23]}, {"titulo": "Módulo 4 · Asignación de observaciones", "icono": "fa-book-open", "primera": 24, "diapos": [24, 25, 26, 27, 28, 29, 30, 31, 32]}, {"titulo": "Módulo 5 · Asignación óptima con costos", "icono": "fa-book-open", "primera": 33, "diapos": [33, 34, 35, 36, 37, 38, 39]}, {"titulo": "Módulo 13 · Práctica", "icono": "fa-award", "primera": 40, "diapos": [40, 41, 42]}], "iconos": {}, "graficas": {}}</script>
+
+    <script>
+    (() => {
+        'use strict';
+        const DATOS = JSON.parse(document.getElementById('datos-mazo').textContent);
+        const CFG = DATOS.config;
+        const params = new URLSearchParams(location.search);
+        const MODO_PRESENTADOR = params.has('presentador');
+        const MODO_REVISION = params.has('revisar');
+        const TODO_VISIBLE = params.has('todo');   // revela todos los pasos (capturas)
+        const CLAVE = (CFG.storageKey || 'lpcore') + '_diapositivas';
+
+        const mazo = document.getElementById('mazo');
+        const diapos = Array.from(mazo.querySelectorAll(':scope > .diapo'));
+        const N = diapos.length;
+        const $ = (id) => document.getElementById(id);
+
+        const leer = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } };
+
+        /* ---------- Resaltado de código, como `resaltar` de LP-CORE ------- */
+        // El pseudocódigo de Lógica de Programación Financiera: la misma gramática
+        // que registra el capítulo (Prism no la trae).
+        if (window.Prism && !Prism.languages.pseudo) {
+            Prism.languages.pseudo = {
+                'comment': { pattern: /\/\/.*/, greedy: true },
+                'string': { pattern: /"(?:[^"\\\n]|\\.)*"/, greedy: true },
+                'keyword': /\b(?:FinSi|FinMientras|FinPara|FinSegun|FinFuncion|FinProcedimiento|FinRepita|Inicio|Fin|Si|Entonces|SinoSi|Sino|Segun|Caso|DeOtroModo|Mientras|Hacer|Para|Repita|Hasta|Con|Paso|Leer|Escribir|Funcion|Procedimiento|Retornar|Llamar)\b/,
+                'builtin': /\b(?:Entero|Real|Cadena|Caracter|Logico|Arreglo|Matriz|Constante|Verdadero|Falso)\b/,
+                'function': /\b(?:Y|O|NO|MOD|DIV|abs|raiz|redondear|potencia|longitud)\b/,
+                'number': /\b\d+(?:\.\d+)?\b/,
+                'operator': /<-|←|>=|<=|<>|[+\-*\/=<>]/,
+                'punctuation': /[(),;\[\]]/,
+            };
+        }
+        const GRAMATICA = { pseudo: 'pseudo', pseudocodigo: 'pseudo', python: 'python', py: 'python', shell: 'bash', bash: 'bash', sh: 'bash', docker: 'docker', dockerfile: 'docker', yaml: 'yaml', yml: 'yaml', sql: 'sql', toml: 'toml', json: 'json', r: 'r', vba: 'visual-basic', js: 'javascript', javascript: 'javascript' };
+        const PREFIJO_SALIDA = { python: '#>', py: '#>', r: '#>', shell: '#>', bash: '#>', vba: "'>", pseudo: '//>', pseudocodigo: '//>' };
+        const escaparHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        const resaltarBloques = () => {
+            document.querySelectorAll('.codigo').forEach((bloque) => {
+                const code = bloque.querySelector('pre code');
+                if (!code || code.dataset.hecho) return;
+                const fuente = code.textContent;
+                bloque._fuente = fuente;
+                const lang = bloque.dataset.lang || 'text';
+                const nombre = GRAMATICA[lang];
+                const gram = nombre && window.Prism && Prism.languages[nombre];
+                let html = gram ? Prism.highlight(fuente, gram, nombre) : escaparHtml(fuente);
+                const pref = PREFIJO_SALIDA[lang];
+                const foco = new Set((bloque.dataset.foco || '').split(',').filter(Boolean).flatMap((r) => {
+                    const [a, b] = r.split('-').map(Number);
+                    return Array.from({ length: (b || a) - a + 1 }, (_, i) => a + i);
+                }));
+                // Un token de varias líneas (una cadena """…""", un comentario /* … */) llega como un
+                // solo <span>: se cierra al final de cada línea y se reabre en la siguiente, para que
+                // cada .linea quede bien anidada.
+                let abiertas = [];
+                html = html.split('\n').map((linea) => {
+                    const prefijo = abiertas.join('');
+                    for (const m of linea.matchAll(/<(\/?)span\b[^>]*>/g)) {
+                        if (m[1]) abiertas.pop(); else abiertas.push(m[0]);
+                    }
+                    return prefijo + linea + '</span>'.repeat(abiertas.length);
+                }).map((linea, i) => {
+                    const plano = linea.replace(/<[^>]*>/g, '').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&').trimStart();
+                    const clases = ['linea'];
+                    if (pref && plano.startsWith(pref)) clases.push('lp-salida');
+                    if (foco.has(i + 1)) clases.push('foco');
+                    return `<span class="${clases.join(' ')}">${linea}${plano ? '' : ' '}</span>`;
+                }).join('\n');
+                code.innerHTML = html;
+                code.dataset.hecho = '1';
+                if (foco.size) bloque.classList.add('con-foco');
+            });
+        };
+
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-copiar');
+            if (!btn) return;
+            const bloque = btn.closest('.codigo');
+            const texto = bloque._fuente ?? bloque.querySelector('code').textContent;
+            navigator.clipboard.writeText(texto).then(() => {
+                btn.classList.add('copiado');
+                btn.innerHTML = '<i aria-hidden="true" class="fas fa-check"></i> Copiado';
+                setTimeout(() => { btn.classList.remove('copiado'); btn.innerHTML = '<i aria-hidden="true" class="fas fa-copy"></i> Copiar'; }, 2000);
+            }).catch(() => { });
+        });
+
+        /* ---------- Gráficas de Plotly (solo si el mazo trae alguna) ---------- */
+        const dibujarGraficas = () => {
+            const nodos = document.querySelectorAll('.grafica[data-fuente]');
+            if (!nodos.length || !window.Plotly) return;
+            nodos.forEach((el) => {
+                if (el.dataset.hecha) return;
+                const g = DATOS.graficas[el.dataset.fuente];
+                if (!g) return;
+                const layout = Object.assign({}, g.layout || {}, {
+                    autosize: true,
+                    font: Object.assign({ size: 14, color: '#1E293B' }, (g.layout || {}).font || {}, { family: getComputedStyle(document.documentElement).getPropertyValue('--fuente').trim() || 'Montserrat, sans-serif' }),
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                });
+                delete layout.width; delete layout.height;
+                // Con la tipografía del curso las etiquetas miden otra cosa que
+                // en el material: que cada eje reserve su propio margen.
+                Object.keys(layout).filter((k) => /^[xy]axis\d*$/.test(k)).forEach((k) => {
+                    layout[k] = Object.assign({}, layout[k], { automargin: true });
+                });
+                Plotly.newPlot(el, g.data, layout, { displayModeBar: false, responsive: true });
+                el.dataset.hecha = '1';
+            });
+        };
+
+        /* ---------- Ajuste: lo que no cabe se encoge, hasta un límite ---------- */
+        const K_MIN = 0.7;
+        const desborda = (d) => {
+            const c = d.querySelector('.cuerpo');
+            if (!c) return false;
+            if (c.scrollHeight > c.clientHeight + 2) return true;
+            if (Array.from(c.querySelectorAll('pre')).some((el) => el.scrollHeight > el.clientHeight + 2)) return true;
+            if (Array.from(c.querySelectorAll('pre, table, .tarjetas, .flujo, .columnas')).some((el) => el.scrollWidth > el.clientWidth + 2)) return true;
+            // Una fórmula, una imagen o un diagrama más anchos que su columna no
+            // agrandan la rejilla: invaden la columna de al lado. Se mide contra
+            // la caja que los contiene.
+            return Array.from(c.querySelectorAll('mjx-container, img, svg, .grafica')).some((el) => {
+                if (el.closest('.codigo')) return false;
+                if (el.tagName.toLowerCase() === 'svg' && el.parentElement && el.parentElement.closest('mjx-container, .grafica, svg')) return false;
+                const marco = el.closest('.columnas > *, .tarjeta, .caja, td, th') || c;
+                const m = marco.getBoundingClientRect();
+                // MathJax deja el contenedor del ancho de la columna y desborda por dentro.
+                const r = (el.querySelector(':scope > svg, :scope > mjx-math') || el).getBoundingClientRect();
+                return r.width > 0 && (r.right > m.right + 2 || r.left < m.left - 2);
+            });
+        };
+
+        const ajustar = () => {
+            const informe = [];
+            diapos.forEach((d, i) => {
+                d.querySelectorAll(':scope > .aviso-revision').forEach((a) => a.remove());
+                let k = parseFloat(d.dataset.k || '1');
+                d.style.setProperty('--k', k);
+                while (desborda(d) && k > K_MIN + 1e-6) {
+                    k = Math.max(K_MIN, +(k - 0.03).toFixed(3));
+                    d.style.setProperty('--k', k);
+                }
+                const sigue = desborda(d);
+                if (sigue || k < 0.88) informe.push({ n: i + 1, titulo: DATOS.diapos[i].titulo, escala: k, desborda: sigue });
+                if (MODO_REVISION && (sigue || k < 0.88)) {
+                    const a = document.createElement('div');
+                    a.className = 'aviso-revision';
+                    a.textContent = sigue ? 'NO CABE' : `encogida a ${Math.round(k * 100)} %`;
+                    d.appendChild(a);
+                }
+            });
+            return informe;
+        };
+
+        /* ---------- Escala del lienzo ---------- */
+        const escalar = () => {
+            if (MODO_PRESENTADOR) return escalarPresentador();
+            const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+            mazo.style.transform = `translate(-50%, -50%) scale(${s})`;
+        };
+
+        /* ---------- Estado ---------- */
+        const inicial = () => {
+            const h = parseInt(location.hash.replace('#', ''), 10);
+            if (Number.isInteger(h) && h >= 1 && h <= N) return h - 1;
+            const g = parseInt(leer(CLAVE), 10);
+            return Number.isInteger(g) && g >= 0 && g < N ? g : 0;
+        };
+
+        let actual = -1;
+        let paso = 0;
+        const pasosDe = (i) => Array.from(diapos[i].querySelectorAll('.paso'));
+
+        const canal = ('BroadcastChannel' in window) ? new BroadcastChannel('diapositivas-' + CLAVE) : null;
+        let silencio = false;
+
+        const mostrar = (i, p = 0, emitir = true) => {
+            i = Math.max(0, Math.min(N - 1, i));
+            if (i !== actual) {
+                diapos.forEach((d, j) => d.classList.toggle('activa', j === i));
+                actual = i;
+            }
+            const pasos = pasosDe(i);
+            paso = (p < 0 || TODO_VISIBLE) ? pasos.length : Math.min(p, pasos.length);
+            pasos.forEach((el, j) => el.classList.toggle('visto', j < paso));
+            const meta = DATOS.diapos[i];
+            $('progreso').firstElementChild.style.width = `${((i + 1) / N) * 100}%`;
+            $('contador').innerHTML = `${i + 1} / ${N}${meta.seccion ? ` <span>· ${meta.seccion}</span>` : ''}`;
+            $('btn-ant').disabled = i === 0 && paso === 0;
+            $('btn-sig').disabled = i === N - 1 && paso >= pasos.length;
+            $('notas').innerHTML = `<div class="etq-notas">Notas · ${i + 1}. ${meta.titulo || ''}</div>` + (meta.notas || '<p class="notas-vacias">Esta diapositiva no tiene notas.</p>');
+            if (!MODO_PRESENTADOR) {
+                if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+                guardar(CLAVE, String(i));
+            }
+            pintarIndice();
+            if (MODO_PRESENTADOR) pintarPresentador();
+            if (emitir && canal && !silencio) canal.postMessage({ tipo: 'ir', i, paso });
+        };
+
+        const siguiente = () => {
+            const pasos = pasosDe(actual);
+            if (paso < pasos.length) return mostrar(actual, paso + 1);
+            if (actual < N - 1) mostrar(actual + 1, 0);
+        };
+
+        const anterior = () => {
+            if (paso > 0) return mostrar(actual, paso - 1);
+            if (actual > 0) mostrar(actual - 1, -1);
+        };
+
+        if (canal) {
+            canal.onmessage = (e) => {
+                const m = e.data || {};
+                silencio = true;
+                if (m.tipo === 'ir') mostrar(m.i, m.paso, false);
+                if (m.tipo === 'sig') siguiente();
+                if (m.tipo === 'ant') anterior();
+                silencio = false;
+                if ((m.tipo === 'sig' || m.tipo === 'ant') && canal) canal.postMessage({ tipo: 'ir', i: actual, paso });
+            };
+        }
+
+        /* ---------- Índice: la barra lateral del material ---------- */
+        const iconoSvg = (nombre) => (nombre && nombre.startsWith('fa-')) ? `<i aria-hidden="true" class="fas ${nombre}"></i>`
+            : (DATOS.iconos[nombre] || DATOS.iconos.BookOpen || '<i aria-hidden="true" class="fas fa-book-open"></i>');
+
+        const construirIndice = () => {
+            const ind = $('indice');
+            const secciones = DATOS.secciones;
+            let html = `<div class="cab">
+                <div class="institucion" style="font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)">${CFG.institucion || ''}</div>
+                <div style="font-size:18px;font-weight:700;margin-top:4px;line-height:1.25">${CFG.asignatura || ''}</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:5px">${CFG.unidad || 'Semana'} ${CFG.numero || ''} · <span style="color:var(--secondary);font-weight:600">${CFG.titulo || ''}</span></div>
+            </div><nav>`;
+            html += `<button class="item-seccion" data-ir="0">${iconoSvg('BookOpen')}<span>Portada</span></button>`;
+            secciones.forEach((s, k) => {
+                html += `<button class="item-seccion" data-seccion="${k}" data-ir="${s.primera}">${iconoSvg(s.icono)}<span>${s.titulo}</span></button>`;
+                html += `<div class="sub" data-sub="${k}">` + s.diapos.map((j) => `<button data-ir="${j}">${j + 1}. ${DATOS.diapos[j].titulo || '—'}</button>`).join('') + `</div>`;
+            });
+            html += `</nav><div class="pie-indice"><p style="margin:0">${CFG.ra || ''}${CFG.horas ? ' · ' + CFG.horas + ' horas' : ''}</p><p style="margin:4px 0 0">${Array.isArray(CFG.stack) ? CFG.stack.join(' · ') : (CFG.stack || '')}</p></div>`;
+            ind.innerHTML = html;
+            ind.addEventListener('click', (e) => {
+                const b = e.target.closest('[data-ir]');
+                if (!b) return;
+                mostrar(parseInt(b.dataset.ir, 10), 0);
+                document.body.classList.remove('con-indice');
+            });
+        };
+
+        const pintarIndice = () => {
+            const k = DATOS.diapos[actual].k;
+            document.querySelectorAll('#indice [data-seccion]').forEach((b) => b.classList.toggle('actual', +b.dataset.seccion === k));
+            document.querySelectorAll('#indice [data-sub]').forEach((s) => { s.style.display = +s.dataset.sub === k ? '' : 'none'; });
+            document.querySelectorAll('#indice .sub button').forEach((b) => b.classList.toggle('actual', +b.dataset.ir === actual));
+            const portada = document.querySelector('#indice [data-ir="0"].item-seccion');
+            if (portada) portada.classList.toggle('actual', k === -1);
+        };
+
+        /* ---------- Vista del presentador ---------- */
+        const t0 = Date.now();
+        const escalarPresentador = () => {
+            const hueco = $('p-hueco').getBoundingClientRect();
+            const s = Math.min(hueco.width / 1280, hueco.height / 720);
+            mazo.style.transform = `translate(-50%, -50%) scale(${s})`;
+            mazo.style.left = `${hueco.left + hueco.width / 2}px`;
+            mazo.style.top = `${hueco.top + hueco.height / 2}px`;
+            const vs = $('vista-siguiente');
+            const d = vs.firstElementChild;
+            if (d) d.style.transform = `scale(${vs.clientWidth / 1280})`;
+        };
+
+        const pintarPresentador = () => {
+            const meta = DATOS.diapos[actual];
+            $('p-contador').textContent = `${actual + 1} / ${N}`;
+            $('p-titulo').textContent = meta.titulo || '';
+            $('notas-presentador').innerHTML = meta.notas || '<p class="notas-vacias">Sin notas.</p>';
+            const vs = $('vista-siguiente');
+            vs.innerHTML = '';
+            const pasos = pasosDe(actual);
+            const fuente = paso < pasos.length ? diapos[actual] : diapos[actual + 1];
+            if (fuente) {
+                const copia = fuente.cloneNode(true);
+                copia.classList.add('activa');
+                copia.querySelectorAll('.grafica').forEach((g) => { g.innerHTML = ''; });
+                vs.appendChild(copia);
+            } else {
+                vs.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#64748B;font-weight:600">Fin de la presentación</div>';
+            }
+            escalarPresentador();
+        };
+
+        if (MODO_PRESENTADOR) {
+            document.body.classList.add('presentador');
+            setInterval(() => {
+                const s = Math.floor((Date.now() - t0) / 1000);
+                $('p-cronometro').textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+                $('p-hora').textContent = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+            }, 1000);
+            mazo.style.boxShadow = 'none';
+            mazo.style.borderRadius = '10px';
+        }
+
+        /* ---------- Teclado, ratón y tacto ---------- */
+        let numero = '';
+        let tNumero = null;
+        const irA = $('ir-a');
+
+        const alternar = (clase, forzar) => {
+            const r = document.body.classList.toggle(clase, forzar);
+            const abierto = document.body.classList.contains('con-indice');
+            $('btn-menu').innerHTML = `<i aria-hidden="true" class="fas ${abierto ? 'fa-times' : 'fa-bars'}"></i>`;
+            $('btn-menu').title = abierto ? 'Ocultar el índice (M)' : 'Índice (M)';
+            return r;
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            const t = e.key;
+            // Enter o Espacio sobre un enlace o botón enfocado lo activan: no pasan diapositiva
+            if ((t === 'Enter' || t === ' ') && !numero && e.target.closest && e.target.closest('a[href], button')) return;
+            if (/^[0-9]$/.test(t)) {
+                numero += t;
+                irA.textContent = `Ir a ${numero}`;
+                irA.style.display = 'block';
+                clearTimeout(tNumero);
+                tNumero = setTimeout(() => { numero = ''; irA.style.display = 'none'; }, 2500);
+                return;
+            }
+            if (t === 'Enter' && numero) {
+                mostrar(parseInt(numero, 10) - 1, 0);
+                numero = ''; irA.style.display = 'none';
+                e.preventDefault();
+                return;
+            }
+            switch (t) {
+                case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter':
+                    e.preventDefault(); siguiente(); break;
+                case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace':
+                    e.preventDefault(); anterior(); break;
+                case 'Home': e.preventDefault(); mostrar(0, 0); break;
+                case 'End': e.preventDefault(); mostrar(N - 1, 0); break;
+                case 'm': case 'M': alternar('con-indice'); break;
+                case 'n': case 'N': alternar('con-notas'); break;
+                case 'b': case 'B': case '.': alternar('en-negro'); break;
+                case '?': case 'h': case 'H': alternar('con-ayuda'); break;
+                case 'f': case 'F':
+                    if (document.fullscreenElement) document.exitFullscreen();
+                    else document.documentElement.requestFullscreen().catch(() => { });
+                    break;
+                case 'p': case 'P':
+                    if (!MODO_PRESENTADOR) {
+                        const u = new URL(location.href);
+                        u.searchParams.set('presentador', '1');
+                        u.hash = '#' + (actual + 1);
+                        window.open(u.toString(), 'presentador-' + CLAVE, 'width=1280,height=760');
+                    }
+                    break;
+                case 'Escape':
+                    ['con-notas', 'con-ayuda', 'en-negro'].forEach((c) => document.body.classList.remove(c));
+                    alternar('con-indice', false);
+                    break;
+            }
+        });
+
+        $('btn-sig').addEventListener('click', siguiente);
+        $('btn-ant').addEventListener('click', anterior);
+        $('btn-menu').addEventListener('click', () => alternar('con-indice'));
+        $('velo').addEventListener('click', () => alternar('con-indice', false));
+        $('ayuda').addEventListener('click', () => alternar('con-ayuda', false));
+        $('negro').addEventListener('click', () => alternar('en-negro', false));
+
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('.enlace-material');
+            if (!a) return;
+            // El material guarda la lección abierta en su `storageKey`: se deja
+            // apuntando a la sección y se abre. Así el enlace aterriza en ella.
+            if (a.dataset.indice && CFG.storageKey) guardar(CFG.storageKey, a.dataset.indice);
+        });
+
+        let tQuieto = null;
+        const despertar = () => {
+            document.body.classList.remove('quieto');
+            clearTimeout(tQuieto);
+            tQuieto = setTimeout(() => {
+                if (!document.body.classList.contains('con-indice')) document.body.classList.add('quieto');
+            }, 2800);
+        };
+        document.addEventListener('mousemove', despertar);
+        document.addEventListener('mousedown', despertar);
+
+        let x0 = null;
+        document.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            if (x0 === null) return;
+            const dx = e.changedTouches[0].clientX - x0;
+            if (Math.abs(dx) > 50) (dx < 0 ? siguiente : anterior)();
+            x0 = null;
+        });
+
+        window.addEventListener('resize', escalar);
+        window.addEventListener('hashchange', () => {
+            const h = parseInt(location.hash.replace('#', ''), 10);
+            if (Number.isInteger(h) && h - 1 !== actual) mostrar(h - 1, 0);
+        });
+
+        /* ---------- Arranque ---------- */
+        if (MODO_REVISION) document.body.classList.add('revision');
+        construirIndice();
+        resaltarBloques();
+        escalar();
+        mostrar(inicial(), 0, false);
+        despertar();
+
+        // Se mide cuando todo tiene ya su tamaño final. MathJax llega `async`:
+        // aquí casi nunca ha cargado, y con las fuentes en caché `fonts.ready`
+        // se resolvía antes que él, así que las fórmulas se medían como una
+        // línea de TeX sin componer y el texto de debajo se salía al
+        // componerlas. En Chrome sin ventana, con las fuentes por descargar,
+        // salía bien por casualidad: `revisar.py` no lo veía. El `load` de la
+        // ventana espera al guion de MathJax (llegue o falle) y a las imágenes;
+        // después se espera a que MathJax componga.
+        const cargada = new Promise((r) => {
+            if (document.readyState === 'complete') r();
+            else window.addEventListener('load', r, { once: true });
+        });
+        const listo = cargada.then(() => Promise.all([
+            document.fonts ? document.fonts.ready : null,
+            window.MathJax && MathJax.startup ? MathJax.startup.promise.then(() => MathJax.typesetPromise ? MathJax.typesetPromise() : null).catch(() => { }) : null,
+        ]));
+        // Si algo tarda más que el plazo, se ajusta con lo que haya y se
+        // vuelve a ajustar al terminar; mientras tanto el informe es provisional.
+        const PLAZO_CARGA = 5000;
+        let completo = false;
+        const ajustarYInformar = () => {
+            dibujarGraficas();
+            const informe = ajustar();
+            if (window.Plotly) document.querySelectorAll('.grafica[data-hecha]').forEach((g) => { try { Plotly.Plots.resize(g); } catch (e) { } });
+            if (MODO_PRESENTADOR) pintarPresentador();
+            let pre = $('informe-revision');
+            if (!pre) {
+                pre = document.createElement('pre');
+                pre.id = 'informe-revision';
+                pre.hidden = true;
+                document.body.appendChild(pre);
+            }
+            pre.textContent = JSON.stringify(Object.assign({ total: N, avisos: informe }, completo ? {} : { provisional: true }));
+            if (MODO_REVISION) console.log('[revisión]', JSON.stringify(informe));
+        };
+        const plazo = setTimeout(ajustarYInformar, PLAZO_CARGA);
+        listo.then(() => {
+            clearTimeout(plazo);
+            completo = true;
+            ajustarYInformar();
+        });
+    })();
+    </script>
+</body>
+
+</html>
