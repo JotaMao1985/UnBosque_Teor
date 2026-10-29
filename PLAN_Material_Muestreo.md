@@ -7419,3 +7419,27 @@ Pedido de Javier: enlazarlas «como las del cap. 4» (T7.94), sin publicar.
 - **Comprobado:** los cuatro enlaces de diapositivas de la portada y del README apuntan a archivos que
   existen. La portada se ve en el navegador sin desborde horizontal.
 - **Sin publicar.**
+
+### T7.99 — Las diapositivas arrancan sin red: arreglo en la plantilla de la skill (2026-10-23)
+
+Pedido de Javier: «Arregla el problema con la skill y después corrige las diapositivas» (VI-1 de
+`PLAN_Auditoria_Cap5_Diapositivas.md`).
+
+- **El fallo:** la cabecera de la plantilla de `diapositivas-clase` define `window.Prism = { manual: true }`
+  antes de cargar Prism de cdnjs. Sin cdnjs, `Prism.languages` no existe y el visor se caía al registrar la
+  gramática del pseudocódigo (`TypeError`): la presentación se quedaba en una página en blanco.
+- **El arreglo** (`skills_docencia/skills/diapositivas-clase/assets/plantilla.html`): una comprobación,
+  `hayPrism`, que exige `Prism.languages`, en los dos sitios que usan Prism. Sin commit en ese
+  repositorio, que tiene además cambios sin commit de sesiones anteriores.
+- **Reconstruidas** las cuatro presentaciones del curso (caps. 4 y 5, dos sesiones cada uno). Cada una
+  cambia solo en esas líneas.
+- **Comprobado** con `revisar.py` en Chrome sin interfaz:
+  - **Sin red** (un Chrome que no resuelve ningún nombre): la versión anterior no arranca («el visor no
+    escribió el informe»). Las cuatro corregidas arrancan y caben; el código sale sin color, las fórmulas
+    en TeX crudo y sin íconos. La diap. 9 de S1 del cap. 5 se encoge al 85 %.
+  - **Con red:** todas caben a ≥ 88 %, como antes, con el código resaltado y las fórmulas compuestas.
+- **Queda, no pedido:**
+  - Las fórmulas sin red: MathJax viene de jsdelivr.
+  - El mismo fallo está en las presentaciones de otros cursos hechas con la skill y en la librería LP-CORE
+    de la USTA (`lp-base.html`), de donde viene la guarda.
+- **Sin commit y sin publicar.**
