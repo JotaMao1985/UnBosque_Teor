@@ -429,16 +429,10 @@ def course_data():
             '    };\n')
 
 
-DESC_TARJETA = (
-    "Cincuenta y nueve preguntas autocorregidas sobre los capítulos 1 y 2: cuatro bloques nuevos "
-    "—conceptos, procedimientos, interpretación y análisis gráfico— sobre una población que no "
-    "aparece en ningún capítulo, más el simulacro del parcial repartido por las cuatro semanas "
-    "del corte. Retroalimentación en cada opción —también en las correctas— y respuestas "
-    "abiertas que se corrigen contra una lista de comprobación. Trae la tabla de "
-    "especificaciones del Parcial 1, con lo que pesa cada objetivo y cuántas preguntas de aquí "
-    "le tocan; los diez errores de cálculo que corren sin dar error; y el mapa que lleva cada "
-    "pregunta del simulacro a su módulo del capítulo y a su sección de Lohr. Sin nota y "
-    "repetible.")
+# La línea bajo el título de la tarjeta. La portada por cortes (T7.100) lleva
+# tarjetas compactas, como la de Diseño de Experimentos: sin descripción larga.
+DESC_TARJETA = ("Capítulos 1 y 2 · Cuatro bloques de preguntas nuevas, uno por dimensión del "
+                "parcial, y el simulacro del Parcial 1. Repetible.")
 
 
 def tarjeta_en_indice(n_preguntas):
@@ -448,51 +442,78 @@ def tarjeta_en_indice(n_preguntas):
     índice siguió anunciando «8 módulos · 30 preguntas» después de que la página
     pasara a 12 y 59. Una cuenta escrita a mano sobre algo que cambió, otra vez,
     y en la puerta de entrada del sitio.
+
+    Cada campo que se refresca tiene que aparecer UNA vez en la tarjeta. Si no
+    casa —porque el marcado de la portada cambió, como en T7.100—, se aborta:
+    un «ya estaba al día» que en realidad no miró nada es el fallo silencioso
+    que esta función existe para evitar.
     """
+    minutos = sum(int(m["dur"].split()[0]) for m in MODULOS)
     html = INDICE.read_text(encoding="utf-8")
-    if DESTINO.name in html:
-        meta = re.compile(r'(<span class="chapter-card__modules">'
-                          r'<i class="fas fa-list-ul" aria-hidden="true"></i> )[^<]*(</span>)')
-        desc = re.compile(r'(<p class="chapter-card__desc">)(?:(?!</p>).)*?(</p>)', re.S)
-        i = html.find(f'href="{DESTINO.name}"')
-        j = html.find("</a>", i)
-        trozo = html[i:j]
-        nuevo_trozo = meta.sub(
-            rf"\g<1>{len(MODULOS)} módulos · {n_preguntas} preguntas\g<2>", trozo, count=1)
-        nuevo_trozo = desc.sub(rf"\g<1>{DESC_TARJETA}\g<2>", nuevo_trozo, count=1)
+    enlace = f'href="{DESTINO.name}"'
+    if enlace in html:
+        # La tarjeta del preparcial es la que lo enlaza desde su TÍTULO, no la
+        # primera que lo nombre: un enlace suelto en otra tarjeta haría que se
+        # reescribiera esa con las cifras del preparcial.
+        suyas = [m for m in re.finditer(r'<article class="tarjeta.*?</article>', html, re.S)
+                 if re.search(r'class="tarjeta-titulo[^"]*">\s*<a ' + re.escape(enlace),
+                              m.group(0))]
+        if len(suyas) != 1:
+            aborta(f"hay {len(suyas)} tarjetas con el preparcial en el título; "
+                   "no sé cuál refrescar")
+        i, j = suyas[0].span()
+        trozo = nuevo_trozo = html[i:j]
+        for patron, valor in [
+                (r'(\d+)( módulos</span>)', len(MODULOS)),
+                (r'(\d+)( preguntas</span>)', n_preguntas),
+                (r'(\d+)( min estimados</span>)', minutos),
+                (r'(<p class="mt-1 text-xs text-slate-500">)[^<]*(</p>)', None)]:
+            n = len(re.findall(patron, nuevo_trozo))
+            if n != 1:
+                aborta(f"el campo {patron!r} aparece {n} veces en la tarjeta del preparcial "
+                       "y tiene que aparecer una; ¿cambió el marcado de la portada?")
+            reemplazo = (rf"\g<1>{DESC_TARJETA}\g<2>" if valor is None
+                         else rf"{valor}\g<2>")
+            nuevo_trozo = re.sub(patron, reemplazo, nuevo_trozo, count=1)
         if nuevo_trozo == trozo:
             print(f"  {INDICE.name}: la tarjeta ya estaba al día")
             return
         INDICE.write_text(html[:i] + nuevo_trozo + html[j:], encoding="utf-8")
         INDICE.chmod(0o644)
         print(f"  {INDICE.name}: tarjeta refrescada "
-              f"({len(MODULOS)} módulos · {n_preguntas} preguntas)")
+              f"({len(MODULOS)} módulos · {n_preguntas} preguntas · {minutos} min)")
         return
-    ancla = '        </a>\n\n      </div>\n    </section>'
+    # La tarjeta va la última del Corte I: su rejilla cierra justo antes de la
+    # sección del Corte II.
+    ancla = ('      </div>\n    </section>\n\n    <section class="mb-12" id="corte-ii">\n'
+             '      <div class="corte-rotulo">\n        <h2>Corte II</h2>')
     if html.count(ancla) != 1:
-        aborta(f"el cierre de la rejilla de tarjetas aparece {html.count(ancla)} veces en el "
+        aborta(f"el cierre de la rejilla del Corte I aparece {html.count(ancla)} veces en el "
                "índice; no puedo colocar la del preparcial con seguridad")
-    tarjeta = f"""        </a>
-
-        <a class="chapter-card" href="{DESTINO.name}">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">P1</span>
-            <span class="chapter-card__icon"><i class="fas fa-stethoscope" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Corte I · autodiagnóstico sin nota</p>
-            <h3 class="chapter-card__title">Preparcial del Corte I</h3>
-            <p class="chapter-card__desc">{DESC_TARJETA}</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> {len(MODULOS)} módulos · {n_preguntas} preguntas</span>
-              <span class="chapter-card__go">Diagnosticarme <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+    tarjeta = f"""      <article class="tarjeta tarjeta-taller p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-stethoscope" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Preparcial</span>
+              <span class="text-xs font-semibold text-slate-500">Autodiagnóstico sin nota</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="{DESTINO.name}">Preparcial del Corte I</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">{DESC_TARJETA}</p>
           </div>
-        </a>
-
-      </div>
-    </section>"""
-    INDICE.write_text(html.replace(ancla, tarjeta, 1), encoding="utf-8")
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>{len(MODULOS)} módulos</span>
+          <span><i class="fas fa-circle-question mr-1" aria-hidden="true"></i>{n_preguntas} preguntas</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>{minutos} min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el preparcial <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
+"""
+    INDICE.write_text(html.replace(ancla, tarjeta + ancla, 1), encoding="utf-8")
     INDICE.chmod(0o644)
     print(f"  {INDICE.name}: tarjeta añadida")
 

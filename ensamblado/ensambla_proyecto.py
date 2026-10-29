@@ -680,41 +680,52 @@ def comprueba_y_escribe(html: str, sel_plantilla: set, revisar: bool, ej: dict,
 
 
 def tarjeta_en_indice() -> None:
-    """La tarjeta del índice, detrás de la última. Idempotente. SOLO al publicar:
-    `sitio/muestreo/index.html` está versionado, y una tarjeta que apunte a una
-    página sin publicar sería un enlace roto en gh-pages."""
+    """La tarjeta del índice, la última del Corte III. Idempotente. SOLO al
+    publicar: `sitio/muestreo/index.html` está versionado, y una tarjeta que
+    apunte a una página sin publicar sería un enlace roto en gh-pages.
+
+    El marcado es el `.tarjeta` de la portada por cortes (T7.100), calcado de
+    la de Diseño de Experimentos; precalculo/cuenta_sitio.py coteja sus
+    módulos y sus minutos contra la página."""
     html = INDICE.read_text(encoding="utf-8")
     if DESTINO.name in html:
         print(f"  {INDICE.name}: ya tiene la tarjeta, no toco nada")
         return
-    ancla = '        </a>\n\n      </div>\n    </section>'
+    # El Corte III es la última sección: su rejilla cierra justo antes de </main>.
+    # Se comprueba que la sección que cierra ahí sea de verdad la del Corte III:
+    # si algún día se añade otra detrás, la tarjeta no debe caer en ella.
+    ancla = '      </div>\n    </section>\n  </main>'
     if html.count(ancla) != 1:
-        sys.exit(f"PARADO: el cierre de la rejilla de tarjetas aparece {html.count(ancla)} veces")
-    tarjeta = f"""        </a>
-
-        <a class="chapter-card" href="{DESTINO.name}">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">PI</span>
-            <span class="chapter-card__icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Corte III · {D.PROYECTO_DEL_CORTE}&nbsp;% de la nota del corte</p>
-            <h3 class="chapter-card__title">Proyecto integrador</h3>
-            <p class="chapter-card__desc">Diseñar, ejecutar, estimar y defender una encuesta por muestreo
-              probabilístico sobre una población finita real. Los hitos con sus fechas, el repositorio de
-              GitHub donde vive el proyecto, el protocolo que se escribe antes de seleccionar, la comprobación
-              de las probabilidades de inclusión, la estimación con survey y la rúbrica entera. Trae una
-              plantilla de informe y explica la modalidad conjunta con Diseño de Experimentos.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> {len(MODULOS)} módulos · plantilla .Rmd</span>
-              <span class="chapter-card__go">Leer la guía <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        sys.exit(f"PARADO: el cierre de la rejilla del Corte III aparece {html.count(ancla)} veces")
+    ultimo_h2 = re.findall(r"<h2>([^<]*)</h2>", html[:html.find(ancla)])
+    if not ultimo_h2 or ultimo_h2[-1] != "Corte III":
+        sys.exit("PARADO: la última sección antes de </main> no es la del Corte III "
+                 f"(es «{ultimo_h2[-1] if ultimo_h2 else '—'}»)")
+    minutos = sum(int(d.split()[0]) for _, _, _, d, *_ in MODULOS)
+    # El `id` es el destino del enlace «Proyecto» de la cabecera de la portada.
+    tarjeta = f"""      <article class="tarjeta tarjeta-proyecto p-5" id="proyecto">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-clipboard-check" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Proyecto integrador</span>
+              <span class="text-xs font-semibold text-primary">{D.PROYECTO_DEL_CORTE}&nbsp;% de la nota del corte</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="{DESTINO.name}">Diseñar, ejecutar y defender una encuesta</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Muestreo probabilístico sobre una población finita real · Hitos y fechas, rúbrica y modalidad conjunta con Diseño de Experimentos.</p>
           </div>
-        </a>
-
-      </div>
-    </section>"""
-    INDICE.write_text(html.replace(ancla, tarjeta, 1), encoding="utf-8")
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>{len(MODULOS)} módulos</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>{minutos} min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir la guía <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span><a class="tarjeta-extra" href="{RMD_DESTINO.name}" download><i class="fas fa-file-code" aria-hidden="true"></i> Plantilla del informe (.Rmd)</a></p>
+      </article>
+"""
+    INDICE.write_text(html.replace(ancla, tarjeta + ancla, 1), encoding="utf-8")
     INDICE.chmod(0o644)
     print(f"  {INDICE.name}: tarjeta añadida")
 

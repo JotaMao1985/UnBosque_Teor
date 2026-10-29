@@ -28,6 +28,9 @@ CAMPOS = [
     ("bloques R",    lambda h: len(re.findall(r'class="language-r"', h))),
     ("bloques Py",   lambda h: len(re.findall(r'class="language-python"', h))),
     ("cifras #>",    lambda h: len(re.findall(r"#&gt;", h))),
+    # Los minutos de lectura que declara cada módulo en el courseData; la
+    # portada los suma en cada tarjeta, como la de Diseño de Experimentos.
+    ("minutos",      lambda h: sum(int(x) for x in re.findall(r'duration: "(\d+) min"', h))),
 ]
 COMPONENTES = [
     ("glosario",  'data-glosario="'),
@@ -52,6 +55,8 @@ def etiqueta_de(nombre):
     m = re.match(r"preparcial-corte-(\d+)", nombre)
     if m:
         return f"preparcial {m.group(1)}"
+    if nombre.startswith("proyecto-integrador"):
+        return "proyecto"
     return nombre[:10]
 
 
@@ -73,24 +78,34 @@ ESCRITOS = ["README.md", "index.html"]
 # falsos positivos a la primera: el «91 modulos · 70 simuladores» de la cabecera
 # lleva encima un «Comenzar» que apunta al capitulo 1, asi que el global se leia
 # como cifra del cap. 1. La regla buena es estructural:
-#   - index.html: una cifra dentro de una tarjeta `<a class="chapter-card">`
-#     es de esa pagina; cualquier otra es del curso entero.
+#   - index.html: una cifra dentro de una tarjeta es de la pagina de su primer
+#     enlace (el del titulo); cualquier otra es del curso entero. Valen los dos
+#     marcados: `<article class="tarjeta">` (la portada por cortes, T7.100) y
+#     `<a class="chapter-card">` (la anterior), porque `--sitio` se apunta a
+#     estados pasados. Una tarjeta cuyo enlace no es una pagina contada no
+#     presta sus cifras al curso: se listan aparte, «(sin cotejar)».
+#   - Los minutos solo se cotejan dentro de una tarjeta: son la suma de los
+#     modulos de una pagina, y el curso entero no declara ninguna.
 #   - README.md: las cifras por capitulo viven SOLO en la tabla, fila a fila;
 #     el resto de la prosa es global.
 # Si algun dia alguien escribe «el capitulo 3 tiene 14 modulos» en la prosa del
 # README, saltara como desajuste. Es un falso positivo ruidoso y localizable, no
 # un fallo silencioso, que es el reparto que interesa.
-PAGINA_RE = re.compile(r'(capitulo-\d+|taller-\d+|preparcial-corte-\d+)[-\w]*\.html')
-TARJETA_RE = re.compile(r'<a class="chapter-card" href="([^"]+)"(.*?)</a>', re.S)
+PAGINA_RE = re.compile(
+    r'(capitulo-\d+|taller-\d+|preparcial-corte-\d+|proyecto-integrador-corte-[ivx]+)[-\w]*\.html')
+TARJETA_RE = re.compile(
+    r'<article class="tarjeta[^"]*"(.*?)</article>|<a class="chapter-card"(.*?)</a>', re.S)
 CIFRA_RE = re.compile(
     r'(\d+)\s+(módulos|simuladores|preguntas|ejercicios guiados'
-    r'|bloques de código|de R\b|de Python\b)')
+    r'|bloques de código|bloques R/Python|bloques en R y Python|de R\b|de Python\b|min\b)')
 CAMPO_DE = {
     "módulos": "módulos", "simuladores": "simuladores", "preguntas": "preguntas",
     "ejercicios guiados": "ejercicios", "de R": "bloques R",
-    "de Python": "bloques Py",
-    # Este no es un campo del recuento: se suma de los dos.
+    "de Python": "bloques Py", "min": "minutos",
+    # Estos no son campos del recuento: se suman de los dos.
     "bloques de código": ("bloques R", "bloques Py"),
+    "bloques R/Python": ("bloques R", "bloques Py"),
+    "bloques en R y Python": ("bloques R", "bloques Py"),
 }
 # Las filas de la tabla del README no dicen «10 modulos»: dicen `| 10 | 7 |`.
 FILA_RE = re.compile(
@@ -116,7 +131,7 @@ def valor(pagina, campo, cuentas):
 
 def coteja(cuentas, sitio):
     """Compara cada cifra escrita a mano con la contada."""
-    fallos, ajenas, mirados = [], [], 0
+    fallos, ajenas, sueltas, mirados = [], [], [], 0
     for ruta in [sitio / n for n in ESCRITOS]:
         if not ruta.exists():
             continue
@@ -126,13 +141,25 @@ def coteja(cuentas, sitio):
             cap = PAGINA_RE.match(m.group(1)).group(1)
             casos += [(m.start(2), cap, "módulos", int(m.group(2))),
                       (m.start(3), cap, "simuladores", int(m.group(3)))]
-        tarjetas = [(m.start(), m.end(), PAGINA_RE.match(m.group(1)).group(1))
-                    for m in TARJETA_RE.finditer(texto)]
+        tarjetas = []
+        for m in TARJETA_RE.finditer(texto):
+            enlace = re.search(r'href="([^"]+)"', m.group(1) or m.group(2))
+            href = enlace.group(1) if enlace else "(sin enlace)"
+            pag = PAGINA_RE.match(href)
+            # «sin contar»: sus cifras no se leen como del curso entero ni se
+            # callan; se listan aparte, con la línea y el enlace de la tarjeta.
+            tarjetas.append((m.start(), m.end(),
+                             pag.group(1) if pag else "sin contar", href))
         for m in CIFRA_RE.finditer(texto):
-            casos.append((m.start(),
-                          next((pag for ini, fin, pag in tarjetas
-                                if ini <= m.start() < fin), None),
-                          m.group(2), int(m.group(1))))
+            pagina, href = next(((pag, h) for ini, fin, pag, h in tarjetas
+                                 if ini <= m.start() < fin), (None, None))
+            if m.group(2) == "min" and pagina is None:
+                continue
+            if pagina == "sin contar":
+                sueltas.append((ruta.name, texto.count("\n", 0, m.start()) + 1,
+                                m.group(0), href))
+                continue
+            casos.append((m.start(), pagina, m.group(2), int(m.group(1))))
         for pos, pagina, nombre, escrito in casos:
             contado = valor(pagina, CAMPO_DE[nombre], cuentas)
             if contado is None:
@@ -144,7 +171,7 @@ def coteja(cuentas, sitio):
                                escrito, contado))
         ajenas += [(ruta.name, texto.count("\n", 0, m.start()) + 1, m.group(1))
                    for m in AJENA_RE.finditer(texto)]
-    return mirados, fallos, ajenas
+    return mirados, fallos, ajenas, sueltas
 
 
 def main():
@@ -158,8 +185,12 @@ def main():
     # El recurso de práctica del Taller 1 no es un capítulo pero sí es una
     # página publicada con módulos, preguntas y bloques de código: si no se
     # contara, el total del README volvería a ser una cifra escrita a mano.
+    # La guía del proyecto también: su tarjeta de la portada dice módulos y
+    # minutos. El total del cotejo («los 8 capítulos») solo suma `capitulo-*`,
+    # así que no lo mueve; la fila TOTAL que se imprime, sí.
     caps = (sorted(sitio.glob("capitulo-*.html")) + sorted(sitio.glob("taller-*.html"))
-            + sorted(sitio.glob("preparcial-*.html")))
+            + sorted(sitio.glob("preparcial-*.html"))
+            + sorted(sitio.glob("proyecto-integrador-corte-*.html")))
     # Solo lo que de verdad se publica. Un archivo que sigue en disco pero esta
     # en el .gitignore -como el recurso del Taller 1, absorbido por el
     # preparcial y retirado como pagina propia- no llega a gh-pages, y contarlo
@@ -192,7 +223,7 @@ def main():
     print(f"\n{len(caps)} páginas · "
           f"{sum(c.stat().st_size for c in caps) / 1024:.0f} KB publicados")
 
-    mirados, fallos, ajenas = coteja(cuentas, sitio)
+    mirados, fallos, ajenas, sueltas = coteja(cuentas, sitio)
     print(f"\nCotejo: {mirados} cifras escritas a mano en {len(ESCRITOS)} archivos "
           f"· {len(fallos)} desajustada{'s' if len(fallos) != 1 else ''}")
     for archivo, linea, ambito, nombre, escrito, contado in fallos:
@@ -201,6 +232,9 @@ def main():
     for archivo, linea, cifra in ajenas:
         print(f"    (sin cotejar) {archivo}:{linea}  «{cifra} cifras»: sale de "
               f"verifica_bloques.py, este guion no la calcula")
+    for archivo, linea, cifra, href in sueltas:
+        print(f"    (sin cotejar) {archivo}:{linea}  «{cifra}»: su tarjeta enlaza a "
+              f"«{href}», que no es una página contada")
     return 1 if fallos else 0
 
 

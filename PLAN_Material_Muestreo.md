@@ -7460,3 +7460,97 @@ Pedido de Javier: «Arregla el problema con la skill y después corrige las diap
   - El mismo fallo está en las presentaciones de otros cursos hechas con la skill y en la librería LP-CORE
     de la USTA (`lp-base.html`), de donde viene la guarda.
 - **Sin commit y sin publicar.**
+
+### T7.100 — La portada por cortes, con la estructura de la de Diseño de Experimentos (2026-10-29)
+
+Pedido de Javier: que la estructura de la portada se parezca a la de Diseño de Experimentos (`Htmls/index.html`
+de ese curso).
+
+- **Decisiones de Javier:**
+  - cortes como se dictó: I = caps. 1–2 + Preparcial I; II = caps. 3–4, porque el preparcial del cap. 4 habla
+    de «los dos capítulos del Corte II»; III = caps. 5–8 + proyecto;
+  - tarjetas compactas, sin las descripciones largas;
+  - sin sección «Recursos del curso»;
+  - la bibliografía del pie, igual a la de los capítulos.
+- **Portada (`sitio/muestreo/index.html`), reescrita con el componente de Diseño:**
+  - cabecera fija y *hero* con la fila de cifras;
+  - una sección por corte, con lo que cubre y un lema; los tres lemas son redacción propia, propuesta en el
+    plan aprobado, y el del Corte I se corrigió en la auditoría;
+  - tarjetas `.tarjeta` con módulos, simuladores, bloques R/Python y minutos (los `duration` de cada módulo);
+  - las diapositivas de los caps. 4 y 5, dentro de la tarjeta de su capítulo («Sesión 1 · Sesión 2»), en vez
+    de cuatro tarjetas sueltas;
+  - el proyecto, con un segundo enlace a la plantilla del informe.
+- **Lo que no se copió de Diseño:** el programa. Muestreo es de **Estadística** (sílabo 20939), no de
+  «Matemáticas y Ciencia de Datos». La paleta y el icono son los de Muestreo.
+- **Font Awesome 6.0.0 → 6.4.0**, como en Diseño: el icono del cap. 1 (`fa-magnifying-glass-chart`) no existe
+  en 6.0.0 y ya salía en blanco en la portada anterior.
+- **`precalculo/cuenta_sitio.py`:**
+  - Ya fallaba en `main` (`AttributeError`) con las tarjetas del proyecto y de las diapositivas.
+  - Lee las tarjetas de los dos marcados (`.tarjeta` y `.chapter-card`, este para `--sitio` sobre estados
+    pasados) y coteja también «bloques R/Python», «bloques en R y Python», los minutos (solo dentro de una
+    tarjeta) y la guía del proyecto.
+  - Las cifras de una tarjeta que no enlaza a una página contada se listan «(sin cotejar)».
+- **Ensambladores:**
+  - `ensambla_preparcial.py` refresca módulos, preguntas, minutos y la línea de su tarjeta, que elige por el
+    enlace del título. Aborta si un campo no aparece exactamente una vez. Con el marcado nuevo, el anterior
+    habría dicho «ya estaba al día» sin mirar nada.
+  - `ensambla_proyecto.py` no refresca: solo inserta su tarjeta si falta, al final del Corte III, y comprueba
+    que esa sección sea la del Corte III.
+  - `ensambla_taller1.py` no se toca: su página está retirada y su ancla ya no existe, así que aborta.
+- **Auditoría antes de publicar** (pedida por Javier; informe en `PLAN_Auditoria_Portada.md`, fuera de git):
+  - **Método:** protocolo mecánico y cinco lectores independientes (DA, CO, CL, VI y PE) sobre una copia
+    congelada.
+  - **16 errores corregidos.** Los de más peso:
+    - Las semanas de los cortes eran falsas. Lo dictado coincide con el sílabo (1–5, 6–11 y 12–16), pero choca
+      con las semanas de las tarjetas, así que el rótulo dice ahora qué capítulos cubre.
+    - La «2.ª ed.» de las tarjetas de los caps. 3 y 4 era la 1.ª. La nota de la l. 715 de este PLAN («capítulo
+      3 en la 2.ª edición») es falsa: en la 2.ª (2010), estratificado ya es el cap. 3, como en la 3.ª.
+    - El pie lleva ahora las cinco entradas del pie de los capítulos. Kish sale: solo lo citan módulos.
+    - El lema del Corte I contradecía el objetivo del cap. 1.
+    - Accesibilidad: desborde a 320 px, cabecera fija que tapaba el destino del salto y el foco, foco por
+      debajo de 3:1, y rótulos grises a 2,56:1.
+    - Código: la prueba de regresión de `cuenta_sitio.py` sobre `9e9ec78` (daba 20 en vez de 2), un fallo
+      silencioso y tres robusteces de los ensambladores.
+  - **Para decidir:** 10 grupos de mejoras, A1–A10; la primera, las semanas reales de los caps. 5–8.
+  - **Errores del material ya publicado (C1–C6).** El más visible: los capítulos no leen `location.hash`, así
+    que los 26 enlaces «Leer en el material» de las cuatro presentaciones caen en el módulo 1.
+- **Comprobado tras las correcciones:**
+  - `cuenta_sitio.py`: 68 cifras, 0 desajustadas; sobre `9e9ec78`, las 2 metaetiquetas.
+  - Los dos ensambladores, sobre copias de la portada: la dejan igual y reinsertan su tarjeta byte a byte igual
+    a la escrita a mano; el del preparcial además la refresca. Abortan en los casos nuevos.
+  - Los 15 enlaces locales existen.
+  - En el navegador:
+    - consola limpia y los 73 iconos dibujados;
+    - sin desborde a 1280, 768, 375 y 320 px;
+    - «Sesión 1/2» y «Plantilla del informe» abren su destino, no el capítulo;
+    - tras «Saltar al contenido», el «Corte I» queda debajo de la cabecera.
+- **Mejoras A2–A8 aplicadas** (Javier, mismo día: «Aplica las recomendadas»). A1 espera las semanas reales;
+  A9 y A10 no entraban.
+  - A2: el texto naranja (`.tarjeta-abrir`, `.corte-semanas`) pasa a #C2410C: 5,18:1 sobre blanco y 4,95:1
+    sobre el fondo. El #FF6600 sigue en lo que no es texto. La portada de Diseño NO se tocó: la escribe
+    `ensamblado/genera_portada.py` de ese repositorio, que otra sesión tiene modificado sin commit.
+  - A3: anclas «Corte I · II · III · Proyecto» en la cabecera, `id` en cada sección y en la tarjeta del
+    proyecto, y `id="capitulos"` en `<main>` para los marcadores de la portada anterior (el salto apunta ahí).
+  - A4: «Sesión 1 · M1–5», «Sesión 2 · M6–12» (cap. 4) y «M6–10» (cap. 5), sacados de las fuentes de las
+    diapositivas; el proyecto nombra «Hitos y fechas, rúbrica y modalidad conjunta con Diseño».
+  - A5: «N min estimados» en las diez tarjetas y en el README.
+  - A6: cap. 7, «Lohr caps. 7 y 9» (el capítulo cita §9.1 y §9.3).
+  - A7: preparcial con la píldora «Preparcial» y la línea «Cuatro bloques de preguntas nuevas, uno por
+    dimensión del parcial, y el simulacro del Parcial 1. Repetible.», tomada de su propio «Cómo usar esto»
+    (la propuesta de CL, «una población nueva», no la respalda la página); proyecto con el título de su
+    guía, «Diseñar, ejecutar y defender una encuesta»; lema III, «Las encuestas grandes por dentro: …»;
+    README sin el guion interno ni «la de Diseño». CL-10 (tipografía del pie) no se toca: el pie es copia
+    del de los capítulos por decisión de Javier.
+  - A8: subrayado opaco y 25 px de alto en los enlaces secundarios; el aire de las tarjetas de Diseño
+    (`.tarjeta h3, .tarjeta p`: 1rem debajo); la cabecera fija solo con ≥ 768 px de ancho y ≥ 600 de alto
+    (`md:sticky` no bastaba: un teléfono apaisado mide 812 de ancho); el *hero* como región con nombre;
+    «Plantilla del informe (.Rmd)»; icono y aviso para lector de pantalla en los dos enlaces que abren otra
+    pestaña; `text-balance` en el h1. VI-8 (columna vacía del Corte II) se deja.
+  - Los dos ensambladores escriben la tarjeta nueva (píldora, línea, «min estimados», `id`, ancla del Corte
+    II con su `id`).
+  - Comprobado: `cuenta_sitio.py`, 68 cifras y 0 desajustadas, y 2 de 2 desajustes sembrados en una copia;
+    ensambladores: al día, refresco y reinserción byte a byte igual; HTML equilibrado, `id` únicos, 15
+    enlaces locales y 5 anclas que existen; en el navegador, consola limpia, 75 iconos, sin desborde a 1280,
+    768, 812×375, 375 y 320 px, cabecera fija solo a 1280×800 y 768×1024, las cuatro anclas dejan su
+    sección a 96 px (cabecera de 84), foco lima en la cabecera y los enlaces secundarios reciben su clic.
+- **Sin commit y sin publicar.**
