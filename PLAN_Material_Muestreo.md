@@ -7158,7 +7158,8 @@ las notas** del presentador y **código R en cada sección**.
   `_sesion2.html` (43 y 44 diapositivas: 35 y 34 de contenido, tras las mejoras de la auditoría); fuentes en
   `sitio/muestreo/diapositivas/fuentes/cap4_sesion{1,2}.md`, y trece gráficos animados en
   `fuentes/recursos/cap4/*.json`, generados desde las salidas de R del capítulo y desde
-  `precalculo/salidas/cap4_datos.json` (el generador no se versiona: cada JSON lleva sus cifras tal cual).
+  `precalculo/salidas/cap4_datos.json` con `precalculo/genera_diapositivas_cap4.py` (versionado el 2026-10-29: ver
+  «Rescate», al final).
 - **Rótulos:** `::: ejemplo Dato`, `::: tip Interpretación` y `::: warn Criterio`; lo que no lleva
   rótulo es teoría o dato. Una diapositiva antes del primer divisor de la sesión 1 explica la convención.
 - **Verificado:** `verifica_bloques.py --prosa` sobre el cap. 4, 528/528 cifras de código y 249/249 de
@@ -7209,6 +7210,22 @@ portada y el README). Build `built`; `verifica_publicado.py --solo-huella` da la
 portada y el README servidos coinciden byte a byte con la rama; servida, la portada tiene 12 tarjetas, las dos
 nuevas responden 200 y la consola está limpia; a 375 px, sin desborde. El capítulo 4 no enlaza las diapositivas:
 se regenera con su cadena, y un enlace escrito a mano se perdería.
+
+**Rescate** (2026-10-29, a pedido de Javier). El scratchpad de la sesión se borró, y con él el generador de los
+gráficos y el guion de R de BigLucy, que no estaban versionados; el informe de auditoría vivía solo en el worktree.
+
+- **Generador:** se rehízo como `precalculo/genera_diapositivas_cap4.py`. Corrido sobre el repositorio, reproduce
+  los trece `.json` byte a byte, comprobado con sus sha.
+  - **Lo que enseña:** la primera versión rehecha difería en cuatro archivos solo por el separador de miles. Los
+    publicados usan espacio no separable (U+00A0), invisible en una salida de `cat`; ahora va escrito como
+    `\u00a0`.
+- **BigLucy:** `precalculo/verifica_biglucy_ppt.R` da lo mismo que el 22 de octubre: 980 501 frente a 582 346, y
+  correlaciones 0,77, 0,44 y 0,19.
+- **Registro:** los dos guiones figuran en la tabla de `precalculo/README.md`.
+- **El informe:** `INFORME_Auditoria_Diapositivas_Cap4.md` está ahora también en el checkout principal, fuera de
+  git como los demás. Sus referencias al scratchpad se corrigieron. Los guiones y salidas de los cinco lectores
+  se perdieron; queda lo que el informe resume.
+- **Sin publicar:** nada de esto cambia el sitio.
 
 ### T7.95 — Las diapositivas del cap. 5, en dos sesiones de 90 minutos (2026-10-22)
 
