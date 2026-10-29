@@ -1,0 +1,57 @@
+{
+ "tipo": "animado",
+ "titulo": "Varianza estimada del total de matemáticas en schools: sumandos del estimador y aporte de cada etapa",
+ "x": {
+  "categorias": [
+   "sumando 1",
+   "sumando 2",
+   "etapa 1 (escuelas)",
+   "etapa 2 (estudiantes)"
+  ]
+ },
+ "y": {
+  "titulo": "varianza (×10^{8})",
+  "min": 0,
+  "max": 30,
+  "marcas": [
+   0,
+   10,
+   20,
+   30
+  ]
+ },
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "serie": 5,
+    "x": 0,
+    "y": 26.718,
+    "texto": "26,72 · 99,2 %"
+   },
+   {
+    "tipo": "barra",
+    "serie": 5,
+    "x": 1,
+    "y": 0.218,
+    "texto": "0,22 · 0,8 %"
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "serie": 1,
+    "x": 2,
+    "y": 25.303,
+    "texto": "25,30 · 93,9 %"
+   },
+   {
+    "tipo": "barra",
+    "serie": 2,
+    "x": 3,
+    "y": 1.632,
+    "texto": "1,63 · 6,1 %"
+   }
+  ]
+ ]
+}

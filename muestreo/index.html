@@ -19,7 +19,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- 6.4.0, como la portada de Diseño: `fa-magnifying-glass-chart` (cap. 1) no existe en 6.0.0. -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
 
@@ -44,133 +45,214 @@
   </script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    /* La estructura de esta portada calca la de Diseño de Experimentos
+       (Htmls/index.html de ese curso, 29 oct 2026): secciones por corte, una
+       tarjeta compacta por capítulo y las diapositivas dentro de la tarjeta de
+       su capítulo. Las cifras de cada tarjeta las coteja
+       precalculo/cuenta_sitio.py contra los propios capítulos. */
     body {
-      font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Montserrat', sans-serif;
       background-color: #F8FAFC;
       color: #1E293B;
-      margin: 0;
-      line-height: 1.6;
+      scroll-behavior: smooth;
     }
 
-    .usta-gradient { background: linear-gradient(140deg, #012820 0%, #FF6600 100%); }
-    .usta-header { background: linear-gradient(180deg, #012820 0%, #001F18 100%); }
+    /* La cabecera solo es fija donde sobra alto: en un teléfono, vertical o
+       apaisado, ocuparía entre el 11 y el 22 % de la pantalla. Fija, mide unos
+       85 px: sin el margen de desplazamiento, «Saltar al contenido», las anclas
+       de los cortes y el foco que retrocede con Mayús+Tab dejarían el destino
+       debajo de ella. */
+    html { scroll-padding-top: 1rem; }
 
-    /* Hero */
+    @media (min-width: 768px) and (min-height: 600px) {
+      .cabecera-fija { position: sticky; top: 0; }
+      html { scroll-padding-top: 6rem; }
+    }
+
+    .usta-header { background: linear-gradient(180deg, #012820 0%, #001F18 100%); }
+    .usta-gradient { background: linear-gradient(140deg, #012820 0%, #FF6600 100%); }
+
     .hero {
-      background: linear-gradient(140deg, #012820 0%, #023a2e 55%, #FF6600 160%);
+      background:
+        radial-gradient(1200px 400px at 15% -20%, rgba(255, 102, 0, 0.18), transparent 60%),
+        linear-gradient(140deg, #012820 0%, #02382D 55%, #001F18 100%);
+    }
+
+    /* ------------------------------------------------------------------
+       Componente .tarjeta — una tarjeta por capítulo
+       ------------------------------------------------------------------
+       El enlace envuelve la tarjeta entera con ::after, no solo el rótulo
+       «Abrir»: el área de clic es toda la tarjeta pero en el árbol de
+       accesibilidad hay UN enlace con un nombre que se basta solo. Por eso
+       el <a> lleva el título dentro y el resto es texto hermano.
+       ------------------------------------------------------------------ */
+    .tarjeta {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
       position: relative;
       overflow: hidden;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(circle at 20% 30%, rgba(255, 102, 0, 0.18), transparent 40%),
-                        radial-gradient(circle at 85% 20%, rgba(144, 255, 0, 0.12), transparent 35%);
-      pointer-events: none;
-    }
-
-    /* Chapter cards */
-    .chapter-card {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-      text-decoration: none;
-      color: inherit;
     }
-    .chapter-card:hover {
-      box-shadow: 0 14px 38px rgba(1, 40, 32, 0.16);
+
+    .tarjeta::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: linear-gradient(180deg, #012820, #FF6600);
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+
+    .tarjeta:hover {
       transform: translateY(-6px);
-      border-color: rgba(255, 102, 0, 0.35);
+      box-shadow: 0 16px 40px rgba(1, 40, 32, 0.16);
+      border-color: rgba(255, 102, 0, 0.4);
     }
-    .chapter-card__top {
-      background: linear-gradient(135deg, #012820 0%, #FF6600 100%);
-      color: white;
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+
+    .tarjeta:hover::before { opacity: 1; }
+
+    /* El foco, en colores opacos: el naranja translúcido de Diseño no llega al
+       3:1 que pide la WCAG (1,8:1 sobre el fondo). Verde del curso en lo claro,
+       verde lima en la cabecera y el pie, como en la portada anterior. */
+    .tarjeta:focus-within {
+      outline: 3px solid #012820;
+      outline-offset: 2px;
     }
-    .chapter-card__num {
-      font-size: 2.75rem;
-      font-weight: 800;
-      line-height: 1;
-      opacity: 0.95;
-    }
-    .chapter-card__icon {
-      width: 3.25rem;
-      height: 3.25rem;
-      border-radius: 0.9rem;
-      background: rgba(255, 255, 255, 0.15);
+
+    .tarjeta-num {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.85rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
+      color: #fff;
+      font-size: 1.15rem;
+      background: linear-gradient(140deg, #012820 0%, #FF6600 100%);
+      box-shadow: 0 6px 16px rgba(1, 40, 32, 0.25);
+      flex-shrink: 0;
     }
-    .chapter-card__body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
-    .chapter-card__kicker {
+
+    .tarjeta-semana {
       font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #FF6600;
-      margin-bottom: 0.4rem;
+      letter-spacing: 0.06em;
+      color: #012820;
+      background: rgba(255, 102, 0, 0.12);
+      border: 1px solid rgba(255, 102, 0, 0.3);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
     }
-    .chapter-card__title { font-size: 1.2rem; font-weight: 700; color: #012820; margin: 0 0 0.5rem; }
-    .chapter-card__desc { font-size: 0.9rem; color: #475569; flex-grow: 1; }
-    .chapter-card__meta {
+
+    /* El aire de las tarjetas de Diseño. Allí sale de su bloque de prosa
+       (`main h3` y `main p`, 1rem por debajo), que esta portada no copia
+       porque no tiene prosa; aquí va con selectores de la propia tarjeta. */
+    .tarjeta h3, .tarjeta p { margin-bottom: 1rem; }
+
+    .tarjeta-titulo { color: #012820; font-weight: 700; line-height: 1.3; }
+    .tarjeta-titulo a { color: inherit; text-decoration: none; }
+
+    .tarjeta-titulo a::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .tarjeta-meta {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 1.1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #f1f5f9;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.9rem;
+      font-size: 0.75rem;
+      color: #64748B;
     }
-    .chapter-card__modules { font-size: 0.78rem; color: #64748b; font-weight: 600; }
-    .chapter-card__go {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #FF6600;
+
+    /* El texto naranja va en #C2410C, no en el #FF6600 del curso: este da
+       2,9:1 sobre blanco y la WCAG pide 4,5:1 para texto. El #FF6600 sigue en
+       lo que no es texto (degradados, bordes, iconos). */
+    .tarjeta-abrir {
+      color: #C2410C;
+      font-weight: 600;
+      font-size: 0.875rem;
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      transition: gap 0.2s ease;
+      transition: gap .2s ease;
     }
-    .chapter-card:hover .chapter-card__go { gap: 0.7rem; }
 
-    .pill {
+    .tarjeta:hover .tarjeta-abrir { gap: 0.75rem; }
+
+    /* Un SEGUNDO enlace dentro de la tarjeta (la plantilla del proyecto, las
+       sesiones de diapositivas). El enlace del título cubre la tarjeta entera
+       con un `::after` en `inset: 0`, así que cualquier otro tiene que ponerse
+       POR ENCIMA o el clic se lo come la capa de arriba: `position: relative`
+       y un `z-index` mayor. */
+    /* Subrayado opaco: el translúcido de Diseño (1,5:1) no lo distinguía de
+       las cifras, que llevan el mismo gris. El relleno vertical lo lleva a los
+       24 px de alto que pide la WCAG 2.2 para un blanco de clic. */
+    .tarjeta-extra {
+      position: relative;
+      z-index: 2;
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: #fff;
-      padding: 0.4rem 0.9rem;
-      border-radius: 50px;
+      gap: 0.4rem;
+      margin-left: 1.25rem;
+      padding-block: 2px;
+      color: #64748B;
+      font-weight: 600;
       font-size: 0.8rem;
-      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 2px solid #C2410C;
     }
 
-    .feature-card {
-      background: white;
-      border-radius: 0.9rem;
-      padding: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(0, 0, 0, 0.04);
-      text-align: center;
-    }
-    .feature-card i { color: #FF6600; font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .tarjeta-extra:hover { color: #012820; border-bottom-color: #012820; }
+    .tarjeta-extra:focus-visible { outline: 3px solid #012820; outline-offset: 3px; }
 
-    *:focus-visible { outline: 2px solid #012820; outline-offset: 3px; border-radius: 4px; }
-    .hero *:focus-visible { outline-color: #90FF00; }
+    /* Las diapositivas de clase, en una línea propia debajo de «Abrir el
+       capítulo». Cada sesión es un `.tarjeta-extra`, por encima del `::after`
+       del título; el rótulo no, así que pulsarlo abre el capítulo, como el
+       resto de la tarjeta. */
+    .tarjeta-diapositivas {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed #E2E8F0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748B;
+    }
+
+    .tarjeta-diapositivas .tarjeta-extra { margin-left: 0; }
+
+    .corte-rotulo {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      border-bottom: 2px solid rgba(1, 40, 32, 0.12);
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .corte-rotulo h2 { color: #012820; font-weight: 800; font-size: 1.35rem; margin: 0; }
+    .corte-rotulo .corte-semanas { color: #C2410C; font-weight: 700; font-size: 0.85rem; }
+    .corte-rotulo .corte-lema { color: #64748B; font-size: 0.85rem; font-style: italic; }
+
+    a:focus-visible { outline: 3px solid #012820; outline-offset: 3px; }
+    .usta-header a:focus-visible, .hero a:focus-visible { outline-color: #90FF00; }
+
+    ::-webkit-scrollbar { width: 9px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #012820, #FF6600); border-radius: 4px; }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -178,325 +260,365 @@
   </style>
 </head>
 
-<body>
-  <!-- Hero / Header -->
-  <header class="hero text-white" role="banner">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 relative" style="z-index:1;">
-      <div class="flex items-center gap-3 mb-6">
+<body class="min-h-screen flex flex-col">
+  <a href="#capitulos"
+    class="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:m-3 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-semibold focus:text-primary">Saltar
+    al contenido</a>
+
+  <header class="usta-header cabecera-fija z-50 shadow-lg" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <div class="flex items-center gap-4 min-w-0">
         <div class="usta-gradient p-3 rounded-xl shadow-md">
-          <i class="fas fa-chart-pie text-2xl text-white" aria-hidden="true"></i>
+          <i class="fas fa-chart-pie text-xl text-white" aria-hidden="true"></i>
         </div>
-        <span class="pill"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Universidad El Bosque · 2026</span>
+        <div>
+          <p class="text-xl font-bold text-white leading-tight tracking-tight">Muestreo Estadístico</p>
+          <p class="text-xs text-white/70 font-medium tracking-wide">UNIVERSIDAD EL BOSQUE • ESTADÍSTICA • 2026-II</p>
+        </div>
       </div>
-      <h1 class="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4">
-        Fundamentos del<br><span class="text-gold">Muestreo Estadístico</span>
+      <nav class="w-full md:w-auto md:ml-auto" aria-label="Secciones de la portada">
+        <ul class="flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
+          <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#corte-i">Corte I</a></li>
+          <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#corte-ii">Corte II</a></li>
+          <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#corte-iii">Corte III</a></li>
+          <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#proyecto">Proyecto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero text-white" aria-labelledby="titulo-curso">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+      <span class="tarjeta-semana"
+        style="color:#fff; background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.25);">
+        <i class="fas fa-graduation-cap mr-1" aria-hidden="true"></i> Material de estudio · código 20939
+      </span>
+      <h1 id="titulo-curso" class="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-balance">
+        Fundamentos del <span class="text-gold">Muestreo Estadístico</span>
       </h1>
-      <p class="text-base md:text-lg text-white/80 max-w-2xl mb-8">
+      <p class="mt-4 max-w-3xl text-white/80 text-base md:text-lg leading-relaxed">
         Material de estudio autónomo e interactivo basado en <em>Sampling: Design and Analysis</em> de
         Sharon L. Lohr y <em>Estrategias de muestreo</em> de H. A. Gutiérrez. Los ocho capítulos del semestre,
         con 70 simuladores, 136 preguntas de autoevaluación, 41 ejercicios guiados y código verificado en R y Python.
       </p>
-      <div class="flex flex-wrap gap-3">
-        <a href="#capitulos"
-          class="inline-flex items-center gap-2 bg-white text-primary font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gold hover:text-primary transition-all">
-          <i class="fas fa-book-open" aria-hidden="true"></i> Explorar capítulos
-        </a>
-        <a href="capitulo-1-encuestas-sesgos.html"
-          class="inline-flex items-center gap-2 border-2 border-white/40 text-white font-semibold px-6 py-3 rounded-full hover:bg-white/10 transition-all">
-          <i class="fas fa-play" aria-hidden="true"></i> Comenzar por el Capítulo 1
-        </a>
+      <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75">
+        <span><i class="fas fa-book-open text-secondary mr-2" aria-hidden="true"></i>8 capítulos</span>
+        <span><i class="fas fa-sliders text-secondary mr-2" aria-hidden="true"></i>70 simuladores</span>
+        <span><i class="fas fa-code text-secondary mr-2" aria-hidden="true"></i>215 bloques en R y Python</span>
+        <span><i class="fas fa-list-check text-secondary mr-2" aria-hidden="true"></i>93 módulos</span>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <!-- Intro features -->
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-12 relative" style="z-index:2;">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="feature-card">
-          <i class="fas fa-layer-group" aria-hidden="true"></i>
-          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">8 Capítulos</h2>
-          <p class="text-xs text-gray-500" style="margin:0;">93 módulos · 70 simuladores</p>
+  <!-- `capitulos` es la ancla de la portada anterior: los marcadores guardados
+       con ella siguen cayendo en los capítulos. -->
+  <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12" id="capitulos">
+    <section class="mb-12" id="corte-i">
+      <div class="corte-rotulo">
+        <h2>Corte I</h2>
+        <span class="corte-semanas">Capítulos 1 y 2</span>
+        <span class="corte-lema">Del sesgo al diseño: una muestra vale por cómo se eligió</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-magnifying-glass-chart" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semanas 1–2</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 1</span>
+            </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-1-encuestas-sesgos.html">Encuestas, sesgos y error total</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr cap. 1</p>
+          </div>
         </div>
-        <div class="feature-card">
-          <i class="fas fa-square-root-variable" aria-hidden="true"></i>
-          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">Fórmulas KaTeX</h2>
-          <p class="text-xs text-gray-500" style="margin:0;">Notación matemática nítida</p>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>10 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>7 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>34 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>184 min estimados</span>
         </div>
-        <div class="feature-card">
-          <i class="fas fa-chart-line" aria-hidden="true"></i>
-          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">Gráficos</h2>
-          <p class="text-xs text-gray-500" style="margin:0;">Visualizaciones interactivas</p>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-dice" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semanas 3–4</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 2</span>
+            </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-2-diseno-mas-sistematico.html">Diseño muestral, MAS y sistemático</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr cap. 2</p>
+          </div>
         </div>
-        <div class="feature-card">
-          <i class="fas fa-mobile-screen" aria-hidden="true"></i>
-          <h2 class="font-bold text-sm text-primary" style="margin:.3rem 0 0;">Responsive</h2>
-          <p class="text-xs text-gray-500" style="margin:0;">Diseño accesible</p>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>11 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>10 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>30 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>210 min estimados</span>
         </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
+      <article class="tarjeta tarjeta-taller p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-stethoscope" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Preparcial</span>
+              <span class="text-xs font-semibold text-slate-500">Autodiagnóstico sin nota</span>
+            </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="preparcial-corte-1.html">Preparcial del Corte I</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Capítulos 1 y 2 · Cuatro bloques de preguntas nuevas, uno por dimensión del parcial, y el simulacro del Parcial 1. Repetible.</p>
+          </div>
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>13 módulos</span>
+          <span><i class="fas fa-circle-question mr-1" aria-hidden="true"></i>59 preguntas</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>253 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el preparcial <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
       </div>
     </section>
 
-    <!-- Chapters -->
-    <section id="capitulos" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
-      <div class="mb-10 text-center">
-        <p class="text-secondary font-bold uppercase tracking-widest text-sm mb-2">Contenido del curso</p>
-        <h2 class="text-2xl md:text-3xl font-bold text-primary">Los capítulos</h2>
+    <section class="mb-12" id="corte-ii">
+      <div class="corte-rotulo">
+        <h2>Corte II</h2>
+        <span class="corte-semanas">Capítulos 3 y 4</span>
+        <span class="corte-lema">Usar lo que ya se sabe de la población: variables auxiliares y estratos</span>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <a class="chapter-card" href="capitulo-1-encuestas-sesgos.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">1</span>
-            <span class="chapter-card__icon"><i class="fas fa-magnifying-glass-chart" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semanas 1–2 · Lohr cap. 1</p>
-            <h3 class="chapter-card__title">Encuestas, sesgos y error total</h3>
-            <p class="chapter-card__desc">El <em>Literary Digest</em> y el estudio de Hite; población objetivo, marco y
-              unidad; sesgo de selección y de medición; diseño de cuestionarios; el árbol del error total, y por qué
-              un sondeo de 2,3 millones de papeletas valía lo que seis votantes al azar.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 10 módulos · 7 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-chart-line" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semanas 5–6</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 3</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-3-razon-y-regresion.html">Estimación de razón y regresión</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr cap. 4 (3.ª ed.) · cap. 3 (1.ª ed.)</p>
           </div>
-        </a>
-
-        <a class="chapter-card" href="capitulo-2-diseno-mas-sistematico.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">2</span>
-            <span class="chapter-card__icon"><i class="fas fa-dice" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semanas 3–4 · Lohr cap. 2</p>
-            <h3 class="chapter-card__title">Diseño muestral, MAS y sistemático</h3>
-            <p class="chapter-card__desc">El diseño muestral <em>p(s)</em>, las probabilidades de inclusión y el estimador de
-              Horvitz–Thompson; el MAS, los intervalos de confianza, el tamaño de muestra, el diseño Bernoulli y el
-              muestreo sistemático como casos particulares de ese marco.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 11 módulos · 10 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>15 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>9 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>19 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>413 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semanas 7–9</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 4</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-4-muestreo-estratificado.html">Muestreo estratificado</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr cap. 3 (3.ª ed.) · cap. 4 (1.ª ed.) · Cierra con el preparcial del Corte II.</p>
           </div>
-        </a>
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>14 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>9 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>35 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>450 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+        <p class="tarjeta-diapositivas mt-3">
+          <span><i class="fas fa-chalkboard-user mr-1" aria-hidden="true"></i>Diapositivas de clase</span>
+          <a class="tarjeta-extra" href="diapositivas/capitulo-4-muestreo-estratificado_sesion1.html" aria-label="Sesión 1, módulos 1 a 5: diapositivas del capítulo 4">Sesión 1 · M1–5</a>
+          <a class="tarjeta-extra" href="diapositivas/capitulo-4-muestreo-estratificado_sesion2.html" aria-label="Sesión 2, módulos 6 a 12: diapositivas del capítulo 4">Sesión 2 · M6–12</a>
+        </p>
+      </article>
+      </div>
+    </section>
 
-        <a class="chapter-card" href="capitulo-3-razon-y-regresion.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">3</span>
-            <span class="chapter-card__icon"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semanas 5–6 · Lohr cap. 3</p>
-            <h3 class="chapter-card__title">Estimación de razón y regresión</h3>
-            <p class="chapter-card__desc">Variables auxiliares y el estimador de razón; su sesgo, medido con 200 000
-              réplicas; regresión y diferencia; estimación en dominios; el estimador general de regresión (GREG) como
-              paraguas de los tres, y la mediana desde la función de distribución estimada.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 15 módulos · 9 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+    <section class="mb-4" id="corte-iii">
+      <div class="corte-rotulo">
+        <h2>Corte III</h2>
+        <span class="corte-semanas">Capítulos 5 a 8</span>
+        <span class="corte-lema">Las encuestas grandes por dentro: conglomerados, probabilidades desiguales, pesos y no respuesta</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-cubes" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semanas 10–11</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 5</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-5-conglomerados.html">Muestreo por conglomerados</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr cap. 5</p>
           </div>
-        </a>
-
-        <a class="chapter-card" href="capitulo-4-muestreo-estratificado.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">4</span>
-            <span class="chapter-card__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semanas 7–9 · Lohr cap. 4</p>
-            <h3 class="chapter-card__title">Muestreo estratificado</h3>
-            <p class="chapter-card__desc">El estratificado como caso del π-estimador; asignación proporcional, igual, de
-              Neyman y con costos desiguales; cómo definir estratos y cuántos; el efecto de diseño; estratificado PPT
-              sobre BigLucy; postestratificación como calibración, y <code>StratifiedKFold</code> con su trampa. Cierra con
-              el preparcial del Corte II.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 14 módulos · 9 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>11 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>8 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>22 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>240 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+        <p class="tarjeta-diapositivas mt-3">
+          <span><i class="fas fa-chalkboard-user mr-1" aria-hidden="true"></i>Diapositivas de clase</span>
+          <a class="tarjeta-extra" href="diapositivas/capitulo-5-conglomerados_sesion1.html" aria-label="Sesión 1, módulos 1 a 5: diapositivas del capítulo 5">Sesión 1 · M1–5</a>
+          <a class="tarjeta-extra" href="diapositivas/capitulo-5-conglomerados_sesion2.html" aria-label="Sesión 2, módulos 6 a 10: diapositivas del capítulo 5">Sesión 2 · M6–10</a>
+        </p>
+      </article>
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-scale-unbalanced" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semanas 12–13</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 6</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-6-probabilidades-desiguales.html">Probabilidades desiguales: PPT, HH y HT</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr cap. 6</p>
           </div>
-        </a>
-
-        <a class="chapter-card" href="capitulo-5-conglomerados.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">5</span>
-            <span class="chapter-card__icon"><i class="fas fa-cubes" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semanas 10–11 · Lohr cap. 5</p>
-            <h3 class="chapter-card__title">Muestreo por conglomerados</h3>
-            <p class="chapter-card__desc">Estados enteros contra condados sueltos (deff 30, medido con 10 000 réplicas);
-              la correlación intraclase y el deff de Kish; nidadas de tamaño desigual y el estimador de razón; dos
-              etapas por tres vías; cuántos conglomerados y de qué tamaño, y los datos agrupados en machine
-              learning.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 11 módulos · 8 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>11 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>10 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>24 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>249 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-clipboard-list" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semana 14</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 7</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-7-encuestas-complejas.html">Encuestas complejas: pesos, DEFF y replicación</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr caps. 7 y 9</p>
           </div>
-        </a>
-
-        <a class="chapter-card" href="capitulo-6-probabilidades-desiguales.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">6</span>
-            <span class="chapter-card__icon"><i class="fas fa-scale-unbalanced" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semanas 12–13 · Lohr cap. 6</p>
-            <h3 class="chapter-card__title">Probabilidades desiguales: PPT, HH y HT</h3>
-            <p class="chapter-card__desc">Cuatro tiendas y una enumeración exacta; Hansen–Hurwitz con reemplazo; los
-              métodos acumulativo y de Lahiri; el diseño πPT con inclusión forzosa y cuándo <em>pierde</em> frente al
-              MAS; Poisson y su n aleatorio; Sen–Yates–Grundy frente a la forma HT; el elefante que revienta la
-              varianza; los diseños autoponderados, y el muestreo por importancia de la IA.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 11 módulos · 10 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>10 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>9 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>22 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>242 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
+      <article class="tarjeta p-5">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-user-slash" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Semanas 15–16</span>
+              <span class="text-xs font-semibold text-slate-500">Capítulo 8</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="capitulo-8-no-respuesta-ponderacion.html">No respuesta, ponderación e imputación</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Lohr cap. 8</p>
           </div>
-        </a>
-
-        <a class="chapter-card" href="capitulo-7-encuestas-complejas.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">7</span>
-            <span class="chapter-card__icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semana 14 · Lohr cap. 7</p>
-            <h3 class="chapter-card__title">Encuestas complejas: pesos, DEFF y replicación</h3>
-            <p class="chapter-card__desc">NHANES y SYC analizadas en paralelo; los pesos y sus tres factores; el DEFF
-              descompuesto (y los estratos, que lo <em>bajan</em>); linealización de Taylor; jackknife a mano, BRR y
-              bootstrap; calibración y raking con el IPFP paso a paso; un intervalo «del 95 %» que cubre el 56 %, y
-              el ciclo completo de diseño de una encuesta.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 10 módulos · 9 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>11 módulos</span>
+          <span><i class="fas fa-sliders mr-1" aria-hidden="true"></i>8 simuladores</span>
+          <span><i class="fas fa-code mr-1" aria-hidden="true"></i>29 bloques R/Python</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>283 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir el capítulo <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span></p>
+      </article>
+      <article class="tarjeta tarjeta-proyecto p-5" id="proyecto">
+        <div class="flex items-start gap-4">
+          <div class="tarjeta-num"><i class="fas fa-clipboard-check" aria-hidden="true"></i></div>
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tarjeta-semana">Proyecto integrador</span>
+              <span class="text-xs font-semibold text-primary">50&nbsp;% de la nota del corte</span>
             </div>
+            <h3 class="tarjeta-titulo mt-2 text-base">
+              <a href="proyecto-integrador-corte-iii.html">Diseñar, ejecutar y defender una encuesta</a>
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">Muestreo probabilístico sobre una población finita real · Hitos y fechas, rúbrica y modalidad conjunta con Diseño de Experimentos.</p>
           </div>
-        </a>
-
-        <a class="chapter-card" href="capitulo-8-no-respuesta-ponderacion.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">8</span>
-            <span class="chapter-card__icon"><i class="fas fa-user-slash" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Semanas 15–16 · Lohr cap. 8</p>
-            <h3 class="chapter-card__title">No respuesta, ponderación e imputación</h3>
-            <p class="chapter-card__desc">La encuesta de profesores cuyo autor persiguió a los ausentes, así que el
-              sesgo se <em>mide</em>: −1,10 horas semanales. MCAR, MAR y MNAR construidos y medidos; ajuste de pesos
-              por clases (que aquí empeora la estimación, y se explica por qué); calibración contra la ACS;
-              imputación simple y múltiple con las reglas de Rubin; R-indicators; el taller del proyecto integrador
-              con su rúbrica, y tres afirmaciones de IA sobre muestreo refutadas con código.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 11 módulos · 8 simuladores</span>
-              <span class="chapter-card__go">Comenzar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-            </div>
-          </div>
-        </a>
-
-        <a class="chapter-card" href="preparcial-corte-1.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">P1</span>
-            <span class="chapter-card__icon"><i class="fas fa-stethoscope" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Corte I · autodiagnóstico sin nota</p>
-            <h3 class="chapter-card__title">Preparcial del Corte I</h3>
-            <p class="chapter-card__desc">Cincuenta y nueve preguntas autocorregidas sobre los capítulos 1 y 2: cuatro bloques nuevos —conceptos, procedimientos, interpretación y análisis gráfico— sobre una población que no aparece en ningún capítulo, más el simulacro del parcial repartido por las cuatro semanas del corte. Retroalimentación en cada opción —también en las correctas— y respuestas abiertas que se corrigen contra una lista de comprobación. Trae la tabla de especificaciones del Parcial 1, con lo que pesa cada objetivo y cuántas preguntas de aquí le tocan; los diez errores de cálculo que corren sin dar error; y el mapa que lleva cada pregunta del simulacro a su módulo del capítulo y a su sección de Lohr. Sin nota y repetible.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 13 módulos · 59 preguntas</span>
-              <span class="chapter-card__go">Diagnosticarme <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-            </div>
-          </div>
-        </a>
-
-        <a class="chapter-card" href="proyecto-integrador-corte-iii.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">PI</span>
-            <span class="chapter-card__icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Corte III · 50&nbsp;% de la nota del corte</p>
-            <h3 class="chapter-card__title">Proyecto integrador</h3>
-            <p class="chapter-card__desc">Diseñar, ejecutar, estimar y defender una encuesta por muestreo
-              probabilístico sobre una población finita real. Los hitos con sus fechas, el repositorio de
-              GitHub donde vive el proyecto, el protocolo que se escribe antes de seleccionar, la comprobación
-              de las probabilidades de inclusión, la estimación con survey y la rúbrica entera. Trae una
-              plantilla de informe y explica la modalidad conjunta con Diseño de Experimentos.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> 10 módulos · plantilla .Rmd</span>
-              <span class="chapter-card__go">Leer la guía <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-            </div>
-          </div>
-        </a>
-
-        <a class="chapter-card" href="diapositivas/capitulo-4-muestreo-estratificado_sesion1.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">S1</span>
-            <span class="chapter-card__icon"><i class="fas fa-chalkboard-user" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Diapositivas del cap. 4 · Sesión 1 de 2 · 90 min</p>
-            <h3 class="chapter-card__title">Estratificar: por qué, cómo estimar y cómo repartir</h3>
-            <p class="chapter-card__desc">Los módulos 1 a 5 para proyectar en clase: por qué estratificar reduce la varianza, el
-              estimador y sus pesos, la asignación proporcional, igual, de Neyman y con costos, y el tamaño de
-              muestra. Datos, interpretaciones y criterios van rotulados; la fuente de cada cifra, en las notas
-              (tecla N).</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> módulos 1 a 5 · 35 diapositivas</span>
-              <span class="chapter-card__go">Ver las diapositivas <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-            </div>
-          </div>
-        </a>
-
-        <a class="chapter-card" href="diapositivas/capitulo-4-muestreo-estratificado_sesion2.html">
-          <div class="chapter-card__top">
-            <span class="chapter-card__num">S2</span>
-            <span class="chapter-card__icon"><i class="fas fa-chalkboard-user" aria-hidden="true"></i></span>
-          </div>
-          <div class="chapter-card__body">
-            <p class="chapter-card__kicker">Diapositivas del cap. 4 · Sesión 2 de 2 · 90 min</p>
-            <h3 class="chapter-card__title">Estratificar: definir estratos y corregir después</h3>
-            <p class="chapter-card__desc">Los módulos 6 a 12: con qué variable y en cuántos estratos partir, el ANOVA y el efecto de
-              diseño, el PPT por estrato sobre BigLucy, la postestratificación, <code>StratifiedKFold</code> y la
-              razón combinada y separada. Cada sección trae su código y una pregunta para la clase.</p>
-            <div class="chapter-card__meta">
-              <span class="chapter-card__modules"><i class="fas fa-list-ul" aria-hidden="true"></i> módulos 6 a 12 · 34 diapositivas</span>
-              <span class="chapter-card__go">Ver las diapositivas <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-            </div>
-          </div>
-        </a>
-
+        </div>
+        <div class="tarjeta-meta mt-4">
+          <span><i class="fas fa-list-ul mr-1" aria-hidden="true"></i>10 módulos</span>
+          <span><i class="fas fa-clock mr-1" aria-hidden="true"></i>94 min estimados</span>
+        </div>
+        <p class="mt-4"><span class="tarjeta-abrir">Abrir la guía <i class="fas fa-arrow-right"
+              aria-hidden="true"></i></span><a class="tarjeta-extra" href="proyecto-integrador-plantilla.Rmd" download><i class="fas fa-file-code" aria-hidden="true"></i> Plantilla del informe (.Rmd)</a></p>
+      </article>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="usta-header" role="contentinfo">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <footer class="usta-header mt-8" role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-        <i class="fas fa-book-open" aria-hidden="true"></i> Referencias Bibliográficas
+        <i class="fas fa-book-open" aria-hidden="true"></i> Referencias bibliográficas
       </h2>
-      <ul class="space-y-3 text-white/90 text-sm list-none p-0 m-0">
+      <ul class="space-y-3 text-white/90 text-sm">
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
-          <span>Lohr, S.L. (2010). <em class="text-gold">Sampling: Design and Analysis</em> (2nd ed.). Boston:
-            Brooks/Cole.</span>
+          <span>Lohr, S.L. (2021). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
         </li>
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
-          <span>Cochran, W.G. (1977). <em class="text-gold">Sampling Techniques</em> (3rd ed.). New York: John Wiley &
-            Sons.</span>
+          <span>Gutiérrez, H.A. <em class="text-gold">Estrategias de Muestreo: diseño de encuestas y estimación de parámetros</em>. Acceso abierto: <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" class="underline text-gold break-all" target="_blank" rel="noopener">psirusteam.github.io/EstrategiasDeMuestreo<i class="fas fa-arrow-up-right-from-square text-xs ml-1" aria-hidden="true"></i><span class="sr-only"> (se abre en una pestaña nueva)</span></a>.</span>
         </li>
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
-          <span>Kish, L. (1965). <em class="text-gold">Survey Sampling</em>. New York: John Wiley & Sons.</span>
+          <span>Särndal, C.E., Swensson, B., &amp; Wretman, J. (1992). <em class="text-gold">Model Assisted Survey Sampling</em>. Springer.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Cochran, W.G. (1977). <em class="text-gold">Sampling Techniques</em> (3rd ed.). John Wiley &amp; Sons.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span>Lumley, T. <em class="text-gold">survey: Analysis of Complex Survey Samples</em> (paquete de R). <a href="https://cran.r-project.org/package=survey" class="underline text-gold break-all" target="_blank" rel="noopener">cran.r-project.org/package=survey<i class="fas fa-arrow-up-right-from-square text-xs ml-1" aria-hidden="true"></i><span class="sr-only"> (se abre en una pestaña nueva)</span></a>.</span>
         </li>
       </ul>
-      <div class="mt-8 pt-6 border-t border-white/20 text-center">
-        <p class="text-white font-medium">Diseñado por <span class="text-gold">Javier Mauricio Sierra</span></p>
-        <p class="text-xs mt-1 text-white/60">Muestreo Estadístico · Universidad El Bosque · 2026</p>
+      <div class="mt-8 pt-6 border-t border-white/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="usta-gradient p-2 rounded-lg shadow-md">
+            <i class="fas fa-chart-pie text-white" aria-hidden="true"></i>
+          </div>
+          <div>
+            <p class="text-white font-semibold">Muestreo Estadístico</p>
+            <p class="text-xs text-white/60">Universidad El Bosque • Programa de Estadística • 2026-II</p>
+          </div>
+        </div>
+        <p class="text-xs text-white/60 md:text-right">Diseñado por <span class="text-gold">Javier Mauricio Sierra</span></p>
       </div>
     </div>
   </footer>

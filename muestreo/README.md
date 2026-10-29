@@ -11,7 +11,7 @@ de Lohr, con los datos oficiales de *Sampling: Design and Analysis*.
 
 Ocho capítulos que cubren las 16 semanas del cronograma. **93 módulos, 70 simuladores,
 136 preguntas de autoevaluación, 41 ejercicios guiados y 215 bloques de código** (165 de R,
-50 de Python) con **2 796 cifras contrastadas contra la salida real**.
+50 de Python) con **2 806 cifras contrastadas contra la salida real**.
 
 | # | Capítulo | Semanas | Temas | Módulos | Simuladores |
 |---|---|:---:|---|:---:|:---:|
@@ -24,10 +24,14 @@ Ocho capítulos que cubren las 16 semanas del cronograma. **93 módulos, 70 simu
 | 7 | [Encuestas complejas](capitulo-7-encuestas-complejas.html) | 14 | NHANES y SYC en paralelo, los tres factores del peso, DEFF descompuesto, linealización de Taylor, jackknife, BRR y bootstrap, calibración y raking, el ciclo de diseño | 10 | 9 |
 | 8 | [No respuesta, ponderación e imputación](capitulo-8-no-respuesta-ponderacion.html) | 15–16 | MCAR/MAR/MNAR medidos, la fórmula del sesgo, ajuste por clases de respuesta, calibración contra la ACS, imputación simple y múltiple con reglas de Rubin, R-indicators, taller del proyecto integrador, verificación de salidas de IA | 11 | 8 |
 
-La portada [`index.html`](index.html) enlaza todos los capítulos y la [guía del proyecto integrador
-del Corte III](proyecto-integrador-corte-iii.html), con su [plantilla de informe](proyecto-integrador-plantilla.Rmd), y las
-diapositivas de clase del capítulo 4 en dos sesiones ([1](diapositivas/capitulo-4-muestreo-estratificado_sesion1.html) y
-[2](diapositivas/capitulo-4-muestreo-estratificado_sesion2.html)), con sus fuentes en `diapositivas/fuentes/`. La navegación es siempre por la
+La portada [`index.html`](index.html) agrupa el material por cortes: en cada corte, una tarjeta por
+capítulo con sus módulos, simuladores, bloques de código y minutos estimados de estudio, cotejados
+contra los propios capítulos.
+Enlaza todos los capítulos, el [preparcial del Corte I](preparcial-corte-1.html), la [guía del proyecto integrador
+del Corte III](proyecto-integrador-corte-iii.html), con su [plantilla de informe](proyecto-integrador-plantilla.Rmd), y, dentro de la tarjeta de su capítulo, las
+diapositivas de clase de los capítulos 4 ([1](diapositivas/capitulo-4-muestreo-estratificado_sesion1.html) y
+[2](diapositivas/capitulo-4-muestreo-estratificado_sesion2.html)) y 5 ([1](diapositivas/capitulo-5-conglomerados_sesion1.html) y
+[2](diapositivas/capitulo-5-conglomerados_sesion2.html)), en dos sesiones cada uno, con sus fuentes en `diapositivas/fuentes/`. La navegación es siempre por la
 portada: los capítulos no enlazan entre sí, aunque sí se citan («esto se trata en el capítulo 5»).
 
 ## Qué trae cada capítulo
