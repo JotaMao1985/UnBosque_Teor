@@ -7289,6 +7289,7 @@ animados**.
 - **Convivencia:** T7.94 (cap. 4) es de otra sesión y también añade al final del PLAN; al juntar las
   ramas habrá un conflicto trivial en esta zona del archivo.
 - **Sin commit ni publicación**, a la espera de la revisión de Javier.
+  - **Publicado** el 2026-10-29 junto con T7.100 (`main` `66703ee`, `gh-pages` `0316511`).
 
 ### T7.96 — La auditoría del cap. 5 y de sus diapositivas, antes de publicar (2026-10-22)
 
@@ -7420,6 +7421,7 @@ ya no cita «2,7» ni ningún otro número.
 - **Trampa del entorno.** El panel del navegador abre los archivos locales como instantánea `data:`:
   `location.reload()` vuelve a mostrar la versión vieja. Hay que navegar otra vez al archivo.
 - **Sin commit ni publicación.**
+  - **Publicado** el 2026-10-29 junto con T7.100 (`main` `66703ee`, `gh-pages` `0316511`).
 
 ### T7.98 — La portada y el README enlazan las diapositivas del cap. 5 (2026-10-23)
 
@@ -7436,6 +7438,7 @@ Pedido de Javier: enlazarlas «como las del cap. 4» (T7.94), sin publicar.
 - **Comprobado:** los cuatro enlaces de diapositivas de la portada y del README apuntan a archivos que
   existen. La portada se ve en el navegador sin desborde horizontal.
 - **Sin publicar.**
+  - **Publicado** el 2026-10-29 junto con T7.100 (`main` `66703ee`, `gh-pages` `0316511`).
 
 ### T7.99 — Las diapositivas arrancan sin red: arreglo en la plantilla de la skill (2026-10-23)
 
@@ -7460,6 +7463,7 @@ Pedido de Javier: «Arregla el problema con la skill y después corrige las diap
   - El mismo fallo está en las presentaciones de otros cursos hechas con la skill y en la librería LP-CORE
     de la USTA (`lp-base.html`), de donde viene la guarda.
 - **Sin commit y sin publicar.**
+  - **Publicado** el 2026-10-29 junto con T7.100 (`main` `66703ee`, `gh-pages` `0316511`).
 
 ### T7.100 — La portada por cortes, con la estructura de la de Diseño de Experimentos (2026-10-29)
 
@@ -7553,4 +7557,22 @@ de ese curso).
     enlaces locales y 5 anclas que existen; en el navegador, consola limpia, 75 iconos, sin desborde a 1280,
     768, 812×375, 375 y 320 px, cabecera fija solo a 1280×800 y 768×1024, las cuatro anclas dejan su
     sección a 96 px (cabecera de 84), foco lima en la cabecera y los enlaces secundarios reciben su clic.
-- **Sin commit y sin publicar.**
+- **Publicado** el 2026-10-29 con el visto bueno de Javier («Súbelo y publícalo»; para el alcance, «Todo el
+  sitio de main»):
+  - `main` `66703ee`, empujado sobre `4ea6474` sin nada más.
+  - `gh-pages` `0316511`, construido con `git commit-tree` del árbol `66703ee:sitio` sobre la punta `e064deb`.
+    Nada ajeno: el árbol de la punta era el `sitio/` de `f3875b7`.
+  - Entraron 14 archivos. Además de la portada y el README, `gh-pages` iba tres pasos detrás de `main` en
+    material marcado «sin publicar»: el cap. 5 corregido (T7.97), sus dos presentaciones con fuentes y
+    recursos (T7.95–T7.97) y el arranque sin red de las diapositivas (T7.99). Se le preguntó a Javier antes
+    de publicar, porque la portada enlaza esas presentaciones.
+  - Antes de publicar, `verifica_publicado.py --local --pagina capitulo-5`: R (18) y Python (4) arrancan.
+  - Comprobado después de publicar:
+    - el build de Pages, `built`;
+    - `verifica_publicado.py --solo-huella`: las 11 páginas coinciden con la rama;
+    - el código del cap. 5 servido arranca;
+    - portada, README, las presentaciones de los caps. 4 y 5 y la plantilla servidas coinciden byte a byte
+      con la rama;
+    - en el navegador, la portada viva carga con la consola limpia, 10 tarjetas y 75 iconos, y sus 15
+      enlaces locales dan 200;
+    - las dos presentaciones del cap. 5 cargan sin errores.
