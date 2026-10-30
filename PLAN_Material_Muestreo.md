@@ -7769,5 +7769,18 @@ JSON existe.
 - **Abierto.** El comentario de P4 dice «la de R (bloque R13) daba 0.563», y en la página no hay bloques rotulados
   así. Es la clase de puntero que C12 cambió en el cap. 6 por «el bloque del módulo N». No se tocó, porque no era de
   esta tarea.
-- **Commit** con el visto bueno de Javier («Sí, haz commit»), rebasado sobre `origin/main` `10a1a9c`. Sin push
-  ni publicación.
+- **Publicado** el 2026-10-30 con el visto bueno de Javier («Sí, haz commit»; luego «Push y publica»):
+  - `main` `99a701d`, rebasado y empujado sobre `10a1a9c` sin nada más. Tras el rebase se repitió todo: reensamblado
+    sin cambios, `--check` 0, `--prosa` 0 sin respaldo y arranque dentro y fuera del repositorio.
+  - `gh-pages` `e9d8b22`, construido con `git commit-tree` del árbol `99a701d:sitio` sobre la punta `0796353`.
+    Nada ajeno: el árbol de la punta era el `sitio/` de `10a1a9c`. Entró 1 archivo, el cap. 7.
+  - Antes de publicar: `verifica_publicado.py --local --pagina capitulo-7` arranca, y `cuenta_sitio.py` da 0
+    desajustadas (el cap. 7 sigue en 241 cifras, así que el README no cambia).
+  - Comprobado después de publicar:
+    - el build de Pages, `built`;
+    - `verifica_publicado.py --solo-huella`: las 11 páginas coinciden con la rama;
+    - el código del cap. 7 servido arranca: R (18) y Python (4);
+    - el cap. 7 servido coincide byte a byte con la rama, y sus 22 bloques salen con 0 en una carpeta sin
+      `precalculo/`;
+    - en el navegador, el cap. 7 vivo carga los 10 módulos con la consola limpia y 0 `.katex-error`, y el módulo 8
+      muestra los dos bloques nuevos. No se midió el desborde: el panel estaba oculto.
