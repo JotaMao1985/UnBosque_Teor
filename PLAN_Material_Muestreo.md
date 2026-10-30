@@ -7634,6 +7634,7 @@ Conviene moverlo junto a los demás `PLAN_Auditoria_*.md`.
   - el resumen del quiz dice «impecable» y a la vez lista los módulos que costaron.
 - **Sin cambios en la cadena, sin commit y sin publicación.**
   - **Corregidos en T7.102** (2026-10-30), con el visto bueno de Javier.
+  - **Publicado** el 2026-10-30 junto con T7.102 (`main` `6ef2445`, `gh-pages` `0796353`).
 
 ### T7.102 — Los errores C1–C33 de la auditoría, corregidos en el cap. 6 (2026-10-30)
 
@@ -7724,4 +7725,16 @@ están en `PLAN_Auditoria_Cap6.md` (T7.101). Se siguió la regla de T7.97: toda 
   - los seis defectos de la plantilla común;
   - el JSON que lee el cap. 7, el mismo defecto que C12;
   - el `fmtNum` del cap. 5, que tiene el mismo espacio normal que C32.
-- **Commit en la rama `claude/nifty-wu-2357d7`, sin push ni publicación.**
+- **Publicado** el 2026-10-30 con el visto bueno de Javier («Sí, haz commit»; luego «Procede con el push a main y la
+  publicación»):
+  - `main` `6ef2445`, empujado sobre `953cb99` sin nada más.
+  - `gh-pages` `0796353`, construido con `git commit-tree` del árbol `6ef2445:sitio` sobre la punta `0316511`.
+    Nada ajeno: el árbol de la punta era el `sitio/` de `953cb99`. Entraron 2 archivos, el cap. 6 y el README.
+  - Antes de publicar, `verifica_publicado.py --local --pagina capitulo-6`: R (19) y Python (5) arrancan.
+  - Comprobado después de publicar:
+    - el build de Pages, `built`;
+    - `verifica_publicado.py --solo-huella`: las 11 páginas coinciden con la rama;
+    - el código del cap. 6 servido arranca: R (19) y Python (5);
+    - el cap. 6 y el README servidos coinciden byte a byte con la rama;
+    - en el navegador, el cap. 6 vivo carga con la consola limpia, 257 fórmulas y 0 `.katex-error` en los 11
+      módulos, sin desborde a 1280 px.
