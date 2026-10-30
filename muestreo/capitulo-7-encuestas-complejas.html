@@ -3613,7 +3613,6 @@
 # en custodia). Las dos son estratos x conglomerados x pesos, pero con una
 # diferencia estructural que decide que se puede hacer con cada una.
 library(survey)               # el capitulo entero corre sobre este paquete
-library(jsonlite)             # para leer el JSON del precalculo
 
 options(scipen = 8, digits = 7)
 nh &lt;- read.csv("CSV data sets for SDA 3e/nhanes.csv")
@@ -4645,13 +4644,33 @@ signif(max(abs(as.matrix(svytable(~sexo + edadg, dis_rak)) - A)) / total, 3)
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># EL ERROR MAS CARO, cuantificado: cobertura empirica de los IC. Poblacion
-# sintetica de 200 conglomerados x 40 unidades con ICC = 0.15, 2 000 replicas
-# de un diseno de 20 conglomerados (datos del precalculo).
-cob &lt;- fromJSON("precalculo/salidas/cap7_datos.json")$cobertura
+# sintetica de 200 conglomerados x 40 unidades con ICC = 0.15, y 2 000
+# muestras de 20 conglomerados. La media verdadera se conoce, asi que basta
+# contar cuantas veces la contiene cada intervalo.
+set.seed(2026)
+NI &lt;- 200; Mi &lt;- 40; rho &lt;- 0.15                  # conglomerados, tamano, ICC
+efecto &lt;- rnorm(NI, 0, sqrt(rho))                 # lo que comparte cada conglomerado
+pobl &lt;- data.frame(upm = rep(1:NI, each = Mi),
+                   y = rep(efecto, each = Mi) + rnorm(NI * Mi, 0, sqrt(1 - rho)))
+mu &lt;- mean(pobl$y)                                # la verdad
+n_rep &lt;- 2000; n_upm &lt;- 20
+cub_ing &lt;- 0; cub_dis &lt;- 0
+anchos &lt;- matrix(NA_real_, n_rep, 2)
+idx_upm &lt;- split(seq_len(nrow(pobl)), pobl$upm)
+for (k in seq_len(n_rep)) {
+  ups &lt;- sample(NI, n_upm)
+  y &lt;- pobl$y[unlist(idx_upm[ups], use.names = FALSE)]
+  ee_i &lt;- sd(y) / sqrt(length(y))                 # ingenuo: MAS de 800 unidades
+  medias &lt;- sapply(idx_upm[ups], function(i) mean(pobl$y[i]))
+  ee_d &lt;- sqrt((1 - n_upm / NI) * var(medias) / n_upm)   # entre medias de UPM
+  cub_ing &lt;- cub_ing + (abs(mean(y) - mu) &lt;= 1.96 * ee_i)
+  cub_dis &lt;- cub_dis + (abs(mean(y) - mu) &lt;= qt(0.975, n_upm - 1) * ee_d)
+  anchos[k, ] &lt;- c(2 * 1.96 * ee_i, 2 * qt(0.975, n_upm - 1) * ee_d)
+}
 data.frame(metodo = c("IC ingenuo (ignora el diseno)", "IC del diseno"),
-           cobertura = c(cob$cobIngenuo, cob$cobDiseno),
-           ancho_medio = round(c(cob$anchoIngenuo, cob$anchoDiseno), 4))
-c(deff_teorico = cob$deffTeorico)
+           cobertura = c(cub_ing, cub_dis) / n_rep,
+           ancho_medio = round(colMeans(anchos), 4))
+c(deff_teorico = 1 + (Mi - 1) * rho)
 # El intervalo "del 95 %" que ignora los conglomerados cubre el 56.3 % de las
 # veces. No es un matiz academico: uno de cada dos intervalos publicados no
 # contiene el valor verdadero, y nadie lo nota porque el numero sale bonito.
@@ -4724,11 +4743,23 @@ print(f"deff teorico = 1 + (m-1)*rho = {1 + (Mi-1)*rho:.2f}")
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># RECORTE DE PESOS: la practica habitual para domar pesos extremos. Se topa
-# el peso en un cuantil y se reescala para conservar el total. Sobre NHANES:
-rec &lt;- fromJSON("precalculo/salidas/cap7_datos.json")$recorte
-data.frame(cuantil = rec$q, tope = round(rec$tope), afectados = rec$afectados,
-           media = round(rec$media, 4), dif = round(rec$sesgoAparente, 4),
-           ee = round(rec$ee, 4), kish = round(rec$kish, 3))
+# el peso en un cuantil y se reescala para conservar el total. Sobre NHANES,
+# con el diseno completo y el kish() del modulo 2; dif es el desplazamiento
+# respecto a la media sin recortar (m, modulo 3):
+w &lt;- nh_ad$wtmec2yr
+recorta &lt;- function(q) {
+  tope &lt;- as.numeric(quantile(w, q))
+  w2 &lt;- pmin(w, tope)                             # topar...
+  w2 &lt;- w2 * sum(w) / sum(w2)                     # ...y reescalar
+  d2 &lt;- svydesign(id = ~sdmvpsu, strata = ~sdmvstra, weights = w2,
+                  data = nh_ad, nest = TRUE)
+  m2 &lt;- svymean(~bmxbmi, d2)
+  c(cuantil = q, tope = round(tope), afectados = sum(w &gt; tope),
+    media = round(as.numeric(coef(m2)), 4),
+    dif = round(as.numeric(coef(m2) - coef(m)), 4),
+    ee = round(as.numeric(SE(m2)), 4), kish = round(kish(w2), 3))
+}
+data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
 # HALLAZGO INCOMODO: recortar aqui NO compensa. El Kish baja de 1.89 a 1.31
 # (los pesos se aplanan mucho), pero el error estandar no mejora — hasta
 # empeora un poco — y la media se desplaza 0.057. Razon: en NHANES la varianza
