@@ -7738,3 +7738,36 @@ están en `PLAN_Auditoria_Cap6.md` (T7.101). Se siguió la regla de T7.97: toda 
     - el cap. 6 y el README servidos coinciden byte a byte con la rama;
     - en el navegador, el cap. 6 vivo carga con la consola limpia, 257 fórmulas y 0 `.katex-error` en los 11
       módulos, sin desborde a 1280 px.
+
+### T7.103 — El código del cap. 7 arranca fuera del repositorio (2026-10-30)
+
+Pedido desde la sesión de la auditoría del cap. 6. R13 y R14 leían `precalculo/salidas/cap7_datos.json`, el mismo
+fallo que C12 corrigió en el cap. 6 (T7.101–T7.102). Fuera del repositorio fallaban con `lexical error: invalid char
+in json text`, que no dice que falta un archivo. `verifica_publicado --local` no lo ve: corre desde la raíz, donde el
+JSON existe.
+
+- **Número.** Se hizo sobre `953cb99`, que acababa en T7.100. T7.101 y T7.102 entraron mientras tanto en `main`
+  (`6ef2445` y `10a1a9c`, publicados) y solo coincidían con esta en el final del PLAN.
+- **`cadena.R`.**
+  - **R13** genera en el bloque la población y las 2 000 muestras, con la semilla 2026 y el código de la sección 7 de
+    `genera_cap7.R`. Tarda 0,12 s, así que no hizo falta bajar réplicas. Da lo mismo que el JSON: coberturas 0,563 y
+    0,950, anchos 0,1394 y 0,3800, deff 6,85.
+  - **R14** calcula el recorte sobre NHANES con `recorta(q)`: el diseño completo, el `kish()` de R3 (módulo 2) y la
+    `m` de R4 (módulo 3). Las siete filas salen idénticas a las del JSON.
+  - **R1** ya no carga `jsonlite`, y la cabecera de la cadena tampoco.
+  - `anota_salidas`: «ya estaba al día»; `--check` da 0 en R y en Python.
+- **Prosa.** Ninguna frase de la página citaba el JSON: solo el comentario de R1 y el de R13 («datos del
+  precalculo»). No cambian ni los módulos ni `cifras_prosa.json`.
+- **Verificado.**
+  - `ensambla_cap7.py`: el HTML cambia solo en R1, R13 y R14, y un segundo ensamblado sale idéntico.
+  - `verifica_bloques --prosa`: 241 de 241 cifras y 54 de prosa, 0 sin respaldo.
+  - `verifica_referencias --pagina capitulo-7`: 0 nuevas, 0 cambiadas.
+  - `verifica_publicado --local --pagina capitulo-7`: R (18) y Python (4) arrancan.
+  - **Los 22 bloques publicados, extraídos del HTML y ejecutados en una carpeta con solo `CSV data sets for SDA
+    3e/`: R y Python salen con 0.** Con el HTML de HEAD, la misma prueba falla en R13.
+  - En el navegador, el módulo 8 muestra los dos bloques nuevos resaltados, con 0 errores de consola.
+- **Abierto.** El comentario de P4 dice «la de R (bloque R13) daba 0.563», y en la página no hay bloques rotulados
+  así. Es la clase de puntero que C12 cambió en el cap. 6 por «el bloque del módulo N». No se tocó, porque no era de
+  esta tarea.
+- **Commit** con el visto bueno de Javier («Sí, haz commit»), rebasado sobre `origin/main` `10a1a9c`. Sin push
+  ni publicación.
