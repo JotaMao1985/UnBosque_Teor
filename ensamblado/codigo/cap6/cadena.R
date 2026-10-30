@@ -3,12 +3,11 @@ Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 options(warn = 1, survey.lonely.psu = "adjust")
 
 cat("\n###BLOQUE-R1###\n")
-# Cuatro tiendas y una auditoria de ventas (el ejemplo 6.1 de Lohr): la
+# Cuatro tiendas y sus ventas (Lohr, §6.1 y Tabla 6.1): la
 # tienda D tiene diez veces el area de la A. Si el sorteo las trata igual,
 # el azar decide si la muestra ve el 82 % de las ventas o el 4 %.
 library(survey)               # el disenno y sus estimadores
 library(sampling)             # inclusionprobabilities() y los algoritmos PPT
-library(jsonlite)             # para leer el JSON del precalculo
 
 options(scipen = 8)
 tiendas <- data.frame(tienda = c("A", "B", "C", "D"),
@@ -186,12 +185,13 @@ c(V_SYG = V_syg, V_enumerada = sum(p_s * (ht_s - t_total)^2))
 #>       V_SYG V_enumerada
 #>    15025.67    15025.67
 # Identicas: SYG es la misma varianza reescrita. Su ventaja practica llega
-# al ESTIMARLA (bloques del modulo 7): suele ser mas estable que la forma HT.
+# al ESTIMARLA (los bloques de agpps, mas abajo): suele ser mas estable que
+# la forma HT.
 
 cat("\n###BLOQUE-R7###\n")
 # Un pi-PT real: los 51 estados de EE.UU. (50 + DC), tamano = poblacion 2019,
-# n = 10. inclusionprobabilities calcula pi_k = n x_k / sum(x)... y avisa
-# del problema: la pi cruda de California pasa de 1.
+# n = 10. inclusionprobabilities calcula pi_k = n x_k / sum(x)... y trunca
+# en silencio: la pi cruda de California (linea siguiente) pasa de 1.
 statepps <- read.csv("CSV data sets for SDA 3e/statepps.csv")
 c(estados = nrow(statepps), total_condados = sum(statepps$counties))
 #>        estados total_condados
@@ -209,7 +209,8 @@ statepps$state[pi_st >= 1 - 1e-12]
 # unidades gigantes, proporcionalidad para las demas.
 
 cat("\n###BLOQUE-R8###\n")
-# Seleccion pi-PT sistematica (UPsystematic) y el HT del total de condados:
+# Seleccion pi-PT sistematica (UPsystematic), recorriendo la lista en el
+# orden del archivo (alfabetico), y el HT del total de condados:
 set.seed(2026)
 s_sys <- UPsystematic(pi_st) == 1
 statepps$state[s_sys]
@@ -224,12 +225,15 @@ c(n = sum(s_sys),
 
 # El sistematico deja pi_kl = 0 en muchos pares (capitulo 2): no hay
 # estimador insesgado de varianza. La salida practica es la aproximacion
-# CON reemplazo, conservadora, que solo usa las pi de primer orden:
-z <- statepps$counties[s_sys] / (pi_st[s_sys] / 10)   # z_i = y_i/psi_i aprox
-c(ee_aprox_WR = sqrt(var(z[pi_st[s_sys] < 1]) / sum(pi_st[s_sys] < 1)))
+# CON reemplazo, conservadora, que solo usa las pi de primer orden.
+# California (pi = 1) no aporta varianza y queda fuera; las otras nueve se
+# tratan como nueve extracciones con psi_i = pi_i/9, asi que
+# z_i = y_i/psi_i = 9 y_i/pi_i:
+nf <- s_sys & pi_st < 1
+z <- sum(nf) * statepps$counties[nf] / pi_st[nf]
+c(ee_aprox_WR = sqrt(var(z) / sum(nf)))
 #> ee_aprox_WR
-#>    1116.288
-# (California, con pi = 1, no aporta varianza y queda fuera de la formula.)
+#>     1004.66
 
 cat("\n###BLOQUE-R9###\n")
 # Diseno de Poisson: cada estado entra con SU pi_k, con monedas
@@ -280,12 +284,17 @@ for (k in 1:14) for (l in (k + 1):15) {
   V_syg <- V_syg + (agpps$SelectionProb[k] * agpps$SelectionProb[l] - Pmat[k, l]) /
     Pmat[k, l] * (d[k] - d[l])^2
 }
-round(c(ee_forma_HT = as.numeric(sqrt(V_ht)), ee_SYG = as.numeric(sqrt(V_syg))), 0)
-#> ee_forma_HT      ee_SYG
-#>    70466698    11715204
+# Y el tercero, el que Lohr recomienda en general (ec. 6.24): la
+# aproximacion con reemplazo, que no usa ninguna pi_kl (psi_k = pi_k/15):
+V_wr_ag <- 15 / 14 * sum((d - t_ht / 15)^2)
+round(c(ee_forma_HT = as.numeric(sqrt(V_ht)), ee_SYG = as.numeric(sqrt(V_syg)),
+        ee_WR = sqrt(V_wr_ag)), 0)
+#> ee_forma_HT      ee_SYG       ee_WR
+#>    70466698    11715204    12293010
 # MISMOS datos, MISMA varianza teorica... y el estimador en forma HT da un
-# ee 6 veces mayor. La forma HT es notoriamente inestable (puede hasta dar
-# negativa); con tamano fijo, SYG es el estimador que se usa.
+# ee 6 veces mayor: es notoriamente inestable (puede hasta dar negativa).
+# SYG, con las pi_kl, y la aproximacion WR, sin ellas, quedan cerca: con
+# n/N = 15/3078 la WR apenas sobreestima (Lohr, ej. 6.10).
 
 cat("\n###BLOQUE-R11###\n")
 # survey hace las dos cuentas con la matriz de conjuntas (pps = ppsmat):
@@ -302,35 +311,44 @@ svytotal(~acres92, dis_ht)
 #> acres92 936291173 70466698
 # Las dos vias a mano del bloque anterior, reproducidas por survey. El
 # intervalo con SYG: 936.3 +/- 23 millones de acres. El total verdadero de
-# agpop (cap. 1) era 943 millones: cae dentro.
+# agpop (cap. 1) era 944 millones (943 951 718): cae dentro.
 
 cat("\n###BLOQUE-R12###\n")
-# Cuando el HT se comporta mal: pi_k chico con y_k grande. La poblacion
-# del modulo 8: 20 negocios, pi proporcional al AREA... y un "elefante"
-# (unidad 20) con area minuscula y ventas enormes. Bajo Poisson la varianza
-# es exacta y se ve el desastre en funcion de pi_20:
-datos <- fromJSON("precalculo/salidas/cap6_datos.json")$elefante
-c(y_elefante = datos$yElefante, total = datos$totalY,
-  aporta = round(datos$yElefante / datos$totalY, 3))
+# Cuando el HT se comporta mal: pi_k chica con y_k grande. La poblacion del
+# modulo 8 es SIMULADA: 20 negocios con ventas proporcionales al area y pi
+# proporcional al area (n = 5)... y un "elefante" (unidad 20) con area
+# minima y ventas enormes. Bajo Poisson la varianza es exacta y se ve el
+# desastre en funcion de pi_20:
+set.seed(2026)
+x_e <- round(exp(rnorm(20, 4, 0.6)))               # areas
+y_e <- round(2 * x_e * exp(rnorm(20, 0, 0.15)))    # ventas, prop. al area
+x_e[20] <- min(x_e[-20]); y_e[20] <- 30 * max(y_e[-20])   # el elefante
+pi_e <- inclusionprobabilities(x_e, 5)
+c(y_elefante = y_e[20], total = sum(y_e), aporta = round(y_e[20] / sum(y_e), 3))
 #> y_elefante      total     aporta
 #>    8790.00   10726.00       0.82
+round(pi_e[20], 4)                                 # la pi que le toca por su area
+#> [1] 0.0649
 
 V_con_pi <- function(p) {
-  pk <- datos$piBase; pk[20] <- p
-  sum((1 - pk) * datos$y^2 / pk)
+  pk <- pi_e; pk[20] <- p
+  sum((1 - pk) * y_e^2 / pk)
 }
-round(sapply(c(pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
-#>      pi_005       pi_05        pi_5
-#> 15376068757  1468530757    77776957
-# De pi = 0.5 a pi = 0.005 la varianza se multiplica por casi 200: el
-# termino (1/pi - 1) y^2 del elefante domina todo. La leccion de diseno:
-# si sospechas que y_k puede ser grande, NO le dejes pi_k chico — tamanos
-# de referencia actualizados, o inclusion forzosa.
+round(sapply(c(pi_area = pi_e[20], pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
+#>     pi_area      pi_005       pi_05        pi_5
+#>  1113115897 15376068757  1468530757    77776957
+# Frente a su pi de area, bajarla a 0.005 multiplica la varianza por casi
+# 14; frente a pi = 0.5, por casi 200. El termino (1/pi - 1) y^2 del
+# elefante domina todo: con su pi de area ya pone el 99.95 %. La leccion
+# de diseno: si sospechas que y_k puede ser grande, NO le dejes pi_k chica —
+# tamanos de referencia actualizados, o inclusion forzosa.
 
 cat("\n###BLOQUE-R13###\n")
 # PPT en dos etapas, el diseno de las encuestas reales. classpps (Lohr,
-# ej. 6.11): 5 clases sorteadas con psi_i = M_i/647 CON reemplazo, 4
-# estudiantes por clase. El HH de dos etapas promedia t_hat_i / psi_i:
+# ej. 6.11): 5 clases sorteadas SIN reemplazo con pi_i = 5 M_i/647 (ninguna
+# se repite) y 4 estudiantes por clase. Se analiza COMO SI fuera con
+# reemplazo, con psi_i = pi_i/5 = M_i/647 (Lohr, ec. 6.30): el HH de dos
+# etapas promedia t_hat_i / psi_i:
 clases <- read.csv("CSV data sets for SDA 3e/classes.csv")      # marco: 15 clases
 classpps <- read.csv("CSV data sets for SDA 3e/classpps.csv")   # la muestra
 K <- sum(clases$class_size)
@@ -359,6 +377,8 @@ c(t_HH = mean(z), ee = sqrt(var(z) / 5))
 # reemplazo" en la primera etapa hace que las dos etapas de azar queden
 # empaquetadas en esa unica varianza entre clases. Ese truco es el motivo
 # de que las encuestas reales declaren sus UPM "con reemplazo" (cap. 7).
+# Aqui n/N = 5/15 no es chico, y Lohr advierte que este ee probablemente
+# sobreestima: la ficcion rinde con cientos de UPM, no con 5 de 15.
 
 cat("\n###BLOQUE-R14###\n")
 # El mismo calculo en survey, con los pesos del archivo, y dos regalos del
@@ -419,7 +439,7 @@ round(c(t_HH_psi = mean(z1), ee_psi = sqrt(var(z1) / 10),
 #>   t_HH_psi     ee_psi t_HH_igual   ee_igual
 #>       2430        588       3886       1126
 # Trampa instructiva: en ESTA realizacion el ee estimado del PPT (588) parece
-# mejor que el del uniforme (1126)... y el bloque R15 demostro que la verdad
+# mejor que el del uniforme (1126)... y el bloque del modulo 10 demostro que la verdad
 # es la contraria (V = 963 006 contra 557 287). Un ee estimado con n = 10 es
 # una variable aleatoria ruidosa: una realizacion no adjudica un debate que
 # las formulas exactas ya resolvieron. Confia en la V exacta, no en la
@@ -470,19 +490,36 @@ c(t_87 = t87, ee_87 = as.numeric(sqrt(V87)))
 # ayer prediga la variable de hoy.
 
 cat("\n###BLOQUE-R19###\n")
-# EJERCICIO 4. Poisson frente a sistematico sobre statepps, con waterarea:
-# V exacta de Poisson y V empirica del sistematico (10 000 replicas del
-# precalculo). Cuanto cuesta el n aleatorio?
-V_poi_water <- sum((1 - pi_st) * statepps$waterarea^2 / pi_st)
-V_sis_water <- fromJSON("precalculo/salidas/cap6_datos.json")$statepps$waterarea$vPps
-round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
-        razon = V_poi_water / V_sis_water), 2)
-#>        V_poisson    V_sistematico            razon
-#> 2625514850771.31 2553797234162.09             1.03
-# Poisson paga solo un 3 % mas que el sistematico de tamano fijo con esta
-# variable — pero cuidado con generalizar: aqui casi toda la varianza viene
-# de que waterarea NO acompana a las pi (deff 9 frente al MAS, modulo 5).
-# Repite la cuenta con counties y la razon sube a 2.8 (1 604 349 exacta de
-# Poisson contra 571 878 del sistematico en el precalculo): cuando las pi
-# trabajan bien, dejar n al azar si cuesta caro. Por eso Poisson se reserva
-# para marcos que llegan en flujo (una unidad a la vez).
+# EJERCICIO 4. Poisson frente al sistematico sobre statepps, con las mismas
+# pi: las dos varianzas EXACTAS. El sistematico tiene pocas muestras
+# posibles: el arranque u ~ U(0, 1) decide la muestra, y entre dos "cortes"
+# (las partes fraccionarias de las pi acumuladas) sale siempre la misma.
+# Basta recorrer esos tramos y ponderar cada HT por la longitud del suyo.
+v_sistematico <- function(y, pi) {
+  acum <- c(0, cumsum(pi))
+  cortes <- sort(unique(round(c(0, 1, acum %% 1), 12)))
+  V <- 0
+  for (j in seq_len(length(cortes) - 1)) {
+    u <- (cortes[j] + cortes[j + 1]) / 2                   # un arranque del tramo
+    s <- floor(acum[-1] - u) > floor(head(acum, -1) - u)   # lo que elige UPsystematic
+    V <- V + (cortes[j + 1] - cortes[j]) * (sum(y[s] / pi[s]) - sum(y))^2
+  }
+  V
+}
+v_poisson <- function(y, pi) sum((1 - pi) * y^2 / pi)
+round(sapply(statepps[c("waterarea", "counties")], function(y)
+  c(V_poisson = v_poisson(y, pi_st), V_sistematico = v_sistematico(y, pi_st),
+    razon = v_poisson(y, pi_st) / v_sistematico(y, pi_st))), 2)
+#>                      waterarea   counties
+#> V_poisson     2625514850771.31 1604348.62
+#> V_sistematico 2523053241934.55  575400.94
+#> razon                     1.04       2.79
+# Con waterarea, Poisson paga solo un 4 % mas que el sistematico: casi toda
+# la varianza viene de que waterarea NO acompana a las pi (deff 9 frente al
+# MAS, modulo 5), y el n aleatorio apenas suma. Con counties la razon sube a
+# 2.8, y no porque las pi trabajen bien (el modulo 5 mostro que no): lo que
+# anade el n aleatorio depende sobre todo de la escala de la variable (del
+# orden de V(n_s) (t/n)^2), y con counties eso es tanto como toda la varianza
+# del sistematico. Por eso Poisson se reserva para marcos que llegan en flujo
+# (una unidad a la vez). (Las 10 000 replicas del modulo 5 dan 571 878 para
+# el sistematico con counties: la exacta difiere un 0.6 %, el error de simular.)

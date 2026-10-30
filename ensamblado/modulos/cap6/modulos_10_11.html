@@ -46,8 +46,12 @@
           deslizador interpola la propuesta desde el uniforme ($\alpha = 0$), pasando por $\psi \propto$
           empleados ($\alpha = 1$, lo que un diseñador real puede hacer), hasta $\psi \propto y$
           ($\alpha = 2$, la perfección inalcanzable). La curva es la varianza <strong>exacta</strong> del
-          precálculo. Nota la asimetría del viaje: de 0 a 1 se gana poco (correlación 0,64); casi toda la
-          ganancia vive entre 1 y 2 — donde ya no se puede caminar.</p>
+          precálculo. El primer tramo mezcla el uniforme con $\psi \propto$ empleados, y la curva no es
+          monótona: baja hasta $\alpha = 0{,}6$ —1,8 veces mejor que el uniforme— y vuelve a subir en
+          $\psi \propto$ empleados, que solo mejora 1,3 veces (correlación 0,64). La razón es la del elefante del
+          módulo 8: $\psi \propto$ empleados deja $\psi$ minúsculas a empresas con pocos empleados y mucho ingreso,
+          y una pizca de uniforme les pone un suelo. Entre 1 y 2 la varianza cae a cero, pero ese tramo exige
+          conocer $y$: ya no se puede caminar.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Varianza exacta del HH según la propuesta interpolada</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -131,8 +135,7 @@
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
         <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre los datos reales del capítulo.
-          Las cifras de cada solución salen de <code>ensamblado/codigo/cap6/cadena.R</code>, que se ejecuta de
-          verdad: ninguna está escrita a mano.</p>
+          Las cifras de cada solución salen de ejecutar sus bloques: ninguna está escrita a mano.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>statepps</code>, saca
@@ -195,20 +198,24 @@
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Calcula la varianza exacta del
             HT bajo Poisson para <code>waterarea</code> en <code>statepps</code> y compárala con la varianza
-            empírica del πPT sistemático del precálculo. Repite mentalmente con <code>counties</code> (los números
-            están en el módulo 6). ¿Cuánto cuesta el $n$ aleatorio en cada caso?</p>
+            exacta del πPT sistemático con las mismas π. Repite con <code>counties</code>. ¿Cuánto cuesta el $n$
+            aleatorio en cada caso?</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
-            <p>La fórmula exacta es $\sum_U (1-\pi_k)\,y_k^2/\pi_k$. La empírica del sistemático está en el JSON
-              del precálculo (<code>statepps$waterarea$vPps</code>).</p>
+            <p>La de Poisson es $\sum_U (1-\pi_k)\,y_k^2/\pi_k$. La del sistemático también es exacta: el arranque
+              $u$ decide la muestra, y entre dos cortes —las partes fraccionarias de las π acumuladas— sale siempre
+              la misma. Recorre esos tramos y pondera cada HT por la longitud del suyo.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R19⟧</code></pre>
-            <p>Con <code>waterarea</code> la razón es 1,03 — casi gratis, porque la varianza está dominada por el
-              desajuste π–variable, no por el $n$ aleatorio. Con <code>counties</code> sube a 2,8: cuando las π
-              trabajan bien, el $n$ aleatorio es lo único que queda por pagar, y se nota. Moraleja doble: el
-              precio de Poisson depende de qué tan buena sea ya la parte πPT del diseño.</p>
+            <p>Con <code>waterarea</code> la razón es 1,04 — casi gratis, porque la varianza está dominada por el
+              desajuste π–variable, no por el $n$ aleatorio. Con <code>counties</code> sube a 2,8, y no porque las π
+              trabajen bien (el módulo 5 mostró que no): lo que añade el $n$ aleatorio depende sobre todo de la
+              escala de la variable, y con <code>counties</code> es tanto como toda la varianza del sistemático.
+              Moraleja: el precio de Poisson se nota cuando el resto de la varianza es pequeño. (Las 10 000 réplicas
+              del módulo 5 dan, para <code>counties</code>, una varianza del sistemático un 0,6 % menor que la
+              exacta: es el error de simular.)</p>
           </details>
         </div>
       </div>

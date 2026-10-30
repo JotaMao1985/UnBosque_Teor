@@ -70,9 +70,10 @@
       <div class="simulador" data-simulador="espacio-wor">
         <h4><i class="fas fa-sitemap" aria-hidden="true"></i> Seis muestras, un espacio completo</h4>
         <p class="simulador-intro">Cada barra es una de las 6 muestras posibles: su altura, la probabilidad
-          $p(s)$; el rótulo, el valor del HT si sale esa muestra. La línea marca $t = 300$. Verás la insesgadez
-          funcionando a la vista — las muestras con HT bajo (las que no contienen a D) pesan poco — y también su
-          precio: cuando salen, el HT se queda en 77–100.</p>
+          $p(s)$; el rótulo, la muestra y el valor del HT si sale. La lectura da, para la muestra elegida, su
+          desviación frente a $t = 300$ y cuánto aporta a la varianza; su última línea es la insesgadez:
+          $E(\hat{t}) = 300$ exacto. Mira también el precio, en las tres muestras sin D: salen una de cada cuatro
+          veces, dejan el HT en 77–100 y ponen las tres cuartas partes de la varianza.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">$p(s)$ y $\hat{t}_\pi$ de cada muestra posible</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -124,7 +125,8 @@
 
       <p>El diseño estrella del capítulo fija directamente las probabilidades de inclusión:
         $\pi_k = n\,x_k / \sum_U x_l$, proporcionales al tamaño y <strong>sin reemplazo con tamaño fijo</strong>.
-        Gutiérrez lo llama πPT; Lohr, «πps». Pero la fórmula tiene una fuga: nada impide que salga
+        Gutiérrez lo llama πPT; Lohr no le da nombre propio: es su muestreo <em>pps</em> (probabilidad proporcional al
+        tamaño) sin reemplazo. Pero la fórmula tiene una fuga: nada impide que salga
         $\pi_k > 1$, y con los 51 estados de EE.UU. (50 + DC) pasa de inmediato:</p>
 
       <div class="code-tabs">
@@ -142,11 +144,13 @@
           $\pi_k = 1$, no aporta varianza, y las demás π se reescalan para que $\sum \pi_k = n$ se conserve. Es la
           respuesta estándar a las unidades gigantes — el mismo instinto del estrato censado del capítulo 4
           —el que entra entero y por eso no aporta varianza—, ahora dentro del formalismo π. <code>sampling::inclusionprobabilities()</code> lo hace
-          con un truncamiento iterativo (el ayudante <code>probInclusionPPT</code> de este material, igual).</p>
+          con un truncamiento iterativo (el bloque Python del módulo 6 lo programa en un bucle de pocas líneas).</p>
       </div>
 
-      <p>Con las π en la mano falta <em>sortear</em> una muestra que las respete. El πPT sistemático — ordenar,
-        acumular las π y recorrer con paso 1 — es el más usado por su simplicidad:</p>
+      <p>Con las π en la mano falta <em>sortear</em> una muestra que las respete. El πPT sistemático — recorrer
+        la lista acumulando las π y tomar una unidad cada vez que la suma cruza $u$, $u+1$, $u+2$… con un arranque
+        $u$ al azar — es el más usado por su simplicidad. El bloque recorre la lista en el orden del archivo, que
+        es alfabético; ese detalle importa, como se verá enseguida:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Selección sistemática y HT">
@@ -160,9 +164,10 @@
       <div class="simulador" data-simulador="ppt-mc">
         <h4><i class="fas fa-chart-column" aria-hidden="true"></i> ¿Cuándo gana el πPT? 10 000 réplicas contra el MAS</h4>
         <p class="simulador-intro">Tres variables sobre los mismos estados, del precálculo: <code>counties</code>
-          (correlación 0,46 con la población), <code>waterarea</code> (0,04) y <code>pop2019</code> — la propia
-          medida de tamaño (1,00). Cambia la variable y compara los histogramas del πPT sistemático y del MAS con
-          el mismo $n = 10$. La sorpresa pedagógica: con correlación «decente» (0,46), el πPT <em>pierde</em>.</p>
+          (correlación 0,46 con la población), <code>waterarea</code> (0,045) y <code>pop2019</code> — la propia
+          medida de tamaño (1,00). Cambia la variable y compara los histogramas del πPT sistemático (con la lista en
+          orden alfabético) y del MAS con el mismo $n = 10$. La sorpresa pedagógica: con correlación «decente»
+          (0,46), el πPT <em>pierde</em>.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Distribución de muestreo del HT del total, πPT frente a MAS</p>
         <div class="grafico-wrapper" style="height:280px;">
@@ -173,11 +178,15 @@
 
       <div class="warning">
         <p><strong>πPT no es un amuleto: es una apuesta a la proporcionalidad.</strong> La varianza del HT depende
-          de qué tan constante sea $y_k/\pi_k$. Si $y$ es <em>proporcional</em> al tamaño, el cociente es casi
+          de dos cosas: de qué tan constante sea $y_k/\pi_k$ y, a través de las $\pi_{kl}$, de cómo se sortea —el
+          algoritmo y el orden de la lista—. Si $y$ es <em>proporcional</em> al tamaño, el cociente es casi
           constante y la varianza se desploma (con <code>pop2019</code>, a prácticamente cero). Si la relación es
           difusa — <code>counties</code> tiene correlación 0,46 pero <em>no</em> proporcionalidad —, las π
-          desiguales meten más ruido del que quitan y el MAS gana (deff 1,25). Con <code>waterarea</code>, el
-          castigo es deff 9. La regla práctica de Lohr: πPT cuando la variable «se mueve con» el tamaño (ventas,
+          desiguales meten más ruido del que quitan y el MAS gana (deff 1,25). Pero ese 1,25 es del sistemático con
+          la lista alfabética: ordenada por población, el mismo diseño gana (deff 0,75, cálculo exacto), porque
+          recorrer la lista por tamaño reparte la muestra entre estados chicos, medianos y grandes —estratifica a
+          escondidas, como el sistemático del capítulo 2, módulo 9—. Con <code>waterarea</code>, el castigo es
+          deff 9 en cualquier orden. La regla práctica de Lohr: πPT cuando la variable «se mueve con» el tamaño (ventas,
           matrícula, cosecha), no cuando apenas lo roza.</p>
       </div>
 
@@ -191,7 +200,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.4.1–6.4.2: diseños πps; el ejemplo de los estados es el 6.10 de la 3.ª ed.</li>
+          <li>Lohr — §6.4.1–6.4.2: el muestreo sin reemplazo con probabilidades desiguales y cómo sortearlo; su ejemplo 6.10 es agpps (módulo 7). Los estados (<code>statepps</code>) salen en sus ejercicios, y allí con reemplazo.</li>
           <li>Gutiérrez — §4.3–4.4: πPT sistemático y por qué no siempre existe un diseño con esas π.</li>
         </ul>
       </div>
@@ -214,7 +223,7 @@
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Entender el diseño de monedas independientes: el
-              único con varianza del HT sin $\pi_{kl}$, al precio de un $n$ aleatorio cuya distribución exacta
+              más simple de los diseños sin reemplazo, cuya varianza del HT no pide $\pi_{kl}$, al precio de un $n$ aleatorio cuya distribución exacta
               vas a calcular.</p>
           </div>
         </div>
@@ -251,8 +260,11 @@
         <h4><i class="fas fa-coins" aria-hidden="true"></i> La lotería del tamaño de muestra</h4>
         <p class="simulador-intro">La distribución <strong>exacta</strong> de $n_s$ (Poisson-binomial, calculada
           por convolución — la pestaña Python la programa en cuatro líneas). El deslizador reescala todas las π
-          por un factor: con la mitad de presupuesto esperado, ¿cuánto se ensancha la lotería? La lectura da
-          $P(n = E(n))$: incluso en el diseño nominal, solo el 16 % de las veces sale exactamente 10.</p>
+          por un factor. Con la mitad de presupuesto esperado, ¿la lotería se ensancha o se estrecha? Mira las dos
+          lecturas de dispersión: la desviación de $n$ baja un poco, pero el cv —la desviación como fracción de
+          $E(n)$— crece mucho, y al planear es el que importa. Con un factor mayor que 1, las π que pasan de 1 se
+          truncan y $E(n)$ se queda por debajo de lo pedido. La lectura da también $P(n = E(n))$: incluso en el
+          diseño nominal, solo el 16 % de las veces sale exactamente 10.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Distribución exacta del tamaño de muestra $n_s$</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -266,15 +278,16 @@
           que <em>están</em>: auditar transacciones conforme ocurren, muestrear tráfico de red paquete a paquete,
           <em>web scraping</em> con presupuesto de peticiones. Cada unidad se decide en el momento, sin conocer
           las demás — exactamente lo que las monedas independientes permiten y ningún diseño de tamaño fijo puede
-          hacer. El ejercicio 4 cuantifica el precio: con π bien alineadas, hasta 2,8 veces la varianza del
-          sistemático. Es la versión π del resultado del capítulo 2: Bernoulli pagaba lo mismo por su $n$
+          hacer. El ejercicio 4 cuantifica el precio con dos variables: casi nada con <code>waterarea</code> y 2,8
+          veces la varianza del sistemático con <code>counties</code> —no porque allí las π trabajen bien, sino
+          porque lo que añade el $n$ aleatorio pesa más cuanto más chico es el resto de la varianza—. Es la versión π del resultado del capítulo 2: Bernoulli pagaba lo mismo por su $n$
           aleatorio.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Gutiérrez — §4.1: el diseño de Poisson (Lohr lo trata solo de pasada, en los ejercicios del cap. 6).</li>
+          <li>Gutiérrez — §4.1: el diseño de Poisson. Lohr lo presenta en su ejemplo 6.14 (el muestreo 3-P de los forestales, un caso de Poisson) y lo desarrolla en un ejercicio del cap. 6.</li>
           <li>Särndal, Swensson y Wretman — §3.2: Poisson como familia de diseños «de lista».</li>
           <li>Este material — cap. 2, módulo 8: Bernoulli, el caso de π constante.</li>
         </ul>

@@ -16,6 +16,8 @@ V1 = (psi * (est - t)**2).sum()       # varianza exacta con n = 1
 print("t/psi por tienda:", np.round(est, 1))
 print(f"V(n=1) = {V1:.0f}   V_HH(n=2) = V/2 = {V1 / 2:.0f}")
 
+# numpy usa otro generador que R: con la misma semilla sale OTRA muestra
+# (en R, CD). Lo que coincide son las cifras exactas, 14 248 y 7 124.
 rng = np.random.default_rng(2026)
 s = rng.choice(4, size=2, replace=True, p=psi)
 z = ventas[s] / psi[s]
@@ -26,7 +28,8 @@ print(f"muestra {s + 1} -> t_hat = {z.mean():.0f}, ee = {(z.var(ddof=1) / 2)**0.
 
 print("\n###BLOQUE-P2###\n")
 # Los dos metodos de seleccion, en Python puro. Acumulativo: un uniforme
-# contra los tramos. Lahiri: rechazo contra M_max.
+# contra los tramos. Lahiri: rechazo contra M_max. (Otro generador que R:
+# las frecuencias no son las de R, pero clavan las mismas psi.)
 acum = np.cumsum(m2)
 u = rng.uniform(0, m2.sum(), size=100000)
 sel = np.searchsorted(acum, u)
@@ -46,8 +49,8 @@ print(f"tasa de aceptacion Lahiri = {acepta.mean():.3f} (teorica {m2.mean() / M_
 
 print("\n###BLOQUE-P3###\n")
 # El espacio de muestras del modulo 4, con la matriz pi_kl y el SYG
-# calculados con bucles explicitos — la version transparente del calculo
-# que R hizo con survey y formulas.
+# calculados con bucles explicitos — la version en Python de los bucles
+# de R (bloques de los modulos 4 y 7).
 from itertools import combinations
 muestras = list(combinations(range(4), 2))
 p_s = np.array([m2[i] + m2[j] for i, j in muestras], dtype=float)

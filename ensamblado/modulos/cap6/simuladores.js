@@ -15,11 +15,73 @@
       if (!isFinite(x)) return '—';
       const s = Math.abs(x).toFixed(d);
       const partes = s.split('.');
-      const entero = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      const entero = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
       return (x < 0 ? '−' : '') + entero + (partes[1] ? ',' + partes[1] : '');
     }
 
     function fmtPct(x, d = 1) { return fmtNum(100 * x, d) + ' %'; }
+
+    // Los ejes en el formato del curso, sea cual sea el idioma del navegador
+    // (Chart.js usa el del navegador: en inglés salían «0.05» y «1,000», y en
+    // español «1.000» junto a un eje sin formato), y sin que Chart.js esconda
+    // rótulos de categoría en pantallas estrechas. Los constructores de la
+    // plantilla no lo hacen; se arregla aquí, como en el cap. 5, sin tocar la
+    // plantilla que comparten los demás.
+    function ejesEnEspanol(g, decX, decY) {
+      const x = g.options.scales.x, y = g.options.scales.y;
+      if (x.type === 'linear') {
+        x.ticks = Object.assign({}, x.ticks, { callback: v => fmtNum(v, decX) });
+      } else {
+        x.ticks = Object.assign({}, x.ticks, { autoSkip: false, maxRotation: 0 });
+      }
+      y.ticks = Object.assign({}, y.ticks, { callback: v => fmtNum(v, decY) });
+    }
+
+    // Eje logarítmico: solo las potencias de diez, escritas 10³, 10⁶…
+    function ejeLogEnEspanol(g) {
+      const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+      const y = g.options.scales.y;
+      y.ticks = Object.assign({}, y.ticks, {
+        callback: v => {
+          const e = Math.log10(v);
+          if (Math.abs(e - Math.round(e)) > 1e-9) return '';
+          return '10' + String(Math.round(e)).split('').map(c => SUP[+c]).join('');
+        }
+      });
+    }
+    function topeLog(maximo) { return Math.pow(10, Math.ceil(Math.log10(maximo) - 1e-9)); }
+
+    function multiploDe(paso, k) { return Number((k * paso).toFixed(10)); }
+
+    // Un paso «bonito» (1, 2, 2,5 o 5 por potencia de 10) y sus decimales.
+    function pasoBonito(bruto) {
+      const pot = Math.pow(10, Math.floor(Math.log10(bruto)));
+      const paso = [1, 2, 2.5, 5, 10].map(f => f * pot).find(p => p >= bruto);
+      const dec = Math.max(0, -Math.floor(Math.log10(paso) + 1e-9)) + (paso / pot === 2.5 ? 1 : 0);
+      return { paso, dec };
+    }
+
+    // Un tope de eje redondo para un máximo cualquiera, con sus marcas: así el
+    // eje no enseña el flotante crudo (38,8, 77,6, 0,28).
+    function topeBonito(g, maximo) {
+      const { paso, dec } = pasoBonito(maximo / 5);
+      g.options.scales.y.max = multiploDe(paso, Math.ceil(maximo / paso - 1e-9));
+      g.options.scales.y.ticks.stepSize = paso;
+      g.options.scales.y.ticks.callback = v => fmtNum(v, dec);
+    }
+
+    // La plantilla escribe la cifra del deslizador con toFixed (punto
+    // decimal). Este oyente se registra después del suyo, así que corre
+    // después y la reescribe con coma.
+    function comaEnDeslizadores(inputs, decimales) {
+      Object.keys(decimales).forEach(clave => {
+        const input = inputs[clave];
+        const salida = input.parentElement.querySelector('output');
+        const pinta = () => { salida.textContent = fmtNum(parseFloat(input.value), decimales[clave]); };
+        input.addEventListener('input', pinta);
+        pinta();
+      });
+    }
 
     // ---------------------------------------------------------------
     // M1 · Cuatro muestras posibles, dos sorteos
@@ -31,22 +93,28 @@
       const NOMBRES = ['ψ proporcional al área', 'probabilidades iguales', 'los dos sorteos'];
 
       const g = crearGraficoBarras(lienzo, T.nombres, T.estPpt, {
-        etiqueta: 'ψ ∝ área', color: COLORES_GRAFICO.primario, min: 0, max: 1050
+        etiqueta: 'ψ ∝ área', color: COLORES_GRAFICO.primario, min: 0, max: 1000,
+        lineas: [{ valor: T.total, etiqueta: 't = 300', color: COLORES_GRAFICO.gris }]
       });
+      ejesEnEspanol(g, 0, 0);
+      topeBonito(g, 1000);
+      const [principal, linea] = g.data.datasets;
+      const extra = {
+        type: 'bar', label: 'ψ iguales', data: T.estIgual,
+        backgroundColor: COLORES_GRAFICO.secundario, borderWidth: 0,
+        barPercentage: 0.4, categoryPercentage: 0.9, order: 2
+      };
+      // La muestra más alejada del total verdadero, en cada sorteo
+      const peor = est => est.reduce((m, v, i) =>
+        Math.abs(v - T.total) > Math.abs(est[m] - T.total) ? i : m, 0);
+      const iP = peor(T.estPpt), iI = peor(T.estIgual);
+      const textoP = T.nombres[iP] + ' (t̂ = ' + fmtNum(T.estPpt[iP], 0) + ') con ψ ∝ área';
+      const textoI = T.nombres[iI] + ' (t̂ = ' + fmtNum(T.estIgual[iI], 0) + ') con ψ iguales';
 
       function pintar() {
-        const datasets = g.data.datasets;
-        datasets.length = 1;
-        datasets[0].label = 'ψ ∝ área';
-        datasets[0].data = params.mostrar === 1 ? T.estIgual : T.estPpt;
-        if (params.mostrar === 1) datasets[0].label = 'ψ iguales';
-        if (params.mostrar === 2) {
-          datasets.push({
-            type: 'bar', label: 'ψ iguales', data: T.estIgual,
-            backgroundColor: COLORES_GRAFICO.secundario, borderWidth: 0,
-            barPercentage: 0.4, categoryPercentage: 0.9
-          });
-        }
+        principal.label = params.mostrar === 1 ? 'ψ iguales' : 'ψ ∝ área';
+        principal.data = params.mostrar === 1 ? T.estIgual : T.estPpt;
+        g.data.datasets = params.mostrar === 2 ? [principal, extra, linea] : [principal, linea];
         g.update('none');
 
         const V = params.mostrar === 1 ? T.vIgual : T.vPpt;
@@ -56,8 +124,8 @@
           { etiqueta: 'V con ψ ∝ área:', valor: fmtNum(T.vPpt, 0) },
           { etiqueta: 'V con ψ iguales:', valor: fmtNum(T.vIgual, 0) },
           { etiqueta: 'razón de varianzas:', valor: fmtNum(T.vIgual / T.vPpt, 1) + ' a 1' },
-          { etiqueta: 'la peor muestra (' + (params.mostrar === 1 ? 'D con ψ = 1/4' : 'A con ψ ∝ área') + '):',
-            valor: 't̂ = ' + fmtNum(params.mostrar === 1 ? 980 : T.estPpt[0], 0) }
+          { etiqueta: 'la más alejada de t = 300:',
+            valor: params.mostrar === 0 ? textoP : (params.mostrar === 1 ? textoI : textoP + '; ' + textoI) }
         ]);
       }
 
@@ -87,6 +155,7 @@
       const g = crearGraficoXY(lienzo, [], {
         tituloX: 'valor del estimador HH', tituloY: 'probabilidad exacta', xMin: 0, xMax: 1000
       });
+      ejesEnEspanol(g, 0, 2);
 
       function stems(xs, ps, etiqueta, color) {
         return {
@@ -135,8 +204,10 @@
       const acum = T.acumulado;                       // [100, 300, 600, 1600]
 
       const g = crearGraficoBarras(lienzo, T.nombres, T.m2, {
-        etiqueta: 'área (m²) = longitud del tramo', color: COLORES_GRAFICO.primario, min: 0, max: 1050
+        etiqueta: 'área (m²) = longitud del tramo', color: COLORES_GRAFICO.primario, min: 0, max: 1000
       });
+      ejesEnEspanol(g, 0, 0);
+      topeBonito(g, 1000);
 
       function pintar() {
         let colores, lectura;
@@ -188,9 +259,15 @@
       const params = { muestra: 6 };
       const lienzo = raiz.querySelector('canvas');
 
-      const g = crearGraficoBarras(lienzo, E.muestras, E.pS, {
-        etiqueta: 'p(s)', color: COLORES_GRAFICO.primario, min: 0, max: 0.32
+      // Rótulo en dos líneas: la muestra y el HT que da si sale (sin
+      // decimales: a 375 px, «t̂ = 77,3» se pisaba con el vecino).
+      const rotulos = E.muestras.map((m, i) => [m, fmtNum(E.ht[i], 0)]);
+      const g = crearGraficoBarras(lienzo, rotulos, E.pS, {
+        etiqueta: 'p(s)', color: COLORES_GRAFICO.primario, min: 0, max: 0.3,
+        tituloX: 'muestra y el t̂ que da si sale'
       });
+      ejesEnEspanol(g, 0, 2);
+      topeBonito(g, 0.3);
 
       function pintar() {
         const i = params.muestra - 1;
@@ -230,6 +307,7 @@
       const g = crearGraficoXY(lienzo, [], {
         tituloX: 'HT del total', tituloY: 'réplicas por caja'
       });
+      ejesEnEspanol(g, 0, 0);
 
       function pintar() {
         const V = D6.statepps[VARS[params.variable].clave];
@@ -271,6 +349,8 @@
       const g = crearGraficoBarras(lienzo, [], [], {
         etiqueta: 'P(n = k) exacta', color: COLORES_GRAFICO.primario, min: 0, max: 0.45
       });
+      ejesEnEspanol(g, 0, 2);
+      g.options.scales.x.ticks.autoSkip = true;     // hasta 26 valores de n: que salte rótulos
 
       function pintar() {
         const pi = piBase.map(p => Math.min(1, p * params.factor));
@@ -288,23 +368,29 @@
         const kMax = Math.min(pn.length - 1, Math.ceil(En + 4 * Math.sqrt(Vn) + 2));
         g.data.labels = Array.from({ length: kMax + 1 }, (_, k) => k);
         g.data.datasets[0].data = pn.slice(0, kMax + 1);
-        g.options.scales.y.max = Math.max(0.25, Math.max(...pn) * 1.15);
+        topeBonito(g, Math.max(0.2, Math.max(...pn) * 1.1));
         g.update('none');
 
+        // k = E(n) redondeado: con E(n) no entero, «a una unidad de k» no es
+        // «a una unidad de E(n)», y el rótulo dice lo que de verdad se suma.
         const kEsp = Math.round(En);
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
-          { etiqueta: 'factor sobre las π:', valor: fmtNum(params.factor, 2) },
+          { etiqueta: 'factor sobre las π:', valor: fmtNum(params.factor, 2) +
+            (params.factor > 1 ? ' (las π que pasan de 1 se truncan)' : '') },
           { etiqueta: 'E(n) = Σπ:', valor: fmtNum(En, 2) },
-          { etiqueta: 'de(n):', valor: fmtNum(Math.sqrt(Vn), 2) },
+          { etiqueta: 'desviación de n:', valor: fmtNum(Math.sqrt(Vn), 2) },
+          { etiqueta: 'cv = desviación / E(n):', valor: fmtPct(Math.sqrt(Vn) / En, 0) },
           { etiqueta: 'P(n = ' + kEsp + '):', valor: fmtNum(pn[kEsp] || 0, 3) },
-          { etiqueta: 'P(|n − E(n)| ≤ 1):', valor: fmtNum((pn[kEsp - 1] || 0) + (pn[kEsp] || 0) + (pn[kEsp + 1] || 0), 3) },
+          { etiqueta: 'P(' + (kEsp - 1) + ' ≤ n ≤ ' + (kEsp + 1) + '):',
+            valor: fmtNum((pn[kEsp - 1] || 0) + (pn[kEsp] || 0) + (pn[kEsp + 1] || 0), 3) },
           { etiqueta: 'forzosas (π = 1):', valor: fmtNum(pi.filter(p => p === 1).length, 0) }
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'factor', etiqueta: 'Factor de escala de las π', min: 0.3, max: 1.5, paso: 0.05 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { factor: 2 });
       pintar();
       return [g];
     };
@@ -325,8 +411,10 @@
         (E.piK[k] * E.piK[l] - E.piKl[k][l]) * Math.pow(d[k] - d[l], 2));
 
       const g = crearGraficoBarras(lienzo, E.muestras, aportes, {
-        etiqueta: 'aporte a V (SYG)', color: COLORES_GRAFICO.primario, min: 0, max: Math.max(...aportes) * 1.15
+        etiqueta: 'aporte a V (SYG)', color: COLORES_GRAFICO.primario, min: 0, max: Math.max(...aportes) * 1.1
       });
+      ejesEnEspanol(g, 0, 0);
+      topeBonito(g, Math.max(...aportes) * 1.1);
 
       function pintar() {
         const i = params.par - 1;
@@ -362,10 +450,17 @@
       const etiquetas = E.y.map((_, i) => i + 1);
 
       const g = crearGraficoBarras(lienzo, etiquetas, E.y.map(() => 1), {
-        etiqueta: 'aporte (1/π − 1)·y² a V', color: COLORES_GRAFICO.primario, min: 0.1, max: 1e11
+        etiqueta: 'aporte (1/π − 1)·y² a V', color: COLORES_GRAFICO.primario, min: 0.1, max: 1e11,
+        tituloX: 'negocio (el 20 es el elefante)'
       });
       g.options.scales.y.type = 'logarithmic';
       g.options.scales.y.min = 10;
+      ejeLogEnEspanol(g);
+      // Rótulos 1, 5, 10, 15 y 20: caben a 375 px y el elefante queda rotulado
+      g.options.scales.x.ticks = Object.assign({}, g.options.scales.x.ticks, {
+        autoSkip: false, maxRotation: 0,
+        callback: (v, i) => [0, 4, 9, 14, 19].includes(i) ? String(i + 1) : ''
+      });
 
       function pintar() {
         const pi = E.piBase.slice();
@@ -374,7 +469,7 @@
         const V = aportes.reduce((a, b) => a + b, 0);
         g.data.datasets[0].data = aportes;
         g.data.datasets[0].backgroundColor = etiquetas.map((_, i) => i === 19 ? '#FF6600' : '#012820');
-        g.options.scales.y.max = Math.max(1e10, Math.max(...aportes) * 2);
+        g.options.scales.y.max = topeLog(Math.max(1e10, Math.max(...aportes) * 1.5));
         g.update('none');
 
         const VBase = E.piBase.map((p, i) => (1 / p - 1) * E.y[i] * E.y[i]).reduce((a, b) => a + b, 0);
@@ -383,16 +478,17 @@
             fmtNum(E.piElefanteX, 3) + ')' },
           { etiqueta: 'su y:', valor: fmtNum(E.yElefante, 0) + ' — el ' + fmtPct(E.yElefante / E.totalY, 0) + ' del total' },
           { etiqueta: 'V total del HT (Poisson):', valor: fmtNum(V, 0) },
-          { etiqueta: 'el elefante aporta:', valor: fmtPct(aportes[19] / V, 1) },
+          { etiqueta: 'el elefante aporta:', valor: fmtPct(aportes[19] / V, 2) },
           { etiqueta: 'frente a la V con su π de área:', valor: fmtNum(V / VBase, 2) + '×' },
           { etiqueta: 'defensa:', valor: params.piE >= 0.5 ? 'π grande: bomba desactivada' :
             (params.piE < 0.03 ? '¡π mínima con y enorme: explosión!' : 'zona de riesgo' ) }
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'piE', etiqueta: 'π del elefante', min: 0.005, max: 0.9, paso: 0.005 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { piE: 3 });
       pintar();
       return [g];
     };
@@ -404,11 +500,14 @@
       const C = D6.classpps;
       const params = { diseno: 0, m: 4 };
       const lienzo = raiz.querySelector('canvas');
-      const etiquetas = C.tamanos.map((_, i) => 'clase ' + (i + 1));
+      const etiquetas = C.tamanos.map((_, i) => String(i + 1));
 
       const g = crearGraficoBarras(lienzo, etiquetas, C.tamanos, {
-        etiqueta: 'peso final de un estudiante', color: COLORES_GRAFICO.primario, min: 0, max: 40
+        etiqueta: 'peso final de un estudiante', color: COLORES_GRAFICO.primario, min: 0, max: 40,
+        tituloX: 'clase del marco'
       });
+      ejesEnEspanol(g, 0, 0);
+      g.options.scales.x.ticks.maxRotation = 90;    // a 375 px, 15 rótulos se pegaban: que giren
 
       function pintar() {
         const n = 5;
@@ -417,7 +516,7 @@
           : (C.Nclases / n) * Mi / params.m);          // iguales: (N/n) · (Mi/m)
         g.data.datasets[0].data = pesos;
         g.data.datasets[0].label = params.diseno === 0 ? 'PPT + m fijo (autoponderado)' : 'iguales + m fijo';
-        g.options.scales.y.max = Math.max(...pesos) * 1.2;
+        topeBonito(g, Math.max(...pesos) * 1.1);
         g.update('none');
 
         const maxP = Math.max(...pesos), minP = Math.min(...pesos);
@@ -447,15 +546,19 @@
       const params = { alpha: 0 };
       const lienzo = raiz.querySelector('canvas');
 
+      // En billones (×10¹²): con la cifra entera, el eje no cabe en un teléfono.
+      const ESC = 1e12;
       const curva = {
         type: 'line', label: 'V exacta del HH', stepped: false, fill: false,
-        data: I.mallaAlpha.map((a, i) => ({ x: a, y: I.curvaV[i] })),
+        data: I.mallaAlpha.map((a, i) => ({ x: a, y: I.curvaV[i] / ESC })),
         borderColor: COLORES_GRAFICO.primario, backgroundColor: COLORES_GRAFICO.primario,
         borderWidth: 2, pointRadius: 0, tension: 0.25
       };
       const g = crearGraficoXY(lienzo, [curva], {
-        tituloX: 'α: 0 uniforme · 1 ψ∝empleados · 2 ψ∝y', tituloY: 'V exacta', xMin: 0, xMax: 2
+        tituloX: 'α: 0 uniforme · 1 ψ∝empleados · 2 ψ∝y', tituloY: 'V exacta (×10¹²)', xMin: 0, xMax: 2
       });
+      ejesEnEspanol(g, 1, 0);
+      topeBonito(g, I.vUniforme / ESC * 1.1);
 
       function vDe(a) {
         // interpolación lineal sobre la malla del precálculo (paso 0.1)
@@ -466,7 +569,7 @@
 
       function pintar() {
         const V = vDe(params.alpha);
-        g.data.datasets = [curva, serieVertical(params.alpha, I.vUniforme * 1.05, 'α actual', COLORES_GRAFICO.secundario)];
+        g.data.datasets = [curva, serieVertical(params.alpha, I.vUniforme / ESC * 1.05, 'α actual', COLORES_GRAFICO.secundario)];
         g.update('none');
 
         const nombre = params.alpha <= 0.05 ? 'uniforme' :
@@ -482,9 +585,10 @@
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'alpha', etiqueta: 'α de la propuesta', min: 0, max: 2, paso: 0.05 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { alpha: 2 });
       pintar();
       return [g];
     };
@@ -497,8 +601,8 @@
       const P = D6.poisson;
       return {
         descripcion: 'Estimar el total de condados de EE.UU. (3 143) con n = 10 estados y cuatro ' +
-          'diseños. Las varianzas del MAS y del πPT sistemático salen de 10 000 réplicas; las de ' +
-          'Poisson y HH son exactas. Pulsa cualquier cabecera para reordenar.',
+          'diseños. Las varianzas del MAS y del πPT sistemático (lista en orden alfabético) salen de ' +
+          '10 000 réplicas; las de Poisson y HH son exactas. Pulsa cualquier cabecera para reordenar.',
         columnas: [
           { clave: 'diseno', titulo: 'Diseño', tipo: 'texto' },
           { clave: 'n', titulo: 'n', tipo: 'texto' },
@@ -518,10 +622,12 @@
         inicial: 'V',
         destacada: 'MAS de 10 estados',
         pie: 'La sorpresa honesta del módulo: para counties, el humilde MAS gana — la correlación ' +
-          'de 0,46 con la población no compra la proporcionalidad que el πPT necesita. La tabla ' +
-          'entera se invierte con una variable que sí acompañe al tamaño (con pop2019, la V del ' +
-          'πPT es ≈ 0 y las demás quedan en ridículo). Diseñar con probabilidades desiguales es ' +
-          'apostar: esta tabla muestra una apuesta perdida para que nadie crea que el πPT gana solo.'
+          'de 0,46 con la población no compra la proporcionalidad que el πPT necesita (con la lista ' +
+          'ordenada por población, el sistemático sí ganaría: el orden también juega). Con una variable ' +
+          'que sí acompañe al tamaño, como pop2019, lo que anula la varianza es la proporcionalidad, no ' +
+          'el «sin reemplazo»: el πPT y el HH con ψ ∝ pop dan V = 0, y Poisson conserva la que pone su n ' +
+          'aleatorio. Diseñar con probabilidades desiguales es apostar: esta tabla muestra una apuesta ' +
+          'perdida para que nadie crea que el πPT gana solo.'
       };
     };
 
@@ -529,7 +635,7 @@
     // Diagrama de diseño del módulo 9: classpps, PPT en dos etapas
     // ================================================================
     DIAGRAMAS_DISENO['ppt-dos-etapas'] = {
-      titulo: 'El diseño de classpps: PPT con reemplazo × MAS',
+      titulo: 'El diseño de classpps: πPT sin reemplazo × MAS',
       intro: 'Pulsa cada etapa. La primera sortea CON probabilidades desiguales; la franja final ' +
         'muestra la cancelación que deja todos los pesos iguales.',
       nota: 'Compara con el diagrama de schools del capítulo 5, módulo 2: allí la primera etapa ' +
@@ -540,20 +646,21 @@
           etiqueta: 'Marco',
           unidad: '15 clases, $K = 647$ estudiantes',
           icono: 'fa-chalkboard-user',
-          resumen: 'El marco lista las 15 clases con sus tamaños M_i (de 20 a 100). A diferencia ' +
+          resumen: 'El marco lista las 15 clases con sus tamaños M_i (de 15 a 100). A diferencia ' +
             'de schools, aquí el total K = 647 sí se conoce: lo exige el PPT para calcular las psi.',
-          cifras: [{ k: 'N', v: '15 clases' }, { k: 'M_i', v: 'de 20 a 100' }]
+          cifras: [{ k: 'N', v: '15 clases' }, { k: 'M_i', v: 'de 15 a 100' }]
         },
         {
           etiqueta: 'Etapa 1: clases',
-          unidad: 'PPT con reemplazo, $n = 5$',
+          unidad: 'πPT sin reemplazo, $n = 5$',
           icono: 'fa-scale-unbalanced',
-          resumen: 'Cinco extracciones con psi_i = M_i/647: la clase de 100 estudiantes sale con ' +
-            'probabilidad 0,155 por extracción; la de 20, con 0,031. Con reemplazo: puede repetirse.',
-          pi: '\\psi_i = M_i/647',
-          peso: '1/(n\\psi_i) = 647/(5 M_i)',
-          cifras: [{ k: 'ψ rango', v: '0,031 a 0,155' }],
-          ejemplo: 'la clase 14 (M = 100) tiene cinco veces la probabilidad de la clase 4 (M = 22).'
+          resumen: 'Cinco clases distintas, sorteadas con π_i = 5M_i/647 (Lohr, ej. 6.11). Para la ' +
+            'varianza se analizan como si fueran cinco extracciones con reemplazo, con ψ_i = π_i/5 = ' +
+            'M_i/647: la clase de 100 estudiantes, con 0,155 por extracción; la de 15, con 0,023.',
+          pi: '\\pi_i = 5M_i/647,\\quad \\psi_i = \\pi_i/5',
+          peso: '1/\\pi_i = 1/(n\\psi_i) = 647/(5 M_i)',
+          cifras: [{ k: 'ψ rango', v: '0,023 a 0,155' }],
+          ejemplo: 'la clase 14 (M = 100) tiene unas 4,5 veces la probabilidad de la clase 4 (M = 22).'
         },
         {
           etiqueta: 'Etapa 2: estudiantes',
@@ -563,7 +670,7 @@
             'baja con el tamaño de la clase — exactamente al revés que la etapa 1.',
           pi: 'm/M_i = 4/M_i',
           peso: 'M_i/4',
-          cifras: [{ k: 'm/Mᵢ rango', v: '0,04 a 0,18' }],
+          cifras: [{ k: 'm/Mᵢ (clases sorteadas)', v: '0,04 a 0,18' }],
           ejemplo: 'en la clase de 100, cada estudiante sale con 4/100 = 0,04.'
         },
         {
@@ -600,12 +707,12 @@
         { concepto: 'Prob. de inclusión', aqui: '\\pi_k', lohr: '\\pi_i', gutierrez: '\\pi_k', r: 'inclusionprobabilities()' },
         { concepto: 'Conjunta de segundo orden', aqui: '\\pi_{kl}', lohr: '\\pi_{ik}', gutierrez: '\\pi_{kl}', r: 'ppsmat(Pmat)' },
         { concepto: 'Estimador con reemplazo', aqui: '\\hat{t}_{HH}', lohr: '\\hat{t}_\\psi', gutierrez: '\\hat{t}_{p}', r: 'mean(y/psi)' },
-        { concepto: 'Su varianza estimada', aqui: 's_z^2/n', lohr: 's_z^2/n', gutierrez: '\\widehat{V}_{p}', r: 'var(z)/n' },
+        { concepto: 'Su varianza estimada', aqui: 's_z^2/n', lohr: 's_u^2/n', gutierrez: '\\widehat{V}_{p}', r: 'var(z)/n' },
         { concepto: 'Estimador sin reemplazo', aqui: '\\hat{t}_\\pi', lohr: '\\hat{t}_{HT}', gutierrez: '\\hat{t}_\\pi', r: 'svytotal + probs' },
         { concepto: 'Varianza SYG', aqui: '\\widehat{V}_{SYG}', lohr: '\\widehat{V}_{SYG}', gutierrez: '\\widehat{V}_{SYG}', r: 'variance = "YG"' },
-        { concepto: 'Diseño πPT / πps', aqui: '\\pi_k \\propto x_k', lohr: '\\pi ps', gutierrez: '\\pi PT', r: 'UPsystematic, UPbrewer' },
-        { concepto: 'Diseño de Poisson', aqui: '\\text{PO}(\\pi)', lohr: '—', gutierrez: 'PO', r: 'rbinom(N, 1, pi)' },
-        { concepto: 'Inclusión forzosa', aqui: '\\pi_k = 1', lohr: 'certainty psu', gutierrez: '\\text{incl. forzosa}', r: 'pik >= 1' },
+        { concepto: 'Diseño πPT / πps', aqui: '\\pi_k \\propto x_k', lohr: '\\text{pps sin reemplazo}', gutierrez: '\\pi PT', r: 'UPsystematic, UPbrewer' },
+        { concepto: 'Diseño de Poisson', aqui: '\\text{PO}(\\pi)', lohr: '\\text{Poisson sampling}', gutierrez: 'PO', r: 'rbinom(N, 1, pi)' },
+        { concepto: 'Inclusión forzosa', aqui: '\\pi_k = 1', lohr: '\\text{certainty psu}', gutierrez: '\\text{incl. forzosa}', r: 'pik >= 1' },
         { concepto: 'Peso de diseño', aqui: 'w_k = 1/\\pi_k', lohr: 'w_i', gutierrez: 'd_k', r: 'SamplingWeight' }
       ]
     };
@@ -643,11 +750,11 @@
       {
         tipo: 'opcion',
         modulo: 3,
-        pregunta: 'Un marco tiene 40 millones de unidades y llega ordenado en archivos parciales que no caben juntos en memoria. ¿Qué método de selección PPT conviene y por qué?',
-        pista: '¿Cuál de los dos métodos necesita acumular todo el marco antes de sortear?',
+        pregunta: 'Un marco tiene 40 millones de unidades repartidas en archivos que no caben juntos en memoria. No se pueden recorrer todos antes de sortear, pero sí leer cualquier unidad por su número, y se conocen N y el tamaño máximo M_max. ¿Qué método de selección PPT conviene y por qué?',
+        pista: '¿Cuál de los dos métodos necesita la suma de todos los tamaños antes del primer sorteo?',
         opciones: [
-          { texto: 'Lahiri: no necesita acumular el marco — solo M_max — y decide unidad por unidad, al precio de repetir intentos.', correcta: true,
-            retro: 'Correcto. El acumulativo exige construir los tramos (recorrer y sumar TODO antes del primer sorteo); el rechazo de Lahiri trabaja con lo que va llegando. Es la misma razón por la que Poisson sirve para flujos.' },
+          { texto: 'Lahiri: sortea una unidad entre 1 y N y la acepta o la rechaza contra M_max, sin acumular nada, al precio de repetir intentos.', correcta: true,
+            retro: 'Correcto. El acumulativo exige construir los tramos: recorrer y sumar TODO el marco antes del primer sorteo. Lahiri solo necesita poder leer una unidad cualquiera y conocer N y M_max. (Si las unidades llegaran una a una y hubiera que decidir en el momento, ninguno de los dos serviría: eso lo resuelve Poisson, módulo 6.)' },
           { texto: 'El acumulativo, porque es exacto y Lahiri es aproximado.', correcta: false,
             retro: 'Los dos son EXACTOS — la verificación de 100 000 sorteos lo confirmó para ambos. La diferencia es operativa (memoria y pasadas), no probabilística.' },
           { texto: 'Ninguno: con marcos grandes solo funciona el MAS.', correcta: false,
@@ -673,7 +780,7 @@
         pista: 'Repasa la inclusión forzosa, el MC de las tres variables y lo que el sistemático puede y no puede estimar.',
         opciones: [
           { texto: 'California queda con π = 1: su π cruda (1,204) supera 1 y se trunca, reescalando las demás.', correcta: true },
-          { texto: 'Para counties (correlación 0,46 con el tamaño), el πPT tiene MÁS varianza que un MAS de 10 estados.', correcta: true },
+          { texto: 'Para counties (correlación 0,46 con el tamaño), el πPT sistemático con la lista en orden alfabético tiene MÁS varianza que un MAS de 10 estados.', correcta: true },
           { texto: 'El πPT sistemático no tiene estimador insesgado de varianza: muchas π_kl valen 0.', correcta: true },
           { texto: 'πPT garantiza menor varianza que el MAS siempre que la correlación con el tamaño sea positiva.', correcta: false }
         ],
@@ -696,12 +803,12 @@
         pregunta: 'Sobre agpps, los estimadores de varianza en forma HT y SYG usan los mismos datos y las mismas π_kl, pero dan ee de 70,5 y 11,7 millones. ¿Cuál es el diagnóstico correcto?',
         pista: '¿Cómo suma cada forma sus términos?',
         opciones: [
-          { texto: 'La forma HT suma términos grandes de signos opuestos que casi se cancelan — es insesgada pero inestable (hasta puede dar negativa); la SYG suma cuadrados y es la que se usa con tamaño fijo.', correcta: true,
-            retro: 'Exacto. Ambas estiman la MISMA varianza teórica; difieren como estimadores. La aritmética de cancelaciones de la forma HT amplifica cualquier desajuste; los cuadrados de SYG no pueden.' },
+          { texto: 'La forma HT suma términos grandes de signos opuestos que casi se cancelan — es insesgada pero inestable (hasta puede dar negativa); la SYG suma cuadrados y, con tamaño fijo, es la más estable de las dos.', correcta: true,
+            retro: 'Exacto. Ambas estiman la MISMA varianza teórica; difieren como estimadores. La aritmética de cancelaciones de la forma HT amplifica cualquier desajuste; los cuadrados de SYG mucho menos. (Sin las π_kl, Lohr recomienda en general una tercera vía: la aproximación con reemplazo, que aquí da un ee muy cercano al de SYG.)' },
           { texto: 'La forma HT está mal programada: con los mismos datos deberían dar lo mismo.', correcta: false,
             retro: 'survey reproduce ambas cifras exactamente (variance = "HT" y "YG"): no hay error. Son dos ESTIMADORES distintos de una misma cantidad, y pueden diferir mucho en una muestra concreta.' },
           { texto: 'La SYG subestima: el ee verdadero es el de la forma HT.', correcta: false,
-            retro: 'No hay «verdadero» entre los dos sin más información — pero la teoría y la práctica (Lohr §6.4.3) señalan a la forma HT como el estimador errático. Aquí, además, 70 millones implicaría un cv del 7,5 % para un diseño construido para ser preciso.' },
+            retro: 'No hay «verdadero» entre los dos sin más información — pero la teoría y la práctica (Lohr §6.4.1, ej. 6.10) señalan a la forma HT como el estimador errático. Aquí, además, 70 millones implicaría un cv del 7,5 % para un diseño construido para ser preciso.' },
           { texto: 'Las π_kl del archivo están corruptas.', correcta: false,
             retro: 'Las mismas π_kl producen la SYG perfectamente razonable (cv 1,3 %) y reproducen los pesos del archivo. El problema es la forma del estimador, no los datos.' }
         ]
@@ -721,6 +828,12 @@
             etiqueta: 'aporte a V', color: COLORES_GRAFICO.primario, min: 10, max: Math.max(...aportes) * 2
           });
           g.options.scales.y.type = 'logarithmic';
+          g.options.scales.y.max = topeLog(Math.max(...aportes) * 1.5);
+          ejeLogEnEspanol(g);
+          g.options.scales.x.ticks = Object.assign({}, g.options.scales.x.ticks, {
+            autoSkip: false, maxRotation: 0,
+            callback: (v, i) => [0, 4, 9, 14, 19].includes(i) ? String(i + 1) : ''
+          });
           g.data.datasets[0].backgroundColor = E.y.map((_, i) => i === 19 ? '#FF6600' : '#012820');
           g.update('none');
           return g;
@@ -747,7 +860,7 @@
           { texto: 'Sortear las clases con probabilidades iguales y compensar con m proporcional a M_i.', correcta: false,
             retro: 'Esa combinación TAMBIÉN autopondera (w = (N/n)·M_i/m_i constante si m_i ∝ M_i), pero no es la de classpps — aquí m = 4 fijo — y tiene el costo práctico de cargas de trabajo desiguales por clase.' },
           { texto: 'Es coincidencia numérica de este archivo.', correcta: false,
-            retro: 'Es estructura, no suerte: 32,35 = 647/(5·4) sale de la fórmula para cualquier clase. La cadena del módulo verificó que el peso del archivo coincide con la fórmula en las 5 clases.' },
+            retro: 'Es estructura, no suerte: 32,35 = 647/(5·4) sale de la fórmula para cualquier clase. El bloque del módulo lo comprueba: el archivo trae un único peso, el de la fórmula, en las 5 clases.' },
           { texto: 'survey normaliza los pesos automáticamente para que sean iguales.', correcta: false,
             retro: 'survey usa los pesos tal cual llegan — jamás los iguala. Si el archivo trae pesos dispares (como schools en el cap. 5: 40,9 a 137,6), así se quedan.' }
         ]
@@ -771,22 +884,25 @@
         modulo: 5,
         alto: 240,
         descripcionGrafico: 'Dos histogramas de 10 000 réplicas del HT del total de waterarea: πPT sistemático frente a MAS de 10 estados',
-        pregunta: 'Las réplicas del módulo 5 para <code>waterarea</code> (correlación 0,04 con la población). ¿Cuál histograma es el πPT, y qué veredicto sale?',
-        pista: 'Con correlación casi nula, ¿a quién castigan las π desiguales?',
+        pregunta: 'Las réplicas del módulo 5 para <code>waterarea</code> (correlación 0,045 con la población). Fíjate en el cuerpo de cada histograma y también en su cola derecha. ¿Cuál es el πPT, y qué veredicto sale?',
+        pista: 'Con correlación casi nula, ¿a quién castigan las π desiguales? Busca qué diseño tiene réplicas lejísimos del total.',
         dibujar: canvas => {
           const V = D6.statepps.waterarea;
           const alto = Math.max(...V.pps.conteo, ...V.mas.conteo) * 1.05;
-          return crearGraficoXY(canvas, [
+          const g = crearGraficoXY(canvas, [
             serieHistograma(V.mas, 'diseño A', COLORES_GRAFICO.primario),
             serieHistograma(V.pps, 'diseño B', COLORES_GRAFICO.secundario),
             serieVertical(V.total, alto, 'total verdadero', COLORES_GRAFICO.gris)
           ], { tituloX: 'HT del total de waterarea', tituloY: 'réplicas' });
+          ejesEnEspanol(g, 0, 0);
+          g.update('none');
+          return g;
         },
         opciones: [
-          { texto: 'El B (naranja), el disperso: con correlación 0,04, las π desiguales solo meten ruido — deff ≈ 9 contra el MAS.', correcta: true,
-            retro: 'Correcto. Alaska tiene el 40 % del agua y una π modesta; estados enormes en población apenas tienen agua. El cociente y/π queda salvaje y el πPT paga deff 9. πPT sin proporcionalidad es un mal negocio.' },
+          { texto: 'El B (naranja), el de la cola larga: con correlación 0,045, las π desiguales solo meten ruido — deff ≈ 9 contra el MAS.', correcta: true,
+            retro: 'Correcto. Su cuerpo es incluso más estrecho que el del MAS, pero casi siempre se queda corto, y cuando entra Alaska (π = 0,023 y el 36 % del agua) el HT salta a unos 11 millones: esa cola, un par de réplicas de cada cien, es la que da el deff 9. Es el elefante del módulo 8 con datos reales. πPT sin proporcionalidad es un mal negocio.' },
           { texto: 'El A (verde): el πPT siempre es el más concentrado.', correcta: false,
-            retro: '«Siempre» es la palabra equivocada del capítulo. El concentrado aquí es el MAS; el πPT solo se concentra cuando y acompaña al tamaño, y el agua no acompaña a la población.' },
+            retro: '«Siempre» es la palabra equivocada del capítulo. El cuerpo del πPT puede verse estrecho, pero su varianza la decide la cola: aquí el disperso de verdad es el πPT, porque el agua no acompaña a la población.' },
           { texto: 'Los dos están sesgados: los histogramas no se centran en el total.', correcta: false,
             retro: 'Mira la línea gris: ambos histogramas la tienen dentro — los dos HT son insesgados (el MC dio sesgo relativo < 1 %). Lo que difiere brutalmente es la dispersión.' },
           { texto: 'El B, pero el problema es el n: el sistemático usa menos estados.', correcta: false,

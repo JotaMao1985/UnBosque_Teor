@@ -29,7 +29,7 @@ comprueba <- function(etiqueta, a, b, tol = 1e-9) {
 }
 
 # =============================================================================
-# 1. Las cuatro tiendas de Lohr (ej. 6.1-6.3): todo exacto, por enumeración
+# 1. Las cuatro tiendas de Lohr (§6.1, Tabla 6.1; ej. 6.8): todo exacto, por enumeración
 # =============================================================================
 cat("== 1. tiendas: psi proporcional al tamaño, n = 1 ==\n")
 tiendas <- data.frame(
@@ -180,7 +180,7 @@ cat(sprintf("  pi cruda de California = %.4f (por eso se trunca y se reescala)\n
             max(pi_crudo)))
 
 # Monte Carlo: pi PT sistemático frente a MAS de estados, mismas 10 UPM.
-# (C(50,10) ~ 1e10 muestras: aquí sí se simula, no se puede enumerar.)
+# (C(51,10) ~ 1e10 muestras del MAS: aquí sí se simula, no se puede enumerar.)
 R_mc <- 10000
 ht_sys <- matrix(NA_real_, R_mc, 3)   # counties, waterarea, pop2019
 ht_mas <- matrix(NA_real_, R_mc, 3)
@@ -216,6 +216,45 @@ mc_var <- function(col) {
        vPps = V_emp[col], vMas = V_mas_emp[col], total = tot_reales[col],
        corr = correl[col])
 }
+# El sistemático, en cambio, SÍ se puede enumerar: el arranque u ~ U(0, 1)
+# decide la muestra, y entre dos «cortes» (las partes fraccionarias de las pi
+# acumuladas) sale siempre la misma. Su varianza exacta es la suma, tramo a
+# tramo, de longitud x (HT - t)^2. Sirve de segunda vía para el MC y para medir
+# dos cosas que el MC no puede separar: el ORDEN de la lista (el MC usa el del
+# archivo, alfabético) y el sesgo de la aproximación con reemplazo del bloque
+# R8 (que el módulo 7 llamaba «un poco» conservadora).
+tramos_sis <- function(pi) {
+  acum <- c(0, cumsum(pi))
+  cortes <- sort(unique(round(c(0, 1, acum %% 1), 12)))
+  lapply(seq_len(length(cortes) - 1), function(j) {
+    u <- (cortes[j] + cortes[j + 1]) / 2
+    list(L = cortes[j + 1] - cortes[j],
+         s = floor(acum[-1] - u) > floor(head(acum, -1) - u))
+  })
+}
+v_sis_exacta <- function(y, pi) {
+  sum(sapply(tramos_sis(pi), function(z) z$L * (sum(y[z$s] / pi[z$s]) - sum(y))^2))
+}
+v_mas_exacta <- function(y, n = 10) length(y)^2 * (1 - n / length(y)) * var(y) / n
+y_c <- statepps$counties
+orden <- order(statepps$pop2019)
+V_sis_alf <- v_sis_exacta(y_c, pi_st)
+V_sis_ord <- v_sis_exacta(y_c[orden], pi_st[orden])
+V_mas_ex <- v_mas_exacta(y_c)
+stopifnot(all(sapply(tramos_sis(pi_st), function(z) sum(z$s)) == 10))
+comprueba("statepps: V sistemático exacta <-> MC (counties)", V_sis_alf, V_emp[1], 0.03)
+comprueba("statepps: V MAS exacta <-> MC (counties)", V_mas_ex, V_mas_emp[1], 0.03)
+cat(sprintf("  counties, sistemático exacto: alfabético %.0f (deff %.3f) | ordenado por pop %.0f (deff %.3f)\n",
+            V_sis_alf, V_sis_alf / V_mas_ex, V_sis_ord, V_sis_ord / V_mas_ex))
+# La aproximación con reemplazo de R8 (California, forzosa, fuera; las otras
+# nueve con psi = pi/9): su esperanza exacta frente a la varianza verdadera.
+E_Vwr <- sum(sapply(tramos_sis(pi_st), function(z) {
+  s <- z$s & pi_st < 1 - 1e-12; n9 <- sum(s)
+  z$L * var(n9 * y_c[s] / pi_st[s]) / n9
+}))
+cat(sprintf("  aproximación WR (R8): E[V_WR] = %.0f frente a V = %.0f (x %.2f)\n",
+            E_Vwr, V_sis_alf, E_Vwr / V_sis_alf))
+
 # HH con reemplazo (psi prop. a pop) sobre counties: exacta, para el ranking
 psi_st <- statepps$pop2019 / sum(statepps$pop2019)
 V_hh_st <- sum(psi_st * (statepps$counties / psi_st - t_counties)^2) / 10
@@ -227,7 +266,10 @@ cifras$statepps <- list(
   piCrudaMax = max(pi_crudo),
   forzosas = statepps$state[pi_st >= 1 - 1e-12],
   counties = mc_var(1), waterarea = mc_var(2), pop = mc_var(3),
-  vHhCounties = V_hh_st
+  vHhCounties = V_hh_st,
+  ordenLista = list(vAlfabetica = V_sis_alf, vOrdenada = V_sis_ord, vMasExacta = V_mas_ex,
+                    deffAlfabetico = V_sis_alf / V_mas_ex, deffOrdenado = V_sis_ord / V_mas_ex),
+  aproxWR = list(esperanza = E_Vwr, v = V_sis_alf, exceso = E_Vwr / V_sis_alf)
 )
 
 # =============================================================================
@@ -306,7 +348,7 @@ cifras$agpps <- list(
 cat("== 8. varianza explosiva ==\n")
 set.seed(SEMILLA)
 N_e <- 20
-x_e <- round(exp(rnorm(N_e, 4, 0.6)))            # tamaños entre ~20 y ~200
+x_e <- round(exp(rnorm(N_e, 4, 0.6)))            # tamaños entre ~10 y ~120
 y_e <- round(2 * x_e * exp(rnorm(N_e, 0, 0.15))) # y proporcional a x, con ruido
 # el elefante: la unidad 20 tiene x chico pero y enorme
 x_e[N_e] <- min(x_e[-N_e]); y_e[N_e] <- 30 * max(y_e[-N_e])
@@ -325,19 +367,29 @@ cat(sprintf("  pi del elefante segun su x: %.4f | y = %d (%.0f%% del total)\n",
 cat(sprintf("  V con pi_e = 0.005: %.3g | con 0.5: %.3g (razón %.0f)\n",
             curva[1], curva[length(curva)], curva[1] / curva[length(curva)]))
 
+# Lo que lee el simulador: V con la pi que le tocaba por su área, cuánto la
+# multiplica bajar esa pi a 0.005, y qué parte pone ya el elefante con ella.
+V_base_e <- sum((1 - pi_e) * y_e^2 / pi_e)
+aporte_base_e <- (1 - pi_e[N_e]) * y_e[N_e]^2 / pi_e[N_e] / V_base_e
+cat(sprintf("  con su pi de área: V = %.4g, el elefante aporta %.2f%%; con 0.005, x %.2f\n",
+            V_base_e, 100 * aporte_base_e, curva[1] / V_base_e))
+
 cifras$elefante <- list(
   N = N_e, x = x_e, y = y_e, piBase = pi_e, piElefanteX = pi_e[N_e],
+  vBase = V_base_e, aporteBasePct = 100 * aporte_base_e, razon005Base = curva[1] / V_base_e,
   malla = malla, curva = curva, aporte = aporte,
   totalY = sum(y_e), yElefante = y_e[N_e]
 )
 
 # =============================================================================
-# 9. classpps: PPT con reemplazo en dos etapas (HH a mano <-> survey),
+# 9. classpps: dos etapas SIN reemplazo (Lohr, ej. 6.11, pi_i = 5 M_i/647),
+#    analizado con la aproximación con reemplazo psi_i = pi_i/5 (Lohr 6.30)
+#    (HH a mano <-> survey),
 #    y el diseño autoponderado
 # =============================================================================
 cat("== 9. classpps (dos etapas) ==\n")
 clases <- lee_lohr("classes")            # el marco: 15 clases con su tamaño
-classpps <- lee_lohr("classpps")         # la muestra: 5 clases, ~5 alumnos c/u
+classpps <- lee_lohr("classpps")         # la muestra: 5 clases, 4 alumnos c/u
 K_cl <- sum(clases$class_size)
 psi_cl <- clases$class_size / K_cl
 n_cl <- length(unique(classpps$class))
@@ -406,7 +458,10 @@ cifras$importancia <- list(
   K = nrow(BigLucy), n = n_bl, total = t_inc, corr = r_ie,
   vUniforme = V_unif, vEmployees = V_emp_bl, vPerfecta = V_perf,
   mejora = V_unif / V_emp_bl,
-  mallaAlpha = malla_a, curvaV = curva_imp
+  mallaAlpha = malla_a, curvaV = curva_imp,
+  # la curva no es monótona: la mezcla con algo de uniforme gana a psi ~ Employees
+  alphaMejor = malla_a[which.min(curva_imp[malla_a <= 1])],
+  mejoraMezcla = V_unif / min(curva_imp[malla_a <= 1])
 )
 
 # =============================================================================

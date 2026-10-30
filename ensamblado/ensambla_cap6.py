@@ -65,7 +65,7 @@ def main():
          '(Universidad El Bosque): cajas, código R/Python en pestañas, simuladores con Chart.js, '
          'autoevaluación y ejercicios guiados."',
          'content="Capítulo 6 del material de Muestreo Estadístico (Universidad El Bosque): '
-         'muestreo con probabilidades desiguales, estimador de Hansen-Thompson y de '
+         'muestreo con probabilidades desiguales, estimador de Hansen-Hurwitz y de '
          'Horvitz-Thompson, diseños PPT y de Poisson, varianza de Sen-Yates-Grundy, diseños '
          'autoponderados y muestreo por importancia, con simuladores y código en R y Python."'),
         ('<meta name="keywords" content="muestreo estadístico, muestreo probabilístico, '

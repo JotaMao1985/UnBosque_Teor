@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Capítulo 6 del material de Muestreo Estadístico (Universidad El Bosque): muestreo con probabilidades desiguales, estimador de Hansen-Thompson y de Horvitz-Thompson, diseños PPT y de Poisson, varianza de Sen-Yates-Grundy, diseños autoponderados y muestreo por importancia, con simuladores y código en R y Python.">
+    content="Capítulo 6 del material de Muestreo Estadístico (Universidad El Bosque): muestreo con probabilidades desiguales, estimador de Hansen-Hurwitz y de Horvitz-Thompson, diseños PPT y de Poisson, varianza de Sen-Yates-Grundy, diseños autoponderados y muestreo por importancia, con simuladores y código en R y Python.">
   <meta name="author" content="Javier Mauricio Sierra">
   <meta name="keywords" content="probabilidades desiguales, PPT, PPS, Hansen-Hurwitz, Horvitz-Thompson, Sen-Yates-Grundy, muestreo de Poisson, metodo de Lahiri, metodo acumulativo, inclusion forzosa, diseno autoponderado, muestreo por importancia, active learning, survey, sampling, R, Python, Lohr, Gutiérrez, UnBosque">
   <title>Capítulo 6 · Probabilidades desiguales — Muestreo Estadístico</title>
@@ -3585,21 +3585,20 @@
 
       <p>El capítulo 5 terminó con una incomodidad: el sorteo trataba igual al estado de 254 condados y al de 3.
         Este capítulo la resuelve con la idea más productiva del muestreo moderno: <strong>dejar que la probabilidad
-        de selección acompañe al tamaño de la unidad</strong>. El ejemplo con el que Lohr abre su capítulo 6 cabe en
-        una tabla: una firma audita las ventas de una cadena con cuatro tiendas, y la tienda D — diez veces el área
-        de la A — concentra el 82 % de las ventas.</p>
+        de selección acompañe al tamaño de la unidad</strong>. El ejemplo con el que Lohr abre su §6.1 cabe en
+        una tabla: un pueblo con cuatro supermercados, cuyas ventas del último mes se quieren estimar observando
+        uno solo, y la tienda D — diez veces el área de la A — concentra el 82 % de las ventas.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Las cuatro tiendas: dos sorteos enumerados exactos">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Cuatro tiendas y una auditoria de ventas (el ejemplo 6.1 de Lohr): la
+          <pre><code class="language-r"># Cuatro tiendas y sus ventas (Lohr, §6.1 y Tabla 6.1): la
 # tienda D tiene diez veces el area de la A. Si el sorteo las trata igual,
 # el azar decide si la muestra ve el 82 % de las ventas o el 4 %.
 library(survey)               # el disenno y sus estimadores
 library(sampling)             # inclusionprobabilities() y los algoritmos PPT
-library(jsonlite)             # para leer el JSON del precalculo
 
 options(scipen = 8)
 tiendas &lt;- data.frame(tienda = c("A", "B", "C", "D"),
@@ -3717,10 +3716,13 @@ c(E_ppt = sum(tiendas$psi * est_ppt),
 
       <div class="formula">
         <p class="formula-titulo">Estimador de Hansen–Hurwitz y su varianza</p>
-        $$\hat{t}_{HH} = \frac{1}{n}\sum_{i=1}^{n} \frac{y_i}{\psi_i}, \qquad
+        $$\hat{t}_{HH} = \frac{1}{n}\sum_{i \in W} z_i, \quad z_i = \frac{t_i}{\psi_i}, \qquad
         V(\hat{t}_{HH}) = \frac{1}{n}\sum_{i \in U} \psi_i\left(\frac{t_i}{\psi_i} - t\right)^2, \qquad
         \widehat{V}(\hat{t}_{HH}) = \frac{s_z^2}{n}$$
-        <p style="margin-bottom:0;">con $z_i = y_i/\psi_i$. La tercera fórmula es el regalo del «con reemplazo»:
+        <p>Aquí $t_i$ es el valor de la unidad $i$ del marco (las ventas de la tienda; en el capítulo 5, el
+          total de la UPM) y $W$ es la muestra <em>con sus repeticiones</em>, una entrada por extracción. La suma
+          de la varianza, en cambio, recorre las $N$ unidades del marco, cada una con su $\psi_i$.</p>
+        <p style="margin-bottom:0;">La tercera fórmula es el regalo del «con reemplazo»:
           las extracciones son independientes, así que la varianza se estima con la <strong>varianza muestral de
           los $z_i$</strong> — sin probabilidades conjuntas, sin estructura, el capítulo 2 aplicado a los $z$. Ese
           regalo reaparece en el módulo 9 y explica medio capítulo 7.</p>
@@ -3773,6 +3775,8 @@ V1 = (psi * (est - t)**2).sum()       # varianza exacta con n = 1
 print("t/psi por tienda:", np.round(est, 1))
 print(f"V(n=1) = {V1:.0f}   V_HH(n=2) = V/2 = {V1 / 2:.0f}")
 
+# numpy usa otro generador que R: con la misma semilla sale OTRA muestra
+# (en R, CD). Lo que coincide son las cifras exactas, 14 248 y 7 124.
 rng = np.random.default_rng(2026)
 s = rng.choice(4, size=2, replace=True, p=psi)
 z = ventas[s] / psi[s]
@@ -3782,6 +3786,9 @@ print(f"muestra {s + 1} -&gt; t_hat = {z.mean():.0f}, ee = {(z.var(ddof=1) / 2)*
 #&gt; muestra [2 4] -&gt; t_hat = 276, ee = 116</code></pre>
         </div>
       </div>
+      <p class="text-sm">Las dos pestañas sortean con la misma semilla, 2026, pero R y Python usan generadores
+        distintos: la muestra concreta no es la misma (en R sale CD; en Python, B y D). Lo que coincide son las
+        cifras exactas, que no dependen del azar.</p>
 
       <div class="simulador" data-simulador="hh-exacto">
         <h4><i class="fas fa-dice-two" aria-hidden="true"></i> La distribución exacta del HH con $n = 2$</h4>
@@ -3808,7 +3815,7 @@ print(f"muestra {s + 1} -&gt; t_hat = {z.mean():.0f}, ee = {(z.var(ddof=1) / 2)*
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.2: muestreo con reemplazo de una etapa; la demostración de insesgadez está en §6.6.</li>
+          <li>Lohr — §6.2: muestreo con reemplazo de una etapa; la demostración de insesgadez está en §6.2.2 (ecs. 6.7–6.9).</li>
           <li>Gutiérrez — §4.2: el diseño «PPT con reemplazo» y su π-estimador.</li>
         </ul>
       </div>
@@ -3843,7 +3850,7 @@ print(f"muestra {s + 1} -&gt; t_hat = {z.mean():.0f}, ee = {(z.var(ddof=1) / 2)*
         <h4>Método acumulativo y método de Lahiri</h4>
         <p><strong>Acumulativo:</strong> cada unidad ocupa un tramo de $[0, \sum M_i]$ de longitud $M_i$; un
           uniforme cae en un tramo y esa unidad sale. Exacto y directo, pero exige <strong>acumular todo el
-          marco</strong> — con millones de unidades, ordenar y acumular tiene costo.</p>
+          marco</strong> — con millones de unidades, recorrerlo entero antes del primer sorteo tiene costo.</p>
         <p style="margin-bottom:0;"><strong>Lahiri (rechazo):</strong> se sortea una unidad al azar y un uniforme
           contra $M_{\max}$; si $u \cdot M_{\max} \le M_i$ la unidad queda, si no se repite. No acumula nada, a
           cambio de repetir en promedio $N M_{\max} / \sum M_i$ veces. Es el mismo <em>rejection sampling</em> que
@@ -3889,7 +3896,8 @@ round(rbind(frecuencia = table(sel) / 100000, psi = tiendas$psi), 4)
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># Los dos metodos de seleccion, en Python puro. Acumulativo: un uniforme
-# contra los tramos. Lahiri: rechazo contra M_max.
+# contra los tramos. Lahiri: rechazo contra M_max. (Otro generador que R:
+# las frecuencias no son las de R, pero clavan las mismas psi.)
 acum = np.cumsum(m2)
 u = rng.uniform(0, m2.sum(), size=100000)
 sel = np.searchsorted(acum, u)
@@ -3937,7 +3945,7 @@ c(intentos_promedio = round(1 / mean(acepta), 3),
       </div>
 
       <div class="simulador" data-simulador="seleccion">
-        <h4><i class="fas fa-arrows-to-dot" aria-hidden="true"></i> El sorteo por dentro</h4>
+        <h4><i class="fas fa-dice" aria-hidden="true"></i> El sorteo por dentro</h4>
         <p class="simulador-intro">Mueve el uniforme y mira qué tienda sale. En modo acumulativo, $u$ recorre
           $[0, 1600]$ y las barras son los tramos; en modo Lahiri, la primera perilla elige la tienda candidata y
           la segunda es el uniforme contra $M_{\max} = 1000$: si supera el área de la candidata, se rechaza y toca
@@ -3955,8 +3963,11 @@ c(intentos_promedio = round(1 / mean(acepta), 3),
         <p><strong>En la práctica: <code>sampling</code> y <code>sample()</code>.</strong> R trae el acumulativo de
           serie: <code>sample(N, n, replace = TRUE, prob = psi)</code> hace exactamente eso. El paquete
           <code>sampling</code> añade los diseños sin reemplazo del módulo 5 (<code>UPsystematic</code>,
-          <code>UPbrewer</code>...). Lahiri sobrevive donde el marco no cabe en memoria o llega por partes — y como
-          idea: es el puente conceptual entre el muestreo clásico y los métodos de Monte Carlo.</p>
+          <code>UPbrewer</code>...). Lahiri sobrevive donde el marco no se puede recorrer entero antes de sortear
+          pero sí leer cualquier unidad por su número, conociendo $N$ y $M_{\max}$ — y como idea: es el puente
+          conceptual entre el muestreo clásico y los métodos de Monte Carlo. (Si las unidades <em>llegan</em> una a
+          una y hay que decidir en el momento, ninguno de los dos sirve: eso lo resuelve el diseño de Poisson del
+          módulo 6.)</p>
       </div>
 
       <div class="references">
@@ -4066,8 +4077,8 @@ c(E_HT = sum(p_s * ht_s), V_HT = sum(p_s * (ht_s - t_total)^2))
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># El espacio de muestras del modulo 4, con la matriz pi_kl y el SYG
-# calculados con bucles explicitos — la version transparente del calculo
-# que R hizo con survey y formulas.
+# calculados con bucles explicitos — la version en Python de los bucles
+# de R (bloques de los modulos 4 y 7).
 from itertools import combinations
 muestras = list(combinations(range(4), 2))
 p_s = np.array([m2[i] + m2[j] for i, j in muestras], dtype=float)
@@ -4098,9 +4109,10 @@ print(f"V por enumeracion = {V_enum:.2f}   V por SYG = {V_syg:.2f}")
       <div class="simulador" data-simulador="espacio-wor">
         <h4><i class="fas fa-sitemap" aria-hidden="true"></i> Seis muestras, un espacio completo</h4>
         <p class="simulador-intro">Cada barra es una de las 6 muestras posibles: su altura, la probabilidad
-          $p(s)$; el rótulo, el valor del HT si sale esa muestra. La línea marca $t = 300$. Verás la insesgadez
-          funcionando a la vista — las muestras con HT bajo (las que no contienen a D) pesan poco — y también su
-          precio: cuando salen, el HT se queda en 77–100.</p>
+          $p(s)$; el rótulo, la muestra y el valor del HT si sale. La lectura da, para la muestra elegida, su
+          desviación frente a $t = 300$ y cuánto aporta a la varianza; su última línea es la insesgadez:
+          $E(\hat{t}) = 300$ exacto. Mira también el precio, en las tres muestras sin D: salen una de cada cuatro
+          veces, dejan el HT en 77–100 y ponen las tres cuartas partes de la varianza.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">$p(s)$ y $\hat{t}_\pi$ de cada muestra posible</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -4152,7 +4164,8 @@ print(f"V por enumeracion = {V_enum:.2f}   V por SYG = {V_syg:.2f}")
 
       <p>El diseño estrella del capítulo fija directamente las probabilidades de inclusión:
         $\pi_k = n\,x_k / \sum_U x_l$, proporcionales al tamaño y <strong>sin reemplazo con tamaño fijo</strong>.
-        Gutiérrez lo llama πPT; Lohr, «πps». Pero la fórmula tiene una fuga: nada impide que salga
+        Gutiérrez lo llama πPT; Lohr no le da nombre propio: es su muestreo <em>pps</em> (probabilidad proporcional al
+        tamaño) sin reemplazo. Pero la fórmula tiene una fuga: nada impide que salga
         $\pi_k > 1$, y con los 51 estados de EE.UU. (50 + DC) pasa de inmediato:</p>
 
       <div class="code-tabs">
@@ -4161,8 +4174,8 @@ print(f"V por enumeracion = {V_enum:.2f}   V por SYG = {V_syg:.2f}")
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Un pi-PT real: los 51 estados de EE.UU. (50 + DC), tamano = poblacion 2019,
-# n = 10. inclusionprobabilities calcula pi_k = n x_k / sum(x)... y avisa
-# del problema: la pi cruda de California pasa de 1.
+# n = 10. inclusionprobabilities calcula pi_k = n x_k / sum(x)... y trunca
+# en silencio: la pi cruda de California (linea siguiente) pasa de 1.
 statepps &lt;- read.csv("CSV data sets for SDA 3e/statepps.csv")
 c(estados = nrow(statepps), total_condados = sum(statepps$counties))
 #&gt;        estados total_condados
@@ -4187,18 +4200,21 @@ statepps$state[pi_st &gt;= 1 - 1e-12]
           $\pi_k = 1$, no aporta varianza, y las demás π se reescalan para que $\sum \pi_k = n$ se conserve. Es la
           respuesta estándar a las unidades gigantes — el mismo instinto del estrato censado del capítulo 4
           —el que entra entero y por eso no aporta varianza—, ahora dentro del formalismo π. <code>sampling::inclusionprobabilities()</code> lo hace
-          con un truncamiento iterativo (el ayudante <code>probInclusionPPT</code> de este material, igual).</p>
+          con un truncamiento iterativo (el bloque Python del módulo 6 lo programa en un bucle de pocas líneas).</p>
       </div>
 
-      <p>Con las π en la mano falta <em>sortear</em> una muestra que las respete. El πPT sistemático — ordenar,
-        acumular las π y recorrer con paso 1 — es el más usado por su simplicidad:</p>
+      <p>Con las π en la mano falta <em>sortear</em> una muestra que las respete. El πPT sistemático — recorrer
+        la lista acumulando las π y tomar una unidad cada vez que la suma cruza $u$, $u+1$, $u+2$… con un arranque
+        $u$ al azar — es el más usado por su simplicidad. El bloque recorre la lista en el orden del archivo, que
+        es alfabético; ese detalle importa, como se verá enseguida:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Selección sistemática y HT">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Seleccion pi-PT sistematica (UPsystematic) y el HT del total de condados:
+          <pre><code class="language-r"># Seleccion pi-PT sistematica (UPsystematic), recorriendo la lista en el
+# orden del archivo (alfabetico), y el HT del total de condados:
 set.seed(2026)
 s_sys &lt;- UPsystematic(pi_st) == 1
 statepps$state[s_sys]
@@ -4213,21 +4229,25 @@ c(n = sum(s_sys),
 
 # El sistematico deja pi_kl = 0 en muchos pares (capitulo 2): no hay
 # estimador insesgado de varianza. La salida practica es la aproximacion
-# CON reemplazo, conservadora, que solo usa las pi de primer orden:
-z &lt;- statepps$counties[s_sys] / (pi_st[s_sys] / 10)   # z_i = y_i/psi_i aprox
-c(ee_aprox_WR = sqrt(var(z[pi_st[s_sys] &lt; 1]) / sum(pi_st[s_sys] &lt; 1)))
+# CON reemplazo, conservadora, que solo usa las pi de primer orden.
+# California (pi = 1) no aporta varianza y queda fuera; las otras nueve se
+# tratan como nueve extracciones con psi_i = pi_i/9, asi que
+# z_i = y_i/psi_i = 9 y_i/pi_i:
+nf &lt;- s_sys &amp; pi_st &lt; 1
+z &lt;- sum(nf) * statepps$counties[nf] / pi_st[nf]
+c(ee_aprox_WR = sqrt(var(z) / sum(nf)))
 #&gt; ee_aprox_WR
-#&gt;    1116.288
-# (California, con pi = 1, no aporta varianza y queda fuera de la formula.)</code></pre>
+#&gt;     1004.66</code></pre>
         </div>
       </div>
 
       <div class="simulador" data-simulador="ppt-mc">
         <h4><i class="fas fa-chart-column" aria-hidden="true"></i> ¿Cuándo gana el πPT? 10 000 réplicas contra el MAS</h4>
         <p class="simulador-intro">Tres variables sobre los mismos estados, del precálculo: <code>counties</code>
-          (correlación 0,46 con la población), <code>waterarea</code> (0,04) y <code>pop2019</code> — la propia
-          medida de tamaño (1,00). Cambia la variable y compara los histogramas del πPT sistemático y del MAS con
-          el mismo $n = 10$. La sorpresa pedagógica: con correlación «decente» (0,46), el πPT <em>pierde</em>.</p>
+          (correlación 0,46 con la población), <code>waterarea</code> (0,045) y <code>pop2019</code> — la propia
+          medida de tamaño (1,00). Cambia la variable y compara los histogramas del πPT sistemático (con la lista en
+          orden alfabético) y del MAS con el mismo $n = 10$. La sorpresa pedagógica: con correlación «decente»
+          (0,46), el πPT <em>pierde</em>.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Distribución de muestreo del HT del total, πPT frente a MAS</p>
         <div class="grafico-wrapper" style="height:280px;">
@@ -4238,11 +4258,15 @@ c(ee_aprox_WR = sqrt(var(z[pi_st[s_sys] &lt; 1]) / sum(pi_st[s_sys] &lt; 1)))
 
       <div class="warning">
         <p><strong>πPT no es un amuleto: es una apuesta a la proporcionalidad.</strong> La varianza del HT depende
-          de qué tan constante sea $y_k/\pi_k$. Si $y$ es <em>proporcional</em> al tamaño, el cociente es casi
+          de dos cosas: de qué tan constante sea $y_k/\pi_k$ y, a través de las $\pi_{kl}$, de cómo se sortea —el
+          algoritmo y el orden de la lista—. Si $y$ es <em>proporcional</em> al tamaño, el cociente es casi
           constante y la varianza se desploma (con <code>pop2019</code>, a prácticamente cero). Si la relación es
           difusa — <code>counties</code> tiene correlación 0,46 pero <em>no</em> proporcionalidad —, las π
-          desiguales meten más ruido del que quitan y el MAS gana (deff 1,25). Con <code>waterarea</code>, el
-          castigo es deff 9. La regla práctica de Lohr: πPT cuando la variable «se mueve con» el tamaño (ventas,
+          desiguales meten más ruido del que quitan y el MAS gana (deff 1,25). Pero ese 1,25 es del sistemático con
+          la lista alfabética: ordenada por población, el mismo diseño gana (deff 0,75, cálculo exacto), porque
+          recorrer la lista por tamaño reparte la muestra entre estados chicos, medianos y grandes —estratifica a
+          escondidas, como el sistemático del capítulo 2, módulo 9—. Con <code>waterarea</code>, el castigo es
+          deff 9 en cualquier orden. La regla práctica de Lohr: πPT cuando la variable «se mueve con» el tamaño (ventas,
           matrícula, cosecha), no cuando apenas lo roza.</p>
       </div>
 
@@ -4256,7 +4280,7 @@ c(ee_aprox_WR = sqrt(var(z[pi_st[s_sys] &lt; 1]) / sum(pi_st[s_sys] &lt; 1)))
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.4.1–6.4.2: diseños πps; el ejemplo de los estados es el 6.10 de la 3.ª ed.</li>
+          <li>Lohr — §6.4.1–6.4.2: el muestreo sin reemplazo con probabilidades desiguales y cómo sortearlo; su ejemplo 6.10 es agpps (módulo 7). Los estados (<code>statepps</code>) salen en sus ejercicios, y allí con reemplazo.</li>
           <li>Gutiérrez — §4.3–4.4: πPT sistemático y por qué no siempre existe un diseño con esas π.</li>
         </ul>
       </div>
@@ -4279,7 +4303,7 @@ c(ee_aprox_WR = sqrt(var(z[pi_st[s_sys] &lt; 1]) / sum(pi_st[s_sys] &lt; 1)))
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Entender el diseño de monedas independientes: el
-              único con varianza del HT sin $\pi_{kl}$, al precio de un $n$ aleatorio cuya distribución exacta
+              más simple de los diseños sin reemplazo, cuya varianza del HT no pide $\pi_{kl}$, al precio de un $n$ aleatorio cuya distribución exacta
               vas a calcular.</p>
           </div>
         </div>
@@ -4357,8 +4381,11 @@ print(f"P(n = 10) = {pn[10]:.3f}   P(9 &lt;= n &lt;= 11) = {pn[9:12].sum():.3f}"
         <h4><i class="fas fa-coins" aria-hidden="true"></i> La lotería del tamaño de muestra</h4>
         <p class="simulador-intro">La distribución <strong>exacta</strong> de $n_s$ (Poisson-binomial, calculada
           por convolución — la pestaña Python la programa en cuatro líneas). El deslizador reescala todas las π
-          por un factor: con la mitad de presupuesto esperado, ¿cuánto se ensancha la lotería? La lectura da
-          $P(n = E(n))$: incluso en el diseño nominal, solo el 16 % de las veces sale exactamente 10.</p>
+          por un factor. Con la mitad de presupuesto esperado, ¿la lotería se ensancha o se estrecha? Mira las dos
+          lecturas de dispersión: la desviación de $n$ baja un poco, pero el cv —la desviación como fracción de
+          $E(n)$— crece mucho, y al planear es el que importa. Con un factor mayor que 1, las π que pasan de 1 se
+          truncan y $E(n)$ se queda por debajo de lo pedido. La lectura da también $P(n = E(n))$: incluso en el
+          diseño nominal, solo el 16 % de las veces sale exactamente 10.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Distribución exacta del tamaño de muestra $n_s$</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -4372,15 +4399,16 @@ print(f"P(n = 10) = {pn[10]:.3f}   P(9 &lt;= n &lt;= 11) = {pn[9:12].sum():.3f}"
           que <em>están</em>: auditar transacciones conforme ocurren, muestrear tráfico de red paquete a paquete,
           <em>web scraping</em> con presupuesto de peticiones. Cada unidad se decide en el momento, sin conocer
           las demás — exactamente lo que las monedas independientes permiten y ningún diseño de tamaño fijo puede
-          hacer. El ejercicio 4 cuantifica el precio: con π bien alineadas, hasta 2,8 veces la varianza del
-          sistemático. Es la versión π del resultado del capítulo 2: Bernoulli pagaba lo mismo por su $n$
+          hacer. El ejercicio 4 cuantifica el precio con dos variables: casi nada con <code>waterarea</code> y 2,8
+          veces la varianza del sistemático con <code>counties</code> —no porque allí las π trabajen bien, sino
+          porque lo que añade el $n$ aleatorio pesa más cuanto más chico es el resto de la varianza—. Es la versión π del resultado del capítulo 2: Bernoulli pagaba lo mismo por su $n$
           aleatorio.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Gutiérrez — §4.1: el diseño de Poisson (Lohr lo trata solo de pasada, en los ejercicios del cap. 6).</li>
+          <li>Gutiérrez — §4.1: el diseño de Poisson. Lohr lo presenta en su ejemplo 6.14 (el muestreo 3-P de los forestales, un caso de Poisson) y lo desarrolla en un ejercicio del cap. 6.</li>
           <li>Särndal, Swensson y Wretman — §3.2: Poisson como familia de diseños «de lista».</li>
           <li>Este material — cap. 2, módulo 8: Bernoulli, el caso de π constante.</li>
         </ul>
@@ -4446,7 +4474,8 @@ c(V_SYG = V_syg, V_enumerada = sum(p_s * (ht_s - t_total)^2))
 #&gt;       V_SYG V_enumerada
 #&gt;    15025.67    15025.67
 # Identicas: SYG es la misma varianza reescrita. Su ventaja practica llega
-# al ESTIMARLA (bloques del modulo 7): suele ser mas estable que la forma HT.</code></pre>
+# al ESTIMARLA (los bloques de agpps, mas abajo): suele ser mas estable que
+# la forma HT.</code></pre>
         </div>
       </div>
 
@@ -4455,7 +4484,10 @@ c(V_SYG = V_syg, V_enumerada = sum(p_s * (ht_s - t_total)^2))
         <p class="simulador-intro">La forma SYG es una suma sobre los 6 pares: cada término lleva el «estorbo»
           $\pi_k\pi_l - \pi_{kl}$ y la discrepancia $(y_k/\pi_k - y_l/\pi_l)^2$. Recorre los pares con el
           deslizador: la lectura muestra las tres piezas y la barra resaltada, cuánto aporta ese par a
-          $V = 15\,026$. Los pares con D concentran casi todo — discrepancias grandes con estorbos grandes.</p>
+          $V = 15\,026$. Los pares con D concentran casi todo, y no por el estorbo —el suyo es el menor de los
+          seis— sino por la discrepancia: $y_D/\pi_D$ queda lejísimos de las demás. Ojo con leer los sumandos como
+          «culpables»: son una forma de escribir $V$ entre varias. La del módulo 4, $p(s)(\hat{t}_s - t)^2$,
+          reparte la misma $V$ y carga las tres cuartas partes a las muestras <em>sin</em> D.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Aporte de cada par a la varianza SYG del diseño</p>
         <div class="grafico-wrapper" style="height:240px;">
@@ -4500,12 +4532,17 @@ for (k in 1:14) for (l in (k + 1):15) {
   V_syg &lt;- V_syg + (agpps$SelectionProb[k] * agpps$SelectionProb[l] - Pmat[k, l]) /
     Pmat[k, l] * (d[k] - d[l])^2
 }
-round(c(ee_forma_HT = as.numeric(sqrt(V_ht)), ee_SYG = as.numeric(sqrt(V_syg))), 0)
-#&gt; ee_forma_HT      ee_SYG
-#&gt;    70466698    11715204
+# Y el tercero, el que Lohr recomienda en general (ec. 6.24): la
+# aproximacion con reemplazo, que no usa ninguna pi_kl (psi_k = pi_k/15):
+V_wr_ag &lt;- 15 / 14 * sum((d - t_ht / 15)^2)
+round(c(ee_forma_HT = as.numeric(sqrt(V_ht)), ee_SYG = as.numeric(sqrt(V_syg)),
+        ee_WR = sqrt(V_wr_ag)), 0)
+#&gt; ee_forma_HT      ee_SYG       ee_WR
+#&gt;    70466698    11715204    12293010
 # MISMOS datos, MISMA varianza teorica... y el estimador en forma HT da un
-# ee 6 veces mayor. La forma HT es notoriamente inestable (puede hasta dar
-# negativa); con tamano fijo, SYG es el estimador que se usa.</code></pre>
+# ee 6 veces mayor: es notoriamente inestable (puede hasta dar negativa).
+# SYG, con las pi_kl, y la aproximacion WR, sin ellas, quedan cerca: con
+# n/N = 15/3078 la WR apenas sobreestima (Lohr, ej. 6.10).</code></pre>
         </div>
       </div>
 
@@ -4528,25 +4565,31 @@ svytotal(~acres92, dis_ht)
 #&gt; acres92 936291173 70466698
 # Las dos vias a mano del bloque anterior, reproducidas por survey. El
 # intervalo con SYG: 936.3 +/- 23 millones de acres. El total verdadero de
-# agpop (cap. 1) era 943 millones: cae dentro.</code></pre>
+# agpop (cap. 1) era 944 millones (943 951 718): cae dentro.</code></pre>
         </div>
       </div>
 
       <div class="warning">
-        <p><strong>Mismos datos, mismos $\pi_{kl}$: ee de 11,7 millones o de 70,5 millones.</strong> Los dos
+        <p><strong>Mismos datos, mismas $\pi_{kl}$: ee de 11,7 millones o de 70,5 millones.</strong> Los dos
           estimadores apuntan a la misma varianza teórica, pero la forma HT suma términos enormes de signos
           opuestos que casi se cancelan — cualquier temblor la desestabiliza, y puede llegar a dar
-          <em>negativa</em>. La forma SYG suma cuadrados con coeficientes positivos (en los diseños de tamaño
-          fijo usuales) y se queda quieta. Regla operativa desde Lohr y Gutiérrez: <strong>tamaño fijo ⇒ SYG</strong>;
-          la forma HT queda para los diseños donde SYG no aplica — como Poisson, que por eso usó su propia fórmula
-          en el módulo 6.</p>
+          <em>negativa</em>. La forma SYG suma cuadrados y es más estable: con tamaño fijo y
+          $\pi_k\pi_l \ge \pi_{kl}$ (la condición de Yates–Grundy del capítulo 2, que agpps cumple) no puede
+          salir negativa. Lohr la prefiere a la forma HT, pero su recomendación general es otra: la
+          <strong>aproximación con reemplazo</strong> (su ec. 6.24), que no pide ninguna $\pi_{kl}$. El bloque
+          la calcula: 12,3 millones, cerca de SYG porque aquí $n/N$ es pequeño. Donde SYG no aplica —diseños de
+          tamaño variable, como Poisson— se usa la forma HT, que en Poisson se reduce a la fórmula del
+          módulo 6.</p>
       </div>
 
       <div class="note">
         <p><strong>Cuando no hay $\pi_{kl}$: las aproximaciones honestas.</strong> El πPT sistemático del módulo 5
           no tiene estimador insesgado, y la salida universal es la <strong>aproximación con reemplazo</strong>
-          del bloque R8 — tratar los $y_k/\pi_k$ como si fueran $z_i$ de Hansen–Hurwitz. Sobreestima un poco
-          (es conservadora) y solo pide π de primer orden. Las variantes afinadas llevan nombre propio —
+          que calcula el bloque del módulo 5: tomar $\psi_k = \pi_k/n$ (sin las unidades forzosas, que no aportan varianza) y
+          tratar los $z_k = y_k/\psi_k = n\,y_k/\pi_k$ como las extracciones de Hansen–Hurwitz. Solo pide π de
+          primer orden, y es conservadora: sobreestima, tanto más cuanto mayor es $n/N$. Con los estados
+          ($n/N = 0{,}2$), la varianza estimada vale en promedio 1,53 veces la verdadera (cálculo exacto sobre
+          todas las muestras posibles del sistemático); con cientos de UPM, la diferencia se esfuma. Las variantes afinadas llevan nombre propio —
           Hartley–Rao, Brewer — y todas son eso: <em>aproximaciones declaradas</em>, no fórmulas exactas. El
           capítulo 7 vive de esta idea: las encuestas reales casi nunca conocen sus $\pi_{kl}$.</p>
       </div>
@@ -4554,7 +4597,7 @@ svytotal(~acres92, dis_ht)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.4.3: los dos estimadores; el ejemplo de agpps es el 6.6 de la 3.ª ed.</li>
+          <li>Lohr — §6.4.1: los dos estimadores (ecs. 6.22 y 6.23) y la aproximación con reemplazo (6.24); agpps es su ejemplo 6.10.</li>
           <li>Gutiérrez — §4.5: SYG en el marco π; Särndal et al. §2.8 para la teoría fina.</li>
           <li>Este material — cap. 2, módulo 3: donde SYG apareció por primera vez.</li>
         </ul>
@@ -4594,27 +4637,34 @@ svytotal(~acres92, dis_ht)
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Cuando el HT se comporta mal: pi_k chico con y_k grande. La poblacion
-# del modulo 8: 20 negocios, pi proporcional al AREA... y un "elefante"
-# (unidad 20) con area minuscula y ventas enormes. Bajo Poisson la varianza
-# es exacta y se ve el desastre en funcion de pi_20:
-datos &lt;- fromJSON("precalculo/salidas/cap6_datos.json")$elefante
-c(y_elefante = datos$yElefante, total = datos$totalY,
-  aporta = round(datos$yElefante / datos$totalY, 3))
+          <pre><code class="language-r"># Cuando el HT se comporta mal: pi_k chica con y_k grande. La poblacion del
+# modulo 8 es SIMULADA: 20 negocios con ventas proporcionales al area y pi
+# proporcional al area (n = 5)... y un "elefante" (unidad 20) con area
+# minima y ventas enormes. Bajo Poisson la varianza es exacta y se ve el
+# desastre en funcion de pi_20:
+set.seed(2026)
+x_e &lt;- round(exp(rnorm(20, 4, 0.6)))               # areas
+y_e &lt;- round(2 * x_e * exp(rnorm(20, 0, 0.15)))    # ventas, prop. al area
+x_e[20] &lt;- min(x_e[-20]); y_e[20] &lt;- 30 * max(y_e[-20])   # el elefante
+pi_e &lt;- inclusionprobabilities(x_e, 5)
+c(y_elefante = y_e[20], total = sum(y_e), aporta = round(y_e[20] / sum(y_e), 3))
 #&gt; y_elefante      total     aporta
 #&gt;    8790.00   10726.00       0.82
+round(pi_e[20], 4)                                 # la pi que le toca por su area
+#&gt; [1] 0.0649
 
 V_con_pi &lt;- function(p) {
-  pk &lt;- datos$piBase; pk[20] &lt;- p
-  sum((1 - pk) * datos$y^2 / pk)
+  pk &lt;- pi_e; pk[20] &lt;- p
+  sum((1 - pk) * y_e^2 / pk)
 }
-round(sapply(c(pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
-#&gt;      pi_005       pi_05        pi_5
-#&gt; 15376068757  1468530757    77776957
-# De pi = 0.5 a pi = 0.005 la varianza se multiplica por casi 200: el
-# termino (1/pi - 1) y^2 del elefante domina todo. La leccion de diseno:
-# si sospechas que y_k puede ser grande, NO le dejes pi_k chico — tamanos
-# de referencia actualizados, o inclusion forzosa.</code></pre>
+round(sapply(c(pi_area = pi_e[20], pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
+#&gt;     pi_area      pi_005       pi_05        pi_5
+#&gt;  1113115897 15376068757  1468530757    77776957
+# Frente a su pi de area, bajarla a 0.005 multiplica la varianza por casi
+# 14; frente a pi = 0.5, por casi 200. El termino (1/pi - 1) y^2 del
+# elefante domina todo: con su pi de area ya pone el 99.95 %. La leccion
+# de diseno: si sospechas que y_k puede ser grande, NO le dejes pi_k chica —
+# tamanos de referencia actualizados, o inclusion forzosa.</code></pre>
         </div>
       </div>
 
@@ -4622,9 +4672,10 @@ round(sapply(c(pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
         <h4><i class="fas fa-bomb" aria-hidden="true"></i> El elefante y su π</h4>
         <p class="simulador-intro">Cada barra es el aporte exacto $(1/\pi_k - 1)\,y_k^2$ de un negocio a la
           varianza (escala logarítmica); la naranja es el elefante. Mueve su $\pi$ — de la que le tocaría por
-          área (0,065) hacia abajo o hacia arriba — y mira la lectura: con $\pi = 0{,}005$ la varianza total se
-          multiplica por ~200 y el elefante pone más del 99 %. Subirlo hacia la inclusión forzosa desactiva la
-          bomba.</p>
+          área (0,065) hacia abajo o hacia arriba — y mira la lectura: con $\pi = 0{,}005$ la varianza total es
+          13,8 veces la de su π de área, y unas 200 veces la que tendría con $\pi = 0{,}5$ (el bloque de arriba).
+          Fíjate en que el elefante pone el 99,95 % de la varianza ya con su π de área: la bomba estaba armada
+          desde el principio, y bajar la π solo la agrava. Subirla hacia la inclusión forzosa la desactiva.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Aporte de cada unidad a $V$ bajo Poisson (escala log)</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -4652,7 +4703,7 @@ round(sapply(c(pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.7 (3.ª ed.): «cosas que salen mal» con probabilidades desiguales.</li>
+          <li>Lohr — §6.7: los elefantes de Basu (1971), el ejemplo clásico de un HT insesgado e inútil cuando las π no acompañan a la variable.</li>
           <li>Särndal et al. — §2.8: condiciones para que el π-estimador sea eficiente.</li>
         </ul>
       </div>
@@ -4687,9 +4738,11 @@ round(sapply(c(pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
 
       <div class="diagrama-diseno" data-diagrama="ppt-dos-etapas"></div>
 
-      <p>El laboratorio es <code>classpps</code> (Lohr, ej. 6.11): 15 clases universitarias, 5 sorteadas con
-        $\psi_i = M_i/647$ con reemplazo, 4 estudiantes por clase. El estimador es el Hansen–Hurwitz del módulo 2
-        aplicado a los <em>totales estimados</em> de cada clase:</p>
+      <p>El laboratorio es <code>classpps</code> (Lohr, ej. 6.11): 15 clases universitarias, de las que Lohr
+        sorteó 5 <strong>sin reemplazo</strong>, con $\pi_i = 5M_i/647$ (salieron la 1, la 4, la 9, la 10 y la 14), y
+        4 estudiantes por clase. Para estimar se analiza <em>como si</em> fuera con reemplazo, con
+        $\psi_i = \pi_i/5 = M_i/647$: los pesos son los mismos, y el estimador es el Hansen–Hurwitz del módulo 2
+        aplicado a los <em>totales estimados</em> de cada clase (Lohr, ec. 6.30):</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="HH de dos etapas a mano">
@@ -4697,8 +4750,10 @@ round(sapply(c(pi_005 = 0.005, pi_05 = 0.05, pi_5 = 0.5), V_con_pi))
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># PPT en dos etapas, el diseno de las encuestas reales. classpps (Lohr,
-# ej. 6.11): 5 clases sorteadas con psi_i = M_i/647 CON reemplazo, 4
-# estudiantes por clase. El HH de dos etapas promedia t_hat_i / psi_i:
+# ej. 6.11): 5 clases sorteadas SIN reemplazo con pi_i = 5 M_i/647 (ninguna
+# se repite) y 4 estudiantes por clase. Se analiza COMO SI fuera con
+# reemplazo, con psi_i = pi_i/5 = M_i/647 (Lohr, ec. 6.30): el HH de dos
+# etapas promedia t_hat_i / psi_i:
 clases &lt;- read.csv("CSV data sets for SDA 3e/classes.csv")      # marco: 15 clases
 classpps &lt;- read.csv("CSV data sets for SDA 3e/classpps.csv")   # la muestra
 K &lt;- sum(clases$class_size)
@@ -4726,7 +4781,9 @@ c(t_HH = mean(z), ee = sqrt(var(z) / 5))
 # HH los promedia. La varianza usa SOLO la dispersion de los z_i: el "con
 # reemplazo" en la primera etapa hace que las dos etapas de azar queden
 # empaquetadas en esa unica varianza entre clases. Ese truco es el motivo
-# de que las encuestas reales declaren sus UPM "con reemplazo" (cap. 7).</code></pre>
+# de que las encuestas reales declaren sus UPM "con reemplazo" (cap. 7).
+# Aqui n/N = 5/15 no es chico, y Lohr advierte que este ee probablemente
+# sobreestima: la ficcion rinde con cientos de UPM, no con 5 de 15.</code></pre>
         </div>
       </div>
 
@@ -4764,7 +4821,7 @@ unique(classpps$finalweight)
           tienen el mismo peso final. PPT en la primera etapa + número fijo $m$ en la segunda lo consigue por
           cancelación: $w = \dfrac{K}{n M_i}\cdot\dfrac{M_i}{m} = \dfrac{K}{nm}$ — el $M_i$ se va. Cada
           estudiante de <code>classpps</code> pesa 32,35, salga de la clase de 22 o de la de 100. La media es
-          entonces (casi) la media simple de los datos, el sueño de cualquier analista — y el estándar de las
+          entonces exactamente la media simple de los datos, el sueño de cualquier analista — y el estándar de las
           encuestas de hogares: DANE, INEGI, la GEIH, la ENAHO sortean sus UPM con PPT por esta cancelación.</p>
       </div>
 
@@ -4773,7 +4830,8 @@ unique(classpps$finalweight)
         <p class="simulador-intro">Las barras son los pesos finales de un estudiante de cada clase del marco. En
           «PPT + m fijo», da igual el tamaño: pesos idénticos. Cambia a «iguales + m fijo» (el diseño ingenuo del
           capítulo 5) y mira cómo los pesos se disparan con $M_i$ — el estudiante de la clase de 100 pesa 4,5
-          veces el de la de 22. El deslizador de $m$ muestra que el nivel del peso cambia, pero la igualdad (o su
+          veces el de la de 22, la menor de las cinco sorteadas, y más aún frente a la de 15, la menor del marco:
+          es la razón máx./mín. de la lectura. El deslizador de $m$ muestra que el nivel del peso cambia, pero la igualdad (o su
           ruptura) no depende de él.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Peso final por clase del marco, según el diseño de primera etapa</p>
@@ -4787,14 +4845,15 @@ unique(classpps$finalweight)
         <p><strong>El «con reemplazo» es una ficción útil.</strong> Ninguna encuesta seria visita dos veces la
           misma UPM con gusto — pero declarar el diseño como WR permite estimar la varianza con la dispersión de
           los $z_i$ entre UPM (módulo 2), sin $\pi_{kl}$ de ninguna etapa. Con $n/N$ chico, el sesgo de esa
-          ficción es minúsculo y conservador. Es la aproximación sobre la que el capítulo 7 construye
+          ficción es minúsculo y conservador. Con <code>classpps</code> no lo es ($n/N = 1/3$), y Lohr advierte que
+          su ee probablemente sobreestima. Es la aproximación sobre la que el capítulo 7 construye
           <em>todo</em> el análisis de encuestas complejas: «ultimate cluster» es su nombre de guerra.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.3 y 6.5: PPT en dos etapas con y sin reemplazo; el ejemplo 6.11.</li>
+          <li>Lohr — §6.3: dos etapas con reemplazo; §6.4.3–6.4.4: sin reemplazo, con el ejemplo 6.11 (<code>classpps</code>).</li>
           <li>Gutiérrez — §7.3: diseños de dos etapas con PPT en la primera.</li>
           <li>Este material — cap. 5, módulos 2 y 6: la notación y el caso de probabilidades iguales.</li>
         </ul>
@@ -4884,8 +4943,12 @@ print(f"V psi ~ y     = {V_wr(psi_y):.0f}")
           deslizador interpola la propuesta desde el uniforme ($\alpha = 0$), pasando por $\psi \propto$
           empleados ($\alpha = 1$, lo que un diseñador real puede hacer), hasta $\psi \propto y$
           ($\alpha = 2$, la perfección inalcanzable). La curva es la varianza <strong>exacta</strong> del
-          precálculo. Nota la asimetría del viaje: de 0 a 1 se gana poco (correlación 0,64); casi toda la
-          ganancia vive entre 1 y 2 — donde ya no se puede caminar.</p>
+          precálculo. El primer tramo mezcla el uniforme con $\psi \propto$ empleados, y la curva no es
+          monótona: baja hasta $\alpha = 0{,}6$ —1,8 veces mejor que el uniforme— y vuelve a subir en
+          $\psi \propto$ empleados, que solo mejora 1,3 veces (correlación 0,64). La razón es la del elefante del
+          módulo 8: $\psi \propto$ empleados deja $\psi$ minúsculas a empresas con pocos empleados y mucho ingreso,
+          y una pizca de uniforme les pone un suelo. Entre 1 y 2 la varianza cae a cero, pero ese tramo exige
+          conocer $y$: ya no se puede caminar.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Varianza exacta del HH según la propuesta interpolada</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -4969,8 +5032,7 @@ print(f"V psi ~ y     = {V_wr(psi_y):.0f}")
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
         <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre los datos reales del capítulo.
-          Las cifras de cada solución salen de <code>ensamblado/codigo/cap6/cadena.R</code>, que se ejecuta de
-          verdad: ninguna está escrita a mano.</p>
+          Las cifras de cada solución salen de ejecutar sus bloques: ninguna está escrita a mano.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>statepps</code>, saca
@@ -4998,7 +5060,7 @@ round(c(t_HH_psi = mean(z1), ee_psi = sqrt(var(z1) / 10),
 #&gt;   t_HH_psi     ee_psi t_HH_igual   ee_igual
 #&gt;       2430        588       3886       1126
 # Trampa instructiva: en ESTA realizacion el ee estimado del PPT (588) parece
-# mejor que el del uniforme (1126)... y el bloque R15 demostro que la verdad
+# mejor que el del uniforme (1126)... y el bloque del modulo 10 demostro que la verdad
 # es la contraria (V = 963 006 contra 557 287). Un ee estimado con n = 10 es
 # una variable aleatoria ruidosa: una realizacion no adjudica un debate que
 # las formulas exactas ya resolvieron. Confia en la V exacta, no en la
@@ -5088,35 +5150,56 @@ c(t_87 = t87, ee_87 = as.numeric(sqrt(V87)))
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Calcula la varianza exacta del
             HT bajo Poisson para <code>waterarea</code> en <code>statepps</code> y compárala con la varianza
-            empírica del πPT sistemático del precálculo. Repite mentalmente con <code>counties</code> (los números
-            están en el módulo 6). ¿Cuánto cuesta el $n$ aleatorio en cada caso?</p>
+            exacta del πPT sistemático con las mismas π. Repite con <code>counties</code>. ¿Cuánto cuesta el $n$
+            aleatorio en cada caso?</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
-            <p>La fórmula exacta es $\sum_U (1-\pi_k)\,y_k^2/\pi_k$. La empírica del sistemático está en el JSON
-              del precálculo (<code>statepps$waterarea$vPps</code>).</p>
+            <p>La de Poisson es $\sum_U (1-\pi_k)\,y_k^2/\pi_k$. La del sistemático también es exacta: el arranque
+              $u$ decide la muestra, y entre dos cortes —las partes fraccionarias de las π acumuladas— sale siempre
+              la misma. Recorre esos tramos y pondera cada HT por la longitud del suyo.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
-            <pre><code class="language-r"># EJERCICIO 4. Poisson frente a sistematico sobre statepps, con waterarea:
-# V exacta de Poisson y V empirica del sistematico (10 000 replicas del
-# precalculo). Cuanto cuesta el n aleatorio?
-V_poi_water &lt;- sum((1 - pi_st) * statepps$waterarea^2 / pi_st)
-V_sis_water &lt;- fromJSON("precalculo/salidas/cap6_datos.json")$statepps$waterarea$vPps
-round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
-        razon = V_poi_water / V_sis_water), 2)
-#&gt;        V_poisson    V_sistematico            razon
-#&gt; 2625514850771.31 2553797234162.09             1.03
-# Poisson paga solo un 3 % mas que el sistematico de tamano fijo con esta
-# variable — pero cuidado con generalizar: aqui casi toda la varianza viene
-# de que waterarea NO acompana a las pi (deff 9 frente al MAS, modulo 5).
-# Repite la cuenta con counties y la razon sube a 2.8 (1 604 349 exacta de
-# Poisson contra 571 878 del sistematico en el precalculo): cuando las pi
-# trabajan bien, dejar n al azar si cuesta caro. Por eso Poisson se reserva
-# para marcos que llegan en flujo (una unidad a la vez).</code></pre>
-            <p>Con <code>waterarea</code> la razón es 1,03 — casi gratis, porque la varianza está dominada por el
-              desajuste π–variable, no por el $n$ aleatorio. Con <code>counties</code> sube a 2,8: cuando las π
-              trabajan bien, el $n$ aleatorio es lo único que queda por pagar, y se nota. Moraleja doble: el
-              precio de Poisson depende de qué tan buena sea ya la parte πPT del diseño.</p>
+            <pre><code class="language-r"># EJERCICIO 4. Poisson frente al sistematico sobre statepps, con las mismas
+# pi: las dos varianzas EXACTAS. El sistematico tiene pocas muestras
+# posibles: el arranque u ~ U(0, 1) decide la muestra, y entre dos "cortes"
+# (las partes fraccionarias de las pi acumuladas) sale siempre la misma.
+# Basta recorrer esos tramos y ponderar cada HT por la longitud del suyo.
+v_sistematico &lt;- function(y, pi) {
+  acum &lt;- c(0, cumsum(pi))
+  cortes &lt;- sort(unique(round(c(0, 1, acum %% 1), 12)))
+  V &lt;- 0
+  for (j in seq_len(length(cortes) - 1)) {
+    u &lt;- (cortes[j] + cortes[j + 1]) / 2                   # un arranque del tramo
+    s &lt;- floor(acum[-1] - u) &gt; floor(head(acum, -1) - u)   # lo que elige UPsystematic
+    V &lt;- V + (cortes[j + 1] - cortes[j]) * (sum(y[s] / pi[s]) - sum(y))^2
+  }
+  V
+}
+v_poisson &lt;- function(y, pi) sum((1 - pi) * y^2 / pi)
+round(sapply(statepps[c("waterarea", "counties")], function(y)
+  c(V_poisson = v_poisson(y, pi_st), V_sistematico = v_sistematico(y, pi_st),
+    razon = v_poisson(y, pi_st) / v_sistematico(y, pi_st))), 2)
+#&gt;                      waterarea   counties
+#&gt; V_poisson     2625514850771.31 1604348.62
+#&gt; V_sistematico 2523053241934.55  575400.94
+#&gt; razon                     1.04       2.79
+# Con waterarea, Poisson paga solo un 4 % mas que el sistematico: casi toda
+# la varianza viene de que waterarea NO acompana a las pi (deff 9 frente al
+# MAS, modulo 5), y el n aleatorio apenas suma. Con counties la razon sube a
+# 2.8, y no porque las pi trabajen bien (el modulo 5 mostro que no): lo que
+# anade el n aleatorio depende sobre todo de la escala de la variable (del
+# orden de V(n_s) (t/n)^2), y con counties eso es tanto como toda la varianza
+# del sistematico. Por eso Poisson se reserva para marcos que llegan en flujo
+# (una unidad a la vez). (Las 10 000 replicas del modulo 5 dan 571 878 para
+# el sistematico con counties: la exacta difiere un 0.6 %, el error de simular.)</code></pre>
+            <p>Con <code>waterarea</code> la razón es 1,04 — casi gratis, porque la varianza está dominada por el
+              desajuste π–variable, no por el $n$ aleatorio. Con <code>counties</code> sube a 2,8, y no porque las π
+              trabajen bien (el módulo 5 mostró que no): lo que añade el $n$ aleatorio depende sobre todo de la
+              escala de la variable, y con <code>counties</code> es tanto como toda la varianza del sistemático.
+              Moraleja: el precio de Poisson se nota cuando el resto de la varianza es pequeño. (Las 10 000 réplicas
+              del módulo 5 dan, para <code>counties</code>, una varianza del sistemático un 0,6 % menor que la
+              exacta: es el error de simular.)</p>
           </details>
         </div>
       </div>
@@ -5164,7 +5247,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
     // semilla 2026. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP6 = {"meta":{"generado":"precalculo/genera_cap6.R","semilla":2026,"replicasMc":10000,"replicasSeleccion":100000,"rVersion":"4.4.1"},"tiendas":{"nombres":["A","B","C","D"],"m2":[100,200,300,1000],"t":[11,20,24,245],"psi":[0.0625,0.125,0.1875,0.625],"estPpt":[176,160,128,392],"estIgual":[44,80,96,980],"total":300,"vPpt":14248,"vIgual":154488,"acumulado":[100,300,600,1600]},"hh":{"valores":[128,144,152,160,168,176,260,276,284,392],"probs":[0.03515625,0.046875,0.0234375,0.015625,0.015625,0.00390625,0.234375,0.15625,0.078125,0.390625],"E":300,"V":7124,"se":84.40379138},"seleccion":{"B":100000,"frecAcum":[0.06271,0.12475,0.1873,0.62524],"frecLahiri":[0.06276,0.12666,0.1883,0.62228],"intentosMedios":2.49765,"intentosTeoricos":2.5,"Mmax":1000},"espacioWor":{"muestras":["AB","AC","AD","BC","BD","CD"],"pS":[0.0625,0.08333333,0.22916667,0.10416667,0.25,0.27083333],"ht":[77.33333333,81.6969697,356,100.36363636,374.66666667,379.03030303],"piK":[0.375,0.41666667,0.45833333,0.75],"piKl":[[0.375,0.0625,0.08333333,0.22916667],[0.0625,0.41666667,0.10416667,0.25],[0.08333333,0.10416667,0.45833333,0.27083333],[0.22916667,0.25,0.27083333,0.75]],"V":15025.67003367,"vHH2":7124,"total":300},"statepps":{"N":51,"n":10,"totalCounties":3143,"replicas":10000,"estados":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"pi":[0.15283856,0.0228032,0.22688694,0.09406882,1,0.17950718,0.11113457,0.03035347,0.0219991,0.66948859,0.33095868,0.04413454,0.05570511,0.3949969,0.20985189,0.09834758,0.09081173,0.13926309,0.14490887,0.04190081,0.18845159,0.21484815,0.31130313,0.17579456,0.09277038,0.1913115,0.03331518,0.06029798,0.09601241,0.04238393,0.27686925,0.06536085,0.60639243,0.32692702,0.02375445,0.36436423,0.12334386,0.13147227,0.39905441,0.03302164,0.16049201,0.02757595,0.21287411,0.90383877,0.09993382,0.01945054,0.26606307,0.23736597,0.05586352,0.18149273,0.01804066],"countiesPorEstado":[67,30,15,75,58,64,8,3,1,67,159,5,44,102,92,99,105,120,64,16,24,14,83,87,82,115,56,93,17,10,21,33,62,100,53,88,77,36,67,5,46,66,95,254,29,14,133,39,55,72,23],"waterPorEstado":[4597,245384,1026,2961,20501,1170,1816,1399,19,31424,4951,11678,2398,6202,1537,1077,1346,2387,23761,11750,6990,7134,104052,18930,3907,2501,3869,1356,2048,1027,3544,757,19240,13471,4397,10269,3377,6191,3397,1324,5076,3379,2355,19075,7064,1035,8508,12542,497,29367,1864],"piCrudaMax":1.20376189,"forzosas":"California","counties":{"pps":{"centros":[1238.81046938,1360.23140813,1481.65234689,1603.07328565,1724.4942244,1845.91516316,1967.33610192,2088.75704067,2210.17797943,2331.59891818,2453.01985694,2574.4407957,2695.86173445,2817.28267321,2938.70361196,3060.12455072,3181.54548948,3302.96642823,3424.38736699,3545.80830575,3667.2292445,3788.65018326,3910.07112201,4031.49206077,4152.91299953,4274.33393828,4395.75487704,4517.1758158,4638.59675455,4760.01769331,4881.43863206,5002.85957082,5124.28050958,5245.70144833,5367.12238709,5488.54332584,5609.9642646,5731.38520336,5852.80614211,5974.22708087],"conteo":[0,0,0,0,0,68,158,513,22,0,42,604,1408,0,1445,1086,1902,1296,146,87,0,99,312,56,247,0,0,0,15,0,0,0,52,47,0,0,0,0,203,192]},"mas":{"centros":[1238.81046938,1360.23140813,1481.65234689,1603.07328565,1724.4942244,1845.91516316,1967.33610192,2088.75704067,2210.17797943,2331.59891818,2453.01985694,2574.4407957,2695.86173445,2817.28267321,2938.70361196,3060.12455072,3181.54548948,3302.96642823,3424.38736699,3545.80830575,3667.2292445,3788.65018326,3910.07112201,4031.49206077,4152.91299953,4274.33393828,4395.75487704,4517.1758158,4638.59675455,4760.01769331,4881.43863206,5002.85957082,5124.28050958,5245.70144833,5367.12238709,5488.54332584,5609.9642646,5731.38520336,5852.80614211,5974.22708087],"conteo":[2,11,16,38,60,86,141,214,268,397,477,582,625,738,771,707,684,650,615,548,430,362,355,266,233,188,162,110,99,58,33,30,16,13,5,8,2,0,0,0]},"vPps":571878.01070675,"vMas":457575.89832467,"total":3143,"corr":0.45555876},"waterarea":{"pps":{"centros":[205832.55474624,479991.46423873,754150.37373122,1028309.2832237,1302468.19271619,1576627.10220867,1850786.01170116,2124944.92119364,2399103.83068613,2673262.74017862,2947421.6496711,3221580.55916359,3495739.46865608,3769898.37814856,4044057.28764105,4318216.19713353,4592375.10662602,4866534.0161185,5140692.92561099,5414851.83510348,5689010.74459596,5963169.65408845,6237328.56358093,6511487.47307342,6785646.38256591,7059805.29205839,7333964.20155088,7608123.11104336,7882282.02053585,8156440.93002834,8430599.83952082,8704758.74901331,8978917.65850579,9253076.56799828,9527235.47749077,9801394.38698325,10075553.29647574,10349712.20596822,10623871.11546071,10898030.0249532],"conteo":[3665,4747,1357,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,231]},"mas":{"centros":[205832.55474624,479991.46423873,754150.37373122,1028309.2832237,1302468.19271619,1576627.10220867,1850786.01170116,2124944.92119364,2399103.83068613,2673262.74017862,2947421.6496711,3221580.55916359,3495739.46865608,3769898.37814856,4044057.28764105,4318216.19713353,4592375.10662602,4866534.0161185,5140692.92561099,5414851.83510348,5689010.74459596,5963169.65408845,6237328.56358093,6511487.47307342,6785646.38256591,7059805.29205839,7333964.20155088,7608123.11104336,7882282.02053585,8156440.93002834,8430599.83952082,8704758.74901331,8978917.65850579,9253076.56799828,9527235.47749077,9801394.38698325,10075553.29647574,10349712.20596822,10623871.11546071,10898030.0249532],"conteo":[3192,3098,1265,498,169,1283,226,255,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"vPps":2553797234162.0947,"vMas":278456179399.95776,"total":685927,"corr":0.04511489},"pop":{"pps":{"centros":[88864510.125,107757406.57499999,126650303.02499999,145543199.475,164436095.92499998,183328992.37499997,202221888.825,221114785.27499998,240007681.725,258900578.17499998,277793474.625,296686371.0749999,315579267.525,334472163.975,353365060.42499995,372257956.875,391150853.3249999,410043749.775,428936646.22499996,447829542.67499995,466722439.125,485615335.5749999,504508232.025,523401128.4749999,542294024.925,561186921.375,580079817.825,598972714.275,617865610.7249999,636758507.175,655651403.625,674544300.0749999,693437196.525,712330092.9749999,731222989.425,750115885.875,769008782.3249999,787901678.775,806794575.2249999,825687471.675],"conteo":[0,0,0,0,0,0,0,0,0,0,0,0,0,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"mas":{"centros":[88864510.125,107757406.57499999,126650303.02499999,145543199.475,164436095.92499998,183328992.37499997,202221888.825,221114785.27499998,240007681.725,258900578.17499998,277793474.625,296686371.0749999,315579267.525,334472163.975,353365060.42499995,372257956.875,391150853.3249999,410043749.775,428936646.22499996,447829542.67499995,466722439.125,485615335.5749999,504508232.025,523401128.4749999,542294024.925,561186921.375,580079817.825,598972714.275,617865610.7249999,636758507.175,655651403.625,674544300.0749999,693437196.525,712330092.9749999,731222989.425,750115885.875,769008782.3249999,787901678.775,806794575.2249999,825687471.675],"conteo":[3,20,55,129,246,302,512,608,696,721,692,678,634,652,546,531,488,446,385,337,294,226,214,169,101,93,59,58,36,31,14,11,5,3,1,2,1,0,0,1]},"vPps":0,"vMas":11481866077768274,"total":328239523,"corr":1},"vHhCounties":963005.69255451},"poisson":{"En":10,"Vn":5.83211145,"distN":[0,5.25555178e-06,0.00011534,0.00100828,0.00508962,0.01728654,0.0429337,0.08214683,0.125465,0.15694284,0.16392006,0.14510867,0.11017396,0.07243484,0.04156231,0.02094807,0.00932429,0.00368185,0.00129456,0.00040658,0.00011436,2.887e-05,6.5517677e-06,1.33862042e-06,2.46473509e-07,4.09267474e-08,6.13128777e-09,8.28829755e-10,1.01086072e-10,1.11187344e-11,1.10221045e-12,9.83793384e-14,7.89642883e-15,5.69070119e-16,3.67520331e-17,2.12219456e-18,1.09269524e-19,5.00069888e-21,2.02645448e-22,7.23892107e-24,2.26741706e-25,6.18788355e-27,1.46000741e-28,2.95022224e-30,5.04537482e-32,7.19247833e-34,8.37727721e-36,7.75499303e-38,5.48071824e-40,2.77394398e-42,8.94269542e-45,1.37807757e-47],"vHt":1604348.62163958,"vSistematico":571878.01070675,"pn10":0.16392006,"pn9a11":0.46597157},"agpps":{"n":15,"total":936291172.983188,"seHt":70466697.55049548,"seSyg":11715203.54580413,"pi":[0.00286471,0.00290632,0.00296926,0.00312262,0.00484449,0.00524585,0.00784724,0.00818214,0.01547083,0.01820186,0.02252226,0.02400488,0.02502561,0.02529155,0.03389017],"pesos":[349.0757041,344.07782976,336.78473011,320.2442961,206.42024135,190.62679349,127.43341027,122.21738499,64.63776033,54.93943691,44.40052011,41.658202,39.95906096,39.53890466,29.50708067],"condados":["HARRISON COUNTY, IN","ROCK ISLAND COUNTY, IL","WAYNE COUNTY, NY","ALLEN COUNTY, OH","TRAVERSE COUNTY, MN","HARDIN COUNTY, IA","YOLO COUNTY, CA","WILLIAMSON COUNTY, TX","KIOWA COUNTY, CO","WASCO COUNTY, OR","UMATILLA COUNTY, OR","WESTON COUNTY, WY","YAKIMA COUNTY, WA","CARTER COUNTY, MT","CUSTER COUNTY, MT"]},"elefante":{"N":20,"x":[75,29,59,52,37,12,35,30,58,41,43,35,48,48,12,123,79,62,34,12],"y":[143,57,96,130,75,32,91,61,128,106,79,72,92,101,25,293,173,108,74,8790],"piBase":[0.40584416,0.15692641,0.31926407,0.28138528,0.20021645,0.06493506,0.18939394,0.16233766,0.31385281,0.22186147,0.23268398,0.18939394,0.25974026,0.25974026,0.06493506,0.66558442,0.42748918,0.33549784,0.18398268,0.06493506],"piElefanteX":0.06493506,"malla":[0.005,0.01,0.02,0.05,0.1,0.2,0.3,0.5],"curva":[15376068757.44659,7649658757.446591,3786453757.4465914,1468530757.4465911,695889757.4465911,309569257.44659114,180795757.44659117,77776957.44659115],"aporte":[0.99996665,0.99993296,0.99986455,0.99965077,0.99926302,0.99834332,0.99716333,0.99340605],"totalY":10726,"yElefante":8790},"classpps":{"K":647,"Nclases":15,"n":5,"tamanos":[44,33,26,22,76,63,20,44,54,34,46,24,46,100,15],"psi":[0.06800618,0.05100464,0.04018547,0.03400309,0.11746522,0.09737249,0.0309119,0.06800618,0.08346213,0.05255023,0.07109737,0.03709428,0.07109737,0.15455951,0.02318393],"clasesMuestra":[1,4,9,10,14],"mi":[4,4,4,4,4],"Mi":[44,22,54,34,100],"ybar":[3.5,5,3.625,3.125,2],"thatI":[154,110,195.75,106.25,200],"zI":[2264.5,3235,2345.375,2021.875,1294],"pesos":[32.35,32.35,32.35,32.35,32.35],"total":2232.15,"se":311.76237295,"media":3.45,"seMedia":0.48185838,"sumaPesos":647},"importancia":{"K":85296,"n":100,"total":36634733,"corr":0.6433037,"vUniforme":5143345369296.74,"vEmployees":4028654913135.7373,"vPerfecta":2.18408084e-21,"mejora":1.27669048,"mallaAlpha":[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2],"curvaV":[5143345369296.74,4404136782429.562,3855889906393.537,3447754591318.448,3153488971234.4644,2960327742724.5176,2865287212104.177,2875371829879.1377,3012482646644.54,3331381781119.0464,4028654913135.7373,3055498890250.1387,2323577677408.2905,1746071393312.7666,1280541925751.4617,902391537450.4025,596567280652.1993,354162258628.095,171186111021.74033,49132896814.5627,2.18408084e-21]}};
+    const DATOS_CAP6 = {"meta":{"generado":"precalculo/genera_cap6.R","semilla":2026,"replicasMc":10000,"replicasSeleccion":100000,"rVersion":"4.4.1"},"tiendas":{"nombres":["A","B","C","D"],"m2":[100,200,300,1000],"t":[11,20,24,245],"psi":[0.0625,0.125,0.1875,0.625],"estPpt":[176,160,128,392],"estIgual":[44,80,96,980],"total":300,"vPpt":14248,"vIgual":154488,"acumulado":[100,300,600,1600]},"hh":{"valores":[128,144,152,160,168,176,260,276,284,392],"probs":[0.03515625,0.046875,0.0234375,0.015625,0.015625,0.00390625,0.234375,0.15625,0.078125,0.390625],"E":300,"V":7124,"se":84.40379138},"seleccion":{"B":100000,"frecAcum":[0.06271,0.12475,0.1873,0.62524],"frecLahiri":[0.06276,0.12666,0.1883,0.62228],"intentosMedios":2.49765,"intentosTeoricos":2.5,"Mmax":1000},"espacioWor":{"muestras":["AB","AC","AD","BC","BD","CD"],"pS":[0.0625,0.08333333,0.22916667,0.10416667,0.25,0.27083333],"ht":[77.33333333,81.6969697,356,100.36363636,374.66666667,379.03030303],"piK":[0.375,0.41666667,0.45833333,0.75],"piKl":[[0.375,0.0625,0.08333333,0.22916667],[0.0625,0.41666667,0.10416667,0.25],[0.08333333,0.10416667,0.45833333,0.27083333],[0.22916667,0.25,0.27083333,0.75]],"V":15025.67003367,"vHH2":7124,"total":300},"statepps":{"N":51,"n":10,"totalCounties":3143,"replicas":10000,"estados":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"pi":[0.15283856,0.0228032,0.22688694,0.09406882,1,0.17950718,0.11113457,0.03035347,0.0219991,0.66948859,0.33095868,0.04413454,0.05570511,0.3949969,0.20985189,0.09834758,0.09081173,0.13926309,0.14490887,0.04190081,0.18845159,0.21484815,0.31130313,0.17579456,0.09277038,0.1913115,0.03331518,0.06029798,0.09601241,0.04238393,0.27686925,0.06536085,0.60639243,0.32692702,0.02375445,0.36436423,0.12334386,0.13147227,0.39905441,0.03302164,0.16049201,0.02757595,0.21287411,0.90383877,0.09993382,0.01945054,0.26606307,0.23736597,0.05586352,0.18149273,0.01804066],"countiesPorEstado":[67,30,15,75,58,64,8,3,1,67,159,5,44,102,92,99,105,120,64,16,24,14,83,87,82,115,56,93,17,10,21,33,62,100,53,88,77,36,67,5,46,66,95,254,29,14,133,39,55,72,23],"waterPorEstado":[4597,245384,1026,2961,20501,1170,1816,1399,19,31424,4951,11678,2398,6202,1537,1077,1346,2387,23761,11750,6990,7134,104052,18930,3907,2501,3869,1356,2048,1027,3544,757,19240,13471,4397,10269,3377,6191,3397,1324,5076,3379,2355,19075,7064,1035,8508,12542,497,29367,1864],"piCrudaMax":1.20376189,"forzosas":"California","counties":{"pps":{"centros":[1238.81046938,1360.23140813,1481.65234689,1603.07328565,1724.4942244,1845.91516316,1967.33610192,2088.75704067,2210.17797943,2331.59891818,2453.01985694,2574.4407957,2695.86173445,2817.28267321,2938.70361196,3060.12455072,3181.54548948,3302.96642823,3424.38736699,3545.80830575,3667.2292445,3788.65018326,3910.07112201,4031.49206077,4152.91299953,4274.33393828,4395.75487704,4517.1758158,4638.59675455,4760.01769331,4881.43863206,5002.85957082,5124.28050958,5245.70144833,5367.12238709,5488.54332584,5609.9642646,5731.38520336,5852.80614211,5974.22708087],"conteo":[0,0,0,0,0,68,158,513,22,0,42,604,1408,0,1445,1086,1902,1296,146,87,0,99,312,56,247,0,0,0,15,0,0,0,52,47,0,0,0,0,203,192]},"mas":{"centros":[1238.81046938,1360.23140813,1481.65234689,1603.07328565,1724.4942244,1845.91516316,1967.33610192,2088.75704067,2210.17797943,2331.59891818,2453.01985694,2574.4407957,2695.86173445,2817.28267321,2938.70361196,3060.12455072,3181.54548948,3302.96642823,3424.38736699,3545.80830575,3667.2292445,3788.65018326,3910.07112201,4031.49206077,4152.91299953,4274.33393828,4395.75487704,4517.1758158,4638.59675455,4760.01769331,4881.43863206,5002.85957082,5124.28050958,5245.70144833,5367.12238709,5488.54332584,5609.9642646,5731.38520336,5852.80614211,5974.22708087],"conteo":[2,11,16,38,60,86,141,214,268,397,477,582,625,738,771,707,684,650,615,548,430,362,355,266,233,188,162,110,99,58,33,30,16,13,5,8,2,0,0,0]},"vPps":571878.01070675,"vMas":457575.89832467,"total":3143,"corr":0.45555876},"waterarea":{"pps":{"centros":[205832.55474624,479991.46423873,754150.37373122,1028309.2832237,1302468.19271619,1576627.10220867,1850786.01170116,2124944.92119364,2399103.83068613,2673262.74017862,2947421.6496711,3221580.55916359,3495739.46865608,3769898.37814856,4044057.28764105,4318216.19713353,4592375.10662602,4866534.0161185,5140692.92561099,5414851.83510348,5689010.74459596,5963169.65408845,6237328.56358093,6511487.47307342,6785646.38256591,7059805.29205839,7333964.20155088,7608123.11104336,7882282.02053585,8156440.93002834,8430599.83952082,8704758.74901331,8978917.65850579,9253076.56799828,9527235.47749077,9801394.38698325,10075553.29647574,10349712.20596822,10623871.11546071,10898030.0249532],"conteo":[3665,4747,1357,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,231]},"mas":{"centros":[205832.55474624,479991.46423873,754150.37373122,1028309.2832237,1302468.19271619,1576627.10220867,1850786.01170116,2124944.92119364,2399103.83068613,2673262.74017862,2947421.6496711,3221580.55916359,3495739.46865608,3769898.37814856,4044057.28764105,4318216.19713353,4592375.10662602,4866534.0161185,5140692.92561099,5414851.83510348,5689010.74459596,5963169.65408845,6237328.56358093,6511487.47307342,6785646.38256591,7059805.29205839,7333964.20155088,7608123.11104336,7882282.02053585,8156440.93002834,8430599.83952082,8704758.74901331,8978917.65850579,9253076.56799828,9527235.47749077,9801394.38698325,10075553.29647574,10349712.20596822,10623871.11546071,10898030.0249532],"conteo":[3192,3098,1265,498,169,1283,226,255,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"vPps":2553797234162.0947,"vMas":278456179399.95776,"total":685927,"corr":0.04511489},"pop":{"pps":{"centros":[88864510.125,107757406.57499999,126650303.02499999,145543199.475,164436095.92499998,183328992.37499997,202221888.825,221114785.27499998,240007681.725,258900578.17499998,277793474.625,296686371.0749999,315579267.525,334472163.975,353365060.42499995,372257956.875,391150853.3249999,410043749.775,428936646.22499996,447829542.67499995,466722439.125,485615335.5749999,504508232.025,523401128.4749999,542294024.925,561186921.375,580079817.825,598972714.275,617865610.7249999,636758507.175,655651403.625,674544300.0749999,693437196.525,712330092.9749999,731222989.425,750115885.875,769008782.3249999,787901678.775,806794575.2249999,825687471.675],"conteo":[0,0,0,0,0,0,0,0,0,0,0,0,0,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"mas":{"centros":[88864510.125,107757406.57499999,126650303.02499999,145543199.475,164436095.92499998,183328992.37499997,202221888.825,221114785.27499998,240007681.725,258900578.17499998,277793474.625,296686371.0749999,315579267.525,334472163.975,353365060.42499995,372257956.875,391150853.3249999,410043749.775,428936646.22499996,447829542.67499995,466722439.125,485615335.5749999,504508232.025,523401128.4749999,542294024.925,561186921.375,580079817.825,598972714.275,617865610.7249999,636758507.175,655651403.625,674544300.0749999,693437196.525,712330092.9749999,731222989.425,750115885.875,769008782.3249999,787901678.775,806794575.2249999,825687471.675],"conteo":[3,20,55,129,246,302,512,608,696,721,692,678,634,652,546,531,488,446,385,337,294,226,214,169,101,93,59,58,36,31,14,11,5,3,1,2,1,0,0,1]},"vPps":0,"vMas":11481866077768274,"total":328239523,"corr":1},"vHhCounties":963005.69255451,"ordenLista":{"vAlfabetica":575400.94264286,"vOrdenada":344950.64493727,"vMasExacta":456975.176,"deffAlfabetico":1.25915142,"deffOrdenado":0.75485642},"aproxWR":{"esperanza":880367.33151796,"v":575400.94264286,"exceso":1.53000676}},"poisson":{"En":10,"Vn":5.83211145,"distN":[0,5.25555178e-06,0.00011534,0.00100828,0.00508962,0.01728654,0.0429337,0.08214683,0.125465,0.15694284,0.16392006,0.14510867,0.11017396,0.07243484,0.04156231,0.02094807,0.00932429,0.00368185,0.00129456,0.00040658,0.00011436,2.887e-05,6.5517677e-06,1.33862042e-06,2.46473509e-07,4.09267474e-08,6.13128777e-09,8.28829755e-10,1.01086072e-10,1.11187344e-11,1.10221045e-12,9.83793384e-14,7.89642883e-15,5.69070119e-16,3.67520331e-17,2.12219456e-18,1.09269524e-19,5.00069888e-21,2.02645448e-22,7.23892107e-24,2.26741706e-25,6.18788355e-27,1.46000741e-28,2.95022224e-30,5.04537482e-32,7.19247833e-34,8.37727721e-36,7.75499303e-38,5.48071824e-40,2.77394398e-42,8.94269542e-45,1.37807757e-47],"vHt":1604348.62163958,"vSistematico":571878.01070675,"pn10":0.16392006,"pn9a11":0.46597157},"agpps":{"n":15,"total":936291172.983188,"seHt":70466697.55049548,"seSyg":11715203.54580413,"pi":[0.00286471,0.00290632,0.00296926,0.00312262,0.00484449,0.00524585,0.00784724,0.00818214,0.01547083,0.01820186,0.02252226,0.02400488,0.02502561,0.02529155,0.03389017],"pesos":[349.0757041,344.07782976,336.78473011,320.2442961,206.42024135,190.62679349,127.43341027,122.21738499,64.63776033,54.93943691,44.40052011,41.658202,39.95906096,39.53890466,29.50708067],"condados":["HARRISON COUNTY, IN","ROCK ISLAND COUNTY, IL","WAYNE COUNTY, NY","ALLEN COUNTY, OH","TRAVERSE COUNTY, MN","HARDIN COUNTY, IA","YOLO COUNTY, CA","WILLIAMSON COUNTY, TX","KIOWA COUNTY, CO","WASCO COUNTY, OR","UMATILLA COUNTY, OR","WESTON COUNTY, WY","YAKIMA COUNTY, WA","CARTER COUNTY, MT","CUSTER COUNTY, MT"]},"elefante":{"N":20,"x":[75,29,59,52,37,12,35,30,58,41,43,35,48,48,12,123,79,62,34,12],"y":[143,57,96,130,75,32,91,61,128,106,79,72,92,101,25,293,173,108,74,8790],"piBase":[0.40584416,0.15692641,0.31926407,0.28138528,0.20021645,0.06493506,0.18939394,0.16233766,0.31385281,0.22186147,0.23268398,0.18939394,0.25974026,0.25974026,0.06493506,0.66558442,0.42748918,0.33549784,0.18398268,0.06493506],"piElefanteX":0.06493506,"vBase":1113115897.4465911,"aporteBasePct":99.95392596,"razon005Base":13.81353801,"malla":[0.005,0.01,0.02,0.05,0.1,0.2,0.3,0.5],"curva":[15376068757.44659,7649658757.446591,3786453757.4465914,1468530757.4465911,695889757.4465911,309569257.44659114,180795757.44659117,77776957.44659115],"aporte":[0.99996665,0.99993296,0.99986455,0.99965077,0.99926302,0.99834332,0.99716333,0.99340605],"totalY":10726,"yElefante":8790},"classpps":{"K":647,"Nclases":15,"n":5,"tamanos":[44,33,26,22,76,63,20,44,54,34,46,24,46,100,15],"psi":[0.06800618,0.05100464,0.04018547,0.03400309,0.11746522,0.09737249,0.0309119,0.06800618,0.08346213,0.05255023,0.07109737,0.03709428,0.07109737,0.15455951,0.02318393],"clasesMuestra":[1,4,9,10,14],"mi":[4,4,4,4,4],"Mi":[44,22,54,34,100],"ybar":[3.5,5,3.625,3.125,2],"thatI":[154,110,195.75,106.25,200],"zI":[2264.5,3235,2345.375,2021.875,1294],"pesos":[32.35,32.35,32.35,32.35,32.35],"total":2232.15,"se":311.76237295,"media":3.45,"seMedia":0.48185838,"sumaPesos":647},"importancia":{"K":85296,"n":100,"total":36634733,"corr":0.6433037,"vUniforme":5143345369296.74,"vEmployees":4028654913135.7373,"vPerfecta":2.18408084e-21,"mejora":1.27669048,"mallaAlpha":[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2],"curvaV":[5143345369296.74,4404136782429.562,3855889906393.537,3447754591318.448,3153488971234.4644,2960327742724.5176,2865287212104.177,2875371829879.1377,3012482646644.54,3331381781119.0464,4028654913135.7373,3055498890250.1387,2323577677408.2905,1746071393312.7666,1280541925751.4617,902391537450.4025,596567280652.1993,354162258628.095,171186111021.74033,49132896814.5627,2.18408084e-21],"alphaMejor":0.6,"mejoraMezcla":1.79505403}};
 
     // ================================================================
     // Estado y elementos del DOM
@@ -7462,11 +7545,73 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       if (!isFinite(x)) return '—';
       const s = Math.abs(x).toFixed(d);
       const partes = s.split('.');
-      const entero = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      const entero = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
       return (x < 0 ? '−' : '') + entero + (partes[1] ? ',' + partes[1] : '');
     }
 
     function fmtPct(x, d = 1) { return fmtNum(100 * x, d) + ' %'; }
+
+    // Los ejes en el formato del curso, sea cual sea el idioma del navegador
+    // (Chart.js usa el del navegador: en inglés salían «0.05» y «1,000», y en
+    // español «1.000» junto a un eje sin formato), y sin que Chart.js esconda
+    // rótulos de categoría en pantallas estrechas. Los constructores de la
+    // plantilla no lo hacen; se arregla aquí, como en el cap. 5, sin tocar la
+    // plantilla que comparten los demás.
+    function ejesEnEspanol(g, decX, decY) {
+      const x = g.options.scales.x, y = g.options.scales.y;
+      if (x.type === 'linear') {
+        x.ticks = Object.assign({}, x.ticks, { callback: v => fmtNum(v, decX) });
+      } else {
+        x.ticks = Object.assign({}, x.ticks, { autoSkip: false, maxRotation: 0 });
+      }
+      y.ticks = Object.assign({}, y.ticks, { callback: v => fmtNum(v, decY) });
+    }
+
+    // Eje logarítmico: solo las potencias de diez, escritas 10³, 10⁶…
+    function ejeLogEnEspanol(g) {
+      const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+      const y = g.options.scales.y;
+      y.ticks = Object.assign({}, y.ticks, {
+        callback: v => {
+          const e = Math.log10(v);
+          if (Math.abs(e - Math.round(e)) > 1e-9) return '';
+          return '10' + String(Math.round(e)).split('').map(c => SUP[+c]).join('');
+        }
+      });
+    }
+    function topeLog(maximo) { return Math.pow(10, Math.ceil(Math.log10(maximo) - 1e-9)); }
+
+    function multiploDe(paso, k) { return Number((k * paso).toFixed(10)); }
+
+    // Un paso «bonito» (1, 2, 2,5 o 5 por potencia de 10) y sus decimales.
+    function pasoBonito(bruto) {
+      const pot = Math.pow(10, Math.floor(Math.log10(bruto)));
+      const paso = [1, 2, 2.5, 5, 10].map(f => f * pot).find(p => p >= bruto);
+      const dec = Math.max(0, -Math.floor(Math.log10(paso) + 1e-9)) + (paso / pot === 2.5 ? 1 : 0);
+      return { paso, dec };
+    }
+
+    // Un tope de eje redondo para un máximo cualquiera, con sus marcas: así el
+    // eje no enseña el flotante crudo (38,8, 77,6, 0,28).
+    function topeBonito(g, maximo) {
+      const { paso, dec } = pasoBonito(maximo / 5);
+      g.options.scales.y.max = multiploDe(paso, Math.ceil(maximo / paso - 1e-9));
+      g.options.scales.y.ticks.stepSize = paso;
+      g.options.scales.y.ticks.callback = v => fmtNum(v, dec);
+    }
+
+    // La plantilla escribe la cifra del deslizador con toFixed (punto
+    // decimal). Este oyente se registra después del suyo, así que corre
+    // después y la reescribe con coma.
+    function comaEnDeslizadores(inputs, decimales) {
+      Object.keys(decimales).forEach(clave => {
+        const input = inputs[clave];
+        const salida = input.parentElement.querySelector('output');
+        const pinta = () => { salida.textContent = fmtNum(parseFloat(input.value), decimales[clave]); };
+        input.addEventListener('input', pinta);
+        pinta();
+      });
+    }
 
     // ---------------------------------------------------------------
     // M1 · Cuatro muestras posibles, dos sorteos
@@ -7478,22 +7623,28 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const NOMBRES = ['ψ proporcional al área', 'probabilidades iguales', 'los dos sorteos'];
 
       const g = crearGraficoBarras(lienzo, T.nombres, T.estPpt, {
-        etiqueta: 'ψ ∝ área', color: COLORES_GRAFICO.primario, min: 0, max: 1050
+        etiqueta: 'ψ ∝ área', color: COLORES_GRAFICO.primario, min: 0, max: 1000,
+        lineas: [{ valor: T.total, etiqueta: 't = 300', color: COLORES_GRAFICO.gris }]
       });
+      ejesEnEspanol(g, 0, 0);
+      topeBonito(g, 1000);
+      const [principal, linea] = g.data.datasets;
+      const extra = {
+        type: 'bar', label: 'ψ iguales', data: T.estIgual,
+        backgroundColor: COLORES_GRAFICO.secundario, borderWidth: 0,
+        barPercentage: 0.4, categoryPercentage: 0.9, order: 2
+      };
+      // La muestra más alejada del total verdadero, en cada sorteo
+      const peor = est => est.reduce((m, v, i) =>
+        Math.abs(v - T.total) > Math.abs(est[m] - T.total) ? i : m, 0);
+      const iP = peor(T.estPpt), iI = peor(T.estIgual);
+      const textoP = T.nombres[iP] + ' (t̂ = ' + fmtNum(T.estPpt[iP], 0) + ') con ψ ∝ área';
+      const textoI = T.nombres[iI] + ' (t̂ = ' + fmtNum(T.estIgual[iI], 0) + ') con ψ iguales';
 
       function pintar() {
-        const datasets = g.data.datasets;
-        datasets.length = 1;
-        datasets[0].label = 'ψ ∝ área';
-        datasets[0].data = params.mostrar === 1 ? T.estIgual : T.estPpt;
-        if (params.mostrar === 1) datasets[0].label = 'ψ iguales';
-        if (params.mostrar === 2) {
-          datasets.push({
-            type: 'bar', label: 'ψ iguales', data: T.estIgual,
-            backgroundColor: COLORES_GRAFICO.secundario, borderWidth: 0,
-            barPercentage: 0.4, categoryPercentage: 0.9
-          });
-        }
+        principal.label = params.mostrar === 1 ? 'ψ iguales' : 'ψ ∝ área';
+        principal.data = params.mostrar === 1 ? T.estIgual : T.estPpt;
+        g.data.datasets = params.mostrar === 2 ? [principal, extra, linea] : [principal, linea];
         g.update('none');
 
         const V = params.mostrar === 1 ? T.vIgual : T.vPpt;
@@ -7503,8 +7654,8 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
           { etiqueta: 'V con ψ ∝ área:', valor: fmtNum(T.vPpt, 0) },
           { etiqueta: 'V con ψ iguales:', valor: fmtNum(T.vIgual, 0) },
           { etiqueta: 'razón de varianzas:', valor: fmtNum(T.vIgual / T.vPpt, 1) + ' a 1' },
-          { etiqueta: 'la peor muestra (' + (params.mostrar === 1 ? 'D con ψ = 1/4' : 'A con ψ ∝ área') + '):',
-            valor: 't̂ = ' + fmtNum(params.mostrar === 1 ? 980 : T.estPpt[0], 0) }
+          { etiqueta: 'la más alejada de t = 300:',
+            valor: params.mostrar === 0 ? textoP : (params.mostrar === 1 ? textoI : textoP + '; ' + textoI) }
         ]);
       }
 
@@ -7534,6 +7685,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const g = crearGraficoXY(lienzo, [], {
         tituloX: 'valor del estimador HH', tituloY: 'probabilidad exacta', xMin: 0, xMax: 1000
       });
+      ejesEnEspanol(g, 0, 2);
 
       function stems(xs, ps, etiqueta, color) {
         return {
@@ -7582,8 +7734,10 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const acum = T.acumulado;                       // [100, 300, 600, 1600]
 
       const g = crearGraficoBarras(lienzo, T.nombres, T.m2, {
-        etiqueta: 'área (m²) = longitud del tramo', color: COLORES_GRAFICO.primario, min: 0, max: 1050
+        etiqueta: 'área (m²) = longitud del tramo', color: COLORES_GRAFICO.primario, min: 0, max: 1000
       });
+      ejesEnEspanol(g, 0, 0);
+      topeBonito(g, 1000);
 
       function pintar() {
         let colores, lectura;
@@ -7635,9 +7789,15 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const params = { muestra: 6 };
       const lienzo = raiz.querySelector('canvas');
 
-      const g = crearGraficoBarras(lienzo, E.muestras, E.pS, {
-        etiqueta: 'p(s)', color: COLORES_GRAFICO.primario, min: 0, max: 0.32
+      // Rótulo en dos líneas: la muestra y el HT que da si sale (sin
+      // decimales: a 375 px, «t̂ = 77,3» se pisaba con el vecino).
+      const rotulos = E.muestras.map((m, i) => [m, fmtNum(E.ht[i], 0)]);
+      const g = crearGraficoBarras(lienzo, rotulos, E.pS, {
+        etiqueta: 'p(s)', color: COLORES_GRAFICO.primario, min: 0, max: 0.3,
+        tituloX: 'muestra y el t̂ que da si sale'
       });
+      ejesEnEspanol(g, 0, 2);
+      topeBonito(g, 0.3);
 
       function pintar() {
         const i = params.muestra - 1;
@@ -7677,6 +7837,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const g = crearGraficoXY(lienzo, [], {
         tituloX: 'HT del total', tituloY: 'réplicas por caja'
       });
+      ejesEnEspanol(g, 0, 0);
 
       function pintar() {
         const V = D6.statepps[VARS[params.variable].clave];
@@ -7718,6 +7879,8 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const g = crearGraficoBarras(lienzo, [], [], {
         etiqueta: 'P(n = k) exacta', color: COLORES_GRAFICO.primario, min: 0, max: 0.45
       });
+      ejesEnEspanol(g, 0, 2);
+      g.options.scales.x.ticks.autoSkip = true;     // hasta 26 valores de n: que salte rótulos
 
       function pintar() {
         const pi = piBase.map(p => Math.min(1, p * params.factor));
@@ -7735,23 +7898,29 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         const kMax = Math.min(pn.length - 1, Math.ceil(En + 4 * Math.sqrt(Vn) + 2));
         g.data.labels = Array.from({ length: kMax + 1 }, (_, k) => k);
         g.data.datasets[0].data = pn.slice(0, kMax + 1);
-        g.options.scales.y.max = Math.max(0.25, Math.max(...pn) * 1.15);
+        topeBonito(g, Math.max(0.2, Math.max(...pn) * 1.1));
         g.update('none');
 
+        // k = E(n) redondeado: con E(n) no entero, «a una unidad de k» no es
+        // «a una unidad de E(n)», y el rótulo dice lo que de verdad se suma.
         const kEsp = Math.round(En);
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
-          { etiqueta: 'factor sobre las π:', valor: fmtNum(params.factor, 2) },
+          { etiqueta: 'factor sobre las π:', valor: fmtNum(params.factor, 2) +
+            (params.factor > 1 ? ' (las π que pasan de 1 se truncan)' : '') },
           { etiqueta: 'E(n) = Σπ:', valor: fmtNum(En, 2) },
-          { etiqueta: 'de(n):', valor: fmtNum(Math.sqrt(Vn), 2) },
+          { etiqueta: 'desviación de n:', valor: fmtNum(Math.sqrt(Vn), 2) },
+          { etiqueta: 'cv = desviación / E(n):', valor: fmtPct(Math.sqrt(Vn) / En, 0) },
           { etiqueta: 'P(n = ' + kEsp + '):', valor: fmtNum(pn[kEsp] || 0, 3) },
-          { etiqueta: 'P(|n − E(n)| ≤ 1):', valor: fmtNum((pn[kEsp - 1] || 0) + (pn[kEsp] || 0) + (pn[kEsp + 1] || 0), 3) },
+          { etiqueta: 'P(' + (kEsp - 1) + ' ≤ n ≤ ' + (kEsp + 1) + '):',
+            valor: fmtNum((pn[kEsp - 1] || 0) + (pn[kEsp] || 0) + (pn[kEsp + 1] || 0), 3) },
           { etiqueta: 'forzosas (π = 1):', valor: fmtNum(pi.filter(p => p === 1).length, 0) }
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'factor', etiqueta: 'Factor de escala de las π', min: 0.3, max: 1.5, paso: 0.05 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { factor: 2 });
       pintar();
       return [g];
     };
@@ -7772,8 +7941,10 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         (E.piK[k] * E.piK[l] - E.piKl[k][l]) * Math.pow(d[k] - d[l], 2));
 
       const g = crearGraficoBarras(lienzo, E.muestras, aportes, {
-        etiqueta: 'aporte a V (SYG)', color: COLORES_GRAFICO.primario, min: 0, max: Math.max(...aportes) * 1.15
+        etiqueta: 'aporte a V (SYG)', color: COLORES_GRAFICO.primario, min: 0, max: Math.max(...aportes) * 1.1
       });
+      ejesEnEspanol(g, 0, 0);
+      topeBonito(g, Math.max(...aportes) * 1.1);
 
       function pintar() {
         const i = params.par - 1;
@@ -7809,10 +7980,17 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const etiquetas = E.y.map((_, i) => i + 1);
 
       const g = crearGraficoBarras(lienzo, etiquetas, E.y.map(() => 1), {
-        etiqueta: 'aporte (1/π − 1)·y² a V', color: COLORES_GRAFICO.primario, min: 0.1, max: 1e11
+        etiqueta: 'aporte (1/π − 1)·y² a V', color: COLORES_GRAFICO.primario, min: 0.1, max: 1e11,
+        tituloX: 'negocio (el 20 es el elefante)'
       });
       g.options.scales.y.type = 'logarithmic';
       g.options.scales.y.min = 10;
+      ejeLogEnEspanol(g);
+      // Rótulos 1, 5, 10, 15 y 20: caben a 375 px y el elefante queda rotulado
+      g.options.scales.x.ticks = Object.assign({}, g.options.scales.x.ticks, {
+        autoSkip: false, maxRotation: 0,
+        callback: (v, i) => [0, 4, 9, 14, 19].includes(i) ? String(i + 1) : ''
+      });
 
       function pintar() {
         const pi = E.piBase.slice();
@@ -7821,7 +7999,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         const V = aportes.reduce((a, b) => a + b, 0);
         g.data.datasets[0].data = aportes;
         g.data.datasets[0].backgroundColor = etiquetas.map((_, i) => i === 19 ? '#FF6600' : '#012820');
-        g.options.scales.y.max = Math.max(1e10, Math.max(...aportes) * 2);
+        g.options.scales.y.max = topeLog(Math.max(1e10, Math.max(...aportes) * 1.5));
         g.update('none');
 
         const VBase = E.piBase.map((p, i) => (1 / p - 1) * E.y[i] * E.y[i]).reduce((a, b) => a + b, 0);
@@ -7830,16 +8008,17 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
             fmtNum(E.piElefanteX, 3) + ')' },
           { etiqueta: 'su y:', valor: fmtNum(E.yElefante, 0) + ' — el ' + fmtPct(E.yElefante / E.totalY, 0) + ' del total' },
           { etiqueta: 'V total del HT (Poisson):', valor: fmtNum(V, 0) },
-          { etiqueta: 'el elefante aporta:', valor: fmtPct(aportes[19] / V, 1) },
+          { etiqueta: 'el elefante aporta:', valor: fmtPct(aportes[19] / V, 2) },
           { etiqueta: 'frente a la V con su π de área:', valor: fmtNum(V / VBase, 2) + '×' },
           { etiqueta: 'defensa:', valor: params.piE >= 0.5 ? 'π grande: bomba desactivada' :
             (params.piE < 0.03 ? '¡π mínima con y enorme: explosión!' : 'zona de riesgo' ) }
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'piE', etiqueta: 'π del elefante', min: 0.005, max: 0.9, paso: 0.005 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { piE: 3 });
       pintar();
       return [g];
     };
@@ -7851,11 +8030,14 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const C = D6.classpps;
       const params = { diseno: 0, m: 4 };
       const lienzo = raiz.querySelector('canvas');
-      const etiquetas = C.tamanos.map((_, i) => 'clase ' + (i + 1));
+      const etiquetas = C.tamanos.map((_, i) => String(i + 1));
 
       const g = crearGraficoBarras(lienzo, etiquetas, C.tamanos, {
-        etiqueta: 'peso final de un estudiante', color: COLORES_GRAFICO.primario, min: 0, max: 40
+        etiqueta: 'peso final de un estudiante', color: COLORES_GRAFICO.primario, min: 0, max: 40,
+        tituloX: 'clase del marco'
       });
+      ejesEnEspanol(g, 0, 0);
+      g.options.scales.x.ticks.maxRotation = 90;    // a 375 px, 15 rótulos se pegaban: que giren
 
       function pintar() {
         const n = 5;
@@ -7864,7 +8046,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
           : (C.Nclases / n) * Mi / params.m);          // iguales: (N/n) · (Mi/m)
         g.data.datasets[0].data = pesos;
         g.data.datasets[0].label = params.diseno === 0 ? 'PPT + m fijo (autoponderado)' : 'iguales + m fijo';
-        g.options.scales.y.max = Math.max(...pesos) * 1.2;
+        topeBonito(g, Math.max(...pesos) * 1.1);
         g.update('none');
 
         const maxP = Math.max(...pesos), minP = Math.min(...pesos);
@@ -7894,15 +8076,19 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const params = { alpha: 0 };
       const lienzo = raiz.querySelector('canvas');
 
+      // En billones (×10¹²): con la cifra entera, el eje no cabe en un teléfono.
+      const ESC = 1e12;
       const curva = {
         type: 'line', label: 'V exacta del HH', stepped: false, fill: false,
-        data: I.mallaAlpha.map((a, i) => ({ x: a, y: I.curvaV[i] })),
+        data: I.mallaAlpha.map((a, i) => ({ x: a, y: I.curvaV[i] / ESC })),
         borderColor: COLORES_GRAFICO.primario, backgroundColor: COLORES_GRAFICO.primario,
         borderWidth: 2, pointRadius: 0, tension: 0.25
       };
       const g = crearGraficoXY(lienzo, [curva], {
-        tituloX: 'α: 0 uniforme · 1 ψ∝empleados · 2 ψ∝y', tituloY: 'V exacta', xMin: 0, xMax: 2
+        tituloX: 'α: 0 uniforme · 1 ψ∝empleados · 2 ψ∝y', tituloY: 'V exacta (×10¹²)', xMin: 0, xMax: 2
       });
+      ejesEnEspanol(g, 1, 0);
+      topeBonito(g, I.vUniforme / ESC * 1.1);
 
       function vDe(a) {
         // interpolación lineal sobre la malla del precálculo (paso 0.1)
@@ -7913,7 +8099,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
 
       function pintar() {
         const V = vDe(params.alpha);
-        g.data.datasets = [curva, serieVertical(params.alpha, I.vUniforme * 1.05, 'α actual', COLORES_GRAFICO.secundario)];
+        g.data.datasets = [curva, serieVertical(params.alpha, I.vUniforme / ESC * 1.05, 'α actual', COLORES_GRAFICO.secundario)];
         g.update('none');
 
         const nombre = params.alpha <= 0.05 ? 'uniforme' :
@@ -7929,9 +8115,10 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
+      const inputs = crearControles(raiz.querySelector('.simulador-controles'), [
         { clave: 'alpha', etiqueta: 'α de la propuesta', min: 0, max: 2, paso: 0.05 }
       ], params, pintar);
+      comaEnDeslizadores(inputs, { alpha: 2 });
       pintar();
       return [g];
     };
@@ -7944,8 +8131,8 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       const P = D6.poisson;
       return {
         descripcion: 'Estimar el total de condados de EE.UU. (3 143) con n = 10 estados y cuatro ' +
-          'diseños. Las varianzas del MAS y del πPT sistemático salen de 10 000 réplicas; las de ' +
-          'Poisson y HH son exactas. Pulsa cualquier cabecera para reordenar.',
+          'diseños. Las varianzas del MAS y del πPT sistemático (lista en orden alfabético) salen de ' +
+          '10 000 réplicas; las de Poisson y HH son exactas. Pulsa cualquier cabecera para reordenar.',
         columnas: [
           { clave: 'diseno', titulo: 'Diseño', tipo: 'texto' },
           { clave: 'n', titulo: 'n', tipo: 'texto' },
@@ -7965,10 +8152,12 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         inicial: 'V',
         destacada: 'MAS de 10 estados',
         pie: 'La sorpresa honesta del módulo: para counties, el humilde MAS gana — la correlación ' +
-          'de 0,46 con la población no compra la proporcionalidad que el πPT necesita. La tabla ' +
-          'entera se invierte con una variable que sí acompañe al tamaño (con pop2019, la V del ' +
-          'πPT es ≈ 0 y las demás quedan en ridículo). Diseñar con probabilidades desiguales es ' +
-          'apostar: esta tabla muestra una apuesta perdida para que nadie crea que el πPT gana solo.'
+          'de 0,46 con la población no compra la proporcionalidad que el πPT necesita (con la lista ' +
+          'ordenada por población, el sistemático sí ganaría: el orden también juega). Con una variable ' +
+          'que sí acompañe al tamaño, como pop2019, lo que anula la varianza es la proporcionalidad, no ' +
+          'el «sin reemplazo»: el πPT y el HH con ψ ∝ pop dan V = 0, y Poisson conserva la que pone su n ' +
+          'aleatorio. Diseñar con probabilidades desiguales es apostar: esta tabla muestra una apuesta ' +
+          'perdida para que nadie crea que el πPT gana solo.'
       };
     };
 
@@ -7976,7 +8165,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
     // Diagrama de diseño del módulo 9: classpps, PPT en dos etapas
     // ================================================================
     DIAGRAMAS_DISENO['ppt-dos-etapas'] = {
-      titulo: 'El diseño de classpps: PPT con reemplazo × MAS',
+      titulo: 'El diseño de classpps: πPT sin reemplazo × MAS',
       intro: 'Pulsa cada etapa. La primera sortea CON probabilidades desiguales; la franja final ' +
         'muestra la cancelación que deja todos los pesos iguales.',
       nota: 'Compara con el diagrama de schools del capítulo 5, módulo 2: allí la primera etapa ' +
@@ -7987,20 +8176,21 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
           etiqueta: 'Marco',
           unidad: '15 clases, $K = 647$ estudiantes',
           icono: 'fa-chalkboard-user',
-          resumen: 'El marco lista las 15 clases con sus tamaños M_i (de 20 a 100). A diferencia ' +
+          resumen: 'El marco lista las 15 clases con sus tamaños M_i (de 15 a 100). A diferencia ' +
             'de schools, aquí el total K = 647 sí se conoce: lo exige el PPT para calcular las psi.',
-          cifras: [{ k: 'N', v: '15 clases' }, { k: 'M_i', v: 'de 20 a 100' }]
+          cifras: [{ k: 'N', v: '15 clases' }, { k: 'M_i', v: 'de 15 a 100' }]
         },
         {
           etiqueta: 'Etapa 1: clases',
-          unidad: 'PPT con reemplazo, $n = 5$',
+          unidad: 'πPT sin reemplazo, $n = 5$',
           icono: 'fa-scale-unbalanced',
-          resumen: 'Cinco extracciones con psi_i = M_i/647: la clase de 100 estudiantes sale con ' +
-            'probabilidad 0,155 por extracción; la de 20, con 0,031. Con reemplazo: puede repetirse.',
-          pi: '\\psi_i = M_i/647',
-          peso: '1/(n\\psi_i) = 647/(5 M_i)',
-          cifras: [{ k: 'ψ rango', v: '0,031 a 0,155' }],
-          ejemplo: 'la clase 14 (M = 100) tiene cinco veces la probabilidad de la clase 4 (M = 22).'
+          resumen: 'Cinco clases distintas, sorteadas con π_i = 5M_i/647 (Lohr, ej. 6.11). Para la ' +
+            'varianza se analizan como si fueran cinco extracciones con reemplazo, con ψ_i = π_i/5 = ' +
+            'M_i/647: la clase de 100 estudiantes, con 0,155 por extracción; la de 15, con 0,023.',
+          pi: '\\pi_i = 5M_i/647,\\quad \\psi_i = \\pi_i/5',
+          peso: '1/\\pi_i = 1/(n\\psi_i) = 647/(5 M_i)',
+          cifras: [{ k: 'ψ rango', v: '0,023 a 0,155' }],
+          ejemplo: 'la clase 14 (M = 100) tiene unas 4,5 veces la probabilidad de la clase 4 (M = 22).'
         },
         {
           etiqueta: 'Etapa 2: estudiantes',
@@ -8010,7 +8200,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
             'baja con el tamaño de la clase — exactamente al revés que la etapa 1.',
           pi: 'm/M_i = 4/M_i',
           peso: 'M_i/4',
-          cifras: [{ k: 'm/Mᵢ rango', v: '0,04 a 0,18' }],
+          cifras: [{ k: 'm/Mᵢ (clases sorteadas)', v: '0,04 a 0,18' }],
           ejemplo: 'en la clase de 100, cada estudiante sale con 4/100 = 0,04.'
         },
         {
@@ -8047,12 +8237,12 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         { concepto: 'Prob. de inclusión', aqui: '\\pi_k', lohr: '\\pi_i', gutierrez: '\\pi_k', r: 'inclusionprobabilities()' },
         { concepto: 'Conjunta de segundo orden', aqui: '\\pi_{kl}', lohr: '\\pi_{ik}', gutierrez: '\\pi_{kl}', r: 'ppsmat(Pmat)' },
         { concepto: 'Estimador con reemplazo', aqui: '\\hat{t}_{HH}', lohr: '\\hat{t}_\\psi', gutierrez: '\\hat{t}_{p}', r: 'mean(y/psi)' },
-        { concepto: 'Su varianza estimada', aqui: 's_z^2/n', lohr: 's_z^2/n', gutierrez: '\\widehat{V}_{p}', r: 'var(z)/n' },
+        { concepto: 'Su varianza estimada', aqui: 's_z^2/n', lohr: 's_u^2/n', gutierrez: '\\widehat{V}_{p}', r: 'var(z)/n' },
         { concepto: 'Estimador sin reemplazo', aqui: '\\hat{t}_\\pi', lohr: '\\hat{t}_{HT}', gutierrez: '\\hat{t}_\\pi', r: 'svytotal + probs' },
         { concepto: 'Varianza SYG', aqui: '\\widehat{V}_{SYG}', lohr: '\\widehat{V}_{SYG}', gutierrez: '\\widehat{V}_{SYG}', r: 'variance = "YG"' },
-        { concepto: 'Diseño πPT / πps', aqui: '\\pi_k \\propto x_k', lohr: '\\pi ps', gutierrez: '\\pi PT', r: 'UPsystematic, UPbrewer' },
-        { concepto: 'Diseño de Poisson', aqui: '\\text{PO}(\\pi)', lohr: '—', gutierrez: 'PO', r: 'rbinom(N, 1, pi)' },
-        { concepto: 'Inclusión forzosa', aqui: '\\pi_k = 1', lohr: 'certainty psu', gutierrez: '\\text{incl. forzosa}', r: 'pik >= 1' },
+        { concepto: 'Diseño πPT / πps', aqui: '\\pi_k \\propto x_k', lohr: '\\text{pps sin reemplazo}', gutierrez: '\\pi PT', r: 'UPsystematic, UPbrewer' },
+        { concepto: 'Diseño de Poisson', aqui: '\\text{PO}(\\pi)', lohr: '\\text{Poisson sampling}', gutierrez: 'PO', r: 'rbinom(N, 1, pi)' },
+        { concepto: 'Inclusión forzosa', aqui: '\\pi_k = 1', lohr: '\\text{certainty psu}', gutierrez: '\\text{incl. forzosa}', r: 'pik >= 1' },
         { concepto: 'Peso de diseño', aqui: 'w_k = 1/\\pi_k', lohr: 'w_i', gutierrez: 'd_k', r: 'SamplingWeight' }
       ]
     };
@@ -8090,11 +8280,11 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
       {
         tipo: 'opcion',
         modulo: 3,
-        pregunta: 'Un marco tiene 40 millones de unidades y llega ordenado en archivos parciales que no caben juntos en memoria. ¿Qué método de selección PPT conviene y por qué?',
-        pista: '¿Cuál de los dos métodos necesita acumular todo el marco antes de sortear?',
+        pregunta: 'Un marco tiene 40 millones de unidades repartidas en archivos que no caben juntos en memoria. No se pueden recorrer todos antes de sortear, pero sí leer cualquier unidad por su número, y se conocen N y el tamaño máximo M_max. ¿Qué método de selección PPT conviene y por qué?',
+        pista: '¿Cuál de los dos métodos necesita la suma de todos los tamaños antes del primer sorteo?',
         opciones: [
-          { texto: 'Lahiri: no necesita acumular el marco — solo M_max — y decide unidad por unidad, al precio de repetir intentos.', correcta: true,
-            retro: 'Correcto. El acumulativo exige construir los tramos (recorrer y sumar TODO antes del primer sorteo); el rechazo de Lahiri trabaja con lo que va llegando. Es la misma razón por la que Poisson sirve para flujos.' },
+          { texto: 'Lahiri: sortea una unidad entre 1 y N y la acepta o la rechaza contra M_max, sin acumular nada, al precio de repetir intentos.', correcta: true,
+            retro: 'Correcto. El acumulativo exige construir los tramos: recorrer y sumar TODO el marco antes del primer sorteo. Lahiri solo necesita poder leer una unidad cualquiera y conocer N y M_max. (Si las unidades llegaran una a una y hubiera que decidir en el momento, ninguno de los dos serviría: eso lo resuelve Poisson, módulo 6.)' },
           { texto: 'El acumulativo, porque es exacto y Lahiri es aproximado.', correcta: false,
             retro: 'Los dos son EXACTOS — la verificación de 100 000 sorteos lo confirmó para ambos. La diferencia es operativa (memoria y pasadas), no probabilística.' },
           { texto: 'Ninguno: con marcos grandes solo funciona el MAS.', correcta: false,
@@ -8120,7 +8310,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         pista: 'Repasa la inclusión forzosa, el MC de las tres variables y lo que el sistemático puede y no puede estimar.',
         opciones: [
           { texto: 'California queda con π = 1: su π cruda (1,204) supera 1 y se trunca, reescalando las demás.', correcta: true },
-          { texto: 'Para counties (correlación 0,46 con el tamaño), el πPT tiene MÁS varianza que un MAS de 10 estados.', correcta: true },
+          { texto: 'Para counties (correlación 0,46 con el tamaño), el πPT sistemático con la lista en orden alfabético tiene MÁS varianza que un MAS de 10 estados.', correcta: true },
           { texto: 'El πPT sistemático no tiene estimador insesgado de varianza: muchas π_kl valen 0.', correcta: true },
           { texto: 'πPT garantiza menor varianza que el MAS siempre que la correlación con el tamaño sea positiva.', correcta: false }
         ],
@@ -8143,12 +8333,12 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         pregunta: 'Sobre agpps, los estimadores de varianza en forma HT y SYG usan los mismos datos y las mismas π_kl, pero dan ee de 70,5 y 11,7 millones. ¿Cuál es el diagnóstico correcto?',
         pista: '¿Cómo suma cada forma sus términos?',
         opciones: [
-          { texto: 'La forma HT suma términos grandes de signos opuestos que casi se cancelan — es insesgada pero inestable (hasta puede dar negativa); la SYG suma cuadrados y es la que se usa con tamaño fijo.', correcta: true,
-            retro: 'Exacto. Ambas estiman la MISMA varianza teórica; difieren como estimadores. La aritmética de cancelaciones de la forma HT amplifica cualquier desajuste; los cuadrados de SYG no pueden.' },
+          { texto: 'La forma HT suma términos grandes de signos opuestos que casi se cancelan — es insesgada pero inestable (hasta puede dar negativa); la SYG suma cuadrados y, con tamaño fijo, es la más estable de las dos.', correcta: true,
+            retro: 'Exacto. Ambas estiman la MISMA varianza teórica; difieren como estimadores. La aritmética de cancelaciones de la forma HT amplifica cualquier desajuste; los cuadrados de SYG mucho menos. (Sin las π_kl, Lohr recomienda en general una tercera vía: la aproximación con reemplazo, que aquí da un ee muy cercano al de SYG.)' },
           { texto: 'La forma HT está mal programada: con los mismos datos deberían dar lo mismo.', correcta: false,
             retro: 'survey reproduce ambas cifras exactamente (variance = "HT" y "YG"): no hay error. Son dos ESTIMADORES distintos de una misma cantidad, y pueden diferir mucho en una muestra concreta.' },
           { texto: 'La SYG subestima: el ee verdadero es el de la forma HT.', correcta: false,
-            retro: 'No hay «verdadero» entre los dos sin más información — pero la teoría y la práctica (Lohr §6.4.3) señalan a la forma HT como el estimador errático. Aquí, además, 70 millones implicaría un cv del 7,5 % para un diseño construido para ser preciso.' },
+            retro: 'No hay «verdadero» entre los dos sin más información — pero la teoría y la práctica (Lohr §6.4.1, ej. 6.10) señalan a la forma HT como el estimador errático. Aquí, además, 70 millones implicaría un cv del 7,5 % para un diseño construido para ser preciso.' },
           { texto: 'Las π_kl del archivo están corruptas.', correcta: false,
             retro: 'Las mismas π_kl producen la SYG perfectamente razonable (cv 1,3 %) y reproducen los pesos del archivo. El problema es la forma del estimador, no los datos.' }
         ]
@@ -8168,6 +8358,12 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
             etiqueta: 'aporte a V', color: COLORES_GRAFICO.primario, min: 10, max: Math.max(...aportes) * 2
           });
           g.options.scales.y.type = 'logarithmic';
+          g.options.scales.y.max = topeLog(Math.max(...aportes) * 1.5);
+          ejeLogEnEspanol(g);
+          g.options.scales.x.ticks = Object.assign({}, g.options.scales.x.ticks, {
+            autoSkip: false, maxRotation: 0,
+            callback: (v, i) => [0, 4, 9, 14, 19].includes(i) ? String(i + 1) : ''
+          });
           g.data.datasets[0].backgroundColor = E.y.map((_, i) => i === 19 ? '#FF6600' : '#012820');
           g.update('none');
           return g;
@@ -8194,7 +8390,7 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
           { texto: 'Sortear las clases con probabilidades iguales y compensar con m proporcional a M_i.', correcta: false,
             retro: 'Esa combinación TAMBIÉN autopondera (w = (N/n)·M_i/m_i constante si m_i ∝ M_i), pero no es la de classpps — aquí m = 4 fijo — y tiene el costo práctico de cargas de trabajo desiguales por clase.' },
           { texto: 'Es coincidencia numérica de este archivo.', correcta: false,
-            retro: 'Es estructura, no suerte: 32,35 = 647/(5·4) sale de la fórmula para cualquier clase. La cadena del módulo verificó que el peso del archivo coincide con la fórmula en las 5 clases.' },
+            retro: 'Es estructura, no suerte: 32,35 = 647/(5·4) sale de la fórmula para cualquier clase. El bloque del módulo lo comprueba: el archivo trae un único peso, el de la fórmula, en las 5 clases.' },
           { texto: 'survey normaliza los pesos automáticamente para que sean iguales.', correcta: false,
             retro: 'survey usa los pesos tal cual llegan — jamás los iguala. Si el archivo trae pesos dispares (como schools en el cap. 5: 40,9 a 137,6), así se quedan.' }
         ]
@@ -8218,22 +8414,25 @@ round(c(V_poisson = V_poi_water, V_sistematico = V_sis_water,
         modulo: 5,
         alto: 240,
         descripcionGrafico: 'Dos histogramas de 10 000 réplicas del HT del total de waterarea: πPT sistemático frente a MAS de 10 estados',
-        pregunta: 'Las réplicas del módulo 5 para <code>waterarea</code> (correlación 0,04 con la población). ¿Cuál histograma es el πPT, y qué veredicto sale?',
-        pista: 'Con correlación casi nula, ¿a quién castigan las π desiguales?',
+        pregunta: 'Las réplicas del módulo 5 para <code>waterarea</code> (correlación 0,045 con la población). Fíjate en el cuerpo de cada histograma y también en su cola derecha. ¿Cuál es el πPT, y qué veredicto sale?',
+        pista: 'Con correlación casi nula, ¿a quién castigan las π desiguales? Busca qué diseño tiene réplicas lejísimos del total.',
         dibujar: canvas => {
           const V = D6.statepps.waterarea;
           const alto = Math.max(...V.pps.conteo, ...V.mas.conteo) * 1.05;
-          return crearGraficoXY(canvas, [
+          const g = crearGraficoXY(canvas, [
             serieHistograma(V.mas, 'diseño A', COLORES_GRAFICO.primario),
             serieHistograma(V.pps, 'diseño B', COLORES_GRAFICO.secundario),
             serieVertical(V.total, alto, 'total verdadero', COLORES_GRAFICO.gris)
           ], { tituloX: 'HT del total de waterarea', tituloY: 'réplicas' });
+          ejesEnEspanol(g, 0, 0);
+          g.update('none');
+          return g;
         },
         opciones: [
-          { texto: 'El B (naranja), el disperso: con correlación 0,04, las π desiguales solo meten ruido — deff ≈ 9 contra el MAS.', correcta: true,
-            retro: 'Correcto. Alaska tiene el 40 % del agua y una π modesta; estados enormes en población apenas tienen agua. El cociente y/π queda salvaje y el πPT paga deff 9. πPT sin proporcionalidad es un mal negocio.' },
+          { texto: 'El B (naranja), el de la cola larga: con correlación 0,045, las π desiguales solo meten ruido — deff ≈ 9 contra el MAS.', correcta: true,
+            retro: 'Correcto. Su cuerpo es incluso más estrecho que el del MAS, pero casi siempre se queda corto, y cuando entra Alaska (π = 0,023 y el 36 % del agua) el HT salta a unos 11 millones: esa cola, un par de réplicas de cada cien, es la que da el deff 9. Es el elefante del módulo 8 con datos reales. πPT sin proporcionalidad es un mal negocio.' },
           { texto: 'El A (verde): el πPT siempre es el más concentrado.', correcta: false,
-            retro: '«Siempre» es la palabra equivocada del capítulo. El concentrado aquí es el MAS; el πPT solo se concentra cuando y acompaña al tamaño, y el agua no acompaña a la población.' },
+            retro: '«Siempre» es la palabra equivocada del capítulo. El cuerpo del πPT puede verse estrecho, pero su varianza la decide la cola: aquí el disperso de verdad es el πPT, porque el agua no acompaña a la población.' },
           { texto: 'Los dos están sesgados: los histogramas no se centran en el total.', correcta: false,
             retro: 'Mira la línea gris: ambos histogramas la tienen dentro — los dos HT son insesgados (el MC dio sesgo relativo < 1 %). Lo que difiere brutalmente es la dispersión.' },
           { texto: 'El B, pero el problema es el n: el sistemático usa menos estados.', correcta: false,

@@ -7576,3 +7576,152 @@ de ese curso).
     - en el navegador, la portada viva carga con la consola limpia, 10 tarjetas y 75 iconos, y sus 15
       enlaces locales dan 200;
     - las dos presentaciones del cap. 5 cargan sin errores.
+
+### T7.101 — La auditoría del cap. 6: 33 errores, en espera del visto bueno (2026-10-29)
+
+Javier preguntó si el cap. 6 ya estaba auditado y mejorado. Tenía:
+- la auditoría mecánica de la Fase 4;
+- Sen–Yates–Grundy y los glosarios (T7.1–T7.3);
+- la auditoría de orden (T7.20).
+
+Le faltaban la revisión de cifras y la de cinco lectores, la que encontró 21 errores en el cap. 5 (T7.96). Pedido:
+«la auditoría que acostumbramos», revisando de paso el material de origen, sin publicar. Se siguió el protocolo de
+T7.96: mecánico, cinco lectores independientes en solo lectura sobre una copia congelada de `953cb99`, y cada
+hallazgo verificado aparte con R 4.4 o contra Lohr 3.ª.
+
+**El informe completo:** `PLAN_Auditoria_Cap6.md`, en la raíz del worktree `nifty-wu-2357d7`, fuera de git.
+Conviene moverlo junto a los demás `PLAN_Auditoria_*.md`.
+
+- **Mecánico, todo en verde:**
+  - `verifica_bloques --prosa`: 315/315 y 53.
+  - `verifica_publicado --local`: R (19) y Python (5) arrancan.
+  - `verifica_referencias`: 31 resueltas, 0 nuevas.
+  - `node --check`: OK.
+  - Reensamblado y `genera_cap6.R` byte a byte; `anota_salidas --check`, 0.
+- **Lectores:** ES 27, CL 29, PE 29, CO 21 y VI 25 hallazgos.
+  - CO comparó 131 líneas `#>` de los bloques publicados, ejecutados en sesión limpia: todas iguales.
+  - VI recorrió 2 680 estados de los simuladores a 320–1280 px, en es-CO y en-US: sin errores de consola ni de
+    KaTeX.
+- **33 errores objetivos (C1–C33), sin corregir:** son muchos, y el encargo pedía informar primero. Los de más peso:
+  - **C1:** `classpps` se cuenta como muestra con reemplazo, con ψ = M/647. En Lohr (Ej. 6.11) es **sin reemplazo**,
+    con π = 5M/647, y Lohr avisa de que el ee con reemplazo sobrestima (n/N = 1/3).
+  - **C2:** el «el πPT pierde con `counties`, deff 1,25» (el hallazgo 1 de la Fase 4) es del sistemático **con la
+    lista alfabética**, y el texto dice «ordenar». Ordenada por población, el mismo diseño gana: deff 0,75, exacto.
+    Con Brewer o con máxima entropía también pierde (1,6), así que la lección vale; su explicación omite las π_kl.
+  - **C3:** ejes sin formato o en el idioma del navegador, y recortados en móvil. Es lo que el cap. 5 arregló en
+    T7.97.
+  - **C5, C6, C7, C10, C14, C15, C16:** lecturas de cifras correctas que dicen otra cosa que el gráfico o la lectura
+    que el texto manda mirar. Por ejemplo, «×200» donde la lectura da 13,8×, y «estorbos grandes» que son los
+    menores.
+  - **C9:** atribuye a Lohr «tamaño fijo ⇒ SYG». Lohr recomienda en general el estimador con reemplazo (6.24).
+  - **C11:** R8 mezcla dos escalas: imprime 1 116,3 donde debería dar 1 004,7.
+  - **C12:** R12 y R19 leen `precalculo/salidas/cap6_datos.json`, que el estudiante no tiene. El cap. 7 tiene el
+    mismo defecto.
+  - **C13:** nueve citas a Lohr con sección o ejemplo equivocados.
+- **Por qué no lo vieron las herramientas:**
+  - `verifica_publicado` corre desde la raíz del repositorio, donde el JSON sí existe.
+  - Las demás comprueban que las cifras estén, no cómo se leen. Repite la lección de T7.20: la lente de orden no ve
+    las cifras, y la de cifras no ve su lectura.
+- **Decisiones pendientes de Javier:**
+  - el visto bueno para corregir C1–C33 en la cadena;
+  - cuatro elecciones (C2, C4, C8 y C12), cada una con su opción por defecto;
+  - las 25 mejoras M-1 a M-25 (la de más peso: el diseño sin reemplazo de las tiendas no es el de Lohr, que llega a
+    la conclusión contraria);
+  - cuatro dudas (Gutiérrez y Särndal sin copia; la frase sobre DANE e INEGI).
+- **Fuera del cap. 6:** seis defectos de la plantilla común. Entre ellos:
+  - en móvil no hay índice de módulos y el botón «‹» no hace nada;
+  - las soluciones de los ejercicios se abren con el código colapsado;
+  - el resumen del quiz dice «impecable» y a la vez lista los módulos que costaron.
+- **Sin cambios en la cadena, sin commit y sin publicación.**
+  - **Corregidos en T7.102** (2026-10-30), con el visto bueno de Javier.
+
+### T7.102 — Los errores C1–C33 de la auditoría, corregidos en el cap. 6 (2026-10-30)
+
+Visto bueno de Javier: «Sí, corrige todo», con las opciones por defecto de C2, C4, C8 y C12. La lista y su evidencia
+están en `PLAN_Auditoria_Cap6.md` (T7.101). Se siguió la regla de T7.97: toda cifra nueva de la prosa sale antes de
+`genera_cap6.R` o de una cadena.
+
+- **`genera_cap6.R`.** Las cifras que ya existían salen idénticas: comparado clave a clave. Lo nuevo:
+  - **La varianza exacta del πPT sistemático.** El arranque u decide la muestra, y entre dos cortes (las partes
+    fraccionarias de las π acumuladas) sale siempre la misma. Con eso:
+    - una segunda vía para el Monte Carlo: 575 401 frente a 571 878, dentro del 3 %;
+    - el MAS exacto (456 975) frente al Monte Carlo;
+    - `counties` con la lista ordenada por población: deff **0,75** (C2);
+    - la esperanza exacta de la aproximación con reemplazo de R8: **1,53 veces** la V (C11).
+  - **Elefante:** V con su π de área, su aporte (**99,95 %**) y la razón con π = 0,005 (**13,8**) (C5).
+  - **Importancia:** el mínimo de la curva, en α = 0,6, es **1,8 veces** mejor que el uniforme (C16).
+  - **Comentarios:** «ej. 6.1-6.3», «C(50,10)», tamaños, alumnos y el diseño de classpps.
+- **Cadenas.**
+  - **R1:** la cita de Lohr; fuera `jsonlite`.
+  - **R6 y R7:** comentarios.
+  - **R8:** con ψ = π/9 sobre las nueve no forzosas, el ee pasa de 1 116,288 a **1 004,66**; el orden alfabético se
+    dice.
+  - **R10:** añade el ee con reemplazo (**12 293 010**, el de Lohr, ej. 6.10).
+  - **R11:** 944 millones.
+  - **R12:** genera la población del elefante en el bloque (semilla 2026) y muestra V con la π de área.
+  - **R13:** classpps sin reemplazo.
+  - **R16:** «el bloque del módulo 10».
+  - **R19:** las dos varianzas exactas (`v_sistematico`, `v_poisson`): razón 1,04 con waterarea y 2,79 con counties.
+  - **Python:** P1 y P2 avisan del otro generador; P3 ya no dice «survey».
+  - `anota_salidas` anotó; `--check`, 0.
+- **Módulos.**
+  - M1: las tiendas son la §6.1 de Lohr.
+  - M2: el HH sobre i ∈ W, con z_i = t_i/ψ_i, y una nota de R frente a Python.
+  - M3: Lahiri sin «flujo»; icono `fa-dice`.
+  - M4: el simulador, tal como se dibuja; las muestras sin D, 25 % y tres cuartas partes de V.
+  - M5:
+    - pps;
+    - el bloque de Python en lugar de `probInclusionPPT`;
+    - el sistemático en orden alfabético y la advertencia con los dos factores;
+    - 0,045.
+  - M6: objetivo; la lotería con cv; el precio del n aleatorio sin «bien alineadas»; Lohr, ej. 6.14.
+  - M7:
+    - el estorbo es el menor, y los sumandos son una representación;
+    - la regla de Lohr: WR (6.24), 12,3 millones;
+    - la nota de la aproximación WR, con 1,53;
+    - §6.4.1.
+  - M8: 13,8 / 200 / 99,95 %; Basu, en §6.7.
+  - M9: classpps sin reemplazo, con ψ = π/5 (6.30); «exactamente»; la razón máx./mín.; n/N = 1/3; §6.3 y §6.4.3–6.4.4.
+  - M10: la curva con su valle.
+  - M11: la intro de los ejercicios y el ejercicio 4 (enunciado, pista y solución, 1,04).
+  - `ensambla_cap6.py`: «Hansen-Hurwitz».
+- **`simuladores.js`.**
+  - Ayudantes `ejesEnEspanol`, `topeBonito`, `comaEnDeslizadores`, más `ejeLogEnEspanol` y `topeLog`; `fmtNum` con
+    U+202F.
+  - Los 10 simuladores y los 2 gráficos del quiz llevan ejes en formato español y topes redondos.
+  - Rótulos:
+    - M8 en 10ⁿ, con la barra del elefante rotulada;
+    - M10 en ×10¹²;
+    - M4 en dos líneas, con la muestra y su HT;
+    - M9 numéricos, que giran si no caben.
+  - Coma en los deslizadores de M6, M8 y M10.
+  - Lecturas:
+    - M1, la más alejada de t, con la línea en 300;
+    - M6, cv y P(k−1 ≤ n ≤ k+1);
+    - M8, el aporte con 2 decimales.
+  - Tabla y diagrama, corregidos; glosario: pps, Poisson, s_u² y `\text{certainty psu}`.
+  - Preguntas: la 3 (escenario y retroalimentación), la 5 (alfabético), la 7 (retroalimentación y §6.4.1), la 9
+    (retroalimentación) y la 11 (enunciado, retroalimentaciones, 36 %, 0,045).
+- **Verificado.**
+  - Reensamblado byte a byte; `genera_cap6.R` se reproduce.
+  - `verifica_bloques --prosa`: **322/322** y **62** de prosa, 0 sin respaldo (eran 315 y 53).
+    - Entra en `cifras_prosa.json` el «12,3» (millones), como el 11,7 y el 70,5.
+    - Todo el sitio: 0 sin respaldo.
+  - `verifica_referencias --anota`: 11 nuevas, revisadas una a una.
+  - `verifica_publicado --local`: R (19) y Python (5) arrancan.
+  - **Los 24 bloques publicados, ejecutados en una carpeta sin `precalculo/`: R y Python salen con 0.** Es la prueba
+    que `verifica_publicado` no hace, porque corre desde la raíz.
+  - `node --check`: OK.
+  - En el navegador (servidor propio en el puerto 8781; el 8767 era de otra sesión):
+    - 0 errores de consola y 0 `.katex-error` en los 11 módulos (257 fórmulas);
+    - 26 estados extremos de los simuladores sin NaN ni ∞;
+    - a 1280 y 375 px, sin desborde.
+    
+    Al verlo se ajustaron los rótulos de M4 (se pisaban a 375 px) y los de M9 (giran).
+- **README:** 2 806 → **2 813** cifras contrastadas; `cuenta_sitio.py`, 0 desajustadas.
+- **Lo que no se tocó:**
+  - las mejoras M-1 a M-25 y las dudas D-1 a D-4 del informe;
+  - los seis defectos de la plantilla común;
+  - el JSON que lee el cap. 7, el mismo defecto que C12;
+  - el `fmtNum` del cap. 5, que tiene el mismo espacio normal que C32.
+- **Commit en la rama `claude/nifty-wu-2357d7`, sin push ni publicación.**
