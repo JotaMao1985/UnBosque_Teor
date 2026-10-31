@@ -1,6 +1,6 @@
 
   <!-- ============================================================ -->
-  <!-- MÓDULO 7 · Estimar la varianza: SYG y el cuello de botella    -->
+  <!-- MÓDULO 7 · Estimar la varianza del HT                         -->
   <!-- ============================================================ -->
   <template id="module-7">
     <div class="animate-fade-in">
@@ -8,23 +8,40 @@
         <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
           <span>Módulo 7</span>
         </div>
-        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estimar la varianza:
-          $\pi_{kl}$ como cuello de botella <span class="text-gray-400 font-normal text-2xl">/ Variance estimation</span></h2>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Estimar la varianza del
+          HT <span class="text-gray-400 font-normal text-2xl">/ Variance estimation</span></h2>
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Calcular los dos estimadores de varianza del HT
-              sobre un πPT real de Lohr — y ver con datos por qué el de Sen–Yates–Grundy es el que se usa.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Distinguir la varianza del HT de su estimador,
+              conocer las dos formas del estimador cuando se tienen las probabilidades conjuntas $\pi_{kl}$, y las
+              aproximaciones que se usan, casi siempre, cuando no se tienen.</p>
           </div>
         </div>
       </div>
 
-      <p>Estimar $\hat{t}_\pi$ pide solo las $\pi_k$ de la muestra. Estimar su <strong>varianza</strong> pide las
-        conjuntas $\pi_{kl}$ de cada par muestreado — y ahí se atasca todo: en el πPT sistemático muchas
-        $\pi_{kl}$ son cero (no hay estimador insesgado), y en los diseños que sí las tienen, calcularlas es lo
-        más caro del capítulo. Primero, el caso pequeño donde todo se ve — las cuatro tiendas del módulo 4, con
-        su matriz completa:</p>
+      <h3>Por qué hacen falta las $\pi_{kl}$</h3>
+
+      <p>El HT es una suma de términos $(y_k/\pi_k)\,I_k$, uno por unidad de la población. Su varianza incluye las
+        covarianzas entre las indicadoras $I_k$ e $I_l$, que son $\Delta_{kl} = \pi_{kl} - \pi_k\pi_l$, donde
+        $\pi_{kl}$ es la probabilidad de que $k$ y $l$ salgan juntas. Por eso estimar el total pide solo las
+        $\pi_k$, pero estimar su varianza pide además las $\pi_{kl}$ de cada par.</p>
+
+      <div class="formula">
+        <p class="formula-titulo">La varianza del HT, de dos maneras</p>
+        $$V(\hat{t}_\pi) = \sum_{k \in U}\sum_{l \in U} \Delta_{kl}\,\frac{y_k}{\pi_k}\,\frac{y_l}{\pi_l}$$
+        $$V(\hat{t}_\pi) = \sum_{k < l} (\pi_k\pi_l - \pi_{kl})\left(\frac{y_k}{\pi_k} - \frac{y_l}{\pi_l}\right)^2$$
+        <p style="margin-bottom:0;">La primera es la forma HT; la segunda, la de Sen–Yates–Grundy (SYG), vale para
+          los diseños de tamaño fijo. Son la misma varianza escrita de dos maneras. Con tamaño fijo, si $k$ entra en la
+          muestra quedan menos cupos para $l$, así que $\pi_{kl}$ suele ser menor que $\pi_k\pi_l$: la diferencia mide
+          cuánto se excluyen las dos unidades. En Poisson vale 0.</p>
+      </div>
+
+      <h3>La varianza, con las cuatro tiendas</h3>
+
+      <p>El diseño del módulo 4 da su matriz de $\pi_{kl}$ por enumeración. Con ella, la forma SYG reproduce la
+        varianza exacta, 15 026:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La matriz pi_kl del diseño pequeño y el SYG">
@@ -37,13 +54,11 @@
 
       <div class="simulador" data-simulador="syg-pares">
         <h4><i class="fas fa-table-cells" aria-hidden="true"></i> La varianza, par por par</h4>
-        <p class="simulador-intro">La forma SYG es una suma sobre los 6 pares: cada término lleva el «estorbo»
-          $\pi_k\pi_l - \pi_{kl}$ y la discrepancia $(y_k/\pi_k - y_l/\pi_l)^2$. Recorre los pares con el
-          deslizador: la lectura muestra las tres piezas y la barra resaltada, cuánto aporta ese par a
-          $V = 15\,026$. Los pares con D concentran casi todo, y no por el estorbo —el suyo es el menor de los
-          seis— sino por la discrepancia: $y_D/\pi_D$ queda lejísimos de las demás. Ojo con leer los sumandos como
-          «culpables»: son una forma de escribir $V$ entre varias. La del módulo 4, $p(s)(\hat{t}_s - t)^2$,
-          reparte la misma $V$ y carga las tres cuartas partes a las muestras <em>sin</em> D.</p>
+        <p class="simulador-intro">Cada barra es lo que aporta un par a la varianza en forma SYG: el producto de
+          $\pi_k\pi_l - \pi_{kl}$ por $(y_k/\pi_k - y_l/\pi_l)^2$. Recorre los pares con el deslizador; la lectura da
+          los dos factores y su producto. Los pares con D aportan casi todo, y no porque su primer factor sea grande
+          (en los tres pares con D es menor que en los otros tres), sino porque $y_D/\pi_D$ queda muy lejos de los
+          demás cocientes.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Aporte de cada par a la varianza SYG del diseño</p>
         <div class="grafico-wrapper" style="height:240px;">
@@ -52,9 +67,55 @@
         <div class="simulador-lectura"></div>
       </div>
 
-      <p>Y ahora con datos reales: <code>agpps</code> es la muestra πPT <strong>de verdad</strong> que Lohr sorteó
-        — 15 condados con π proporcional a <code>acres87</code> — y trae de fábrica lo que casi ningún archivo
-        trae: la matriz 15 × 15 de probabilidades conjuntas. Se pueden montar los dos estimadores rivales:</p>
+      <p class="text-sm">Estos sumandos son una manera de repartir la varianza entre pares, no la única. La del
+        módulo 4, $\sum_s p(s)\,(\hat{t}_s - t)^2$, la reparte entre muestras y carga las tres cuartas partes a las
+        que no tienen a D.</p>
+
+      <h3>De la varianza a su estimador</h3>
+
+      <p>Con las cuatro tiendas se conocen todas las ventas, así que la fórmula da la varianza verdadera. En una
+        encuesta solo se ve la muestra, y la varianza hay que <em>estimarla</em> con los pares que salieron. Cada par
+        $(k, l)$ sale con probabilidad $\pi_{kl}$, así que su término se divide entre $\pi_{kl}$: es el HT aplicado a
+        los pares.</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Los dos estimadores de la varianza</p>
+        $$\widehat{V}_{HT} = \sum_{k \in s}\sum_{l \in s} \frac{\Delta_{kl}}{\pi_{kl}}\,\frac{y_k}{\pi_k}\,\frac{y_l}{\pi_l}$$
+        $$\widehat{V}_{SYG} = \sum_{\substack{k < l \\ k, l \in s}} \frac{\pi_k\pi_l - \pi_{kl}}{\pi_{kl}}
+        \left(\frac{y_k}{\pi_k} - \frac{y_l}{\pi_l}\right)^2$$
+        <p style="margin-bottom:0;">En la primera, el término de $k = l$ es $(1 - \pi_k)\,y_k^2/\pi_k^2$. Los dos
+          son insesgados si todas las $\pi_{kl} > 0$. El de SYG no puede salir negativo si se cumple la condición de
+          Yates–Grundy, $\pi_k\pi_l \ge \pi_{kl}$ para todos los pares, porque entonces todos sus términos son
+          positivos o cero.</p>
+      </div>
+
+      <p>El bloque calcula los dos estimadores en cada una de las 6 muestras posibles de las tiendas:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Los dos estimadores de la varianza en las seis muestras">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R6b⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La forma HT sale <strong>negativa</strong> en tres muestras (AB, AC y BC: −2342, −1241 y −1360), y una
+        varianza negativa no tiene sentido. La de SYG nunca. Las dos son insesgadas: promediadas con las
+        probabilidades de las muestras, dan la varianza verdadera, 15 026.</p>
+
+      <h3>Con datos reales: <code>agpps</code></h3>
+
+      <div class="note">
+        <p><strong>Los datos: <code>agpps</code> (Lohr, ej. 6.10).</strong> Quince de los 3078 condados de EE. UU.,
+          sorteados con $\pi$ proporcional a los acres sembrados en 1987 (<code>acres87</code>). Se estima el total de
+          acres sembrados en 1992 (<code>acres92</code>). El archivo trae algo que casi ningún archivo trae: la matriz
+          15 × 15 de las $\pi_{kl}$ (las columnas <code>JtProb</code>).</p>
+      </div>
+
+      <p>Con la matriz se pueden calcular las dos formas. El bloque añade una tercera, la aproximación con reemplazo,
+        que no usa ninguna $\pi_{kl}$ y se explica más abajo; después, <code>survey</code> reproduce las dos
+        primeras:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="agpps: forma HT y forma SYG a mano">
@@ -74,36 +135,92 @@
         </div>
       </div>
 
-      <div class="warning">
-        <p><strong>Mismos datos, mismas $\pi_{kl}$: ee de 11,7 millones o de 70,5 millones.</strong> Los dos
-          estimadores apuntan a la misma varianza teórica, pero la forma HT suma términos enormes de signos
-          opuestos que casi se cancelan — cualquier temblor la desestabiliza, y puede llegar a dar
-          <em>negativa</em>. La forma SYG suma cuadrados y es más estable: con tamaño fijo y
-          $\pi_k\pi_l \ge \pi_{kl}$ (la condición de Yates–Grundy del capítulo 2, que agpps cumple) no puede
-          salir negativa. Lohr la prefiere a la forma HT, pero su recomendación general es otra: la
-          <strong>aproximación con reemplazo</strong> (su ec. 6.24), que no pide ninguna $\pi_{kl}$. El bloque
-          la calcula: 12,3 millones, cerca de SYG porque aquí $n/N$ es pequeño. Donde SYG no aplica —diseños de
-          tamaño variable, como Poisson— se usa la forma HT, que en Poisson se reduce a la fórmula del
-          módulo 6.</p>
+      <p>El total estimado es de 936 millones de acres. Con las mismas $\pi_{kl}$, la forma SYG da un error estándar
+        de 11,7 millones, poco más del 1 % del total, y la forma HT, de 70,5 millones, más del 7 %. La forma HT suma
+        términos grandes de signos opuestos que casi se cancelan, y por eso es inestable; la de SYG suma términos
+        positivos, y <code>agpps</code> cumple la condición de Yates–Grundy. La aproximación con reemplazo da 12,3
+        millones, cerca de SYG.</p>
+
+      <h3>Cuando no hay $\pi_{kl}$: la aproximación con reemplazo</h3>
+
+      <p>Casi ningún diseño real da sus $\pi_{kl}$, y el sistemático ni siquiera las tiene todas positivas. La salida
+        más usada es tratar la muestra como si fuera con reemplazo. Por el módulo 4, $\pi_k \approx n\,\psi_k$, así
+        que se toma $\psi_k = \pi_k/n$ y cada unidad da una estimación del total, $z_k = y_k/\psi_k = n\,y_k/\pi_k$.
+        La varianza se estima como en el Hansen–Hurwitz del módulo 2, $\widehat{V} = s_z^2/n$. Las unidades
+        forzosas se dejan fuera, porque no aportan varianza; así lo hizo el bloque del módulo 5.</p>
+
+      <p>Solo pide las $\pi$ de primer orden, y es conservadora: sobrestima la varianza, porque ignora que sin
+        reemplazo una unidad no se repite. El exceso crece con $n/N$. Lohr la recomienda en general (su ec. 6.24).
+        Con los estados ($n/N = 0{,}2$), su esperanza es 1,53 veces la varianza verdadera del sistemático; con
+        cientos de UPM, la diferencia se vuelve despreciable.</p>
+
+      <h3>La aproximación de Hájek–Deville</h3>
+
+      <p>Gutiérrez (Resultado 4.4.4) presenta una aproximación más fina, que también usa solo las $\pi$ de primer
+        orden. Corrige el defecto de la anterior: una unidad con $\pi_k$ cerca de 1 casi no aporta varianza.</p>
+
+      <div class="formula">
+        <p class="formula-titulo">Estimador de Deville</p>
+        $$\widehat{V}(\hat{t}_\pi) = \sum_{k \in s} c_k \left(\frac{y_k}{\pi_k} - \hat{R}\right)^2, \qquad
+        c_k = (1 - \pi_k)\,\frac{n}{n - 1}$$
+        $$\hat{R} = \frac{\sum_{l \in s} c_l\,y_l/\pi_l}{\sum_{l \in s} c_l}$$
+        <p style="margin-bottom:0;">$\hat{R}$ es el promedio de los cocientes $y_k/\pi_k$ de la muestra, ponderado
+          por los $c_k$. El estimador mide cuánto se aleja cada cociente de ese promedio: es la idea central del
+          capítulo convertida en estimador. El factor $1 - \pi_k$ es el mismo de la varianza de Poisson (módulo 6), y
+          hace que una unidad con $\pi_k$ cerca de 1 casi no cuente.</p>
       </div>
 
+      <p>La <strong>aproximación de Hájek</strong> es la misma cuenta hecha sobre toda la población, con
+        $b_k = N\,\pi_k(1 - \pi_k)/(N - 1)$ en lugar de $c_k$: da la varianza que tendría el HT, sin necesidad de
+        ninguna $\pi_{kl}$. Las dos funcionan bien en los diseños de alta entropía del módulo 5, como los de Brewer,
+        Tillé o máxima entropía.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Las aproximaciones de Hájek y Deville">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R23⟧</code></pre>
+        </div>
+      </div>
+
+      <p><strong>La aproximación.</strong> Con los estados, la de Hájek da 726 308, frente a la varianza exacta del
+        diseño de máxima entropía, 723 607: una diferencia del 0,4 %, sin usar ninguna $\pi_{kl}$.</p>
+
+      <p><strong>El estimador.</strong> Sobre el sistemático alfabético, el estimador de Deville vale en promedio
+        1,23 veces la varianza verdadera, frente a 1,53 de la aproximación con reemplazo. Sigue sobrestimando, porque
+        el orden de la lista le da al sistemático menos varianza que a un diseño de alta entropía, pero bastante menos.
+        En <code>agpps</code>, Deville da un error estándar de 12,23 millones, entre SYG y la aproximación con
+        reemplazo. <code>sampling::varest</code> y <code>survey</code> con <code>pps = "brewer"</code> usan variantes
+        de la misma idea (otro factor en lugar de $n/(n-1)$, otro centro) y coinciden en esas cifras.</p>
+
+      <p>En resumen:</p>
+
+      <table>
+        <caption class="sr-only">Qué estimador de la varianza usar en cada caso</caption>
+        <thead>
+          <tr><th scope="col">Situación</th><th scope="col">Estimador de la varianza</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Tamaño fijo y $\pi_{kl}$ conocidas</td><td>SYG</td></tr>
+          <tr><td>Tamaño aleatorio, como en Poisson</td><td>Forma HT (en Poisson, la fórmula del módulo 6)</td></tr>
+          <tr><td>$\pi_{kl}$ desconocidas, el caso habitual</td><td>Aproximación con reemplazo, o la de
+            Hájek–Deville</td></tr>
+        </tbody>
+      </table>
+
       <div class="note">
-        <p><strong>Cuando no hay $\pi_{kl}$: las aproximaciones honestas.</strong> El πPT sistemático del módulo 5
-          no tiene estimador insesgado, y la salida universal es la <strong>aproximación con reemplazo</strong>
-          que calcula el bloque del módulo 5: tomar $\psi_k = \pi_k/n$ (sin las unidades forzosas, que no aportan varianza) y
-          tratar los $z_k = y_k/\psi_k = n\,y_k/\pi_k$ como las extracciones de Hansen–Hurwitz. Solo pide π de
-          primer orden, y es conservadora: sobreestima, tanto más cuanto mayor es $n/N$. Con los estados
-          ($n/N = 0{,}2$), la varianza estimada vale en promedio 1,53 veces la verdadera (cálculo exacto sobre
-          todas las muestras posibles del sistemático); con cientos de UPM, la diferencia se esfuma. Las variantes afinadas llevan nombre propio —
-          Hartley–Rao, Brewer — y todas son eso: <em>aproximaciones declaradas</em>, no fórmulas exactas. El
-          capítulo 7 vive de esta idea: las encuestas reales casi nunca conocen sus $\pi_{kl}$.</p>
+        <p><strong>Hacia el capítulo 7.</strong> Las encuestas reales casi nunca conocen sus $\pi_{kl}$. Por eso su
+          varianza se estima con aproximaciones como estas, y el capítulo 7 se apoya en la primera: tratar las UPM
+          como si se hubieran sorteado con reemplazo. Lo hace el capítulo 7 (módulo 1) al estimar la varianza con
+          los totales de las UPM, comparados dentro de su estrato.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Lohr — §6.4.1: los dos estimadores (ecs. 6.22 y 6.23) y la aproximación con reemplazo (6.24); agpps es su ejemplo 6.10.</li>
-          <li>Gutiérrez — §4.5: SYG en el marco π; Särndal et al. §2.8 para la teoría fina.</li>
+          <li>Gutiérrez — Resultado 4.3.1: la varianza del HT y su estimador escritos con $\Delta_{kl}$, la forma SYG; §4.4.3: la aproximación de Hájek–Deville, que no pide $\pi_{kl}$. Särndal et al. §2.8 para la teoría fina.</li>
           <li>Este material — cap. 2, módulo 3: donde SYG apareció por primera vez.</li>
         </ul>
       </div>
@@ -125,17 +242,40 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Diseccionar el modo de falla del π-estimador —
-              $\pi_k$ pequeño con $y_k$ grande — y sacar las reglas de diseño que lo previenen.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Entender cómo falla el estimador de Horvitz–Thompson
+              cuando una unidad con un valor grande tiene una probabilidad de inclusión pequeña, y qué decisiones de
+              diseño lo evitan.</p>
           </div>
         </div>
       </div>
 
-      <p>El HT es insesgado siempre; <em>bien portado</em>, no. Su talón de Aquiles está a la vista en la fórmula
-        de Poisson: cada unidad aporta $(1/\pi_k - 1)\,y_k^2$ a la varianza. Una unidad con $y_k$ grande y
-        $\pi_k$ chico es una bomba: si sale, su $y_k/\pi_k$ dispara el estimador hacia arriba; si no sale — que
-        es casi siempre —, lo deja corto. La población sintética del precálculo lo escenifica: 20 negocios con π
-        proporcional al área, y un «elefante» con área mínima y el 82 % de las ventas.</p>
+      <p>En el módulo 5, el πPT perdió con <code>waterarea</code> por un solo estado, Alaska: poca población, así
+        que una $\pi$ pequeña (0,023), y el 36 % del agua del país. El HT es insesgado siempre, pero eso no impide que
+        su varianza sea enorme. Este módulo muestra por qué.</p>
+
+      <h3>El mecanismo, en una fórmula</h3>
+
+      <p>Con Poisson la varianza del HT tiene la fórmula más simple del capítulo (módulo 6), y deja ver el problema
+        término a término:</p>
+
+      $$V(\hat{t}_\pi) = \sum_{k \in U}\left(\frac{1}{\pi_k} - 1\right) y_k^2.$$
+
+      <p>Cada unidad aporta $(1/\pi_k - 1)\,y_k^2$. Si $\pi_k$ es pequeña y $y_k$ grande, ese término crece sin
+        tope; si $\pi_k = 1$, vale cero. Con tamaño fijo la fórmula es otra, pero el problema es el mismo.</p>
+
+      <h3>Un ejemplo: el elefante</h3>
+
+      <p>El nombre viene de un ejemplo famoso de Basu (1971), que Lohr cuenta en su §6.7. Un dueño de circo quiere
+        estimar el peso total de sus 50 elefantes pesando uno solo. Su estadístico propone sortear el elefante mediano
+        con probabilidad 99/100 y cada uno de los otros 49 con 1/4900; en total, $0{,}99 + 49/4900 = 1$. El total
+        buscado es unas 50 veces el peso de un elefante. Si sale el mediano, el HT da 100/99 veces su peso, casi 50
+        veces menos de lo que debería; si sale otro, 4900 veces su peso, casi 100 veces más. El estimador es
+        insesgado, y absurdo con cualquier muestra.</p>
+
+      <p>El bloque construye otro ejemplo con la misma lógica: una población simulada de 20 negocios cuyas ventas
+        son proporcionales a su área, salvo una: el «elefante», con el área más pequeña y el 82 % de las ventas. Es la tienda D del módulo 1 al revés:
+        allí el área anticipaba las ventas; aquí las contradice. Con $\pi$ proporcional al área y $n = 5$, al elefante
+        le toca $\pi = 0{,}0649$:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La curva de la varianza explosiva">
@@ -146,14 +286,17 @@
         </div>
       </div>
 
+      <p>El HT oscila entre dos mundos. El 93,5 % de las veces el elefante no sale, y el HT solo ve, más o menos, el
+        resto de las ventas: unas 1936 de un total de 10 726. Cuando sale, su término $y/\pi$ vale 135 366, más de doce
+        veces el total. En promedio da el total, pero casi nunca se acerca a él.</p>
+
       <div class="simulador" data-simulador="explosiva">
         <h4><i class="fas fa-bomb" aria-hidden="true"></i> El elefante y su π</h4>
-        <p class="simulador-intro">Cada barra es el aporte exacto $(1/\pi_k - 1)\,y_k^2$ de un negocio a la
-          varianza (escala logarítmica); la naranja es el elefante. Mueve su $\pi$ — de la que le tocaría por
-          área (0,065) hacia abajo o hacia arriba — y mira la lectura: con $\pi = 0{,}005$ la varianza total es
-          13,8 veces la de su π de área, y unas 200 veces la que tendría con $\pi = 0{,}5$ (el bloque de arriba).
-          Fíjate en que el elefante pone el 99,95 % de la varianza ya con su π de área: la bomba estaba armada
-          desde el principio, y bajar la π solo la agrava. Subirla hacia la inclusión forzosa la desactiva.</p>
+        <p class="simulador-intro">Cada barra es lo que aporta un negocio a la varianza, $(1/\pi_k - 1)\,y_k^2$; la
+          naranja es el elefante. El eje es logarítmico: cada marca multiplica por 10. Con la $\pi$ que le toca por su
+          área (0,065), el elefante ya pone el 99,95 % de la varianza. Mueve su $\pi$: bajarla a 0,005 multiplica la
+          varianza total por 13,8, y la deja unas 200 veces por encima de la que tendría con $\pi = 0{,}5$. Subirla
+          la reduce, y con $\pi = 1$ su término desaparecería.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Aporte de cada unidad a $V$ bajo Poisson (escala log)</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -162,21 +305,24 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <h3>Cómo se evita</h3>
+
       <div class="warning">
-        <p><strong>Las tres defensas, en orden de uso.</strong> (1) <em>Tamaños al día:</em> el elefante nace de
-          una medida de tamaño desactualizada — el negocio creció y su $x_k$ no. (2) <em>Inclusión forzosa:</em>
-          ante la sospecha, $\pi_k = 1$ y esa unidad deja de generar azar (módulo 5). (3) <em>Recorte de
-          pesos:</em> si el elefante ya salió en la muestra con un peso enorme, recortarlo cambia sesgo por
-          varianza — es una decisión del capítulo 7, no de este. Lo que <strong>no</strong> es defensa: eliminar
-          la observación «rara». Esa unidad es legítima; el problema fue el diseño que le dio π chica.</p>
+        <p><strong>Tres defensas, según el momento.</strong></p>
+        <ol style="margin-bottom:0.5rem;">
+          <li><strong>Antes de muestrear: tamaños al día.</strong> El elefante suele nacer de una medida de tamaño
+            desactualizada: el negocio creció y su $x_k$ no.</li>
+          <li><strong>Al diseñar: inclusión forzosa.</strong> Ante la sospecha, $\pi_k = 1$, y esa unidad deja de
+            aportar varianza (módulo 5).</li>
+          <li><strong>Después: recortar el peso.</strong> Si el elefante ya salió con un peso enorme, se le puede
+            poner un tope, a cambio de un pequeño sesgo. El capítulo 7 lo trata.</li>
+        </ol>
+        <p style="margin-bottom:0;">Lo que <strong>no</strong> es una defensa: borrar la observación «rara». Esa
+          unidad es legítima; el problema fue el diseño que le dio una $\pi$ pequeña.</p>
       </div>
 
-      <div class="note">
-        <p><strong>El mismo fantasma ronda la IA.</strong> En muestreo por importancia (módulo 10), los pesos
-          $w = f/\psi$ con $\psi$ chica en zonas de $|y|$ grande explotan igual — es el problema de los
-          <em>importance weights</em> de colas pesadas en RL <em>off-policy</em> y en la evaluación de políticas.
-          La misma medicina también: recortar o suavizar pesos, aceptando algo de sesgo por mucha estabilidad.</p>
-      </div>
+      <p>El mismo problema aparece en ciencia de datos cuando se usan pesos $1/\psi$ con $\psi$ muy pequeñas; el
+        módulo 10 lo retoma.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -203,24 +349,77 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Armar el diseño de las encuestas de hogares reales
-              — UPM con PPT, submuestreo fijo — y descubrir por qué produce pesos exactamente iguales.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Armar el diseño de muchas encuestas reales —UPM
+              sorteadas con PPT y el mismo número de unidades en cada una— y ver por qué todas las unidades acaban con
+              el mismo peso.</p>
           </div>
         </div>
       </div>
 
-      <p>Este módulo junta el capítulo 5 con este: conglomerados <em>y</em> probabilidades desiguales. El
-        capítulo 5 cerró con una injusticia — la escuela de 367 estudiantes salía con la misma probabilidad que
-        la de 109, y sus estudiantes acababan con π distintas y pesos dispares. La cura es sortear las UPM
-        <strong>con PPT</strong>:</p>
+      <p>Este módulo junta el capítulo 5 con este: conglomerados <em>y</em> probabilidades desiguales. En el
+        capítulo 5, las escuelas se sorteaban con la misma probabilidad y se entrevistaba el mismo número de
+        estudiantes en cada una. Así, un estudiante de una escuela grande tenía menos probabilidad de salir que uno de
+        una escuela pequeña, y los pesos quedaban muy desiguales. La solución es sortear las UPM <strong>con
+        PPT</strong>:</p>
 
       <div class="diagrama-diseno" data-diagrama="ppt-dos-etapas"></div>
 
-      <p>El laboratorio es <code>classpps</code> (Lohr, ej. 6.11): 15 clases universitarias, de las que Lohr
-        sorteó 5 <strong>sin reemplazo</strong>, con $\pi_i = 5M_i/647$ (salieron la 1, la 4, la 9, la 10 y la 14), y
-        4 estudiantes por clase. Para estimar se analiza <em>como si</em> fuera con reemplazo, con
-        $\psi_i = \pi_i/5 = M_i/647$: los pesos son los mismos, y el estimador es el Hansen–Hurwitz del módulo 2
-        aplicado a los <em>totales estimados</em> de cada clase (Lohr, ec. 6.30):</p>
+      <div class="note">
+        <p><strong>Los datos: <code>classpps</code> (Lohr, ej. 6.11).</strong> Las 15 clases de estadística de una
+          universidad, con $K = 647$ estudiantes en total; la clase $i$ tiene $M_i$ estudiantes. Lohr sorteó $n = 5$
+          clases sin reemplazo con $\pi_i = 5M_i/647$, y salieron la 1, la 4, la 9, la 10 y la 14; no dice con qué
+          algoritmo, y con esas $\pi$ serviría cualquiera de los del módulo 5. En cada una
+          sorteó $m = 4$ estudiantes y les preguntó cuántas horas estudian estadística (<code>hours</code>).</p>
+      </div>
+
+      <h3>La probabilidad de cada estudiante</h3>
+
+      <p>Un estudiante sale si sale su clase y si después sale él dentro de ella. Su probabilidad es el producto de
+        las dos etapas:</p>
+
+      $$\frac{5\,M_i}{647} \times \frac{4}{M_i} = \frac{20}{647} = 0{,}0309.$$
+
+      <p>El $M_i$ se cancela: una clase grande tiene más probabilidad de salir, y dentro de ella cada estudiante
+        tiene menos, en la misma proporción. Todos los estudiantes del marco tienen la misma probabilidad, y por eso
+        el mismo peso, $647/20 = 32{,}35$.</p>
+
+      <div class="definition">
+        <h4>Diseño autoponderado</h4>
+        <p style="margin-bottom:0;">Un diseño es <strong>autoponderado</strong> si todas las unidades observadas
+          tienen el mismo peso. Sortear las UPM con PPT y el mismo número $m$ de unidades en cada una lo consigue:
+          $w = \dfrac{K}{n M_i}\cdot\dfrac{M_i}{m} = \dfrac{K}{nm}$. El primer factor es el inverso de la
+          probabilidad de la clase; el segundo, el de la probabilidad del estudiante dentro de ella. Con un peso
+          común, la media estimada es la media simple de los datos.</p>
+      </div>
+
+      <p>Por eso este esquema es tan común en las encuestas grandes que se hacen en persona. Lohr (ej. 6.12) describe
+        la encuesta de seroprevalencia de COVID-19 en España: secciones censales sorteadas con PPT y 24 hogares en
+        cada una. Dentro de cada estrato la muestra quedó aproximadamente autoponderada, y cada sección dio la misma
+        carga de trabajo, conocida de antemano. Gutiérrez (§7.3.1) da el mismo motivo: fijar el número de entrevistas
+        por UPM es una forma de controlar el trabajo de campo.</p>
+
+      <h3>El estimador y su varianza</h3>
+
+      <p>Las clases se sortearon sin reemplazo, pero se analizan <em>como si</em> fuera con reemplazo: cada clase se
+        trata como una extracción del módulo 2, con probabilidad $\psi_i = \pi_i/5 = M_i/647$. Es la aproximación
+        $\pi \approx n\,\psi$ de los módulos 4 y 7, y su ventaja es que la varianza se estima con la dispersión
+        entre clases, sin ninguna $\pi_{kl}$.</p>
+
+      <p>Cada clase da su propia estimación del total de horas de todo el marco. Primero se estima el total de la
+        clase, $\hat{t}_i = M_i\,\bar{y}_i$, y después se expande con $\psi_i$:</p>
+
+      $$z_i = \frac{\hat{t}_i}{\psi_i}, \qquad \hat{t} = \frac{1}{5}\sum_{i} z_i, \qquad
+      \widehat{V}(\hat{t}) = \frac{s_z^2}{5}.$$
+
+      <p><strong>A mano, con la clase 14.</strong> Tiene $M_{14} = 100$ estudiantes, y los 4 de la muestra estudian
+        en promedio $\bar{y}_{14} = 2{,}0$ horas. El total estimado de la clase es $\hat{t}_{14} = 200$, y
+        con $\psi_{14} = 100/647 = 0{,}155$, la estimación del total de horas de todo el marco que da esta clase es
+        $z_{14} = 1294$. En general, $z_i = M_i\,\bar{y}_i \cdot 647/M_i = 647\,\bar{y}_i$, y el estimador
+        promedia los cinco: $647$ por la media de las cinco $\bar{y}_i$, que es 3,45.</p>
+
+      <p>Los $z_i$ varían por dos razones: qué clase salió (la primera etapa) y qué 4 estudiantes salieron dentro de
+        ella, que deciden $\bar{y}_i$ (la segunda). La dispersión de los $z_i$ entre clases recoge las dos a la vez,
+        y por eso la varianza de la segunda etapa no necesita un término aparte.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="HH de dos etapas a mano">
@@ -231,6 +430,11 @@
         </div>
       </div>
 
+      <p>El total estimado de horas es 2232,15, con un error estándar de 311,8. Con $n/N = 5/15$, la aproximación
+        con reemplazo probablemente sobrestima la varianza, como advierte Lohr; con cientos de UPM el exceso sería
+        despreciable. El bloque siguiente lo hace con <code>survey</code> y los pesos del archivo, y comprueba que
+        todos valen 32,35:</p>
+
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="survey y el diseño autoponderado">
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
@@ -240,24 +444,12 @@
         </div>
       </div>
 
-      <div class="definition">
-        <h4>Diseño autoponderado</h4>
-        <p style="margin-bottom:0;">Un diseño es <strong>autoponderado</strong> si todas las unidades observadas
-          tienen el mismo peso final. PPT en la primera etapa + número fijo $m$ en la segunda lo consigue por
-          cancelación: $w = \dfrac{K}{n M_i}\cdot\dfrac{M_i}{m} = \dfrac{K}{nm}$ — el $M_i$ se va. Cada
-          estudiante de <code>classpps</code> pesa 32,35, salga de la clase de 22 o de la de 100. La media es
-          entonces exactamente la media simple de los datos, el sueño de cualquier analista — y el estándar de las
-          encuestas de hogares: DANE, INEGI, la GEIH, la ENAHO sortean sus UPM con PPT por esta cancelación.</p>
-      </div>
-
       <div class="simulador" data-simulador="autoponderado">
         <h4><i class="fas fa-balance-scale" aria-hidden="true"></i> La cancelación, en vivo</h4>
-        <p class="simulador-intro">Las barras son los pesos finales de un estudiante de cada clase del marco. En
-          «PPT + m fijo», da igual el tamaño: pesos idénticos. Cambia a «iguales + m fijo» (el diseño ingenuo del
-          capítulo 5) y mira cómo los pesos se disparan con $M_i$ — el estudiante de la clase de 100 pesa 4,5
-          veces el de la de 22, la menor de las cinco sorteadas, y más aún frente a la de 15, la menor del marco:
-          es la razón máx./mín. de la lectura. El deslizador de $m$ muestra que el nivel del peso cambia, pero la igualdad (o su
-          ruptura) no depende de él.</p>
+        <p class="simulador-intro">Las barras son el peso final de un estudiante de cada clase del marco. Con «PPT +
+          m fijo», todas son iguales. Cambia a «iguales + m fijo», el diseño del capítulo 5: los pesos crecen con el
+          tamaño de la clase, y el estudiante de la clase de 100 pesa 4,5 veces el de la de 22. El deslizador de $m$
+          cambia el nivel de los pesos, pero no si son iguales o no.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Peso final por clase del marco, según el diseño de primera etapa</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -267,19 +459,18 @@
       </div>
 
       <div class="note">
-        <p><strong>El «con reemplazo» es una ficción útil.</strong> Ninguna encuesta seria visita dos veces la
-          misma UPM con gusto — pero declarar el diseño como WR permite estimar la varianza con la dispersión de
-          los $z_i$ entre UPM (módulo 2), sin $\pi_{kl}$ de ninguna etapa. Con $n/N$ chico, el sesgo de esa
-          ficción es minúsculo y conservador. Con <code>classpps</code> no lo es ($n/N = 1/3$), y Lohr advierte que
-          su ee probablemente sobreestima. Es la aproximación sobre la que el capítulo 7 construye
-          <em>todo</em> el análisis de encuestas complejas: «ultimate cluster» es su nombre de guerra.</p>
+        <p><strong>Hacia el capítulo 7.</strong> Analizar las UPM como si se hubieran sorteado con reemplazo, y
+          estimar la varianza solo con la dispersión entre ellas, es la base del análisis de las encuestas complejas.
+          En esa literatura se llama «conglomerado último» (<em>ultimate cluster</em>): cada UPM se trata como la
+          unidad final de la muestra. El capítulo 7 (módulo 1) lo usa al estimar la varianza con los totales de las UPM
+          dentro de cada estrato.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.3: dos etapas con reemplazo; §6.4.3–6.4.4: sin reemplazo, con el ejemplo 6.11 (<code>classpps</code>).</li>
-          <li>Gutiérrez — §7.3: diseños de dos etapas con PPT en la primera.</li>
+          <li>Lohr — §6.3: dos etapas con reemplazo; §6.4.3–6.4.4: sin reemplazo, con el ejemplo 6.11 (<code>classpps</code>); ejemplo 6.12: por qué las encuestas grandes en persona sortean sus UPM con pps.</li>
+          <li>Gutiérrez — §7.3.1: diseños autoponderados (πPT en la primera etapa y el mismo número de unidades en la segunda).</li>
           <li>Este material — cap. 5, módulos 2 y 6: la notación y el caso de probabilidades iguales.</li>
         </ul>
       </div>

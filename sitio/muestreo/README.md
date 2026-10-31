@@ -9,9 +9,9 @@ de Lohr, con los datos oficiales de *Sampling: Design and Analysis*.
 
 ## Contenido
 
-Ocho capítulos que cubren las 16 semanas del cronograma. **93 módulos, 70 simuladores,
-136 preguntas de autoevaluación, 41 ejercicios guiados y 215 bloques de código** (165 de R,
-50 de Python) con **2 813 cifras contrastadas contra la salida real**.
+Ocho capítulos que cubren las 16 semanas del cronograma. **93 módulos, 71 simuladores,
+138 preguntas de autoevaluación, 43 ejercicios guiados y 227 bloques de código** (174 de R,
+53 de Python) con **3 132 cifras contrastadas contra la salida real**.
 
 | # | Capítulo | Semanas | Temas | Módulos | Simuladores |
 |---|---|:---:|---|:---:|:---:|
@@ -20,7 +20,7 @@ Ocho capítulos que cubren las 16 semanas del cronograma. **93 módulos, 70 simu
 | 3 | [Estimación de razón y regresión](capitulo-3-razon-y-regresion.html) | 5–6 | Variables auxiliares, razón, sesgo y ECM, regresión, diferencia, dominios, GREG, mediana, formulario, simulacro del quiz | 15 | 9 |
 | 4 | [Muestreo estratificado](capitulo-4-muestreo-estratificado.html) | 7–9 | Estratos y pesos, asignación proporcional, de Neyman y con costos, construcción de estratos, postestratificación, PPT estratificado, muestreo estratificado en machine learning, razón en el estratificado, preparcial del Corte II | 14 | 9 |
 | 5 | [Muestreo por conglomerados](capitulo-5-conglomerados.html) | 10–11 | Conglomerados de igual y distinto tamaño, ICC y efecto de diseño, dos etapas, descomposición de la varianza, asignación bajo presupuesto, datos agrupados en ciencia de datos | 11 | 8 |
-| 6 | [Probabilidades desiguales](capitulo-6-probabilidades-desiguales.html) | 12–13 | Hansen–Hurwitz, métodos acumulativo y de Lahiri, Horvitz–Thompson sin reemplazo, πPT, Poisson, Sen–Yates–Grundy, PPT en dos etapas, muestreo por importancia | 11 | 10 |
+| 6 | [Probabilidades desiguales](capitulo-6-probabilidades-desiguales.html) | 12–13 | Hansen–Hurwitz, métodos acumulativo y de Lahiri, Horvitz–Thompson sin reemplazo, πPT y sus algoritmos (sistemático, Brewer, Sunter, escisión), criterio de Raj, Poisson, Sen–Yates–Grundy y Hájek–Deville, PPT en dos etapas, muestreo por importancia | 11 | 11 |
 | 7 | [Encuestas complejas](capitulo-7-encuestas-complejas.html) | 14 | NHANES y SYC en paralelo, los tres factores del peso, DEFF descompuesto, linealización de Taylor, jackknife, BRR y bootstrap, calibración y raking, el ciclo de diseño | 10 | 9 |
 | 8 | [No respuesta, ponderación e imputación](capitulo-8-no-respuesta-ponderacion.html) | 15–16 | MCAR/MAR/MNAR medidos, la fórmula del sesgo, ajuste por clases de respuesta, calibración contra la ACS, imputación simple y múltiple con reglas de Rubin, R-indicators, taller del proyecto integrador, verificación de salidas de IA | 11 | 8 |
 

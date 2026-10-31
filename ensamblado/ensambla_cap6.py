@@ -77,6 +77,58 @@ def main():
          'learning, survey, sampling, R, Python, Lohr, Gutiérrez, UnBosque">'),
         ('<title>Plantilla de capítulo — Muestreo Estadístico</title>',
          '<title>Capítulo 6 · Probabilidades desiguales — Muestreo Estadístico</title>'),
+        # Tailwind (CDN) inyecta su preflight después de este <style> y, con la
+        # misma especificidad, gana: `p { margin: 0 }` pega los párrafos seguidos
+        # y `h3 { font-size: inherit }` deja los subtítulos como texto normal. La
+        # prosa del cap. 6 va en párrafos cortos con subtítulos (T7.104), así que
+        # se restituyen aquí, solo para los hijos directos del módulo, sin tocar
+        # la plantilla que comparten los demás capítulos.
+        # El preflight también quita número, viñeta y sangría a las listas (los
+        # pasos de los algoritmos parecían párrafos sueltos) y el margen de los
+        # párrafos dentro de las cajas (T7.107). Esas dos reglas van con
+        # especificidad (0,0,2): ganan al preflight (0,0,1) y pierden ante
+        # cualquier clase o estilo en línea, como las de la plantilla. Además,
+        # el `display: flex` de los h3 de la plantilla hace de cada trozo de
+        # texto y cada fórmula un ítem aparte, que a 375 px se parten en
+        # columnas; y las piezas absolutas de KaTeX escapaban del recorte de las
+        # tablas y ensanchaban la página.
+        ('  </style>',
+         '    .animate-fade-in > p {\n'
+         '      margin-bottom: 1rem;\n'
+         '    }\n\n'
+         '    body :where(.definition, .note, .warning, .formula, .ejercicio-guiado, .ejercicio-solucion) p {\n'
+         '      margin-bottom: 0.75rem;\n'
+         '    }\n\n'
+         '    body :where(.animate-fade-in) ul,\n'
+         '    body :where(.animate-fade-in) ol {\n'
+         '      margin-left: 1.5rem;\n'
+         '      margin-bottom: 1.5rem;\n'
+         '    }\n\n'
+         '    body :where(.animate-fade-in) ul {\n'
+         '      list-style-type: disc;\n'
+         '    }\n\n'
+         '    body :where(.animate-fade-in) ol {\n'
+         '      list-style-type: decimal;\n'
+         '    }\n\n'
+         '    .animate-fade-in > h3 {\n'
+         '      display: block;\n'
+         '      font-size: 1.25rem;\n'
+         '      font-weight: 700;\n'
+         '      margin-top: 2rem;\n'
+         '      margin-bottom: 1rem;\n'
+         '    }\n\n'
+         '    .animate-fade-in > h3::before {\n'
+         '      vertical-align: -0.3rem;\n'
+         '      margin-right: 0.5rem;\n'
+         '    }\n\n'
+         '    .animate-fade-in table {\n'
+         '      position: relative;\n'
+         '    }\n\n'
+         '    .glosario-panel td code {\n'
+         '      white-space: normal;\n'
+         '      overflow-wrap: anywhere;\n'
+         '    }\n'
+         '  </style>'),
         ('<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">PLANTILLA BASE •\n'
          '              4 MÓDULOS DE DEMOSTRACIÓN • UNBOSQUE</p>',
          '<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">CAPÍTULO 6 •\n'
@@ -119,17 +171,17 @@ def main():
     course = """    const courseData = {
       title: "Probabilidades desiguales",
       modules: [
-        { id: 1, title: "¿Por qué probabilidades desiguales?", shortTitle: "Por qué", duration: "20 min" },
-        { id: 2, title: "El estimador de Hansen–Hurwitz", shortTitle: "Hansen–Hurwitz", duration: "22 min" },
-        { id: 3, title: "Cómo se sortea: acumulativo y Lahiri", shortTitle: "Selección", duration: "20 min" },
-        { id: 4, title: "Sin reemplazo: Horvitz–Thompson otra vez", shortTitle: "HT sin reemplazo", duration: "22 min" },
-        { id: 5, title: "El diseño πPT y cuándo gana", shortTitle: "πPT", duration: "25 min" },
-        { id: 6, title: "El diseño de Poisson", shortTitle: "Poisson", duration: "20 min" },
-        { id: 7, title: "Estimar la varianza: SYG", shortTitle: "Varianza SYG", duration: "25 min" },
-        { id: 8, title: "Cuándo el HT se comporta mal", shortTitle: "El elefante", duration: "18 min" },
-        { id: 9, title: "PPT en dos etapas", shortTitle: "Dos etapas", duration: "22 min" },
-        { id: 10, title: "Importancia y active learning", shortTitle: "Importancia", duration: "20 min" },
-        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
+        { id: 1, title: "¿Por qué probabilidades desiguales?", shortTitle: "Por qué", duration: "25 min" },
+        { id: 2, title: "El estimador de Hansen–Hurwitz", shortTitle: "Hansen–Hurwitz", duration: "25 min" },
+        { id: 3, title: "Cómo se sortea: acumulativo y Lahiri", shortTitle: "Selección", duration: "22 min" },
+        { id: 4, title: "Sin reemplazo: Horvitz–Thompson otra vez", shortTitle: "HT sin reemplazo", duration: "25 min" },
+        { id: 5, title: "El diseño πPT y cuándo gana", shortTitle: "πPT", duration: "35 min" },
+        { id: 6, title: "El diseño de Poisson", shortTitle: "Poisson", duration: "25 min" },
+        { id: 7, title: "Estimar la varianza del HT", shortTitle: "Varianza del HT", duration: "30 min" },
+        { id: 8, title: "Cuándo el HT se comporta mal", shortTitle: "El elefante", duration: "22 min" },
+        { id: 9, title: "PPT en dos etapas", shortTitle: "Dos etapas", duration: "25 min" },
+        { id: 10, title: "Importancia y active learning", shortTitle: "Importancia", duration: "22 min" },
+        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "45 min" }
       ]
     };
 

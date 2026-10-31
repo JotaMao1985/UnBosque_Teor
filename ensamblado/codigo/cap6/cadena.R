@@ -40,6 +40,17 @@ c(E_ppt = sum(tiendas$psi * est_ppt),
   V_igual = mean((est_igual - t_total)^2))
 #>   E_ppt   V_ppt E_igual V_igual
 #>     300   14248     300  154488
+
+# La varianza, tienda por tienda: cada sumando psi_i * (t_i/psi_i - t)^2
+# mide que tan lejos de 300 queda el t/psi de esa tienda, pesado por su
+# probabilidad de salir. Los cuatro suman 14 248.
+round(tiendas$psi * (est_ppt - t_total)^2)
+#> [1]  961 2450 5547 5290
+
+# Sin los pesos correctos: si se sortea con psi proporcional pero se expande
+# como si las cuatro tuvieran 1/4 (4 * t_i), la esperanza ya no es 300.
+sum(tiendas$psi * est_igual)
+#> [1] 643.25
 # Los dos son insesgados; el proporcional tiene 10.8 veces menos varianza,
 # porque t_i/psi_i es casi constante cuando psi_i acompana al tamano.
 
@@ -57,6 +68,11 @@ c(E_HH = sum(pares$prob * pares$hh),
   V_formula = sum(tiendas$psi * (est_ppt - t_total)^2) / 2)
 #>        E_HH V_enumerada   V_formula
 #>         300        7124        7124
+
+# Con reemplazo la misma tienda puede salir dos veces. Con estas psi no es
+# raro: D sale en las dos extracciones con probabilidad psi_D^2.
+round(tiendas$psi[4]^2, 3)
+#> [1] 0.391
 
 # En la practica no se enumera: se sortea. Una muestra HH concreta:
 set.seed(2026)
@@ -104,8 +120,8 @@ round(rbind(frecuencia = table(sel) / 100000, psi = tiendas$psi), 4)
 
 cat("\n###BLOQUE-R4###\n")
 # Metodo de Lahiri (rechazo): se sortea una tienda al azar y un uniforme
-# contra M_max = 1000; si u * M_max <= M_i, la tienda queda; si no, se
-# repite. No necesita acumular, y acepta con probabilidad proporcional a M_i.
+# contra x_max = 1000; si u * x_max <= x_i, la tienda queda; si no, se
+# repite. No necesita acumular, y acepta con probabilidad proporcional a x_i.
 set.seed(2026)
 B <- 100000
 sorteos <- sample(1:4, B * 3, replace = TRUE)     # de sobra para B aceptados
@@ -116,6 +132,17 @@ round(rbind(frecuencia = table(sel_lahiri) / B, psi = tiendas$psi), 4)
 #>                 1      2      3      4
 #> frecuencia 0.0622 0.1247 0.1870 0.6261
 #> psi        0.0625 0.1250 0.1875 0.6250
+
+# Por que funciona: en un intento, la tienda i sale con prob. (1/4)(x_i/1000),
+# proporcional al area; la suma es la prob. de aceptar a alguien. Entre las
+# aceptadas, cada tienda queda con su psi_i.
+p_intento <- (1 / 4) * tiendas$m2 / 1000
+rbind(en_un_intento = p_intento, entre_aceptadas = p_intento / sum(p_intento))
+#>                   [,1]  [,2]   [,3]  [,4]
+#> en_un_intento   0.0250 0.050 0.0750 0.250
+#> entre_aceptadas 0.0625 0.125 0.1875 0.625
+sum(p_intento)
+#> [1] 0.4
 
 # El precio del rechazo: cuantos intentos por seleccion?
 c(intentos_promedio = round(1 / mean(acepta), 3),
@@ -129,6 +156,8 @@ cat("\n###BLOQUE-R5###\n")
 # Con N = 4 y n = 2 hay 6 muestras; tomemos p(s) proporcional a m2_k + m2_l:
 muestras <- t(combn(4, 2))
 p_s <- tiendas$m2[muestras[, 1]] + tiendas$m2[muestras[, 2]]
+sum(p_s)            # cada tienda esta en 3 parejas: 3 x 1600
+#> [1] 4800
 p_s <- p_s / sum(p_s)
 data.frame(muestra = apply(muestras, 1, function(m) paste(tiendas$tienda[m], collapse = "")),
            p_s = round(p_s, 4))
@@ -154,9 +183,35 @@ round(ht_s, 1)
 c(E_HT = sum(p_s * ht_s), V_HT = sum(p_s * (ht_s - t_total)^2))
 #>     E_HT     V_HT
 #>   300.00 15025.67
-# Insesgado sin reemplazo, para CUALQUIER p(s) con pi_k > 0. Pero ojo: esta
-# V es mas alta que la del HH — este p(s) produce pi_k mas planos que los
-# psi del sorteo proporcional. El HT no hace magia: hereda las pi que le den.
+# Insesgado sin reemplazo, para CUALQUIER p(s) con pi_k > 0. Pero esta V es
+# mas alta que la del HH. La razon, en los cocientes y_k/pi_k que suma el HT:
+# el de D queda lejisimo de los otros tres.
+round(tiendas$ventas / pi_k, 1)
+#> [1]  29.3  48.0  52.4 326.7
+
+cat("\n###BLOQUE-R5b###\n")
+# psi frente a pi, con las mismas tiendas. psi_i: probabilidad de salir en UNA
+# extraccion (suman 1). Con n = 2 extracciones con reemplazo, la tienda i sale
+# en promedio n psi_i veces y esta en la muestra con probabilidad
+# 1 - (1 - psi_i)^2. Al lado, las pi del diseno sin reemplazo de este modulo:
+rbind(psi = tiendas$psi, n_psi = 2 * tiendas$psi,
+      pi_con_reemplazo = round(1 - (1 - tiendas$psi)^2, 4),
+      pi_sin_reemplazo = round(pi_k, 4))
+#>                    [,1]   [,2]   [,3]   [,4]
+#> psi              0.0625 0.1250 0.1875 0.6250
+#> n_psi            0.1250 0.2500 0.3750 1.2500
+#> pi_con_reemplazo 0.1211 0.2344 0.3398 0.8594
+#> pi_sin_reemplazo 0.3750 0.4167 0.4583 0.7500
+# Con psi pequena, n psi y 1 - (1 - psi)^n casi coinciden (A: 0.125 y 0.121);
+# con psi grande, no (D: 1.25 y 0.859). Esa aproximacion, pi = n psi, es la
+# que usan los modulos 7 y 9.
+# En el HH, n psi_i hace el papel de pi_i: sus cocientes t_i/(n psi_i) son
+# mucho mas parecidos entre si que los y_k/pi_k del diseno de este modulo.
+rbind(HH_t_entre_n_psi = tiendas$ventas / (2 * tiendas$psi),
+      M4_y_entre_pi = round(tiendas$ventas / pi_k, 1))
+#>                  [,1] [,2] [,3]  [,4]
+#> HH_t_entre_n_psi 88.0   80 64.0 196.0
+#> M4_y_entre_pi    29.3   48 52.4 326.7
 
 cat("\n###BLOQUE-R6###\n")
 # La varianza del HT necesita las probabilidades CONJUNTAS pi_kl (que ambas
@@ -187,6 +242,51 @@ c(V_SYG = V_syg, V_enumerada = sum(p_s * (ht_s - t_total)^2))
 # Identicas: SYG es la misma varianza reescrita. Su ventaja practica llega
 # al ESTIMARLA (los bloques de agpps, mas abajo): suele ser mas estable que
 # la forma HT.
+
+cat("\n###BLOQUE-R6b###\n")
+# De la varianza a su ESTIMADOR. Con una muestra solo se ven sus pares, y cada
+# termino se divide entre pi_kl, la probabilidad de que ese par salga junto.
+# Las dos formas del estimador en cada una de las 6 muestras posibles:
+est_v <- t(apply(muestras, 1, function(m) {
+  k <- m[1]; l <- m[2]
+  c(SYG = (pi_k[k] * pi_k[l] - pi_kl[k, l]) / pi_kl[k, l] * (y_pi[k] - y_pi[l])^2,
+    forma_HT = (1 - pi_k[k]) * y_pi[k]^2 + (1 - pi_k[l]) * y_pi[l]^2 +
+      2 * (pi_kl[k, l] - pi_k[k] * pi_k[l]) / pi_kl[k, l] * y_pi[k] * y_pi[l])
+}))
+rownames(est_v) <- apply(muestras, 1, function(m) paste(tiendas$tienda[m], collapse = ""))
+round(est_v)
+#>      SYG forma_HT
+#> AB   523    -2342
+#> AC   564    -1241
+#> AD 20093    22860
+#> BC    16    -1360
+#> BD 19414    20182
+#> CD 20258    18952
+# La forma HT sale NEGATIVA en tres muestras; SYG nunca. Y las dos son
+# insesgadas: promediadas con p(s), dan la varianza verdadera.
+round(colSums(p_s * est_v), 2)
+#>      SYG forma_HT
+#> 15025.67 15025.67
+
+cat("\n###BLOQUE-R20###\n")
+# El piPT con las cuatro tiendas y n = 2: pi_k = 2 x_k / 1600. La de D pasa
+# de 1, asi que D entra siempre, y el otro cupo se reparte entre A, B y C en
+# proporcion a su area (x_k / 600).
+round(2 * tiendas$m2 / 1600, 4)
+#> [1] 0.125 0.250 0.375 1.250
+pi_2 <- inclusionprobabilities(tiendas$m2, 2)
+round(pi_2, 4)
+#> [1] 0.1667 0.3333 0.5000 1.0000
+# Tres muestras posibles, {A, D}, {B, D} y {C, D}, cada una con la pi de la
+# acompanante. El HT de cada una, su esperanza y su varianza exactas:
+ht_2 <- tiendas$ventas[4] / pi_2[4] + tiendas$ventas[1:3] / pi_2[1:3]
+ht_2
+#> [1] 311 305 293
+c(E_HT = sum(pi_2[1:3] * ht_2), V_HT = sum(pi_2[1:3] * (ht_2 - t_total)^2))
+#> E_HT V_HT
+#>  300   53
+# 53, frente a 7124 del HH y 15 026 del diseno del modulo 4: ahora los
+# cocientes y_k/pi_k de A, B y C (66, 60 y 48) casi no cambian.
 
 cat("\n###BLOQUE-R7###\n")
 # Un pi-PT real: los 51 estados de EE.UU. (50 + DC), tamano = poblacion 2019,
@@ -235,8 +335,119 @@ c(ee_aprox_WR = sqrt(var(z) / sum(nf)))
 #> ee_aprox_WR
 #>     1004.66
 
+cat("\n###BLOQUE-R21###\n")
+# Antes de muestrear: el criterio de Raj (Gutierrez, Resultado 4.2.7). Con
+# reemplazo, la varianza del PPT y la del MAS con reemplazo, con n extracciones
+# (Gutierrez las llama m), difieren en
+#   V_MRAS - V_PPT = (N^2 / n) Cov(x, y^2 / x),
+# con la covarianza de la poblacion (divisor N). El PPT gana si es positiva.
+pop <- statepps$pop2019
+cov_N <- function(a, b) mean((a - mean(a)) * (b - mean(b)))
+raj <- function(y, n = 10) {
+  N <- length(y); psi <- pop / sum(pop)
+  c(raj = N^2 / n * cov_N(pop, y^2 / pop),
+    V_MRAS_menos_V_PPT = N^2 / n * cov_N(y, y) - sum(psi * (y / psi - sum(y))^2) / n,
+    cor_x_y = cor(pop, y), cor_x_y2x = cor(pop, y^2 / pop),
+    intercepto = unname(coef(lm(y ~ pop))[1]))
+}
+round(raj(statepps$counties), 3)
+#>                raj V_MRAS_menos_V_PPT            cor_x_y          cor_x_y2x
+#>        -405718.893        -405718.893              0.456             -0.171
+#>         intercepto
+#>             43.006
+signif(raj(statepps$waterarea), 4)
+#>                raj V_MRAS_menos_V_PPT            cor_x_y          cor_x_y2x
+#>         -2.376e+12         -2.376e+12          4.511e-02         -1.099e-01
+#>         intercepto
+#>          1.201e+04
+# Con counties la diferencia es negativa: la correlacion con la poblacion es
+# 0.46, pero la que cuenta, la de x con y^2/x, es negativa, y la recta de
+# counties sobre la poblacion corta el eje en 43 condados, lejos del origen.
+
+cat("\n###BLOQUE-R22###\n")
+# El mismo piPT con distintos algoritmos: la varianza exacta del HT con las
+# pi_kl de cada uno (Brewer no las trae: se sortea 4000 veces). California
+# (pi = 1) entra siempre y no aporta varianza: lo que se sortea son 9 de los
+# otros 50.
+cond <- statepps$counties
+libres <- pi_st < 1
+p9 <- pi_st[libres]; c9 <- cond[libres]
+# Varianza exacta del HT dadas las pi_kl del algoritmo (forma SYG):
+v_syg <- function(P2, p, y) {
+  d <- y / p; D <- outer(p, p) - P2; diag(D) <- 0
+  sum(D * outer(d, d, "-")^2) / 2
+}
+# Sistematico: el arranque u decide la muestra; entre dos cortes sale siempre
+# la misma. Se recorren todas, cada una con la longitud de su tramo:
+arranques <- function(p) {
+  acum <- c(0, cumsum(p))
+  cortes <- sort(unique(round(c(0, 1, acum %% 1), 12)))
+  lapply(seq_len(length(cortes) - 1), function(j) {
+    u <- (cortes[j] + cortes[j + 1]) / 2
+    list(s = floor(acum[-1] - u) > floor(head(acum, -1) - u),
+         prob = cortes[j + 1] - cortes[j])
+  })
+}
+v_sis <- function(y, p) sum(sapply(arranques(p), function(a)
+  a$prob * (sum(y[a$s] / p[a$s]) - sum(y))^2))
+orden_pob <- order(statepps$pop2019)
+# La escision de soporte minimo, como la presenta Gutierrez (ej. 4.4.2): la
+# lista se ordena una vez por pi creciente; en cada etapa, las primeras sin
+# decidir van a 0 y las ultimas a 1, y lambda es el mayor valor con el que las
+# pi siguen entre 0 y 1. Devuelve todas sus muestras y sus probabilidades.
+soporte_minimo <- function(p) {
+  o <- order(p); pb <- p[o]; resto <- 1; muestras <- list(); probs <- c()
+  repeat {
+    libres <- which(pb > 1e-9 & pb < 1 - 1e-9)
+    if (length(libres) == 0) break
+    faltan <- round(sum(pb[libres]))
+    a_cero <- head(libres, length(libres) - faltan); a_uno <- tail(libres, faltan)
+    lam <- min(1 - max(pb[a_cero]), min(pb[a_uno]))
+    pa <- round(pb); pa[a_cero] <- 0; pa[a_uno] <- 1
+    muestras[[length(muestras) + 1]] <- pa; probs <- c(probs, resto * lam)
+    pb[a_cero] <- pb[a_cero] / (1 - lam); pb[a_uno] <- (pb[a_uno] - lam) / (1 - lam)
+    pb[abs(pb) < 1e-9] <- 0; pb[abs(pb - 1) < 1e-9] <- 1
+    resto <- resto * (1 - lam)
+  }
+  muestras[[length(muestras) + 1]] <- pb; probs <- c(probs, resto)
+  list(S = sapply(muestras, function(m) { v <- numeric(length(p)); v[o] <- m; v }), p = probs)
+}
+sm <- soporte_minimo(p9)
+ncol(sm$S)                                   # muestras posibles
+#> [1] 50
+round(max(abs(sm$S %*% sm$p - p9)), 12)      # respeta las pi: diferencia maxima
+#> [1] 0
+# Brewer no trae sus pi_kl: 4000 muestras para su varianza, y de paso para
+# comprobar que respeta las pi.
+set.seed(2026)
+m_brewer <- replicate(4000, UPbrewer(p9))
+round(c(sistematico_alfabetico = v_sis(cond, pi_st),
+        sistematico_por_poblacion = v_sis(cond[orden_pob], pi_st[orden_pob]),
+        eliminacion_de_Tille = v_syg(UPtillepi2(p9), p9, c9),
+        maxima_entropia = v_syg(UPmaxentropypi2(p9), p9, c9),
+        Brewer_4000_muestras = var(colSums(m_brewer * c9 / p9)),
+        soporte_minimo = sum(sm$p * (colSums(sm$S * c9 / p9) - sum(c9))^2)))
+#>    sistematico_alfabetico sistematico_por_poblacion      eliminacion_de_Tille
+#>                    575401                    344951                    697273
+#>           maxima_entropia      Brewer_4000_muestras            soporte_minimo
+#>                    723607                    715020                   3063834
+round(max(abs(rowMeans(m_brewer) - p9)), 3)       # Brewer: frecuencia frente a pi
+#> [1] 0.013
+# Parejas de estados que nunca salen juntos (pi_kl = 0), de las 1225 posibles:
+pares_cero <- function(P2) sum(P2[upper.tri(P2)] < 1e-12)
+c(sistematico = pares_cero(UPsystematicpi2(p9)), eliminacion_de_Tille = pares_cero(UPtillepi2(p9)),
+  maxima_entropia = pares_cero(UPmaxentropypi2(p9)))
+#>          sistematico eliminacion_de_Tille      maxima_entropia
+#>                  830                    0                    0
+
 cat("\n###BLOQUE-R9###\n")
-# Diseno de Poisson: cada estado entra con SU pi_k, con monedas
+# Antes, a mano: con dos monedas, pi = 0.3 y 0.5, el tamano de muestra vale
+# 0, 1 o 2. Como son independientes, las probabilidades se multiplican:
+c(P_n0 = 0.7 * 0.5, P_n1 = 0.3 * 0.5 + 0.7 * 0.5, P_n2 = 0.3 * 0.5)
+#> P_n0 P_n1 P_n2
+#> 0.35 0.50 0.15
+
+# Diseno de Poisson con los estados: cada uno entra con SU pi_k, con monedas
 # independientes. El precio: n queda ALEATORIO.
 set.seed(2026)
 s_poi <- rbinom(nrow(statepps), 1, pi_st) == 1
@@ -255,6 +466,44 @@ c(V_exacta = sum((1 - pi_st) * statepps$counties^2 / pi_st),
   ee = sqrt(sum((1 - pi_st) * statepps$counties^2 / pi_st)))
 #>    V_exacta          ee
 #> 1604348.622    1266.629
+
+cat("\n###BLOQUE-R24###\n")
+# 1. Con y proporcional a x (aqui, y = la propia poblacion), el HT de Poisson
+# solo depende de CUANTOS estados salen. California entra siempre y aporta su
+# poblacion; cada uno de los otros aporta lo mismo, (t - t_California) / 9.
+# Cinco muestras:
+set.seed(2026)
+t(replicate(5, {
+  s <- runif(nrow(statepps)) < pi_st
+  c(n_s = sum(s), HT_entre_t = sum(pop[s] / pi_st[s]) / sum(pop))
+}))
+#>      n_s HT_entre_t
+#> [1,]  15   1.488680
+#> [2,]   8   0.804528
+#> [3,]  10   1.000000
+#> [4,]  10   1.000000
+#> [5,]  12   1.195472
+# 2. El remedio: dividir por lo que salio. Con x conocida en todo el marco, el
+# estimador de razon del capitulo 3 corrige el HT de y con el HT de x:
+#   t_razon = t_x * t_HT(y) / t_HT(x).
+# Gutierrez propone tambien N * t_HT(y) / N_HT. Error cuadratico medio de los
+# tres sobre 20 000 muestras de Poisson, junto a la varianza exacta del HT:
+set.seed(2026)
+rep_poi <- replicate(20000, {
+  s <- runif(nrow(statepps)) < pi_st
+  c(ht = sum(cond[s] / pi_st[s]),
+    razon = sum(pop) * sum(cond[s] / pi_st[s]) / sum(pop[s] / pi_st[s]),
+    alternativo = nrow(statepps) * sum(cond[s] / pi_st[s]) / sum(1 / pi_st[s]))
+})
+round(c(V_HT_exacta = sum((1 - pi_st) * cond^2 / pi_st),
+        ECM_HT = mean((rep_poi["ht", ] - sum(cond))^2),
+        ECM_razon = mean((rep_poi["razon", ] - sum(cond))^2),
+        ECM_alternativo = mean((rep_poi["alternativo", ] - sum(cond))^2)))
+#>     V_HT_exacta          ECM_HT       ECM_razon ECM_alternativo
+#>         1604349         1574244          773791          959401
+# La razon parte la varianza a la mitad y queda cerca de los disenos de tamano
+# fijo del modulo 5 (de 0.70 a 0.72 millones con Tille, Brewer o maxima
+# entropia).
 
 cat("\n###BLOQUE-R10###\n")
 # agpps: la muestra pi-PT REAL de Lohr — 15 condados sorteados con pi
@@ -313,6 +562,54 @@ svytotal(~acres92, dis_ht)
 # intervalo con SYG: 936.3 +/- 23 millones de acres. El total verdadero de
 # agpop (cap. 1) era 944 millones (943 951 718): cae dentro.
 
+cat("\n###BLOQUE-R23###\n")
+# Sin pi_kl: la aproximacion de Hajek de la varianza (Gutierrez, Resultado
+# 4.4.4), con b_k = N pi_k (1 - pi_k) / (N - 1), y el estimador de Deville,
+# con c_k = (1 - pi_k) n / (n - 1). Los dos piden solo las pi de primer orden.
+hajek <- function(y, p) {
+  b <- length(p) * p * (1 - p) / (length(p) - 1)
+  y_aster <- p * sum(b * y / p) / sum(b)
+  sum(b / p^2 * (y - y_aster)^2)
+}
+deville <- function(ys, ps) {
+  n <- length(ps); ck <- (1 - ps) * n / (n - 1)
+  y_aster <- ps * sum(ck * ys / ps) / sum(ck)
+  sum(ck / ps^2 * (ys - y_aster)^2)
+}
+# 1. Los estados: la aproximacion frente a la varianza exacta de maxima
+#    entropia (modulo 5), sin California.
+round(c(hajek = hajek(c9, p9), maxima_entropia = v_syg(UPmaxentropypi2(p9), p9, c9)))
+#>           hajek maxima_entropia
+#>          726308          723607
+# 2. El sistematico alfabetico del modulo 5: la esperanza EXACTA de los dos
+#    estimadores de varianza, recorriendo todas sus muestras, frente a la
+#    varianza verdadera.
+esperanzas <- rowSums(sapply(arranques(pi_st), function(a) {
+  sn <- a$s & libres
+  z <- sum(sn) * cond[sn] / pi_st[sn]
+  a$prob * c(Deville = deville(cond[sn], pi_st[sn]), con_reemplazo = var(z) / sum(sn))
+}))
+round(c(V_verdadera = v_sis(cond, pi_st),
+        E_Deville = esperanzas[["Deville"]], E_con_reemplazo = esperanzas[["con_reemplazo"]],
+        razon_Deville = esperanzas[["Deville"]] / v_sis(cond, pi_st),
+        razon_con_reemplazo = esperanzas[["con_reemplazo"]] / v_sis(cond, pi_st)), 3)
+#>         V_verdadera           E_Deville     E_con_reemplazo       razon_Deville
+#>          575400.943          709384.794          880367.332               1.233
+#> razon_con_reemplazo
+#>               1.530
+# 3. agpps: la funcion deville() de arriba, y dos variantes de la misma idea.
+#    sampling::varest usa el factor 1 / (1 - sum(a^2)), con a = (1 - pi) / sum(1 - pi),
+#    en lugar de n / (n - 1); survey con pps = "brewer" centra los y_k / pi_k
+#    en su media simple. Ninguna usa la matriz JtProb, y las tres dan 12.23
+#    millones.
+c(ee_Deville = sqrt(deville(agpps$acres92, agpps$SelectionProb)),
+  ee_varest = sqrt(varest(Ys = agpps$acres92, pik = agpps$SelectionProb)))
+#> ee_Deville  ee_varest
+#>   12230070   12230116
+svytotal(~acres92, svydesign(id = ~1, fpc = ~SelectionProb, data = agpps, pps = "brewer"))
+#>             total       SE
+#> acres92 936291173 12230104
+
 cat("\n###BLOQUE-R12###\n")
 # Cuando el HT se comporta mal: pi_k chica con y_k grande. La poblacion del
 # modulo 8 es SIMULADA: 20 negocios con ventas proporcionales al area y pi
@@ -329,6 +626,14 @@ c(y_elefante = y_e[20], total = sum(y_e), aporta = round(y_e[20] / sum(y_e), 3))
 #>    8790.00   10726.00       0.82
 round(pi_e[20], 4)                                 # la pi que le toca por su area
 #> [1] 0.0649
+
+# El HT oscila entre dos mundos. Sin el elefante (lo que pasa el 93.5 % de
+# las veces) solo ve, mas o menos, el resto de las ventas; si sale, su
+# termino y/pi solo ya vale mas de doce veces el total:
+c(resto_de_las_ventas = sum(y_e[-20]), prob_de_que_no_salga = round(1 - pi_e[20], 3),
+  termino_del_elefante = round(y_e[20] / pi_e[20]))
+#>  resto_de_las_ventas prob_de_que_no_salga termino_del_elefante
+#>             1936.000                0.935           135366.000
 
 V_con_pi <- function(p) {
   pk <- pi_e; pk[20] <- p
@@ -369,6 +674,8 @@ round(por_clase, 3)
 #> 14    14 100  4 2.000 200.00 0.155
 
 z <- por_clase$t_hat / por_clase$psi
+round(z, 1)                     # z_i = t_hat_i / psi_i = 647 * ybar_i
+#> [1] 2264.5 3235.0 2345.4 2021.9 1294.0
 c(t_HH = mean(z), ee = sqrt(var(z) / 5))
 #>      t_HH        ee
 #> 2232.1500  311.7624
@@ -394,6 +701,8 @@ svymean(~hours, dis_cl)
 c(suma_pesos = sum(classpps$finalweight), K = K)
 #> suma_pesos          K
 #>        647        647
+round(5 * 4 / K, 4)       # prob. de cada estudiante: (5 M_i/647) (4/M_i) = 20/647
+#> [1] 0.0309
 unique(classpps$finalweight)
 #> [1] 32.35
 # UN SOLO peso: 32.35 = 647/(5 x 4). Con psi_i prop. a M_i y m_i = 4 fijo,
@@ -523,3 +832,76 @@ round(sapply(statepps[c("waterarea", "counties")], function(y)
 # del sistematico. Por eso Poisson se reserva para marcos que llegan en flujo
 # (una unidad a la vez). (Las 10 000 replicas del modulo 5 dan 571 878 para
 # el sistematico con counties: la exacta difiere un 0.6 %, el error de simular.)
+
+cat("\n###BLOQUE-R25###\n")
+# EJERCICIO 5 (Gutierrez, sec. 4.5). Diez unidades con estos tamanos y n = 6:
+x5 <- c(62, 151, 76, 77, 80, 60, 194, 78, 74, 61)
+sum(x5)
+#> [1] 913
+round(6 * x5 / sum(x5), 4)            # las pi crudas: la 7 pasa de 1
+#>  [1] 0.4074 0.9923 0.4995 0.5060 0.5257 0.3943 1.2749 0.5126 0.4863 0.4009
+# La 7 entra siempre; quedan 5 cupos para las demas. Con ellos, la 2 pasa de
+# 1 y entra siempre; quedan 4 cupos para las otras ocho, sobre 913 - 194 - 151:
+p5 <- inclusionprobabilities(x5, 6)
+round(p5, 4)
+#>  [1] 0.4366 1.0000 0.5352 0.5423 0.5634 0.4225 1.0000 0.5493 0.5211 0.4296
+# Poisson con los uniformes del enunciado: entra la unidad k si eps_k < pi_k.
+eps <- c(0.858, 0.698, 0.541, 0.320, 0.965, 0.497, 0.208, 0.006, 0.340, 0.206)
+which(eps < p5)
+#> [1]  2  4  7  8  9 10
+# Sunter: la lista de mayor a menor, y los xi en ese orden. La unidad entra si
+# xi < pi_k (n - e_k) / (n - A_k), con e_k las ya elegidas y A_k la suma de las
+# pi anteriores.
+xi <- c(0.322, 0.542, 0.032, 0.141, 0.453, 0.668, 0.174, 0.318, 0.691, 0.006)
+o5 <- order(x5, decreasing = TRUE)
+elegidas <- 0; A <- 0; pasos <- NULL
+for (j in 1:10) {
+  k <- o5[j]
+  umbral <- p5[k] * (6 - elegidas) / (6 - A)
+  entra <- xi[j] < umbral
+  pasos <- rbind(pasos, data.frame(paso = j, unidad = k, pi = round(p5[k], 4),
+                                   umbral = round(umbral, 4), xi = xi[j], entra = entra))
+  elegidas <- elegidas + entra
+  A <- A + p5[k]
+}
+pasos
+#>    paso unidad     pi umbral    xi entra
+#> 1     1      7 1.0000 1.0000 0.322  TRUE
+#> 2     2      2 1.0000 1.0000 0.542  TRUE
+#> 3     3      5 0.5634 0.5634 0.032  TRUE
+#> 4     4      8 0.5493 0.4795 0.141  TRUE
+#> 5     5      4 0.5423 0.3756 0.453 FALSE
+#> 6     6      3 0.5352 0.4565 0.668 FALSE
+#> 7     7      9 0.5211 0.5759 0.174  TRUE
+#> 8     8      1 0.4366 0.3388 0.318  TRUE
+#> 9     9     10 0.4296 0.0000 0.691 FALSE
+#> 10   10      6 0.4225 0.0000 0.006 FALSE
+sort(pasos$unidad[pasos$entra])
+#> [1] 1 2 5 7 8 9
+sort(TeachingSampling::S.piPS(6, x5, e = xi)[, 1])   # lo mismo con S.piPS
+#> [1] 1 2 5 7 8 9
+
+cat("\n###BLOQUE-R26###\n")
+# EJERCICIO 6 (Sarndal et al., 1992, p. 117, via Gutierrez). Poisson sobre
+# N = 284 unidades con pi_k = 10 x_k / 8182: salieron 12, no 10.
+xs <- c(54, 671, 28, 27, 29, 62, 42, 48, 33, 446, 12, 46)
+ys <- c(5246, 59877, 2208, 2546, 2903, 6850, 3773, 4055, 4014, 38945, 1162, 4852)
+ps <- 10 * xs / 8182
+t_ht6 <- sum(ys / ps)
+ee6 <- sqrt(sum((1 - ps) * ys^2 / ps^2))      # el estimador de varianza de Poisson
+round(c(t_HT = t_ht6, ee = ee6, cv = ee6 / t_ht6,
+        IC_inf = t_ht6 - 1.96 * ee6, IC_sup = t_ht6 + 1.96 * ee6), 3)
+#>       t_HT         ee         cv     IC_inf     IC_sup
+#>  945598.21  255586.54       0.27  444648.60 1446547.82
+# Salieron 12 y no 10: el HT de x, que deberia dar 8182, da 12 x 818.2, un
+# 20 % de mas. Es el t n_s / n del modulo 6:
+c(t_HT_de_x = sum(xs / ps), cociente = sum(xs / ps) / 8182)
+#> t_HT_de_x  cociente
+#>    9818.4       1.2
+# La media: dividir entre N = 284 (HT) o entre N estimado (Hajek). Y el total
+# corregido con la razon del modulo 6, que usa t_x = 8182:
+N_hat <- sum(1 / ps)
+round(c(N_hat = N_hat, media_HT = t_ht6 / 284, media_Hajek = t_ht6 / N_hat,
+        t_razon = 8182 * t_ht6 / sum(xs / ps)), 2)
+#>       N_hat    media_HT media_Hajek     t_razon
+#>      266.43     3329.57     3549.11   787998.51

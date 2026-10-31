@@ -14,18 +14,43 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Reconocer el PPT con reemplazo como el muestreo por
-              importancia de Monte Carlo, y trasladar la teoría del capítulo a la IA moderna.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Ver que el PPT con reemplazo es el muestreo por
+              importancia de Monte Carlo, y llevar las lecciones del capítulo a la ciencia de datos.</p>
           </div>
         </div>
       </div>
 
-      <p>Quita del módulo 2 la palabra «tienda» y pon «punto de evaluación»: el estimador
-        $\frac{1}{n}\sum y_i/\psi_i$ con extracciones de una «propuesta» $\psi$ es, literalmente, el
-        <strong>muestreo por importancia</strong> con el que Monte Carlo integra funciones difíciles desde los
-        años 50. La teoría del capítulo responde la pregunta central de esa literatura — ¿qué propuesta minimiza
-        la varianza? — con la fórmula de HH: la $\psi$ óptima es proporcional a $|y|$, y la varianza es
-        <em>exactamente cero</em> si $\psi_i = y_i/t$. El problema, claro: para usarla habría que conocer $y$.</p>
+      <h3>El mismo estimador, con otro nombre</h3>
+
+      <p>El estimador de Hansen–Hurwitz del módulo 2, $\frac{1}{n}\sum y_i/\psi_i$, se usa desde los años
+        cincuenta fuera de las encuestas con otro nombre: <strong>muestreo por importancia</strong>
+        (<em>importance sampling</em>), para estimar por Monte Carlo sumas o integrales difíciles. La traducción es
+        directa:</p>
+
+      <table>
+        <caption class="sr-only">Correspondencia entre el PPT con reemplazo y el muestreo por importancia</caption>
+        <thead>
+          <tr><th scope="col">Encuestas (este capítulo)</th><th scope="col">Muestreo por importancia</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>unidad $i$ del marco</td><td>punto $u_i$ donde se evalúa la función</td></tr>
+          <tr><td>valor $y_i$ de la unidad</td><td>valor de la función, $f(u_i)$</td></tr>
+          <tr><td>probabilidad de extracción $\psi_i$</td><td>la «propuesta» con la que se eligen los puntos</td></tr>
+          <tr><td>peso $1/(n\,\psi_i)$</td><td>peso de importancia</td></tr>
+          <tr><td>total $t$</td><td>la suma o la integral de $f$</td></tr>
+          <tr><td>Hansen–Hurwitz, $\frac{1}{n}\sum y_i/\psi_i$</td><td>estimador por importancia,
+            $\frac{1}{n}\sum f(u_i)/\psi_i$</td></tr>
+        </tbody>
+      </table>
+
+      <p>La pregunta central de esa literatura —qué propuesta da menos varianza— ya la respondió el capítulo. Con
+        $y \ge 0$ y $\psi_i = y_i/t$, cada extracción da $y_i/\psi_i = t$, siempre la misma cifra: varianza cero. Es
+        la idea central del módulo 1 llevada al extremo. El problema es que para usarla habría que conocer $y$, que
+        es justo lo que se quiere estimar. En la práctica se busca una $\psi$ parecida a $y$ con una variable barata
+        que se conozca para todas las unidades.</p>
+
+      <p>Con los estados, el bloque compara tres propuestas para estimar el total de condados con 10
+        extracciones:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Tres propuestas y sus varianzas exactas">
@@ -40,18 +65,33 @@
         </div>
       </div>
 
+      <p>La propuesta uniforme da una varianza de 557 287; la proporcional a la población, 963 006, peor; la
+        proporcional a los propios condados, 0. Es lo que anticipaba el criterio de Raj del módulo 5: una correlación
+        de 0,46 con la población no basta.</p>
+
+      <h3>Un ejemplo más realista: BigLucy</h3>
+
+      <div class="note">
+        <p><strong>Los datos: <code>BigLucy</code></strong> (paquete <code>TeachingSampling</code>, de Gutiérrez).
+          Son 85 296 empresas ficticias. Se quiere estimar su ingreso total (<code>Income</code>) con $n = 100$
+          extracciones, y el número de empleados (<code>Employees</code>) se conoce para todas y sirve para construir
+          la propuesta.</p>
+      </div>
+
+      <p>El simulador mezcla tres propuestas con un parámetro $\alpha$ entre 0 y 2: la uniforme,
+        $\psi^{U}$; la proporcional a los empleados, $\psi^{E}$; y la ideal, proporcional al propio ingreso,
+        $\psi^{I}$:</p>
+
+      $$\psi(\alpha) = (1 - \alpha)\,\psi^{U} + \alpha\,\psi^{E} \quad \text{si } 0 \le \alpha \le 1$$
+      $$\psi(\alpha) = (2 - \alpha)\,\psi^{E} + (\alpha - 1)\,\psi^{I} \quad \text{si } 1 \le \alpha \le 2$$
+
       <div class="simulador" data-simulador="importancia">
         <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> El camino hacia la propuesta perfecta</h4>
-        <p class="simulador-intro">Sobre BigLucy (85 296 empresas, estimar el ingreso total con $n = 100$): el
-          deslizador interpola la propuesta desde el uniforme ($\alpha = 0$), pasando por $\psi \propto$
-          empleados ($\alpha = 1$, lo que un diseñador real puede hacer), hasta $\psi \propto y$
-          ($\alpha = 2$, la perfección inalcanzable). La curva es la varianza <strong>exacta</strong> del
-          precálculo. El primer tramo mezcla el uniforme con $\psi \propto$ empleados, y la curva no es
-          monótona: baja hasta $\alpha = 0{,}6$ —1,8 veces mejor que el uniforme— y vuelve a subir en
-          $\psi \propto$ empleados, que solo mejora 1,3 veces (correlación 0,64). La razón es la del elefante del
-          módulo 8: $\psi \propto$ empleados deja $\psi$ minúsculas a empresas con pocos empleados y mucho ingreso,
-          y una pizca de uniforme les pone un suelo. Entre 1 y 2 la varianza cae a cero, pero ese tramo exige
-          conocer $y$: ya no se puede caminar.</p>
+        <p class="simulador-intro">La curva es la varianza exacta del HH para cada $\alpha$. Fíjate en tres tramos.
+          De 0 a 0,6, mezclar la propuesta de empleados con la uniforme mejora: en $\alpha = 0{,}6$, con un 40 % de
+          uniforme, la varianza es 1,8 veces menor que con la uniforme sola. En $\alpha = 1$, solo con empleados,
+          vuelve a subir: mejora solo 1,3 veces, aunque la correlación con el ingreso es 0,64. De 1 a 2 la varianza
+          cae a cero, pero ese tramo exige conocer el ingreso.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Varianza exacta del HH según la propuesta interpolada</p>
         <div class="grafico-wrapper" style="height:260px;">
@@ -60,30 +100,45 @@
         <div class="simulador-lectura"></div>
       </div>
 
+      <p>¿Por qué la mezcla le gana a la propuesta de empleados? Por el criterio de Raj del módulo 5: la recta del
+        ingreso sobre los empleados corta el eje en 99,9, el 23 % del ingreso medio (429,5). El ingreso no es
+        proporcional a los empleados: una empresa pequeña tiene más ingreso por empleado que una grande, y
+        $\psi \propto$ empleados les da a todas las pequeñas, en conjunto, menos probabilidad de la que su ingreso
+        pide. No hay un elefante: la varianza está repartida entre miles de empresas. La parte uniforme de la mezcla
+        le suma a $\psi$ un término fijo, igual para todas, que hace el papel de ese intercepto.</p>
+
+      <p>Mezclar la propuesta con un poco de uniforme es, además, una defensa conocida, la <strong>mezcla defensiva</strong>
+        (<em>defensive mixture</em>): pone un piso a las $\psi$, y con él un techo a los pesos $1/\psi$. Como la
+        inclusión forzosa del módulo 8, impide que una unidad que puede tener un valor grande reciba una probabilidad
+        demasiado pequeña.</p>
+
+      <h3>Dónde aparece en ciencia de datos</h3>
+
       <div class="note">
-        <p><strong>Dónde vive esto en la IA de hoy.</strong> <em>Active learning:</em> etiquetar los ejemplos
-          donde el modelo más duda es darles $\psi$ grande — y los pesos $1/\psi$ son obligatorios para que la
-          pérdida estimada siga siendo insesgada, exactamente como en HH. <em>Priorizado en RL:</em> los
-          <em>replay buffers</em> muestrean transiciones con $\psi \propto$ error TD y corrigen con pesos de
-          importancia. <em>Evaluación off-policy:</em> $y/\psi$ con colas pesadas es el elefante del módulo 8 con
-          otro nombre. Las tres comunidades redescubrieron, con décadas de diferencia, el mismo teorema de
-          varianza que este capítulo enumeró con cuatro tiendas.</p>
+        <p><strong><em>Active learning</em>.</strong> Hay 10 000 imágenes sin etiquetar y solo se pueden etiquetar
+          100. Si se eligen con probabilidad proporcional a la duda del modelo, se aprende más de cada etiqueta. Pero
+          para estimar la tasa de error del modelo con esas 100 imágenes, cada una tiene que pesar $1/\psi$, como en
+          Hansen–Hurwitz: sin los pesos, la estimación queda sesgada hacia las imágenes difíciles.</p>
+        <p style="margin-bottom:0;">El mismo esquema aparece en otros métodos de aprendizaje automático que
+          reutilizan datos recogidos con probabilidades distintas de las que interesan, y con el mismo riesgo: pesos
+          $1/\psi$ con $\psi$ muy pequeñas reproducen el problema del elefante.</p>
       </div>
 
       <div class="warning">
-        <p><strong>La condición no negociable: $\psi$ conocida y positiva.</strong> Todo el edificio — insesgadez
-          incluida — descansa en conocer $\psi_i$ para lo muestreado y en $\psi_i > 0$ para todo el soporte. Un
-          <em>dataset</em> recolectado «según llegaba» no tiene $\psi$ conocida, y ninguna ponderación posterior
-          lo arregla del todo: ese es el puente con el capítulo 1 (sesgo de selección) y con el 8 (ajustes por no
-          respuesta, que son intentos de <em>reconstruir</em> una $\psi$ que nadie anotó).</p>
+        <p><strong>La condición que no se negocia: $\psi$ conocida y positiva.</strong> La insesgadez descansa en
+          conocer $\psi_i$ para lo que se muestreó y en que ninguna unidad tenga $\psi_i = 0$: una unidad que nunca
+          puede salir no entra en ninguna estimación. Un conjunto de datos recogido «según llegaba» no tiene $\psi$
+          conocida, y ninguna ponderación posterior lo arregla del todo. Es el sesgo de selección del capítulo 1.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Owen — <em>Monte Carlo theory</em>, cap. 9: importance sampling (libre en línea).</li>
-          <li>Settles — <em>Active Learning Literature Survey</em>: la corrección por pesos en §5.</li>
-          <li>Gutiérrez — §4.2: la varianza del PPT-WR que aquí se reinterpreta.</li>
+          <li>Owen — <em>Monte Carlo theory</em>, cap. 9: importance sampling, con la mezcla defensiva (libre en línea).</li>
+          <li>Settles — <em>Active Learning Literature Survey</em>: §4.1 y §6.6 advierten que los datos etiquetados
+            activamente son una muestra sesgada. La corrección con pesos $1/\psi$ es la de Beygelzimer, Dasgupta y
+            Langford (2009), <em>Importance weighted active learning</em>.</li>
+          <li>Gutiérrez — §4.2, Resultado 4.2.4: la varianza del PPT con reemplazo, la que aquí se reinterpreta; §4.2.4 presenta BigLucy.</li>
         </ul>
       </div>
     </div>
@@ -105,13 +160,14 @@
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Comprobar el capítulo completo: ψ y π, HH y HT,
-              selección, Poisson, SYG, autoponderación e importancia.</p>
+              algoritmos de selección, Poisson, estimación de la varianza, autoponderación e importancia.</p>
           </div>
         </div>
       </div>
 
-      <p>El glosario primero — este capítulo maneja <em>dos</em> familias de probabilidades ($\psi_i$ con
-        reemplazo, $\pi_k$ sin) y confundirlas es el error número uno:</p>
+      <p>Primero, la tabla de notación. El capítulo maneja dos familias de probabilidades, $\psi_i$ con reemplazo y
+        $\pi_k$ sin reemplazo, y confundirlas es el error más común. La tabla las pone al lado de la notación de Lohr y
+        de Gutiérrez:</p>
 
       <div class="glosario-notacion" data-glosario="ppt"></div>
 
@@ -121,8 +177,8 @@
 
       <div class="quiz" data-quiz="cap6">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 6</h4>
-        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
-          también las incorrectas: leerlas cuando aciertas también enseña.</p>
+        <p class="text-sm" style="margin-bottom:0;">Trece preguntas. En las de opción, cada opción trae su propia
+          retroalimentación, también las incorrectas: leerlas cuando aciertas también enseña.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
         <div class="quiz-resumen" role="status" hidden></div>
@@ -134,8 +190,9 @@
 
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
-        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre los datos reales del capítulo.
-          Las cifras de cada solución salen de ejecutar sus bloques: ninguna está escrita a mano.</p>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro primeros trabajan con los datos del capítulo, y
+          sus soluciones son bloques de código. Los dos últimos vienen del §4.5 de Gutiérrez y se pueden hacer a mano;
+          la solución da las cuentas y el código que las comprueba.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>statepps</code>, saca
@@ -151,9 +208,9 @@
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R16⟧</code></pre>
-            <p>En esta realización el PPT «gana» (ee estimado 588 contra 1 126) — y es un espejismo: la varianza
+            <p>En esta realización el PPT «gana» (ee estimado 588 contra 1 126), y es un espejismo: la varianza
               exacta dice lo contrario (963 006 contra 557 287). Un ee estimado con $n = 10$ es demasiado ruidoso
-              para adjudicar; la comparación seria se hace con las fórmulas exactas o con réplicas, como en el
+              para decidir; la comparación seria se hace con las fórmulas exactas o con réplicas, como en el
               módulo 5.</p>
           </details>
         </div>
@@ -170,20 +227,20 @@
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R17⟧</code></pre>
-            <p>La clase 9 salió dos veces — dos uniformes (360,1 y 359,3) cayeron en su tramo. No se descarta ni
+            <p>La clase 9 salió dos veces: dos uniformes (360,1 y 359,3) cayeron en su tramo. No se descarta ni
               se reemplaza: sus estudiantes se sortean dos veces y aporta dos $z_i$ al promedio HH. Así es como el
               «con reemplazo» mantiene la independencia entre extracciones.</p>
           </details>
         </div>
 
         <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Repite el módulo 7 sobre
-            <code>agpps</code> con <code>acres87</code> — la variable de tamaño con la que se construyeron las π.
-            ¿Qué le pasa al estimador SYG, y por qué?</p>
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Calcula el estimador SYG de la
+            varianza con <code>agpps</code>, como en el módulo 7, pero usando como variable <code>acres87</code>, la
+            misma con la que se construyeron las π. Explica por qué sale casi cero.</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
             <p>Antes de calcular nada, mira <code>range(acres87 / SelectionProb)</code>. La fórmula SYG suma
-              términos $(d_k - d_l)^2$.</p>
+              términos $(y_k/\pi_k - y_l/\pi_l)^2$.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
@@ -196,36 +253,135 @@
         </div>
 
         <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Calcula la varianza exacta del
-            HT bajo Poisson para <code>waterarea</code> en <code>statepps</code> y compárala con la varianza
-            exacta del πPT sistemático con las mismas π. Repite con <code>counties</code>. ¿Cuánto cuesta el $n$
-            aleatorio en cada caso?</p>
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">4.</span>Con las π de los estados del
+            módulo 5, calcula la varianza exacta del HT bajo Poisson y bajo el πPT sistemático, para
+            <code>waterarea</code> y para <code>counties</code>. ¿Cuántas veces mayor es la varianza de Poisson que la del
+            sistemático en cada caso?</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
-            <p>La de Poisson es $\sum_U (1-\pi_k)\,y_k^2/\pi_k$. La del sistemático también es exacta: el arranque
-              $u$ decide la muestra, y entre dos cortes —las partes fraccionarias de las π acumuladas— sale siempre
-              la misma. Recorre esos tramos y pondera cada HT por la longitud del suyo.</p>
+            <p>La de Poisson es $\sum_U (1-\pi_k)\,y_k^2/\pi_k$ (módulo 6). La del sistemático se calcula como en el
+              bloque de algoritmos del módulo 5: el arranque $u$ decide la muestra, y los arranques se agrupan en tramos
+              que dan la misma muestra. Basta recorrer esos tramos y ponderar el HT de cada uno por la longitud del
+              tramo.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R19⟧</code></pre>
-            <p>Con <code>waterarea</code> la razón es 1,04 — casi gratis, porque la varianza está dominada por el
-              desajuste π–variable, no por el $n$ aleatorio. Con <code>counties</code> sube a 2,8, y no porque las π
-              trabajen bien (el módulo 5 mostró que no): lo que añade el $n$ aleatorio depende sobre todo de la
-              escala de la variable, y con <code>counties</code> es tanto como toda la varianza del sistemático.
-              Moraleja: el precio de Poisson se nota cuando el resto de la varianza es pequeño. (Las 10 000 réplicas
-              del módulo 5 dan, para <code>counties</code>, una varianza del sistemático un 0,6 % menor que la
-              exacta: es el error de simular.)</p>
+            <p>Con <code>waterarea</code> la varianza de Poisson es 1,04 veces la del sistemático: casi no cuesta más, porque la varianza del
+              sistemático ya es enorme (las π no acompañan a la variable) y lo que añade el tamaño aleatorio apenas se
+              nota. Con <code>counties</code> es 2,8 veces: el sistemático tiene poca varianza, y lo que añade el
+              tamaño aleatorio pesa mucho. (Las 10 000 réplicas del módulo 5 dan, para <code>counties</code>, una
+              varianza del sistemático un 0,6 % menor que la exacta: es el error de simular.)</p>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">5.</span>(Gutiérrez, §4.5.) Una población
+            de 10 unidades tiene, en orden, los tamaños 62, 151, 76, 77, 80, 60, 194, 78, 74 y 61, que suman 913. Se quiere
+            una muestra de tamaño esperado 6.</p>
+          <ol class="text-sm">
+            <li>Calcula las π proporcionales a $x$, con la inclusión forzosa del módulo 5.</li>
+            <li>Sortea una muestra de Poisson con estos uniformes $\varepsilon_k$, uno por unidad y en su orden:
+              0,858; 0,698; 0,541; 0,320; 0,965; 0,497; 0,208; 0,006; 0,340 y 0,206.</li>
+            <li>Sortea una muestra de Sunter con estos uniformes $\xi_j$, usados en el orden de la lista de mayor a
+              menor tamaño: 0,322; 0,542; 0,032; 0,141; 0,453; 0,668; 0,174; 0,318; 0,691 y 0,006.</li>
+          </ol>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>(a) $6 \times 194/913$ pasa de 1: esa unidad entra siempre, y los 5 cupos restantes se reparten entre
+              las demás; revisa si otra pasa de 1. (b) Entra la unidad $k$ si $\varepsilon_k < \pi_k$. (c) Recorre las
+              unidades de mayor a menor; la $j$-ésima de esa lista usa $\xi_j$ y entra si
+              $\xi_j < \pi_k\,(6 - e)/(6 - A)$, con $e$ las ya elegidas y $A$ la suma de las π anteriores.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p>(a) La unidad 7 (194) entra siempre. Con 5 cupos para las demás, la 2 (151) pasa de 1 y también entra
+              siempre. Las otras ocho reciben $\pi_k = 4\,x_k/568$, porque $913 - 194 - 151 = 568$: de 0,4225 (la 6) a
+              0,5634 (la 5). (b) Salen las unidades 2, 4, 7, 8, 9 y 10: seis, por casualidad justo el tamaño esperado.
+              (c) El orden de mayor a menor es 7, 2, 5, 8, 4, 3, 9, 1, 10 y 6. Las dos primeras entran siempre (umbral
+              1). La 5 entra ($0{,}032 < 0{,}5634$) y la 8 también ($0{,}141 < 0{,}4795$); la 4 no ($0{,}453 >
+              0{,}3756$), ni la 3 ($0{,}668 > 0{,}4565$); la 9 entra ($0{,}174 < 0{,}5759$) y la 1 también
+              ($0{,}318 < 0{,}3388$). Con eso ya van seis, y el umbral de las dos últimas es 0. Sunter elige las unidades
+              1, 2, 5, 7, 8 y 9; el bloque muestra la tabla de umbrales completa.</p>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="Solución del ejercicio 5">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r">⟦R25⟧</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">⟦P7⟧</code></pre>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">6.</span>(Särndal, Swensson y Wretman, 1992,
+            p. 117, vía Gutiérrez, §4.5.) Para estimar el total de $y$ en una población de $N = 284$ elementos se usó
+            un diseño de Poisson con tamaño esperado 10 y π proporcionales a $x$, cuyo total es $t_x = 8182$. Salieron
+            12 elementos:</p>
+          <table>
+            <caption class="sr-only">Los doce elementos de la muestra de Poisson del ejercicio 6</caption>
+            <thead>
+              <tr><th scope="col">Elemento</th><th scope="col">$x_k$</th><th scope="col">$y_k$</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>54</td><td>5246</td></tr>
+              <tr><td>2</td><td>671</td><td>59 877</td></tr>
+              <tr><td>3</td><td>28</td><td>2208</td></tr>
+              <tr><td>4</td><td>27</td><td>2546</td></tr>
+              <tr><td>5</td><td>29</td><td>2903</td></tr>
+              <tr><td>6</td><td>62</td><td>6850</td></tr>
+              <tr><td>7</td><td>42</td><td>3773</td></tr>
+              <tr><td>8</td><td>48</td><td>4055</td></tr>
+              <tr><td>9</td><td>33</td><td>4014</td></tr>
+              <tr><td>10</td><td>446</td><td>38 945</td></tr>
+              <tr><td>11</td><td>12</td><td>1162</td></tr>
+              <tr><td>12</td><td>46</td><td>4852</td></tr>
+            </tbody>
+          </table>
+          <ol class="text-sm">
+            <li>Estima el total de $y$ con el HT, su coeficiente de variación y un intervalo de confianza del 95 %.</li>
+            <li>Estima la media de $y$ dividiendo entre $N$ y dividiendo entre $\hat{N} = \sum_s 1/\pi_k$ (Hájek).</li>
+            <li>¿Qué indica que hayan salido 12 elementos y no 10? Corrige el total con la razón del módulo 6.</li>
+          </ol>
+          <details class="ejercicio-pista">
+            <summary>Pista</summary>
+            <p>$\pi_k = 10\,x_k/8182$. Para la varianza, la fórmula de Poisson del módulo 6,
+              $\widehat{V} = \sum_s (1 - \pi_k)\,y_k^2/\pi_k^2$. Para (c), calcula también el HT de $x$, que debería
+              dar 8182.</p>
+          </details>
+          <details class="ejercicio-solucion">
+            <summary>Solución</summary>
+            <p>(a) $\hat{t} = 945\,598$, con un error estándar de 255 587: un cv del 27 % y un intervalo de 444 649 a
+              1 446 548. (b) Dividiendo entre $N$, la media es 3329,6; entre $\hat{N} = 266{,}43$, es 3549,1. (c) Cada
+              elemento aporta $x_k/\pi_k = 818{,}2$ al HT de $x$, así que con 12 elementos da $9818{,}4$, 1,2 veces
+              $t_x$: es el $t\,n_s/n$ del módulo 6. El HT de $y$ seguramente se pasa en la misma proporción. La razón
+              corrige ese exceso: $t_x\,\hat{t}_{y,\pi}/\hat{t}_{x,\pi} = 787\,999$.</p>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="Solución del ejercicio 6">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r">⟦R26⟧</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">⟦P8⟧</code></pre>
+              </div>
+            </div>
           </details>
         </div>
       </div>
 
       <div class="note">
         <p><strong>Hacia el capítulo 7.</strong> Ya están todas las piezas de una encuesta real: estratos
-          (cap. 4), conglomerados y etapas (cap. 5), PPT y pesos (este). El capítulo 7 las apila — estratos ×
-          UPM con PPT × submuestreo × pesos ajustados — y responde la pregunta que el software hace inevitable:
-          ¿cómo se estima la varianza cuando el diseño es todo eso a la vez y las $\pi_{kl}$ no existen ni en
-          sueños? Respuesta corta: con la ficción WR del módulo 9, linealización y replicación.</p>
+          (cap. 4), conglomerados y etapas (cap. 5), PPT y pesos (este). El capítulo 7 las junta —estratos, UPM con
+          PPT, submuestreo y pesos ajustados— y responde la pregunta que el software hace inevitable: ¿cómo se estima
+          la varianza cuando el diseño es todo eso a la vez y nadie conoce las $\pi_{kl}$?</p>
       </div>
     </div>
   </template>

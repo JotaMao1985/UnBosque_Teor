@@ -286,13 +286,14 @@ comprueba("Poisson: E(n) por convolución", sum((seq_along(pn) - 1) * pn), E_n)
 V_poisson <- sum((1 - pi_st) * statepps$counties^2 / pi_st)
 cat(sprintf("  E(n) = %.2f | V(n) = %.2f (de = %.2f) | V_HT(counties) = %.4g\n",
             E_n, V_n, sqrt(V_n), V_poisson))
-cat(sprintf("  P(n = 10) = %.3f | P(9 <= n <= 11) = %.3f\n",
-            pn[11], sum(pn[10:12])))
+cat(sprintf("  P(n = 10) = %.3f | P(9 <= n <= 11) = %.3f | P(7 <= n <= 13) = %.3f\n",
+            pn[11], sum(pn[10:12]), sum(pn[8:14])))
 
 cifras$poisson <- list(
   En = E_n, Vn = V_n, distN = pn, vHt = V_poisson,
   vSistematico = V_emp[1],
-  pn10 = pn[11], pn9a11 = sum(pn[10:12])
+  pn10 = pn[11], pn9a11 = sum(pn[10:12]),
+  pn7a13 = sum(pn[8:14])
 )
 
 # =============================================================================
@@ -374,8 +375,11 @@ aporte_base_e <- (1 - pi_e[N_e]) * y_e[N_e]^2 / pi_e[N_e] / V_base_e
 cat(sprintf("  con su pi de área: V = %.4g, el elefante aporta %.2f%%; con 0.005, x %.2f\n",
             V_base_e, 100 * aporte_base_e, curva[1] / V_base_e))
 
+# El JSON guarda 8 decimales: con y^2/pi, la pi del elefante redondeada mueve V
+# en la 7.a cifra. El simulador recalcula las pi desde x con n (ninguna se trunca).
+stopifnot(all(abs(pi_e - 5 * x_e / sum(x_e)) < 1e-12))
 cifras$elefante <- list(
-  N = N_e, x = x_e, y = y_e, piBase = pi_e, piElefanteX = pi_e[N_e],
+  N = N_e, n = 5, x = x_e, y = y_e, piBase = pi_e, piElefanteX = pi_e[N_e],
   vBase = V_base_e, aporteBasePct = 100 * aporte_base_e, razon005Base = curva[1] / V_base_e,
   malla = malla, curva = curva, aporte = aporte,
   totalY = sum(y_e), yElefante = y_e[N_e]
@@ -441,6 +445,11 @@ psi_prop <- BigLucy$Income / t_inc               # la propuesta "perfecta"
 V_unif <- v_wr(psi_unif); V_emp_bl <- v_wr(psi_emp); V_perf <- v_wr(psi_prop)
 r_ie <- cor(BigLucy$Income, BigLucy$Employees)
 cat(sprintf("  corr(Income, Employees) = %.3f\n", r_ie))
+# Por qué psi ~ Employees rinde poco (criterio de Raj, módulo 5): el ingreso no
+# es proporcional a los empleados; la recta corta el eje lejos del origen.
+recta_ie <- coef(lm(Income ~ Employees, data = BigLucy))
+cat(sprintf("  recta Income ~ Employees: intercepto %.1f, pendiente %.2f; ingreso medio %.1f (%.0f%%)\n",
+            recta_ie[1], recta_ie[2], mean(BigLucy$Income), 100 * recta_ie[1] / mean(BigLucy$Income)))
 cat(sprintf("  V uniforme = %.4g | V psi~Employees = %.4g (mejora %.1fx) | V psi~y = %.3g\n",
             V_unif, V_emp_bl, V_unif / V_emp_bl, V_perf))
 comprueba("BigLucy: psi ~ y da varianza 0", V_perf, 0, 1e-6)
@@ -458,10 +467,62 @@ cifras$importancia <- list(
   K = nrow(BigLucy), n = n_bl, total = t_inc, corr = r_ie,
   vUniforme = V_unif, vEmployees = V_emp_bl, vPerfecta = V_perf,
   mejora = V_unif / V_emp_bl,
+  intercepto = unname(recta_ie[1]), pendiente = unname(recta_ie[2]),
+  mediaIngreso = mean(BigLucy$Income),
+  interceptoPct = 100 * unname(recta_ie[1]) / mean(BigLucy$Income),
   mallaAlpha = malla_a, curvaV = curva_imp,
   # la curva no es monótona: la mezcla con algo de uniforme gana a psi ~ Employees
   alphaMejor = malla_a[which.min(curva_imp[malla_a <= 1])],
   mejoraMezcla = V_unif / min(curva_imp[malla_a <= 1])
+)
+
+# =============================================================================
+# 11. Escisión de soporte mínimo (Deville y Tillé, 1998) con el ejemplo de
+#     Gutiérrez (ej. 4.4.2): cinco personas, x = (52, 60, 75, 100, 50), n = 3.
+#     Como en su tabla, la lista se ordena una vez por pi ascendente; en cada
+#     etapa las primeras N* - n* unidades sin decidir van a 0 y las demás a 1,
+#     con lambda = min(1 - max de las que van a 0, min de las que van a 1).
+# =============================================================================
+cat("== 11. escisión de soporte mínimo ==\n")
+esc_x <- c(Yves = 52, Ken = 60, Erik = 75, Sharon = 100, Leslie = 50)
+esc_n <- 3
+esc_x <- esc_x[order(esc_x)]                     # Leslie, Yves, Ken, Erik, Sharon
+esc_pi <- unname(esc_n * esc_x / sum(esc_x))
+limpia <- function(v) ifelse(abs(v) < 1e-9, 0, ifelse(abs(v - 1) < 1e-9, 1, v))
+pb <- esc_pi; resto <- 1; etapas <- list()
+repeat {
+  libres <- which(pb > 0 & pb < 1)
+  if (length(libres) == 0) break
+  faltan <- round(sum(pb[libres]))
+  a_cero <- head(libres, length(libres) - faltan)
+  a_uno <- tail(libres, faltan)
+  lam <- min(1 - max(pb[a_cero]), min(pb[a_uno]))
+  pa <- pb; pa[a_cero] <- 0; pa[a_uno] <- 1
+  pnueva <- pb
+  pnueva[a_cero] <- pb[a_cero] / (1 - lam)
+  pnueva[a_uno] <- (pb[a_uno] - lam) / (1 - lam)
+  pnueva <- limpia(pnueva)
+  etapas[[length(etapas) + 1]] <- list(lambda = lam, antes = pb, pa = pa, pb = pnueva,
+                                       prob = resto * lam)
+  resto <- resto * (1 - lam)
+  pb <- pnueva
+}
+soporte <- c(lapply(etapas, function(e) e$pa), list(pb))
+p_soporte <- c(sapply(etapas, `[[`, "prob"), resto)
+# Comprobaciones: las probabilidades suman 1, cada muestra tiene n unidades y
+# el diseño devuelve exactamente las pi pedidas.
+stopifnot(abs(sum(p_soporte) - 1) < 1e-12,
+          all(sapply(soporte, sum) == esc_n),
+          max(abs(Reduce(`+`, Map(`*`, soporte, p_soporte)) - esc_pi)) < 1e-12)
+cat("  lambdas:", round(sapply(etapas, `[[`, "lambda"), 4), "\n")
+cat("  p(s):", round(p_soporte, 4), "\n")
+
+cifras$escision <- list(
+  nombres = names(esc_x), x = unname(esc_x), n = esc_n, pi = esc_pi,
+  etapas = lapply(etapas, function(e) list(lambda = e$lambda, antes = e$antes,
+                                            pa = e$pa, pb = e$pb, prob = e$prob)),
+  soporte = lapply(seq_along(soporte), function(j)
+    list(muestra = names(esc_x)[soporte[[j]] == 1], prob = p_soporte[j]))
 )
 
 # =============================================================================

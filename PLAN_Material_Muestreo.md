@@ -7784,3 +7784,310 @@ JSON existe.
       `precalculo/`;
     - en el navegador, el cap. 7 vivo carga los 10 módulos con la consola limpia y 0 `.katex-error`, y el módulo 8
       muestra los dos bloques nuevos. No se midió el desborde: el panel estaba oculto.
+
+### T7.104 — El cap. 6 con el cap. 4 de Gutiérrez, fase 1: diagnóstico, citas y piloto M1–M3 (2026-10-30)
+
+Javier pidió usar el cap. 4 de Gutiérrez (*Estrategias de muestreo*, en línea en psirusteam.github.io) para mejorar
+el cap. 6. Añadió que su narrativa «resulta por momentos muy críptica… puede resultar muy abstracto y confuso para los
+estudiantes que se acercan a este tema por primera vez». Aprobó un plan en cuatro fases:
+- **Fase 1 (esta tarea):** diagnóstico, citas y un piloto en M1–M3.
+- **Fase 2:** M4–M7, con lo que aporta Gutiérrez: Raj, Brewer, Sunter, la escisión con su simulador, Poisson con π ∝ y,
+  y Hájek–Deville.
+- **Fase 3:** M8–M11, con dos ejercicios de su §4.5 y dos preguntas nuevas.
+- **Fase 4:** la auditoría habitual.
+
+El plan y la guía de la reescritura están en `PLAN_Narrativa_Cap6.md`, fuera de git.
+
+- **Diagnóstico.** Dos lectores independientes leyeron los 11 módulos sobre `main` `36a1f6b`: uno como estudiante que
+  ve el tema por primera vez y otro como docente.
+  - **La idea central nunca se dice en la prosa:** la varianza baja cuando $t_i/\psi_i$ es casi constante. Vive en
+    comentarios de código y en el quiz.
+  - **Faltan cuentas a mano**, y sobran metáforas en lugar de mecanismos («fuga», «estorbo», «amuleto»).
+  - **Hay 55 remisiones en unas 5 100 palabras.**
+  - **La notación cambia sin aviso:** $M_i$, $x_k$ y `m2` para el tamaño.
+  - **Los módulos más difíciles** son M7, M5, M10 y M9.
+- **Citas a Gutiérrez** (la duda D-1 de T7.101; se contrastaron con el libro en línea):
+  - **M2:** «§4.2: su π-estimador» pasa a «§4.2, Resultado 4.2.4: Hansen–Hurwitz».
+  - **M5:** «§4.3–4.4: πPT sistemático» era falso, porque Gutiérrez no trata el sistemático. Pasa a «§4.3: inclusión
+    forzosa; §4.4: Brewer, Sunter y escisión».
+  - **M7:** «§4.5: SYG» apuntaba a los ejercicios. Pasa a «Res. 4.3.1 y §4.4.3».
+  - **M9:** «§7.3» pasa a «§7.3.1, diseños autoponderados».
+  - **Glosario:** $\hat t_{y,p}$, $\widehat{Var}_{PPT}$, $\hat t_{y,\pi}$ y «Res. 4.3.1».
+- **La duda D-2** (la frase sin fuente «DANE, INEGI, la GEIH, la ENAHO…»). La sustituye un párrafo con fuente:
+  - el ej. 6.12 de Lohr (seroprevalencia en España: secciones con pps y 24 hogares por sección; una muestra
+    aproximadamente autoponderada y la misma carga de trabajo en cada sección);
+  - el §7.3.1 de Gutiérrez, que da el mismo motivo: controlar el trabajo de campo.
+- **Piloto M1–M3**, reescrito con un arco fijo:
+  - **M1:** pregunta, tabla de las 4 tiendas con las cuentas a mano, definición de PPT y de $\psi_i$, y la línea de la
+    insesgadez $E = \sum\psi_i\,t_i/\psi_i = 300$. Después, la varianza como suma de la tabla y una caja «La idea
+    central del capítulo»; el bloque R1 va detrás, como comprobación. El aviso de los pesos lleva su caso: sin ellos,
+    la esperanza es 643,25.
+  - **M2:** la estimación con reemplazo explicada como independencia; HH como media de $n$ variables independientes;
+    una caja de fórmulas con $j$ para las extracciones e $i$ para las unidades; 16 pares frente a 6 parejas; y la
+    repetición de D con probabilidad 0,39, que antes contradecía «la repetición es rara».
+  - **M3:** los dos algoritmos en pasos numerados, con un ejemplo a mano, el porqué y el costo. En Lahiri se
+    normaliza: 0,025, 0,05, 0,075 y 0,25 suman 0,4, y 0,25/0,4 = 0,625.
+  - **Notación única de tamaño $x_i$** en prosa, simulador, quiz y comentarios de R4 y P2. M9 sigue con $M_i$ como
+    tamaño de la UPM.
+  - **Cifras nuevas, que salen antes del código:**
+    - R1 imprime los cuatro sumandos de la varianza (961, 2450, 5547, 5290) y la esperanza sin pesos (643,25);
+    - R2 imprime $\psi_D^2$ (0,391);
+    - R4 imprime las probabilidades de un intento y entre las aceptadas.
+  - **Separadores de miles** en las cifras de 4 dígitos, como en el resto del sitio.
+- **Defecto de la plantilla.** Tailwind (CDN) inyecta su *preflight* después del `<style>` de la plantilla. Anula
+  `p { margin-bottom }` y el estilo de `h3`, así que en todo el sitio los párrafos seguidos salen pegados y los `h3`
+  parecen texto normal.
+  - Se corrige solo en el cap. 6, con `.animate-fade-in > p` y `.animate-fade-in > h3` en `ensambla_cap6.py`.
+  - Llevarlo a la plantilla queda para Javier.
+- **Lector de claridad sobre el piloto.** Un tercer lector independiente leyó M1–M3 en frío y los contrastó con el
+  diagnóstico.
+  - De 57 hallazgos: 44 resueltos, 11 parciales y 2 que siguen.
+  - Se cerraron después sus pendientes de más peso:
+    - la normalización de Lahiri;
+    - R1 después de la teoría;
+    - presentar $x_i$, $t_i$ y $\psi_i$ antes de la tabla;
+    - la caja de HH;
+    - recordar en M2 que $\psi \ne \pi$;
+    - el texto del simulador de selección;
+    - el 154 488 y el 643,25 con su fórmula;
+    - «ponderada» por «pesada».
+  - Sigue abierto el «254 condados y 3» del M1 frente a las escuelas de 367 y 109 del M9. Los dos son pendientes que
+    deja el cap. 5; el M1 nombra ahora Texas y Delaware.
+- **Verificado:**
+  - `ensambla_cap6.py`, byte a byte en la segunda pasada;
+  - `verifica_bloques --prosa`: 345 de 345 cifras y 75 de prosa, 0 sin respaldo; todo el sitio, 0 sin respaldo;
+  - `anota_salidas --check` = 0 en R y en Python;
+  - `verifica_referencias`: 46 resueltas, las nuevas revisadas una por una;
+  - `node --check`;
+  - `cuenta_sitio` = 0 desajustadas; el README pasa de 2 813 a **2 836** cifras;
+  - `verifica_publicado --local --pagina capitulo-6`: R (19) y Python (5) arrancan;
+  - los 24 bloques publicados salen con 0 en una carpeta con solo los CSV;
+  - en el navegador: 0 errores de consola y de KaTeX en los 11 módulos (347 fórmulas); los estados extremos del
+    simulador de selección, sin NaN; sin desborde a 1280 ni a 375 px.
+- **Sin commit ni publicación.** Espera el visto bueno de Javier al tono del piloto antes de la fase 2.
+
+### T7.105 — El cap. 6 con el cap. 4 de Gutiérrez, fase 2: M4–M7 reescritos y sus aportes (2026-10-31)
+
+Visto bueno de Javier al piloto de T7.104: «Sí, sigue con M4–M7». Se mantienen los 11 módulos.
+
+- **M4:**
+  - qué se sabe del cap. 2, con la línea de insesgadez $E = \sum (y_k/\pi_k)\,\pi_k = t$;
+  - el diseño $p(s) \propto x_k + x_l$ presentado antes de su resultado, con $\pi_A$ y el HT de AB a mano;
+  - por qué pierde: los cocientes $y_k/\pi_k$ (29,3; 48; 52,4; 326,7) frente a los $t_i/(n\psi_i)$ del HH (88, 80,
+    64, 196);
+  - la distinción $\psi$ frente a $\pi$ con el puente $\pi \approx n\psi$, en el bloque nuevo **R5b**.
+- **M5:**
+  - el πPT con las cuatro tiendas: D forzosa, tres muestras y $V = 53$ (bloque nuevo **R20**);
+  - los datos de `statepps` presentados en una caja; el sistemático en pasos, con un ejemplo a mano;
+  - **el criterio de Raj** (Gutiérrez, Res. 4.2.7, bloque **R21**), que explica el «0,46 no basta»: −405 719, con
+    $\mathrm{cor}(x, y^2/x) = -0{,}17$ y un intercepto de 43;
+  - la antigua advertencia partida en tres párrafos;
+  - **otros algoritmos:** Brewer, Sunter y la escisión de Deville–Tillé.
+    - **R22** compara las varianzas exactas o por réplicas:
+      - los diseños de alta entropía: eliminación de Tillé 697 273, Brewer 715 020 (4000 muestras) y máxima entropía
+        723 607;
+      - el sistemático: 575 401 con la lista alfabética y 344 951 con la ordenada;
+      - el soporte mínimo de Gutiérrez, con 50 muestras posibles: 3 063 834.
+
+      Cuenta además las parejas con $\pi_{kl} = 0$: 830 de 1225 en el sistemático y 0 en Tillé y en máxima
+      entropía. `sampling::UPminimalsupport` no sirve aquí, porque elige al azar qué unidades van a 1 y produce miles
+      de muestras distintas; por eso R22 programa el diseño de orden fijo.
+    - **P6** programa Sunter en Python: con 20 000 muestras, siempre $n = 10$ y una diferencia máxima con las $\pi$
+      de 0,0065.
+  - **El simulador nuevo «Escisión paso a paso»,** con el ej. 4.4.2 de Gutiérrez: x = (52, 60, 75, 100, 50), n = 3.
+    - Lo calcula `genera_cap6.R` (sección 11, `cifras$escision`), con valores exactos y comprobado: las
+      probabilidades suman 1 y el diseño devuelve las $\pi$.
+    - Las $\lambda$ exactas son 0,534; 0,045; 0,007 y 0,752. Gutiérrez calcula con dos decimales.
+- **M6:**
+  - la motivación al principio y el algoritmo en pasos;
+  - dos monedas a mano (en **R9**);
+  - $\Delta_{kl}$ definido, $V$ y $\widehat V$ por separado;
+  - **π ∝ y ⇒ HT = t·n_s/n** (Gutiérrez §4.1.3) y su **corrección con la razón** (bloque **R24**): en 20 000
+    muestras, el ECM pasa de 1 574 244 a 773 791 con la razón, y a 959 401 con el $N\hat t/\hat N$ de Gutiérrez.
+- **M7:**
+  - por qué hacen falta las $\pi_{kl}$, con las dos formas de $V$;
+  - la varianza separada de su **estimador**;
+  - el bloque nuevo **R6b**: las 6 muestras de las tiendas, donde la forma HT sale negativa en tres (−2342, −1241,
+    −1360) y SYG nunca, y las dos promedian 15 026;
+  - `agpps` presentado en una caja, con una tabla de decisión;
+  - la aproximación con reemplazo ascendida al cuerpo;
+  - **Hájek–Deville** (Gutiérrez, Res. 4.4.4, bloque **R23**):
+    - Hájek da 726 308 frente a la exacta de 723 607;
+    - sobre el sistemático, la esperanza exacta de Deville es 1,23 veces la $V$, frente a 1,53 de la aproximación
+      con reemplazo;
+    - en agpps, `varest` da 12,23 millones y `survey` con `pps = "brewer"`, lo mismo.
+- **Simuladores y glosario:**
+  - fuera las metáforas: «estorbo» pasa a «exclusión», «discrepancia» a «diferencia de cocientes», y «La lotería del
+    tamaño de muestra» pasa a llamarse «La distribución del tamaño de muestra»;
+  - el glosario añade a la fila πPT `UPtille, UPmaxentropy, S.piPS` y gana la fila «Varianza sin π_kl».
+- **Duraciones y recuentos:**
+  - minutos: M1 25, M2 25, M3 22, M4 25, M5 35, M6 25 y M7 30; el capítulo pasa de 249 a 282 minutos;
+  - la tarjeta de la portada: 11 simuladores, 32 bloques y 282 minutos;
+  - en `index.html` y el README: 71 simuladores, 223 bloques (172 de R y 51 de Python) y **2 972** cifras.
+- **Línea base de `cifras_prosa.json`:** «12,23» (el ee de Deville en millones) y «−13,7» (el intercepto de BigLucy
+  que cita Gutiérrez, comprobado en R).
+- **Verificado:**
+  - `ensambla_cap6.py`, byte a byte;
+  - `verifica_bloques --prosa`: 481 de 481 cifras y 112 de prosa, 0 sin respaldo; todo el sitio, 0 sin respaldo;
+  - `anota_salidas --check` = 0 en R (26 bloques) y en Python (6);
+  - `verifica_referencias`: 59 resueltas; las 27 nuevas, revisadas una por una;
+  - `node --check`;
+  - `cuenta_sitio` = 0 desajustadas;
+  - `genera_cap6.R`: las cifras de antes no cambian; solo se añade `escision`;
+  - `verifica_publicado --local --pagina capitulo-6`: R (26) y Python (6) arrancan;
+  - los 32 bloques publicados salen con 0 en una carpeta con solo los CSV;
+  - en el navegador: 0 errores de consola y de KaTeX en los 11 módulos; los estados extremos de los 5 simuladores de
+    M4–M7, sin NaN; sin desborde de página a 1280 ni a 375 px; las fórmulas anchas se desplazan dentro de su caja,
+    como en el resto del sitio.
+- **Lector de claridad sobre M4–M7.** Un lector independiente leyó en frío y contrastó con el diagnóstico.
+  - De 81 hallazgos: 72 resueltos, 7 parciales y 2 que seguían.
+  - Se corrigió después:
+    - el $p(s)$ derivado, $(x_k + x_l)/4800$, con el 4800 impreso en R5;
+    - $V = \sum_s p(s)(\hat t_s - t)^2$ escrita en M4;
+    - en la escisión: ordenar una sola vez, repetir desde el paso 2, por qué $\lambda$ es ese mínimo, y los $x$ con
+      sus nombres ($\pi = 3x/337$);
+    - la entropía y el diseño de máxima entropía definidos, con la eliminación de Tillé presentada;
+    - la notación de Sunter, que pasa a $e_k$ y $A_k$;
+    - en Raj: $m$ y MRAS, con la escala (963 006 frente a 557 287, un 73 % más);
+    - la analogía del sistemático, que estaba invertida;
+    - en M6: qué es $n$, la lectura «total por obtenidas entre esperadas», el 49 % explicado por California, y la
+      razón ligada a $\hat t_{x,\pi} = t_x n_s/n$;
+    - la caja de Hájek–Deville, que pasa al estimador de Deville en su forma de cocientes,
+      $\widehat V = \sum c_k (y_k/\pi_k - \hat R)^2$, con Hájek como la misma cuenta sobre la población;
+    - la introducción del simulador de Poisson, acortada;
+    - el mecanismo del «casi el triple».
+  - **Se movieron dos tablas:** la tabla ordenable «Cuatro diseños» pasa de M5 al final de M6, cuando ya se han visto
+    los cuatro diseños; y la tabla de decisión de M7, al final del módulo, como resumen.
+  - El lector señaló que M5 sigue largo, con unas 1870 palabras frente a unas 950 de M4, M6 y M7. Su duración pasó a
+    35 minutos.
+- **Sin commit ni publicación.** Espera el visto bueno de Javier antes de la fase 3 (M8–M11, ejercicios y preguntas).
+
+
+### T7.106 — El cap. 6 con el cap. 4 de Gutiérrez, fase 3: M8–M11, ejercicios y preguntas (2026-10-31)
+
+Visto bueno de Javier: «Sí, sigue con la fase 3».
+
+- **M8:**
+  - abre con Alaska (módulo 5) y escribe la varianza de Poisson término a término;
+  - el relato de Basu con sus probabilidades, comprobado en Lohr §6.7 (99/100 y 1/4900);
+  - el elefante simulado, presentado como «la tienda D al revés», con sus dos mundos impresos en **R12**: el resto de
+    las ventas, 1936 de 10 726, el 93,5 % de las veces, frente a un término de 135 366;
+  - las tres defensas ordenadas por momento;
+  - fuera la nota de IA, con jerga; ahora es una línea hacia el M10.
+- **M9:**
+  - `classpps` presentado en una caja (K, n, m y `hours`);
+  - la probabilidad de cada estudiante, $20/647 = 0{,}0309$ (impresa en **R14**), antes que la cancelación de los
+    pesos;
+  - el estimador escrito, con la clase 14 a mano ($z_{14} = 1294$; los $z_i$ en **R13**);
+  - el «como si fuera con reemplazo» justificado donde se usa;
+  - «conglomerado último» definido;
+  - fuera «ficción útil», «nombre de guerra» y «con gusto».
+- **M10:**
+  - la tabla de correspondencias entre encuestas y muestreo por importancia;
+  - la varianza cero con $\psi = y/t$ ligada a la idea central;
+  - la lectura de R15, con el enlace a Raj;
+  - BigLucy presentado en una caja, con $\alpha$ definido;
+  - la **mezcla defensiva** con nombre, ligada a la inclusión forzosa;
+  - un ejemplo concreto de *active learning*, y el resto de la jerga reducido a una línea.
+- **M11:**
+  - **Ejercicio 5 nuevo** (Gutiérrez §4.5): las $\pi$ con dos forzosas (194 y 151), Poisson con los $\varepsilon$ del
+    libro (sale {2, 4, 7, 8, 9, 10}) y Sunter con los $\xi$ (sale {1, 2, 5, 7, 8, 9}, igual que `S.piPS`). Bloques
+    **R25** y **P7**.
+  - **Ejercicio 6 nuevo** (Särndal et al. 1992, p. 117, vía Gutiérrez): un Poisson con 12 unidades donde se
+    esperaban 10.
+    - HT 945 598, ee 255 587, cv del 27 % e IC de 444 649 a 1 446 548;
+    - media 3329,6 con $N$ y 3549,1 con $\hat N = 266{,}4$;
+    - el HT de $x$ da 9818,4, 1,2 veces $t_x$: es el $t\,n_s/n$ del M6;
+    - la razón corrige el total a 787 999.
+
+    Bloques **R26** y **P8**.
+  - Los ejercicios 3 y 4 tienen ahora un enunciado y una solución más claros.
+  - **Dos preguntas nuevas:** la 12 (M6: Poisson con $\pi \propto y$ no da varianza nula) y la 13 (M5: el signo
+    del criterio de Raj).
+- **Duraciones y recuentos:**
+  - minutos: M8 22, M9 25, M10 22 y M11 45; el capítulo pasa a 301;
+  - la tarjeta de la portada: 36 bloques y 301 minutos;
+  - en `index.html` y el README: 138 preguntas, 43 ejercicios, 227 bloques (174 de R y 53 de Python) y **3 131**
+    cifras.
+- **Verificado:**
+  - `ensambla_cap6.py`, byte a byte;
+  - `verifica_bloques --prosa`: 640 de 640 cifras y 156 de prosa, 0 sin respaldo; todo el sitio, 0 sin respaldo;
+  - `anota_salidas --check` = 0 (28 bloques de R y 8 de Python);
+  - `verifica_referencias`: 71 resueltas, las 28 nuevas revisadas;
+  - `node --check`;
+  - `cuenta_sitio` = 0 desajustadas;
+  - `verifica_publicado --local`: R (28) y Python (8) arrancan;
+  - los 36 bloques publicados salen con 0 en una carpeta con solo los CSV;
+  - en el navegador: 0 errores de consola y de KaTeX en los 11 módulos; las 13 preguntas y las 6 soluciones (con
+    pestañas R/Python en la 5 y la 6) se ven bien; sin desborde de página a 1280 ni a 375 px, después de pasar a
+    texto las listas de uniformes del ejercicio 5.
+- **Lector de claridad sobre M8–M11.** Un lector independiente leyó en frío y contrastó con el diagnóstico.
+  - De 58 hallazgos: 43 resueltos, 14 parciales y 1 que seguía (cómo se sortearon las 5 clases).
+  - Se corrigió después:
+    - en Basu: la escala (el total es unas 50 veces un elefante) y que las probabilidades suman 1;
+    - el simulador del elefante, que llega a 0,9 y no a 1;
+    - en M9: el «como si» antes del estimador, las dos fuentes de azar de los $z_i$, $z_i = 647\,\bar y_i$ con la
+      media de 3,45, y que Lohr no dice el algoritmo;
+    - en M10: la tabla con $u_i$, el peso de importancia y el estimador; $\alpha$ en una fórmula; la mezcla
+      defensiva mejor ligada; la frase de RL simplificada;
+    - en el ejercicio 5(c): la tabla de umbrales de Sunter, impresa en R25 (0,5634; 0,4795; 0,3756; 0,4565;
+      0,5759; 0,3388);
+    - en el ejercicio 6: $\hat N = 266{,}43$;
+    - en los ejercicios 3 y 4: la notación y la razón de varianzas;
+    - las preguntas 12 («¿qué pasa con la varianza?») y 13 ($V_{MRAS} - V_{PPT}$), y la 4, que usaba $M_k$;
+    - la frase del quiz sobre la retroalimentación.
+- **Sin commit ni publicación.** Espera el visto bueno de Javier para la fase 4, la auditoría habitual del capítulo
+  entero.
+
+
+### T7.107 — El cap. 6 con el cap. 4 de Gutiérrez, fase 4: la auditoría habitual del capítulo entero (2026-10-31)
+
+Javier: «Sí, pasa a la fase 4, la auditoría habitual del capítulo entero».
+- **Cómo:** protocolo mecánico y cinco lectores independientes en solo lectura: ES, CL, PE, CO y VI.
+  - Leyeron una copia congelada (huella `8046fae38c288bf9`), con Lohr 3.ª, el cap. 4 de Gutiérrez y la versión
+    publicada anterior como contexto.
+  - Cada error se verificó aparte, con R, las fuentes o el navegador.
+- **El informe**, con los 33 errores, las 23 mejoras, las 3 dudas y los 7 defectos de la plantilla, está en
+  `PLAN_Auditoria_Cap6_Reescritura.md`, en la raíz del worktree `nifty-wu-2357d7`, fuera de git.
+- **Resultado:** la estadística es sólida (ninguna fórmula, clave ni solución mal calculada). Se corrigieron en la cadena
+  33 errores, N1–N33. Los de más peso:
+  - **visuales (gravedad alta):**
+    - el *preflight* de Tailwind borraba número y viñeta de las listas, y los pasos de los algoritmos parecían
+      párrafos;
+    - la tabla del M1 ensanchaba la página 43 px a 375 px;
+    - la tabla de 12 columnas del ejercicio 6 no cabía.
+  - **de lectura:**
+    - la curva de BigLucy (M10) se explicaba con un «elefante» que no existe; la causa es el intercepto de Raj: 99,9,
+      el 23 % del ingreso medio;
+    - «máxima entropía = Poisson con esas probabilidades», cuando las probabilidades se ajustan;
+    - Settles §5;
+    - el λ de la etapa 4 de la escisión;
+    - la clave ambigua de la P9;
+    - «m» con dos significados;
+    - `varest` presentado como la función `deville()`;
+    - la V inicial del simulador del elefante, distinta de la de R12.
+- **Cifras nuevas,** todas salidas del código:
+  - en `genera_cap6.R`: P(7 ≤ n ≤ 13) = 0,856, el `n` del elefante y la recta de BigLucy (intercepto, pendiente,
+    media y porcentaje); las cifras anteriores no cambian;
+  - en `cifras_prosa.json`: 0,78 (el λ impreso por Gutiérrez) y 80,5 (R24 en porcentaje).
+- **CSS local en `ensambla_cap6.py`:** listas, párrafos dentro de las cajas, `h3` en bloque y tablas con
+  `position: relative`. Las reglas van con especificidad (0,0,2), para ganar al *preflight* y perder ante las clases.
+- **Verificado:**
+  - `ensambla_cap6.py`, byte a byte (`1c446307c2937dc1`); `genera_cap6.R` reproduce el JSON;
+  - `verifica_bloques --prosa`: 641 de 641 cifras y 163 de prosa, 0 sin respaldo; todo el sitio, 0 sin respaldo;
+  - `anota_salidas --check` = 0;
+  - `verifica_referencias`: 74 resueltas y revisadas (las 5 nuevas y las 4 cambiadas, una a una);
+  - `node --check`;
+  - `cuenta_sitio` = 0 desajustes; el README pasa a 3 132 cifras contrastadas;
+  - `verifica_publicado --local`: R (28) y Python (8) arrancan;
+  - los bloques publicados salen con 0 en una carpeta con solo los CSV;
+  - en el navegador, a 1280 y 375 px: listas numeradas en los 11 módulos; sin desborde de página; glosario y
+    ejercicio 6 dentro de su marco; rótulos de `ppt-mc` sin pisarse; 0 errores de consola, de KaTeX y de NaN.
+- **Para que Javier elija:**
+  - MN-1: el M4 contradice a Lohr, Ej. 6.8–6.9, con las mismas tiendas (4 383,6 < 7 124);
+  - MN-2: el M5 está sobrecargado;
+  - MN-3 a MN-23: el resto de las mejoras;
+  - las dudas DN-1 a DN-3;
+  - llevar el parche de CSS a la plantilla, porque los otros siete capítulos tienen las listas sin número.
+- **Commit de las cuatro fases (T7.104–T7.107), pedido por Javier el 2026-10-31.** Son los 16 archivos cambiados
+  desde T7.104, en un solo commit sobre `36a1f6b`. Sin push ni publicación en gh-pages.

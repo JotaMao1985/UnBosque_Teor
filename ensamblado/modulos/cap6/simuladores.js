@@ -130,7 +130,7 @@
       }
 
       crearControles(raiz.querySelector('.simulador-controles'), [
-        { clave: 'mostrar', etiqueta: 'Sorteo (0 ψ∝área · 1 iguales · 2 ambos)', min: 0, max: 2, paso: 1 }
+        { clave: 'mostrar', etiqueta: 'Sorteo (0: ψ proporcional al área · 1: iguales · 2: ambos)', min: 0, max: 2, paso: 1 }
       ], params, pintar);
       pintar();
       return [g];
@@ -188,7 +188,7 @@
       }
 
       crearControles(raiz.querySelector('.simulador-controles'), [
-        { clave: 'sorteo', etiqueta: 'Sorteo (0 ψ∝área · 1 iguales · 2 ambos)', min: 0, max: 2, paso: 1 }
+        { clave: 'sorteo', etiqueta: 'Sorteo (0: ψ proporcional al área · 1: iguales · 2: ambos)', min: 0, max: 2, paso: 1 }
       ], params, pintar);
       pintar();
       return [g];
@@ -230,7 +230,7 @@
           lectura = [
             { etiqueta: 'método:', valor: 'Lahiri (rechazo)' },
             { etiqueta: 'candidata sorteada:', valor: T.nombres[i] + ' (área ' + fmtNum(T.m2[i], 0) + ')' },
-            { etiqueta: 'uniforme contra M_max = 1000:', valor: fmtNum(params.u2, 0) },
+            { etiqueta: 'uniforme contra x_max = 1000:', valor: fmtNum(params.u2, 0) },
             { etiqueta: 'decisión:', valor: acepta ? 'ACEPTADA (u ≤ área)' : 'RECHAZADA — se vuelve a sortear' },
             { etiqueta: 'P(aceptar | candidata ' + T.nombres[i] + '):', valor: fmtNum(T.m2[i] / 1000, 3) },
             { etiqueta: 'intentos promedio del método:', valor: fmtNum(D6.seleccion.intentosTeoricos, 2) }
@@ -245,7 +245,7 @@
         { clave: 'metodo', etiqueta: 'Método (0 acumulativo · 1 Lahiri)', min: 0, max: 1, paso: 1 },
         { clave: 'u', etiqueta: 'Uniforme del acumulativo (0–1600)', min: 1, max: 1600, paso: 1 },
         { clave: 'candidata', etiqueta: 'Lahiri: tienda candidata (1=A … 4=D)', min: 1, max: 4, paso: 1 },
-        { clave: 'u2', etiqueta: 'Lahiri: uniforme contra M_max (0–1000)', min: 1, max: 1000, paso: 1 }
+        { clave: 'u2', etiqueta: 'Lahiri: uniforme contra x_max (0–1000)', min: 1, max: 1000, paso: 1 }
       ], params, pintar);
       pintar();
       return [g];
@@ -308,6 +308,9 @@
         tituloX: 'HT del total', tituloY: 'réplicas por caja'
       });
       ejesEnEspanol(g, 0, 0);
+      // Con waterarea y pop2019 los totales tienen 8 y 9 cifras: el eje va en
+      // millones, y con pocas marcas a 375 px, para que los rótulos no se pisen.
+      g.options.scales.x.ticks.maxTicksLimit = lienzo.parentElement.clientWidth < 500 ? 5 : 10;
 
       function pintar() {
         const V = D6.statepps[VARS[params.variable].clave];
@@ -317,6 +320,10 @@
           serieHistograma(V.mas, 'MAS de 10 estados', COLORES_GRAFICO.secundario),
           serieVertical(V.total, alto, 'total verdadero', COLORES_GRAFICO.gris)
         ];
+        const maxX = Math.max(...g.data.datasets.flatMap(d => d.data.map(p => Math.abs(p.x))));
+        const escala = maxX >= 1e6 ? 1e6 : 1;
+        g.options.scales.x.ticks.callback = v => fmtNum(v / escala, Number.isInteger(v / escala) ? 0 : 1);
+        g.options.scales.x.title.text = escala > 1 ? 'HT del total (millones)' : 'HT del total';
         g.options.scales.x.min = undefined; g.options.scales.x.max = undefined;
         g.update('none');
 
@@ -339,7 +346,57 @@
     };
 
     // ---------------------------------------------------------------
-    // M6 · La lotería del tamaño de muestra (Poisson-binomial exacta)
+    // M5 · La escisión de soporte mínimo, etapa por etapa (Gutiérrez,
+    // ej. 4.4.2; las etapas las calcula genera_cap6.R, sección 11)
+    // ---------------------------------------------------------------
+    SIMULADORES['escision'] = function (raiz) {
+      const E = D6.escision;
+      const T = E.etapas.length;
+      const params = { etapa: 1 };
+      const lienzo = raiz.querySelector('canvas');
+      const enMuestra = v => E.nombres.filter((_, k) => v[k] === 1).join(', ');
+
+      const g = crearGraficoBarras(lienzo, E.nombres, E.etapas[0].antes, {
+        etiqueta: 'π al empezar la etapa', color: COLORES_GRAFICO.primario, min: 0, max: 1,
+        barrasExtra: [{ etiqueta: 'π si no se cierra (πᵇ)', valores: E.etapas[0].pb, color: COLORES_GRAFICO.gris }]
+      });
+      ejesEnEspanol(g, 0, 1);
+
+      function pintar() {
+        const e = E.etapas[params.etapa - 1];
+        g.data.datasets[0].data = e.antes;
+        // las que entran en la muestra si la etapa se cierra, en naranja
+        g.data.datasets[0].backgroundColor = e.pa.map(v => v === 1 ? COLORES_GRAFICO.secundario : COLORES_GRAFICO.primario);
+        g.data.datasets[1].data = e.pb;
+        g.update('none');
+
+        const quedaba = e.prob / e.lambda;
+        const lectura = [
+          { etiqueta: 'etapa:', valor: fmtNum(params.etapa, 0) + ' de ' + fmtNum(T, 0) },
+          { etiqueta: 'λ, probabilidad de cerrar aquí:', valor: fmtNum(e.lambda, 4) },
+          { etiqueta: 'si se cierra, la muestra es:', valor: enMuestra(e.pa) + ' (en naranja)' },
+          { etiqueta: 'probabilidad de esa muestra:', valor: fmtNum(e.lambda, 4) + ' × ' + fmtNum(quedaba, 4) +
+            ' (lo que llegó a esta etapa) = ' + fmtNum(e.prob, 4) },
+          { etiqueta: 'si no (1 − λ):', valor: 'se sigue con las barras grises' }
+        ];
+        if (params.etapa === T) {
+          const ultima = E.soporte[T];
+          lectura.push({ etiqueta: 'y la última muestra:', valor: ultima.muestra.join(', ') + ', con ' + fmtNum(ultima.prob, 4) });
+          lectura.push({ etiqueta: 'muestras posibles en total:', valor: fmtNum(E.soporte.length, 0) +
+            ' (sus probabilidades suman 1)' });
+        }
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), lectura);
+      }
+
+      crearControles(raiz.querySelector('.simulador-controles'), [
+        { clave: 'etapa', etiqueta: 'Etapa', min: 1, max: T, paso: 1 }
+      ], params, pintar);
+      pintar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
+    // M6 · La distribución del tamaño de muestra (Poisson-binomial exacta)
     // ---------------------------------------------------------------
     SIMULADORES['poisson-n'] = function (raiz) {
       const params = { factor: 1 };
@@ -426,8 +483,8 @@
           { etiqueta: 'par:', valor: T.nombres[k] + '–' + T.nombres[l] },
           { etiqueta: 'π_k · π_l:', valor: fmtNum(E.piK[k] * E.piK[l], 4) },
           { etiqueta: 'π_kl:', valor: fmtNum(E.piKl[k][l], 4) },
-          { etiqueta: '«estorbo» π_kπ_l − π_kl:', valor: fmtNum(E.piK[k] * E.piK[l] - E.piKl[k][l], 4) },
-          { etiqueta: 'discrepancia (y_k/π_k − y_l/π_l)²:', valor: fmtNum(Math.pow(d[k] - d[l], 2), 0) },
+          { etiqueta: 'exclusión π_kπ_l − π_kl:', valor: fmtNum(E.piK[k] * E.piK[l] - E.piKl[k][l], 4) },
+          { etiqueta: 'diferencia de cocientes (y_k/π_k − y_l/π_l)²:', valor: fmtNum(Math.pow(d[k] - d[l], 2), 0) },
           { etiqueta: 'aporte:', valor: fmtNum(aportes[i], 0) + ' (' + fmtPct(aportes[i] / E.V, 1) + ' de V = ' +
             fmtNum(E.V, 0) + ')' }
         ]);
@@ -445,7 +502,12 @@
     // ---------------------------------------------------------------
     SIMULADORES['explosiva'] = function (raiz) {
       const E = D6.elefante;
-      const params = { piE: E.piElefanteX };
+      // El JSON guarda las π con 8 decimales, y con y²/π eso mueve V en la 7.ª
+      // cifra: se recalculan desde x (π = n·x/Σx; genera_cap6.R comprueba que
+      // ninguna se trunca), para que la V inicial sea la del bloque R12.
+      const sumaX = E.x.reduce((a, b) => a + b, 0);
+      const piBase = E.x.map(v => E.n * v / sumaX);
+      const params = { piE: piBase[19] };
       const lienzo = raiz.querySelector('canvas');
       const etiquetas = E.y.map((_, i) => i + 1);
 
@@ -463,7 +525,7 @@
       });
 
       function pintar() {
-        const pi = E.piBase.slice();
+        const pi = piBase.slice();
         pi[19] = params.piE;
         const aportes = pi.map((p, i) => (1 / p - 1) * E.y[i] * E.y[i]);
         const V = aportes.reduce((a, b) => a + b, 0);
@@ -472,16 +534,18 @@
         g.options.scales.y.max = topeLog(Math.max(1e10, Math.max(...aportes) * 1.5));
         g.update('none');
 
-        const VBase = E.piBase.map((p, i) => (1 / p - 1) * E.y[i] * E.y[i]).reduce((a, b) => a + b, 0);
+        const VBase = piBase.map((p, i) => (1 / p - 1) * E.y[i] * E.y[i]).reduce((a, b) => a + b, 0);
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'π del elefante:', valor: fmtNum(params.piE, 3) + ' (por su área le tocaba ' +
-            fmtNum(E.piElefanteX, 3) + ')' },
+            fmtNum(piBase[19], 3) + ')' },
           { etiqueta: 'su y:', valor: fmtNum(E.yElefante, 0) + ' — el ' + fmtPct(E.yElefante / E.totalY, 0) + ' del total' },
           { etiqueta: 'V total del HT (Poisson):', valor: fmtNum(V, 0) },
           { etiqueta: 'el elefante aporta:', valor: fmtPct(aportes[19] / V, 2) },
           { etiqueta: 'frente a la V con su π de área:', valor: fmtNum(V / VBase, 2) + '×' },
-          { etiqueta: 'defensa:', valor: params.piE >= 0.5 ? 'π grande: bomba desactivada' :
-            (params.piE < 0.03 ? '¡π mínima con y enorme: explosión!' : 'zona de riesgo' ) }
+          { etiqueta: 'defensa:', valor: params.piE >= 0.5
+            ? 'V baja mucho, pero el elefante sigue dominando: solo π = 1 anula su término'
+            : (params.piE < 0.03 ? '¡π mínima con y enorme: explosión!'
+              : 'π pequeña para su y: el elefante domina V') }
         ]);
       }
 
@@ -602,7 +666,7 @@
       return {
         descripcion: 'Estimar el total de condados de EE.UU. (3 143) con n = 10 estados y cuatro ' +
           'diseños. Las varianzas del MAS y del πPT sistemático (lista en orden alfabético) salen de ' +
-          '10 000 réplicas; las de Poisson y HH son exactas. Pulsa cualquier cabecera para reordenar.',
+          '10 000 réplicas; las de Poisson y HH son exactas.',
         columnas: [
           { clave: 'diseno', titulo: 'Diseño', tipo: 'texto' },
           { clave: 'n', titulo: 'n', tipo: 'texto' },
@@ -706,11 +770,13 @@
         { concepto: 'Prob. de una extracción', aqui: '\\psi_i', lohr: '\\psi_i', gutierrez: 'p_k', r: 'prob = psi' },
         { concepto: 'Prob. de inclusión', aqui: '\\pi_k', lohr: '\\pi_i', gutierrez: '\\pi_k', r: 'inclusionprobabilities()' },
         { concepto: 'Conjunta de segundo orden', aqui: '\\pi_{kl}', lohr: '\\pi_{ik}', gutierrez: '\\pi_{kl}', r: 'ppsmat(Pmat)' },
-        { concepto: 'Estimador con reemplazo', aqui: '\\hat{t}_{HH}', lohr: '\\hat{t}_\\psi', gutierrez: '\\hat{t}_{p}', r: 'mean(y/psi)' },
-        { concepto: 'Su varianza estimada', aqui: 's_z^2/n', lohr: 's_u^2/n', gutierrez: '\\widehat{V}_{p}', r: 'var(z)/n' },
-        { concepto: 'Estimador sin reemplazo', aqui: '\\hat{t}_\\pi', lohr: '\\hat{t}_{HT}', gutierrez: '\\hat{t}_\\pi', r: 'svytotal + probs' },
-        { concepto: 'Varianza SYG', aqui: '\\widehat{V}_{SYG}', lohr: '\\widehat{V}_{SYG}', gutierrez: '\\widehat{V}_{SYG}', r: 'variance = "YG"' },
-        { concepto: 'Diseño πPT / πps', aqui: '\\pi_k \\propto x_k', lohr: '\\text{pps sin reemplazo}', gutierrez: '\\pi PT', r: 'UPsystematic, UPbrewer' },
+        { concepto: 'Estimador con reemplazo', aqui: '\\hat{t}_{HH}\\ (\\hat{t}_\\psi \\text{ si } n = 1)', lohr: '\\hat{t}_\\psi', gutierrez: '\\hat{t}_{y,p}', r: 'mean(y/psi)' },
+        { concepto: 'Su varianza estimada', aqui: 's_z^2/n', lohr: 's_u^2/n', gutierrez: '\\widehat{Var}_{PPT}(\\hat{t}_{y,p})', r: 'var(z)/n' },
+        { concepto: 'Estimador sin reemplazo', aqui: '\\hat{t}_\\pi', lohr: '\\hat{t}_{HT}', gutierrez: '\\hat{t}_{y,\\pi}', r: 'svytotal + probs' },
+        { concepto: 'Varianza SYG', aqui: '\\widehat{V}_{SYG}', lohr: '\\widehat{V}_{SYG}', gutierrez: '\\text{Res. 4.3.1, con } \\Delta_{kl}', r: 'variance = "YG"' },
+        { concepto: 'Diseño πPT / πps', aqui: '\\pi_k \\propto x_k', lohr: '\\text{pps sin reemplazo}', gutierrez: '\\pi PT', r: 'UPsystematic, UPbrewer, UPtille, UPmaxentropy, S.piPS' },
+        { concepto: 'Varianza sin π_kl, con reemplazo', aqui: 's_z^2/n,\\ z_k = n\\,y_k/\\pi_k', lohr: '\\text{(6.24)}', gutierrez: '\\text{—}', r: 'var(z) / n' },
+        { concepto: 'Varianza sin π_kl, Hájek–Deville', aqui: '\\widehat{V}_{Deville}', lohr: '\\text{—}', gutierrez: '\\text{Res. 4.4.4}', r: 'varest(), pps = "brewer"' },
         { concepto: 'Diseño de Poisson', aqui: '\\text{PO}(\\pi)', lohr: '\\text{Poisson sampling}', gutierrez: 'PO', r: 'rbinom(N, 1, pi)' },
         { concepto: 'Inclusión forzosa', aqui: '\\pi_k = 1', lohr: '\\text{certainty psu}', gutierrez: '\\text{incl. forzosa}', r: 'pik >= 1' },
         { concepto: 'Peso de diseño', aqui: 'w_k = 1/\\pi_k', lohr: 'w_i', gutierrez: 'd_k', r: 'SamplingWeight' }
@@ -750,11 +816,11 @@
       {
         tipo: 'opcion',
         modulo: 3,
-        pregunta: 'Un marco tiene 40 millones de unidades repartidas en archivos que no caben juntos en memoria. No se pueden recorrer todos antes de sortear, pero sí leer cualquier unidad por su número, y se conocen N y el tamaño máximo M_max. ¿Qué método de selección PPT conviene y por qué?',
+        pregunta: 'Un marco tiene 40 millones de unidades repartidas en archivos que no caben juntos en memoria. No se pueden recorrer todos antes de sortear, pero sí leer cualquier unidad por su número, y se conocen N y el tamaño máximo x_max. ¿Qué método de selección PPT conviene y por qué?',
         pista: '¿Cuál de los dos métodos necesita la suma de todos los tamaños antes del primer sorteo?',
         opciones: [
-          { texto: 'Lahiri: sortea una unidad entre 1 y N y la acepta o la rechaza contra M_max, sin acumular nada, al precio de repetir intentos.', correcta: true,
-            retro: 'Correcto. El acumulativo exige construir los tramos: recorrer y sumar TODO el marco antes del primer sorteo. Lahiri solo necesita poder leer una unidad cualquiera y conocer N y M_max. (Si las unidades llegaran una a una y hubiera que decidir en el momento, ninguno de los dos serviría: eso lo resuelve Poisson, módulo 6.)' },
+          { texto: 'Lahiri: sortea una unidad entre 1 y N y la acepta o la rechaza contra x_max, sin acumular nada, al precio de repetir intentos.', correcta: true,
+            retro: 'Correcto. El acumulativo exige construir los tramos: recorrer y sumar TODO el marco antes del primer sorteo. Lahiri solo necesita poder leer una unidad cualquiera y conocer N y x_max. (Si las unidades llegaran una a una y hubiera que decidir en el momento, ninguno de los dos serviría: eso lo resuelve Poisson, módulo 6.)' },
           { texto: 'El acumulativo, porque es exacto y Lahiri es aproximado.', correcta: false,
             retro: 'Los dos son EXACTOS — la verificación de 100 000 sorteos lo confirmó para ambos. La diferencia es operativa (memoria y pasadas), no probabilística.' },
           { texto: 'Ninguno: con marcos grandes solo funciona el MAS.', correcta: false,
@@ -766,7 +832,7 @@
       {
         tipo: 'numerica',
         modulo: 4,
-        pregunta: 'En el diseño sin reemplazo de las cuatro tiendas ($p(s) \\propto M_k + M_l$), las π de A, B y C son 0,375, 0,4167 y 0,4583. Sabiendo que $\\sum \\pi_k = n$, ¿cuánto vale $\\pi_D$? Dos decimales.',
+        pregunta: 'En el diseño sin reemplazo de las cuatro tiendas ($p(s) \\propto x_k + x_l$), las π de A, B y C son 0,375, 0,4167 y 0,4583. Sabiendo que $\\sum \\pi_k = n$, ¿cuánto vale $\\pi_D$? Dos decimales.',
         pista: 'Las cuatro π deben sumar n = 2.',
         respuesta: 0.75,
         tolerancia: 0.005,
@@ -794,7 +860,7 @@
         pista: 'Raíz cuadrada.',
         respuesta: 2.41,
         tolerancia: 0.02,
-        retroAcierto: '$\\sqrt{5{,}83} = 2{,}41$: sobre un E(n) de 10, el diseño entrega entre 7 y 13 la mayoría de las veces (P(9 ≤ n ≤ 11) es solo 0,466). El n aleatorio de Poisson no es un tecnicismo — se siente.',
+        retroAcierto: '$\\sqrt{5{,}83} = 2{,}41$: sobre un E(n) de 10, el diseño entrega entre 7 y 13 estados el 86 % de las veces, y entre 9 y 11 solo el 47 %. El n aleatorio de Poisson no es un tecnicismo — se siente.',
         retroFallo: 'Es $\\sqrt{5{,}83} = 2{,}41$. Nota el tamaño relativo: ±24 % del n esperado. La convolución exacta del módulo da P(n = 10) = 0,164 — cinco de cada seis veces, el «n = 10» nominal no se cumple.'
       },
       {
@@ -810,7 +876,7 @@
           { texto: 'La SYG subestima: el ee verdadero es el de la forma HT.', correcta: false,
             retro: 'No hay «verdadero» entre los dos sin más información — pero la teoría y la práctica (Lohr §6.4.1, ej. 6.10) señalan a la forma HT como el estimador errático. Aquí, además, 70 millones implicaría un cv del 7,5 % para un diseño construido para ser preciso.' },
           { texto: 'Las π_kl del archivo están corruptas.', correcta: false,
-            retro: 'Las mismas π_kl producen la SYG perfectamente razonable (cv 1,3 %) y reproducen los pesos del archivo. El problema es la forma del estimador, no los datos.' }
+            retro: 'Las mismas π_kl producen la SYG perfectamente razonable (cv 1,3 %). El problema es la forma del estimador, no los datos.' }
         ]
       },
       {
@@ -852,7 +918,7 @@
       {
         tipo: 'opcion',
         modulo: 9,
-        pregunta: 'En classpps, TODOS los estudiantes acaban con peso 32,35. ¿Qué combinación de diseño produce esa igualdad exacta?',
+        pregunta: 'En classpps, TODOS los estudiantes acaban con peso 32,35. ¿Por qué el diseño de classpps produce esa igualdad exacta?',
         pista: 'Escribe el peso como producto de las dos etapas y busca qué se cancela.',
         opciones: [
           { texto: 'PPT en la primera etapa (ψ ∝ M_i) con m fijo en la segunda: w = [K/(nM_i)]·[M_i/m] = K/(nm) — el M_i se cancela.', correcta: true,
@@ -907,6 +973,38 @@
             retro: 'Mira la línea gris: ambos histogramas la tienen dentro — los dos HT son insesgados (el MC dio sesgo relativo < 1 %). Lo que difiere brutalmente es la dispersión.' },
           { texto: 'El B, pero el problema es el n: el sistemático usa menos estados.', correcta: false,
             retro: 'Los dos diseños usan exactamente n = 10 estados por réplica. La diferencia entera es CÓMO se reparten las π, no cuántas unidades entran.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 6,
+        pregunta: 'En un diseño de Poisson, alguien elige $\\pi_k = n\\,y_k/t$, proporcionales a la propia variable de interés. ¿Qué pasa con la varianza del HT?',
+        pista: '¿Cuánto aporta al HT cada unidad que sale? ¿Y cuántas unidades salen?',
+        opciones: [
+          { texto: 'No es cero: cada unidad que sale aporta $t/n$, así que el HT vale $t\\,n_s/n$ y cambia con el número de unidades que salen.', correcta: true,
+            retro: 'Exacto (Gutiérrez, §4.1.3). Con tamaño fijo esas π darían varianza cero; con Poisson, todo el error viene del tamaño aleatorio. Por eso conviene corregir con la razón, $t_x\\,\\hat{t}_{y,\\pi}/\\hat{t}_{x,\\pi}$, que cancela la fracción $n_s/n$.' },
+          { texto: 'Cero, porque los cocientes $y_k/\\pi_k$ son todos iguales.', correcta: false,
+            retro: 'Los cocientes sí son iguales, $t/n$, pero el HT es su suma sobre la muestra, y en Poisson el número de sumandos es aleatorio. La idea central del capítulo da varianza cero solo con tamaño fijo.' },
+          { texto: 'No se puede calcular, porque Poisson no tiene $\\pi_{kl}$.', correcta: false,
+            retro: 'Sí las tiene, y son las más simples: $\\pi_{kl} = \\pi_k\\pi_l$. Por eso su varianza es exacta sin matriz de conjuntas: $\\sum_U (1/\\pi_k - 1)\\,y_k^2$.' },
+          { texto: 'Es igual a la del MAS con el mismo tamaño esperado.', correcta: false,
+            retro: 'No hay razón para eso. Con π proporcionales a y, la varianza viene solo de cuántas unidades salen, y depende de $V(n_s) = \\sum \\pi_k(1 - \\pi_k)$, no de la dispersión de y como en el MAS.' }
+        ]
+      },
+      {
+        tipo: 'opcion',
+        modulo: 5,
+        pregunta: 'Con los estados, la correlación entre la población y el número de condados es 0,46, positiva. Aun así, el criterio de Raj da $V_{MRAS} - V_{PPT} = \\frac{N^2}{n}\\,\\mathrm{Cov}(x,\\ y^2/x) = -405\\,719$. Con 10 extracciones con reemplazo, ¿qué conviene para estimar el total de condados?',
+        pista: 'El criterio es la diferencia $V_{MRAS} - V_{PPT}$. ¿Qué dice su signo?',
+        opciones: [
+          { texto: 'El MAS con reemplazo: la diferencia $V_{MRAS} - V_{PPT}$ es negativa, así que el PPT tiene más varianza.', correcta: true,
+            retro: 'Correcto. Lo que cuenta no es la correlación de x con y, sino la de x con $y^2/x$, que aquí es −0,17. El PPT gana cuando la recta de y sobre x pasa cerca del origen, y la de los condados corta el eje en 43.' },
+          { texto: 'El PPT, porque la correlación es positiva.', correcta: false,
+            retro: 'La correlación positiva no basta. El criterio mide la correlación de x con $y^2/x$, y con los condados es negativa: los condados no crecen en proporción a la población.' },
+          { texto: 'Da igual: con reemplazo los dos diseños tienen la misma varianza.', correcta: false,
+            retro: 'No: la diferencia es exactamente $\\frac{N^2}{n}\\mathrm{Cov}(x,\\ y^2/x)$. Solo sería cero si esa covarianza fuera nula.' },
+          { texto: 'Ninguno: el criterio solo vale sin reemplazo.', correcta: false,
+            retro: 'Al revés: el criterio de Raj es exacto para los diseños con reemplazo, y para el πPT sin reemplazo es orientativo.' }
         ]
       }
     ];

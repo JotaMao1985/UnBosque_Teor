@@ -28,20 +28,20 @@ print(f"muestra {s + 1} -> t_hat = {z.mean():.0f}, ee = {(z.var(ddof=1) / 2)**0.
 
 print("\n###BLOQUE-P2###\n")
 # Los dos metodos de seleccion, en Python puro. Acumulativo: un uniforme
-# contra los tramos. Lahiri: rechazo contra M_max. (Otro generador que R:
+# contra los tramos. Lahiri: rechazo contra x_max. (Otro generador que R:
 # las frecuencias no son las de R, pero clavan las mismas psi.)
 acum = np.cumsum(m2)
 u = rng.uniform(0, m2.sum(), size=100000)
 sel = np.searchsorted(acum, u)
 print("frecuencias acumulativo:", np.round(np.bincount(sel) / 100000, 4))
 
-M_max = m2.max()
+x_max = m2.max()
 cand = rng.integers(0, 4, size=300000)
-acepta = rng.uniform(0, M_max, size=300000) <= m2[cand]
+acepta = rng.uniform(0, x_max, size=300000) <= m2[cand]
 sel_lahiri = cand[acepta][:100000]
 print("frecuencias Lahiri:     ", np.round(np.bincount(sel_lahiri) / 100000, 4))
 print("psi teoricas:           ", np.round(psi, 4))
-print(f"tasa de aceptacion Lahiri = {acepta.mean():.3f} (teorica {m2.mean() / M_max:.3f})")
+print(f"tasa de aceptacion Lahiri = {acepta.mean():.3f} (teorica {m2.mean() / x_max:.3f})")
 #> frecuencias acumulativo: [0.0633 0.1262 0.1876 0.623 ]
 #> frecuencias Lahiri:      [0.0631 0.1271 0.1869 0.6229]
 #> psi teoricas:            [0.0625 0.125  0.1875 0.625 ]
@@ -75,6 +75,50 @@ for k in range(4):
 print(f"V por enumeracion = {V_enum:.2f}   V por SYG = {V_syg:.2f}")
 #> pi_k: [0.375  0.4167 0.4583 0.75  ]  suma = 2.0
 #> V por enumeracion = 15025.67   V por SYG = 15025.67
+
+print("\n###BLOQUE-P6###\n")
+# El metodo de Sunter (Gutierrez, sec. 4.4.1), programado a mano: se recorre la
+# lista de mayor a menor y se decide unidad por unidad. Si ya van e_k elegidas
+# y las pi de las anteriores suman A_k, la unidad k entra con probabilidad
+#   pi_k * (n - e_k) / (n - A_k).
+# Es el algoritmo de TeachingSampling::S.piPS.
+statepps = pd.read_csv("CSV data sets for SDA 3e/statepps.csv")
+pob = statepps["pop2019"].to_numpy(dtype=float)
+pi_s = 10 * pob / pob.sum()
+while (pi_s > 1).any():                # California: se trunca en 1 y se reescala
+    forzosa = pi_s >= 1
+    pi_s[~forzosa] = (10 - forzosa.sum()) * pob[~forzosa] / pob[~forzosa].sum()
+    pi_s[forzosa] = 1
+
+def sunter(pi, u):
+    """Una muestra de Sunter; u trae un uniforme por unidad."""
+    n = round(pi.sum())
+    elegidas, acumulada, muestra = 0, 0.0, []
+    for k in np.argsort(-pi):          # de mayor a menor
+        if u[k] < pi[k] * (n - elegidas) / (n - acumulada):
+            muestra.append(k)
+            elegidas += 1
+        acumulada += pi[k]
+    return muestra
+
+rng = np.random.default_rng(2026)
+s = sunter(pi_s, rng.uniform(size=51))
+print("muestra:", ", ".join(statepps["state"].iloc[sorted(s)]))
+
+# 20 000 muestras a la vez: se recorre la lista una sola vez con un vector.
+B = 20000
+elegidas, acumulada = np.zeros(B), 0.0
+dentro = np.zeros((B, 51), dtype=bool)
+for k in np.argsort(-pi_s):
+    entra = rng.uniform(size=B) < pi_s[k] * (10 - elegidas) / (10 - acumulada)
+    dentro[:, k] = entra
+    elegidas += entra
+    acumulada += pi_s[k]
+print("tamanos de muestra que salen:", np.unique(dentro.sum(axis=1)))
+print(f"max |frecuencia - pi| = {np.abs(dentro.mean(axis=0) - pi_s).max():.4f}")
+#> muestra: Alabama, California, Delaware, Florida, Maine, Minnesota, New Jersey, Tennessee, Texas, Washington
+#> tamanos de muestra que salen: [10]
+#> max |frecuencia - pi| = 0.0065
 
 print("\n###BLOQUE-P4###\n")
 # La distribucion EXACTA del n aleatorio de Poisson (Poisson-binomial),
@@ -119,3 +163,46 @@ print(f"V psi ~ y     = {V_wr(psi_y):.0f}")
 #> V uniforme    = 557287
 #> V psi ~ pop   = 963006   (corr(pop, counties) = 0.456)
 #> V psi ~ y     = 0
+
+print("\n###BLOQUE-P7###\n")
+# EJERCICIO 5 en Python: las pi con inclusion forzosa, Poisson y Sunter.
+x5 = np.array([62, 151, 76, 77, 80, 60, 194, 78, 74, 61], dtype=float)
+p5 = 6 * x5 / x5.sum()
+while (p5 > 1 + 1e-12).any():          # forzar las que pasan de 1 y repartir el resto
+    forzosa = p5 >= 1 - 1e-12
+    p5[forzosa] = 1
+    p5[~forzosa] = (6 - forzosa.sum()) * x5[~forzosa] / x5[~forzosa].sum()
+print("pi:", np.round(p5, 4))
+
+eps = np.array([0.858, 0.698, 0.541, 0.320, 0.965, 0.497, 0.208, 0.006, 0.340, 0.206])
+print("Poisson:", np.flatnonzero(eps < p5) + 1)
+
+xi = np.array([0.322, 0.542, 0.032, 0.141, 0.453, 0.668, 0.174, 0.318, 0.691, 0.006])
+elegidas, acumulada, muestra = 0, 0.0, []
+for j, k in enumerate(np.argsort(-x5, kind="stable")):
+    if xi[j] < p5[k] * (6 - elegidas) / (6 - acumulada):
+        muestra.append(int(k) + 1)
+        elegidas += 1
+    acumulada += p5[k]
+print("Sunter:", sorted(muestra))
+#> pi: [0.4366 1.     0.5352 0.5423 0.5634 0.4225 1.     0.5493 0.5211 0.4296]
+#> Poisson: [ 2  4  7  8  9 10]
+#> Sunter: [1, 2, 5, 7, 8, 9]
+
+print("\n###BLOQUE-P8###\n")
+# EJERCICIO 6 en Python: el Poisson de Sarndal et al. (p. 117).
+xs = np.array([54, 671, 28, 27, 29, 62, 42, 48, 33, 446, 12, 46], dtype=float)
+ys = np.array([5246, 59877, 2208, 2546, 2903, 6850, 3773, 4055, 4014, 38945, 1162, 4852], dtype=float)
+ps = 10 * xs / 8182
+t_ht6 = (ys / ps).sum()
+ee6 = np.sqrt(((1 - ps) * ys**2 / ps**2).sum())
+print(f"t_HT = {t_ht6:.0f}, ee = {ee6:.0f}, cv = {ee6 / t_ht6:.3f}")
+print(f"IC 95 %: [{t_ht6 - 1.96 * ee6:.0f}, {t_ht6 + 1.96 * ee6:.0f}]")
+N_hat = (1 / ps).sum()
+print(f"N_hat = {N_hat:.1f}, media HT = {t_ht6 / 284:.1f}, media Hajek = {t_ht6 / N_hat:.1f}")
+print(f"total con la razon = {8182 * t_ht6 / (xs / ps).sum():.0f}")
+#> t_HT = 945598, ee = 255587, cv = 0.270
+#> IC 95 %: [444649, 1446548]
+#> N_hat = 266.4, media HT = 3329.6, media Hajek = 3549.1
+#> total con la razon = 787999
+

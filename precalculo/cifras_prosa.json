@@ -229,7 +229,11 @@
     "40,9": "7,5 x 109/20 = 40,875: el peso final mas pequeno de schools (cap. 5)",
     "137,6": "7,5 x 367/20 = 137,625: el peso final mas grande de schools (cap. 5)",
     "3 562": "14 248/4 = 3 562: la varianza del Hansen-Hurwitz decrece como 1/n",
-    "7,5": "70 466 698/936 291 173 = 7,526 %: el cv que implicaria el ee en forma HT de agpps"
+    "7,5": "70 466 698/936 291 173 = 7,526 %: el cv que implicaria el ee en forma HT de agpps",
+    "12,23": "ee del estimador de Deville en agpps = 12 230 070 con la funcion deville() del bloque R23 (12 230 116 con sampling::varest) expresado en millones",
+    "0,78": "lambda de la etapa 4 de la escision tal como la imprime Gutierrez (ej. 4.4.2, con pi redondeadas); el exacto es 0,7517 (cap6_datos.json, escision)",
+    "80,5": "HT/t con 8 estados en el bloque R24 = 0,804528, en porcentaje",
+    "-13,7": "intercepto de lm(Taxes ~ Income) en TeachingSampling::BigLucy = -13,678 (Gutierrez, sec. 4.2.4; comprobado en R 4.4)"
   },
   "capitulo-7-encuestas-complejas.html": {
     "242 386": "peso máximo de NHANES: 242 386,7 truncado",
