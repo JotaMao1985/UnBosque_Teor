@@ -30,7 +30,9 @@ table(table(unique(nh_ad[, c("sdmvstra","sdmvpsu")])$sdmvstra))
 range(table(unique(sy[, c("stratum","psu")])$stratum))
 # NHANES tiene EXACTAMENTE 2 PSU en cada uno de sus 15 estratos — el minimo
 # para estimar varianza, y la condicion que exige el metodo BRR (modulo 5).
-# SYC tiene de 7 a 154 centros por estrato: mas holgura, mas grados de libertad.
+# SYC tiene de 7 a 154 PSU por estrato, pero no todas son centros: en los
+# estratos 1-5 las PSU son centros (39), y cada estrato 6-16 es un centro grande
+# incluido con certeza cuyas PSU son sus jovenes (822; Lohr, Ej. 9.4).
 #>         encuesta    n estratos psu    w_min    w_max    suma_w
 #> 1 NHANES adultos 5406       15  30 5157.019 242386.7 231785870
 #> 2            SYC 2621       16 861    5.000     50.0     25012
@@ -108,8 +110,9 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
 # Lectura: los PESOS multiplican la varianza por 1.73; los ESTRATOS la bajan
 # un poco (1.73 -> 1.71, es su trabajo); y los CONGLOMERADOS la cuadruplican
 # (1.71 -> 6.92). No es monotona, y esa es justo la leccion: cada componente
-# empuja en su direccion. (6.92 no es exactamente el 7.12 que reporta survey
-# porque survey compara contra un MAS CON estos pesos, no contra el ideal.)
+# empuja en su direccion. (6.92 no es exactamente el 7.12 que reporta survey:
+# los dos dividen entre S^2/n, pero aqui S^2 es la varianza de la muestra sin
+# pesos y survey la estima con los pesos, un 3 % menor.)
 #>                MAS_ideal con_pesos mas_estratos completo
 #> varianza          0.0093    0.0160       0.0158   0.0641
 #> deff_acumulado    1.0000    1.7306       1.7099   6.9206
@@ -185,7 +188,7 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
 
 cat("\n###BLOQUE-R9###\n")
 # La MEDIANA. Por defecto, svyquantile NO recalcula la mediana en cada replica:
-# usa el metodo de Woodruff, el del capitulo 3 (modulo 11) — estima F, le pone
+# usa el metodo de Woodruff, el del capitulo 3 (modulo 12) — estima F, le pone
 # un intervalo a la proporcion y lo invierte —, y las replicas solo estiman la
 # varianza de esa proporcion. Por eso las dos vias dan el mismo intervalo, que
 # cae en valores observados del IMC, y el mismo error estandar:
@@ -219,8 +222,8 @@ table(jk_rep$replicates)
 
 cat("\n###BLOQUE-R10###\n")
 # CALIBRACION. Los pesos del diseno no reproducen los totales conocidos de la
-# poblacion; ajustarlos para que si lo hagan reduce varianza y corrige
-# desbalances. Post-estratificacion primero (una sola variable):
+# poblacion; calibrar es ajustarlos lo minimo para que si lo hagan. Primero,
+# la tabla sexo x edad que dicen los pesos, y los margenes objetivo:
 nh_ad$sexo <- factor(nh_ad$riagendr, levels = c(1, 2), labels = c("hombre", "mujer"))
 nh_ad$edadg <- cut(nh_ad$ridageyr, c(19, 39, 59, 200),
                    labels = c("20-39", "40-59", "60+"))
@@ -259,7 +262,8 @@ for (k in 1:5) {
 }
 signif(traza, 3)
 # El error cae en cascada geometrica: 3 iteraciones bastan para la precision
-# de cualquier publicacion. Con margenes compatibles, IPFP siempre converge.
+# de cualquier publicacion. Con margenes compatibles y sin casillas vacias, el
+# IPFP converge; con ceros en la tabla puede no hacerlo (modulo 9).
 #> [1] 1.30e-01 3.35e-03 4.54e-06 6.15e-09 8.33e-12 1.12e-14
 
 cat("\n###BLOQUE-R12###\n")
@@ -271,9 +275,10 @@ svymean(~bmxbmi, dis_rak)
 # Diferencia RELATIVA entre la tabla de survey y el IPFP a mano de 5 iteraciones:
 signif(max(abs(as.matrix(svytable(~sexo + edadg, dis_rak)) - A)) / total, 3)
 # Coinciden a 1e-12 relativo: es el mismo algoritmo. El IMC apenas se mueve
-# (29.389 -> 29.391): con margenes cercanos a los que la muestra ya tenia,
-# calibrar corrige poco. Su valor aparece cuando la no respuesta ha
-# desbalanceado la muestra de verdad — capitulo 8.
+# (29.389 -> 29.391) aunque el margen de 60+ pasa del 27.8 % al 32 %: el IMC
+# casi no cambia de una casilla sexo x edad a otra, asi que reponderarlas no
+# lo mueve. Calibrar corrige cuando la variable de interes si depende de las de
+# calibracion, o cuando la no respuesta ha desbalanceado la muestra — capitulo 8.
 #>          mean     SE
 #> bmxbmi 29.391 0.2557
 #> [1] 0.00000000000139
@@ -336,8 +341,8 @@ recorta <- function(q) {
 }
 data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
 # HALLAZGO INCOMODO: recortar aqui NO compensa. El Kish baja de 1.89 a 1.31
-# (los pesos se aplanan mucho), pero el error estandar no mejora — hasta
-# empeora un poco — y la media se desplaza 0.057. Razon: en NHANES la varianza
+# (los pesos se aplanan mucho), pero el error estandar apenas se mueve (de
+# 0.2523 a 0.2559) y la media se desplaza 0.057. Razon: en NHANES la varianza
 # la ponen los CONGLOMERADOS (modulo 3), no los pesos, asi que aplanar pesos
 # ataca el ingrediente equivocado y solo aporta sesgo. Antes de recortar,
 # mirar la descomposicion del deff.
@@ -361,8 +366,9 @@ round(c(p_diseno = as.numeric(coef(p_dis)), ee_diseno = as.numeric(SE(p_dis)),
         factor = as.numeric(SE(p_dis)) / ee_ing), 5)
 # La estimacion puntual se mueve poco (0.61275 ponderada contra 0.62228 sin
 # ponderar, un punto porcentual) pero el error estandar se multiplica por
-# 2.4 al declarar el diseno. La estimacion puntual perdona; la incertidumbre
-# no: un intervalo de +/-1.9 puntos se convierte en uno de +/-4.5.
+# 2.4 al declarar el diseno. Aqui la estimacion puntual se movio poco, pero no
+# es una regla (la edad media de NHANES se mueve 2.5 ee sin pesos); la
+# incertidumbre si cambia siempre: +/-1.9 puntos pasan a +/-4.5.
 #>   p_diseno  ee_diseno  p_ingenua ee_ingenuo     factor
 #>    0.61275    0.02274    0.62228    0.00947    2.40119
 
@@ -370,14 +376,16 @@ cat("\n###BLOQUE-R16###\n")
 # EJERCICIO 2. Con ipums (9 estratos, 10 PSU cada uno), estimar el ingreso
 # medio de los adultos y medir el deff. Ojo con dos trampas del archivo.
 ip <- read.csv("CSV data sets for SDA 3e/ipums.csv")
-ip_ad <- subset(ip, inctot >= 0 & age >= 18)   # hay 110 ingresos negativos
-ip_ad$peso <- 1                                # ipums viene autoponderado
+ip_ad <- subset(ip, inctot >= 0 & age >= 18)   # fuera 110 ingresos negativos
+ip_ad$peso <- 1                                # tratado como autoponderado
 dis_ip <- svydesign(id = ~psu, strata = ~stratum, weights = ~peso,
                     data = ip_ad, nest = TRUE)
 m_ip <- svymean(~inctot, dis_ip, deff = TRUE)
 m_ip
-# TRAMPA: el DEff sale Inf. survey lo calcula contra un MAS *con fpc*, y sin
-# declarar fpc no tiene el N poblacional. El deff se calcula a mano:
+# TRAMPA: el DEff sale Inf. survey toma N = suma de los pesos, y con pesos 1
+# eso es n: su MAS de referencia es un censo, con varianza 0. Declarar fpc no
+# lo arregla. Se calcula a mano, o con deff = "replace" (MAS con reemplazo):
+deff(svymean(~inctot, dis_ip, deff = "replace"))
 ee_srs <- sd(ip_ad$inctot) / sqrt(nrow(ip_ad))
 round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
         ee_srs = ee_srs, deff = (as.numeric(SE(m_ip)) / ee_srs)^2,
@@ -386,13 +394,17 @@ round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
 # El tamano nominal de una encuesta compleja dice muy poco de su precision.
 #>           mean      SE DEff
 #> inctot 9849.54  159.38  Inf
+#>   inctot
+#> 10.58496
 #>          n         gl  ee_diseno     ee_srs       deff n_efectivo
 #>   49692.00      81.00     159.38      48.99      10.58    4694.58
 
 cat("\n###BLOQUE-R17###\n")
 # EJERCICIO 3. Con integerwt (2 000 observaciones en 4 estratos), calcular la
 # media estratificada a mano y con survey. Es el capitulo 4 revisitado con el
-# vocabulario de este: pesos = N_h/n_h, y el fpc por estrato.
+# vocabulario de este: pesos = N_h/n_h, y el fpc por estrato. En Lohr el
+# archivo es una poblacion; aqui se trata como una muestra de una poblacion
+# mayor, con unos N_h supuestos.
 iw <- read.csv("CSV data sets for SDA 3e/integerwt.csv")
 Nh <- c(3000, 3000, 2000, 2000)                # tamanos de estrato supuestos
 nh_e <- as.numeric(table(iw$stratum))

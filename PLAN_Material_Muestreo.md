@@ -8500,3 +8500,103 @@ Javier pidió «Sí, enlázalas», como en T7.98.
   - Los dos archivos servidos coinciden byte a byte con la rama, y `verifica_publicado.py --solo-huella` da bien las
     11 páginas.
   - La portada viva enlaza las seis presentaciones de los caps. 4 a 6, que responden 200, con la consola limpia.
+
+### T7.115 — La auditoría del cap. 7: 35 errores, en espera del visto bueno (2026-11-02)
+
+Pedido de Javier: «Auditoría habitual» del cap. 7, tras repasar lo que le quedaba (T7.103 había dejado abierto el
+puntero «bloque R13» de P4). Se hizo como en T7.101 y T7.107, sobre `main` `1b438a0`, en el worktree
+`gallant-elbakyan-48ff52`. El informe es `PLAN_Auditoria_Cap7.md`, en la raíz del worktree y fuera de git.
+
+- **Protocolo mecánico**, todo en verde:
+  - reensamblado byte a byte; `genera_cap7.R` reproduce el JSON;
+  - `anota_salidas --check`, 0; `--prosa`, 241/241 y 54, 0 sin respaldo;
+  - `verifica_referencias`, 36 revisadas y 0 nuevas; `node --check`, OK; `cuenta_sitio`, 0 desajustadas;
+  - arranca dentro y fuera del repositorio.
+- **Cinco lectores** independientes en solo lectura (ES, CL, PE, CO, VI), con Lohr 3.ª en texto, el cap. 10 de
+  Gutiérrez, el criterio de contenido y el de narrativa. Dieron 151 hallazgos; cada error se verificó aparte (con R,
+  contra Lohr o Gutiérrez, contra el material o en las capturas) y uno se rechazó (ES-21).
+- **Resultado:** el cálculo es sólido; falla lo que se cuenta de los datos y del código.
+  - **35 errores, S1–S35:** 4 altos, 13 medios y 18 bajos. Los altos:
+    - **S1:** SYC no son «861 centros»: 39 UPM son centros y 822 son jóvenes de los 11 centros que entran con certeza;
+      los estratos son por tamaño (Lohr, Ej. 9.4);
+    - **S3:** el `DEff = Inf` del ejercicio 2 sale de los pesos iguales a 1, no de la falta de `fpc`;
+    - **S4:** el simulador del jackknife dibuja 30 barras iguales, promete una línea que no existe y no junta los pares;
+    - **S5:** el veredicto del simulador del recorte dice «ligera mejora» sin recortar y contradice al módulo.
+  - Medios, entre otros: los gl efectivos de SYC son unos 20, no 845; «la coincidencia de los cuatro métodos valida el
+    diseño»; «la estimación puntual perdona»; la explicación de 7,12 frente a 6,92; la suma de los pesos calibrados;
+    seis citas a Lohr; el *preflight* de Tailwind; gráficos y tablas a 375 y 1280 px; la t ≈ 2,118.
+  - **La narrativa tiene el perfil del cap. 6 viejo:** 5 323 palabras de prosa, 64 remisiones dentro del argumento,
+    ninguna tabla hecha a mano y 8 de 14 bloques sin frase de entrada. CL recomienda reescribir M1, M2, M4, M5 y M6.
+  - Quedan 28 mejoras (MS-1 a MS-28), 5 dudas y 11 defectos de la plantilla común.
+- **Recomendación del informe:** corregir S1–S35 con las opciones por defecto, como en T7.102, y decidir después la
+  reescritura y las diapositivas.
+- **Sin cambios en la cadena, sin commit y sin publicación.** Los informes de los lectores y la verificación están en
+  el scratchpad de la sesión (`aud7/lectores/`, `aud7/verificacion.md`).
+  - **Corregidos en T7.116** (2026-11-02), con el visto bueno de Javier.
+
+### T7.116 — Los errores S1–S35 de la auditoría, corregidos en el cap. 7 (2026-11-02)
+
+Visto bueno de Javier: «Sí, corrige todo», con las opciones por defecto. La lista y su evidencia están en
+`PLAN_Auditoria_Cap7.md` (T7.115). Se siguió la regla de T7.97: toda cifra nueva de la prosa sale antes de
+`genera_cap7.R` o de una cadena.
+
+- **`genera_cap7.R`.** Las cifras que ya existían salen idénticas, comparadas clave a clave. Lo nuevo, con su doble vía:
+  - la estructura de SYC: 39 UPM centro y 822 persona, el 98,6 % de la varianza en los estratos 1–5 y unos 19 gl
+    efectivos (t = 2,09);
+  - la t exacta de los dos diseños;
+  - los totales de control de NHANES (316 481 044);
+  - S² con y sin pesos (48,64 y 50,08);
+  - la edad sin pesos (2,5 ee);
+  - los márgenes de partida y el IMC por casilla.
+  - Además, las réplicas del jackknife van ordenadas por estrato.
+- **Cadenas.**
+  - Comentarios de R1, R5, R9, R10, R11, R12, R14, R15, R16 y R17.
+  - R16 añade `deff = "replace"` (10,585).
+  - P1 nombra scipy y P4 ya no remite al «bloque R13».
+  - `anota_salidas` reanotó R16.
+- **Módulos.**
+  - M1: SYC y NHANES tal como son, los gl efectivos, las citas.
+  - M2: el peso máximo, Kish con «≈», la suma de los pesos, la ACS.
+  - M3: la nota de 7,12 frente a 6,92 y la lectura del paso de los estratos.
+  - M5: la introducción del jackknife.
+  - M6: por qué el IMC no se mueve al calibrar.
+  - M7: SYC.
+  - M8: la cobertura, el recorte y las citas.
+  - M9: el peso final, el proyecto y las citas.
+  - M10:
+    - los archivos de los ejercicios: `integerwt` y también `ipums`, que en Lohr son poblaciones;
+    - las dos trampas del ejercicio 2;
+    - «la estimación puntual perdona»;
+    - el puntero a `cadena.R`.
+- **`simuladores.js`.**
+  - Una envoltura de `crearGraficoBarras` que no salta rótulos a 375 px.
+  - Jackknife con desviaciones y la línea del cero.
+  - Veredictos del recorte.
+  - t exacta en el comparador.
+  - Cobertura: los anchos y el punto, solo en la configuración simulada.
+  - La etiqueta de û_k.
+  - Las dos tablas: requisitos, la «comprobación» del diseño y SYC.
+  - El diagrama de NHANES.
+  - Las preguntas 2, 6, 8 y 9.
+- **`ensambla_cap7.py`.**
+  - El CSS del preflight, como el cap. 6.
+  - Las soluciones desplegadas.
+  - El relleno de las cajas de ejercicio bajo 480 px.
+  - El aviso de desplazamiento de las tablas bajo 640 px.
+  - La plantilla común no se tocó.
+- **Verificado.**
+  - Reensamblado byte a byte; `genera_cap7.R` se reproduce; `--check`, 0.
+  - `--prosa`: **242/242** y **72**, 0 sin respaldo (eran 241 y 54). Entra en `cifras_prosa.json` el 5,7 de Lohr §7.5 y
+    sale el «242 386», que ya no se usa. Todo el sitio: 0 sin respaldo.
+  - `verifica_referencias --anota`: 7 nuevas, revisadas una a una.
+  - `verifica_publicado --local`: R (18) y Python (4) arrancan, y también en una carpeta sin `precalculo/`.
+  - `node --check`: OK. README: de 3 236 a **3 237** cifras contrastadas.
+  - En Chrome sin ventana, a 1280 y 375 px:
+    - los 10 módulos, sin errores de consola ni de KaTeX ni desborde, y sin párrafos pegados;
+    - cada simulador corregido, con sus estados extremos;
+    - las soluciones enteras y todos los rótulos a 375 px.
+- **Número.** Se hizo sobre `main` `1b438a0`. Mientras tanto, otra sesión publicó en `main` su T7.114 (los enlaces a
+  las diapositivas del cap. 6, `37c2a18` y `cb864b4`), así que esta auditoría es T7.115 y sus correcciones, T7.116.
+  Esos commits tocan también `sitio/muestreo/README.md`, en otras líneas que el 3 236 → 3 237 de este.
+- **Commit** con el visto bueno de Javier («Sí, haz commit»), rebasado sobre `origin/main` `cb864b4`. Sin push ni
+  publicación.

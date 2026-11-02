@@ -58,13 +58,39 @@ comprueba("NHANES: gl = PSU - estratos", degf(dis_nh),
 comprueba("SYC: gl = PSU - estratos", degf(dis_sy),
           sy_psu - length(unique(sy$stratum)))
 
+# Lo que son las UPM de SYC (Lohr, Ej. 9.4): en los estratos 1-5 se sortean
+# centros, que son las UPM; los estratos 6-16 son un centro grande cada uno,
+# incluido con certeza, y sus UPM son los residentes. De ahí que los 845 gl
+# nominales digan poco: la varianza la ponen casi entera los centros de los
+# estratos 1-5, y los gl efectivos (Satterthwaite, con la varianza de cada
+# estrato del total linealizado de la edad media) quedan cerca de 20 (T7.115, S1-S2).
+upm_sy <- unique(sy[, c("stratum", "psu")])
+filas_por_upm <- table(interaction(sy$stratum, sy$psu, drop = TRUE))
+estr_de_upm <- as.numeric(sub("\\..*", "", names(filas_por_upm)))
+if (any(filas_por_upm[estr_de_upm >= 6] != 1)) stop("En los estratos 6-16 cada UPM debería ser una persona")
+m_edad_sy <- svymean(~age, dis_sy)
+z_sy <- sy$finalwt * (sy$age - coef(m_edad_sy)) / sum(sy$finalwt)
+tot_sy <- aggregate(z_sy, list(h = sy$stratum, p = sy$psu), sum)
+v_h <- sapply(split(tot_sy$x, tot_sy$h), function(t) length(t) / (length(t) - 1) * sum((t - mean(t))^2))
+n_h <- sapply(split(tot_sy$x, tot_sy$h), length)
+comprueba("SYC: ee de la edad a mano <-> survey", sqrt(sum(v_h)), as.numeric(SE(m_edad_sy)), 1e-9)
+gl_ef_sy <- sum(v_h)^2 / sum(v_h^2 / (n_h - 1))
+cat(sprintf("  SYC: %d UPM centro (estratos 1-5) y %d UPM persona (6-16) | %.1f %% de V en 1-5 | gl efectivos %.1f (t %.3f)\n",
+            sum(upm_sy$stratum <= 5), sum(upm_sy$stratum >= 6),
+            100 * sum(v_h[as.numeric(names(v_h)) <= 5]) / sum(v_h), gl_ef_sy, qt(0.975, gl_ef_sy)))
+
 cifras$encuestas <- list(
   nhanes = list(filas = nrow(nh), analizadas = nrow(nh_ad),
                 estratos = length(unique(nh_ad$sdmvstra)), psu = nh_psu,
-                gl = degf(dis_nh), psuPorEstrato = psu_por_estrato_nh),
+                gl = degf(dis_nh), psuPorEstrato = psu_por_estrato_nh,
+                t = qt(0.975, degf(dis_nh))),
   syc = list(filas = nrow(sy), analizadas = nrow(sy),
              estratos = length(unique(sy$stratum)), psu = sy_psu,
-             gl = degf(dis_sy), psuPorEstrato = psu_por_estrato_sy)
+             gl = degf(dis_sy), psuPorEstrato = psu_por_estrato_sy,
+             t = qt(0.975, degf(dis_sy)),
+             upmCentros = sum(upm_sy$stratum <= 5), upmPersonas = sum(upm_sy$stratum >= 6),
+             pctVarEstratos1a5 = 100 * sum(v_h[as.numeric(names(v_h)) <= 5]) / sum(v_h),
+             glEfectivos = gl_ef_sy, tEfectivo = qt(0.975, gl_ef_sy))
 )
 
 # =============================================================================
@@ -82,10 +108,21 @@ hist_pesos <- function(w, nb = 30) {
   h <- hist(w, breaks = nb, plot = FALSE)
   list(centros = h$mids, conteo = h$counts)
 }
+# Los pesos del examen están calibrados a totales de la ACS (Lohr §7.5, paso 3):
+# sobre el archivo entero suman lo mismo que los de la entrevista. La suma de
+# los adultos con IMC válido estima el tamaño de ese subconjunto (T7.115, S9).
+suma_archivo <- sum(nh$wtmec2yr)
+comprueba("NHANES: los pesos del examen y los de la entrevista suman lo mismo",
+          suma_archivo, sum(nh$wtint2yr), 1e-12)
+suma_adultos_exam <- sum(subset(nh, wtmec2yr > 0 & ridageyr >= 20)$wtmec2yr)
+cat(sprintf("  NHANES: suma de wtmec2yr en el archivo %.0f | adultos examinados %.0f | con IMC %.0f\n",
+            suma_archivo, suma_adultos_exam, sum(w_nh)))
+
 cifras$pesos <- list(
   nhanes = list(min = min(w_nh), max = max(w_nh), media = mean(w_nh),
                 suma = sum(w_nh), kish = kish(w_nh), hist = hist_pesos(w_nh),
-                razonMaxMin = max(w_nh) / min(w_nh)),
+                razonMaxMin = max(w_nh) / min(w_nh),
+                sumaArchivo = suma_archivo, sumaAdultosExaminados = suma_adultos_exam),
   syc = list(min = min(w_sy), max = max(w_sy), media = mean(w_sy),
              suma = sum(w_sy), kish = kish(w_sy), hist = hist_pesos(w_sy),
              razonMaxMin = max(w_sy) / min(w_sy))
@@ -99,7 +136,9 @@ deff_de <- function(dis, formula, datos, w, y) {
   m <- svymean(formula, dis, deff = TRUE)
   ee_dis <- as.numeric(SE(m))
   ee_srs <- sd(y) / sqrt(length(y))          # el "ingenuo" que reporta cualquier software
-  # el deff que devuelve survey compara contra un MAS del mismo n con pesos
+  # el deff de survey divide entre la varianza de un MAS del mismo n, pero con
+  # la S² estimada CON los pesos (svyvar) y el factor 1 - n/N̂; el «crudo», entre
+  # s²/n con la S² de la muestra sin pesos (T7.115, S8)
   list(media = as.numeric(coef(m)), ee = ee_dis, eeIngenuo = ee_srs,
        deffSurvey = as.numeric(deff(m)), deffCrudo = (ee_dis / ee_srs)^2,
        kish = kish(w), nEfectivo = length(y) / as.numeric(deff(m)))
@@ -127,10 +166,20 @@ cat(sprintf("  deff acumulado: 1.00 -> %.2f -> %.2f -> %.2f\n",
             comp$pesos/comp$srs, comp$estratos/comp$srs, comp$completo/comp$srs))
 # HALLAZGO: la descomposición NO es monótona. Los estratos BAJAN la varianza
 # (1.73 -> 1.71) y los conglomerados la cuadruplican. El deff acumulado final
-# (6.92) tampoco iguala al que reporta survey (7.12): survey compara contra un
-# MAS CON los mismos pesos, no contra el MAS ideal. Ambas cosas se declaran en
-# el material en vez de esconderlas.
+# (6.92) tampoco iguala al que reporta survey (7.12): los dos dividen entre S²/n,
+# pero la descomposición estima S² con la varianza de la muestra sin pesos y
+# survey con la estimada con los pesos, un 3 % menor. Ambas cosas se declaran
+# en el material en vez de esconderlas.
 if (comp$estratos > comp$pesos) stop("Los estratos deberían no aumentar la varianza")
+s2_sin <- var(nh_ad$bmxbmi)
+s2_con <- as.numeric(coef(svyvar(~bmxbmi, dis_nh)))
+N_gorro <- sum(w_nh); n_nh <- nrow(nh_ad)
+comprueba("deff de survey = V / [S²_w (N - n)/(N n)]", d_bmi$deffSurvey,
+          comp$completo / (s2_con * (N_gorro - n_nh) / (N_gorro * n_nh)), 1e-6)
+comprueba("7,12 / 6,92 = s² sin pesos / S² con pesos", d_bmi$deffSurvey / (comp$completo / comp$srs),
+          s2_sin / s2_con * N_gorro / (N_gorro - n_nh), 1e-9)
+cat(sprintf("  S² sin pesos %.4f | con pesos %.4f | cociente %.5f | n efectivo con 6,92: %.1f\n",
+            s2_sin, s2_con, s2_sin / s2_con, n_nh / (comp$completo / comp$srs)))
 
 cifras$deff <- list(
   nhanes = d_bmi, syc = d_age,
@@ -138,8 +187,25 @@ cifras$deff <- list(
     etiquetas = c("MAS ideal", "+ pesos desiguales", "+ estratos", "+ conglomerados"),
     varianzas = c(comp$srs, comp$pesos, comp$estratos, comp$completo),
     deffs = c(1, comp$pesos/comp$srs, comp$estratos/comp$srs, comp$completo/comp$srs),
-    n = nrow(nh_ad))
+    n = nrow(nh_ad)),
+  s2SinPesos = s2_sin, s2ConPesos = s2_con, cocienteS2 = s2_sin / s2_con,
+  nEfectivoDescomposicion = n_nh / (comp$completo / comp$srs)
 )
+
+# La estimación puntual no siempre «perdona» ignorar los pesos (T7.115, S7):
+# la edad media se mueve 2,5 ee en NHANES y 1,3 en SYC.
+punto_sin_pesos <- function(dis, y) {
+  m <- svymean(as.formula(paste0("~", y)), dis)
+  sin <- mean(dis$variables[[y]])
+  list(ponderada = as.numeric(coef(m)), sinPonderar = sin, ee = as.numeric(SE(m)),
+       difEnEe = (sin - as.numeric(coef(m))) / as.numeric(SE(m)))
+}
+cifras$puntual <- list(edadNhanes = punto_sin_pesos(dis_nh, "ridageyr"),
+                       edadSyc = punto_sin_pesos(dis_sy, "age"))
+cat(sprintf("  edad sin pesos: NHANES %.2f -> %.2f (%.2f ee) | SYC %.2f -> %.2f (%.2f ee)\n",
+            cifras$puntual$edadNhanes$ponderada, cifras$puntual$edadNhanes$sinPonderar,
+            cifras$puntual$edadNhanes$difEnEe, cifras$puntual$edadSyc$ponderada,
+            cifras$puntual$edadSyc$sinPonderar, cifras$puntual$edadSyc$difEnEe))
 
 # =============================================================================
 # 4. Linealización de Taylor: una razón, por dos vías
@@ -207,12 +273,15 @@ med_jkn <- svyquantile(~bmxbmi, dis_jkn, 0.5, ci = TRUE)
 cat(sprintf("  mediana del IMC: %.3f | ee linealizado %.4f | ee jackknife %.4f\n",
             as.numeric(coef(med_lin)), as.numeric(SE(med_lin)), as.numeric(SE(med_jkn))))
 
+# Las réplicas viajan ordenadas por estrato y PSU: así las dos de cada estrato
+# quedan juntas en el simulador y se ve que se separan simétricamente (T7.115, S4).
+ord_jk <- order(est_nh$sdmvstra, est_nh$sdmvpsu)
 cifras$replicacion <- list(
   metodos = c("linealización", "jackknife (JKn)", "BRR", "bootstrap"),
   ee = c(d_bmi$ee, ee_jkn, ee_brr, ee_boot),
   replicas = c(NA, ncol(dis_jkn$repweights$weights), ncol(dis_brr$repweights$weights), 500),
   theta = theta,
-  jkReplicas = reps, jkEstratos = est_nh$sdmvstra, jkPsu = est_nh$sdmvpsu,
+  jkReplicas = reps[ord_jk], jkEstratos = est_nh$sdmvstra[ord_jk], jkPsu = est_nh$sdmvpsu[ord_jk],
   medianaValor = as.numeric(coef(med_lin)),
   medianaEeLin = as.numeric(SE(med_lin)), medianaEeJk = as.numeric(SE(med_jkn))
 )
@@ -275,7 +344,17 @@ cat(sprintf("  post-estratificado por sexo: %.4f (ee %.4f)\n",
 # (Las matrices viajan como array de FILAS, que es lo que el JS espera leer.)
 plana <- function(m) matrix(as.numeric(m), nrow = nrow(m))
 
+# Por qué el IMC apenas se mueve al calibrar (T7.115, S17): los márgenes NO son
+# cercanos (60+ pasa del 27,8 % al 32 %), pero el IMC casi no cambia de una
+# casilla sexo × edad a otra.
+pct_edad_inicial <- 100 * colSums(as.matrix(tabla_muestral)) / total_pob
+imc_casillas <- as.numeric(coef(svyby(~bmxbmi, ~sexo + edadg, dis_nh2, svymean)))
+cat(sprintf("  edad de partida %% %s | IMC por casilla de %.2f a %.2f\n",
+            paste(sprintf("%.1f", pct_edad_inicial), collapse = "/"), min(imc_casillas), max(imc_casillas)))
+
 cifras$calibracion <- list(
+  pctEdadInicial = as.numeric(pct_edad_inicial),
+  imcCasillaMin = min(imc_casillas), imcCasillaMax = max(imc_casillas),
   filas = rownames(A), columnas = colnames(A),
   tablaInicial = plana(tabla_muestral), tablaFinal = plana(A),
   margSexo = as.numeric(marg_sexo), margEdad = as.numeric(marg_edad),

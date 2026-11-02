@@ -11,7 +11,7 @@ de Lohr, con los datos oficiales de *Sampling: Design and Analysis*.
 
 Ocho capítulos que cubren las 16 semanas del cronograma. **93 módulos, 72 simuladores,
 138 preguntas de autoevaluación, 43 ejercicios guiados y 231 bloques de código** (177 de R,
-54 de Python) con **3 236 cifras contrastadas contra la salida real**.
+54 de Python) con **3 237 cifras contrastadas contra la salida real**.
 
 | # | Capítulo | Semanas | Temas | Módulos | Simuladores |
 |---|---|:---:|---|:---:|:---:|

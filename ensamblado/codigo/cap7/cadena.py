@@ -2,7 +2,7 @@ import warnings; warnings.filterwarnings('ignore')
 import numpy as np, pandas as pd
 
 print("\n###BLOQUE-P1###\n")
-import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+import numpy as np, pandas as pd   # el capitulo usa numpy y pandas (y scipy en el ultimo bloque)
 
 # El deff, calculado con las tres piezas a la vista. Python no tiene survey:
 # hay que escribir la varianza del diseno a mano, y eso es justo la leccion.
@@ -105,5 +105,6 @@ print(f"deff teorico = 1 + (m-1)*rho = {1 + (Mi-1)*rho:.2f}")
 #> cobertura del IC ingenuo: 0.545   del IC del diseno: 0.947
 #> deff teorico = 1 + (m-1)*rho = 6.85
 # El generador de Python no es el de R, asi que la simulacion da 0.545 donde
-# la de R (bloque R13) daba 0.563. Las dos cuentan la misma historia: un
-# intervalo "del 95 %" que ignora los conglomerados cubre poco mas de la mitad.
+# la de R (la otra pestana de este bloque) daba 0.563. Las dos cuentan la
+# misma historia: un intervalo "del 95 %" que ignora los conglomerados cubre
+# poco mas de la mitad.

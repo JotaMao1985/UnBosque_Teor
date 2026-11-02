@@ -34,9 +34,10 @@
       <div class="warning">
         <p><strong>La estructura decide el método, no el gusto del analista.</strong> NHANES, con 2 PSU por
           estrato, admite BRR y da 15 grados de libertad: los intervalos usan $t = 2{,}131$ y hay poco margen
-          para estadísticos delicados. SYC, con 861 centros en 16 estratos, no admite BRR pero regala 845 grados
-          de libertad y jackknife de sobra. Antes de elegir el estimador de varianza, se cuenta cuántas UPM hay
-          por estrato — es la primera línea de código que se escribe con una encuesta ajena.</p>
+          para estadísticos delicados. SYC, con 861 UPM en 16 estratos, no admite BRR y su jackknife pide 861
+          réplicas; sus 845 gl nominales valen unos 19 efectivos, porque casi toda la varianza la ponen sus 39
+          centros (módulo 1). Antes de elegir el estimador de varianza, se cuenta cuántas UPM hay por estrato, y
+          qué son — es la primera línea de código que se escribe con una encuesta ajena.</p>
       </div>
 
       <div class="simulador" data-simulador="comparador">
@@ -63,7 +64,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §7.4: análisis de SYC paso a paso; el apéndice trae la ficha técnica completa.</li>
+          <li>Lohr — §7.5: el diseño y los pesos de NHANES; SYC, en §9.2.2 (Ej. 9.4).</li>
           <li>Lumley — <em>Complex Surveys</em>, cap. 3: NHANES como ejemplo recurrente.</li>
         </ul>
       </div>
@@ -123,8 +124,9 @@
           mueve la ICC y el tamaño del conglomerado: la curva es la cobertura <em>teórica</em> del intervalo
           ingenuo, calculada con la aproximación normal y el deff de los conglomerados, $1 + (m-1)\rho$ —la
           fórmula de Kish del capítulo 5, módulo 4, con $m$ en el papel de $\bar M$; no el deff por pesos del
-          módulo 2—. El punto naranja marca la
-          configuración simulada, cuya cobertura empírica real (0,563 con 2 000 réplicas) aparece en la lectura.</p>
+          módulo 2—. El punto naranja marca la configuración que eliges. Con ρ = 0,15 y m = 40, la de la
+          simulación, la lectura añade lo que midió el bloque: la cobertura empírica (0,563 con 2 000 réplicas)
+          y los anchos medios.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Cobertura del intervalo nominal del 95 % que ignora los conglomerados</p>
         <div class="grafico-wrapper" style="height:250px;">
@@ -149,7 +151,8 @@
         <h4><i class="fas fa-scissors" aria-hidden="true"></i> Recortar pesos: qué se gana y qué se paga</h4>
         <p class="simulador-intro">El deslizador elige el cuantil de corte. Las dos barras son el error estándar
           y el desplazamiento de la media respecto a la estimación sin recortar. Busca el punto donde recortar
-          compense... y observa que en NHANES no lo hay: el ee no baja y el desplazamiento sí crece.</p>
+          compense... y observa que en NHANES no lo hay: el ee apenas se mueve (de 0,2523 a 0,2559) y solo el
+          recorte más agresivo desplaza la media.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Efecto del recorte sobre el error estándar y sobre la media</p>
         <div class="grafico-wrapper" style="height:240px;">
@@ -171,7 +174,8 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §7.6: consecuencias de ignorar el diseño; §11.4 sobre recorte de pesos.</li>
+          <li>Lohr — §7.4 (Ej. 7.7): el deff como precio del diseño; §7.5, lo que pasa si se ignoran los
+            pesos; §7.2.1, sobre el recorte de los pesos grandes.</li>
           <li>Este material — cap. 5, módulo 3: el mismo error, medido sobre conglomerados de igual tamaño.</li>
         </ul>
       </div>
@@ -341,8 +345,8 @@
         <div class="ciclo-panel" id="ciclo-encuesta-pesos" role="tabpanel" hidden>
           <div class="ciclo-campo">
             <span class="ciclo-etiqueta">Qué haces</span>
-            <p>Construir el peso final: $1/\pi_k$ del diseño, dividido por la propensión a responder, por el
-              factor de calibración (módulos 2 y 6). Se documenta cada factor por separado, aunque el archivo
+            <p>Construir el peso final: $1/\pi_k$ del diseño, dividido por la propensión a responder y
+              multiplicado por el factor de calibración (módulos 2 y 6). Se documenta cada factor por separado, aunque el archivo
               publicado lleve solo el producto.</p>
           </div>
           <div class="ciclo-campo">
@@ -380,17 +384,19 @@
       </div>
 
       <div class="note">
-        <p><strong>El proyecto integrador del curso recorre este ciclo completo.</strong> Las seis etapas de
-          arriba son, una a una, los apartados de su entrega: objetivos y dominios, evaluación del marco, diseño
-          justificado con su cálculo de tamaño, plan de campo con protocolo de no respuesta, construcción de
-          pesos, y análisis con intervalos honestos. El capítulo 8 añade la etapa que aquí se ha nombrado sin
+        <p><strong>El proyecto integrador del curso recorre este ciclo completo.</strong> Sus entregas —la
+          ficha del tema, el protocolo, el avance y el informe— van pasando por las seis etapas de arriba: los
+          objetivos y dominios, la evaluación del marco, el diseño justificado con su cálculo de tamaño, el plan
+          de campo con su protocolo de no respuesta, la construcción de los pesos y el análisis con intervalos
+          honestos. El capítulo 8 añade la etapa que aquí se ha nombrado sin
           desarrollar: qué hacer cuando el campo devuelve menos de lo que se pidió.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — cap. 1 (§1.2, el proceso) y cap. 8 (no respuesta) cierran el ciclo.</li>
+          <li>Lohr — cap. 1 (§1.3 a §1.5: sesgo de selección, error de medición y cuestionario) y cap. 8 (no
+            respuesta) cierran el ciclo.</li>
           <li>Groves et al. — <em>Survey Methodology</em>: el ciclo completo, con el error total como hilo.</li>
         </ul>
       </div>
@@ -441,9 +447,10 @@
 
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
-        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre encuestas reales distintas a
-          la del hilo principal. Las cifras de cada solución salen de
-          <code>ensamblado/codigo/cap7/cadena.R</code>, que se ejecuta de verdad: ninguna está escrita a mano.</p>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre archivos de Lohr distintos de
+          NHANES: SYC, una encuesta real, y dos poblaciones del libro, <code>ipums</code> e
+          <code>integerwt</code>, que aquí se tratan como si fueran muestras. Las cifras de cada solución salen
+          de ejecutar el bloque que ves, en la misma sesión del capítulo: ninguna está escrita a mano.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>syc</code>, estima la
@@ -459,26 +466,31 @@
             <pre><code class="language-r">⟦R15⟧</code></pre>
             <p>La estimación puntual se mueve un punto porcentual (0,61275 ponderada frente a 0,62228 sin
               ponderar), pero el error estándar se multiplica por <strong>2,40</strong>: de ±1,9 puntos a ±4,5.
-              Es la lección del capítulo en una línea — la estimación puntual perdona los descuidos de diseño;
-              la incertidumbre, no.</p>
+              Aquí la estimación puntual apenas se movió, pero no es una regla: la edad media de NHANES pasa de
+              47,94 a 49,39 si se ignoran los pesos, 2,5 errores estándar. Lo que cambia siempre al declarar el
+              diseño es la incertidumbre.</p>
           </details>
         </div>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Con <code>ipums</code> (9
-            estratos, 10 PSU cada uno), estima el ingreso medio de los adultos y su deff. Cuidado con dos
-            trampas del archivo.</p>
+            estratos, 10 PSU cada uno), estima el ingreso medio de los adultos y su deff. En Lohr el archivo es
+            una población de la que se sacan muestras; aquí trátalo como una muestra estratificada de
+            conglomerados en la que todos pesan lo mismo. Cuidado con dos trampas del archivo.</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
-            <p>La primera trampa está en <code>inctot</code>: mira su mínimo. La segunda aparece cuando pides
-              <code>deff = TRUE</code> sin declarar <code>fpc</code>.</p>
+            <p>La primera trampa está en <code>inctot</code>: mira su mínimo. La segunda aparece cuando los pesos
+              valen todos 1 y pides <code>deff = TRUE</code>.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R16⟧</code></pre>
-            <p>Trampa 1: hay 110 ingresos negativos (código de faltante). Trampa 2: <code>survey</code> devuelve
-              <code>DEff = Inf</code> porque sin <code>fpc</code> no tiene el $N$ poblacional para el MAS de
-              referencia — hay que calcular el deff a mano. Resultado: 49 692 personas, 81 grados de libertad,
+            <p>Trampa 1: hay 110 ingresos negativos. No son un código de faltante sino pérdidas; aquí se
+              excluyen, y hay que decirlo, porque cambia lo que se estima (el ingreso medio de quienes no tuvieron
+              pérdidas). Trampa 2: <code>survey</code> devuelve <code>DEff = Inf</code> porque toma como $N$ la
+              suma de los pesos, que con pesos 1 es $n$: su MAS de referencia es un censo, con varianza cero.
+              Declarar <code>fpc</code> no lo arregla; sí lo hacen <code>deff = "replace"</code> (10,58) o la
+              cuenta a mano. Resultado: 49 692 personas, 81 grados de libertad,
               deff 10,6, <strong>tamaño efectivo 4 695</strong>. El tamaño nominal de una encuesta compleja dice
               muy poco sobre su precisión.</p>
           </details>
@@ -486,8 +498,10 @@
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Con <code>integerwt</code>
-            (2 000 observaciones en 4 estratos, con $N_h$ = 3 000, 3 000, 2 000, 2 000), calcula la media
-            estratificada a mano y con <code>survey</code>. ¿Coinciden?</p>
+            (2 000 observaciones en 4 estratos), calcula la media estratificada a mano y con
+            <code>survey</code>. ¿Coinciden? En Lohr este archivo es una población; aquí trátalo como una muestra
+            de una población mayor, con unos tamaños de estrato supuestos: $N_h$ = 3 000, 3 000, 2 000,
+            2 000.</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
             <p>Los pesos son $N_h/n_h$ y el <code>fpc</code> es $N_h$. La fórmula a mano es la del capítulo 4:

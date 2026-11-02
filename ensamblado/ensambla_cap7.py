@@ -86,6 +86,83 @@ def main():
          '<p class="text-xs mt-1 text-white/60" style="text-align:center;">Muestreo Estadístico • Capítulo 7 • UnBosque 2026-II\n        </p>'),
         ('<i class="fas fa-layer-group text-xl text-white" aria-hidden="true"></i>',
          '<i class="fas fa-clipboard-list text-xl text-white" aria-hidden="true"></i>'),
+        # Defectos de la plantilla común que la auditoría del cap. 7 vio aquí
+        # (T7.115), corregidos solo en este capítulo, como hizo el cap. 6:
+        # - S11: Tailwind (CDN) inyecta su preflight después de este <style> y,
+        #   con la misma especificidad, gana: `p { margin: 0 }` pega los
+        #   párrafos seguidos, las listas pierden número y viñeta, y los h3
+        #   quedan como texto normal. Las mismas reglas que ensambla_cap6.py; las
+        #   de las cajas y las listas, con especificidad (0,0,2), que gana al
+        #   preflight y pierde ante cualquier clase de la plantilla.
+        # - S14: la plantilla despliega el código dentro de `.ejercicio-panel`,
+        #   pero las soluciones de este capítulo son <details>, y el bloque
+        #   salía plegado a 150 px dentro de la solución que el estudiante
+        #   acababa de abrir. Bajo 480 px, además, tres cajas anidadas dejaban
+        #   el código en una columna de 195 px.
+        # - S13: a 375 px las tablas se desplazan en horizontal sin ninguna
+        #   pista; se avisa encima.
+        ('  </style>',
+         '    .animate-fade-in > p {\n'
+         '      margin-bottom: 1rem;\n'
+         '    }\n\n'
+         '    body :where(.definition, .note, .warning, .formula, .ejercicio-guiado, .ejercicio-solucion) p {\n'
+         '      margin-bottom: 0.75rem;\n'
+         '    }\n\n'
+         '    body :where(.animate-fade-in) ul,\n'
+         '    body :where(.animate-fade-in) ol {\n'
+         '      margin-left: 1.5rem;\n'
+         '      margin-bottom: 1.5rem;\n'
+         '    }\n\n'
+         '    body :where(.animate-fade-in) ul {\n'
+         '      list-style-type: disc;\n'
+         '    }\n\n'
+         '    body :where(.animate-fade-in) ol {\n'
+         '      list-style-type: decimal;\n'
+         '    }\n\n'
+         '    .animate-fade-in > h3 {\n'
+         '      display: block;\n'
+         '      font-size: 1.25rem;\n'
+         '      font-weight: 700;\n'
+         '      margin-top: 2rem;\n'
+         '      margin-bottom: 1rem;\n'
+         '    }\n\n'
+         '    .animate-fade-in > h3::before {\n'
+         '      vertical-align: -0.3rem;\n'
+         '      margin-right: 0.5rem;\n'
+         '    }\n\n'
+         '    .ejercicio-solucion pre.collapsed {\n'
+         '      max-height: none;\n'
+         '      overflow-y: visible;\n'
+         '    }\n\n'
+         '    .ejercicio-solucion pre.collapsed::after,\n'
+         '    .ejercicio-solucion .code-toggle-btn {\n'
+         '      display: none;\n'
+         '    }\n\n'
+         '    @media (max-width: 480px) {\n'
+         '      .exercise {\n'
+         '        padding: 0.75rem;\n'
+         '      }\n\n'
+         '      .ejercicio-guiado,\n'
+         '      details.ejercicio-pista,\n'
+         '      details.ejercicio-solucion {\n'
+         '        padding-left: 0.5rem;\n'
+         '        padding-right: 0.5rem;\n'
+         '      }\n'
+         '    }\n\n'
+         '    @media (max-width: 640px) {\n'
+         '      .tabla-ranking-marco::before,\n'
+         '      .glosario-marco::before {\n'
+         "        content: 'Desliza la tabla hacia la izquierda para ver el resto →';\n"
+         '        display: block;\n'
+         '        padding: 0.35rem 0.6rem;\n'
+         '        font-size: 0.75rem;\n'
+         '        color: #475569;\n'
+         '        background: #f8fafc;\n'
+         '        position: sticky;\n'
+         '        left: 0;\n'
+         '      }\n'
+         '    }\n'
+         '  </style>'),
     ]
     for viejo, nuevo in reemplazos:
         if viejo not in html:

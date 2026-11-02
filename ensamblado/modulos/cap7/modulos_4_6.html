@@ -199,12 +199,13 @@
 
       <div class="simulador" data-simulador="jackknife">
         <h4><i class="fas fa-arrows-rotate" aria-hidden="true"></i> Las 30 réplicas del jackknife</h4>
-        <p class="simulador-intro">Cada barra es una réplica: el IMC medio recalculado <em>sin</em> esa PSU. La
-          línea marca la estimación completa. El deslizador resalta una réplica y la lectura da su desviación y
-          su aporte a la varianza. Nota que las réplicas van por pares (las dos PSU de cada estrato se separan
-          simétricamente): esa es la firma del diseño de 2 PSU por estrato.</p>
+        <p class="simulador-intro">Cada barra es una réplica: cuánto se aparta el IMC medio, recalculado
+          <em>sin</em> esa PSU, de la estimación completa, que es la línea del cero. El deslizador resalta una
+          réplica y la lectura da su desviación y su aporte a la varianza. Las barras van ordenadas por estrato,
+          así que las dos PSU de cada estrato quedan juntas: una por encima del cero y otra por debajo, casi del
+          mismo tamaño. Esa es la firma del diseño de 2 PSU por estrato.</p>
         <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">IMC medio recalculado al eliminar cada PSU</p>
+        <p class="grafico-etiqueta">Desviación del IMC medio al eliminar cada PSU, respecto a la estimación completa</p>
         <div class="grafico-wrapper" style="height:250px;">
           <canvas aria-label="Réplicas jackknife del IMC medio, una por conglomerado eliminado" role="img"></canvas>
         </div>
@@ -344,8 +345,10 @@
 
       <div class="note">
         <p><strong>Calibrar corrigió aquí casi nada, y eso también es un resultado.</strong> El IMC pasa de
-          29,3891 a 29,3912 y el error estándar sube ligeramente. Con márgenes cercanos a los que la muestra ya
-          tenía, calibrar no tiene mucho que arreglar. Su valor real aparece cuando la <em>no respuesta</em> ha
+          29,3891 a 29,3912 y el error estándar sube ligeramente. No es que los márgenes estuvieran cerca: el
+          grupo de 60 años o más pesaba el 27,8 % y pasa al 32 %. Es que el IMC casi no cambia de una casilla
+          sexo × edad a otra (sus medias van de 28,73 a 30,39), así que dar más peso a unas casillas que a otras
+          apenas lo mueve. Su valor real aparece cuando la <em>no respuesta</em> ha
           desbalanceado la muestra de verdad — que es el capítulo 8 — o cuando la variable de interés está
           fuertemente correlacionada con las de calibración, que es el argumento del GREG del capítulo 3.</p>
       </div>
