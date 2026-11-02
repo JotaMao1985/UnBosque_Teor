@@ -30,8 +30,9 @@ contra los propios capítulos.
 Enlaza todos los capítulos, el [preparcial del Corte I](preparcial-corte-1.html), la [guía del proyecto integrador
 del Corte III](proyecto-integrador-corte-iii.html), con su [plantilla de informe](proyecto-integrador-plantilla.Rmd), y, dentro de la tarjeta de su capítulo, las
 diapositivas de clase de los capítulos 4 ([1](diapositivas/capitulo-4-muestreo-estratificado_sesion1.html) y
-[2](diapositivas/capitulo-4-muestreo-estratificado_sesion2.html)) y 5 ([1](diapositivas/capitulo-5-conglomerados_sesion1.html) y
-[2](diapositivas/capitulo-5-conglomerados_sesion2.html)), en dos sesiones cada uno, con sus fuentes en `diapositivas/fuentes/`. La navegación es siempre por la
+[2](diapositivas/capitulo-4-muestreo-estratificado_sesion2.html)), 5 ([1](diapositivas/capitulo-5-conglomerados_sesion1.html) y
+[2](diapositivas/capitulo-5-conglomerados_sesion2.html)) y 6 ([1](diapositivas/capitulo-6-probabilidades-desiguales_sesion1.html) y
+[2](diapositivas/capitulo-6-probabilidades-desiguales_sesion2.html)), en dos sesiones cada uno, con sus fuentes en `diapositivas/fuentes/`. La navegación es siempre por la
 portada: los capítulos no enlazan entre sí, aunque sí se citan («esto se trata en el capítulo 5»).
 
 ## Qué trae cada capítulo
