@@ -1,0 +1,133 @@
+{
+ "tipo": "animado",
+ "titulo": "La estimación del total según qué tienda salga",
+ "ancho": 700,
+ "alto": 420,
+ "x": {
+  "categorias": [
+   "tienda A",
+   "tienda B",
+   "tienda C",
+   "tienda D"
+  ]
+ },
+ "y": {
+  "titulo": "estimación (miles de USD)",
+  "min": 0,
+  "max": 1050,
+  "marcas": [
+   0,
+   250,
+   500,
+   750,
+   1000
+  ]
+ },
+ "base": [
+  {
+   "tipo": "referencia",
+   "y": 300
+  },
+  {
+   "tipo": "texto",
+   "x": -0.42,
+   "y": 330,
+   "texto": "total verdadero: t = 300",
+   "ancla": "inicio"
+  }
+ ],
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "tienda A",
+    "y": 176,
+    "texto": "176",
+    "serie": 1,
+    "ancho": 0.34,
+    "desplazamiento": -0.19
+   },
+   {
+    "tipo": "barra",
+    "x": "tienda B",
+    "y": 160,
+    "texto": "160",
+    "serie": 1,
+    "ancho": 0.34,
+    "desplazamiento": -0.19
+   },
+   {
+    "tipo": "barra",
+    "x": "tienda C",
+    "y": 128,
+    "texto": "128",
+    "serie": 1,
+    "ancho": 0.34,
+    "desplazamiento": -0.19
+   },
+   {
+    "tipo": "barra",
+    "x": "tienda D",
+    "y": 392,
+    "texto": "392",
+    "serie": 1,
+    "ancho": 0.34,
+    "desplazamiento": -0.19
+   },
+   {
+    "tipo": "texto",
+    "x": -0.42,
+    "y": 900,
+    "serie": 1,
+    "ancla": "inicio",
+    "texto": "ψ proporcional al área: de 128 a 392"
+   }
+  ],
+  [
+   {
+    "tipo": "barra",
+    "x": "tienda A",
+    "y": 44,
+    "texto": "44",
+    "serie": 2,
+    "ancho": 0.34,
+    "desplazamiento": 0.19
+   },
+   {
+    "tipo": "barra",
+    "x": "tienda B",
+    "y": 80,
+    "texto": "80",
+    "serie": 2,
+    "ancho": 0.34,
+    "desplazamiento": 0.19
+   },
+   {
+    "tipo": "barra",
+    "x": "tienda C",
+    "y": 96,
+    "texto": "96",
+    "serie": 2,
+    "ancho": 0.34,
+    "desplazamiento": 0.19
+   },
+   {
+    "tipo": "barra",
+    "x": "tienda D",
+    "y": 980,
+    "texto": "980",
+    "serie": 2,
+    "ancho": 0.34,
+    "desplazamiento": 0.19
+   },
+   {
+    "tipo": "texto",
+    "x": -0.42,
+    "y": 820,
+    "serie": 2,
+    "ancla": "inicio",
+    "texto": "ψ = 1/4: de 44 a 980"
+   }
+  ]
+ ]
+}

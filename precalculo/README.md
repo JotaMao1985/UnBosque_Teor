@@ -29,6 +29,8 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 | `genera_cap3.R` | `salidas/cap3_datos.json` | razón, regresión, diferencia, sesgo simulado, dominios, GREG, mediana |
 | `genera_soluciones.R` | consola | soluciones de los ejercicios guiados del cap. 2 |
 | `genera_diapositivas_cap4.py` | `sitio/muestreo/diapositivas/fuentes/recursos/cap4/*.json` | los trece gráficos animados de las diapositivas del cap. 4, desde las salidas del capítulo y `salidas/cap4_datos.json`; cada cifra dice de dónde sale |
+| `genera_diapositivas_cap6.py` | `sitio/muestreo/diapositivas/fuentes/recursos/cap6/*.json` | los cuatro gráficos animados de las diapositivas del cap. 6 (las tiendas, los diseños de counties, el elefante y los pesos de classes), todos desde `salidas/cap6_datos.json` |
+| `fotografia_simuladores_cap6.py` | `sitio/muestreo/diapositivas/fuentes/recursos/cap6/m*-1.png` | las cinco fotos de simuladores de las mismas diapositivas, en su estado inicial, con el capítulo en un marco de 600 px para que el texto se lea proyectado; usa el fotógrafo de la skill `diapositivas-clase` y Chrome |
 | `verifica_biglucy_ppt.R` | consola | el error estándar verdadero del STPPS de BigLucy frente al MAS por nivel (980 501 y 582 346), que usa la diapositiva del M9 |
 | `verifica_bloques.py` | consola | contrasta cada cifra `#>` de un capítulo con la salida real; con `--prosa`, también las del texto; y **siempre** el LaTeX con barra simple dentro de los literales de JS |
 | `verifica_publicado.py` | consola | ejecuta el código **del sitio vivo**, sin anteponerle nada; comprueba además que lo servido coincida con `gh-pages` y que `origin/gh-pages^{tree}` sea `origin/main:sitio` |

@@ -8329,3 +8329,141 @@ Javier: «Sí, tanda 3». Lo que cambió:
       marcadas.
   - Una trampa de zsh: `"$S:sitio"` toma `:s` como modificador y se come la ruta. `git commit-tree` falló sin empujar
     nada, y con `"${S}:sitio"` resolvió el árbol.
+
+### T7.111 — Las diapositivas del cap. 6, en dos sesiones de 90 minutos (2026-11-02)
+
+Javier pidió las diapositivas del cap. 6 reescrito con la skill `diapositivas-clase`. Decidió ese día:
+- **dos sesiones de 90 min** para las semanas 12 y 13: M1–M5 y M6–M10, con el M11 como cantera de preguntas;
+- **las marcas del cap. 5:** `<mark>Dato</mark>`, `<kbd>Lectura</kbd>`, una caja «Opinión del material» y la fuente
+  visible al pie; las cifras elegidas o simuladas van en una caja «Ejemplo ilustrativo»;
+- **unos cuatro gráficos animados.**
+
+- **Los archivos:**
+  - `sitio/muestreo/diapositivas/capitulo-6-probabilidades-desiguales_sesion{1,2}.html`: 36 y 41 diapositivas, 28 y
+    33 de contenido, todas con notas;
+  - las fuentes, en `sitio/muestreo/diapositivas/fuentes/cap6_sesion{1,2}.md`;
+  - los recursos, en `fuentes/recursos/cap6/`: cinco fotos de simuladores (M3, M5, M6, M7 y M10) y cuatro `.json`
+    animados.
+- **Los gráficos animados:**
+  - las tiendas, `t_i/ψ_i` con cada sorteo;
+  - la varianza de `counties` con el sistemático en los dos órdenes y con Brewer;
+  - la curva del elefante;
+  - los pesos de `classes`, primero con probabilidades iguales y después con PPT.
+
+  Los genera `precalculo/genera_diapositivas_cap6.py`, que está versionado desde el principio (la lección de T7.94) y
+  registrado en `precalculo/README.md`. Todas sus cifras salen de `salidas/cap6_datos.json`.
+- **Contenido:**
+  - **Preguntas:** diez `.pregunta`, nueve de la autoevaluación (las preguntas 1–4, 7 y 9–13) y una adaptada de la 11
+    sin su gráfico.
+  - **Ideas clave:** tres `.idea`: la idea central, «correlación no es proporcionalidad» y ψ conocida y positiva. La
+    regla del peso va en una caja de advertencia.
+  - **Código R:** recortado de los bloques del capítulo en cinco diapositivas.
+  - **Lo que se queda fuera:** lo que el capítulo pliega en «Para profundizar» (Tillé, máxima entropía, escisión y
+    Hájek–Deville) se nombra solo en las notas.
+- **Verificado:**
+  - **Cifras:** un contraste automático de todas las cifras de las dos fuentes con el esquema del capítulo y los
+    `.json` deja solo tres tipos de cifra.
+    - Las cuentas de la pregunta numérica: 1017,7 y 949,9, que las notas presentan como propias.
+    - Una resta: 3143 − 1896 = 1247.
+    - Los deff que el capítulo calcula al dibujar su tabla de diseños, recalculados: 1,22, 1,53, 1,58, 1,69, 2,11 y
+      3,51.
+  - **Código:** todas las líneas proyectadas están en el capítulo, salvo dos comentarios finales quitados y una
+    llamada partida en dos, que las notas declaran.
+  - **Ajuste:** `revisar.py` dice que todas caben al 88 % o más en las dos sesiones.
+  - **Navegador:** las cuatro animaciones avanzan etapa por etapa (2, 3, 4 y 2), con 0 errores de fórmulas, y los
+    enlaces «Leer en el material» van a los módulos 1 a 11.
+  - **Reproducibilidad:** el generador y las dos construcciones son reproducibles byte a byte.
+- **Del material:** no se encontró ningún error nuevo del capítulo. Dos detalles visuales:
+  - el glifo «∝» sale diminuto en Montserrat en el texto plano (rótulo del eje del simulador del M10); en las
+    diapositivas se escribe con KaTeX;
+  - el esquema de la skill no extrae el contenido de la tabla de diseños del M6, que se dibuja con JavaScript.
+- **Commit (sin publicar):** ver T7.113.
+
+### T7.112 — La auditoría de las diapositivas del cap. 6 (2026-11-02)
+
+Javier pidió la auditoría habitual de las diapositivas de T7.111.
+- **Método:**
+  - el protocolo mecánico;
+  - cinco lectores independientes en solo lectura sobre una copia congelada: estadística, claridad, pedagogía, código
+    y visual;
+  - la verificación aparte de cada hallazgo, en R, en el HTML construido y contra Lohr 3.ª y Gutiérrez.
+- **Informe completo:** `PLAN_Auditoria_Cap6_Diapositivas.md`, en la raíz del worktree `nifty-wu-2357d7`, fuera de git.
+  Recoge los errores corregidos E1–E36, las mejoras M-1 a M-30, los errores del capítulo C-1 a C-9 y los defectos de la
+  plantilla P-1 a P-3.
+
+- **Mecánico, en verde:** `verifica_bloques --prosa` 184/0, `verifica_referencias` 93, `verifica_publicado --local`
+  arranca, y `revisar.py` deja todas al 88 % o más.
+- **Lectores:** 19 + 26 + 26 + 12 + 22 hallazgos.
+  - ES no halló ninguna cifra mal calculada.
+  - CO ejecutó la cadena del capítulo y comparó las 29 salidas proyectadas: todas coinciden.
+- **Los hallazgos de más peso, corregidos:**
+  - seis de las diez preguntas se respondían en la diapositiva anterior; ahora cada pregunta va antes de su respuesta.
+    La pregunta 12 del material pasa a las notas, y en su lugar hay una pregunta de cálculo: el peso de un estudiante de
+    la clase de 100 y de la de 22;
+  - la respuesta «15.» se dibujaba como lista («1.»);
+  - la idea «correlación no es proporcionalidad» decía que la manera de sortear no decide, y la diapositiva anterior
+    muestra que el orden de la lista sí;
+  - la fórmula del elefante se presentaba sin decir que es la de Poisson;
+  - M_i, K, n y m no se definían en pantalla;
+  - la nota de `Pmat` omitía la diagonal: siguiéndola, `survey` da `NaN`;
+  - el gráfico de diseños rotulaba «exacta» la varianza de Brewer, que sale de 4000 réplicas;
+  - la curva del elefante era una poligonal que sobrestimaba hasta un 20 %. Ahora la calcula
+    `genera_diapositivas_cap6.py` con la fórmula cerrada, y el generador comprueba que pasa por los puntos del precálculo;
+  - citas a Lohr y Gutiérrez (el ej. 6.1, la Tabla 6.2 y el Resultado 4.4.3), rangos de `resaltar`, el «∝» en texto
+    plano y cifras partidas entre líneas (ahora con espacio no separable).
+- **Verificado después:**
+  - `revisar.py`: todas caben al 88 % o más (36 y 41 diapositivas);
+  - el contraste de cifras no da nada nuevo sin respaldo;
+  - la hoja de contactos se revisó entera.
+- **Sin corregir, a decisión de Javier:**
+  - las 30 mejoras, entre ellas los gráficos animados más grandes (probado por VI), los tiempos de los divisores y la
+    posición de la respuesta correcta en las preguntas;
+  - nueve errores del capítulo: la frase del módulo 5 sobre la manera de sortear, la «condición» de Sunter, la
+    aproximación con reemplazo sin su condición, dos citas a Lohr y el área del elefante, entre otros;
+  - tres defectos de la plantilla de la skill. El más visible: las notas con fórmulas salen en crudo en la vista del
+    presentador.
+- **Commit (sin publicar):** ver T7.113.
+
+### T7.113 — Las 30 mejoras de la auditoría de las diapositivas del cap. 6 (2026-11-02)
+
+Javier pidió «Aplica las 30 mejoras del informe» (M-1 a M-30 de `PLAN_Auditoria_Cap6_Diapositivas.md`). Se aplicaron
+todas. El detalle, mejora por mejora, está al final de ese informe («Mejoras aplicadas (T7.113)»).
+
+- **Resultado:** la sesión 1 tiene 38 diapositivas (30 de contenido) y la sesión 2, 41 (33 de contenido).
+- **Lo que más cambia:**
+  - Preguntas:
+    - las opciones van numeradas y la correcta cambia de sitio;
+    - las notas dicen cómo usar cada pregunta.
+  - Diapositivas nuevas y quitadas:
+    - Hansen–Hurwitz con n = 2 se parte en dos (la enumeración y la muestra CD);
+    - la diapositiva de algoritmos queda solo con el sistemático;
+    - hay una diapositiva nueva de `waterarea` y Alaska en la sesión 1;
+    - hay una segunda `.idea` en la sesión 2, «Borrar la observación rara…»;
+    - la tabla de las tres propuestas de la sesión 2 sale.
+  - Minutos de los divisores: 0/19/30/38/53 y 0/22/42/56/70, con el cierre en el 85.
+  - Definiciones en pantalla: deff, α, t_x, I_k, x_max, ee, UPM, π_kl y Δ_kl.
+  - Marcas revisadas. La convención dice ahora que lo sorteado con la semilla del capítulo es `Dato`.
+  - Gráficos animados: lienzo de 700 × 420, con el texto 1,43 veces más grande.
+  - Fotos de simuladores: se rehicieron en un marco de 600 px, con el texto 1,4 veces más grande, mediante un script
+    versionado nuevo.
+  - Títulos: los que terminaban en una palabra suelta se midieron en el navegador y se reescribieron 16.
+  - Notación y pies:
+    - `\dfrac` en las fracciones en línea;
+    - las letras griegas del texto, en TeX;
+    - los nombres internos, fuera de los pies.
+- **Archivos:**
+  - las dos fuentes `cap6_sesion{1,2}.md` y sus HTML;
+  - en `precalculo/genera_diapositivas_cap6.py`, el lienzo, los rótulos y los márgenes;
+  - `precalculo/fotografia_simuladores_cap6.py`, nuevo, que usa el fotógrafo de la skill con el marco a 600 px;
+  - una fila nueva en `precalculo/README.md`;
+  - los recursos de `fuentes/recursos/cap6/`: los 4 `.json` y las 5 `.png`.
+- **Verificado:**
+  - `revisar.py`: todas caben al 88 % o más.
+  - Contraste de cifras: lo único nuevo son dos cuentas declaradas en las notas. La de 71,6 millones con `acres87` se
+    recalculó en R.
+  - Gráficos animados, medidos en el navegador: 2, 3, 4 y 2 etapas, sin rótulos fuera del lienzo ni solapes.
+  - Títulos medidos en el navegador.
+  - Enlaces «Leer en el material» correctos.
+  - Generador, fotógrafo y construcción reproducibles byte a byte.
+- **Sin tocar, a decisión de Javier:** los errores del capítulo C-1 a C-9 y los defectos de la plantilla P-1 a P-3.
+- **Commit (sin publicar):** las tres tareas, T7.111 a T7.113, van en un solo commit, «Las diapositivas del cap. 6, auditadas y mejoradas», sobre `7d2a91d`. Javier dio el visto bueno con «Sí, haz commit». No se empujó, y las diapositivas no se enlazan desde la portada: eso se pregunta, como en T7.98.
