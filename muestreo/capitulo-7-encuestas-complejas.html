@@ -3460,6 +3460,77 @@
       border-color: #fbbf24;
       color: #78350f;
     }
+    .animate-fade-in > p {
+      margin-bottom: 1rem;
+    }
+
+    body :where(.definition, .note, .warning, .formula, .ejercicio-guiado, .ejercicio-solucion) p {
+      margin-bottom: 0.75rem;
+    }
+
+    body :where(.animate-fade-in) ul,
+    body :where(.animate-fade-in) ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    body :where(.animate-fade-in) ul {
+      list-style-type: disc;
+    }
+
+    body :where(.animate-fade-in) ol {
+      list-style-type: decimal;
+    }
+
+    .animate-fade-in > h3 {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .animate-fade-in > h3::before {
+      vertical-align: -0.3rem;
+      margin-right: 0.5rem;
+    }
+
+    .ejercicio-solucion pre.collapsed {
+      max-height: none;
+      overflow-y: visible;
+    }
+
+    .ejercicio-solucion pre.collapsed::after,
+    .ejercicio-solucion .code-toggle-btn {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .exercise {
+        padding: 0.75rem;
+      }
+
+      .ejercicio-guiado,
+      details.ejercicio-pista,
+      details.ejercicio-solucion {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .tabla-ranking-marco::before,
+      .glosario-marco::before {
+        content: 'Desliza la tabla hacia la izquierda para ver el resto →';
+        display: block;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+        color: #475569;
+        background: #f8fafc;
+        position: sticky;
+        left: 0;
+      }
+    }
   </style>
 </head>
 
@@ -3595,13 +3666,15 @@
       <div class="definition">
         <h4>Las dos encuestas del capítulo</h4>
         <p><strong>NHANES</strong> (<em>National Health and Nutrition Examination Survey</em>): la encuesta de
-          salud de EE.UU., con examen físico. Estratos geográficos, condados como UPM, pesos que expanden a la
-          población nacional. Es la fuente de las estadísticas oficiales de obesidad, colesterol y presión
+          salud de EE.UU., con examen físico. Estratos formados con un índice de salud del estado y la
+          ruralidad, condados o grupos de condados como UPM, pesos que expanden a la población nacional. Es la fuente de las estadísticas oficiales de obesidad, colesterol y presión
           arterial.</p>
-        <p style="margin-bottom:0;"><strong>SYC</strong> (<em>Survey of Youth in Custody</em>): jóvenes en
-          centros de detención. Estratos por tipo de centro, centros como UPM. Es la encuesta con la que Lohr
-          abre su capítulo 7, y su estructura es <em>opuesta</em> a la de NHANES en el número de UPM por
-          estrato — una diferencia que en el módulo 5 decidirá qué métodos se pueden usar.</p>
+        <p style="margin-bottom:0;"><strong>SYC</strong> (<em>Survey of Youth in Custody</em>, 1987): jóvenes
+          en centros estatales de detención. Los 206 centros del marco se dividieron en 16 estratos según su
+          número de residentes. En los estratos 1 a 5 se sortean centros, y esos centros son las UPM; cada uno
+          de los estratos 6 a 16 es un centro grande, incluido con certeza, y ahí las UPM son sus jóvenes. Lohr
+          la analiza en el capítulo 9 (Ej. 9.4). Su estructura es <em>opuesta</em> a la de NHANES en el número
+          de UPM por estrato — una diferencia que en el módulo 5 decidirá qué métodos se pueden usar.</p>
       </div>
 
       <div class="code-tabs">
@@ -3636,7 +3709,9 @@ table(table(unique(nh_ad[, c("sdmvstra","sdmvpsu")])$sdmvstra))
 range(table(unique(sy[, c("stratum","psu")])$stratum))
 # NHANES tiene EXACTAMENTE 2 PSU en cada uno de sus 15 estratos — el minimo
 # para estimar varianza, y la condicion que exige el metodo BRR (modulo 5).
-# SYC tiene de 7 a 154 centros por estrato: mas holgura, mas grados de libertad.
+# SYC tiene de 7 a 154 PSU por estrato, pero no todas son centros: en los
+# estratos 1-5 las PSU son centros (39), y cada estrato 6-16 es un centro grande
+# incluido con certeza cuyas PSU son sus jovenes (822; Lohr, Ej. 9.4).
 #&gt;         encuesta    n estratos psu    w_min    w_max    suma_w
 #&gt; 1 NHANES adultos 5406       15  30 5157.019 242386.7 231785870
 #&gt; 2            SYC 2621       16 861    5.000     50.0     25012
@@ -3683,8 +3758,11 @@ c(t_nhanes = qt(0.975, degf(dis_nh)), t_syc = qt(0.975, degf(dis_sy)),
           PSU − H. Un MAS es el caso de un solo estrato en el que cada persona es su propia PSU: sale $n - 1$, lo
           del capítulo 2 (módulo 6). NHANES tiene 30 conglomerados en 15
           estratos: 15 gl, y el multiplicador del intervalo del 95 % pasa de 1,960 a <strong>2,131</strong> — un
-          9 % más ancho antes de tocar nada más. SYC, con 861 centros, tiene 845 gl y prácticamente el valor
-          normal. Cualquier software que reporte «gl = n − 1» sobre datos de encuesta está equivocándose.</p>
+          9 % más ancho antes de tocar nada más. SYC tiene 861 UPM en 16 estratos, y la cuenta da 845 gl. Pero
+          esa cifra exagera: 822 de esas UPM son jóvenes de centros incluidos con certeza, y el 98,6 % de la
+          varianza de la edad media la ponen los 39 centros de los estratos 1 a 5. Contando lo que aporta cada
+          estrato, sus gl efectivos son unos 19 (t = 2,09), no 845. Cualquier software que reporte «gl = n − 1»
+          sobre datos de encuesta está equivocándose.</p>
       </div>
 
       <div class="simulador" data-simulador="anatomia">
@@ -3711,8 +3789,8 @@ c(t_nhanes = qt(0.975, degf(dis_nh)), t_syc = qt(0.975, degf(dis_sy)),
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — cap. 7 (ambas ediciones), §7.1: el ejemplo de SYC abre el capítulo.</li>
-          <li>Gutiérrez — cap. 10: encuestas de gran escala y sus estimadores.</li>
+          <li>Lohr — §7.1: las piezas de un diseño complejo; NHANES en §7.5 y SYC en §9.2.2 (Ej. 9.4).</li>
+          <li>Gutiérrez — cap. 10: estimadores de calibración, los pesos ajustados del módulo 6.</li>
           <li>Lumley — <em>Complex Surveys: A Guide to Analysis Using R</em>, caps. 2–3.</li>
         </ul>
       </div>
@@ -3740,8 +3818,9 @@ c(t_nhanes = qt(0.975, degf(dis_nh)), t_syc = qt(0.975, degf(dis_sy)),
         </div>
       </div>
 
-      <p>El peso de una fila de NHANES vale 242 386: esa persona «habla por» 242 386 estadounidenses. Ese número
-        no sale de un solo sitio — es un producto de tres correcciones sucesivas:</p>
+      <p>El peso más grande de NHANES vale 242 387: esa persona «habla por» 242 387 estadounidenses (el peso
+        mediano es 26 217). Ese número no sale de un solo sitio — es un producto de tres correcciones
+        sucesivas:</p>
 
       <div class="formula">
         <p class="formula-titulo">La descomposición del peso final</p>
@@ -3751,7 +3830,7 @@ c(t_nhanes = qt(0.975, degf(dis_nh)), t_syc = qt(0.975, degf(dis_sy)),
         <p style="margin-bottom:0;">El <strong>peso de diseño</strong> $1/\pi_k$ es el de los capítulos 2 a 6:
           puro producto de las etapas del sorteo. El <strong>ajuste por no respuesta</strong> divide por la
           propensión estimada a responder (capítulo 8). El <strong>factor de calibración</strong> $g_k$ cuadra
-          los totales con los del censo (módulo 6). El archivo publicado trae solo el producto, y con él hay que
+          los totales con totales de población conocidos (módulo 6). El archivo publicado trae solo el producto, y con él hay que
           apañarse.</p>
       </div>
 
@@ -3797,7 +3876,7 @@ c(kish_nhanes = kish(nh_ad$wtmec2yr), kish_syc = kish(sy$finalwt))
 
       <div class="definition">
         <h4>Efecto de diseño de Kish (solo por pesos)</h4>
-        <p style="margin-bottom:0;">$$\text{deff}_{\text{Kish}} = 1 + \frac{s_w^2}{\bar{w}^2} =
+        <p style="margin-bottom:0;">$$\text{deff}_{\text{Kish}} = 1 + \frac{s_w^2}{\bar{w}^2} \approx
         \frac{n \sum w_k^2}{\left(\sum w_k\right)^2}$$
         Mide cuánta varianza extra cuesta que los pesos no sean iguales, <em>ignorando</em> la estructura del
         diseño. En NHANES vale 1,89: la desigualdad de pesos, por sí sola, cuesta un 89 % de varianza. Es
@@ -3806,18 +3885,21 @@ c(kish_nhanes = kish(nh_ad$wtmec2yr), kish_syc = kish(sy$finalwt))
       </div>
 
       <div class="warning">
-        <p><strong>La suma de los pesos es una estimación, no un dato.</strong> Los pesos de NHANES suman
-          231 785 870: eso <em>estima</em> la población adulta de EE.UU., con su propio error. Que el número
-          salga «redondo y creíble» no lo convierte en un censo. Y al revés: si la suma de pesos se aleja mucho
-          de un total conocido, hay algo mal en el archivo o en el filtrado — es la primera comprobación que se
-          hace al abrir una encuesta ajena.</p>
+        <p><strong>La suma de los pesos dice a cuántas personas representa la muestra.</strong> Los pesos del
+          examen de NHANES están calibrados a totales de la ACS, la gran encuesta de población de EE.UU. (Lohr,
+          §7.5): sobre el archivo entero suman 316 481 044, exactamente lo mismo que los de la entrevista,
+          porque los dos se cuadraron con los mismos totales. Los adultos examinados suman 234 507 386, y los
+          que además tienen un IMC válido, 231 785 870: esa cifra <em>estima</em> cuántos adultos de EE.UU.
+          representa el subconjunto que se analiza. Si la suma de pesos se aleja mucho de un total conocido, hay
+          algo mal en el archivo o en el filtrado — es la primera comprobación que se hace al abrir una encuesta
+          ajena.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li>Lohr — §7.2 y §7.5: construcción de pesos y su interpretación.</li>
-          <li>Gutiérrez — §10.1: pesos de diseño frente a pesos calibrados.</li>
+          <li>Gutiérrez — cap. 10, introducción: pesos de diseño frente a pesos calibrados.</li>
           <li>Este material — cap. 6, módulo 9: los pesos de dos etapas y el diseño autoponderado.</li>
         </ul>
       </div>
@@ -3884,7 +3966,7 @@ c(n = nrow(nh_ad), n_efectivo = nrow(nh_ad) / as.numeric(deff(m)))
 #&gt;  5406.0000   758.7546</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python">import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
+          <pre><code class="language-python">import numpy as np, pandas as pd   # el capitulo usa numpy y pandas (y scipy en el ultimo bloque)
 
 # El deff, calculado con las tres piezas a la vista. Python no tiene survey:
 # hay que escribir la varianza del diseno a mano, y eso es justo la leccion.
@@ -3930,8 +4012,9 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
 # Lectura: los PESOS multiplican la varianza por 1.73; los ESTRATOS la bajan
 # un poco (1.73 -&gt; 1.71, es su trabajo); y los CONGLOMERADOS la cuadruplican
 # (1.71 -&gt; 6.92). No es monotona, y esa es justo la leccion: cada componente
-# empuja en su direccion. (6.92 no es exactamente el 7.12 que reporta survey
-# porque survey compara contra un MAS CON estos pesos, no contra el ideal.)
+# empuja en su direccion. (6.92 no es exactamente el 7.12 que reporta survey:
+# los dos dividen entre S^2/n, pero aqui S^2 es la varianza de la muestra sin
+# pesos y survey la estima con los pesos, un 3 % menor.)
 #&gt;                MAS_ideal con_pesos mas_estratos completo
 #&gt; varianza          0.0093    0.0160       0.0158   0.0641
 #&gt; deff_acumulado    1.0000    1.7306       1.7099   6.9206</code></pre>
@@ -3942,8 +4025,9 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
         <h4><i class="fas fa-layer-group" aria-hidden="true"></i> El deff, ingrediente a ingrediente</h4>
         <p class="simulador-intro">Las cuatro barras son la varianza real de la media del IMC según cuánto del
           diseño se declare. El deslizador avanza por la cadena: MAS ideal → + pesos desiguales → + estratos →
-          + conglomerados. La lectura da el deff acumulado y el tamaño efectivo en cada punto. Vigila el paso
-          de los estratos.</p>
+          + conglomerados. La lectura da el deff acumulado y el tamaño efectivo en cada punto. En el paso de
+          los estratos la barra casi no cambia: esa bajada pequeña se ve en la lectura del deff, de 1,73 a
+          1,71.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Varianza de la media del IMC según los componentes declarados</p>
         <div class="grafico-wrapper" style="height:250px;">
@@ -3964,10 +4048,13 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
 
       <div class="note">
         <p><strong>Dos deff que no son el mismo número.</strong> El 6,92 de la descomposición y el 7,12 que
-          reporta <code>svymean(deff = TRUE)</code> difieren porque el denominador no es el mismo: la
-          descomposición compara contra un MAS <em>ideal</em> (sin pesos), y <code>survey</code> contra un MAS
-          <em>con estos pesos</em>. Las dos definiciones circulan en la literatura y ninguna está mal; lo que
-          está mal es compararlas sin decir cuál es cuál.</p>
+          reporta <code>svymean(deff = TRUE)</code> dividen entre lo mismo, la varianza $S^2/n$ de un MAS del
+          mismo tamaño, pero estiman $S^2$ de dos maneras. La descomposición usa la varianza de los IMC de la
+          muestra, sin pesos: 50,08. <code>survey</code> la estima con los pesos: 48,64, y multiplica por
+          $1 - n/\hat N$, que aquí es prácticamente 1. El cociente, 1,0295, es justo lo que separa 6,92 de 7,12. Con
+          7,12 el tamaño efectivo es 759; con 6,92, 781 (el que dan el simulador de arriba y la pestaña de
+          Python). Las dos definiciones circulan en la literatura y ninguna está mal; lo que está mal es
+          compararlas sin decir cuál es cuál.</p>
         <p style="margin-bottom:0;"><strong>Tampoco el 1,73 de los pesos es el 1,89 de Kish del módulo 2.</strong>
           Kish es una fórmula que solo mira los pesos: supone que la variable se comporta igual en todos los
           niveles de peso, y por eso se calcula antes de mirar el IMC. El 1,73 es la varianza real de la media del
@@ -3978,7 +4065,7 @@ round(rbind(varianza = v, deff_acumulado = v / v[1]), 4)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §7.5: efecto de diseño y tamaño efectivo; Kish (1965) es la fuente original.</li>
+          <li>Lohr — §7.4: efecto de diseño y tamaño efectivo; Kish (1965) es la fuente original.</li>
           <li>Este material — cap. 2, módulo 9 (Definición 2.10, el deff frente al MAS), cap. 4, módulo 8
             (el deff del estratificado) y cap. 5, módulo 4 (ICC y deff).</li>
         </ul>
@@ -4267,12 +4354,13 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
 
       <div class="simulador" data-simulador="jackknife">
         <h4><i class="fas fa-arrows-rotate" aria-hidden="true"></i> Las 30 réplicas del jackknife</h4>
-        <p class="simulador-intro">Cada barra es una réplica: el IMC medio recalculado <em>sin</em> esa PSU. La
-          línea marca la estimación completa. El deslizador resalta una réplica y la lectura da su desviación y
-          su aporte a la varianza. Nota que las réplicas van por pares (las dos PSU de cada estrato se separan
-          simétricamente): esa es la firma del diseño de 2 PSU por estrato.</p>
+        <p class="simulador-intro">Cada barra es una réplica: cuánto se aparta el IMC medio, recalculado
+          <em>sin</em> esa PSU, de la estimación completa, que es la línea del cero. El deslizador resalta una
+          réplica y la lectura da su desviación y su aporte a la varianza. Las barras van ordenadas por estrato,
+          así que las dos PSU de cada estrato quedan juntas: una por encima del cero y otra por debajo, casi del
+          mismo tamaño. Esa es la firma del diseño de 2 PSU por estrato.</p>
         <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">IMC medio recalculado al eliminar cada PSU</p>
+        <p class="grafico-etiqueta">Desviación del IMC medio al eliminar cada PSU, respecto a la estimación completa</p>
         <div class="grafico-wrapper" style="height:250px;">
           <canvas aria-label="Réplicas jackknife del IMC medio, una por conglomerado eliminado" role="img"></canvas>
         </div>
@@ -4290,7 +4378,7 @@ c(replicas_JKn = ncol(dis_jkn$repweights$weights),
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># La MEDIANA. Por defecto, svyquantile NO recalcula la mediana en cada replica:
-# usa el metodo de Woodruff, el del capitulo 3 (modulo 11) — estima F, le pone
+# usa el metodo de Woodruff, el del capitulo 3 (modulo 12) — estima F, le pone
 # un intervalo a la proporcion y lo invierte —, y las replicas solo estiman la
 # varianza de esa proporcion. Por eso las dos vias dan el mismo intervalo, que
 # cae en valores observados del IMC, y el mismo error estandar:
@@ -4398,8 +4486,8 @@ table(jk_rep$replicates)
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># CALIBRACION. Los pesos del diseno no reproducen los totales conocidos de la
-# poblacion; ajustarlos para que si lo hagan reduce varianza y corrige
-# desbalances. Post-estratificacion primero (una sola variable):
+# poblacion; calibrar es ajustarlos lo minimo para que si lo hagan. Primero,
+# la tabla sexo x edad que dicen los pesos, y los margenes objetivo:
 nh_ad$sexo &lt;- factor(nh_ad$riagendr, levels = c(1, 2), labels = c("hombre", "mujer"))
 nh_ad$edadg &lt;- cut(nh_ad$ridageyr, c(19, 39, 59, 200),
                    labels = c("20-39", "40-59", "60+"))
@@ -4449,7 +4537,8 @@ for (k in 1:5) {
 }
 signif(traza, 3)
 # El error cae en cascada geometrica: 3 iteraciones bastan para la precision
-# de cualquier publicacion. Con margenes compatibles, IPFP siempre converge.
+# de cualquier publicacion. Con margenes compatibles y sin casillas vacias, el
+# IPFP converge; con ceros en la tabla puede no hacerlo (modulo 9).
 #&gt; [1] 1.30e-01 3.35e-03 4.54e-06 6.15e-09 8.33e-12 1.12e-14</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
@@ -4510,9 +4599,10 @@ svymean(~bmxbmi, dis_rak)
 # Diferencia RELATIVA entre la tabla de survey y el IPFP a mano de 5 iteraciones:
 signif(max(abs(as.matrix(svytable(~sexo + edadg, dis_rak)) - A)) / total, 3)
 # Coinciden a 1e-12 relativo: es el mismo algoritmo. El IMC apenas se mueve
-# (29.389 -&gt; 29.391): con margenes cercanos a los que la muestra ya tenia,
-# calibrar corrige poco. Su valor aparece cuando la no respuesta ha
-# desbalanceado la muestra de verdad — capitulo 8.
+# (29.389 -&gt; 29.391) aunque el margen de 60+ pasa del 27.8 % al 32 %: el IMC
+# casi no cambia de una casilla sexo x edad a otra, asi que reponderarlas no
+# lo mueve. Calibrar corrige cuando la variable de interes si depende de las de
+# calibracion, o cuando la no respuesta ha desbalanceado la muestra — capitulo 8.
 #&gt;          mean     SE
 #&gt; bmxbmi 29.391 0.2557
 #&gt; [1] 0.00000000000139</code></pre>
@@ -4521,8 +4611,10 @@ signif(max(abs(as.matrix(svytable(~sexo + edadg, dis_rak)) - A)) / total, 3)
 
       <div class="note">
         <p><strong>Calibrar corrigió aquí casi nada, y eso también es un resultado.</strong> El IMC pasa de
-          29,3891 a 29,3912 y el error estándar sube ligeramente. Con márgenes cercanos a los que la muestra ya
-          tenía, calibrar no tiene mucho que arreglar. Su valor real aparece cuando la <em>no respuesta</em> ha
+          29,3891 a 29,3912 y el error estándar sube ligeramente. No es que los márgenes estuvieran cerca: el
+          grupo de 60 años o más pesaba el 27,8 % y pasa al 32 %. Es que el IMC casi no cambia de una casilla
+          sexo × edad a otra (sus medias van de 28,73 a 30,39), así que dar más peso a unas casillas que a otras
+          apenas lo mueve. Su valor real aparece cuando la <em>no respuesta</em> ha
           desbalanceado la muestra de verdad — que es el capítulo 8 — o cuando la variable de interés está
           fuertemente correlacionada con las de calibración, que es el argumento del GREG del capítulo 3.</p>
       </div>
@@ -4575,9 +4667,10 @@ signif(max(abs(as.matrix(svytable(~sexo + edadg, dis_rak)) - A)) / total, 3)
       <div class="warning">
         <p><strong>La estructura decide el método, no el gusto del analista.</strong> NHANES, con 2 PSU por
           estrato, admite BRR y da 15 grados de libertad: los intervalos usan $t = 2{,}131$ y hay poco margen
-          para estadísticos delicados. SYC, con 861 centros en 16 estratos, no admite BRR pero regala 845 grados
-          de libertad y jackknife de sobra. Antes de elegir el estimador de varianza, se cuenta cuántas UPM hay
-          por estrato — es la primera línea de código que se escribe con una encuesta ajena.</p>
+          para estadísticos delicados. SYC, con 861 UPM en 16 estratos, no admite BRR y su jackknife pide 861
+          réplicas; sus 845 gl nominales valen unos 19 efectivos, porque casi toda la varianza la ponen sus 39
+          centros (módulo 1). Antes de elegir el estimador de varianza, se cuenta cuántas UPM hay por estrato, y
+          qué son — es la primera línea de código que se escribe con una encuesta ajena.</p>
       </div>
 
       <div class="simulador" data-simulador="comparador">
@@ -4604,7 +4697,7 @@ signif(max(abs(as.matrix(svytable(~sexo + edadg, dis_rak)) - A)) / total, 3)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §7.4: análisis de SYC paso a paso; el apéndice trae la ficha técnica completa.</li>
+          <li>Lohr — §7.5: el diseño y los pesos de NHANES; SYC, en §9.2.2 (Ej. 9.4).</li>
           <li>Lumley — <em>Complex Surveys</em>, cap. 3: NHANES como ejemplo recurrente.</li>
         </ul>
       </div>
@@ -4705,8 +4798,9 @@ print(f"deff teorico = 1 + (m-1)*rho = {1 + (Mi-1)*rho:.2f}")
 #&gt; cobertura del IC ingenuo: 0.545   del IC del diseno: 0.947
 #&gt; deff teorico = 1 + (m-1)*rho = 6.85
 # El generador de Python no es el de R, asi que la simulacion da 0.545 donde
-# la de R (bloque R13) daba 0.563. Las dos cuentan la misma historia: un
-# intervalo "del 95 %" que ignora los conglomerados cubre poco mas de la mitad.</code></pre>
+# la de R (la otra pestana de este bloque) daba 0.563. Las dos cuentan la
+# misma historia: un intervalo "del 95 %" que ignora los conglomerados cubre
+# poco mas de la mitad.</code></pre>
         </div>
       </div>
 
@@ -4724,8 +4818,9 @@ print(f"deff teorico = 1 + (m-1)*rho = {1 + (Mi-1)*rho:.2f}")
           mueve la ICC y el tamaño del conglomerado: la curva es la cobertura <em>teórica</em> del intervalo
           ingenuo, calculada con la aproximación normal y el deff de los conglomerados, $1 + (m-1)\rho$ —la
           fórmula de Kish del capítulo 5, módulo 4, con $m$ en el papel de $\bar M$; no el deff por pesos del
-          módulo 2—. El punto naranja marca la
-          configuración simulada, cuya cobertura empírica real (0,563 con 2 000 réplicas) aparece en la lectura.</p>
+          módulo 2—. El punto naranja marca la configuración que eliges. Con ρ = 0,15 y m = 40, la de la
+          simulación, la lectura añade lo que midió el bloque: la cobertura empírica (0,563 con 2 000 réplicas)
+          y los anchos medios.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Cobertura del intervalo nominal del 95 % que ignora los conglomerados</p>
         <div class="grafico-wrapper" style="height:250px;">
@@ -4761,8 +4856,8 @@ recorta &lt;- function(q) {
 }
 data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
 # HALLAZGO INCOMODO: recortar aqui NO compensa. El Kish baja de 1.89 a 1.31
-# (los pesos se aplanan mucho), pero el error estandar no mejora — hasta
-# empeora un poco — y la media se desplaza 0.057. Razon: en NHANES la varianza
+# (los pesos se aplanan mucho), pero el error estandar apenas se mueve (de
+# 0.2523 a 0.2559) y la media se desplaza 0.057. Razon: en NHANES la varianza
 # la ponen los CONGLOMERADOS (modulo 3), no los pesos, asi que aplanar pesos
 # ataca el ingrediente equivocado y solo aporta sesgo. Antes de recortar,
 # mirar la descomposicion del deff.
@@ -4781,7 +4876,8 @@ data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
         <h4><i class="fas fa-scissors" aria-hidden="true"></i> Recortar pesos: qué se gana y qué se paga</h4>
         <p class="simulador-intro">El deslizador elige el cuantil de corte. Las dos barras son el error estándar
           y el desplazamiento de la media respecto a la estimación sin recortar. Busca el punto donde recortar
-          compense... y observa que en NHANES no lo hay: el ee no baja y el desplazamiento sí crece.</p>
+          compense... y observa que en NHANES no lo hay: el ee apenas se mueve (de 0,2523 a 0,2559) y solo el
+          recorte más agresivo desplaza la media.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Efecto del recorte sobre el error estándar y sobre la media</p>
         <div class="grafico-wrapper" style="height:240px;">
@@ -4803,7 +4899,8 @@ data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §7.6: consecuencias de ignorar el diseño; §11.4 sobre recorte de pesos.</li>
+          <li>Lohr — §7.4 (Ej. 7.7): el deff como precio del diseño; §7.5, lo que pasa si se ignoran los
+            pesos; §7.2.1, sobre el recorte de los pesos grandes.</li>
           <li>Este material — cap. 5, módulo 3: el mismo error, medido sobre conglomerados de igual tamaño.</li>
         </ul>
       </div>
@@ -4973,8 +5070,8 @@ data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
         <div class="ciclo-panel" id="ciclo-encuesta-pesos" role="tabpanel" hidden>
           <div class="ciclo-campo">
             <span class="ciclo-etiqueta">Qué haces</span>
-            <p>Construir el peso final: $1/\pi_k$ del diseño, dividido por la propensión a responder, por el
-              factor de calibración (módulos 2 y 6). Se documenta cada factor por separado, aunque el archivo
+            <p>Construir el peso final: $1/\pi_k$ del diseño, dividido por la propensión a responder y
+              multiplicado por el factor de calibración (módulos 2 y 6). Se documenta cada factor por separado, aunque el archivo
               publicado lleve solo el producto.</p>
           </div>
           <div class="ciclo-campo">
@@ -5012,17 +5109,19 @@ data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
       </div>
 
       <div class="note">
-        <p><strong>El proyecto integrador del curso recorre este ciclo completo.</strong> Las seis etapas de
-          arriba son, una a una, los apartados de su entrega: objetivos y dominios, evaluación del marco, diseño
-          justificado con su cálculo de tamaño, plan de campo con protocolo de no respuesta, construcción de
-          pesos, y análisis con intervalos honestos. El capítulo 8 añade la etapa que aquí se ha nombrado sin
+        <p><strong>El proyecto integrador del curso recorre este ciclo completo.</strong> Sus entregas —la
+          ficha del tema, el protocolo, el avance y el informe— van pasando por las seis etapas de arriba: los
+          objetivos y dominios, la evaluación del marco, el diseño justificado con su cálculo de tamaño, el plan
+          de campo con su protocolo de no respuesta, la construcción de los pesos y el análisis con intervalos
+          honestos. El capítulo 8 añade la etapa que aquí se ha nombrado sin
           desarrollar: qué hacer cuando el campo devuelve menos de lo que se pidió.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — cap. 1 (§1.2, el proceso) y cap. 8 (no respuesta) cierran el ciclo.</li>
+          <li>Lohr — cap. 1 (§1.3 a §1.5: sesgo de selección, error de medición y cuestionario) y cap. 8 (no
+            respuesta) cierran el ciclo.</li>
           <li>Groves et al. — <em>Survey Methodology</em>: el ciclo completo, con el error total como hilo.</li>
         </ul>
       </div>
@@ -5073,9 +5172,10 @@ data.frame(t(sapply(c(1, 0.999, 0.99, 0.975, 0.95, 0.90, 0.80), recorta)))
 
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
-        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre encuestas reales distintas a
-          la del hilo principal. Las cifras de cada solución salen de
-          <code>ensamblado/codigo/cap7/cadena.R</code>, que se ejecuta de verdad: ninguna está escrita a mano.</p>
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cuatro trabajan sobre archivos de Lohr distintos de
+          NHANES: SYC, una encuesta real, y dos poblaciones del libro, <code>ipums</code> e
+          <code>integerwt</code>, que aquí se tratan como si fueran muestras. Las cifras de cada solución salen
+          de ejecutar el bloque que ves, en la misma sesión del capítulo: ninguna está escrita a mano.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>syc</code>, estima la
@@ -5098,39 +5198,44 @@ round(c(p_diseno = as.numeric(coef(p_dis)), ee_diseno = as.numeric(SE(p_dis)),
         factor = as.numeric(SE(p_dis)) / ee_ing), 5)
 # La estimacion puntual se mueve poco (0.61275 ponderada contra 0.62228 sin
 # ponderar, un punto porcentual) pero el error estandar se multiplica por
-# 2.4 al declarar el diseno. La estimacion puntual perdona; la incertidumbre
-# no: un intervalo de +/-1.9 puntos se convierte en uno de +/-4.5.
+# 2.4 al declarar el diseno. Aqui la estimacion puntual se movio poco, pero no
+# es una regla (la edad media de NHANES se mueve 2.5 ee sin pesos); la
+# incertidumbre si cambia siempre: +/-1.9 puntos pasan a +/-4.5.
 #&gt;   p_diseno  ee_diseno  p_ingenua ee_ingenuo     factor
 #&gt;    0.61275    0.02274    0.62228    0.00947    2.40119</code></pre>
             <p>La estimación puntual se mueve un punto porcentual (0,61275 ponderada frente a 0,62228 sin
               ponderar), pero el error estándar se multiplica por <strong>2,40</strong>: de ±1,9 puntos a ±4,5.
-              Es la lección del capítulo en una línea — la estimación puntual perdona los descuidos de diseño;
-              la incertidumbre, no.</p>
+              Aquí la estimación puntual apenas se movió, pero no es una regla: la edad media de NHANES pasa de
+              47,94 a 49,39 si se ignoran los pesos, 2,5 errores estándar. Lo que cambia siempre al declarar el
+              diseño es la incertidumbre.</p>
           </details>
         </div>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Con <code>ipums</code> (9
-            estratos, 10 PSU cada uno), estima el ingreso medio de los adultos y su deff. Cuidado con dos
-            trampas del archivo.</p>
+            estratos, 10 PSU cada uno), estima el ingreso medio de los adultos y su deff. En Lohr el archivo es
+            una población de la que se sacan muestras; aquí trátalo como una muestra estratificada de
+            conglomerados en la que todos pesan lo mismo. Cuidado con dos trampas del archivo.</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
-            <p>La primera trampa está en <code>inctot</code>: mira su mínimo. La segunda aparece cuando pides
-              <code>deff = TRUE</code> sin declarar <code>fpc</code>.</p>
+            <p>La primera trampa está en <code>inctot</code>: mira su mínimo. La segunda aparece cuando los pesos
+              valen todos 1 y pides <code>deff = TRUE</code>.</p>
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r"># EJERCICIO 2. Con ipums (9 estratos, 10 PSU cada uno), estimar el ingreso
 # medio de los adultos y medir el deff. Ojo con dos trampas del archivo.
 ip &lt;- read.csv("CSV data sets for SDA 3e/ipums.csv")
-ip_ad &lt;- subset(ip, inctot &gt;= 0 &amp; age &gt;= 18)   # hay 110 ingresos negativos
-ip_ad$peso &lt;- 1                                # ipums viene autoponderado
+ip_ad &lt;- subset(ip, inctot &gt;= 0 &amp; age &gt;= 18)   # fuera 110 ingresos negativos
+ip_ad$peso &lt;- 1                                # tratado como autoponderado
 dis_ip &lt;- svydesign(id = ~psu, strata = ~stratum, weights = ~peso,
                     data = ip_ad, nest = TRUE)
 m_ip &lt;- svymean(~inctot, dis_ip, deff = TRUE)
 m_ip
-# TRAMPA: el DEff sale Inf. survey lo calcula contra un MAS *con fpc*, y sin
-# declarar fpc no tiene el N poblacional. El deff se calcula a mano:
+# TRAMPA: el DEff sale Inf. survey toma N = suma de los pesos, y con pesos 1
+# eso es n: su MAS de referencia es un censo, con varianza 0. Declarar fpc no
+# lo arregla. Se calcula a mano, o con deff = "replace" (MAS con reemplazo):
+deff(svymean(~inctot, dis_ip, deff = "replace"))
 ee_srs &lt;- sd(ip_ad$inctot) / sqrt(nrow(ip_ad))
 round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
         ee_srs = ee_srs, deff = (as.numeric(SE(m_ip)) / ee_srs)^2,
@@ -5139,11 +5244,16 @@ round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
 # El tamano nominal de una encuesta compleja dice muy poco de su precision.
 #&gt;           mean      SE DEff
 #&gt; inctot 9849.54  159.38  Inf
+#&gt;   inctot
+#&gt; 10.58496
 #&gt;          n         gl  ee_diseno     ee_srs       deff n_efectivo
 #&gt;   49692.00      81.00     159.38      48.99      10.58    4694.58</code></pre>
-            <p>Trampa 1: hay 110 ingresos negativos (código de faltante). Trampa 2: <code>survey</code> devuelve
-              <code>DEff = Inf</code> porque sin <code>fpc</code> no tiene el $N$ poblacional para el MAS de
-              referencia — hay que calcular el deff a mano. Resultado: 49 692 personas, 81 grados de libertad,
+            <p>Trampa 1: hay 110 ingresos negativos. No son un código de faltante sino pérdidas; aquí se
+              excluyen, y hay que decirlo, porque cambia lo que se estima (el ingreso medio de quienes no tuvieron
+              pérdidas). Trampa 2: <code>survey</code> devuelve <code>DEff = Inf</code> porque toma como $N$ la
+              suma de los pesos, que con pesos 1 es $n$: su MAS de referencia es un censo, con varianza cero.
+              Declarar <code>fpc</code> no lo arregla; sí lo hacen <code>deff = "replace"</code> (10,58) o la
+              cuenta a mano. Resultado: 49 692 personas, 81 grados de libertad,
               deff 10,6, <strong>tamaño efectivo 4 695</strong>. El tamaño nominal de una encuesta compleja dice
               muy poco sobre su precisión.</p>
           </details>
@@ -5151,8 +5261,10 @@ round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Con <code>integerwt</code>
-            (2 000 observaciones en 4 estratos, con $N_h$ = 3 000, 3 000, 2 000, 2 000), calcula la media
-            estratificada a mano y con <code>survey</code>. ¿Coinciden?</p>
+            (2 000 observaciones en 4 estratos), calcula la media estratificada a mano y con
+            <code>survey</code>. ¿Coinciden? En Lohr este archivo es una población; aquí trátalo como una muestra
+            de una población mayor, con unos tamaños de estrato supuestos: $N_h$ = 3 000, 3 000, 2 000,
+            2 000.</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
             <p>Los pesos son $N_h/n_h$ y el <code>fpc</code> es $N_h$. La fórmula a mano es la del capítulo 4:
@@ -5162,7 +5274,9 @@ round(c(n = nrow(ip_ad), gl = degf(dis_ip), ee_diseno = as.numeric(SE(m_ip)),
             <summary>Solución</summary>
             <pre><code class="language-r"># EJERCICIO 3. Con integerwt (2 000 observaciones en 4 estratos), calcular la
 # media estratificada a mano y con survey. Es el capitulo 4 revisitado con el
-# vocabulario de este: pesos = N_h/n_h, y el fpc por estrato.
+# vocabulario de este: pesos = N_h/n_h, y el fpc por estrato. En Lohr el
+# archivo es una poblacion; aqui se trata como una muestra de una poblacion
+# mayor, con unos N_h supuestos.
 iw &lt;- read.csv("CSV data sets for SDA 3e/integerwt.csv")
 Nh &lt;- c(3000, 3000, 2000, 2000)                # tamanos de estrato supuestos
 nh_e &lt;- as.numeric(table(iw$stratum))
@@ -5284,7 +5398,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
     // semilla 2026. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP7 = {"meta":{"generado":"precalculo/genera_cap7.R","semilla":2026,"replicasCobertura":2000,"replicasBootstrap":500,"rVersion":"4.4.1"},"encuestas":{"nhanes":{"filas":9971,"analizadas":5406,"estratos":15,"psu":30,"gl":15,"psuPorEstrato":[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]},"syc":{"filas":2621,"analizadas":2621,"estratos":16,"psu":861,"gl":845,"psuPorEstrato":[11,7,7,7,7,47,7,66,78,65,84,48,93,77,103,154]}},"pesos":{"nhanes":{"min":5157.019076,"max":242386.66077,"media":42875.66960939,"suma":231785869.90836108,"kish":1.89300205,"hist":{"centros":[5000,15000,25000,35000,45000,55000,65000,75000,85000,95000,105000,115000,125000,135000,145000,155000,165000,175000,185000,195000,205000,215000,225000,235000,245000],"conteo":[335,1243,1582,673,313,162,112,109,107,113,104,99,107,86,78,60,57,24,19,5,6,6,4,1,1]},"razonMaxMin":47.00131165},"syc":{"min":5,"max":50,"media":9.54292255,"suma":25012,"kish":1.33029997,"hist":{"centros":[5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49],"conteo":[671,884,252,463,45,122,18,44,42,18,15,13,0,0,7,7,12,0,0,0,0,0,8]},"razonMaxMin":10}},"deff":{"nhanes":{"media":29.38910054,"ee":0.25319683,"eeIngenuo":0.09624652,"deffSurvey":7.12483326,"deffCrudo":6.92064366,"kish":1.89300205,"nEfectivo":758.75459843},"syc":{"media":16.63929314,"ee":0.12888226,"eeIngenuo":0.03733239,"deffSurvey":11.85357803,"deffCrudo":11.91830934,"kish":1.33029997,"nEfectivo":221.1146704},"descomposicion":{"etiquetas":["MAS ideal","+ pesos desiguales","+ estratos","+ conglomerados"],"varianzas":[0.00926339,0.0160312,0.01583961,0.06410864],"deffs":[1,1.73059736,1.70991491,6.92064366],"n":5406}},"linealizacion":{"R":0.49547632,"ee":0.00422962,"eeLineal":0.00422962,"Xhat":38965027931.519745,"uMin":-1.08183147e-09,"uMax":2.78620361e-09,"uMedia":-1.43991533e-11,"histU":{"centros":[-0.00105,-0.00095,-0.00085,-0.00075,-0.00065,-0.00055,-0.00045,-0.00035,-0.00025,-0.00015,-5e-05,5e-05,0.00015,0.00025,0.00035,0.00045,0.00055,0.00065,0.00075,0.00085,0.00095,0.00105,0.00115,0.00125,0.00135,0.00145,0.00155,0.00165,0.00175,0.00185,0.00195,0.00205,0.00215,0.00225,0.00235,0.00245,0.00255,0.00265,0.00275],"conteo":[4,21,57,160,246,338,428,452,491,508,449,421,344,287,224,209,172,117,95,61,59,48,44,38,40,21,12,15,10,8,9,1,5,4,1,3,1,1,2]}},"replicacion":{"metodos":["linealización","jackknife (JKn)","BRR","bootstrap"],"ee":[0.25319683,0.25325901,0.25853059,0.25436406],"replicas":[null,30,16,500],"theta":29.38910054,"jkReplicas":[29.38609523,29.46074389,29.45802521,29.29315825,29.48622194,29.25336963,29.35242255,29.31798875,29.28394434,29.3632808,29.40423165,29.46287417,29.41474246,29.40403373,29.52862518,29.35437128,29.49540266,29.36039048,29.31298381,29.37400865,29.42352094,29.33248705,29.4269543,29.31866013,29.37423593,29.3511624,29.39214168,29.44367069,29.41667602,29.42956668],"jkEstratos":[125,131,126,128,128,121,124,126,120,119,132,122,119,133,121,129,120,123,122,132,129,130,124,131,133,127,125,130,123,127],"jkPsu":[1,1,2,1,2,1,1,1,1,1,1,2,2,2,2,2,2,2,1,2,1,1,2,2,1,1,2,2,1,2],"medianaValor":28.3,"medianaEeLin":0.328415,"medianaEeJk":0.328415},"calibracion":{"filas":["hombre","mujer"],"columnas":["20-39","40-59","60+"],"tablaInicial":[[41319308.00423698,40612408.36952602,29096510.48507402],[42492959.43157195,42831055.71413901,35433627.90381301]],"tablaFinal":[[39848237.07161966,39352139.2505855,34374699.93289173],[38958958.69722308,39455056.51825725,39796778.43778379]],"margSexo":[113575076.25509688,118210793.6532641],"margEdad":[78807195.76884274,78807195.76884274,74171478.37067552],"totalPob":231785869.908361,"iteraciones":[{"iter":0,"tabla":[[41319308.00423698,40612408.36952602,29096510.48507402],[42492959.43157195,42831055.71413901,35433627.90381301]],"err":0.12998716},{"iter":1,"tabla":[[39718569.40087551,39222460.6612545,34253330.19094146],[39088626.36796723,39584735.10758824,39918148.17973407]],"err":0.00335211},{"iter":2,"tabla":[[39848061.47498861,39351963.63190158,34374535.52777313],[38959134.29385413,39455232.13694116,39796942.8429024]],"err":4.53990832e-06},{"iter":3,"tabla":[[39848236.83378097,39352139.01271693,34374699.71021141],[38958958.93506178,39455056.75612582,39796778.66046409]],"err":6.14912709e-09},{"iter":4,"tabla":[[39848237.07129752,39352139.25026331,34374699.93259013],[38958958.69754522,39455056.51857942,39796778.4380854]],"err":8.32863815e-12},{"iter":5,"tabla":[[39848237.07161923,39352139.25058506,34374699.93289133],[38958958.69722351,39455056.51825768,39796778.43778419]],"err":1.10208822e-14},{"iter":6,"tabla":[[39848237.07161966,39352139.2505855,34374699.93289173],[38958958.69722307,39455056.51825724,39796778.43778379]],"err":1.89083764e-16},{"iter":7,"tabla":[[39848237.07161967,39352139.2505855,34374699.93289173],[38958958.69722308,39455056.51825725,39796778.43778379]],"err":2.62401958e-16},{"iter":8,"tabla":[[39848237.07161966,39352139.2505855,34374699.93289173],[38958958.69722308,39455056.51825725,39796778.43778379]],"err":2.00901499e-16}],"imcAntes":29.38910054,"eeAntes":0.25319683,"imcRaked":29.39122545,"eeRaked":0.25565373,"imcPost":29.38324725,"eePost":0.25287399},"cobertura":{"replicas":2000,"NI":200,"Mi":40,"nUpm":20,"rho":0.15,"cobIngenuo":0.563,"cobDiseno":0.95,"anchoIngenuo":0.1394232,"anchoDiseno":0.38001001,"deffTeorico":6.85},"recorte":[{"q":1,"tope":242386.66077,"afectados":0,"media":29.38910054,"ee":0.25319683,"kish":1.89300205,"sesgoAparente":0},{"q":0.999,"tope":220464.67922695,"afectados":6,"media":29.38830002,"ee":0.25336477,"kish":1.89171682,"sesgoAparente":-0.00080053},{"q":0.99,"tope":172981.1245225,"afectados":55,"media":29.38977192,"ee":0.25344479,"kish":1.86795555,"sesgoAparente":0.00067137},{"q":0.975,"tope":157448.67905875,"afectados":136,"media":29.3899061,"ee":0.25246629,"kish":1.84269673,"sesgoAparente":0.00080555},{"q":0.95,"tope":138859.23807,"afectados":271,"media":29.3867809,"ee":0.25279796,"kish":1.78742144,"sesgoAparente":-0.00231965},{"q":0.9,"tope":111365.829995,"afectados":541,"media":29.39578397,"ee":0.25232242,"kish":1.65558042,"sesgoAparente":0.00668342},{"q":0.8,"tope":61813.312092,"afectados":1081,"media":29.44650736,"ee":0.2559347,"kish":1.31180208,"sesgoAparente":0.05740682}]};
+    const DATOS_CAP7 = {"meta":{"generado":"precalculo/genera_cap7.R","semilla":2026,"replicasCobertura":2000,"replicasBootstrap":500,"rVersion":"4.4.1"},"encuestas":{"nhanes":{"filas":9971,"analizadas":5406,"estratos":15,"psu":30,"gl":15,"psuPorEstrato":[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],"t":2.13144955},"syc":{"filas":2621,"analizadas":2621,"estratos":16,"psu":861,"gl":845,"psuPorEstrato":[11,7,7,7,7,47,7,66,78,65,84,48,93,77,103,154],"t":1.96277536,"upmCentros":39,"upmPersonas":822,"pctVarEstratos1a5":98.57456109,"glEfectivos":19.24219563,"tEfectivo":2.09124243}},"pesos":{"nhanes":{"min":5157.019076,"max":242386.66077,"media":42875.66960939,"suma":231785869.90836108,"kish":1.89300205,"hist":{"centros":[5000,15000,25000,35000,45000,55000,65000,75000,85000,95000,105000,115000,125000,135000,145000,155000,165000,175000,185000,195000,205000,215000,225000,235000,245000],"conteo":[335,1243,1582,673,313,162,112,109,107,113,104,99,107,86,78,60,57,24,19,5,6,6,4,1,1]},"razonMaxMin":47.00131165,"sumaArchivo":316481043.99556684,"sumaAdultosExaminados":234507385.9976132},"syc":{"min":5,"max":50,"media":9.54292255,"suma":25012,"kish":1.33029997,"hist":{"centros":[5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49],"conteo":[671,884,252,463,45,122,18,44,42,18,15,13,0,0,7,7,12,0,0,0,0,0,8]},"razonMaxMin":10}},"deff":{"nhanes":{"media":29.38910054,"ee":0.25319683,"eeIngenuo":0.09624652,"deffSurvey":7.12483326,"deffCrudo":6.92064366,"kish":1.89300205,"nEfectivo":758.75459843},"syc":{"media":16.63929314,"ee":0.12888226,"eeIngenuo":0.03733239,"deffSurvey":11.85357803,"deffCrudo":11.91830934,"kish":1.33029997,"nEfectivo":221.1146704},"descomposicion":{"etiquetas":["MAS ideal","+ pesos desiguales","+ estratos","+ conglomerados"],"varianzas":[0.00926339,0.0160312,0.01583961,0.06410864],"deffs":[1,1.73059736,1.70991491,6.92064366],"n":5406},"s2SinPesos":50.07789767,"s2ConPesos":48.64385674,"cocienteS2":1.02948041,"nEfectivoDescomposicion":781.14121522},"puntual":{"edadNhanes":{"ponderada":47.93548603,"sinPonderar":49.39012209,"ee":0.58197514,"difEnEe":2.49948143},"edadSyc":{"ponderada":16.63929314,"sinPonderar":16.80923312,"ee":0.12888226,"difEnEe":1.31856769}},"linealizacion":{"R":0.49547632,"ee":0.00422962,"eeLineal":0.00422962,"Xhat":38965027931.519745,"uMin":-1.08183147e-09,"uMax":2.78620361e-09,"uMedia":-1.43991533e-11,"histU":{"centros":[-0.00105,-0.00095,-0.00085,-0.00075,-0.00065,-0.00055,-0.00045,-0.00035,-0.00025,-0.00015,-5e-05,5e-05,0.00015,0.00025,0.00035,0.00045,0.00055,0.00065,0.00075,0.00085,0.00095,0.00105,0.00115,0.00125,0.00135,0.00145,0.00155,0.00165,0.00175,0.00185,0.00195,0.00205,0.00215,0.00225,0.00235,0.00245,0.00255,0.00265,0.00275],"conteo":[4,21,57,160,246,338,428,452,491,508,449,421,344,287,224,209,172,117,95,61,59,48,44,38,40,21,12,15,10,8,9,1,5,4,1,3,1,1,2]}},"replicacion":{"metodos":["linealización","jackknife (JKn)","BRR","bootstrap"],"ee":[0.25319683,0.25325901,0.25853059,0.25436406],"replicas":[null,30,16,500],"theta":29.38910054,"jkReplicas":[29.3632808,29.41474246,29.28394434,29.49540266,29.25336963,29.52862518,29.31298381,29.46287417,29.41667602,29.36039048,29.35242255,29.4269543,29.38609523,29.39214168,29.31798875,29.45802521,29.3511624,29.42956668,29.29315825,29.48622194,29.42352094,29.35437128,29.33248705,29.44367069,29.46074389,29.31866013,29.40423165,29.37400865,29.37423593,29.40403373],"jkEstratos":[119,119,120,120,121,121,122,122,123,123,124,124,125,125,126,126,127,127,128,128,129,129,130,130,131,131,132,132,133,133],"jkPsu":[1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2],"medianaValor":28.3,"medianaEeLin":0.328415,"medianaEeJk":0.328415},"calibracion":{"pctEdadInicial":[36.1593515,36.00023768,27.84041081],"imcCasillaMin":28.73133809,"imcCasillaMax":30.3949303,"filas":["hombre","mujer"],"columnas":["20-39","40-59","60+"],"tablaInicial":[[41319308.00423698,40612408.36952602,29096510.48507402],[42492959.43157195,42831055.71413901,35433627.90381301]],"tablaFinal":[[39848237.07161966,39352139.2505855,34374699.93289173],[38958958.69722308,39455056.51825725,39796778.43778379]],"margSexo":[113575076.25509688,118210793.6532641],"margEdad":[78807195.76884274,78807195.76884274,74171478.37067552],"totalPob":231785869.908361,"iteraciones":[{"iter":0,"tabla":[[41319308.00423698,40612408.36952602,29096510.48507402],[42492959.43157195,42831055.71413901,35433627.90381301]],"err":0.12998716},{"iter":1,"tabla":[[39718569.40087551,39222460.6612545,34253330.19094146],[39088626.36796723,39584735.10758824,39918148.17973407]],"err":0.00335211},{"iter":2,"tabla":[[39848061.47498861,39351963.63190158,34374535.52777313],[38959134.29385413,39455232.13694116,39796942.8429024]],"err":4.53990832e-06},{"iter":3,"tabla":[[39848236.83378097,39352139.01271693,34374699.71021141],[38958958.93506178,39455056.75612582,39796778.66046409]],"err":6.14912709e-09},{"iter":4,"tabla":[[39848237.07129752,39352139.25026331,34374699.93259013],[38958958.69754522,39455056.51857942,39796778.4380854]],"err":8.32863815e-12},{"iter":5,"tabla":[[39848237.07161923,39352139.25058506,34374699.93289133],[38958958.69722351,39455056.51825768,39796778.43778419]],"err":1.10208822e-14},{"iter":6,"tabla":[[39848237.07161966,39352139.2505855,34374699.93289173],[38958958.69722307,39455056.51825724,39796778.43778379]],"err":1.89083764e-16},{"iter":7,"tabla":[[39848237.07161967,39352139.2505855,34374699.93289173],[38958958.69722308,39455056.51825725,39796778.43778379]],"err":2.62401958e-16},{"iter":8,"tabla":[[39848237.07161966,39352139.2505855,34374699.93289173],[38958958.69722308,39455056.51825725,39796778.43778379]],"err":2.00901499e-16}],"imcAntes":29.38910054,"eeAntes":0.25319683,"imcRaked":29.39122545,"eeRaked":0.25565373,"imcPost":29.38324725,"eePost":0.25287399},"cobertura":{"replicas":2000,"NI":200,"Mi":40,"nUpm":20,"rho":0.15,"cobIngenuo":0.563,"cobDiseno":0.95,"anchoIngenuo":0.1394232,"anchoDiseno":0.38001001,"deffTeorico":6.85},"recorte":[{"q":1,"tope":242386.66077,"afectados":0,"media":29.38910054,"ee":0.25319683,"kish":1.89300205,"sesgoAparente":0},{"q":0.999,"tope":220464.67922695,"afectados":6,"media":29.38830002,"ee":0.25336477,"kish":1.89171682,"sesgoAparente":-0.00080053},{"q":0.99,"tope":172981.1245225,"afectados":55,"media":29.38977192,"ee":0.25344479,"kish":1.86795555,"sesgoAparente":0.00067137},{"q":0.975,"tope":157448.67905875,"afectados":136,"media":29.3899061,"ee":0.25246629,"kish":1.84269673,"sesgoAparente":0.00080555},{"q":0.95,"tope":138859.23807,"afectados":271,"media":29.3867809,"ee":0.25279796,"kish":1.78742144,"sesgoAparente":-0.00231965},{"q":0.9,"tope":111365.829995,"afectados":541,"media":29.39578397,"ee":0.25232242,"kish":1.65558042,"sesgoAparente":0.00668342},{"q":0.8,"tope":61813.312092,"afectados":1081,"media":29.44650736,"ee":0.2559347,"kish":1.31180208,"sesgoAparente":0.05740682}]};
 
     // ================================================================
     // Estado y elementos del DOM
@@ -7577,6 +7691,23 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
     // ================================================================
     const D7 = DATOS_CAP7;
 
+    // A 375 px, con `maxRotation: 0` la plantilla deja que Chart.js salte
+    // rótulos, y barras como «IC del diseño» o la del recorte se quedaban sin
+    // nombre (auditoría T7.115, S12). Con pocas categorías se muestran todas y
+    // se giran si no caben; con muchas (las 30 réplicas del jackknife) se
+    // sigue saltando. Envuelve a la de la plantilla, así que vale también para
+    // el gráfico del quiz.
+    const crearGraficoBarrasPlantilla = crearGraficoBarras;
+    crearGraficoBarras = function (canvas, etiquetas, valores, opciones = {}) {
+      const g = crearGraficoBarrasPlantilla(canvas, etiquetas, valores, opciones);
+      if (etiquetas.length <= 16) {
+        g.options.scales.x.ticks.autoSkip = false;
+        g.options.scales.x.ticks.maxRotation = 90;
+        g.update('none');
+      }
+      return g;
+    };
+
     // Formato español: espacio fino como separador de miles, coma decimal.
     function fmtNum(x, d = 2) {
       if (!isFinite(x)) return '—';
@@ -7742,7 +7873,8 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { etiqueta: 'razón peso/altura:', valor: fmtNum(L.R, 6) + ' (ee ' + fmtNum(L.ee, 6) + ')' },
           { etiqueta: 'ee por linealización a mano:', valor: fmtNum(L.eeLineal, 6) + ' — idéntico' },
           { etiqueta: 'û_k mínimo / máximo (×10⁶):', valor: fmtNum(L.uMin * 1e6, 3) + ' / ' + fmtNum(L.uMax * 1e6, 3) },
-          { etiqueta: 'media de û_k (×10⁶):', valor: fmtNum(L.uMedia * 1e6, 6) + ' ≈ 0 por construcción' },
+          { etiqueta: 'media simple de û_k (×10⁶):', valor: fmtNum(L.uMedia * 1e6, 6) +
+            ' · lo que vale 0 por construcción es Σ w_k û_k' },
           { etiqueta: 'zoom:', valor: '×' + fmtNum(params.zoom, 1) },
           { etiqueta: 'total estimado del denominador:', valor: fmtNum(L.Xhat, 0) }
         ]);
@@ -7763,18 +7895,29 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       const params = { replica: 1 };
       const lienzo = raiz.querySelector('canvas');
       const etiquetas = R.jkEstratos.map((h, i) => 'E' + h + '/' + R.jkPsu[i]);
+      // Se dibuja cuánto se aparta cada réplica de la estimación completa: el
+      // cero es esa estimación y, como genera_cap7.R ordena las réplicas por
+      // estrato, cada par sale una barra arriba y otra abajo (T7.115, S4).
+      // Con el valor de la réplica, el eje de barras arrancaba en 0 y las 30
+      // salían iguales.
+      const desvs = R.jkReplicas.map(v => v - R.theta);
+      const tope = Math.max(...desvs.map(Math.abs)) * 1.15;
 
-      const g = crearGraficoBarras(lienzo, etiquetas, R.jkReplicas, {
-        etiqueta: 'IMC medio sin esa PSU', color: COLORES_GRAFICO.primario,
-        min: Math.min(...R.jkReplicas) * 0.998, max: Math.max(...R.jkReplicas) * 1.002
+      const g = crearGraficoBarras(lienzo, etiquetas, desvs, {
+        etiqueta: 'desviación del IMC medio sin esa PSU', color: COLORES_GRAFICO.primario,
+        min: -tope, max: tope,
+        lineas: [{ etiqueta: 'estimación completa (desviación 0)', valor: 0, color: COLORES_GRAFICO.secundario }]
       });
+      g.options.scales.y.min = -tope;
+      g.options.scales.y.max = tope;
+      g.update('none');
 
       function pintar() {
         const i = params.replica - 1;
         g.data.datasets[0].backgroundColor = etiquetas.map((_, k) => k === i ? '#FF6600' : '#012820');
         g.update('none');
 
-        const desv = R.jkReplicas[i] - R.theta;
+        const desv = desvs[i];
         // aporte de esta réplica: (n_h-1)/n_h * (theta_i - theta)^2, con n_h = 2
         const aporte = 0.5 * desv * desv;
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
@@ -7844,23 +7987,19 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       const params = { encuesta: 0 };
       const lienzo = raiz.querySelector('canvas');
       const E = [
-        { nombre: 'NHANES · IMC medio', d: D7.deff.nhanes, gl: D7.encuestas.nhanes.gl, unidad: 'kg/m²' },
-        { nombre: 'SYC · edad media', d: D7.deff.syc, gl: D7.encuestas.syc.gl, unidad: 'años' }
+        { nombre: 'NHANES · IMC medio', d: D7.deff.nhanes, gl: D7.encuestas.nhanes.gl,
+          t: D7.encuestas.nhanes.t, glTexto: 'gl', unidad: 'kg/m²' },
+        { nombre: 'SYC · edad media', d: D7.deff.syc, gl: D7.encuestas.syc.gl,
+          t: D7.encuestas.syc.t, glTexto: 'gl nominales', unidad: 'años' }
       ];
 
       const g = crearGraficoBarras(lienzo, ['IC ingenuo (±)', 'IC del diseño (±)'], [0, 0], {
         etiqueta: 'semiamplitud del IC 95 %', color: COLORES_GRAFICO.primario, min: 0, max: 1
       });
 
-      // valor t aproximado: normal + corrección de Cornish-Fisher de 1er orden
-      function tAprox(gl) {
-        const z = 1.959964;
-        return z + (z * z * z + z) / (4 * gl);
-      }
-
       function pintar() {
         const e = E[params.encuesta];
-        const t = tAprox(e.gl);
+        const t = e.t;   // qt(0.975, gl), de genera_cap7.R
         const semiIng = 1.959964 * e.d.eeIngenuo;
         const semiDis = t * e.d.ee;
         g.data.datasets[0].data = [semiIng, semiDis];
@@ -7872,7 +8011,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { etiqueta: 'estimando:', valor: e.nombre },
           { etiqueta: 'estimación:', valor: fmtNum(e.d.media, 4) + ' ' + e.unidad },
           { etiqueta: 'IC ingenuo (z = 1,96):', valor: '±' + fmtNum(semiIng, 4) },
-          { etiqueta: 'IC del diseño (t con ' + e.gl + ' gl ≈ ' + fmtNum(t, 3) + '):', valor: '±' + fmtNum(semiDis, 4) },
+          { etiqueta: 'IC del diseño (t con ' + e.gl + ' ' + e.glTexto + ' = ' + fmtNum(t, 3) + '):', valor: '±' + fmtNum(semiDis, 4) },
           { etiqueta: 'el honesto es:', valor: fmtNum(semiDis / semiIng, 2) + '× más ancho' },
           { etiqueta: 'deff · tamaño efectivo:', valor: fmtNum(e.d.deffSurvey, 2) + ' · ' +
             fmtNum(e.d.nEfectivo, 0) + ' observaciones equivalentes' }
@@ -7916,10 +8055,17 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
             borderColor: COLORES_GRAFICO.primario, borderWidth: 2, pointRadius: 0, fill: false, tension: 0.2 },
           { type: 'line', label: 'nominal 95 %', data: [{ x: 0, y: 0.95 }, { x: 0.6, y: 0.95 }],
             borderColor: COLORES_GRAFICO.gris, borderDash: [6, 4], borderWidth: 1.5, pointRadius: 0, fill: false },
-          { type: 'scatter', label: 'configuración simulada',
+          { type: 'scatter', label: 'configuración elegida',
             data: [{ x: params.rho, y: cobTeorica(deffAct) }],
             backgroundColor: '#FF6600', pointRadius: 6 }
         ];
+        // La cobertura que midió el bloque solo vale para su configuración:
+        // se dibuja cuando la curva es la de m = 40 (T7.115, S34).
+        if (params.m === C.Mi) {
+          g.data.datasets.push({ type: 'scatter', label: 'simulación del bloque (ρ = 0,15)',
+            data: [{ x: C.rho, y: C.cobIngenuo }], backgroundColor: '#012820',
+            pointStyle: 'rectRot', pointRadius: 7 });
+        }
         g.options.scales.y.min = 0; g.options.scales.y.max = 1;
         g.update('none');
 
@@ -7931,8 +8077,9 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { etiqueta: 'simulación real (' + fmtNum(C.replicas, 0) + ' réplicas):',
             valor: esSimulada ? fmtPct(C.cobIngenuo, 1) + ' ingenuo · ' + fmtPct(C.cobDiseno, 1) + ' diseño'
                               : 'solo medida en ρ = 0,15 y m = 40' },
-          { etiqueta: 'ancho medio simulado:', valor: 'ingenuo ' + fmtNum(C.anchoIngenuo, 4) +
-            ' · diseño ' + fmtNum(C.anchoDiseno, 4) },
+          { etiqueta: 'ancho medio simulado:', valor: esSimulada
+              ? 'ingenuo ' + fmtNum(C.anchoIngenuo, 4) + ' · diseño ' + fmtNum(C.anchoDiseno, 4)
+              : 'solo medido en ρ = 0,15 y m = 40' },
           { etiqueta: 'falsos positivos al 5 % nominal:', valor: fmtPct(1 - cobTeorica(deffAct), 0) }
         ]);
       }
@@ -7971,9 +8118,15 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { etiqueta: 'deff de Kish:', valor: fmtNum(r.kish, 3) + ' (sin recortar ' + fmtNum(base.kish, 3) + ')' },
           { etiqueta: 'error estándar:', valor: fmtNum(r.ee, 4) + ' (sin recortar ' + fmtNum(base.ee, 4) + ')' },
           { etiqueta: 'la media se desplaza:', valor: fmtNum(r.sesgoAparente, 4) },
-          { etiqueta: 'veredicto:', valor: r.ee <= base.ee && Math.abs(r.sesgoAparente) < 0.01
-              ? 'ligera mejora, sesgo despreciable'
-              : (r.q === 1 ? 'punto de partida' : 'el ee NO baja y el sesgo crece: no compensa') }
+          // Sin recortar, el veredicto es el punto de partida; después, un
+          // cambio de ee menor que el 1 % y un desplazamiento menor que 0,01
+          // no cambian nada relevante (T7.115, S5).
+          { etiqueta: 'veredicto:', valor: r.q === 1
+              ? 'punto de partida: sin recortar'
+              : (Math.abs(r.ee / base.ee - 1) < 0.01 && Math.abs(r.sesgoAparente) < 0.01
+                  ? 'no cambia nada relevante: el ee se mueve menos de un 1 % y la media casi nada'
+                  : (r.ee > base.ee ? 'el ee empeora' : 'el ee apenas cambia') +
+                    ' y la media se desplaza ' + fmtNum(r.sesgoAparente, 4) + ': no compensa') }
         ]);
       }
 
@@ -8002,22 +8155,24 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
         ],
         filas: [
           { metodo: 'Linealización de Taylor', ee: R.ee[0], replicas: 0,
-            requisito: 'ninguno', noLineales: 'sí: Woodruff, invirtiendo la F estimada' },
+            requisito: '≥ 2 PSU por estrato', noLineales: 'sí, por Woodruff' },
           { metodo: 'Jackknife (JKn)', ee: R.ee[1], replicas: R.replicas[1],
-            requisito: '≥ 2 PSU por estrato', noLineales: 'solo por Woodruff: sus réplicas de la mediana no valen' },
+            requisito: '≥ 2 PSU por estrato', noLineales: 'solo por Woodruff' },
           { metodo: 'BRR', ee: R.ee[2], replicas: R.replicas[2],
-            requisito: 'exactamente 2 PSU por estrato', noLineales: 'sí, también recalculándola' },
+            requisito: '2 PSU por estrato', noLineales: 'sí, también recalculando' },
           { metodo: 'Bootstrap (Rao–Wu)', ee: R.ee[3], replicas: R.replicas[3],
-            requisito: 'ninguno', noLineales: 'sí, también recalculándola, y para lo más irregular' }
+            requisito: '≥ 2 PSU por estrato', noLineales: 'sí, también recalculando' }
         ],
         inicial: 'replicas',
         destacada: 'Jackknife (JKn)',
         pie: 'La linealización no necesita réplicas y por eso es la opción por defecto de survey. ' +
           'BRR usa menos réplicas que el jackknife (16 contra 30) pero exige exactamente 2 PSU por ' +
           'estrato, condición que NHANES cumple y SYC no. El bootstrap cuesta 500 réplicas y es el ' +
-          'único cómodo con estadísticos muy irregulares. La coincidencia entre los cuatro (todos ' +
-          'entre 0,2532 y 0,2585) es la comprobación de que el diseño está bien declarado: si ' +
-          'divergieran mucho, habría que sospechar del svydesign, no de los métodos.'
+          'único cómodo con estadísticos muy irregulares. Que los cuatro coincidan (todos entre ' +
+          '0,2532 y 0,2585) confirma que los métodos son equivalentes para una media; no valida la ' +
+          'declaración del diseño, porque los cuatro parten de ella: con el diseño mal declarado ' +
+          'coincidirían igual. La declaración se comprueba contando las PSU de cada estrato y ' +
+          'mirando degf().'
       };
     };
 
@@ -8028,7 +8183,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       const N = D7.encuestas.nhanes, S = D7.encuestas.syc;
       const dn = D7.deff.nhanes, ds = D7.deff.syc;
       return {
-        descripcion: 'Todo lo que el capítulo ha calculado de cada encuesta. Las dos son ' +
+        descripcion: 'Las cifras clave de cada encuesta. Las dos son ' +
           'estratos × conglomerados × pesos; sus estructuras son opuestas y eso cambia qué se ' +
           'puede hacer con cada una. Pulsa cualquier cabecera para reordenar.',
         columnas: [
@@ -8043,14 +8198,16 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           { encuesta: 'NHANES (IMC de adultos)', n: N.analizadas, gl: N.gl,
             deff: dn.deffSurvey, nef: dn.nEfectivo, brr: 'sí: 2 PSU por estrato' },
           { encuesta: 'SYC (edad)', n: S.analizadas, gl: S.gl,
-            deff: ds.deffSurvey, nef: ds.nEfectivo, brr: 'no: de 7 a 154 PSU' }
+            deff: ds.deffSurvey, nef: ds.nEfectivo, brr: 'no: estratos con un número impar de PSU' }
         ],
         inicial: 'nef',
         destacada: 'NHANES (IMC de adultos)',
-        pie: 'NHANES tiene el doble de observaciones y un deff menor, así que gana en tamaño ' +
-          'efectivo (759 contra 221). Pero SYC tiene 845 grados de libertad frente a 15, lo que ' +
-          'hace sus intervalos proporcionalmente más cortos y permite estadísticos más finos. No ' +
-          'hay una "mejor": hay dos estructuras, y cada una condiciona qué análisis es defendible.'
+        pie: 'NHANES tiene el doble de observaciones y, para su variable, un deff menor, así que ' +
+          'gana en tamaño efectivo (759 contra 221). Ojo: el deff es de cada estadístico, no de la ' +
+          'encuesta; en la misma NHANES, el de la proporción de adultos con IMC mayor que 30 es 5,7 ' +
+          '(Lohr, §7.5). SYC tiene 845 grados de libertad nominales frente a 15, pero como casi toda ' +
+          'su varianza la ponen 39 centros, sus gl efectivos son unos 19. No hay una "mejor": hay ' +
+          'dos estructuras, y cada una condiciona qué análisis es defendible.'
       };
     };
 
@@ -8066,26 +8223,28 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       etapas: [
         {
           etiqueta: 'Estratos',
-          unidad: '15 estratos geográficos',
+          unidad: '15 estratos: 14 y uno de certeza',
           icono: 'fa-map',
-          resumen: 'El territorio se parte en estratos que agrupan condados parecidos. Es el ' +
-            'capítulo 4: reduce varianza y garantiza cobertura de todas las zonas.',
+          resumen: 'Las UPM se agrupan en estratos según un índice de salud del estado y la ' +
+            'ruralidad; las cuatro más grandes forman un estrato de certeza. Es el capítulo 4: ' +
+            'reduce varianza y garantiza que entren todos los tipos de zona.',
           cifras: [{ k: 'H', v: '15 estratos' }],
           ejemplo: 'ningún estrato puede quedarse sin representación, pase lo que pase con el azar.'
         },
         {
-          etiqueta: 'Etapa 1: condados',
-          unidad: '2 UPM por estrato, PPT',
+          etiqueta: 'Condados',
+          unidad: '1 UPM por estrato y año, PPT',
           icono: 'fa-city',
-          resumen: 'Dentro de cada estrato se sortean DOS condados con probabilidad proporcional ' +
-            'al tamaño (capítulo 6). Dos es el mínimo para estimar varianza — y justo lo que el ' +
-            'método BRR necesita.',
+          resumen: 'Cada año se sortea UNA UPM por estrato —un condado, un grupo de condados o ' +
+            'de secciones censales— con probabilidad proporcional al tamaño (capítulo 6). El ' +
+            'archivo junta dos años, así que trae DOS por estrato: el mínimo para estimar ' +
+            'varianza, y justo lo que el método BRR necesita.',
           pi: '\\pi_{1i} \\propto \\text{población del condado}',
           cifras: [{ k: 'PSU', v: '30 en total' }, { k: 'gl', v: '30 − 15 = 15' }],
           ejemplo: 'con 2 por estrato, cada réplica del jackknife elimina la mitad de un estrato.'
         },
         {
-          etiqueta: 'Etapas 2–3: segmentos y hogares',
+          etiqueta: 'Segmentos y hogares',
           unidad: 'submuestreo dentro del condado',
           icono: 'fa-house',
           resumen: 'Dentro del condado se sortean segmentos censales y dentro de ellos, hogares ' +
@@ -8101,7 +8260,7 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           unidad: 'ajuste y calibración',
           icono: 'fa-weight-hanging',
           resumen: 'El peso de diseño se ajusta por no respuesta (quien no acudió al examen tiene ' +
-            'wtmec2yr = 0) y se calibra a los totales del censo. El resultado es wtmec2yr.',
+            'wtmec2yr = 0) y se calibra a totales de población de la ACS. El resultado es wtmec2yr.',
           peso: 'w_k = \\frac{1}{\\pi_k}\\cdot\\frac{1}{\\hat\\phi_k}\\cdot g_k',
           cifras: [{ k: 'w', v: '5 157 a 242 387' }, { k: 'Σw', v: '231,8 millones' }],
           ejemplo: 'una sola persona puede representar a 242 387 estadounidenses.'
@@ -8158,15 +8317,15 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
       {
         tipo: 'opcion',
         modulo: 2,
-        pregunta: 'Los pesos de NHANES suman 231 785 870. ¿Qué es exactamente ese número?',
-        pista: '¿Es un dato del censo o el resultado de una estimación?',
+        pregunta: 'Los pesos de los adultos de NHANES con IMC válido suman 231 785 870. ¿Qué es ese número?',
+        pista: '¿Los pesos llegan tal como salen del diseño, o pasaron por una calibración?',
         opciones: [
-          { texto: 'Una ESTIMACIÓN de la población adulta de EE.UU., con su propio error muestral.', correcta: true,
-            retro: 'Correcto. La suma de pesos es el estimador de Horvitz–Thompson del total de la población: un estadístico, no un dato. Si se aleja mucho de un total conocido, hay un problema en el archivo o en el filtrado.' },
+          { texto: 'Una estimación de cuántos adultos de EE.UU. representa ese subconjunto, con la escala que fijó la calibración.', correcta: true,
+            retro: 'Correcto. Los pesos del examen están calibrados a totales de la ACS: sobre el archivo entero suman 316 481 044, lo mismo que los de la entrevista. Al quedarse con los adultos con IMC válido se suman solo sus pesos, y la cifra estima cuántos adultos representa ese subconjunto. Si se alejara mucho de un total conocido, habría un problema en el archivo o en el filtrado.' },
           { texto: 'El número exacto de adultos en EE.UU. según el censo, incorporado a los pesos.', correcta: false,
-            retro: 'La calibración acerca los pesos a los totales del censo, pero la suma sigue siendo una estimación — y aquí ni siquiera se calibró a ese total exacto. Que un número salga creíble no lo convierte en un censo.' },
-          { texto: 'El número de personas entrevistadas, multiplicado por el factor de expansión medio.', correcta: false,
-            retro: 'Eso sería $n \\times \\bar w$, que da lo mismo aritméticamente pero describe mal lo que es: cada persona aporta SU peso, y son muy distintos (de 5 157 a 242 387).' },
+            retro: 'No es un conteo. Los pesos se calibran a estimaciones de la ACS, que tienen su propio error, y al filtrar a los adultos con IMC válido la suma ya no reproduce ningún total publicado: dice cuántos adultos representa ese subconjunto.' },
+          { texto: 'El número de personas entrevistadas multiplicado por un factor de expansión común a todas.', correcta: false,
+            retro: 'No hay un factor común: cada persona trae su propio peso, de 5 157 a 242 387, y por eso cada una cuenta distinto en las estimaciones. Esa desigualdad es la que mide el deff de Kish.' },
           { texto: 'Un número de control interno de NHANES sin interpretación estadística.', correcta: false,
             retro: 'Tiene una interpretación muy concreta y muy útil: es la primera comprobación que se hace al abrir una encuesta ajena, precisamente porque debe parecerse a un total conocido.' }
         ]
@@ -8217,10 +8376,10 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
         pregunta: 'Sobre SYC (de 7 a 154 PSU por estrato), ¿qué métodos de varianza son aplicables?',
         pista: 'Repasa el requisito estructural de cada método.',
         opciones: [
-          { texto: 'Linealización, jackknife y bootstrap sí; BRR no, porque exige exactamente 2 PSU por estrato.', correcta: true,
+          { texto: 'Linealización, jackknife y bootstrap sí; BRR no, porque tiene que partir cada estrato en dos mitades y SYC tiene estratos con un número impar de PSU.', correcta: true,
             retro: 'Correcto. Y tampoco sirve JK1, el jackknife no estratificado: survey se niega explícitamente sobre un diseño con estratos. La estructura decide el método.' },
           { texto: 'Todos: los cuatro métodos son universales.', correcta: false,
-            retro: 'BRR está construido sobre matrices de Hadamard que presuponen dos mitades por estrato. Con 7 o 154 PSU no hay tal partición y as.svrepdesign falla.' },
+            retro: 'BRR está construido sobre mitades del diseño: en su forma clásica pide 2 PSU por estrato, y survey lo extiende a cualquier número par partiéndolas en dos. SYC tiene estratos con un número impar de PSU (7, 11, 47…), y as.svrepdesign falla con «odd numbers of PSUs».' },
           { texto: 'Solo la linealización, porque hay demasiadas PSU para replicar.', correcta: false,
             retro: '861 réplicas son perfectamente manejables — el ejercicio 4 las calcula. La replicación escala bien; lo que no escala es la paciencia si el estadístico es muy costoso.' },
           { texto: 'Solo BRR, porque es el único diseñado para encuestas con estratos.', correcta: false,
@@ -8242,8 +8401,8 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
         modulo: 3,
         alto: 240,
         descripcionGrafico: 'Cuatro barras con la varianza de la media del IMC según los componentes del diseño declarados: MAS ideal, más pesos, más estratos, más conglomerados',
-        pregunta: 'La descomposición del módulo 3. ¿Qué barra rompe la idea de que «declarar más diseño siempre sube la varianza»?',
-        pista: 'Compara la segunda con la tercera.',
+        pregunta: 'La descomposición del módulo 3. ¿Qué ingrediente del diseño pone casi toda la varianza de la media del IMC?',
+        pista: 'Compara cada barra con la anterior: ¿en qué paso cambia más la altura?',
         dibujar: canvas => {
           const D = D7.deff.descomposicion;
           const g = crearGraficoBarras(canvas, D.etiquetas, D.varianzas, {
@@ -8255,14 +8414,14 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
           return g;
         },
         opciones: [
-          { texto: 'La tercera: al añadir los estratos la varianza BAJA respecto a la de solo pesos (deff 1,73 → 1,71), que es exactamente lo que un estratificado debe hacer.', correcta: true,
-            retro: 'Correcto. Los estratos son el único componente que trabaja a favor de la precisión — lo demostró el capítulo 4 — y en la descomposición se ve en directo.' },
-          { texto: 'La segunda: los pesos bajan la varianza al corregir el desbalance.', correcta: false,
-            retro: 'Los pesos la SUBEN (1 → 1,73). Corregir sesgo con pesos desiguales cuesta varianza: es el intercambio del capítulo 6, y el deff de Kish lo anticipa mirando solo los pesos.' },
-          { texto: 'La cuarta: los conglomerados bajan la varianza al agrupar observaciones parecidas.', correcta: false,
-            retro: 'Al revés: la cuadruplican (1,71 → 6,92). Agrupar observaciones parecidas es justamente lo que destruye información — es el ICC del capítulo 5.' },
-          { texto: 'Ninguna: las cuatro barras crecen monótonamente.', correcta: false,
-            retro: 'Mira la tercera barra: es más baja que la segunda. Esa pequeña bajada es el trabajo de los estratos, y verla es el objetivo del módulo.' }
+          { texto: 'Los conglomerados: la última barra es cuatro veces la anterior (deff 1,71 → 6,92).', correcta: true,
+            retro: 'Correcto. Agrupar observaciones parecidas es lo que más información destruye: es el ICC del capítulo 5. Y fíjate en lo que el gráfico no deja ver: entre la segunda y la tercera barra la varianza baja un poco (deff 1,73 → 1,71). Es el trabajo de los estratos, demasiado pequeño para el ojo: se lee en las cifras, no en el dibujo.' },
+          { texto: 'Los pesos desiguales: la segunda barra es la que más sube.', correcta: false,
+            retro: 'Los pesos la suben (1 → 1,73), pero mucho menos que los conglomerados, que la cuadruplican (1,71 → 6,92). Compara la altura de la última barra con la de la tercera.' },
+          { texto: 'Los estratos: con ellos la barra sube más que en ningún otro paso.', correcta: false,
+            retro: 'Al revés: con los estratos la varianza baja un poco (1,73 → 1,71). Son el único componente que trabaja a favor de la precisión, como mostró el capítulo 4.' },
+          { texto: 'Ninguno destaca: las cuatro barras miden más o menos lo mismo.', correcta: false,
+            retro: 'La última barra (0,0641) es casi siete veces la primera (0,0093): el diseño completo multiplica la varianza del MAS ideal por 6,92, y casi todo lo pone el último paso.' }
         ]
       },
       {
@@ -8272,13 +8431,13 @@ round(c(replicas = nrow(psus_sy), ee_a_mano = sqrt(v_sy),
         pista: 'Cobertura del intervalo y tasa de error tipo I son dos caras de lo mismo.',
         opciones: [
           { texto: 'La tasa de falsos positivos se dispara del 5 % nominal a más del 40 %.', correcta: true,
-            retro: 'Exacto: si el intervalo cubre el 56 % de las veces, el 44 % restante son casos donde se rechazaría erróneamente. Esa es una de las raíces documentadas de la crisis de replicación en estudios con datos agrupados.' },
+            retro: 'Exacto: si el intervalo cubre el 56 % de las veces, el 44 % restante son casos donde se rechazaría erróneamente. Es una de las raíces de los «efectos» que luego no se replican en estudios con datos agrupados.' },
           { texto: 'No hay traducción: la cobertura de intervalos y los contrastes son cosas distintas.', correcta: false,
             retro: 'Son estrictamente equivalentes: un intervalo del 95 % que no cubre el valor verdadero corresponde exactamente a rechazar $H_0$ cuando es cierta.' },
           { texto: 'La potencia del contraste sube, que es bueno.', correcta: false,
             retro: 'No es potencia, es error tipo I. Detectar «efectos» que no existen no es potencia: es ruido presentado como hallazgo.' },
           { texto: 'El efecto se compensa con muestras grandes.', correcta: false,
-            retro: 'Es lo contrario: el deff no desaparece al crecer $n$ — depende de la ICC y del tamaño del conglomerado. Aumentar $n$ manteniendo el diseño produce intervalos aún más estrechos y aún más falsos.' }
+            retro: 'No: el deff no desaparece al crecer $n$, porque depende de la ICC y del tamaño del conglomerado. Con más conglomerados del mismo tamaño los intervalos se estrechan pero la cobertura sigue igual de baja; si lo que crece es el tamaño del conglomerado, empeora.' }
         ]
       },
       {
