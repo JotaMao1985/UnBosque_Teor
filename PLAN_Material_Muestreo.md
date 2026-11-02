@@ -8309,3 +8309,23 @@ Javier: «Sí, tanda 3». Lo que cambió:
   - el quiz acepta respuestas y muestra KaTeX en opciones y retros.
 - **Commit de las tres tandas (T7.108–T7.110), pedido por Javier el 2026-11-02.** Son los 16 archivos cambiados
   desde `ebe185d`, en un solo commit encima de él. Sin push ni publicación en gh-pages.
+- **Publicado** el 2026-11-02 con el visto bueno de Javier («Sí, haz commit»; luego «Sí, push y publica»). Sale todo lo
+  hecho desde T7.104: la reescritura con Gutiérrez (T7.104–T7.107) y las tres tandas de mejoras (T7.108–T7.110).
+  - `main` `51a7a12`, empujado por SHA sobre `36a1f6b` sin rebase: `origin/main` seguía en la base de `ebe185d`.
+    Entran los dos commits, `ebe185d` y `51a7a12`, sin nada más.
+  - `gh-pages` `b32b4fe`, construido con `git commit-tree` del árbol `51a7a12:sitio` sobre la punta `e9d8b22`. Nada
+    ajeno: el árbol de la punta era el `sitio/` de `36a1f6b`. Entraron 3 archivos: el cap. 6, `muestreo/index.html` y
+    el README.
+  - Antes de publicar: el capítulo se reensambló igual que la versión verificada (huella `9b30f4877136990b`), y
+    `cuenta_sitio.py` da 0 desajustadas. Las demás comprobaciones son las de T7.110, sobre los mismos archivos.
+  - Comprobado después de publicar:
+    - el build de Pages, `built`;
+    - `verifica_publicado.py --solo-huella`: las 11 páginas coinciden con la rama;
+    - el código del cap. 6 servido arranca: R (31) y Python (9);
+    - el cap. 6 servido coincide byte a byte con la rama, y sus 40 bloques salen con 0 en una carpeta que solo tiene
+      los CSV;
+    - en el navegador, el cap. 6 vivo carga los 11 módulos con la consola limpia y 0 `.katex-error`, sin NaN, y con
+      los 40 bloques. A 375 px la página mide 375 de ancho en todos los módulos y las 9 fórmulas que desbordan quedan
+      marcadas.
+  - Una trampa de zsh: `"$S:sitio"` toma `:s` como modificador y se come la ruta. `git commit-tree` falló sin empujar
+    nada, y con `"${S}:sitio"` resolvió el árbol.
