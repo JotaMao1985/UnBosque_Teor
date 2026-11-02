@@ -9,13 +9,13 @@
           <span>Módulo 4</span>
         </div>
         <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sin reemplazo:
-          Horvitz–Thompson otra vez <span class="text-gray-400 font-normal text-2xl">/ Back to the π world</span></h2>
+          Horvitz–Thompson otra vez <span class="text-gray-400 font-normal text-2xl">/ Without replacement: Horvitz–Thompson again</span></h2>
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Sortear sin reemplazo con las cuatro tiendas,
-              comprobar que el estimador de Horvitz–Thompson del capítulo 2 sirve igual con probabilidades desiguales,
+            <p class="text-gray-600 text-sm" style="margin:0;">Enumerar las muestras sin reemplazo de las cuatro
+              tiendas, comprobar que el estimador de Horvitz–Thompson del capítulo 2 sirve igual con probabilidades desiguales,
               y ver por qué quitar el reemplazo no basta para ganar.</p>
           </div>
         </div>
@@ -29,9 +29,12 @@
 
       <p>Un diseño sin reemplazo asigna una probabilidad $p(s)$ a cada muestra posible $s$. De ahí sale la
         probabilidad de inclusión de cada unidad, $\pi_k$: la suma de $p(s)$ sobre las muestras que contienen a $k$.
-        El MAS es el caso en que todas las $\pi_k$ valen $n/N$, pero nada obliga a que sean iguales. Desde aquí el
-        valor de la unidad se escribe $y_k$, como en el capítulo 2; en las tiendas, $y_k$ son las ventas que los
-        módulos anteriores llamaban $t_i$.</p>
+        El MAS es el caso en que todas las $\pi_k$ valen $n/N$, pero nada obliga a que sean iguales.</p>
+
+      <p>Desde aquí el valor de la unidad se escribe $y_k$ y el índice es $k$, como en el capítulo 2 y en
+        Gutiérrez; en las tiendas, $y_k$ son las ventas que los módulos anteriores llamaban $t_i$. La letra $i$ queda
+        para las extracciones con reemplazo, junto a $\psi_i$, y para las clases del módulo 9, como en el capítulo 5.
+        La letra del índice no cambia el concepto: lo que separa los dos mundos es $\psi$ frente a $\pi$.</p>
 
       <div class="formula">
         <p class="formula-titulo">El estimador de Horvitz–Thompson, sin cambios</p>
@@ -46,8 +49,8 @@
 
       <p>Se sortean dos tiendas distintas, y para que las parejas con tiendas grandes salgan más, la probabilidad
         de cada pareja se hace proporcional a la suma de sus áreas: $p(s) \propto x_k + x_l$. Hay 6 parejas
-        posibles, y cada tienda está en 3 de ellas, así que las sumas de las 6 parejas dan $3 \times 1\,600 = 4\,800$ y
-        $p(s) = (x_k + x_l)/4\,800$. Por ejemplo, $p(AB) = 300/4\,800 = 0{,}0625$. Para sortear una pareja basta el
+        posibles, y cada tienda está en 3 de ellas, así que las sumas de las 6 parejas dan $3 \times 1600 = 4800$ y
+        $p(s) = (x_k + x_l)/4800$. Por ejemplo, $p(AB) = 300/4800 = 0{,}0625$. Para sortear una pareja basta el
         método acumulativo del módulo 3, aplicado a sus $p(s)$.</p>
 
       <p><strong>A mano.</strong> La tienda A está en tres parejas, AB, AC y AD, así que
@@ -72,8 +75,8 @@
 
       <p>La esperanza es 300: el HT es insesgado, como prometía la fórmula. La varianza es el promedio, ponderado
         por $p(s)$, de las distancias al cuadrado entre el HT de cada pareja y el total,
-        $V = \sum_s p(s)\,(\hat{t}_s - t)^2$, y vale <strong>15 026</strong>, el doble que la del Hansen–Hurwitz con reemplazo del módulo 2 (7124), con el mismo
-        tamaño de muestra.</p>
+        $V = \sum_s p(s)\,(\hat{t}_s - t)^2$, y vale <strong>15 026</strong>, algo más del doble que la del Hansen–Hurwitz con reemplazo del módulo 2 (7124),
+        con el mismo tamaño de muestra.</p>
 
       <div class="simulador" data-simulador="espacio-wor">
         <h4><i class="fas fa-sitemap" aria-hidden="true"></i> Seis muestras, un espacio completo</h4>
@@ -97,13 +100,68 @@
         este diseño van de 0,375 a 0,75, la mayor el doble de la menor, mientras que las ventas de D son más de veinte
         veces las de A.</p>
 
-      <p>En el Hansen–Hurwitz del módulo 2, el papel de $\pi_i$ lo hace $n\,\psi_i$, el número de veces que se
+      <p>En el Hansen–Hurwitz del módulo 2, el papel de la $\pi$ lo hace $n\,\psi_i$, el número de veces que se
         espera ver la tienda. Sus cocientes $t_i/(n\,\psi_i)$ son 88, 80, 64 y 196: mucho más parecidos entre sí.</p>
 
+      <h3>Otro diseño sin reemplazo: el de Lohr</h3>
+
+      <p>Lohr (ejemplos 6.8 y 6.9) sortea las mismas cuatro tiendas de otro modo, <strong>extracción a
+        extracción</strong>. La primera tienda sale con las $\psi$ del módulo 2. La segunda sale entre las tres que
+        quedan, con sus $\psi$ divididas entre $1 - \psi_k$ para que vuelvan a sumar 1, donde $k$ es la tienda que
+        salió primero. Lohr atribuye el método a Yates y Grundy (1953).</p>
+
+      <p><strong>A mano.</strong> La pareja AD sale si A va primera y D segunda, o al revés:
+        $p(AD) = \frac{1}{16}\cdot\frac{10}{15} + \frac{10}{16}\cdot\frac{1}{6} = 0{,}1458$. Con las seis parejas,
+        las probabilidades de inclusión son 0,19, 0,37, 0,54 y 0,90. D queda fuera solo una vez de cada diez, frente a
+        una de cada cuatro en el diseño anterior.</p>
+
+      <p>El bloque calcula las $p(s)$, las $\pi_k$ y la varianza exacta del HT, y pone lado a lado los tres diseños
+        con $n = 2$:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El diseño de Lohr, extracción a extracción">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R5c⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La varianza del diseño de Lohr es <strong>4383,6</strong>, menor que la del Hansen–Hurwitz (7124), aunque
+        también es sin reemplazo. La tabla muestra por qué. Una muestra sin D da un HT muy por debajo de 300 (entre 77 y
+        176 en los tres diseños), y la varianza baja a medida que esas muestras se vuelven raras. La tabla da, para
+        cada diseño, la probabilidad de sacar una muestra sin D, la parte de la varianza que aportan esas muestras y
+        la varianza total:</p>
+
+      <table>
+        <caption class="sr-only">La varianza del HT con las cuatro tiendas y n = 2, según el diseño</caption>
+        <thead>
+          <tr><th scope="col">Diseño</th><th scope="col">Prob. sin D</th><th scope="col">Parte de $V$</th><th
+            scope="col">$V$</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Este módulo, $p(s) \propto x_k + x_l$</td><td>0,25</td><td>75 %</td><td>15 026</td></tr>
+          <tr><td>Hansen–Hurwitz, con reemplazo (módulo 2)</td><td>0,14</td><td>47 %</td><td>7124</td></tr>
+          <tr><td>Lohr, extracción a extracción</td><td>0,10</td><td>89 %</td><td>4384</td></tr>
+          <tr><td>πPT (módulo 5)</td><td>0</td><td>—</td><td>53</td></tr>
+        </tbody>
+      </table>
+
+      <p>El Hansen–Hurwitz paga además un precio propio: puede sacar D dos veces, y entonces estima 392. Esa sola
+        muestra aporta el 46 % de su varianza, y sin reemplazo no puede ocurrir.</p>
+
+      <div class="note">
+        <p><strong>¿Y los cocientes?</strong> Los de Lohr, $y_k/\pi_k$ = 57,9, 54,0, 44,5 y 272,2, se parecen menos
+          que los del Hansen–Hurwitz (88, 80, 64 y 196), y aun así su varianza es menor. Comparar cocientes sirve entre
+          diseños sin reemplazo: los de Lohr se parecen más que los de este módulo, y su varianza es menor. Entre un
+          diseño con reemplazo y otro sin él cuenta además cómo salen juntas las parejas, con las $\pi_{kl}$ del
+          módulo 7.</p>
+      </div>
+
       <div class="warning">
-        <p><strong>Sin reemplazo no es automáticamente mejor.</strong> Lo que decide la varianza es cuánto se parecen
-          los cocientes $y_k/\pi_k$, no si hay o no reemplazo. El módulo 5 construye un diseño sin reemplazo cuyas
-          $\pi$ son proporcionales al tamaño, y con él la varianza cae a 53.</p>
+        <p><strong>Sin reemplazo no es automáticamente mejor.</strong> Con las mismas tiendas y el mismo $n$, un diseño
+          sin reemplazo queda por encima del Hansen–Hurwitz y otro por debajo. Lo que decide es el diseño, y en estas
+          tiendas se resume en una cifra: con qué probabilidad deja fuera a D. El módulo 5 construye un diseño en el que D entra siempre, y la varianza cae a 53.</p>
       </div>
 
       <h3>Dos probabilidades distintas: $\psi$ y $\pi$</h3>
@@ -112,10 +170,32 @@
         <h4>Probabilidad de una extracción y probabilidad de inclusión</h4>
         <p><strong>$\psi_i$</strong> es la probabilidad de que la unidad $i$ salga en <strong>una
           extracción</strong>. Las $\psi_i$ de todo el marco suman 1, y se usan en los diseños con reemplazo.</p>
-        <p style="margin-bottom:0;"><strong>$\pi_k$</strong> es la probabilidad de que la unidad $k$ esté <strong>en
-          la muestra</strong>. Las $\pi_k$ suman $n$, y son las del capítulo 2. Con reemplazo se divide entre
-          $\psi$; sin reemplazo, entre $\pi$. Confundirlas es el error más común del capítulo.</p>
+        <p><strong>$\pi_k$</strong> es la probabilidad de que la unidad $k$ esté <strong>en la muestra</strong>.
+          Las $\pi_k$ suman $n$, y son las del capítulo 2.</p>
+        <p style="margin-bottom:0;">Con reemplazo, cada extracción se divide entre su $\psi_i$ y se promedian las
+          $n$; escrito como una suma, es dividir entre $n\,\psi_i$. Sin reemplazo, cada unidad se divide entre su
+          $\pi_k$. Confundirlas es el error más común del capítulo.</p>
       </div>
+
+      <table>
+        <caption class="sr-only">Las dos probabilidades, lado a lado, y su notación en Lohr y en Gutiérrez</caption>
+        <thead>
+          <tr><th scope="col"></th><th scope="col">Con reemplazo</th><th scope="col">Sin reemplazo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Probabilidad</td><td>$\psi_i$, de salir en una extracción</td><td>$\pi_k$, de estar en la
+            muestra</td></tr>
+          <tr><td>Suman</td><td>1</td><td>$n$</td></tr>
+          <tr><td>Estimador del total</td><td>$\hat{t}_{HH} = \frac{1}{n}\sum_{j=1}^{n} z_j$, con
+            $z_j = t_i/\psi_i$</td><td>$\hat{t}_\pi = \sum_{k \in s} y_k/\pi_k$</td></tr>
+          <tr><td>Peso de cada dato</td><td>$1/(n\,\psi_i)$</td><td>$1/\pi_k$</td></tr>
+          <tr><td>En Lohr</td><td>$\psi_i$, con valores $t_i$</td><td>$\pi_i$, con valores $t_i$ o $y_i$</td></tr>
+          <tr><td>En Gutiérrez</td><td>$p_k$, con valores $y_k$</td><td>$\pi_k$, con valores $y_k$</td></tr>
+        </tbody>
+      </table>
+
+      <p>La tabla completa de notación, con los estimadores de varianza y las funciones de R, abre el
+        módulo 11.</p>
 
       <p>El bloque las pone lado a lado con las mismas tiendas. Con reemplazo y $n = 2$, la tienda $i$ sale en
         promedio $n\,\psi_i$ veces, y está en la muestra con probabilidad $1 - (1 - \psi_i)^2$:</p>
@@ -130,14 +210,14 @@
       </div>
 
       <p>Cuando $\psi_i$ es pequeña, $n\,\psi_i$ y $1 - (1 - \psi_i)^n$ casi coinciden: para A, 0,125 y 0,121.
-        Cuando es grande, no: para D, 1,25 y 0,859. Esta aproximación, $\pi_i \approx n\,\psi_i$, es la que permite
+        Cuando es grande, no: para D, 1,25 y 0,859. Esta aproximación, $\pi \approx n\,\psi$, es la que permite
         analizar un diseño sin reemplazo como si fuera con reemplazo, tomando $\psi_k = \pi_k/n$. Los módulos 7 y 9
         la usan.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §6.4: muestreo sin reemplazo con probabilidades desiguales; §6.6 para las demostraciones.</li>
+          <li>Lohr — §6.4: muestreo sin reemplazo con probabilidades desiguales; sus ejemplos 6.8 y 6.9 son estas cuatro tiendas, sorteadas extracción a extracción (Tabla 6.6, con las $\pi_{kl}$). §6.6 para las demostraciones.</li>
           <li>Gutiérrez — §4.3: el diseño πPT como caso general de los diseños sin reemplazo; con $x$ constante se reduce al MAS del cap. 2.</li>
           <li>Este material — cap. 2, módulos 1–4: el diseño $p(s)$, las $\pi_k$ y el HT; y la tabla de notación del módulo 11, con $\psi$ y $\pi$ en Lohr y en Gutiérrez.</li>
         </ul>
@@ -173,11 +253,13 @@
         eligen las $\pi_k$ y se busca un sorteo que las respete. El diseño <strong>πPT</strong> (probabilidad de
         inclusión proporcional al tamaño) pide</p>
 
-      $$\pi_k = n\,\frac{x_k}{\sum_{l \in U} x_l}.$$
+      $$\pi_k = n\,\frac{x_k}{t_x},$$
 
-      <p>Gutiérrez lo llama πPT; Lohr lo llama muestreo <em>pps</em> sin reemplazo. Si $y_k$ es proporcional a
-        $x_k$, los cocientes $y_k/\pi_k$ son todos iguales y la varianza del HT es cero: la idea central del capítulo
-        llevada al extremo.</p>
+      <p>con $t_x$ el total de la medida de tamaño, como en el módulo 1. Gutiérrez lo llama πPT; Lohr lo llama
+        muestreo <em>pps</em> sin reemplazo. Si $y_k$ es proporcional a $x_k$, los cocientes $y_k/\pi_k$ son todos
+        iguales y la varianza del HT es cero: la idea central del capítulo llevada al extremo. (Las unidades de
+        inclusión forzosa, que se ven enseguida, son la excepción: su cociente es otro, pero entran en todas las
+        muestras y tampoco aportan varianza.)</p>
 
       <h3>Con las cuatro tiendas</h3>
 
@@ -186,7 +268,7 @@
 
       <div class="definition">
         <h4>Inclusión forzosa</h4>
-        <p style="margin-bottom:0;">Si $n\,x_k/\sum x > 1$, la unidad $k$ entra en todas las muestras:
+        <p style="margin-bottom:0;">Si $n\,x_k/t_x > 1$, la unidad $k$ entra en todas las muestras:
           $\pi_k = 1$. Su término $y_k/\pi_k = y_k$ es el mismo en todas ellas, así que no aporta varianza; es el
           estrato que se censa entero, como en el capítulo 4. Los cupos que quedan se reparten entre las demás
           unidades en proporción a su tamaño, y si alguna vuelve a pasar de 1, se repite el paso.</p>
@@ -206,7 +288,7 @@
       </div>
 
       <p>Las tres dan un HT de 311, 305 y 293, todos cerca de 300, y la varianza es <strong>53</strong>, frente a
-        7124 del Hansen–Hurwitz y 15 026 del diseño del módulo 4. Los cocientes $y_k/\pi_k$ de A, B y C son 66, 60
+        7124 del Hansen–Hurwitz y de 15 026 y 4383,6 de los dos diseños sin reemplazo del módulo 4. Los cocientes $y_k/\pi_k$ de A, B y C son 66, 60
         y 48, casi iguales, y el de D no cambia nunca.</p>
 
       <h3>Con datos reales: los 51 estados</h3>
@@ -219,7 +301,7 @@
           cuánto se equivoca cada diseño.</p>
       </div>
 
-      <p>California pasa de 1 enseguida: $10\,x_{CA}/\sum x = 1{,}2038$. Queda de inclusión forzosa, y los otros 9
+      <p>California pasa de 1 enseguida: $10\,x_{CA}/t_x = 1{,}2038$. Queda de inclusión forzosa, y los otros 9
         cupos se reparten entre los 50 estados restantes:</p>
 
       <div class="code-tabs">
@@ -264,106 +346,61 @@
       <p>El HT da 3028 condados, 115 menos que el total verdadero. El error estándar, unos 1005, sale de una
         aproximación que explica el módulo 7, porque con el sistemático no hay forma insesgada de estimarlo.</p>
 
-      <h3>¿Cuándo gana el πPT? Una cuenta antes de muestrear</h3>
-
-      <p>Que $y$ y $x$ estén correlacionados no basta. Gutiérrez (Resultado 4.2.7) da un criterio exacto para el
-        diseño con reemplazo, debido a Raj. Con $n$ extracciones (Gutiérrez las llama $m$), compara dos formas de
-        sortear con reemplazo: con
-        probabilidades iguales (el MAS con reemplazo, MRAS) y con probabilidades proporcionales al tamaño (PPT). La
-        diferencia entre sus varianzas es</p>
-
-      <div class="formula">
-        <p class="formula-titulo">El criterio de Raj</p>
-        $$V_{MRAS} - V_{PPT} = \frac{N^2}{n}\,\mathrm{Cov}\!\left(x,\ \frac{y^2}{x}\right)$$
-        <p style="margin-bottom:0;">La covarianza es la de la población, con divisor $N$. El PPT gana si es
-          positiva. Si $y/x$ es constante, $y^2/x$ es proporcional a $y$, y basta con que $x$ e $y$ estén
-          correlacionados positivamente. Si no, lo que cuenta es la correlación de $x$ con $y^2/x$.</p>
-      </div>
-
-      <p>Gutiérrez añade, citando a Lehtonen y Pahkinen, una lectura geométrica: el PPT funciona cuando la recta de
-        $y$ sobre $x$ pasa cerca del origen, es decir, cuando una unidad sin tamaño tendría $y \approx 0$. El criterio
-        es exacto con reemplazo y orientativo para el πPT. El bloque lo aplica a los estados:</p>
-
-      <div class="code-tabs">
-        <div class="code-tabs-nav" role="tablist" aria-label="El criterio de Raj sobre los estados">
-          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
-        </div>
-        <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r">⟦R21⟧</code></pre>
-        </div>
-      </div>
-
-      <p>Con <code>counties</code>, la diferencia es negativa, −405 719: el PPT pierde. Es decir, con 10
-        extracciones el PPT tiene una varianza de 963 006, frente a 557 287 del MAS con reemplazo, un 73 % más. La correlación de los
-        condados con la población es 0,46, pero la que cuenta, la de $x$ con $y^2/x$, es −0,17. Y la recta de los
-        condados sobre la población corta el eje en 43: predice 43 condados para un estado sin habitantes, lejos del
-        origen, porque los condados no crecen en proporción a la población. Con <code>waterarea</code> la diferencia
-        también es negativa.</p>
-
-      <h3>Diez mil réplicas lo confirman</h3>
-
-      <div class="simulador" data-simulador="ppt-mc">
-        <h4><i class="fas fa-chart-column" aria-hidden="true"></i> ¿Cuándo gana el πPT? 10 000 réplicas contra el MAS</h4>
-        <p class="simulador-intro">Cada réplica es una muestra de 10 estados con su HT. Los histogramas muestran
-          cómo se reparten las 10 000 estimaciones del πPT sistemático (lista alfabética) y las del MAS del mismo
-          tamaño. La lectura da el <strong>deff</strong>, la varianza del diseño dividida entre la del MAS: menor que 1,
-          gana el diseño; mayor que 1, pierde. Con <code>pop2019</code>, la propia medida de tamaño, el πPT acierta
-          siempre. Con <code>counties</code> (correlación 0,46 con la población) y <code>waterarea</code> (0,045),
-          pierde, como anticipaba el criterio de Raj.</p>
-        <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">Distribución de muestreo del HT del total, πPT frente a MAS</p>
-        <div class="grafico-wrapper" style="height:280px;">
-          <canvas aria-label="Histogramas de las réplicas del diseño proporcional al tamaño y del MAS" role="img"></canvas>
-        </div>
-        <div class="simulador-lectura"></div>
-      </div>
-
-      <p><strong>Correlación no es proporcionalidad.</strong> Con <code>counties</code>, el πPT tiene un deff de
-        1,25 en las réplicas del simulador: la correlación de 0,46 no alcanza, porque los condados no crecen en
-        proporción a la población. (Con las varianzas exactas, 575 401 frente a 456 975 del MAS sin reemplazo, el
-        deff es 1,26; la diferencia es el error de simular.)</p>
-
-      <p><strong>El orden de la lista también cuenta.</strong> Ese 1,25 es del sistemático con la lista alfabética.
-        Con la lista ordenada por población, el mismo diseño gana, con un deff de 0,75; el bloque de abajo da su
-        varianza exacta, 344 951, frente a 575 401 con la lista alfabética. Recorrer la lista por tamaño reparte la muestra entre estados chicos, medianos y grandes, como un
-        estratificado implícito (capítulo 2, módulo 9).</p>
-
-      <p><strong>Un estado puede arruinarlo todo.</strong> Con <code>waterarea</code> el deff es 9 en cualquier
-        orden, por un solo estado: Alaska, con poca población y mucha agua. El módulo 8 explica el mecanismo.</p>
-
-      <h3>Otros algoritmos para sortear un πPT</h3>
+      <h3>Otros algoritmos: Brewer y Sunter</h3>
 
       <p>El sistemático es sencillo, pero tiene dos inconvenientes. Su varianza depende del orden de la lista. Y
-        muchas parejas de unidades nunca salen juntas: con los 50 estados que se sortean, 830 de las 1225 parejas
-        tienen $\pi_{kl} = 0$, y sin $\pi_{kl} > 0$ no hay forma insesgada de estimar la varianza (módulo 7).
-        Gutiérrez (§4.4) presenta tres alternativas, y el paquete <code>sampling</code> trae otras:</p>
+        muchas parejas de unidades nunca salen juntas: con los 50 estados que se sortean, en el orden alfabético,
+        830 de las 1225 parejas tienen $\pi_{kl} = 0$ (828 con la lista ordenada por población), y sin
+        $\pi_{kl} > 0$ no hay forma insesgada de estimar la varianza (módulo 7).
+        Gutiérrez (§4.4) presenta algoritmos sin esos inconvenientes. Estos son los dos más sencillos.</p>
+
+      <div class="definition">
+        <h4>Algoritmo: Brewer, para $n = 2$</h4>
+        <ol style="margin-bottom:0;">
+          <li>Sortear la primera unidad con probabilidad proporcional a $x_k(t_x - x_k)/(t_x - 2x_k)$.</li>
+          <li style="margin-bottom:0;">Sortear la segunda entre las restantes, con probabilidad proporcional a su
+            tamaño $x_k$.</li>
+        </ol>
+      </div>
+
+      <p>Da exactamente $\pi_k = 2x_k/t_x$, con todas las $\pi_{kl} > 0$, y menos varianza que el PPT con reemplazo.
+        Pide que ninguna unidad pase de la mitad del total, que es lo mismo que pedir $\pi_k < 1$. Con las tiendas
+        no hace falta: D, con 1000 de los 1600 m², entra de forma forzosa, y el cupo que queda se sortea con el
+        acumulativo. <code>sampling::UPbrewer</code> lo extiende a cualquier $n$.</p>
+
+      <div class="definition">
+        <h4>Algoritmo: Sunter</h4>
+        <ol style="margin-bottom:0;">
+          <li>Ordenar las unidades de mayor a menor $\pi$.</li>
+          <li>Recorrer la lista una sola vez. Si antes de la unidad $k$ ya van $e_k$ elegidas y las $\pi$ de las
+            anteriores suman $A_k$, la unidad $k$ entra con probabilidad $\pi_k\,(n - e_k)/(n - A_k)$, su
+            <em>umbral</em>.</li>
+          <li style="margin-bottom:0;">Cuando ya van $n$ elegidas, el umbral de las que faltan es 0: la muestra
+            está completa.</li>
+        </ol>
+      </div>
+
+      <p><strong>Con las cuatro tiendas</strong> ($n = 2$), la lista va de D a A, con $\pi$ de 1, 1/2, 1/3 y 1/6.</p>
 
       <ul>
-        <li><strong>Brewer, para $n = 2$.</strong> La primera unidad se sortea con probabilidad proporcional a
-          $x_k(T - x_k)/(T - 2x_k)$, donde $T = \sum x$, y la segunda, entre las restantes, en proporción a su
-          tamaño. Da exactamente $\pi_k = 2x_k/T$, con todas las $\pi_{kl} > 0$, y menos varianza que el PPT con
-          reemplazo. <code>sampling::UPbrewer</code> lo extiende a cualquier $n$.</li>
-        <li><strong>Sunter.</strong> Recorre la lista de mayor a menor y decide unidad por unidad: si ya van $e_k$
-          elegidas y las $\pi$ de las anteriores suman $A_k$, la unidad $k$ entra con probabilidad
-          $\pi_k\,(n - e_k)/(n - A_k)$. Es el algoritmo de <code>TeachingSampling::S.piPS</code>.</li>
-        <li><strong>La escisión de Deville y Tillé.</strong> Parte el vector de $\pi$ en dos y elige uno al azar, una
-          y otra vez, hasta que todas las $\pi$ valen 0 o 1. Se describe abajo.</li>
-        <li><strong>Otros de <code>sampling</code>:</strong> la eliminación de Tillé (<code>UPtille</code>), que parte
-          de toda la población y va descartando unidades, y el diseño de máxima entropía
-          (<code>UPmaxentropy</code>).</li>
+        <li>D tiene umbral $1 \times 2/2 = 1$: entra siempre.</li>
+        <li>C tiene umbral $\tfrac12 \times 1/1 = \tfrac12$. Si entra, la muestra es {C, D} y se termina.</li>
+        <li>Si C no entra, B tiene umbral $\tfrac13 \times 1/(2 - \tfrac32) = \tfrac23$.</li>
+        <li>Si tampoco entra B, A tiene umbral $\tfrac16 \times 1/(2 - \tfrac{11}{6}) = 1$: entra seguro.</li>
       </ul>
 
-      <p>Estos diseños se distinguen por su <strong>entropía</strong>: cuánto reparten la probabilidad entre muchas
-        muestras distintas. El de <strong>máxima entropía</strong> es, entre todos los que tienen las mismas $\pi_k$,
-        el que la reparte más. Equivale a sortear un Poisson y quedarse solo con las muestras de tamaño $n$, pero
-        las probabilidades de ese Poisson no son las $\pi_k$: se ajustan para que, al descartar las demás muestras,
-        cada unidad quede con su $\pi_k$ (<code>UPmaxentropy</code> hace ese ajuste). El de soporte mínimo, el de la
-        escisión de abajo, está en el otro extremo: reparte la probabilidad entre muy pocas muestras, a lo sumo
-        $N$.</p>
+      <p>Cada muestra sale con la probabilidad pedida: {C, D} con 1/2; {B, D} con
+        $\tfrac12 \times \tfrac23 = \tfrac13$; y {A, D} con $\tfrac12 \times \tfrac13 = \tfrac16$.</p>
 
-      <p>El bloque de R calcula, para el mismo πPT, la varianza exacta del HT de <code>counties</code> con las
-        $\pi_{kl}$ de cada algoritmo; a Brewer, que no las trae, lo sortea 4000 veces. La pestaña Python programa
-        Sunter a mano:</p>
+      <p>Sunter tiene una condición (Gutiérrez, Resultado 4.4.3): ningún umbral debe pasar de 1. En las tiendas el
+        último vale justo 1, y no hay problema. Hacia el final de una lista larga puede pasarse; entonces la unidad
+        entra con seguridad, y las $\pi$ de las unidades más pequeñas se apartan un poco de las pedidas. En los
+        estados el desvío es inapreciable, y en el ejercicio 5 no llega a dos milésimas. Es el algoritmo de
+        <code>TeachingSampling::S.piPS</code>.</p>
+
+      <p>El bloque de R da la varianza exacta del HT de <code>counties</code> con el sistemático, en los dos órdenes,
+        y sortea Brewer 4000 veces, porque no trae sus $\pi_{kl}$. La pestaña Python programa Sunter a mano: primero
+        las tiendas, después los estados.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El mismo piPT con distintos algoritmos">
@@ -378,57 +415,186 @@
         </div>
       </div>
 
-      <p>Los tres diseños de alta entropía dan casi la misma varianza: 697 273 la eliminación de Tillé, 715 020
-        Brewer (estimada con 4000 muestras) y 723 607 el de máxima entropía. En los dos que dan sus $\pi_{kl}$ no hay
-        ninguna pareja imposible. El sistemático se aparta, para bien, según el orden: 575 401 con la lista
-        alfabética y 344 951 con la lista ordenada por población. El de soporte mínimo respeta las $\pi$, pero con
-        solo 50 muestras posibles su varianza es 3 063 834, más de cuatro veces la de los de alta entropía: sirve para
-        entender la escisión, no para usarla así. Brewer también respeta las $\pi$: con 4000 muestras, la frecuencia
-        de cada estado se aleja de su $\pi$ en 0,013 como mucho. Y Sunter: sus 20 000 muestras de Python tienen todas
-        10 estados, y sus frecuencias quedan a 0,0065 de las $\pi$.</p>
+      <p>El orden de la lista pesa mucho en el sistemático: 575 401 con la lista alfabética y 344 951 con la ordenada
+        por población. Brewer, que no depende de ningún orden, da 715 020 (estimada con 4000 muestras). Los dos
+        respetan las $\pi$: en las 4000 muestras de Brewer, la frecuencia de cada estado se aleja de su $\pi$ en
+        0,013 como mucho. Sunter también: sus 20 000 muestras de Python tienen todas 10 estados, y sus frecuencias
+        quedan a 0,0065 de las $\pi$. Cuál conviene frente al MAS lo dice la sección siguiente.</p>
 
-      <h3>La escisión, paso a paso</h3>
+      <h3>¿Cuándo gana el πPT? Una cuenta antes de muestrear</h3>
 
-      <div class="definition">
-        <h4>Algoritmo: escisión de soporte mínimo (Deville y Tillé, 1998)</h4>
-        <ol style="margin-bottom:0;">
-          <li>Ordenar las unidades de menor a mayor $\pi$, una sola vez.</li>
-          <li>Entre las unidades aún sin decidir (con $0 < \pi < 1$), las primeras van a 0 y las últimas a 1, tantas
-            como cupos faltan. Ese vector de ceros y unos es $\pi^a$.</li>
-          <li>Calcular $\lambda$, el menor de dos números: 1 menos la mayor $\pi$ de las que van a 0, y la menor
-            $\pi$ de las que van a 1. Es el mayor valor con el que las $\pi^b$ del paso siguiente siguen entre 0
-            y 1.</li>
-          <li>Con probabilidad $\lambda$, la muestra es $\pi^a$ y se termina. Con probabilidad $1 - \lambda$, se sigue
-            con $\pi^b = (\pi - \lambda\,\pi^a)/(1 - \lambda)$.</li>
-          <li style="margin-bottom:0;">Repetir desde el paso 2, con el mismo orden, hasta que todas las $\pi$
-            valgan 0 o 1.</li>
-        </ol>
+      <p>Que $y$ y $x$ estén correlacionados no basta. Gutiérrez (Resultado 4.2.7) da un criterio exacto para el
+        diseño con reemplazo, debido a Raj. Con $n$ extracciones (Gutiérrez las llama $m$), compara dos formas de
+        sortear con reemplazo: con
+        probabilidades iguales (el MAS con reemplazo, MRAS) y con probabilidades proporcionales al tamaño (PPT). La
+        diferencia entre sus varianzas es</p>
+
+      <div class="formula">
+        <p class="formula-titulo">El criterio de Raj</p>
+        $$V_{MRAS} - V_{PPT} = \frac{N^2}{n}\,\mathrm{Cov}\!\left(x,\ \frac{y^2}{x}\right)$$
+        <p style="margin-bottom:0;">La covarianza es la de la población, con divisor $N$. Todo se reduce a su
+          signo: el PPT gana si $y^2/x$ tiende a crecer con $x$, y pierde si tiende a bajar. No basta con que $y$
+          crezca con $x$; lo que cuenta es $y^2/x$.</p>
       </div>
 
-      <p>Funciona porque $\lambda\,\pi^a + (1 - \lambda)\,\pi^b = \pi$: en cada etapa, en promedio, las
-        probabilidades no cambian. Gutiérrez (ejemplo 4.4.2) lo aplica a cinco personas con $n = 3$. Ordenadas de
-        menor a mayor, Leslie, Yves, Ken, Erik y Sharon tienen $x = 50, 52, 60, 75$ y $100$, y $\pi = 3x/337$. En la
-        primera etapa, Leslie y Yves, las de menor $\pi$, van a 0, y
-        $\lambda = 0{,}534$: con esa probabilidad la muestra es {Ken, Erik, Sharon}. En cuatro etapas sale un diseño con
-        solo cinco muestras posibles de las diez que hay, y por eso se llama de soporte mínimo. Gutiérrez parte de
-        las $\pi$ redondeadas a dos decimales, y el redondeo se arrastra: sus $\lambda$ de las etapas 2, 3 y 4 (0,06,
-        0,02 y 0,78) difieren de los exactos (0,045, 0,007 y 0,752), y con ellos las probabilidades de las cuatro
-        últimas muestras. Las muestras y el orden de las etapas coinciden.</p>
+      <p><strong>Con las tiendas.</strong> Con $n = 2$, el PPT con reemplazo es el Hansen–Hurwitz del módulo 2. Los
+        valores de $y^2/x$ son 1,21, 2, 1,92 y 60: la tienda más grande, D, tiene también el $y^2/x$ más grande, y la
+        covarianza es positiva, 8765. La fórmula da $\frac{16}{2} \times 8765 = 70\,120$, que es justo la diferencia
+        entre 77 244 (el MAS con reemplazo) y 7124 (el Hansen–Hurwitz). El PPT gana.</p>
 
-      <div class="simulador" data-simulador="escision">
-        <h4><i class="fas fa-code-branch" aria-hidden="true"></i> Escisión paso a paso</h4>
-        <p class="simulador-intro">El ejemplo de Gutiérrez, etapa por etapa. Las barras verdes son las $\pi$ al
-          empezar la etapa, y las naranjas marcan quién entra en la muestra si la etapa se cierra. Las grises son las
-          $\pi^b$ con las que se sigue si no se cierra. La lectura da $\lambda$ y la probabilidad de la muestra que se
-          cierra en esa etapa. En la última etapa aparece también la quinta muestra, la que queda si ninguna etapa se
-          cierra.</p>
+      <p>Gutiérrez añade, citando a Lehtonen y Pahkinen, una lectura geométrica: el PPT funciona cuando la recta de
+        $y$ sobre $x$ pasa cerca del origen, es decir, cuando una unidad sin tamaño tendría $y \approx 0$. El criterio
+        es exacto con reemplazo y orientativo para el πPT. El bloque lo aplica a las tiendas y después a los
+        estados:</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="El criterio de Raj sobre los estados">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R21⟧</code></pre>
+        </div>
+      </div>
+
+      <p>Con <code>counties</code>, la diferencia es negativa, −405 719: el PPT pierde. Es decir, con 10
+        extracciones el PPT tiene una varianza de 963 006, frente a 557 287 del MAS con reemplazo, un 73 % más. La correlación de los
+        condados con la población es 0,46, pero la que cuenta, la de $x$ con $y^2/x$, es −0,17. Y la recta de los
+        condados sobre la población corta el eje en 43, el 70 % de su media: predice 43 condados para un estado sin
+        habitantes, lejos del origen, porque los condados no crecen en proporción a la población. Con
+        <code>waterarea</code> la diferencia también es negativa.</p>
+
+      <div class="simulador" data-simulador="raj-recta">
+        <h4><i class="fas fa-chart-line" aria-hidden="true"></i> La recta de Raj: ¿pasa por el origen?</h4>
+        <p class="simulador-intro">Cada punto es un estado: su población de 2019 en el eje horizontal y la variable
+          elegida en el vertical. La recta naranja es la de mínimos cuadrados, prolongada hasta una población de cero,
+          y el rombo marca dónde corta el eje. Con <code>pop2019</code> la recta pasa por el origen y el PPT anula la
+          varianza. Con <code>counties</code> corta en 43. Con <code>waterarea</code>, Alaska queda lejos de todos los
+          demás. La lectura da las dos correlaciones, el cociente de las varianzas y el signo del criterio.</p>
         <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">Probabilidades de inclusión antes y después de cada escisión</p>
-        <div class="grafico-wrapper" style="height:260px;">
-          <canvas aria-label="Probabilidades de inclusión de las cinco personas en cada etapa de la escisión" role="img"></canvas>
+        <p class="grafico-etiqueta">La variable de interés frente a la medida de tamaño, con su recta</p>
+        <div class="grafico-wrapper" style="height:280px;">
+          <canvas aria-label="Diagrama de dispersión de los 51 estados con la recta de mínimos cuadrados" role="img"></canvas>
         </div>
         <div class="simulador-lectura"></div>
       </div>
+
+      <h3>Diez mil réplicas lo confirman</h3>
+
+      <div class="simulador" data-simulador="ppt-mc">
+        <h4><i class="fas fa-chart-column" aria-hidden="true"></i> ¿Cuándo gana el πPT? 10 000 réplicas contra el MAS</h4>
+        <p class="simulador-intro">Cada réplica es una muestra de 10 estados con su HT. Los histogramas muestran
+          cómo se reparten las 10 000 estimaciones del πPT sistemático (lista alfabética) y las del MAS sin reemplazo
+          del mismo tamaño. La lectura da el <strong>deff</strong>, la varianza del diseño dividida entre la del MAS sin
+          reemplazo: menor que 1,
+          gana el diseño; mayor que 1, pierde. Con <code>pop2019</code>, la propia medida de tamaño, el πPT acierta
+          siempre. Con <code>counties</code> (correlación 0,46 con la población) y <code>waterarea</code> (0,045),
+          pierde, como anticipaba el criterio de Raj.</p>
+        <div class="simulador-controles"></div>
+        <p class="grafico-etiqueta">Distribución de muestreo del HT del total, πPT frente a MAS</p>
+        <div class="grafico-wrapper" style="height:280px;">
+          <canvas aria-label="Histogramas de las réplicas del diseño proporcional al tamaño y del MAS sin reemplazo" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+      </div>
+
+      <p><strong>Correlación no es proporcionalidad.</strong> Con <code>counties</code>, el πPT tiene un deff de
+        1,25 en las réplicas del simulador: la correlación de 0,46 no alcanza, porque los condados no crecen en
+        proporción a la población. (Con las varianzas exactas, 575 401 frente a 456 975 del MAS sin reemplazo, el
+        deff es 1,26; la diferencia es el error de simular.)</p>
+
+      <p><strong>El orden de la lista también cuenta.</strong> Ese 1,25 es del sistemático con la lista alfabética.
+        Con la lista ordenada por población, el mismo diseño gana, con un deff de 0,75: es la varianza exacta de
+        344 951 que dio el bloque de los algoritmos. Recorrer la lista por tamaño reparte la muestra entre estados
+        chicos, medianos y grandes, como un estratificado implícito (capítulo 2, módulo 9).</p>
+
+      <p><strong>Cambiar de algoritmo no lo arregla.</strong> Brewer, con 715 020, también pierde frente a los
+        456 975 del MAS sin reemplazo. Lo que decide es si $y$ es casi proporcional a $x$, no la manera de sortear
+        las $\pi$.</p>
+
+      <p><strong>Un estado puede arruinarlo todo.</strong> Con <code>waterarea</code> el deff es 9 en cualquier
+        orden, por un solo estado: Alaska, con poca población y mucha agua. El módulo 8 explica el mecanismo.</p>
+
+      <details class="profundizar">
+        <summary>Para profundizar: la entropía de un diseño, otros dos algoritmos y la escisión paso a paso</summary>
+        <div class="profundizar-cuerpo">
+          <p>Esta parte amplía el módulo y no hace falta para seguir el capítulo. La tabla del módulo 6
+            incluye dos de sus diseños, el de Tillé y el de máxima entropía.</p>
+
+          <h4>La entropía de un diseño</h4>
+
+          <p>Los algoritmos de arriba dan las mismas $\pi_k$, pero no las mismas muestras. Se distinguen por su
+            <strong>entropía</strong>: cuánto reparten la probabilidad entre muchas muestras distintas. El de
+            <strong>máxima entropía</strong> es, entre todos los que tienen las mismas $\pi_k$, el que la reparte
+            más. Equivale a sortear un Poisson y quedarse solo con las muestras de tamaño $n$, pero las
+            probabilidades de ese Poisson no son las $\pi_k$: se ajustan para que, al descartar las demás muestras,
+            cada unidad quede con su $\pi_k$ (<code>UPmaxentropy</code> hace ese ajuste). La eliminación de Tillé
+            (<code>UPtille</code>) parte de toda la población y va descartando unidades, y también reparte mucho.
+            El de soporte mínimo, el de la escisión de abajo, está en el otro extremo: reparte la probabilidad entre
+            muy pocas muestras, a lo sumo $N$.</p>
+
+          <p>El bloque calcula la varianza exacta del HT de <code>counties</code> con las $\pi_{kl}$ de los tres:</p>
+
+          <div class="code-tabs">
+            <div class="code-tabs-nav" role="tablist" aria-label="Tillé, máxima entropía y soporte mínimo">
+              <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+            </div>
+            <div class="code-tab-panel" data-lang="r">
+              <pre><code class="language-r">⟦R22b⟧</code></pre>
+            </div>
+          </div>
+
+          <p>Los tres diseños de alta entropía dan casi la misma varianza: 697 273 la eliminación de Tillé, 715 020
+            Brewer y 723 607 el de máxima entropía. En los dos que dan sus $\pi_{kl}$ no hay ninguna pareja
+            imposible. El de soporte mínimo respeta las $\pi$, pero con solo 50 muestras posibles su varianza es
+            3 063 834, más de cuatro veces la de los de alta entropía: sirve para entender la escisión, no para
+            usarla así.</p>
+
+          <h4>La escisión, paso a paso</h4>
+
+          <div class="definition">
+            <h4>Algoritmo: escisión de soporte mínimo (Deville y Tillé, 1998)</h4>
+            <ol style="margin-bottom:0;">
+              <li>Ordenar las unidades de menor a mayor $\pi$, una sola vez.</li>
+              <li>Entre las unidades aún sin decidir (con $0 < \pi < 1$), las primeras van a 0 y las últimas a 1, tantas
+                como cupos faltan. Ese vector de ceros y unos es $\pi^a$.</li>
+              <li>Calcular $\lambda$, el menor de dos números: 1 menos la mayor $\pi$ de las que van a 0, y la menor
+                $\pi$ de las que van a 1. Es el mayor valor con el que las $\pi^b$ del paso siguiente siguen entre 0
+                y 1.</li>
+              <li>Con probabilidad $\lambda$, la muestra es $\pi^a$ y se termina. Con probabilidad $1 - \lambda$, se sigue
+                con $\pi^b = (\pi - \lambda\,\pi^a)/(1 - \lambda)$.</li>
+              <li style="margin-bottom:0;">Repetir desde el paso 2, con el mismo orden, hasta que todas las $\pi$
+                valgan 0 o 1.</li>
+            </ol>
+          </div>
+
+          <p>Funciona porque $\lambda\,\pi^a + (1 - \lambda)\,\pi^b = \pi$: en cada etapa, en promedio, las
+            probabilidades no cambian. Gutiérrez (ejemplo 4.4.2) lo aplica a cinco personas con $n = 3$. Ordenadas de
+            menor a mayor, Leslie, Yves, Ken, Erik y Sharon tienen $x = 50, 52, 60, 75$ y $100$, y $\pi = 3x/337$. En la
+            primera etapa, Leslie y Yves, las de menor $\pi$, van a 0, y
+            $\lambda = 0{,}534$: con esa probabilidad la muestra es {Ken, Erik, Sharon}. En cuatro etapas sale un diseño con
+            solo cinco muestras posibles de las diez que hay, y por eso se llama de soporte mínimo. Gutiérrez parte de
+            las $\pi$ redondeadas a dos decimales, y el redondeo se arrastra: sus $\lambda$ de las etapas 2, 3 y 4 (0,06,
+            0,02 y 0,78) difieren de los exactos (0,045, 0,007 y 0,752), y con ellos las probabilidades de las cuatro
+            últimas muestras. Las muestras y el orden de las etapas coinciden.</p>
+
+          <div class="simulador" data-simulador="escision">
+            <h4><i class="fas fa-code-branch" aria-hidden="true"></i> Escisión paso a paso</h4>
+            <p class="simulador-intro">El ejemplo de Gutiérrez, etapa por etapa: avanza con el control y fíjate en
+              quién va a 0 en cada una. Las barras verdes son las $\pi$ al empezar la etapa, y las naranjas marcan quién
+              entra en la muestra si la etapa se cierra. Las grises son las $\pi^b$ con las que se sigue si no se cierra.
+              El orden es el de la etapa 1 y no cambia: en la etapa 2 va a 0 Leslie, con $\pi = 0{,}955$, y entra Erik,
+              con 0,287, porque Leslie va primera en ese orden, aunque su $\pi$ ya no sea la menor. La lectura da
+              $\lambda$ y la probabilidad de la muestra que se cierra en cada etapa. En la última aparecen las cinco
+              muestras posibles, y la comprobación de que juntas reproducen las $\pi$ del principio.</p>
+            <div class="simulador-controles"></div>
+            <p class="grafico-etiqueta">Probabilidades de inclusión antes y después de cada escisión</p>
+            <div class="grafico-wrapper" style="height:260px;">
+              <canvas aria-label="Probabilidades de inclusión de las cinco personas en cada etapa de la escisión" role="img"></canvas>
+            </div>
+            <div class="simulador-lectura"></div>
+          </div>
+        </div>
+      </details>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -488,7 +654,8 @@
       <p>Con dos monedas, $\pi_1 = 0{,}3$ y $\pi_2 = 0{,}5$, el tamaño de muestra puede ser 0, 1 o 2. Como las
         monedas son independientes, las probabilidades se multiplican: $P(n_s = 0) = 0{,}7 \times 0{,}5 = 0{,}35$,
         $P(n_s = 1) = 0{,}3 \times 0{,}5 + 0{,}7 \times 0{,}5 = 0{,}5$ y $P(n_s = 2) = 0{,}3 \times 0{,}5 = 0{,}15$.
-        Con 51 monedas se hace lo mismo, moneda por moneda; la pestaña Python del bloque lo programa así.</p>
+        Con 51 monedas se hace lo mismo, moneda por moneda: así calcula la pestaña Python del bloque la distribución
+        exacta de $n_s$. La pestaña R sortea una muestra, y da su HT y la varianza exacta.</p>
 
       <h3>El estimador y su varianza</h3>
 
@@ -519,15 +686,16 @@
         </div>
       </div>
 
-      <p>En promedio salen 10 estados, con una desviación de 2,4. Con esta semilla salieron 8, y el HT dio 1896,
-        lejos de 3143: es una muestra, no un error. La varianza exacta, 1 604 349 (un error estándar de 1267), mide
-        cuánto puede alejarse.</p>
+      <p>En promedio salen 10 estados, con una desviación de 2,4. Con esta semilla salieron 8, y el HT dio 1896
+        frente a un total de 3143. Parece lejos, pero está a menos de un error estándar: la varianza exacta es
+        1 604 349, un error estándar de 1267.</p>
 
       <div class="simulador" data-simulador="poisson-n">
         <h4><i class="fas fa-coins" aria-hidden="true"></i> La distribución del tamaño de muestra</h4>
         <p class="simulador-intro">Las barras dan la distribución exacta de $n_s$ con las $\pi$ de los estados:
           solo el 16 % de las veces salen exactamente 10. El deslizador multiplica todas las $\pi$ por un factor, como
-          si cambiara el presupuesto esperado, $E(n)$. La lectura da la desviación de $n_s$ y su coeficiente de
+          si cambiara el presupuesto esperado, $E(n)$. Por encima de 1, las $\pi$ que pasarían de 1 se truncan sin
+          repartir el sobrante, y $E(n)$ crece algo menos que el factor. La lectura da la desviación de $n_s$ y su coeficiente de
           variación (cv), la desviación dividida entre $E(n)$. ¿Qué le pasa al cv si el presupuesto baja a la
           mitad?</p>
         <div class="simulador-controles"></div>
@@ -554,7 +722,7 @@
 
       <p>El remedio es dividir por lo que salió. Con $x$ conocida en todo el marco, el HT de $x$ sufre el mismo
         efecto, $\hat{t}_{x,\pi} = t_x\,n_s/n$ cuando $\pi \propto x$. El estimador de razón del capítulo 3 divide
-        entre él, y la fracción $n_s/n$ se cancela:</p>
+        el HT de $y$ entre el de $x$, y la fracción $n_s/n$ se cancela:</p>
 
       $$\hat{t}_{\text{razón}} = t_x\,\frac{\hat{t}_{y,\pi}}{\hat{t}_{x,\pi}}.$$
 
@@ -582,11 +750,13 @@
           sistemático tiene poca varianza, y lo que añade el tamaño aleatorio pesa mucho.</p>
       </div>
 
-      <p>Con este módulo ya se han visto los cuatro diseños de la tabla: el MAS, el πPT sistemático, el PPT con
-        reemplazo (Hansen–Hurwitz) y Poisson, todos con $n = 10$ estados.</p>
+      <p>La tabla reúne los diseños de los módulos 5 y 6 para el mismo problema: el total de condados con 10
+        estados. Las varianzas son exactas salvo dos, que salen de réplicas, y todos los deff se miden contra el
+        mismo MAS sin reemplazo. Los criterios de Raj y del módulo 10 comparan, en cambio, con el MAS con reemplazo,
+        que es la segunda fila.</p>
 
       <div class="tabla-ranking" data-ranking="disenos">
-        <p class="tabla-ranking-titulo">Cuatro diseños para el mismo total, con el mismo n</p>
+        <p class="tabla-ranking-titulo">Diez diseños para el mismo total, con el mismo n</p>
         <div class="tabla-ranking-marco" aria-label="Comparación ordenable de diseños con probabilidades desiguales"></div>
         <p class="tabla-ranking-estado" role="status" aria-live="polite"></p>
         <p class="tabla-ranking-pie"></p>

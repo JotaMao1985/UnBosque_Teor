@@ -8091,3 +8091,221 @@ Javier: «Sí, pasa a la fase 4, la auditoría habitual del capítulo entero».
   - llevar el parche de CSS a la plantilla, porque los otros siete capítulos tienen las listas sin número.
 - **Commit de las cuatro fases (T7.104–T7.107), pedido por Javier el 2026-10-31.** Son los 16 archivos cambiados
   desde T7.104, en un solo commit sobre `36a1f6b`. Sin push ni publicación en gh-pages.
+
+### T7.108 — Las mejoras del cap. 6 reescrito, tanda 1: el contenido (2026-11-01)
+
+Javier, al cierre de T7.107: «Primero las mejoras». Eligió:
+- **todas las mejoras, en tres tandas,** con su revisión entre ellas:
+  1. contenido: MN-1, 3, 4, 5, 7 y 15 a 18;
+  2. estructura y quiz: MN-2, 6 y 14;
+  3. visual, notación y código: MN-8 a 13 y 19 a 23;
+- **el M5 se reordena y se pliega:** Tillé, máxima entropía y la escisión pasan a «Para profundizar». Se conservan los
+  11 módulos y sus anclas (tanda 2);
+- **Hájek–Deville no es evaluable** (DN-1): se pliega como ampliación en el M7, sin pregunta nueva (tanda 2).
+
+Esta es la tanda 1. Lo que cambió:
+- **MN-1, el M4 frente a Lohr.** Se añadió el diseño de Lohr (ej. 6.8 y 6.9), extracción a extracción, con su cuenta a
+  mano, el bloque nuevo **R5c** y una tabla con la escalera de varianzas: 15 026 (este módulo), 7124 (HH), 4384 (Lohr) y
+  53 (πPT).
+  - La varianza sigue a la probabilidad de una muestra sin D: 0,25, 0,14, 0,10 y 0.
+  - El HH paga además sacar D dos veces, que aporta el 46 % de su varianza.
+  - Una nota explica por qué los cocientes de Lohr se parecen menos que los del HH y aun así gana: cuentan las
+    $\pi_{kl}$.
+  - «El doble» pasa a «algo más del doble».
+- **MN-4, el criterio de Raj.** El recuadro ya no dice la frase vacía; dice que todo se reduce al signo de
+  Cov(x, y²/x).
+  - Abre con las tiendas: 77 244 − 7124 = 70 120 = 8 × 8765.
+  - R21 da además el corte de la recta como porcentaje de la media (70 %).
+  - **Simulador nuevo `raj-recta`:** la nube de los 51 estados con la recta prolongada hasta el eje, para `counties`,
+    `waterarea` y `pop2019`.
+- **MN-5, el MAS de referencia.** Se rotula «sin reemplazo» o «con reemplazo» en el simulador de réplicas, el quiz y
+  el M10.
+  - La tabla-ranking del M6 pasa de 4 a 10 diseños para `counties`, n = 10, con la varianza, cómo se obtuvo y el deff
+    frente al MAS sin reemplazo.
+  - Todas las varianzas son exactas salvo Brewer y la razón de Poisson, que salen de réplicas.
+- **MN-3, la condición de validez de Sunter** (Gutiérrez, Res. 4.4.3). Se dice en el M5. La programación dinámica en
+  `genera_cap6.R` da el desvío: 6,7·10⁻⁶ en los estados y 0,0015 en el ejercicio 5.
+- **MN-7, el *active learning*.** El bloque nuevo **R27** simula 10 000 imágenes y 100 etiquetas.
+  - La tasa de error verdadera es 0,162. Sin pesos, el promedio sale 0,288; con pesos 1/ψ, 0,162, con desviación 0,033
+    frente a 0,036 del MAS.
+  - Una nota separa las etiquetas de entrenamiento de las de evaluación, y nombra otra vez el *replay* priorizado
+    (Schaul et al., 2016) y la evaluación *off-policy*.
+- **MN-15:** la cuarta defensa contra los elefantes, el estimador de razón, como cierra Lohr §6.7 la historia de Basu.
+  No salva el ejemplo de los 20 negocios.
+- **MN-16:** la nota visible que reconcilia «las muestras sin D» del M4 con «los pares con D» del M7.
+- **MN-17, los ejercicios.**
+  - Ej. 2: si ninguna clase se repite, se vuelve a sortear. R17 calcula la probabilidad exacta de alguna repetición:
+    0,607.
+  - Ej. 6c: «seguramente» se sustituye por las cifras. y/x va de 78,9 a 121,6, y el estimador alternativo de Gutiérrez
+    da 1 007 947, en sentido contrario, porque N̂ < N.
+- **MN-18:** el ej. 3 aclara que 966 millones es el total que implican las π. `acres87` suma 963 466 689 en
+  `agpop.csv`, sin 23 condados con −99.
+- **Dudas.**
+  - DN-2: Gutiérrez §7.3.1 es «Diseños auto-ponderados»; la cita del M9 es correcta. Las de Särndal (§3.2 y §2.8)
+    siguen sin verificar: SpringerLink pide sesión.
+  - DN-3: la página de copyright del epub dice «Third edition published 2022», © 2022, y el pie dice 2021. Corregirlo
+    toca la plantilla y todas las páginas del sitio; queda para Javier.
+- **Cifras nuevas,** todas salidas del código. `genera_cap6.R` añade `espacioWor$lohr`, `raj`, `disenosCounties` y
+  `sunter`.
+  - Las réplicas de 6b usan las semillas de R22 y R24 y reproducen 715 020 y 773 791.
+  - El estado del generador se restaura, así que las cifras anteriores no cambian; el JSON solo gana claves.
+  - No hizo falta tocar `cifras_prosa.json`.
+- **Recuentos:** el cap. 6 pasa a 12 simuladores y 38 bloques (R5c y R27), y el sitio a 72 simuladores y 229 bloques
+  (176 de R). Se actualizaron la portada y el README; las cifras contrastadas pasan de 3132 a 3204.
+- **Verificado:**
+  - el ensamblado reproduce byte a byte;
+  - 713/713 cifras de código y 185 de prosa con respaldo, con 0 sin respaldo en el sitio;
+  - `anota --check` = 0 en R (30 bloques) y en Python (8);
+  - 84 referencias revisadas, 15 de ellas nuevas;
+  - `node --check` pasa y `cuenta_sitio` da 0 desajustes;
+  - `verifica_publicado --local` arranca, y los bloques publicados salen con 0 en una carpeta que solo tiene los CSV;
+  - en el navegador: 0 errores de consola y de KaTeX, 0 NaN, la lectura del simulador nuevo correcta en sus tres
+    estados, la tabla de 10 filas y, a 375 px, sin desborde de página y con la tabla del M4 dentro de su marco.
+- **Sin commit ni publicación.** Falta la revisión de Javier antes de la tanda 2.
+
+### T7.109 — Las mejoras del cap. 6 reescrito, tanda 2: estructura y quiz (2026-11-01)
+
+Javier: «Sí, sigue con la tanda 2». Lo que cambió:
+- **MN-2, el M5 reordenado y plegado.** El orden pasa a ser: la idea → las tiendas → los estados y el sistemático →
+  **otros algoritmos** → cuándo gana → «Para profundizar».
+  - La sección nueva «Otros algoritmos: Brewer y Sunter» sube detrás del sistemático. Brewer y Sunter tienen ahora su
+    recuadro de algoritmo, y Sunter se hace a mano con las tiendas. Los umbrales son 1, 1/2, 2/3 y 1, y las muestras
+    {C, D}, {B, D} y {A, D} salen con 1/2, 1/3 y 1/6, que son sus π. Le sigue la condición de validez, ya con el caso
+    límite: el último umbral de las tiendas vale justo 1.
+  - **R22 se parte en dos.** R22 queda en el texto, con el sistemático en los dos órdenes, Brewer con 4000 muestras y
+    las 830 parejas imposibles. R22b, con Tillé, máxima entropía y el soporte mínimo, va al plegable. En `cadena.R`, R22
+    pasa delante de R21 para que la cadena siga el orden de la página. R21 no usa el generador aleatorio, así que solo
+    cambiaron las salidas de R22 y R22b. P6 calcula además los umbrales de las tiendas.
+  - En «Cuándo gana» se añade «Cambiar de algoritmo no lo arregla»: Brewer, con 715 020, también pierde frente a los
+    456 975 del MAS sin reemplazo.
+  - El plegable `<details class="profundizar">` reúne la entropía, Tillé, máxima entropía, R22b, la escisión y su
+    simulador. Su estilo va en el ensamblador. Un manejador de `toggle` redimensiona los gráficos al abrirlo, para los
+    navegadores que no maquetan el contenido cerrado. Chrome sí lo maqueta, y el manejador se probó encogiendo el
+    gráfico a 10 px.
+  - Palabras del M5: 2709, de las que 644 van plegadas. A la vista quedan 2065, frente a 2210 antes de la tanda 1, que
+    añadió Raj con las tiendas y un simulador.
+- **DN-1, Hájek–Deville en el M7:** la sección entera, con R23, pasa a un plegable «Para profundizar». La fila del
+  resumen remite a él, y R23 avisa en un comentario de que `v_syg()` viene del plegable del M5.
+- **MN-6, la autoevaluación.**
+  - **P4 nueva, ψ frente a π,** que ninguna pregunta cubría: con reemplazo, n = 2 y ψ_D = 0,625, π_D = 0,8594. Los
+    distractores son n ψ_D = 1,25, ψ_D = 0,625 y la π_D = 0,75 de otro diseño, cada uno con su retro. Sustituye a la
+    cuenta de un paso π_D = 2 − Σ.
+  - **P2 y P6 pasan a dos pasos.**
+    - P2: el n mínimo para que la varianza del HH baje de 1000 es 15.
+    - P6: V(n_s) con 51 π iguales da 8,04, frente a 5,83; con π desiguales el tamaño varía menos. La cifra sale de
+      `genera_cap6.R` (`poisson$vnIguales`), y el JSON solo gana esa clave.
+  - **Pistas de longitud.** Se reescribieron opciones de P1, P3, P7, P8, P9, P11, P12 y P13: la correcta ya no es la
+    más larga en solitario en ninguna de las 9 de opción única, aunque empata en P7 y P8. Tras el barajado estable sale
+    en a) dos veces, en b) tres, en c) una y en d) tres.
+  - **Distractores flojos:** «π_kl corruptas» (P7) y «error del precálculo» (P8) se cambian por errores plausibles:
+    «SYG deja fuera los términos k = l» y «la π pequeña sola explica el aporte».
+  - **P5 y P10** tienen ahora retro por opción, que el motor muestra en «Por qué las demás».
+  - Otros retoques de rótulo: «frente al MAS sin reemplazo» en P5 y P11.
+- **MN-14, duraciones:** M5 pasa de 35 a 45 min, M7 de 30 a 35 y M11 de 45 a 60. El cap. 6 suma 331 min.
+- **Recuentos:** el cap. 6 pasa a 39 bloques (R22b), y el sitio a 230 (177 de R). Las cifras contrastadas pasan de
+  3204 a 3208. Se actualizaron la portada (39 bloques, 331 min, 230 bloques) y el README.
+- **Verificado:**
+  - el ensamblado reproduce byte a byte;
+  - 717/717 cifras de código y 185 de prosa, con 0 sin respaldo en el sitio;
+  - `anota --check` = 0 en R (31 bloques) y en Python (8);
+  - 85 referencias revisadas, 1 nueva;
+  - `node --check` pasa y `cuenta_sitio` da 0 desajustes;
+  - `verifica_publicado --local` arranca, y los bloques publicados salen con 0 en una carpeta que solo tiene los CSV;
+  - en el navegador: 0 errores de consola y de KaTeX en los 11 módulos. El simulador de la escisión funciona dentro de
+    su plegable. P2, P4 y P6 aceptan sus respuestas y P5 muestra la retro por opción. A 375 px no hay desborde visible
+    en M5, M7 ni M11.
+- **Sin commit ni publicación.** Falta la revisión de Javier antes de la tanda 3.
+
+### T7.110 — Las mejoras del cap. 6 reescrito, tanda 3: visual, notación y código (2026-11-02)
+
+Javier: «Sí, tanda 3». Lo que cambió:
+- **MN-8, notación y glosario.**
+  - El M4 tiene ahora una tabla corta ψ frente a π: qué mide, cuánto suman, el estimador, el peso de cada dato y la
+    notación de Lohr y de Gutiérrez. La tabla completa sigue abriendo el M11. «El error más común» queda solo en el M4;
+    el M11 y la nota del glosario remiten a él.
+  - «Con reemplazo se divide entre ψ» ya dice la n: cada extracción entre ψ_i y se promedian las n, que en una suma es
+    dividir entre n ψ_i.
+  - Un párrafo del M4 fija los índices: k desde aquí, como en el cap. 2 y en Gutiérrez; i para las extracciones con
+    reemplazo y para las clases del M9. Se quitaron las mezclas «π_i» y «π_i ≈ n ψ_i» del M4.
+  - El total de la medida de tamaño es t_x en todo el capítulo: lo define el M1, y lo usan el acumulativo del M3, el
+    πPT y la inclusión forzosa del M5 y la caja de Brewer. Antes eran Σ_j x_j, T_N = Σx_i, Σx y T.
+  - El M9 dice que M_i es la x_k de antes y K su total, la t_x, con los nombres del cap. 5. El M10 explica por qué
+    escribe y_i. El ejercicio 6 aclara que la media de Hájek no es la aproximación de Hájek del M7.
+- **MN-22:** el subtítulo inglés del M4 traduce el título («Without replacement: Horvitz–Thompson again»).
+- **MN-9, la sesión única.**
+  - El M1 tiene una caja antes del primer bloque: los bloques forman una sola sesión, también los plegados; qué
+    paquetes y qué carpeta de datos hacen falta. Las soluciones de los ejercicios 5 y 6 corren solas.
+  - P7 y P8 importan numpy, y R25 llama a `sampling::inclusionprobabilities`. Las cuatro soluciones corren solas fuera
+    del repositorio, en R con `--vanilla` y en Python con `-I`.
+- **MN-20, código.**
+  - P2 se re-siembra con 2026 y ya no depende de P1; cambió su línea de Lahiri.
+  - P3 hacía la matriz π_kl y el SYG en el M4: se parte en dos. P3 se queda con lo del M4, igual que R5, y el nuevo
+    P3b es la pestaña Python de R6 en el M7, que no tenía.
+  - P4 usa las π del bloque de Sunter, en vez de programar otra vez la inclusión forzosa, y su de(n) ya no fija el 100.
+    El M6 dice qué hace cada pestaña: Python calcula la distribución de n_s, y R sortea una muestra.
+  - R19 dice que su `v_sistematico` es la cuenta de `v_sis()` del M5, escrita con un bucle. Su argumento ya no se
+    llama `pi`, ni el de `sunter()` en P6. Se corrigió «disenno», y `options(scipen = 8)` tiene su comentario.
+  - **«830 de 1225»** es de la lista alfabética: R22 da ahora las dos cuentas, 830 y 828 con la ordenada por
+    población, y así lo dicen «Otros algoritmos» y la retro de P5.
+  - El simulador de Poisson avisa en su introducción de que, por encima de 1, el factor trunca sin repartir, y E(n)
+    crece algo menos.
+  - Quedan en el JSON `seleccion$frecLahiri` e `intentosMedios`, que nadie lee: quitarlos cambiaría claves verificadas.
+- **MN-10, el sorteo del M3.** En el acumulativo, cada barra flota sobre su tramo de 0 a 1600, y una recta marca u:
+  sale la tienda cuyo tramo corta. En Lahiri, las barras miden el área y la recta es u, entre 0 y 1000: se acepta si
+  la recta no pasa de la barra. El método se elige con un menú, y se esconden los deslizadores del otro método.
+- **MN-11, la escisión.** La introducción y la lectura dicen que el orden de la etapa 1 no cambia: en la etapa 2 va a 0
+  Leslie (0,955) y entra Erik (0,287). En la última etapa sale una tabla con las cinco muestras, sus p(s) y la
+  comprobación de que reproducen las π del principio.
+- **MN-12, proyección.**
+  - Ejes, leyendas y tooltips pasan a 13 px, o 12 en pantallas de menos de 500 px.
+  - Los gráficos de los simuladores miden 360 px de alto en pantalla ancha y 300 en las demás; los del quiz, 300.
+  - El gris de los gráficos pasa a #64748b.
+  - La tabla-ranking, el diagrama y la etiqueta del quiz tienen al menos unos 12 px.
+  - El eje logarítmico escribe «mil» y «1 millón» en lugar de superíndices de 11 px.
+- **MN-13, detalles de los gráficos.**
+  - La leyenda ya no cambia de color con el estado. Toma el color de la mayoría de las barras, o el que fija el
+    simulador: la escisión lo fija, porque en su etapa 4 las naranjas son mayoría. Las rectas de referencia salen con
+    su color.
+  - Los tooltips usan `fmtNum`, y el de `espacio-wor` dice «muestra AD, t̂ = 356,0».
+  - Ya no hay subíndices ASCII en lecturas, quiz, glosario, tabla ni diagrama: van con KaTeX o con `<sub>`.
+  - Seis deslizadores que elegían una categoría son menús: M1, M2, M3, los dos del M5 y el M9.
+  - La tabla-ranking escribe «456 975», no «456.975». El ensamblador cambia su `toLocaleString` por `fmtNum` solo en
+    el cap. 6, sin tocar la plantilla.
+- **MN-19, lecturas de los simuladores.**
+  - El autoponderado da las dos razones: 6,7 entre la mayor y la menor clase del marco, y 4,5 entre las sorteadas.
+  - En el de importancia, el deslizador va de 0,1 en 0,1, los puntos de la malla, así que V(α) es la exacta y no una
+    interpolación. «∞ veces mejor» pasa a «la varianza se anula».
+  - En el del elefante, el diagnóstico sale de lo que aporta el elefante: más o menos de la mitad de V.
+- **MN-21, claridad menor.**
+  - El M8 nombra el problema antes de «el nombre viene de…».
+  - El objetivo del M4 dice «enumerar».
+  - La caja de fórmulas del M2 deja dentro solo los índices, y sus tres ideas van fuera, una por párrafo. La prosa de
+    toda caja de fórmula sale en Montserrat y alineada a la izquierda.
+  - El M7 dice qué es la aproximación con reemplazo antes de usarla, y que el SYG solo es insesgado con tamaño fijo.
+  - Su nota «Hacia el capítulo 7» repetía la del M9 y queda en una frase.
+  - Lenguaje (CL-27): «una sola tienda visitada», «con dos extracciones, por ejemplo», «divide el HT de y entre el de
+    x», «está a menos de un error estándar» (1896 frente a 3143).
+  - Las cifras de cuatro dígitos van sin espacio, como en la RAE y en el resto del sitio: 29 casos en las fuentes, y
+    `fmtNum` no agrupa los de cuatro dígitos.
+  - «ee» se define en el ejercicio 1, y las lecturas dicen «error estándar». Sustituciones: «MC» por «réplicas»,
+    «dataset» por «conjunto de datos», y las mayúsculas de énfasis del quiz por cursiva. El deff de las retros de P5
+    pasa de 1,25 a 1,26, el exacto. El quiz va en el orden de los módulos: las antiguas 11, 12 y 13 suben tras la 5 y
+    la 6.
+- **MN-23:** una fórmula en bloque que no cabe ya avisa. `simuladores.js` marca cuáles desbordan y por qué lado siguen,
+  y el CSS las desvanece por ese lado. La fórmula del M9 que medía 323 px en 240 se parte en dos.
+- **Recuentos:** el cap. 6 pasa a 40 bloques (P3b), y el sitio a 231, 54 de ellos de Python. Las cifras contrastadas
+  pasan de 3208 a 3236 (cap. 6: 745). Se actualizaron la portada y el README.
+- **Verificado:**
+  - el ensamblado reproduce byte a byte (9b30f4877136990b);
+  - 745/745 cifras de código y 184 de prosa, con 0 sin respaldo en el sitio (6,7 entra en `cifras_prosa.json` con su
+    cuenta);
+  - `anota --check` = 0 en R (31 bloques) y en Python (9);
+  - 93 referencias revisadas, 10 nuevas;
+  - `node --check` pasa y `cuenta_sitio` da 0 desajustes;
+  - `verifica_publicado --local` arranca, y los bloques publicados salen con 0 en una carpeta que solo tiene los CSV;
+  - en el navegador: 0 errores de consola y de KaTeX en los 11 módulos, con todos los deslizadores y menús en sus
+    extremos y sin NaN en ninguna lectura;
+  - a 375 px no hay desplazamiento horizontal de la página, y las 9 fórmulas que desbordan quedan marcadas;
+  - el quiz acepta respuestas y muestra KaTeX en opciones y retros.
+- **Commit de las tres tandas (T7.108–T7.110), pedido por Javier el 2026-11-02.** Son los 16 archivos cambiados
+  desde `ebe185d`, en un solo commit encima de él. Sin push ni publicación en gh-pages.

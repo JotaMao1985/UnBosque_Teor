@@ -92,6 +92,15 @@ def main():
         # texto y cada fórmula un ítem aparte, que a 375 px se parten en
         # columnas; y las piezas absolutas de KaTeX escapaban del recorte de las
         # tablas y ensanchaban la página.
+        # La caja plegable «Para profundizar» de los módulos 5 y 7 (T7.109) lleva
+        # su propio estilo: la de la plantilla, `details`, es para las pistas.
+        # Para proyectar (T7.110): la tabla-ranking, el diagrama y la etiqueta del
+        # quiz tenían letra de 10 a 11 px, y las áreas de trazado de los gráficos
+        # medían unos 150 px de alto (la altura en línea de cada módulo se pisa con
+        # !important). La prosa de una caja de fórmula salía en Fira Code y
+        # centrada. Y una fórmula en bloque que no cabe a 375 px se cortaba en el
+        # borde sin aviso: simuladores.js marca cuáles desbordan y por qué lado
+        # siguen, y aquí se desvanecen por ese lado.
         ('  </style>',
          '    .animate-fade-in > p {\n'
          '      margin-bottom: 1rem;\n'
@@ -124,11 +133,88 @@ def main():
          '    .animate-fade-in table {\n'
          '      position: relative;\n'
          '    }\n\n'
+         '    details.profundizar {\n'
+         '      padding: 0;\n'
+         '      margin: 2rem 0;\n'
+         '      background: #f8fafc;\n'
+         '      border: 1px solid #cbd5e1;\n'
+         '      border-left: 4px solid #012820;\n'
+         '      border-radius: 0.5rem;\n'
+         '    }\n\n'
+         '    details.profundizar > summary {\n'
+         '      padding: 0.85rem 1rem;\n'
+         '      font-weight: 700;\n'
+         '      color: #012820;\n'
+         '    }\n\n'
+         '    details.profundizar[open] > summary {\n'
+         '      border-bottom: 1px solid #e2e8f0;\n'
+         '    }\n\n'
+         '    .profundizar-cuerpo {\n'
+         '      padding: 1rem 1.25rem 0.25rem;\n'
+         '    }\n\n'
+         '    .profundizar-cuerpo > p {\n'
+         '      margin-bottom: 1rem;\n'
+         '    }\n\n'
+         '    .profundizar-cuerpo > h4 {\n'
+         '      font-size: 1.1rem;\n'
+         '      font-weight: 700;\n'
+         '      color: #012820;\n'
+         '      margin: 1.5rem 0 0.75rem;\n'
+         '    }\n\n'
          '    .glosario-panel td code {\n'
          '      white-space: normal;\n'
          '      overflow-wrap: anywhere;\n'
+         '    }\n\n'
+         '    .tabla-ranking table {\n'
+         '      font-size: 0.875rem;\n'
+         '    }\n\n'
+         '    .tabla-ranking thead th,\n'
+         '    .tabla-ranking caption {\n'
+         '      font-size: 0.8125rem;\n'
+         '    }\n\n'
+         '    .tabla-ranking-titulo,\n'
+         '    .tabla-ranking-flecha,\n'
+         '    .quiz-tipo {\n'
+         '      font-size: 0.75rem;\n'
+         '    }\n\n'
+         '    .diagrama-diseno-unidad,\n'
+         '    .diagrama-diseno-cifra,\n'
+         '    .diagrama-diseno-formula .rotulo,\n'
+         '    .diagrama-diseno-acumulado .rotulo {\n'
+         '      font-size: 0.8125rem;\n'
+         '    }\n\n'
+         '    .simulador .grafico-wrapper {\n'
+         '      height: 300px !important;\n'
+         '    }\n\n'
+         '    @media (min-width: 1024px) {\n'
+         '      .simulador .grafico-wrapper {\n'
+         '        height: 360px !important;\n'
+         '      }\n'
+         '    }\n\n'
+         '    .formula p:not(.formula-titulo) {\n'
+         "      font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;\n"
+         '      text-align: left;\n'
+         '    }\n\n'
+         '    .katex-display.desborda {\n'
+         '      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);\n'
+         '      mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);\n'
+         '    }\n\n'
+         '    .katex-display.desborda.en-medio {\n'
+         '      -webkit-mask-image: linear-gradient(to right, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent);\n'
+         '      mask-image: linear-gradient(to right, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent);\n'
+         '    }\n\n'
+         '    .katex-display.desborda.al-final {\n'
+         '      -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 2.5rem), transparent);\n'
+         '      mask-image: linear-gradient(to left, #000 calc(100% - 2.5rem), transparent);\n'
          '    }\n'
          '  </style>'),
+        # La tabla-ranking formatea con toLocaleString('es-CO'), que escribe
+        # «457.576» en un capítulo que escribe «457 576»: aquí usa fmtNum, el
+        # formato de simuladores.js (T7.110), sin tocar la plantilla común.
+        ("        return Number(valor).toLocaleString('es-CO', {\n"
+         "          minimumFractionDigits: d, maximumFractionDigits: d\n"
+         "        }) + (columna.sufijo || '');",
+         "        return fmtNum(Number(valor), d) + (columna.sufijo || '');"),
         ('<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">PLANTILLA BASE •\n'
          '              4 MÓDULOS DE DEMOSTRACIÓN • UNBOSQUE</p>',
          '<p class="text-xs text-white/70 font-medium tracking-wide" style="margin:0; text-align:left;">CAPÍTULO 6 •\n'
@@ -175,13 +261,13 @@ def main():
         { id: 2, title: "El estimador de Hansen–Hurwitz", shortTitle: "Hansen–Hurwitz", duration: "25 min" },
         { id: 3, title: "Cómo se sortea: acumulativo y Lahiri", shortTitle: "Selección", duration: "22 min" },
         { id: 4, title: "Sin reemplazo: Horvitz–Thompson otra vez", shortTitle: "HT sin reemplazo", duration: "25 min" },
-        { id: 5, title: "El diseño πPT y cuándo gana", shortTitle: "πPT", duration: "35 min" },
+        { id: 5, title: "El diseño πPT y cuándo gana", shortTitle: "πPT", duration: "45 min" },
         { id: 6, title: "El diseño de Poisson", shortTitle: "Poisson", duration: "25 min" },
-        { id: 7, title: "Estimar la varianza del HT", shortTitle: "Varianza del HT", duration: "30 min" },
+        { id: 7, title: "Estimar la varianza del HT", shortTitle: "Varianza del HT", duration: "35 min" },
         { id: 8, title: "Cuándo el HT se comporta mal", shortTitle: "El elefante", duration: "22 min" },
         { id: 9, title: "PPT en dos etapas", shortTitle: "Dos etapas", duration: "25 min" },
         { id: 10, title: "Importancia y active learning", shortTitle: "Importancia", duration: "22 min" },
-        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "45 min" }
+        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "60 min" }
       ]
     };
 

@@ -226,6 +226,7 @@
     "70,5": "ee en forma HT = 70 466 698 expresado en millones",
     "12,3": "ee con la aproximacion con reemplazo (Lohr 6.24) de agpps = 12 293 010 (bloque R10; Lohr, ej. 6.10: 12 293 010) expresado en millones",
     "4,5": "100/22 = 4,5455: cociente de tamanos de clase en classpps con pesos iguales y m fijo",
+    "6,7": "100/15 = 6,667: cociente entre la clase mayor y la menor del marco classes con pesos iguales y m fijo (el simulador autoponderado imprime 6,67)",
     "40,9": "7,5 x 109/20 = 40,875: el peso final mas pequeno de schools (cap. 5)",
     "137,6": "7,5 x 367/20 = 137,625: el peso final mas grande de schools (cap. 5)",
     "3 562": "14 248/4 = 3 562: la varianza del Hansen-Hurwitz decrece como 1/n",

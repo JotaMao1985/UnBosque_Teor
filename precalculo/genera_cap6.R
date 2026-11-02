@@ -155,10 +155,29 @@ comprueba("WOR: enumeración <-> doble suma", V_enum, V_doble)
 comprueba("WOR: enumeración <-> Sen-Yates-Grundy", V_enum, V_syg)
 cat(sprintf("  V(t_HT) = %.1f (frente a HH n=2: %.1f)\n", V_enum, V_hh_enum))
 
+# El diseño de Lohr (ej. 6.8 y 6.9), extracción a extracción: psi en la
+# primera, psi_l / (1 - psi_k) en la segunda. Lohr imprime V = 4383.6.
+psi <- tiendas$psi
+p_lohr <- apply(muestras, 1, function(m) {
+  k <- m[1]; l <- m[2]
+  psi[k] * psi[l] / (1 - psi[k]) + psi[l] * psi[k] / (1 - psi[l])
+})
+comprueba("Lohr extracción a extracción: suma de p(s) = 1", sum(p_lohr), 1)
+pi_lohr <- sapply(1:4, function(k) sum(p_lohr[apply(muestras == k, 1, any)]))
+ht_lohr <- apply(muestras, 1, function(m) sum(tiendas$t[m] / pi_lohr[m]))
+V_lohr <- sum(p_lohr * (ht_lohr - t_total)^2)
+comprueba("Lohr extracción a extracción: V <-> 4383.6 del ej. 6.9", V_lohr, 4383.6, 1e-5)
+sin_D <- !apply(muestras == 4, 1, any)
+cat(sprintf("  Lohr: pi = %s | V = %.1f | P(sin D) = %.4f (M4: %.4f; HH: %.4f)\n",
+            paste(round(pi_lohr, 4), collapse = ", "), V_lohr, sum(p_lohr[sin_D]),
+            sum(p_s[sin_D]), (1 - psi[4])^2))
+
 cifras$espacioWor <- list(
   muestras = apply(muestras, 1, function(m) paste(tiendas$tienda[m], collapse = "")),
   pS = p_s, ht = ht_s, piK = pi_k, piKl = pi_kl,
-  V = V_enum, vHH2 = V_hh_enum, total = t_total
+  V = V_enum, vHH2 = V_hh_enum, total = t_total,
+  lohr = list(pS = p_lohr, piK = pi_lohr, ht = ht_lohr, V = V_lohr,
+              pSinD = sum(p_lohr[sin_D]))
 )
 
 # =============================================================================
@@ -293,8 +312,107 @@ cifras$poisson <- list(
   En = E_n, Vn = V_n, distN = pn, vHt = V_poisson,
   vSistematico = V_emp[1],
   pn10 = pn[11], pn9a11 = sum(pn[10:12]),
-  pn7a13 = sum(pn[8:14])
+  pn7a13 = sum(pn[8:14]),
+  # Para la autoevaluación (M6): la misma suma de las pi repartida en 51 pi
+  # iguales da más varianza del tamaño, porque sum(pi^2) es mínima así.
+  vnIguales = length(pi_st) * (E_n / length(pi_st)) * (1 - E_n / length(pi_st))
 )
+
+# =============================================================================
+# 6b. El criterio de Raj a la vista (M5: la nube y su recta) y la tabla de
+#     diseños para counties con n = 10 (M6). Exactas salvo Brewer y la razón
+#     de Poisson, que salen de réplicas con las semillas de R22 y R24. El
+#     estado del generador se restaura al final: las secciones siguientes
+#     no cambian.
+# =============================================================================
+cat("== 6b. Raj y la tabla de diseños ==\n")
+semilla_previa <- .Random.seed
+cov_N <- function(a, b) mean((a - mean(a)) * (b - mean(b)))
+
+# Las tiendas (n = 2): el PPT con reemplazo es el HH del módulo 2
+V_mras_t <- 4^2 * cov_N(tiendas$t, tiendas$t) / 2
+comprueba("Raj tiendas: V_MRAS - V_HH = (N^2/n) Cov(x, y^2/x)", V_mras_t - V_hh_enum,
+          4^2 / 2 * cov_N(tiendas$m2, tiendas$t^2 / tiendas$m2))
+
+pop_st <- statepps$pop2019
+raj_var <- function(y, nombre, n = 10) {
+  N <- length(y); psi <- pop_st / sum(pop_st)
+  recta <- unname(coef(lm(y ~ pop_st)))
+  if (abs(recta[1]) < 1e-6 * mean(y)) recta[1] <- 0     # y = x: pasa por el origen
+  v_mras <- N^2 * cov_N(y, y) / n
+  v_ppt <- sum(psi * (y / psi - sum(y))^2) / n
+  dif <- N^2 / n * cov_N(pop_st, y^2 / pop_st)
+  comprueba(paste("Raj", nombre, ": V_MRAS - V_PPT <-> (N^2/n) Cov"), v_mras - v_ppt, dif, 1e-8)
+  cat(sprintf("  %-9s a = %.4g (%.1f %% de la media) | cor(x,y) = %.3f | cor(x,y2/x) = %.3f | dif = %.4g\n",
+              nombre, recta[1], 100 * recta[1] / mean(y), cor(pop_st, y), cor(pop_st, y^2 / pop_st), dif))
+  list(y = y, a = recta[1], b = recta[2], media = mean(y), corXY = cor(pop_st, y),
+       corXY2X = cor(pop_st, y^2 / pop_st), vMras = v_mras, vPpt = v_ppt, dif = dif)
+}
+raj_c <- raj_var(statepps$counties, "counties")
+comprueba("Raj counties: V_PPT <-> HH exacta de la sección 5", raj_c$vPpt, V_hh_st)
+
+cifras$raj <- list(
+  x = pop_st, estados = statepps$state, n = 10,
+  tiendas = list(vMras = V_mras_t, vHh = V_hh_enum,
+                 cov = cov_N(tiendas$m2, tiendas$t^2 / tiendas$m2)),
+  counties = raj_c,
+  waterarea = raj_var(statepps$waterarea, "waterarea"),
+  pop = raj_var(pop_st, "pop2019")
+)
+
+# La tabla de diseños: California (pi = 1) entra siempre; se sortean 9 de 50
+libres_st <- pi_st < 1 - 1e-12
+p9 <- pi_st[libres_st]; c9 <- statepps$counties[libres_st]
+v_syg_p2 <- function(P2, p, y) {
+  d <- y / p; Dl <- outer(p, p) - P2; diag(Dl) <- 0
+  sum(Dl * outer(d, d, "-")^2) / 2
+}
+V_tille <- v_syg_p2(UPtillepi2(p9), p9, c9)
+V_maxent <- v_syg_p2(UPmaxentropypi2(p9), p9, c9)
+set.seed(2026)                                  # la de R22
+m_brewer <- replicate(4000, UPbrewer(p9))
+V_brewer <- var(colSums(m_brewer * c9 / p9))
+set.seed(2026)                                  # la de R24
+rep_razon <- replicate(20000, {
+  s <- runif(N_st) < pi_st
+  sum(pop_st) * sum(statepps$counties[s] / pi_st[s]) / sum(pop_st[s] / pi_st[s])
+})
+ecm_razon <- mean((rep_razon - t_counties)^2)
+cat(sprintf("  counties, n = 10: MAS sin %.0f | MRAS %.0f | HH %.0f | sis. alf. %.0f | sis. ord. %.0f\n",
+            V_mas_ex, raj_c$vMras, V_hh_st, V_sis_alf, V_sis_ord))
+cat(sprintf("                    Tillé %.0f | máx. entropía %.0f | Brewer (4000) %.0f | Poisson %.0f | razón (ECM) %.0f\n",
+            V_tille, V_maxent, V_brewer, V_poisson, ecm_razon))
+
+cifras$disenosCounties <- list(
+  vMasSin = V_mas_ex, vMasCon = raj_c$vMras, vHh = V_hh_st,
+  vSisAlf = V_sis_alf, vSisOrd = V_sis_ord, vTille = V_tille, vMaxent = V_maxent,
+  vBrewer = V_brewer, replicasBrewer = 4000,
+  vPoisson = V_poisson, ecmRazon = ecm_razon, replicasRazon = 20000
+)
+assign(".Random.seed", semilla_previa, envir = globalenv())
+
+# Sunter exacto (M5, Gutiérrez Res. 4.4.3): si un umbral pasa de 1 la unidad
+# entra seguro y las pi logradas se apartan de las pedidas. Se calculan por
+# programación dinámica sobre el número de elegidas.
+sunter_pi <- function(p) {
+  n <- round(sum(p)); pe <- c(1, rep(0, n)); A <- 0; pi_l <- numeric(length(p)); u_max <- 0
+  for (k in order(p, decreasing = TRUE)) {
+    e <- 0:n
+    u <- ifelse(e < n, p[k] * (n - e) / (n - A), 0)
+    u_max <- max(u_max, u[pe > 1e-15])
+    q <- pmin(1, u)
+    pi_l[k] <- sum(pe * q)
+    pe <- pe * (1 - q) + c(0, (pe * q)[-(n + 1)])
+    A <- A + p[k]
+  }
+  list(desvio = max(abs(pi_l - p)), umbralMax = u_max)
+}
+sun_st <- sunter_pi(pi_st)
+sun_e5 <- sunter_pi(inclusionprobabilities(c(62, 151, 76, 77, 80, 60, 194, 78, 74, 61), 6))
+cat(sprintf("  Sunter: estados desvío %.2g (umbral máx. %.3f) | ej. 5 desvío %.4f (umbral máx. %.3f)\n",
+            sun_st$desvio, sun_st$umbralMax, sun_e5$desvio, sun_e5$umbralMax))
+stopifnot(sun_st$desvio < 1e-5, sun_e5$desvio < 0.002)   # lo que dice la prosa del M5
+cifras$sunter <- list(estados = sun_st, ej5 = sun_e5)
 
 # =============================================================================
 # 7. agpps: el diseño pi PT real de Lohr con matriz de conjuntas -> SYG por

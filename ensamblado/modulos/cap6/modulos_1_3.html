@@ -46,7 +46,7 @@
         estimar; y su probabilidad de salir en el sorteo, $\psi_i$ (la letra griega psi).</p>
 
       <p>Si cada tienda sale con probabilidad proporcional a su área, la A sale una vez de cada 16, porque ocupa
-        100 de los 1 600 m². ¿Cómo estimar el total si sale la A? Sus ventas representan las de 16 «tiendas como la
+        100 de los 1600 m². ¿Cómo estimar el total si sale la A? Sus ventas representan las de 16 «tiendas como la
         A», así que la estimación es $16 \times 11 = 176$. En general, <strong>se divide el valor observado entre su
         probabilidad de salir</strong>. La tabla hace la cuenta para las cuatro tiendas.</p>
 
@@ -54,17 +54,17 @@
         <caption class="sr-only">Las cuatro tiendas con el sorteo proporcional al área</caption>
         <thead>
           <tr>
-            <th scope="col">Tienda</th><th scope="col">Área $x_i$ (m²)</th><th scope="col">$\psi_i = x_i/1\,600$</th>
+            <th scope="col">Tienda</th><th scope="col">Área $x_i$ (m²)</th><th scope="col">$\psi_i = x_i/1600$</th>
             <th scope="col">Ventas $t_i$</th><th scope="col">$t_i/\psi_i$</th>
             <th scope="col">$\psi_i\,(t_i/\psi_i - 300)^2$</th>
           </tr>
         </thead>
         <tbody>
           <tr><td>A</td><td>100</td><td>0,0625</td><td>11</td><td>176</td><td>961</td></tr>
-          <tr><td>B</td><td>200</td><td>0,125</td><td>20</td><td>160</td><td>2 450</td></tr>
-          <tr><td>C</td><td>300</td><td>0,1875</td><td>24</td><td>128</td><td>5 547</td></tr>
-          <tr><td>D</td><td>1 000</td><td>0,625</td><td>245</td><td>392</td><td>5 290</td></tr>
-          <tr><td><strong>Total</strong></td><td>1 600</td><td>1</td><td style="white-space:nowrap;"><strong>$t = 300$</strong></td><td>—</td>
+          <tr><td>B</td><td>200</td><td>0,125</td><td>20</td><td>160</td><td>2450</td></tr>
+          <tr><td>C</td><td>300</td><td>0,1875</td><td>24</td><td>128</td><td>5547</td></tr>
+          <tr><td>D</td><td>1000</td><td>0,625</td><td>245</td><td>392</td><td>5290</td></tr>
+          <tr><td><strong>Total</strong></td><td>1600</td><td>1</td><td style="white-space:nowrap;"><strong>$t = 300$</strong></td><td>—</td>
             <td><strong>14 248</strong></td></tr>
         </tbody>
       </table>
@@ -77,9 +77,9 @@
         <p>En un sorteo de <strong>una extracción</strong>, $\psi_i$ es la probabilidad de que salga la unidad
           $i$. Las $\psi_i$ de todo el marco suman 1. Si sale la unidad $i$, el total se estima con
           $\hat{t}_\psi = t_i/\psi_i$: el valor observado dividido entre su probabilidad de salir.</p>
-        <p style="margin-bottom:0;">El sorteo es <strong>PPT</strong> cuando $\psi_i = x_i/\sum_j x_j$, con $x_i$
-          una medida de tamaño conocida para todo el marco. En las tiendas, $x_i$ es el área y
-          $\psi_D = 1\,000/1\,600 = 0{,}625$.</p>
+        <p style="margin-bottom:0;">El sorteo es <strong>PPT</strong> cuando $\psi_i = x_i/t_x$, con $x_i$ una
+          medida de tamaño conocida para todo el marco y $t_x = \sum_j x_j$ su total. En las tiendas, $x_i$ es el
+          área, $t_x = 1600$ y $\psi_D = 1000/1600 = 0{,}625$.</p>
       </div>
 
       <p>Con una sola extracción, $\psi_i$ es la probabilidad de inclusión $\pi_i$ del capítulo 2, y $1/\psi_i$ es
@@ -101,13 +101,13 @@
       <p>La varianza es el promedio de las distancias al cuadrado entre cada estimación posible y el total, cada una
         ponderada por su probabilidad. Es la suma de la última columna de la tabla:</p>
 
-      $$V(\hat{t}_\psi) = \sum_i \psi_i\left(\frac{t_i}{\psi_i} - t\right)^2 = 961 + 2\,450 + 5\,547 + 5\,290 = 14\,248.$$
+      $$V(\hat{t}_\psi) = \sum_i \psi_i\left(\frac{t_i}{\psi_i} - t\right)^2 = 961 + 2450 + 5547 + 5290 = 14\,248.$$
 
       <p>Ahora el sorteo de siempre: las cuatro tiendas con la misma probabilidad, $\psi_i = 1/4$. La estimación
         pasa a ser $4\,t_i$, es decir, 44, 80, 96 o 980 según la tienda: es el estimador de expansión del capítulo 2,
         $N$ veces el valor observado. Su promedio sigue siendo 300, porque también es insesgada, pero su varianza sube a
-        $\frac{1}{4}\sum_i (4\,t_i - 300)^2 = 154\,488$. Es decir: <strong>visitando la misma única tienda, el sorteo
-        proporcional tiene 10,8 veces menos varianza.</strong></p>
+        $\frac{1}{4}\sum_i (4\,t_i - 300)^2 = 154\,488$. Es decir: <strong>con una sola tienda visitada en los dos
+        sorteos, el proporcional tiene 10,8 veces menos varianza.</strong></p>
 
       <p>¿De dónde sale la diferencia? De la columna $t_i/\psi_i$. Con el sorteo proporcional, las cuatro
         estimaciones van de 128 a 392; con probabilidades iguales, de 44 a 980.</p>
@@ -118,6 +118,19 @@
           ocurre cuando la probabilidad de cada unidad es aproximadamente proporcional a su valor $t_i$; aquí ocurre
           porque las ventas crecen con el área. Sin reemplazo, desde el módulo 4, la misma idea se escribe con
           $y_k/\pi_k$.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Los bloques de código forman una sola sesión.</strong> Cada bloque usa lo que dejaron los
+          anteriores: datos, funciones y paquetes. Para obtener las salidas que se muestran hay que ejecutarlos en
+          orden, desde el módulo 1, en una misma sesión de R o de Python. También cuentan los que van dentro de una
+          caja plegada «Para profundizar», porque los bloques siguientes usan lo que definen. Para repetir un módulo
+          suelto, ejecuta antes los anteriores.</p>
+        <p style="margin-bottom:0;">R usa los paquetes <code>survey</code> y <code>sampling</code>, que carga este
+          primer bloque, y <code>TeachingSampling</code>, que solo hay que tener instalado. Python usa
+          <code>numpy</code> y <code>pandas</code>. Los datos son los archivos CSV de Lohr, en una carpeta
+          <code>CSV data sets for SDA 3e</code> junto al script. Las soluciones de los ejercicios 5 y 6 sí corren
+          solas.</p>
       </div>
 
       <p>El bloque reproduce todo lo anterior: la tabla, la esperanza y la varianza de los dos sorteos y los cuatro
@@ -209,7 +222,8 @@
         no afecta a las demás: las extracciones son independientes.</p>
 
       <p>Con varias extracciones, $\psi_i$ sigue siendo la probabilidad de salir <em>en cada una</em>, pero ya no es
-        la probabilidad de estar en la muestra: D entra en la muestra si sale en cualquiera de las dos. Por eso, desde
+        la probabilidad de estar en la muestra: con dos extracciones, por ejemplo, D entra en la muestra si sale en
+        cualquiera de las dos. Por eso, desde
         aquí, $\psi_i$ y la $\pi_i$ del capítulo 2 dejan de coincidir.</p>
 
       <p>Cada extracción da su propia estimación del total, $t_i/\psi_i$ de la unidad que salió, la misma del
@@ -223,21 +237,27 @@
         \ \text{ si en la extracción } j \text{ salió la unidad } i$$
         $$V(\hat{t}_{HH}) = \frac{1}{n}\sum_{i=1}^{N} \psi_i\left(\frac{t_i}{\psi_i} - t\right)^2
         \qquad\qquad \widehat{V}(\hat{t}_{HH}) = \frac{s_z^2}{n}$$
-        <p>El índice $j$ recorre las $n$ extracciones (si una tienda sale dos veces, aparece dos veces); el índice
-          $i$ recorre las $N$ unidades del marco. $t_i$ es el valor de la unidad $i$: las ventas de la tienda o, en el
-          capítulo 5, el total de una UPM. Hace el papel de la $y_k$ del capítulo 2; se escribe $t$ porque, cuando la
-          unidad es una UPM, su valor es un total.</p>
-        <p>Dicho de otro modo, Hansen–Hurwitz es la media muestral de $n$ variables independientes, cada una
-          igual a la estimación del módulo 1. Cada $z_j$ es insesgado para $t$, así que su promedio también lo es. Y
-          promediar $n$ variables independientes divide su varianza entre $n$: eso dice la segunda fórmula. Su suma recorre las $N$ unidades del marco, no solo las de la muestra.</p>
-        <p style="margin-bottom:0;">Para estimar esa varianza con la muestra basta la varianza muestral de los
-          $z_j$, $s_z^2$, dividida entre $n$: la cuenta de siempre, $s^2/n$, aplicada a los $z_j$ como si fueran datos
-          independientes. Que sea tan simple se debe, otra vez, a que las extracciones son independientes.</p>
+        <p style="margin-bottom:0;">El índice $j$ recorre las $n$ extracciones (si una tienda sale dos veces,
+          aparece dos veces); el índice $i$ recorre las $N$ unidades del marco. $t_i$ es el valor de la unidad $i$:
+          las ventas de la tienda o, en el capítulo 5, el total de una UPM. Hace el papel de la $y_k$ del capítulo 2;
+          se escribe $t$ porque, cuando la unidad es una UPM, su valor es un total.</p>
       </div>
+
+      <p>Las tres fórmulas se leen así. La primera dice que Hansen–Hurwitz es la media muestral de $n$ variables
+        independientes, cada una igual a la estimación del módulo 1. Cada $z_j$ es insesgado para $t$, así que su
+        promedio también lo es.</p>
+
+      <p>La segunda: promediar $n$ variables independientes divide su varianza entre $n$, así que
+        $V(\hat{t}_{HH})$ es la varianza del módulo 1 dividida entre $n$. Su suma recorre las $N$ unidades del marco,
+        no solo las de la muestra: sirve para el cálculo exacto con las tiendas, no para una encuesta real.</p>
+
+      <p>La tercera es la que se usa con una muestra: la varianza muestral de los $z_j$, $s_z^2$, dividida entre
+        $n$. Es la cuenta de siempre, $s^2/n$, aplicada a los $z_j$ como si fueran datos independientes, y es tan
+        simple porque las extracciones son independientes.</p>
 
       <h3>Con las cuatro tiendas y $n = 2$</h3>
 
-      <p>Con una extracción, la varianza era 14 248; con dos, la fórmula da la mitad, 7 124. El bloque lo comprueba
+      <p>Con una extracción, la varianza era 14 248; con dos, la fórmula da la mitad, 7124. El bloque lo comprueba
         de dos maneras. Primero aplica la fórmula. Después enumera los 16 pares ordenados posibles, cada uno con su
         probabilidad $\psi_i\,\psi_j$ y su estimación. Son 16 porque, con reemplazo, el orden cuenta y la misma tienda
         puede repetirse: 4 tiendas en la primera extracción por 4 en la segunda. Sin reemplazo serían solo las 6
@@ -246,7 +266,7 @@
       <p>En la práctica no se enumera: se sortea una muestra. Con la semilla 2026, R saca C y D, y la estimación es
         $(128 + 392)/2 = 260$, no 300, y es normal: la insesgadez es una propiedad del promedio sobre todas las
         muestras, no de cada una. El error estándar estimado es 132, mientras que el verdadero es
-        $\sqrt{7\,124} \approx 84$. Con solo dos extracciones la estimación del error es poco fiable, porque es una
+        $\sqrt{7124} \approx 84$. Con solo dos extracciones la estimación del error es poco fiable, porque es una
         varianza muestral calculada con dos datos. Cómo hace R ese sorteo es el tema del módulo 3.</p>
 
       <div class="code-tabs">
@@ -340,18 +360,18 @@
         <ol style="margin-bottom:0;">
           <li>Poner las unidades en una lista, en cualquier orden, y acumular sus tamaños: $T_0 = 0$ y
             $T_k = T_{k-1} + x_k$. La unidad $k$ ocupa el tramo que va de $T_{k-1}$ a $T_k$, de longitud $x_k$.</li>
-          <li>Sortear un número $u$ uniforme entre 0 y el tamaño total $T_N = \sum x_i$.</li>
+          <li>Sortear un número $u$ uniforme entre 0 y el tamaño total, $T_N = t_x$.</li>
           <li style="margin-bottom:0;">Sale la unidad cuyo tramo contiene a $u$.</li>
         </ol>
       </div>
 
-      <p><strong>A mano, con las cuatro tiendas.</strong> El tamaño total es 1 600 m², y los tramos son: A del 1 al
-        100, B del 101 al 300, C del 301 al 600 y D del 601 al 1 600. Si sale $u = 224{,}2$, cae en el tramo de B y sale
-        B. Si sale $u = 1\,117{,}9$, sale D. En los cinco sorteos del bloque de abajo, D sale tres veces: es una muestra
+      <p><strong>A mano, con las cuatro tiendas.</strong> El tamaño total es 1600 m², y los tramos son: A del 1 al
+        100, B del 101 al 300, C del 301 al 600 y D del 601 al 1600. Si sale $u = 224{,}2$, cae en el tramo de B y sale
+        B. Si sale $u = 1117{,}9$, sale D. En los cinco sorteos del bloque de abajo, D sale tres veces: es una muestra
         con reemplazo.</p>
 
       <p><strong>Por qué funciona.</strong> El número $u$ cae en cada tramo con probabilidad igual a la longitud del
-        tramo dividida entre el total, $x_i/1\,600$, que es justamente $\psi_i$. D ocupa 1 000 de los 1 600 puntos, el
+        tramo dividida entre el total, $x_i/1600$, que es justamente $\psi_i$. D ocupa 1000 de los 1600 puntos, el
         62,5 %, y sale con esa probabilidad.</p>
 
       <p><strong>Ventaja y costo.</strong> Es exacto y directo. A cambio, hay que recorrer el marco entero para
@@ -370,12 +390,12 @@
         </ol>
       </div>
 
-      <p><strong>A mano, con las cuatro tiendas.</strong> Aquí $x_{\max} = 1\,000$. Si la candidata es B (200 m²) y
+      <p><strong>A mano, con las cuatro tiendas.</strong> Aquí $x_{\max} = 1000$. Si la candidata es B (200 m²) y
         sale $u = 640$, B se rechaza y se elige otra candidata. Si la candidata es D, se acepta siempre, porque ningún
-        $u$ supera 1 000.</p>
+        $u$ supera 1000.</p>
 
       <p><strong>Por qué funciona.</strong> En cada intento, una tienda sale si primero es la candidata
-        (probabilidad 1/4) y luego se acepta (probabilidad $x_i/1\,000$). Multiplicando, en un intento A sale con
+        (probabilidad 1/4) y luego se acepta (probabilidad $x_i/1000$). Multiplicando, en un intento A sale con
         probabilidad 0,025, B con 0,05, C con 0,075 y D con 0,25: proporcional al área, aunque la suma es solo 0,4,
         porque en los demás intentos no sale nadie. Como se repite hasta aceptar una tienda, lo que cuenta es la
         proporción de cada una entre las aceptadas: D sale $0{,}25/0{,}4 = 0{,}625$ de las veces, justo su
@@ -383,7 +403,7 @@
 
       <p><strong>Ventaja y costo.</strong> No hay que acumular nada: basta poder consultar el tamaño de cualquier
         unidad por su número. El costo son los intentos rechazados: un intento acaba en aceptación con probabilidad
-        0,4 (la suma de arriba, que también es $400/1\,000$, el área media entre $x_{\max}$), así que hacen falta en
+        0,4 (la suma de arriba, que también es $400/1000$, el área media entre $x_{\max}$), así que hacen falta en
         promedio $1/0{,}4 = 2{,}5$ intentos por selección. Esta idea de proponer una candidata y aceptarla o rechazarla se llama muestreo por rechazo
         (<em>rejection sampling</em>), y la usan también los generadores de números aleatorios.</p>
 
@@ -417,17 +437,18 @@
 
       <div class="simulador" data-simulador="seleccion">
         <h4><i class="fas fa-dice" aria-hidden="true"></i> El sorteo por dentro</h4>
-        <p class="simulador-intro">Cada barra mide el área de una tienda, que es también la longitud de su tramo; la
-          tienda elegida se pinta de naranja, y de rojo si Lahiri la rechaza. El primer control elige el método. En el
-          acumulativo, cambia el valor del uniforme $u$, entre 0 y 1 600, y mira en el tramo de qué tienda cae. En
-          Lahiri, elige la tienda candidata y el uniforme $u$, entre 0 y $x_{\max} = 1\,000$: si $u$ supera el área
-          de la candidata, se rechaza. Los dos métodos llegan a lo mismo por caminos distintos: en el acumulativo, D
-          ocupa 1 000 de los 1 600 puntos, el 62,5 %; en Lahiri, D se acepta siempre que es candidata, pero solo es
-          candidata en uno de cada cuatro intentos, y entre las tiendas aceptadas también es el 62,5 %.</p>
+        <p class="simulador-intro">El primer control elige el método, y la recta horizontal es el uniforme $u$. En
+          el acumulativo, cada barra flota sobre el tramo de su tienda, y los cuatro tramos cubren de 0 a 1600: mueve
+          $u$ y sale la tienda cuyo tramo corta la recta, pintada de naranja. En Lahiri, cada barra mide el área de su
+          tienda, y $u$ va de 0 a $x_{\max} = 1000$: elige la candidata y mueve $u$; si la recta no pasa de la barra de
+          la candidata, se acepta (naranja), y si pasa, se rechaza (rojo). Los dos métodos llegan a lo mismo por caminos
+          distintos: en el acumulativo, D ocupa 1000 de los 1600 puntos, el 62,5 %; en Lahiri, D se acepta siempre que
+          es candidata, pero solo es candidata en uno de cada cuatro intentos, y entre las tiendas aceptadas también es
+          el 62,5 %.</p>
         <div class="simulador-controles"></div>
-        <p class="grafico-etiqueta">Tramos del acumulativo / umbral de aceptación de Lahiri</p>
+        <p class="grafico-etiqueta">El uniforme $u$ frente a los tramos (acumulativo) o frente al área de la candidata (Lahiri)</p>
         <div class="grafico-wrapper" style="height:240px;">
-          <canvas aria-label="Tramos acumulados o umbral de aceptación según el método elegido" role="img"></canvas>
+          <canvas aria-label="El uniforme u frente a los tramos acumulados o frente al área de la candidata, según el método" role="img"></canvas>
         </div>
         <div class="simulador-lectura"></div>
       </div>

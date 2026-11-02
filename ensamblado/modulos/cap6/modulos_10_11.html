@@ -24,8 +24,9 @@
 
       <p>El estimador de Hansen–Hurwitz del módulo 2, $\frac{1}{n}\sum y_i/\psi_i$, se usa desde los años
         cincuenta fuera de las encuestas con otro nombre: <strong>muestreo por importancia</strong>
-        (<em>importance sampling</em>), para estimar por Monte Carlo sumas o integrales difíciles. La traducción es
-        directa:</p>
+        (<em>importance sampling</em>), para estimar por Monte Carlo sumas o integrales difíciles. Aquí las unidades
+        son sueltas, no UPM, y su valor se escribe $y_i$: la $t_i$ del módulo 2, con el índice $i$ de las extracciones
+        con reemplazo. La traducción es directa:</p>
 
       <table>
         <caption class="sr-only">Correspondencia entre el PPT con reemplazo y el muestreo por importancia</caption>
@@ -65,7 +66,8 @@
         </div>
       </div>
 
-      <p>La propuesta uniforme da una varianza de 557 287; la proporcional a la población, 963 006, peor; la
+      <p>La propuesta uniforme, que es el MAS con reemplazo, da una varianza de 557 287; la proporcional a la
+        población, 963 006, peor; la
         proporcional a los propios condados, 0. Es lo que anticipaba el criterio de Raj del módulo 5: una correlación
         de 0,46 con la población no basta.</p>
 
@@ -87,7 +89,8 @@
 
       <div class="simulador" data-simulador="importancia">
         <h4><i class="fas fa-crosshairs" aria-hidden="true"></i> El camino hacia la propuesta perfecta</h4>
-        <p class="simulador-intro">La curva es la varianza exacta del HH para cada $\alpha$. Fíjate en tres tramos.
+        <p class="simulador-intro">La curva es la varianza exacta del HH, calculada para 21 valores de $\alpha$, de
+          0,1 en 0,1; el deslizador recorre esos mismos valores. Fíjate en tres tramos.
           De 0 a 0,6, mezclar la propuesta de empleados con la uniforme mejora: en $\alpha = 0{,}6$, con un 40 % de
           uniforme, la varianza es 1,8 veces menor que con la uniforme sola. En $\alpha = 1$, solo con empleados,
           vuelve a subir: mejora solo 1,3 veces, aunque la correlación con el ingreso es 0,64. De 1 a 2 la varianza
@@ -114,14 +117,37 @@
 
       <h3>Dónde aparece en ciencia de datos</h3>
 
+      <p><strong><em>Active learning</em>.</strong> Un modelo ya entrenado clasifica 10 000 imágenes, y hay
+        presupuesto para etiquetar a mano solo 100. Si se eligen con probabilidad proporcional a la duda del modelo,
+        se etiquetan sobre todo las imágenes en que puede equivocarse. Para estimar su tasa de error con esas 100,
+        cada una tiene que pesar $1/\psi$, como en Hansen–Hurwitz. El bloque lo simula con datos inventados: la duda
+        de cada imagen es también su probabilidad de error, y $\psi$ mezcla la duda con un 10 % de uniforme, la
+        mezcla defensiva de arriba.</p>
+
+      <div class="code-tabs">
+        <div class="code-tabs-nav" role="tablist" aria-label="Active learning: la tasa de error con y sin pesos">
+          <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+        </div>
+        <div class="code-tab-panel" data-lang="r">
+          <pre><code class="language-r">⟦R27⟧</code></pre>
+        </div>
+      </div>
+
+      <p>La tasa de error verdadera es 0,162. Sin pesos, el promedio de las 2000 estimaciones es 0,288, casi el
+        doble, porque la muestra está llena de imágenes difíciles. Con los pesos $1/\psi$ es 0,162: insesgada, y con
+        una desviación (0,033) algo menor que la de un MAS con reemplazo del mismo tamaño (0,036).</p>
+
       <div class="note">
-        <p><strong><em>Active learning</em>.</strong> Hay 10 000 imágenes sin etiquetar y solo se pueden etiquetar
-          100. Si se eligen con probabilidad proporcional a la duda del modelo, se aprende más de cada etiqueta. Pero
-          para estimar la tasa de error del modelo con esas 100 imágenes, cada una tiene que pesar $1/\psi$, como en
-          Hansen–Hurwitz: sin los pesos, la estimación queda sesgada hacia las imágenes difíciles.</p>
-        <p style="margin-bottom:0;">El mismo esquema aparece en otros métodos de aprendizaje automático que
-          reutilizan datos recogidos con probabilidades distintas de las que interesan, y con el mismo riesgo: pesos
-          $1/\psi$ con $\psi$ muy pequeñas reproducen el problema del elefante.</p>
+        <p><strong>Entrenar y evaluar con etiquetas distintas.</strong> En la práctica, las etiquetas que elige el
+          <em>active learning</em> sirven para reentrenar el modelo. Si con esas mismas etiquetas se mide después su
+          error, el modelo parece mejor de lo que es, con pesos o sin ellos, porque ya las vio. La tasa de error se
+          estima con otras imágenes, sorteadas aparte y con $\psi$ conocida.</p>
+        <p style="margin-bottom:0;"><strong>El mismo esquema en otros métodos.</strong> En aprendizaje por refuerzo,
+          el <em>replay</em> priorizado vuelve a sortear transiciones pasadas con probabilidad creciente en su error
+          de predicción, y corrige con pesos de importancia. En la evaluación <em>off-policy</em>, una política se
+          evalúa con datos que recogió otra, y cada dato pesa el cociente entre las probabilidades que le dan las dos.
+          En ambos casos, pesos $1/\psi$ con $\psi$ muy pequeñas reproducen el problema del elefante del
+          módulo 8.</p>
       </div>
 
       <div class="warning">
@@ -137,7 +163,8 @@
           <li>Owen — <em>Monte Carlo theory</em>, cap. 9: importance sampling, con la mezcla defensiva (libre en línea).</li>
           <li>Settles — <em>Active Learning Literature Survey</em>: §4.1 y §6.6 advierten que los datos etiquetados
             activamente son una muestra sesgada. La corrección con pesos $1/\psi$ es la de Beygelzimer, Dasgupta y
-            Langford (2009), <em>Importance weighted active learning</em>.</li>
+            Langford (2009), <em>Importance weighted active learning</em>. El <em>replay</em> priorizado es de Schaul,
+            Quan, Antonoglou y Silver (2016), <em>Prioritized experience replay</em>.</li>
           <li>Gutiérrez — §4.2, Resultado 4.2.4: la varianza del PPT con reemplazo, la que aquí se reinterpreta; §4.2.4 presenta BigLucy.</li>
         </ul>
       </div>
@@ -166,8 +193,8 @@
       </div>
 
       <p>Primero, la tabla de notación. El capítulo maneja dos familias de probabilidades, $\psi_i$ con reemplazo y
-        $\pi_k$ sin reemplazo, y confundirlas es el error más común. La tabla las pone al lado de la notación de Lohr y
-        de Gutiérrez:</p>
+        $\pi_k$ sin reemplazo, que el módulo 4 puso lado a lado. La tabla completa las pone junto a la notación de
+        Lohr y de Gutiérrez, con los estimadores de la varianza y las funciones de R:</p>
 
       <div class="glosario-notacion" data-glosario="ppt"></div>
 
@@ -197,7 +224,7 @@
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>statepps</code>, saca
             una muestra Hansen–Hurwitz de $n = 10$ con $\psi \propto$ población y estima el total de condados con
-            su ee; repite con probabilidades iguales. ¿Qué diseño «parece» mejor en tu realización, y qué dice la
+            su error estándar (ee); repite con probabilidades iguales. ¿Qué diseño «parece» mejor en tu realización, y qué dice la
             varianza exacta del módulo 10?</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
@@ -208,8 +235,8 @@
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R16⟧</code></pre>
-            <p>En esta realización el PPT «gana» (ee estimado 588 contra 1 126), y es un espejismo: la varianza
-              exacta dice lo contrario (963 006 contra 557 287). Un ee estimado con $n = 10$ es demasiado ruidoso
+            <p>En esta realización el PPT «gana» (ee estimado 588 contra 1126), y es un espejismo: la varianza
+              exacta dice lo contrario (963 006 contra 557 287 del MAS con reemplazo). Un ee estimado con $n = 10$ es demasiado ruidoso
               para decidir; la comparación seria se hace con las fórmulas exactas o con réplicas, como en el
               módulo 5.</p>
           </details>
@@ -217,8 +244,9 @@
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">2.</span>Sortea 5 clases de
-            <code>classes.csv</code> con el método acumulativo, con reemplazo, usando $\psi_i = M_i/647$. Anota
-            qué pasa si dos uniformes caen en el tramo de la misma clase.</p>
+            <code>classes.csv</code> con el método acumulativo, con reemplazo, usando $\psi_i = M_i/647$. Si ninguna
+            clase sale dos veces, sortea otra vez: alguna se repite en el 61 % de las muestras. Anota qué pasa cuando
+            dos uniformes caen en el tramo de la misma clase.</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
             <p><code>cumsum(class_size)</code> define los tramos y <code>findInterval()</code> hace el resto. Con
@@ -229,7 +257,8 @@
             <pre><code class="language-r">⟦R17⟧</code></pre>
             <p>La clase 9 salió dos veces: dos uniformes (360,1 y 359,3) cayeron en su tramo. No se descarta ni
               se reemplaza: sus estudiantes se sortean dos veces y aporta dos $z_i$ al promedio HH. Así es como el
-              «con reemplazo» mantiene la independencia entre extracciones.</p>
+              «con reemplazo» mantiene la independencia entre extracciones. El bloque calcula también la
+              probabilidad de que alguna clase se repita en 5 extracciones: 0,607.</p>
           </details>
         </div>
 
@@ -246,8 +275,11 @@
             <summary>Solución</summary>
             <pre><code class="language-r">⟦R18⟧</code></pre>
             <p>Los 15 cocientes $y_k/\pi_k$ valen lo mismo hasta la sexta cifra (64 429 949 a 64 429 951): el ee
-              queda en ~1 acre sobre un total de 966 millones. Es el πPT llevado al límite: para la variable que
-              define las π, la varianza es cero por construcción. La ganancia real con <code>acres92</code>
+              queda en ~1 acre sobre un total estimado de 966 millones. Es el πPT llevado al límite: para la variable
+              que define las π, la varianza es cero por construcción. Esos 966 millones son el total de
+              <code>acres87</code> que implican las π; en <code>agpop.csv</code> la variable suma 963 466 689, sin los
+              23 condados con −99, el código de dato faltante. Las π no salieron exactamente de ese archivo, pero la
+              conclusión no cambia. La ganancia real con <code>acres92</code>
               (cv 1,3 %) mide cuánto se parece la agricultura del 92 a la del 87.</p>
           </details>
         </div>
@@ -345,7 +377,9 @@
           </table>
           <ol class="text-sm">
             <li>Estima el total de $y$ con el HT, su coeficiente de variación y un intervalo de confianza del 95 %.</li>
-            <li>Estima la media de $y$ dividiendo entre $N$ y dividiendo entre $\hat{N} = \sum_s 1/\pi_k$ (Hájek).</li>
+            <li>Estima la media de $y$ dividiendo entre $N$ y dividiendo entre $\hat{N} = \sum_s 1/\pi_k$. La
+              segunda es la media de Hájek, que no tiene que ver con la aproximación de Hájek de la varianza del
+              módulo 7.</li>
             <li>¿Qué indica que hayan salido 12 elementos y no 10? Corrige el total con la razón del módulo 6.</li>
           </ol>
           <details class="ejercicio-pista">
@@ -359,8 +393,12 @@
             <p>(a) $\hat{t} = 945\,598$, con un error estándar de 255 587: un cv del 27 % y un intervalo de 444 649 a
               1 446 548. (b) Dividiendo entre $N$, la media es 3329,6; entre $\hat{N} = 266{,}43$, es 3549,1. (c) Cada
               elemento aporta $x_k/\pi_k = 818{,}2$ al HT de $x$, así que con 12 elementos da $9818{,}4$, 1,2 veces
-              $t_x$: es el $t\,n_s/n$ del módulo 6. El HT de $y$ seguramente se pasa en la misma proporción. La razón
-              corrige ese exceso: $t_x\,\hat{t}_{y,\pi}/\hat{t}_{x,\pi} = 787\,999$.</p>
+              $t_x$: es el $t\,n_s/n$ del módulo 6. El HT de $y$ se pasa en la misma proporción si $y$ es casi
+              proporcional a $x$, y en la muestra lo es: $y_k/x_k$ va de 78,9 a 121,6. La razón corrige ese exceso:
+              $t_x\,\hat{t}_{y,\pi}/\hat{t}_{x,\pi} = 787\,999$. El estimador alternativo de Gutiérrez,
+              $N\,\hat{t}_{y,\pi}/\hat{N}$, corrige con el número de elementos en vez de con $x$, y da 1 007 947, en
+              sentido contrario, porque $\hat{N} = 266{,}43$ sale por debajo de 284. Con $y$ casi proporcional a $x$,
+              la corrección que conviene es la razón.</p>
             <div class="code-tabs">
               <div class="code-tabs-nav" role="tablist" aria-label="Solución del ejercicio 6">
                 <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
