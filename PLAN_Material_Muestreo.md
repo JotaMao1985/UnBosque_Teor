@@ -8598,5 +8598,19 @@ Visto bueno de Javier: «Sí, corrige todo», con las opciones por defecto. La l
 - **Número.** Se hizo sobre `main` `1b438a0`. Mientras tanto, otra sesión publicó en `main` su T7.114 (los enlaces a
   las diapositivas del cap. 6, `37c2a18` y `cb864b4`), así que esta auditoría es T7.115 y sus correcciones, T7.116.
   Esos commits tocan también `sitio/muestreo/README.md`, en otras líneas que el 3 236 → 3 237 de este.
-- **Commit** con el visto bueno de Javier («Sí, haz commit»), rebasado sobre `origin/main` `cb864b4`. Sin push ni
-  publicación.
+- **Publicado** el 2026-11-02 con el visto bueno de Javier («Sí, haz commit»; luego «Push y publica»):
+  - `main` `c06f2e3`, rebasado y empujado sobre `cb864b4` sin nada más. En el rebase, el README se juntó solo y el
+    PLAN se resolvió a mano, con T7.114 delante.
+  - `gh-pages` `587ae38`, construido con `git commit-tree` del árbol `c06f2e3:sitio` sobre la punta `1024426`. Nada
+    ajeno: el árbol de la punta era el `sitio/` de `cb864b4`. Entraron 2 archivos, el cap. 7 y el README.
+  - Antes de publicar, tras el rebase: reensamblado sin cambios, `--check` 0, `--todos --prosa` 0 sin respaldo, 486
+    referencias revisadas, y el código del cap. 7 arranca dentro y fuera del repositorio.
+  - Comprobado después de publicar:
+    - el build de Pages, `built`;
+    - `verifica_publicado.py --solo-huella`: las 11 páginas coinciden con la rama;
+    - el código del cap. 7 servido arranca: R (18) y Python (4), también en una carpeta sin `precalculo/`;
+    - el cap. 7 y el README servidos coinciden byte a byte con la rama;
+    - en Chrome sin ventana, la página viva a 1280 y 375 px: 0 `.katex-error`, 0 párrafos pegados, sin desborde,
+      y el jackknife, el recorte, el comparador, la cobertura, el diagrama, la tabla del M5, las soluciones y los
+      rótulos del quiz como en la copia local. La única línea de la consola es el 404 de `favicon.ico` en la raíz del
+      dominio, que pide el navegador y no es del capítulo.
