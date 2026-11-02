@@ -8466,4 +8466,17 @@ todas. El detalle, mejora por mejora, está al final de ese informe («Mejoras a
   - Enlaces «Leer en el material» correctos.
   - Generador, fotógrafo y construcción reproducibles byte a byte.
 - **Sin tocar, a decisión de Javier:** los errores del capítulo C-1 a C-9 y los defectos de la plantilla P-1 a P-3.
-- **Commit (sin publicar):** las tres tareas, T7.111 a T7.113, van en un solo commit, «Las diapositivas del cap. 6, auditadas y mejoradas», sobre `7d2a91d`. Javier dio el visto bueno con «Sí, haz commit». No se empujó, y las diapositivas no se enlazan desde la portada: eso se pregunta, como en T7.98.
+- **Commit:** las tres tareas, T7.111 a T7.113, van en un solo commit, `9594a07` («Las diapositivas del cap. 6,
+  auditadas y mejoradas»), sobre `7d2a91d`. Javier dio el visto bueno con «Sí, haz commit».
+- **Publicado (2026-11-02):** Javier dijo «Sí, push y publica».
+  - `main` está en `9594a07`, empujado por SHA tras comprobar que su padre era `origin/main`.
+  - `gh-pages` está en `ae3fdce`, construido con `git commit-tree` del árbol `9594a07:sitio` sobre `b32b4fe`.
+  - No había nada ajeno: el árbol de `b32b4fe` era el `main:sitio` anterior.
+  - Entraron 13 archivos, todos de `muestreo/diapositivas/`: los dos HTML, las dos fuentes y los 9 recursos.
+- **Comprobado tras publicar:**
+  - el build de Pages está en `built`, para `ae3fdce`;
+  - los 13 archivos servidos coinciden byte a byte con la rama;
+  - `verifica_publicado.py --solo-huella`: las 11 páginas coinciden;
+  - en el navegador, las dos presentaciones vivas cargan con 38 y 41 diapositivas, 2 animados cada una, 0 errores de
+    MathJax y la consola limpia, y sus enlaces «Leer en el material» van a los módulos 1–11.
+- **Sin enlace desde la portada ni el README:** eso se pregunta aparte, como en T7.98.
