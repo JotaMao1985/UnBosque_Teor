@@ -8494,3 +8494,9 @@ Javier pidió «Sí, enlázalas», como en T7.98.
   - `cuenta_sitio.py` coteja 68 cifras escritas a mano, y ninguna está desajustada;
   - en el navegador, a 1024 y a 375 px, los dos enlaces nuevos se pueden pulsar (quedan por encima del enlace de la
     tarjeta), responden 200 y la página no se desborda en horizontal.
+- **Publicado (2026-11-02):** `main` `37c2a18` y `gh-pages` `1024426`.
+  - Solo entraron `muestreo/index.html` y `muestreo/README.md`.
+  - El build de Pages está en `built`.
+  - Los dos archivos servidos coinciden byte a byte con la rama, y `verifica_publicado.py --solo-huella` da bien las
+    11 páginas.
+  - La portada viva enlaza las seis presentaciones de los caps. 4 a 6, que responden 200, con la consola limpia.
