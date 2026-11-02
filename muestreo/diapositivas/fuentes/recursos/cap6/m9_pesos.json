@@ -1,0 +1,180 @@
+{
+ "tipo": "animado",
+ "titulo": "Peso final de un estudiante de cada clase del marco (m = 4)",
+ "ancho": 700,
+ "alto": 420,
+ "margen_derecho": 170,
+ "x": {
+  "titulo": "clase del marco",
+  "categorias": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "8",
+   "9",
+   "10",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15"
+  ]
+ },
+ "y": {
+  "titulo": "peso final",
+  "min": 0,
+  "max": 80,
+  "marcas": [
+   0,
+   20,
+   40,
+   60,
+   80
+  ]
+ },
+ "etapas": [
+  [
+   {
+    "tipo": "barra",
+    "x": "1",
+    "y": 33.0,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "2",
+    "y": 24.75,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "3",
+    "y": 19.5,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "4",
+    "y": 16.5,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "5",
+    "y": 57.0,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "6",
+    "y": 47.25,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "7",
+    "y": 15.0,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "8",
+    "y": 33.0,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "9",
+    "y": 40.5,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "10",
+    "y": 25.5,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "11",
+    "y": 34.5,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "12",
+    "y": 18.0,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "13",
+    "y": 34.5,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "barra",
+    "x": "14",
+    "y": 75.0,
+    "serie": 5,
+    "ancho": 0.6,
+    "texto": "75 (M = 100)"
+   },
+   {
+    "tipo": "barra",
+    "x": "15",
+    "y": 11.25,
+    "serie": 5,
+    "ancho": 0.6
+   },
+   {
+    "tipo": "texto",
+    "x": 14.5,
+    "y": 11.25,
+    "serie": 5,
+    "ancla": "inicio",
+    "texto": "11,25 (M = 15)"
+   },
+   {
+    "tipo": "texto",
+    "x": -0.4,
+    "y": 72,
+    "serie": 5,
+    "ancla": "inicio",
+    "texto": "probabilidades iguales: de 11,25 a 75"
+   }
+  ],
+  [
+   {
+    "tipo": "referencia",
+    "y": 32.35,
+    "serie": 1
+   },
+   {
+    "tipo": "texto",
+    "x": 14.5,
+    "y": 32.35,
+    "serie": 1,
+    "ancla": "inicio",
+    "texto": "PPT: 32,35 todas"
+   }
+  ]
+ ]
+}
