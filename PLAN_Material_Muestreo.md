@@ -8480,3 +8480,17 @@ todas. El detalle, mejora por mejora, está al final de ese informe («Mejoras a
   - en el navegador, las dos presentaciones vivas cargan con 38 y 41 diapositivas, 2 animados cada una, 0 errores de
     MathJax y la consola limpia, y sus enlaces «Leer en el material» van a los módulos 1–11.
 - **Sin enlace desde la portada ni el README:** eso se pregunta aparte, como en T7.98.
+
+### T7.114 — La portada y el README enlazan las diapositivas del cap. 6 (2026-11-02)
+
+Javier pidió «Sí, enlázalas», como en T7.98.
+
+- **Portada:** la tarjeta del cap. 6 lleva la línea «Diapositivas de clase», con «Sesión 1 · M1–5» y «Sesión 2 ·
+  M6–10». Tiene el mismo formato y las mismas `aria-label` que las de los caps. 4 y 5.
+- **README de `sitio/muestreo/`:** la frase de lo que enlaza la portada nombra ahora las diapositivas de los caps. 4, 5
+  y 6.
+- **Comprobado:**
+  - los 12 enlaces de diapositivas de la portada y del README apuntan a archivos que existen;
+  - `cuenta_sitio.py` coteja 68 cifras escritas a mano, y ninguna está desajustada;
+  - en el navegador, a 1024 y a 375 px, los dos enlaces nuevos se pueden pulsar (quedan por encima del enlace de la
+    tarjeta), responden 200 y la página no se desborda en horizontal.
