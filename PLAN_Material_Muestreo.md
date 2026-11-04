@@ -8614,3 +8614,32 @@ Visto bueno de Javier: «Sí, corrige todo», con las opciones por defecto. La l
       y el jackknife, el recorte, el comparador, la cobertura, el diagrama, la tabla del M5, las soluciones y los
       rótulos del quiz como en la copia local. La única línea de la consola es el 404 de `favicon.ico` en la raíz del
       dominio, que pide el navegador y no es del capítulo.
+
+### T7.117 — El calendario de entregas del proyecto, en la portada (2026-11-04)
+
+Pedido de Javier: «en la portada del curso publica un calendario de entregas del proyecto, confío en tu buen
+gusto en este punto».
+
+- **Dónde:** dentro de la sección del Corte III, detrás de la rejilla de tarjetas, con su enlace «Calendario» en la
+  cabecera de la portada (`#calendario-proyecto`). No toca nada de lo que ya había en la portada (T7.100).
+- **Qué dice:** los seis hitos en orden: ficha (27 oct), protocolo (30 oct), avance (6 nov), cierre del campo
+  (13 nov), informe (23 nov) y exposición (semana 16, 23–28 nov). Cada uno con su fecha, su día y la hora de
+  cierre, qué se entrega, la etiqueta de su release y su peso en el proyecto («sin nota» la ficha y el campo).
+  Debajo, una nota con las dos fechas propias de la modalidad conjunta.
+- **Con JavaScript**, cada hito dice si ya cerró y cuál es la próxima entrega («Próxima · cierra en 2 días»,
+  «Cierra hoy a las 11:00», «Es esta semana»), contando días en la hora de Bogotá. Sin JavaScript el calendario
+  se lee entero, sin estados. Probado con cinco fechas simuladas (26 oct, 13 nov antes y después de las 11:00,
+  24 nov, 29 nov).
+- **De dónde sale:** `ensambla_proyecto.py --calendario` (también lo corre `--con-indice`) lo escribe desde
+  `ensamblado/proyecto/datos.py`, en tres regiones con marcadores: el bloque, su CSS y su guion. Es idempotente,
+  reemplaza las regiones si ya están y para si una está a medias. Ninguna fecha se teclea en la portada.
+- **Diseño:** seis columnas a partir de 1180 px, tres en tableta y, en un teléfono, una fila por hito con la fecha
+  a la izquierda. Texto con 4,5:1 sobre su fondo, como el resto de la portada; el naranja del curso solo en
+  bordes. No usa `.tarjeta`, para que `cuenta_sitio.py` no lo cuente.
+- **Verificado:** `audita_proyecto.py` 246 comprobaciones, 0 fallos (frente H nuevo: el calendario contra
+  `datos.py` y el calendario recalculado; se relaja la de D sobre cuántos capítulos comparten el CSS de la
+  plantilla, porque los caps. 6 y 7 ya añadieron componentes propios); `prueba_audita_proyecto.py` 44 de 44
+  (cinco defectos nuevos sobre una copia de la portada); `cuenta_sitio.py` 68 cifras, 0 desajustadas; en el
+  navegador, sin desborde a 1366, 768, 375 y 320 px y la consola limpia.
+- **Convivencia:** hecho en el worktree `calendario-proyecto`, desde `origin/main`; la carpeta principal tiene
+  cambios del cap. 4 de otra sesión, que no se tocan.

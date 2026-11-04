@@ -118,12 +118,28 @@ DEFECTOS = [
 ]
 
 
-def corre(ruta: pathlib.Path, sin_r: bool) -> tuple[int, set]:
+INDICE = GUIA.parent / "index.html"
+
+# H · El calendario de la portada: estos defectos van sobre una copia del índice.
+DEFECTOS_INDICE = [
+    ("una fecha del calendario cambiada", "H",
+     cambia('data-cierre="2026-11-06T11:00:00-05:00"', 'data-cierre="2026-11-07T11:00:00-05:00"')),
+    ("el peso de un hito cambiado", "H", cambia("45 % del proyecto", "40 % del proyecto")),
+    ("un día de la semana equivocado", "H", cambia("viernes<br>11:00</span></p>\n          <p class=\"calendario-nombre\">Avance",
+                                                    "jueves<br>11:00</span></p>\n          <p class=\"calendario-nombre\">Avance")),
+    ("la nota de la conjunta con otra fecha", "H", cambia("cerró el\n          viernes 23 de octubre", "cerró el\n          viernes 24 de octubre")),
+    ("el calendario a medias", "H", cambia("<!-- CALENDARIO-PROYECTO:FIN -->", "")),
+]
+
+
+def corre(ruta: pathlib.Path, sin_r: bool, indice: pathlib.Path | None = None) -> tuple[int, set]:
     env = dict(os.environ, PROYECTO_HTML=str(ruta))
+    if indice:
+        env["PROYECTO_INDICE"] = str(indice)
     if sin_r:
         env["PROYECTO_SIN_R"] = "1"
     r = subprocess.run([sys.executable, str(AUDITOR)], capture_output=True, text=True, env=env)
-    frentes = set(re.findall(r"MAL \[([A-G])\]", r.stdout))
+    frentes = set(re.findall(r"MAL \[([A-H])\]", r.stdout))
     return r.returncode, frentes
 
 
@@ -145,10 +161,22 @@ def main() -> int:
             cazados += ok
             if not ok:
                 fallidos.append(nombre)
+        original_i = INDICE.read_text(encoding="utf-8")
+        copia_i = pathlib.Path(tmp) / "index.html"
+        for nombre, frente, f in DEFECTOS_INDICE:
+            copia_i.write_text(f(original_i), encoding="utf-8")
+            rc, fr = corre(GUIA, sin_r=True, indice=copia_i)
+            ok = rc != 0 and frente in fr
+            print(f"  {'cazado ' if ok else 'ESCAPA '} [{frente}] {nombre}"
+                  + ("" if ok else f"  (falló en {sorted(fr)}, código {rc})"))
+            cazados += ok
+            if not ok:
+                fallidos.append(nombre)
+    total = len(DEFECTOS) + len(DEFECTOS_INDICE)
     rc, fr = corre(GUIA, sin_r=True)
     print(f"control limpio al final: {'pasa' if rc == 0 else 'FALLA ' + str(sorted(fr))}")
-    print(f"\n{cazados} de {len(DEFECTOS)} defectos cazados en su frente")
-    return 0 if cazados == len(DEFECTOS) and rc == 0 else 1
+    print(f"\n{cazados} de {total} defectos cazados en su frente")
+    return 0 if cazados == total and rc == 0 else 1
 
 
 if __name__ == "__main__":

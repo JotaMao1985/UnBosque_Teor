@@ -57,6 +57,7 @@ RAIZ = AQUI.parent.parent
 SITIO = RAIZ / "sitio" / "muestreo"
 PUBLICADO = SITIO / "proyecto-integrador-corte-iii.html"
 RUTA = pathlib.Path(os.environ.get("PROYECTO_HTML", PUBLICADO))
+INDICE = pathlib.Path(os.environ.get("PROYECTO_INDICE", SITIO / "index.html"))
 PLANTILLA = RAIZ / "plantilla" / "plantilla-capitulo-muestreo.html"
 CADENA = RAIZ / "ensamblado" / "codigo" / "proyecto" / "cadena.R"
 RMD_FUENTE = AQUI / "plantilla-informe.Rmd"
@@ -413,7 +414,9 @@ def main() -> int:
             f"el CSS es el de la plantilla ({len(sel)} selectores)")
     # Los capítulos que no añadieron componentes propios comparten ese CSS.
     iguales = [p.name for p in sorted(SITIO.glob("capitulo-*.html")) if selectores(p.read_text(encoding="utf-8")) == sel]
-    A.check("D", len(iguales) >= 5, f"y el de los capítulos que no añadieron componentes ({len(iguales)})")
+    # Los capítulos que se rehacen con componentes propios se apartan de la
+    # plantilla (los caps. 6 y 7, oct–nov 2026); basta con que alguno la comparta.
+    A.check("D", len(iguales) >= 1, f"y el de los capítulos que no añadieron componentes ({len(iguales)})")
     ids = re.findall(r' id="([^"]+)"', H)
     repes = sorted({i for i in ids if ids.count(i) > 1})
     A.check("D", not repes, "los identificadores son únicos", f"({repes})")
@@ -456,6 +459,10 @@ def main() -> int:
     # ------------------------------------------------------------------ F
     print("\n=== F · Modalidad conjunta ===")
     frente_conjunta(A, mod(T_CONJUNTA), V)
+
+    # ------------------------------------------------------------------ H
+    print("\n=== H · El calendario de la portada ===")
+    frente_portada(A)
 
     print("\n" + "=" * 62)
     print(f"  {A.ok + len(A.fallos)} comprobaciones · {len(A.fallos)} fallo(s)")
@@ -666,6 +673,63 @@ def frente_contenido(A: Auditoria, M: str, mod) -> None:
     G("valores de respondio que no entiendo" in rmd and "menos de 2 respuestas" in rmd and "setdiff" in rmd
       and "peso_aj" in rmd and "AJUSTE POR NO RESPUESTA" in rmd and "warning = FALSE" not in rmd,
       "ES-2·ES-3·CO-1·CO-4·CO-5·CO-6·CO-7", "la plantilla: respondio, estratos sin respuesta, columnas y ajuste declarado")
+
+
+MES_CORTO = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+
+
+def frente_portada(A: Auditoria) -> None:
+    """El calendario de entregas de la portada (4 nov 2026), contra datos.py y
+    contra el calendario recalculado aquí."""
+    H = INDICE.read_text(encoding="utf-8")
+    for ini, fin in (("<!-- CALENDARIO-PROYECTO:INICIO", "<!-- CALENDARIO-PROYECTO:FIN -->"),
+                     ("/* CALENDARIO-PROYECTO:INICIO", "/* CALENDARIO-PROYECTO:FIN */"),
+                     ("<!-- CALENDARIO-PROYECTO-JS:INICIO", "<!-- CALENDARIO-PROYECTO-JS:FIN -->")):
+        A.check("H", H.count(ini) == 1 and H.count(fin) == 1 and H.index(ini) < H.index(fin),
+                f"la región «{ini[5:40].strip()}» está una sola vez y entera")
+    if H.count("<!-- CALENDARIO-PROYECTO:INICIO") != 1:
+        return
+    C = H[H.index("<!-- CALENDARIO-PROYECTO:INICIO"):H.index("<!-- CALENDARIO-PROYECTO:FIN -->")]
+    corte3 = H[H.index('id="corte-iii"'):H.index("</main>")]
+    A.check("H", C in corte3, "el calendario va dentro de la sección del Corte III")
+    A.check("H", 'href="#calendario-proyecto"' in H and 'id="calendario-proyecto"' in C,
+            "la cabecera de la portada enlaza el calendario")
+    A.check("H", 'class="tarjeta' not in C, "el calendario no usa .tarjeta (cuenta_sitio.py cuenta las tarjetas)")
+    items = re.findall(r'<li class="calendario-hito[^"]*" data-cierre="([^"]+)"(?: data-fin="([^"]+)")?>(.*?)</li>', C, re.S)
+    esperados = [dict(h, peso=None if h["id"] == "ficha" else
+                      sum(c["puntos"] for b in D.RUBRICA if b["hito"] == h["id"] for c in b["criterios"]))
+                 for h in D.HITOS] + [dict(D.CAMPO, peso=None)]
+    esperados.sort(key=lambda h: h["fecha"])
+    A.check("H", len(items) == len(esperados) + 1, f"el calendario tiene los {len(esperados) + 1} hitos", f"({len(items)})")
+    for (cierre, _fin, cuerpo), h in zip(items, esperados):
+        f = h["fecha"]
+        vis = texto_visible(cuerpo)
+        A.check("H", cierre == f"{f.isoformat()}T{D.HORA_ENTREGA}:00-05:00" and semana(f) == h["semana"],
+                f"{h['nombre']}: cierra el {f.isoformat()} a las {D.HORA_ENTREGA}, hora de Bogotá", f"({cierre})")
+        A.check("H", vis.startswith(f"{f.day} {MES_CORTO[f.month - 1]} {DIAS[f.weekday()]} {D.HORA_ENTREGA} {h['nombre']}"),
+                f"{h['nombre']}: dice «{f.day} {MES_CORTO[f.month - 1]}», «{DIAS[f.weekday()]}» y su nombre", f"({vis[:60]})")
+        A.check("H", f"<code>{D.ETIQUETA[h['id']]}</code>" in cuerpo
+                and ((f"{h['peso']} % del proyecto" in vis) if h["peso"] else ("sin nota" in vis and "% del proyecto" not in vis)),
+                f"{h['nombre']}: su release y su peso ({h['peso'] or 'sin nota'})")
+    if len(items) == len(esperados) + 1:
+        cierre, fin, cuerpo = items[-1]
+        l16 = ANCLA_SEMANA_9 + timedelta(weeks=D.SEMANA_EXPOSICION - 9)
+        s16 = l16 + timedelta(days=5)
+        p_e = sum(c["puntos"] for b in D.RUBRICA if b["hito"] == "exposicion" for c in b["criterios"])
+        A.check("H", cierre.startswith(l16.isoformat()) and (fin or "").startswith(s16.isoformat())
+                and f"{l16.day}–{s16.day}" in cuerpo and f"semana<br>{D.SEMANA_EXPOSICION}" in cuerpo
+                and f"{p_e} % del proyecto" in texto_visible(cuerpo) and "se acuerda en clase" in cuerpo,
+                f"la exposición: semana {D.SEMANA_EXPOSICION} ({l16.day}–{s16.day} de {MESES[s16.month - 1]}), {p_e} %, día en clase")
+    fechas = [c[:10] for c, _f, _b in items]     # el día: la exposición empieza el día del informe
+    A.check("H", fechas == sorted(fechas), "los hitos van en orden de fecha")
+    nota = texto_visible(C[C.index('class="calendario-nota"'):]) if 'class="calendario-nota"' in C else ""
+    cj = {h["id"]: h["fecha"] for h in D.CONJUNTO_HITOS}
+    A.check("H", f"cerró el {frase(cj['conjunto'])}" in nota and f"el {frase(cj['preregistro'])}" in nota,
+            "la nota de la modalidad conjunta trae sus dos fechas propias")
+    A.check("H", f'href="{PUBLICADO.name}"' in C and PUBLICADO.exists(), "el calendario enlaza la guía, que existe")
+    js = H[H.index("<!-- CALENDARIO-PROYECTO-JS:INICIO"):] if "<!-- CALENDARIO-PROYECTO-JS:INICIO" in H else ""
+    A.check("H", "America/Bogota" in js and "es-pasado" in js and "es-proximo" in js,
+            "el guion marca lo cerrado y la próxima entrega con la hora de Bogotá")
 
 
 def frente_conjunta(A: Auditoria, C: str, V: str) -> None:

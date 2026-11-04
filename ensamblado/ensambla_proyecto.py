@@ -571,8 +571,10 @@ def main() -> int:
     rc = comprueba_y_escribe(html, sel_plantilla, revisar, ej, len(codigo), codigo_insertado)
     if rc == 0 and con_indice and not revisar:
         tarjeta_en_indice()
-    elif not revisar:
-        print("  (sin tocar el índice: pásale --con-indice al publicar)")
+    if rc == 0 and (con_indice or "--calendario" in sys.argv):
+        rc = calendario_en_indice(revisar)
+    elif not revisar and not con_indice:
+        print("  (sin tocar el índice: pásale --con-indice al publicar, o --calendario)")
     return rc
 
 
@@ -728,6 +730,196 @@ def tarjeta_en_indice() -> None:
     INDICE.write_text(html.replace(ancla, tarjeta + ancla, 1), encoding="utf-8")
     INDICE.chmod(0o644)
     print(f"  {INDICE.name}: tarjeta añadida")
+
+
+# ---------------------------------------------------------------------------
+# 7. El calendario de entregas en la portada (Javier, 4 nov 2026)
+# ---------------------------------------------------------------------------
+# Tres regiones de la portada, cada una entre sus marcadores y generada SOLO
+# desde datos.py: el bloque del calendario (dentro del Corte III, detrás de la
+# rejilla de tarjetas), su CSS (al final del <style>) y su guion (antes de
+# </body>). Sin JavaScript el calendario se lee entero; con él, cada hito dice
+# si ya cerró y cuál es la próxima entrega, con la hora de Bogotá.
+CAL_INI, CAL_FIN = "<!-- CALENDARIO-PROYECTO:INICIO", "<!-- CALENDARIO-PROYECTO:FIN -->"
+CSS_INI, CSS_FIN = "/* CALENDARIO-PROYECTO:INICIO", "/* CALENDARIO-PROYECTO:FIN */"
+JS_INI, JS_FIN = "<!-- CALENDARIO-PROYECTO-JS:INICIO", "<!-- CALENDARIO-PROYECTO-JS:FIN -->"
+MES_CORTO = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+
+CALENDARIO_CSS = """    /* CALENDARIO-PROYECTO:INICIO · lo escribe ensamblado/ensambla_proyecto.py
+       desde ensamblado/proyecto/datos.py; no se edita a mano. Colores de texto
+       con 4,5:1 sobre su fondo, como el resto de la portada; el naranja del
+       curso solo en bordes. */
+    .calendario { margin-top: 2.75rem; }
+    .calendario-cabecera { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 1rem; margin-bottom: 1rem; }
+    .calendario-cabecera h3 { color: #012820; font-weight: 800; font-size: 1.1rem; margin: 0; }
+    .calendario-cabecera p { color: #475569; font-size: 0.85rem; margin: 0; }
+    .calendario-cabecera a { color: #C2410C; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .calendario-cabecera a:hover { color: #012820; }
+    .calendario-hitos { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 640px) { .calendario-hitos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 1180px) { .calendario-hitos { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+    .calendario-hito {
+      background: #fff; border: 1px solid rgba(0, 0, 0, 0.08); border-top: 4px solid #012820;
+      border-radius: 0.85rem; padding: 0.85rem 0.9rem 0.95rem; display: flex; flex-direction: column;
+      gap: 0.45rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+    .calendario-hito.sin-nota { border-top-color: #64748B; }
+    .calendario-fecha { display: flex; align-items: baseline; gap: 0.35rem; color: #012820; }
+    .calendario-fecha .dia { font-size: 1.55rem; font-weight: 800; line-height: 1; }
+    .calendario-fecha .mes { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .calendario-fecha .cuando { margin-left: auto; font-size: 0.72rem; color: #64748B; text-align: right; }
+    .calendario-nombre { margin: 0; color: #012820; font-weight: 700; font-size: 0.9rem; line-height: 1.3; }
+    .calendario-que { margin: 0; color: #475569; font-size: 0.78rem; line-height: 1.45; }
+    .calendario-meta { margin: auto 0 0; padding-top: 0.35rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.6rem; font-size: 0.72rem; color: #64748B; }
+    .calendario-meta code { font-size: 0.72rem; color: #012820; background: #F1F5F9; border-radius: 0.3rem; padding: 0.05rem 0.35rem; }
+    .calendario-meta .peso { color: #C2410C; font-weight: 700; }
+    .calendario-estado { margin: 0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; }
+    .calendario-estado:empty { display: none; }
+    .calendario-hito.es-pasado { background: #F8FAFC; border-top-color: #CBD5E1; box-shadow: none; }
+    .calendario-hito.es-pasado .calendario-estado { color: #475569; }
+    .calendario-hito.es-proximo { border-color: rgba(255, 102, 0, 0.55); border-top-color: #FF6600; box-shadow: 0 8px 24px rgba(255, 102, 0, 0.16); }
+    .calendario-hito.es-proximo .calendario-estado { color: #C2410C; }
+    .calendario-nota { margin: 1rem 0 0; font-size: 0.8rem; color: #475569; line-height: 1.5; background: rgba(1, 40, 32, 0.04); border-left: 3px solid #012820; border-radius: 0 0.5rem 0.5rem 0; padding: 0.6rem 0.85rem; }
+    .calendario-nota code { font-size: 0.76rem; color: #012820; }
+    /* En un teléfono, una fila por hito con la fecha a la izquierda: seis
+       tarjetas apiladas a lo ancho ocupaban tres pantallas. */
+    @media (max-width: 639px) {
+      .calendario-hito { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); column-gap: 0.85rem; row-gap: 0.3rem; align-items: start; }
+      .calendario-fecha { grid-row: 1 / span 5; flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+      .calendario-fecha .dia { font-size: 1.3rem; }
+      .calendario-fecha .cuando { margin-left: 0; text-align: left; }
+      .calendario-meta { padding-top: 0.15rem; }
+    }
+    /* CALENDARIO-PROYECTO:FIN */
+"""
+
+CALENDARIO_JS = """  <!-- CALENDARIO-PROYECTO-JS:INICIO · el estado de cada hito, con la hora de Bogotá -->
+  <script>
+    (function () {
+      var hitos = document.querySelectorAll('.calendario-hito');
+      if (!hitos.length) return;
+      var ahora = new Date();
+      // La fecha de hoy en Bogotá, como AAAA-MM-DD, para contar días de calendario.
+      var hoy;
+      try {
+        hoy = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).format(ahora);
+      } catch (e) { return; }
+      function dias(iso) {
+        var a = hoy.split('-'), b = iso.slice(0, 10).split('-');
+        return Math.round((Date.UTC(+b[0], b[1] - 1, +b[2]) - Date.UTC(+a[0], a[1] - 1, +a[2])) / 86400000);
+      }
+      var proxima = false;
+      Array.prototype.forEach.call(hitos, function (li) {
+        var cierre = li.getAttribute('data-cierre'), fin = li.getAttribute('data-fin') || cierre;
+        var estado = li.querySelector('.calendario-estado');
+        if (ahora > new Date(fin)) { li.classList.add('es-pasado'); estado.textContent = 'Cerró'; return; }
+        if (proxima) return;
+        proxima = true;
+        li.classList.add('es-proximo');
+        var d = dias(cierre);
+        if (li.hasAttribute('data-fin')) estado.textContent = d <= 0 ? 'Es esta semana' : (d === 1 ? 'Empieza mañana' : 'Próxima · empieza en ' + d + ' días');
+        else estado.textContent = d <= 0 ? 'Cierra hoy a las 11:00' : (d === 1 ? 'Cierra mañana a las 11:00' : 'Próxima · cierra en ' + d + ' días');
+      });
+    })();
+  </script>
+  <!-- CALENDARIO-PROYECTO-JS:FIN -->
+"""
+
+
+def bloque_calendario() -> str:
+    """El marcado del calendario, desde datos.py: los cuatro hitos, el cierre
+    del campo y la exposición, en orden de fecha."""
+    def iso(d, hora="11:00"):
+        return f"{d.isoformat()}T{hora}:00-05:00"
+    filas = []
+    hitos = [dict(h, peso=None if h["id"] == "ficha" else D.puntos_de(h["id"])) for h in D.HITOS]
+    hitos.append(dict(D.CAMPO, peso=None))
+    hitos.sort(key=lambda h: h["fecha"])
+    for h in hitos:
+        f = h["fecha"]
+        que = h["entrega"].split(": ", 1)[1] if h["id"] == "campo" else h["entrega"]
+        que = que[0].upper() + que[1:]
+        peso = (f'<span class="peso">{h["peso"]} % del proyecto</span>' if h["peso"]
+                else "<span>sin nota</span>")
+        filas.append(f"""        <li class="calendario-hito{'' if h['peso'] else ' sin-nota'}" data-cierre="{iso(f)}">
+          <p class="calendario-fecha"><time datetime="{iso(f)[:16]}"><span class="dia">{f.day}</span>
+            <span class="mes">{MES_CORTO[f.month - 1]}</span></time><span class="cuando">{D.DIAS[f.weekday()]}<br>{D.HORA_ENTREGA}</span></p>
+          <p class="calendario-nombre">{e(h['nombre'])}</p>
+          <p class="calendario-que">{e(que)}</p>
+          <p class="calendario-meta"><code>{D.ETIQUETA[h['id']]}</code>{peso}</p>
+          <p class="calendario-estado"></p>
+        </li>""")
+    ini = D.lunes_de_la_semana(D.SEMANA_EXPOSICION)
+    fin = ini + __import__("datetime").timedelta(days=5)
+    filas.append(f"""        <li class="calendario-hito" data-cierre="{iso(ini, '00:00')}" data-fin="{iso(fin, '23:59')}">
+          <p class="calendario-fecha"><time datetime="{ini.isoformat()}"><span class="dia">{ini.day}–{fin.day}</span>
+            <span class="mes">{MES_CORTO[fin.month - 1]}</span></time><span class="cuando">semana<br>{D.SEMANA_EXPOSICION}</span></p>
+          <p class="calendario-nombre">Exposición</p>
+          <p class="calendario-que">{D.MINUTOS_EXPOSICION} minutos por equipo y {D.MINUTOS_PREGUNTAS} de preguntas por persona, en clase; el día se acuerda en clase</p>
+          <p class="calendario-meta"><span>en clase</span><span class="peso">{D.puntos_de('exposicion')} % del proyecto</span></p>
+          <p class="calendario-estado"></p>
+        </li>""")
+    cj = {h["id"]: h["fecha"] for h in D.CONJUNTO_HITOS}
+    return f"""      {CAL_INI} · lo escribe ensamblado/ensambla_proyecto.py desde ensamblado/proyecto/datos.py; no se edita a mano -->
+      <section class="calendario" id="calendario-proyecto" aria-labelledby="calendario-titulo">
+        <div class="calendario-cabecera">
+          <h3 id="calendario-titulo">Calendario del proyecto integrador</h3>
+          <p>Cada entrega es una release del repositorio en GitHub y cierra a las {D.HORA_ENTREGA}, hora de
+            Colombia. <a href="{DESTINO.name}">Qué lleva cada una, en la guía</a></p>
+        </div>
+        <ol class="calendario-hitos">
+{chr(10).join(filas)}
+        </ol>
+        <p class="calendario-nota"><strong>Modalidad conjunta con Diseño de Experimentos.</strong> En vez
+          de la ficha y el protocolo, la inscripción (release <code>conjunto</code>) cerró el
+          {D.frase_fecha(cj['conjunto'])} y el preregistro conjunto, el {D.frase_fecha(cj['preregistro'])}.
+          El avance, el cierre del campo, el informe y la exposición van en estas mismas fechas.</p>
+      </section>
+      {CAL_FIN}
+"""
+
+
+def calendario_en_indice(revisar: bool = False) -> int:
+    """Escribe o refresca el calendario de la portada. Idempotente: si ya está,
+    reemplaza sus tres regiones; si no, las inserta. Para si una región aparece
+    a medias o un ancla no aparece exactamente una vez."""
+    html = INDICE.read_text(encoding="utf-8")
+    nuevo = html
+    piezas = [(CAL_INI, CAL_FIN, bloque_calendario(), "      </div>\n    </section>\n  </main>",
+               lambda a, p: a.replace("      </div>\n    </section>", "      </div>\n" + p + "    </section>", 1)),
+              (CSS_INI, CSS_FIN, CALENDARIO_CSS, "  </style>\n</head>",
+               lambda a, p: p + a),
+              (JS_INI, JS_FIN, CALENDARIO_JS, "</body>",
+               lambda a, p: p + a)]
+    for ini, fin, pieza, ancla, inserta in piezas:
+        ni, nf = nuevo.count(ini), nuevo.count(fin)
+        if (ni, nf) == (1, 1):
+            i = nuevo.rindex("\n", 0, nuevo.index(ini)) + 1
+            j = nuevo.index(fin) + len(fin) + 1
+            nuevo = nuevo[:i] + pieza + nuevo[j:]
+        elif (ni, nf) == (0, 0):
+            if nuevo.count(ancla) != 1:
+                sys.exit(f"PARADO: el ancla del calendario aparece {nuevo.count(ancla)} veces: {ancla!r}")
+            nuevo = nuevo.replace(ancla, inserta(ancla, pieza), 1)
+        else:
+            sys.exit(f"PARADO: la región {ini!r} está a medias en la portada ({ni} inicios, {nf} fines)")
+    # El enlace de la cabecera, detrás del de «Proyecto».
+    nav = '<li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#proyecto">Proyecto</a></li>'
+    nav_cal = '<li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#calendario-proyecto">Calendario</a></li>'
+    if nav_cal not in nuevo:
+        if nuevo.count(nav) != 1:
+            sys.exit("PARADO: no encuentro una sola vez el enlace «Proyecto» de la cabecera")
+        nuevo = nuevo.replace(nav, nav + "\n          " + nav_cal, 1)
+    if revisar:
+        print(f"  --revisar: {INDICE.name} {'igual' if nuevo == html else 'CAMBIA'} con el calendario")
+        return 0
+    if nuevo == html:
+        print(f"  {INDICE.name}: el calendario ya estaba al día")
+        return 0
+    INDICE.write_text(nuevo, encoding="utf-8")
+    INDICE.chmod(0o644)
+    print(f"  {INDICE.name}: calendario escrito")
+    return 0
 
 
 if __name__ == "__main__":
