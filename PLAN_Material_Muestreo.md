@@ -8643,3 +8643,9 @@ gusto en este punto».
   navegador, sin desborde a 1366, 768, 375 y 320 px y la consola limpia.
 - **Convivencia:** hecho en el worktree `calendario-proyecto`, desde `origin/main`; la carpeta principal tiene
   cambios del cap. 4 de otra sesión, que no se tocan.
+
+**Publicado** el 2026-11-04 a pedido de Javier («publica un calendario de entregas del proyecto»): `main` `f81e793`,
+`gh-pages` `15804c1`, construido con `git commit-tree` del árbol `f81e793:sitio` sobre la punta (solo cambiaba la
+portada). El build de Pages terminó en `built`; la portada servida coincide byte a byte con la rama y
+`verifica_publicado.py --solo-huella` da la huella de las 11 páginas. En vivo, a 1366 px y con la consola limpia,
+el calendario marca la ficha y el protocolo como cerrados y el avance como «Próxima · cierra en 2 días».
