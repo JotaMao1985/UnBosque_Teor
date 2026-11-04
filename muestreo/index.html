@@ -257,6 +257,52 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
     }
+    /* CALENDARIO-PROYECTO:INICIO · lo escribe ensamblado/ensambla_proyecto.py
+       desde ensamblado/proyecto/datos.py; no se edita a mano. Colores de texto
+       con 4,5:1 sobre su fondo, como el resto de la portada; el naranja del
+       curso solo en bordes. */
+    .calendario { margin-top: 2.75rem; }
+    .calendario-cabecera { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 1rem; margin-bottom: 1rem; }
+    .calendario-cabecera h3 { color: #012820; font-weight: 800; font-size: 1.1rem; margin: 0; }
+    .calendario-cabecera p { color: #475569; font-size: 0.85rem; margin: 0; }
+    .calendario-cabecera a { color: #C2410C; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .calendario-cabecera a:hover { color: #012820; }
+    .calendario-hitos { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 640px) { .calendario-hitos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 1180px) { .calendario-hitos { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+    .calendario-hito {
+      background: #fff; border: 1px solid rgba(0, 0, 0, 0.08); border-top: 4px solid #012820;
+      border-radius: 0.85rem; padding: 0.85rem 0.9rem 0.95rem; display: flex; flex-direction: column;
+      gap: 0.45rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+    .calendario-hito.sin-nota { border-top-color: #64748B; }
+    .calendario-fecha { display: flex; align-items: baseline; gap: 0.35rem; color: #012820; }
+    .calendario-fecha .dia { font-size: 1.55rem; font-weight: 800; line-height: 1; }
+    .calendario-fecha .mes { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .calendario-fecha .cuando { margin-left: auto; font-size: 0.72rem; color: #64748B; text-align: right; }
+    .calendario-nombre { margin: 0; color: #012820; font-weight: 700; font-size: 0.9rem; line-height: 1.3; }
+    .calendario-que { margin: 0; color: #475569; font-size: 0.78rem; line-height: 1.45; }
+    .calendario-meta { margin: auto 0 0; padding-top: 0.35rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.6rem; font-size: 0.72rem; color: #64748B; }
+    .calendario-meta code { font-size: 0.72rem; color: #012820; background: #F1F5F9; border-radius: 0.3rem; padding: 0.05rem 0.35rem; }
+    .calendario-meta .peso { color: #C2410C; font-weight: 700; }
+    .calendario-estado { margin: 0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; }
+    .calendario-estado:empty { display: none; }
+    .calendario-hito.es-pasado { background: #F8FAFC; border-top-color: #CBD5E1; box-shadow: none; }
+    .calendario-hito.es-pasado .calendario-estado { color: #475569; }
+    .calendario-hito.es-proximo { border-color: rgba(255, 102, 0, 0.55); border-top-color: #FF6600; box-shadow: 0 8px 24px rgba(255, 102, 0, 0.16); }
+    .calendario-hito.es-proximo .calendario-estado { color: #C2410C; }
+    .calendario-nota { margin: 1rem 0 0; font-size: 0.8rem; color: #475569; line-height: 1.5; background: rgba(1, 40, 32, 0.04); border-left: 3px solid #012820; border-radius: 0 0.5rem 0.5rem 0; padding: 0.6rem 0.85rem; }
+    .calendario-nota code { font-size: 0.76rem; color: #012820; }
+    /* En un teléfono, una fila por hito con la fecha a la izquierda: seis
+       tarjetas apiladas a lo ancho ocupaban tres pantallas. */
+    @media (max-width: 639px) {
+      .calendario-hito { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); column-gap: 0.85rem; row-gap: 0.3rem; align-items: start; }
+      .calendario-fecha { grid-row: 1 / span 5; flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+      .calendario-fecha .dia { font-size: 1.3rem; }
+      .calendario-fecha .cuando { margin-left: 0; text-align: left; }
+      .calendario-meta { padding-top: 0.15rem; }
+    }
+    /* CALENDARIO-PROYECTO:FIN */
   </style>
 </head>
 
@@ -282,6 +328,7 @@
           <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#corte-ii">Corte II</a></li>
           <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#corte-iii">Corte III</a></li>
           <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#proyecto">Proyecto</a></li>
+          <li><a class="inline-block py-1 text-white/80 hover:text-gold" href="#calendario-proyecto">Calendario</a></li>
         </ul>
       </nav>
     </div>
@@ -583,6 +630,69 @@
               aria-hidden="true"></i></span><a class="tarjeta-extra" href="proyecto-integrador-plantilla.Rmd" download><i class="fas fa-file-code" aria-hidden="true"></i> Plantilla del informe (.Rmd)</a></p>
       </article>
       </div>
+      <!-- CALENDARIO-PROYECTO:INICIO · lo escribe ensamblado/ensambla_proyecto.py desde ensamblado/proyecto/datos.py; no se edita a mano -->
+      <section class="calendario" id="calendario-proyecto" aria-labelledby="calendario-titulo">
+        <div class="calendario-cabecera">
+          <h3 id="calendario-titulo">Calendario del proyecto integrador</h3>
+          <p>Cada entrega es una release del repositorio en GitHub y cierra a las 11:00, hora de
+            Colombia. <a href="proyecto-integrador-corte-iii.html">Qué lleva cada una, en la guía</a></p>
+        </div>
+        <ol class="calendario-hitos">
+        <li class="calendario-hito sin-nota" data-cierre="2026-10-27T11:00:00-05:00">
+          <p class="calendario-fecha"><time datetime="2026-10-27T11:00"><span class="dia">27</span>
+            <span class="mes">oct</span></time><span class="cuando">martes<br>11:00</span></p>
+          <p class="calendario-nombre">Ficha del tema</p>
+          <p class="calendario-que">Una ficha de unas 150 palabras: población, marco y diseño que piensas usar</p>
+          <p class="calendario-meta"><code>ficha</code><span>sin nota</span></p>
+          <p class="calendario-estado"></p>
+        </li>
+        <li class="calendario-hito" data-cierre="2026-10-30T11:00:00-05:00">
+          <p class="calendario-fecha"><time datetime="2026-10-30T11:00"><span class="dia">30</span>
+            <span class="mes">oct</span></time><span class="cuando">viernes<br>11:00</span></p>
+          <p class="calendario-nombre">Protocolo</p>
+          <p class="calendario-que">El diseño completo, escrito antes de seleccionar una sola unidad</p>
+          <p class="calendario-meta"><code>protocolo</code><span class="peso">15 % del proyecto</span></p>
+          <p class="calendario-estado"></p>
+        </li>
+        <li class="calendario-hito" data-cierre="2026-11-06T11:00:00-05:00">
+          <p class="calendario-fecha"><time datetime="2026-11-06T11:00"><span class="dia">6</span>
+            <span class="mes">nov</span></time><span class="cuando">viernes<br>11:00</span></p>
+          <p class="calendario-nombre">Avance</p>
+          <p class="calendario-que">La muestra seleccionada, los datos recogidos, la bitácora de campo y la no respuesta</p>
+          <p class="calendario-meta"><code>avance</code><span class="peso">10 % del proyecto</span></p>
+          <p class="calendario-estado"></p>
+        </li>
+        <li class="calendario-hito sin-nota" data-cierre="2026-11-13T11:00:00-05:00">
+          <p class="calendario-fecha"><time datetime="2026-11-13T11:00"><span class="dia">13</span>
+            <span class="mes">nov</span></time><span class="cuando">viernes<br>11:00</span></p>
+          <p class="calendario-nombre">Cierre del campo</p>
+          <p class="calendario-que">Lo que esté en datos/ a esa hora es lo que se estima</p>
+          <p class="calendario-meta"><code>campo</code><span>sin nota</span></p>
+          <p class="calendario-estado"></p>
+        </li>
+        <li class="calendario-hito" data-cierre="2026-11-23T11:00:00-05:00">
+          <p class="calendario-fecha"><time datetime="2026-11-23T11:00"><span class="dia">23</span>
+            <span class="mes">nov</span></time><span class="cuando">lunes<br>11:00</span></p>
+          <p class="calendario-nombre">Informe y código</p>
+          <p class="calendario-que">El informe, el código que lo produce y los datos</p>
+          <p class="calendario-meta"><code>informe</code><span class="peso">45 % del proyecto</span></p>
+          <p class="calendario-estado"></p>
+        </li>
+        <li class="calendario-hito" data-cierre="2026-11-23T00:00:00-05:00" data-fin="2026-11-28T23:59:00-05:00">
+          <p class="calendario-fecha"><time datetime="2026-11-23"><span class="dia">23–28</span>
+            <span class="mes">nov</span></time><span class="cuando">semana<br>16</span></p>
+          <p class="calendario-nombre">Exposición</p>
+          <p class="calendario-que">10 minutos por equipo y 5 de preguntas por persona, en clase; el día se acuerda en clase</p>
+          <p class="calendario-meta"><span>en clase</span><span class="peso">30 % del proyecto</span></p>
+          <p class="calendario-estado"></p>
+        </li>
+        </ol>
+        <p class="calendario-nota"><strong>Modalidad conjunta con Diseño de Experimentos.</strong> En vez
+          de la ficha y el protocolo, la inscripción (release <code>conjunto</code>) cerró el
+          viernes 23 de octubre y el preregistro conjunto, el viernes 30 de octubre.
+          El avance, el cierre del campo, el informe y la exposición van en estas mismas fechas.</p>
+      </section>
+      <!-- CALENDARIO-PROYECTO:FIN -->
     </section>
   </main>
 
@@ -627,6 +737,36 @@
       </div>
     </div>
   </footer>
+  <!-- CALENDARIO-PROYECTO-JS:INICIO · el estado de cada hito, con la hora de Bogotá -->
+  <script>
+    (function () {
+      var hitos = document.querySelectorAll('.calendario-hito');
+      if (!hitos.length) return;
+      var ahora = new Date();
+      // La fecha de hoy en Bogotá, como AAAA-MM-DD, para contar días de calendario.
+      var hoy;
+      try {
+        hoy = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).format(ahora);
+      } catch (e) { return; }
+      function dias(iso) {
+        var a = hoy.split('-'), b = iso.slice(0, 10).split('-');
+        return Math.round((Date.UTC(+b[0], b[1] - 1, +b[2]) - Date.UTC(+a[0], a[1] - 1, +a[2])) / 86400000);
+      }
+      var proxima = false;
+      Array.prototype.forEach.call(hitos, function (li) {
+        var cierre = li.getAttribute('data-cierre'), fin = li.getAttribute('data-fin') || cierre;
+        var estado = li.querySelector('.calendario-estado');
+        if (ahora > new Date(fin)) { li.classList.add('es-pasado'); estado.textContent = 'Cerró'; return; }
+        if (proxima) return;
+        proxima = true;
+        li.classList.add('es-proximo');
+        var d = dias(cierre);
+        if (li.hasAttribute('data-fin')) estado.textContent = d <= 0 ? 'Es esta semana' : (d === 1 ? 'Empieza mañana' : 'Próxima · empieza en ' + d + ' días');
+        else estado.textContent = d <= 0 ? 'Cierra hoy a las 11:00' : (d === 1 ? 'Cierra mañana a las 11:00' : 'Próxima · cierra en ' + d + ' días');
+      });
+    })();
+  </script>
+  <!-- CALENDARIO-PROYECTO-JS:FIN -->
 </body>
 
 </html>
