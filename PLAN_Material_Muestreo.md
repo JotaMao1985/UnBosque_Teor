@@ -8899,7 +8899,17 @@ mecánico y cinco lectores (ES, CL, PE, CO y VI) sobre una copia congelada.
   - la barra naranja, y Safari.
 - **Un seguimiento fuera del laboratorio:** los capítulos no abren el módulo de `#modulo-N`.
 
-**Sin commit y sin publicar.** El commit, el push a `main` y la publicación en gh-pages van cada uno con su permiso.
+**Publicado** el 2026-11-05. El commit, el push y la publicación fueron cada uno con su permiso de Javier («Sí, haz
+el commit», «Sí, empuja a main», «Sí, publícalo»):
+- `main` `fe71724`, por avance rápido desde `a188a44`.
+- `gh-pages` `918fa58`, construido con `git commit-tree` del árbol `fe71724:sitio` sobre la punta `15804c1`. Entraron
+  cuatro archivos: el laboratorio, el cap. 6 con sus dos enlaces, la portada con la tarjeta y el README.
+- Un minuto después, la sesión del quiz del cap. 5 publicó encima `0cbd9ec` (T7.122, árbol `296fcf9:sitio`). Esa
+  versión deja intactos los cuatro archivos del laboratorio.
+- El build de Pages terminó en `built`. `verifica_publicado.py --solo-huella` da la huella de las 12 páginas y el
+  README servido coincide con la rama.
+- En vivo, en Chrome, el enlace del M7 abre la pestaña 3 con Barrios y n = 3, con los 4 pares que nunca salen juntos,
+  sin errores de consola y sin desborde.
 
 ### T7.122 — El simulacro del quiz del cap. 5, como módulo 12, y la UPM de certeza en el M9 (2026-11-04)
 
