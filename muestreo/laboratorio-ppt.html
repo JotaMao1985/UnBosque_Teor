@@ -1,0 +1,2825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio πPT · Capítulo 6 · Muestreo Estadístico · UnBosque</title>
+  <meta name="description" content="Laboratorio del capítulo 6 de Muestreo: el sorteo sistemático πPT, la inclusión forzosa, cuándo gana el πPT, Horvitz–Thompson con las π_kl y el muestreo en dos etapas con las clases de Lohr.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Las fuentes no bloquean el pintado: con una red colgada (portal cautivo), la hoja
+       bloqueante dejaba la página en blanco 75 s (T7.121). Sin ellas, la pila del sistema. -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <style>
+/* Laboratorio πPT — estilos propios, sin Tailwind ni CDN (T7.118).
+   La identidad es la de los capítulos: verde #012820, naranja #FF6600 solo
+   como acento (sobre blanco da 2,9:1; como texto se usa #B84A00, 5,2:1). */
+:root {
+  --verde: #012820;
+  --verde-2: #0B3B30;
+  --naranja: #FF6600;
+  --naranja-texto: #B84A00;
+  --tinta: #1E293B;
+  --tinta-suave: #475569;
+  --borde: #CBD5E1;
+  --fondo: #F8FAFC;
+  --verde-claro: #F0FDF4;
+  --naranja-claro: #FFF7ED;
+  --rojo: #B91C1C;
+  --rojo-claro: #FEF2F2;
+  --azul: #1D4ED8;
+  --fuente: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { font-size: 100%; }
+html.proyector { font-size: 125%; }
+body {
+  margin: 0; font-family: var(--fuente); background: var(--fondo); color: var(--tinta);
+  line-height: 1.6; font-size: 1rem;
+}
+.oculto { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+.salto { position: absolute; left: -999px; top: 0; background: var(--verde); color: #fff; padding: .75rem 1rem; z-index: 100; }
+.salto:focus { left: 1rem; }
+a { color: var(--verde); }
+a:hover { color: var(--naranja-texto); }
+:focus-visible { outline: 3px solid var(--naranja-texto); outline-offset: 2px; }   /* #FF6600 da 2,9:1 sobre blanco */
+.cabecera :focus-visible { outline-color: #fff; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+code, .mono { font-family: var(--mono); font-size: .92em; }
+math { font-size: 1.12em; }
+math[display="block"] { margin: .75rem 0; overflow-x: auto; overflow-y: hidden; }
+
+/* ---------- cabecera ---------- */
+.cabecera { background: linear-gradient(180deg, var(--verde) 0%, #001F18 100%); color: #fff; border-bottom: 3px solid var(--naranja); }
+.cabecera-dentro { max-width: 1120px; margin: 0 auto; padding: 1rem 1rem .9rem; display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; align-items: center; justify-content: space-between; }
+.cabecera h1 { margin: 0; font-size: 1.35rem; line-height: 1.25; }
+.cabecera .sub { margin: .15rem 0 0; font-size: .85rem; opacity: .85; }
+.cabecera nav { display: flex; flex-wrap: wrap; gap: .5rem; }
+.cabecera nav a, .cabecera button {
+  display: inline-flex; align-items: center; color: #fff; border: 1px solid rgba(255, 255, 255, .45); border-radius: .5rem; padding: .35rem .7rem;
+  text-decoration: none; font: 600 .85rem var(--fuente); background: transparent; cursor: pointer; min-height: 2.25rem;
+}
+.cabecera nav a:hover, .cabecera button:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+.cabecera button[aria-pressed="true"] { background: var(--naranja); border-color: var(--naranja); color: var(--verde); }
+
+main { max-width: 1120px; margin: 0 auto; padding: 1rem; }
+h2 { font-size: 1.4rem; color: var(--verde); margin: 1.5rem 0 1rem; padding-bottom: .4rem; border-bottom: 2px solid rgba(255, 102, 0, .25); }
+h3 { font-size: 1.15rem; color: var(--verde); margin: 1.5rem 0 .6rem; }
+h4 { font-size: 1rem; color: var(--verde); margin: 1.2rem 0 .5rem; }
+p { margin: .5rem 0 .9rem; }
+
+/* ---------- cajas del curso ---------- */
+.caja { border-left: 4px solid var(--verde); background: var(--verde-claro); padding: 1rem 1.25rem; border-radius: 0 .75rem .75rem 0; margin: 1rem 0 1.25rem; }
+.caja.nota { border-color: var(--naranja); background: var(--naranja-claro); }
+.caja.aviso { border-color: var(--rojo); background: var(--rojo-claro); }
+.caja > :first-child { margin-top: 0; }
+.caja > :last-child { margin-bottom: 0; }
+.caja-titulo { font-weight: 700; color: var(--verde); margin: 0 0 .35rem; }
+.formula { background: #fff; border: 1px solid #E5E7EB; border-radius: .75rem; padding: .5rem 1rem; margin: 1rem 0; text-align: center; overflow-x: auto; }
+.formula p { text-align: left; font-size: .92rem; margin: .25rem 0 .5rem; }
+
+/* Marcas Dato / Lectura / Opinión del material / Ejemplo ilustrativo */
+.marca { display: inline-block; font: 700 .72rem var(--fuente); letter-spacing: .02em; text-transform: uppercase; border-radius: .35rem; padding: .05rem .45rem; margin-right: .35rem; vertical-align: .08em; border: 1px solid; }
+.marca.dato { color: var(--verde); border-color: var(--verde); background: #fff; }
+.marca.lectura { color: var(--azul); border-color: var(--azul); background: #fff; }
+.marca.opinion { color: var(--naranja-texto); border-color: var(--naranja-texto); background: #fff; }
+.marca.ilustrativo { color: var(--tinta-suave); border-color: var(--tinta-suave); background: #fff; }
+
+/* ---------- controles comunes ---------- */
+.controles { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: flex-end; margin: .5rem 0 1rem; }
+.control { display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
+.control label, .control .etiqueta { font-size: .8rem; font-weight: 700; color: var(--tinta-suave); }
+select, input[type="number"], input[type="text"] {
+  font: 500 .95rem var(--fuente); color: var(--tinta); background: #fff; border: 1px solid #64748B;
+  border-radius: .5rem; padding: .4rem .55rem; min-height: 2.5rem; max-width: 100%;
+}
+input[type="number"] { width: 6.5rem; }
+input[aria-invalid="true"] { border-color: var(--rojo); background: var(--rojo-claro); }
+input[type="range"] { width: 100%; min-height: 2.5rem; accent-color: var(--naranja-texto); }   /* el pulgar, a 3:1 o más sobre blanco */
+.boton {
+  font: 700 .9rem var(--fuente); border-radius: .5rem; padding: .45rem .9rem; min-height: 2.5rem; cursor: pointer;
+  border: 1px solid var(--verde); background: var(--verde); color: #fff;
+}
+.boton:hover { background: var(--verde-2); }
+.boton.secundario { background: #fff; color: var(--verde); }
+.boton.secundario:hover { background: var(--verde-claro); }
+.boton:disabled { opacity: .45; cursor: not-allowed; }
+.error-campo { color: var(--rojo); font-size: .85rem; margin: .25rem 0; }
+
+/* ---------- pestañas ---------- */
+/* Las pestañas quedan a la vista al desplazarse (el original las tapaba con su cabecera fija). */
+.pestanas { display: flex; gap: .35rem; overflow-x: auto; border-bottom: 2px solid var(--borde); margin: 1.25rem 0 0; scrollbar-width: thin;
+  position: sticky; top: 0; z-index: 20; background: var(--fondo); }
+.pestanas [role="tab"] {
+  font: 700 .92rem var(--fuente); color: var(--tinta-suave); background: transparent; border: 0; border-bottom: 3px solid transparent;
+  padding: .6rem .9rem; margin-bottom: -2px; cursor: pointer; white-space: nowrap; min-height: 2.75rem;
+}
+.pestanas [role="tab"][aria-selected="true"] { color: var(--verde); border-bottom-color: var(--naranja); }
+.pestanas [role="tab"]:hover { color: var(--verde); }
+.pestanas [role="tab"]:focus-visible { outline-offset: -3px; }   /* dentro de la barra, que recorta lo que sobresale */
+html.proyector .pestanas [role="tab"] { font-size: .85rem; }
+[role="tabpanel"] { padding-top: .5rem; }
+
+/* La pauta de cada pestaña: Objetivo → Predice → Mueve → Comprueba → Lectura */
+.paso { display: flex; gap: .75rem; align-items: flex-start; margin: 1.25rem 0 .5rem; }
+.paso-num { flex: none; width: 2rem; height: 2rem; border-radius: 50%; background: var(--verde); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
+.paso h3 { margin: .2rem 0; }
+.objetivo { background: #fff; border: 1px solid var(--borde); border-left: 4px solid var(--naranja); border-radius: 0 .75rem .75rem 0; padding: .75rem 1rem; margin: .75rem 0; }
+.objetivo strong { color: var(--verde); }
+
+details { background: #fff; border: 1px solid #E5E7EB; border-radius: .75rem; padding: .6rem 1rem; margin: .75rem 0; }
+details > summary { cursor: pointer; font-weight: 700; color: var(--verde); min-height: 1.75rem; }
+details[open] > summary { margin-bottom: .5rem; }
+#como-usar > summary h2 { display: inline; margin: 0; padding: 0; border: 0; font-size: 1.15rem; }
+#como-usar > summary { padding: .2rem 0; }
+
+/* ---------- tarjetas de resultados ---------- */
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr)); gap: .75rem; margin: .75rem 0 1rem; }
+.tarjeta { background: #fff; border: 1px solid #E5E7EB; border-radius: .75rem; padding: .75rem 1rem; }
+.tarjeta .rotulo { font-size: .82rem; font-weight: 700; color: var(--tinta-suave); }
+.tarjeta .valor { font-size: 1.35rem; font-weight: 700; color: var(--verde); font-variant-numeric: tabular-nums; }
+.tarjeta .detalle { font-size: .85rem; color: var(--tinta-suave); }
+.tarjeta.gana { border-color: #15803D; box-shadow: inset 4px 0 0 #15803D; }
+.tarjeta.pierde { border-color: var(--rojo); box-shadow: inset 4px 0 0 var(--rojo); }
+
+.estado { display: inline-block; font-weight: 700; padding: .05rem .5rem; border-radius: .35rem; font-size: .85rem; }
+.estado.ok { color: #14532D; background: #DCFCE7; }
+.estado.no { color: #7F1D1D; background: #FEE2E2; }
+
+/* ---------- tablas ---------- */
+.tabla-marco { overflow-x: auto; border: 1px solid #E5E7EB; border-radius: .75rem; background: #fff; margin: .75rem 0 1rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { padding: .4rem .6rem; text-align: right; border-bottom: 1px solid #EEF2F7; }
+th { background: #F1F5F9; color: var(--verde); font-weight: 700; position: sticky; top: 0; }
+th:first-child, td:first-child { text-align: left; }
+tbody tr:hover { background: #FAFAF9; }
+tr.en-muestra td { background: var(--naranja-claro); }
+tr.total td { font-weight: 700; border-top: 2px solid var(--borde); background: #F8FAFC; }
+td input { width: 5.5rem; min-height: 2.25rem; text-align: right; }
+.forzosa-etq { font-size: .72rem; font-weight: 700; color: var(--naranja-texto); }
+.tabla-pie { font-size: .85rem; color: var(--tinta-suave); padding: .4rem .75rem .6rem; }
+.paginas { display: flex; gap: .5rem; align-items: center; padding: .5rem .75rem; flex-wrap: wrap; }
+
+/* Matriz π_kl: primera columna fija */
+.matriz td, .matriz th { text-align: center; padding: 0; }
+.matriz th:first-child, .matriz td:first-child { position: sticky; left: 0; background: #F1F5F9; z-index: 1; padding: .4rem .6rem; }
+.matriz button { width: 100%; min-width: 4.2rem; min-height: 2.5rem; border: 0; background: transparent; font: 500 .85rem var(--fuente); font-variant-numeric: tabular-nums; cursor: pointer; color: var(--tinta); }
+.matriz button:hover { background: #FFF7ED; }
+.matriz button[aria-pressed="true"] { box-shadow: inset 0 0 0 3px var(--verde); font-weight: 700; }   /* conserva el color de la celda */
+.matriz button:focus-visible { outline: 3px solid var(--azul); outline-offset: -4px; position: relative; z-index: 2; }
+.matriz .cero { background: #FEE2E2; color: #7F1D1D; }
+.matriz .incumple { box-shadow: inset 0 0 0 2px var(--naranja-texto); }
+.matriz .incumple[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--naranja-texto), inset 0 0 0 5px var(--verde); }
+.matriz .diagonal { background: #F0FDF4; font-weight: 700; }
+
+/* ---------- gráficos ---------- */
+.grafico { background: #fff; border: 1px solid #E5E7EB; border-radius: .75rem; padding: .5rem; margin: .75rem 0 1rem; }
+.grafico svg { display: block; width: 100%; height: auto; }
+.grafico figcaption { font-size: .85rem; color: var(--tinta-suave); padding: .25rem .5rem 0; }
+svg text { font-family: var(--fuente); }
+.leyenda { display: flex; flex-wrap: wrap; gap: .25rem 1rem; font-size: .85rem; padding: .25rem .5rem; }
+.leyenda span::before { content: ""; display: inline-block; width: .8rem; height: .8rem; border-radius: .2rem; margin-right: .35rem; vertical-align: -.1em; background: var(--c); }
+.leyenda span.anillo::before { background: #fff; border: 2px solid var(--c); border-radius: 50%; }
+.leyenda span.linea::before { width: 1.4rem; height: 0; border-radius: 0; border-top: 3px solid var(--c); background: none; vertical-align: .25em; }
+.leyenda span.linea.discontinua::before { border-top-style: dashed; }
+
+.barra-etapas { display: flex; height: 2.25rem; border-radius: .5rem; overflow: hidden; border: 1px solid var(--borde); margin: .5rem 0; }
+.barra-etapas div { display: grid; place-items: center; color: #fff; font-weight: 700; font-size: .85rem; min-width: 0; white-space: nowrap; overflow: hidden; }
+.barra-etapas .e1 { background: var(--verde); }
+.barra-etapas .e2 { background: var(--naranja-texto); }
+
+pre.codigo { background: #0F172A; color: #E2E8F0; border-radius: .75rem; padding: .9rem 1rem; overflow-x: auto; font: .85rem/1.55 var(--mono); white-space: pre; }
+pre.codigo .com { color: #94A3B8; }
+pre.codigo .sal { color: #FDBA74; }
+
+.dos-columnas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.pie-pagina { max-width: 1120px; margin: 2rem auto 0; padding: 1rem; font-size: .85rem; color: var(--tinta-suave); border-top: 1px solid var(--borde); }
+
+@media (max-width: 760px) {
+  .dos-columnas { grid-template-columns: minmax(0, 1fr); }
+  .cabecera h1 { font-size: 1.1rem; }
+  main { padding: .75rem; }
+  .controles .control { flex: 1 1 100%; }
+  select, .boton, input[type="number"] { min-height: 2.75rem; }
+  .pestanas [role="tab"] { padding: .6rem .7rem; }
+  td input { width: 4.25rem; }
+  /* Objetivos táctiles de 44 px o más (WCAG 2.5.8 pide 24; 44 es la guía de los móviles). */
+  .cabecera nav a, .cabecera button, td input, input[type="text"], .matriz button { min-height: 2.75rem; }
+  details > summary { min-height: 2.75rem; padding: .55rem 0; }   /* sin flex: así conserva su flecha */
+  .cabecera nav { width: 100%; }
+}
+@media print {
+  .cabecera nav, .pestanas, .controles, .boton { display: none !important; }
+  [role="tabpanel"][hidden] { display: block !important; }
+}
+
+  </style>
+</head>
+<body>
+<a class="salto" href="#contenido">Saltar al contenido</a>
+
+<header class="cabecera" role="banner">
+  <div class="cabecera-dentro">
+    <div>
+      <h1>Laboratorio πPT</h1>
+      <p class="sub">Probabilidades proporcionales al tamaño · Capítulo 6 · Muestreo Estadístico · UnBosque</p>
+    </div>
+    <nav aria-label="Navegación y herramientas">
+      <a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>
+      <a href="index.html">Portada</a>
+      <button type="button" id="boton-proyector" aria-pressed="false">Modo proyector</button>
+      <button type="button" id="boton-enlace">Copiar enlace</button>
+      <button type="button" id="boton-reiniciar">Reiniciar todo</button>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+  <section aria-labelledby="titulo-uso">
+    <details id="como-usar" open>
+    <summary><h2 id="titulo-uso" style="display:inline;border:0">Cómo usar el laboratorio</h2></summary>
+    <p>Este laboratorio acompaña al capítulo 6. Cada pestaña sigue la misma pauta: un <strong>objetivo</strong>, una
+      <strong>predicción</strong> que conviene escribir antes de tocar nada, los <strong>controles</strong> para comprobarla
+      y una <strong>lectura</strong> de lo que se ve. Al final de cada pestaña hay retos con la respuesta plegada: ábrela
+      después de intentarlo. Las cifras se calculan exactas, enumerando todas las muestras posibles; solo las réplicas de
+      la pestaña 3 son simuladas, con semilla.</p>
+    <p>Las marcas distinguen el tipo de afirmación:
+      <span class="marca dato">Dato</span> cifras de Lohr, de una cuenta exacta o de un sorteo con semilla del laboratorio;
+      <span class="marca lectura">Lectura</span> lo que esas cifras dicen;
+      <span class="marca opinion">Opinión del material</span> una recomendación;
+      <span class="marca ilustrativo">Ejemplo ilustrativo</span> datos inventados para el laboratorio.</p>
+    <details>
+      <summary>Guía de 10 minutos para el repaso en clase (semana 14)</summary>
+      <p>Cada paso es un enlace que deja el laboratorio listo para ese momento.</p>
+      <ol>
+        <li><strong>Minutos 0 a 2 · <a href="#t=1&amp;e=tiendas&amp;n=2&amp;u=0.75">Pestaña 1, tiendas</a>.</strong> Antes de tocar
+          nada: con n = 3, ¿cuántas tiendas serían de inclusión forzosa? Después, con n = 2, mover u hasta que salga {B, D}.</li>
+        <li><strong>Minutos 2 a 5 · <a href="#t=2&amp;e=recta_lejos&amp;n=3&amp;d=maxima_entropia">Pestaña 2, «Sedes»</a>.</strong>
+          La correlación entre x e y es casi 1: ¿gana el πPT? Luego, «Llevar la recta al origen» y ver qué cambia y qué no.</li>
+        <li><strong>Minutos 5 a 8 · <a href="#t=3&amp;e=barrios&amp;n=3&amp;d=sistematico_fijo">Pestaña 3, «Barrios», lista fija</a>.</strong>
+          ¿Qué pares nunca salen juntos? ¿Qué les pasa a las varianzas estimadas? Comparar con
+          <a href="#t=3&amp;e=barrios&amp;n=3&amp;d=sistematico_aleatorio">la lista barajada</a>.</li>
+        <li><strong>Minutos 8 a 10 · <a href="#t=4">Pestaña 4, las clases</a>.</strong> La tarjeta «Con reemplazo»: la
+          aproximación que el capítulo 7 usa en todas sus encuestas, y cuánto exagera aquí. De tarea, los retos de las
+          pestañas 3 y 4.</li>
+      </ol>
+    </details>
+    </details>
+  </section>
+
+  <section id="poblacion" aria-labelledby="titulo-poblacion">
+    <h2 id="titulo-poblacion">La población</h2>
+    <p id="poblacion-nota" class="tabla-pie" style="padding:0">La usan las pestañas 1, 2 y 3. La 4 trae su propia población.</p>
+    <div class="controles">
+      <div class="control">
+        <label for="sel-escenario">Escenario</label>
+        <select id="sel-escenario"></select>
+      </div>
+      <div class="control">
+        <label for="sel-n">Tamaño de muestra n</label>
+        <select id="sel-n"></select>
+      </div>
+      <div class="control">
+        <label for="sel-diseno">Diseño (pestañas 2 y 3)</label>
+        <select id="sel-diseno">
+          <option value="sistematico_fijo">Sistemático, lista fija</option>
+          <option value="sistematico_aleatorio">Sistemático, lista barajada</option>
+          <option value="maxima_entropia">Máxima entropía</option>
+        </select>
+      </div>
+    </div>
+    <p class="tabla-pie" style="padding:0">Los tres diseños dan las mismas π<sub>k</sub> y se distinguen en cómo reparten la
+      probabilidad entre las muestras. El de <strong>máxima entropía</strong> es, entre todos los que tienen esas π, el que
+      la reparte entre más muestras (cap. 6, M5, «Para profundizar»).</p>
+    <p id="escenario-fuente"></p>
+    <div id="aviso-desplazada" class="caja aviso oculto"></div>
+    <div class="tabla-marco">
+      <table id="tabla-poblacion">
+        <caption class="sr-only">Unidades de la población, con su tamaño x, su valor y, ψ y π</caption>
+        <thead></thead>
+        <tbody></tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
+    <div id="errores-poblacion" class="error-campo" role="alert"></div>
+    <div class="controles">
+      <button type="button" class="boton secundario" id="boton-agregar">Agregar una unidad</button>
+      <button type="button" class="boton secundario" id="boton-quitar">Quitar la última</button>
+      <button type="button" class="boton secundario" id="boton-restaurar">Volver a los datos del escenario</button>
+    </div>
+  </section>
+
+  <div class="pestanas" role="tablist" aria-label="Pestañas del laboratorio">
+    <button type="button" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true">1 · La regla sistemática</button>
+    <button type="button" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">2 · ¿Cuándo gana el πPT?</button>
+    <button type="button" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">3 · HT y las π<sub>kl</sub></button>
+    <button type="button" role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" tabindex="-1">4 · Dos etapas</button>
+  </div>
+  <div id="resumen-vivo" class="sr-only" aria-live="polite"></div>
+
+  <!-- =============================================================== PESTAÑA 1 -->
+  <section role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+    <p class="objetivo"><strong>Objetivo.</strong> Ver cómo el sorteo sistemático convierte las π<sub>k</sub> = n·x<sub>k</sub>/t<sub>x</sub>,
+      que suman n, en una muestra de tamaño fijo n; qué es la inclusión forzosa; y en qué se diferencia π<sub>k</sub> de
+      ψ<sub>k</sub> (cap. 6, módulos 1, 4 y 5).</p>
+
+    <div class="formula">
+      <math display="block"><msub><mi>ψ</mi><mi>k</mi></msub><mo>=</mo><mfrac><msub><mi>x</mi><mi>k</mi></msub><msub><mi>t</mi><mi>x</mi></msub></mfrac><mspace width="2em"/><msub><mi>π</mi><mi>k</mi></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mspace width="0.1em"/><msub><mi>x</mi><mi>k</mi></msub></mrow><msub><mi>t</mi><mi>x</mi></msub></mfrac></math>
+      <p>ψ<sub>k</sub> es la probabilidad de salir en <em>una</em> extracción: suman 1. π<sub>k</sub> es la de estar en la
+        muestra: suman n. Si n·x<sub>k</sub>/t<sub>x</sub> pasa de 1, la unidad es de <strong>inclusión forzosa</strong>
+        (π<sub>k</sub> = 1) y los cupos que quedan se reparten entre las demás, en proporción a x, hasta que ninguna pase de 1.</p>
+    </div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Con las tiendas y <strong>n = 3</strong> (sin cambiar todavía el n de arriba, que está en 2): ¿cuántas tiendas quedan de
+      inclusión forzosa, y qué π reciben las demás? Escríbelo antes de seguir.</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> Dos: C y D. Primero D, con 3·1000/1600 = 1,875; quedan 2 cupos para A, B y C, con
+        600 m², y C llega a 2·300/600 = 1, así que también entra siempre. El último cupo se reparte entre A y B:
+        π<sub>A</sub> = 1/3 y π<sub>B</sub> = 2/3. El reparto se repite hasta que ninguna pasa de 1, como hace
+        <code>inclusionprobabilities</code> (cap. 6, M5). Compruébalo poniendo n = 3 arriba.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: la regla del sorteo sistemático</h3></div>
+    <p>Cada unidad ocupa un tramo de largo π<sub>k</sub>, en el orden de la tabla. Se sortea un arranque u entre 0 y 1, y
+      salen las unidades cuyos tramos contienen a u, u + 1, …, u + n − 1. Como cada tramo mide a lo sumo 1, contiene a lo
+      sumo un punto, y lo contiene con probabilidad π<sub>k</sub>. Una forzosa ocupa un tramo entero de largo 1: siempre le
+      cae un punto. Esta regla es el sistemático con la lista fija, sea cual sea el diseño elegido arriba. Mueve u hasta
+      que salga la muestra {B, D}.</p>
+    <div class="controles">
+      <div class="control" style="flex:1 1 18rem">
+        <label for="rango-u">Arranque u: <span id="valor-u" class="num"></span></label>
+        <input type="range" id="rango-u" min="0" max="0.999" step="0.001" value="0.75">
+      </div>
+      <button type="button" class="boton" id="boton-sortear-u">Sortear u</button>
+    </div>
+    <figure class="grafico" id="figura-regla">
+      <div id="svg-regla"></div>
+      <figcaption id="pie-regla"></figcaption>
+    </figure>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <div class="dos-columnas">
+      <div>
+        <h4>La muestra de este u</h4>
+        <div class="tabla-marco"><table id="tabla-muestra-u"><caption class="sr-only">Unidades de la muestra y su aporte al estimador</caption><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
+      </div>
+      <div>
+        <h4>Todas las muestras que puede dar la regla</h4>
+        <div class="tabla-marco"><table id="tabla-tramos"><caption class="sr-only">Tramos de u, la muestra de cada uno y su probabilidad</caption><thead></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+    <h4>ψ frente a π: con reemplazo y sin reemplazo</h4>
+    <p>Con reemplazo (n extracciones con ψ), la probabilidad de que una unidad salga al menos una vez es
+      1 − (1 − ψ<sub>k</sub>)<sup>n</sup>, y una unidad grande puede salir dos veces. El πPT la incluye con π<sub>k</sub>
+      y nunca la repite (cap. 6, M4).</p>
+    <div class="tabla-marco"><table id="tabla-psi-pi"><caption class="sr-only">ψ, n por ψ, probabilidad de salir con reemplazo y π del πPT</caption><thead></thead><tbody></tbody></table></div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca dato">Dato</span> En las tiendas con n = 2, las tres muestras posibles dan t̂ = 311, 305 y 293, y
+      la varianza es 53, frente a 7124 del Hansen–Hurwitz con reemplazo (cap. 6, M2 y M5).
+      <span class="marca lectura">Lectura</span> D entra siempre y aporta lo mismo a todas, 245; lo que cambia es la tienda
+      que la acompaña, y sus cocientes y<sub>k</sub>/π<sub>k</sub> (66, 60 y 48) se parecen. Sortear sin reemplazo y con la
+      inclusión forzosa quita la peor fuente de variación: que D no salga.</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="1"></div>
+    <details>
+      <summary>En R</summary>
+<pre class="codigo">library(sampling)
+x &lt;- c(A = 100, B = 200, C = 300, D = 1000)   <span class="com"># superficie, m²</span>
+y &lt;- c(A = 11, B = 20, C = 24, D = 245)       <span class="com"># ventas, miles de USD</span>
+pik &lt;- inclusionprobabilities(x, 2)           <span class="com"># con la inclusión forzosa</span>
+round(pik, 4)
+<span class="sal">#&gt;      A      B      C      D
+#&gt; 0.1667 0.3333 0.5000 1.0000</span>
+set.seed(2026)
+s &lt;- UPsystematic(pik)                        <span class="com"># 1 = en la muestra</span>
+names(x)[s == 1]
+<span class="sal">#&gt; [1] "C" "D"</span>
+sum(y[s == 1] / pik[s == 1])                  <span class="com"># t̂ de Horvitz–Thompson</span>
+<span class="sal">#&gt; [1] 293</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a> (los módulos se eligen en su menú): módulo 1
+          (una extracción, ψ), módulo 4 (ψ frente a π) y módulo 5 (el πPT, el sorteo sistemático y la inclusión forzosa).</li>
+        <li>Lohr, 3.ª ed.: §6.1 (las tiendas, tabla 6.1) y §6.4.1 (Horvitz–Thompson sin reemplazo).</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- =============================================================== PESTAÑA 2 -->
+  <section role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
+    <p class="objetivo"><strong>Objetivo.</strong> Ver que no basta con que x e y estén correlacionadas: el πPT gana cuando y es
+      casi proporcional a x, es decir, cuando los cocientes y<sub>k</sub>/π<sub>k</sub> se parecen. Eso pide una relación fuerte
+      y una recta que pase cerca del origen (cap. 6, módulo 5).</p>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Elige el escenario «Sedes», con n = 3: la correlación entre empleados y factura de energía es casi 1. ¿Gana el πPT al MAS
+      con el mismo n?</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> No: pierde de lejos, con un deff de 20,9 en el de máxima entropía (18,8 y 23,4 en
+        los dos sistemáticos). <span class="marca lectura">Lectura</span> La
+        factura tiene una parte fija grande: la recta corta el eje lejos del origen y los cocientes y<sub>k</sub>/π<sub>k</sub>
+        quedan muy distintos entre sí.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: dónde corta la recta</h3></div>
+    <p>El control suma la misma cantidad δ a todas las y. La nube sube o baja sin girar: <strong>la correlación no cambia</strong>,
+      pero el corte de la recta con el eje sí. Mientras δ no sea 0, la columna «y en uso» de la tabla de la población muestra
+      las y desplazadas, y las pestañas 1 a 3 calculan con ellas.</p>
+    <div class="controles">
+      <div class="control" style="flex:1 1 18rem">
+        <label for="rango-delta">δ que se suma a cada y: <span id="valor-delta" class="num"></span></label>
+        <input type="range" id="rango-delta" min="-100" max="100" step="1" value="0">
+      </div>
+      <button type="button" class="boton secundario" id="boton-origen">Llevar la recta al origen</button>
+      <button type="button" class="boton secundario" id="boton-constante" aria-pressed="false">y constante</button>
+      <button type="button" class="boton secundario" id="boton-delta-cero">Volver a los datos</button>
+    </div>
+    <p id="nota-origen" class="tabla-pie" style="padding:0"></p>
+    <figure class="grafico">
+      <div id="svg-dispersion"></div>
+      <div class="leyenda" aria-hidden="true"><span style="--c:#012820">Unidades</span><span class="anillo" id="leyenda-forzosa" style="--c:#B84A00">De inclusión forzosa</span><span class="linea discontinua" style="--c:#B84A00">Recta por el origen, y = (t/t<sub>x</sub>)·x</span><span class="linea" style="--c:#64748B">Recta de mínimos cuadrados</span></div>
+      <figcaption id="pie-dispersion"></figcaption>
+    </figure>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <div class="tarjetas" id="tarjetas-gana"></div>
+    <div class="formula">
+      <math display="block"><msub><mi>V</mi><mi>MRAS</mi></msub><mo>−</mo><msub><mi>V</mi><mi>PPT</mi></msub><mo>=</mo><mfrac><msup><mi>N</mi><mn>2</mn></msup><mi>n</mi></mfrac><mspace width="0.2em"/><mi>Cov</mi><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mspace width="0.3em"/><mfrac><msup><mi>y</mi><mn>2</mn></msup><mi>x</mi></mfrac><mo stretchy="false">)</mo></math>
+      <p><strong>El criterio de Raj</strong> (cap. 6, M5, con Gutiérrez, Resultado 4.2.7): compara el MAS con reemplazo con el
+        PPT con reemplazo (Hansen–Hurwitz), con la covarianza de divisor N. Es exacto con reemplazo y orientativo para el πPT.</p>
+    </div>
+    <div class="tabla-marco"><table id="tabla-cocientes"><caption class="sr-only">Cocientes y sobre π y y sobre ψ de cada unidad</caption><thead></thead><tbody></tbody></table></div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca lectura">Lectura</span> Si y<sub>k</sub> es proporcional a x<sub>k</sub>, los cocientes
+      y<sub>k</sub>/π<sub>k</sub> de las unidades no forzosas son todos iguales, las forzosas no aportan varianza, y la del πPT
+      es cero: la idea del capítulo llevada al extremo. Sumar una constante a las y no cambia la correlación, pero separa los
+      cocientes: las unidades chicas, con π pequeña, pasan a tener cocientes enormes. La correlación no basta: hace falta que
+      la relación sea fuerte <em>y</em> que la recta pase cerca del origen. Con forzosas, la recta que cuenta es la de las
+      demás unidades: en las tiendas, «Llevar la recta al origen» de las cuatro empeora el πPT, porque D no entra en la cuenta.</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="2"></div>
+    <details>
+      <summary>En R</summary>
+<pre class="codigo">x &lt;- c(100, 200, 300, 1000); y &lt;- c(11, 20, 24, 245)   <span class="com"># las tiendas</span>
+N &lt;- 4; n &lt;- 2
+cov_N &lt;- mean(x * (y^2 / x)) - mean(x) * mean(y^2 / x) <span class="com"># divisor N</span>
+cov_N
+<span class="sal">#&gt; [1] 8765</span>
+N^2 / n * cov_N                                       <span class="com"># V_MRAS − V_PPT</span>
+<span class="sal">#&gt; [1] 70120</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>, módulo 5: «¿Cuándo gana el πPT?», el criterio de
+          Raj y la recta que pasa por el origen (Gutiérrez, §4.2.3 y §4.2.4); y módulo 2: el Hansen–Hurwitz con reemplazo.</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- =============================================================== PESTAÑA 3 -->
+  <section role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
+    <p class="objetivo"><strong>Objetivo.</strong> Ver todas las muestras posibles de un diseño, comprobar que el estimador de
+      Horvitz–Thompson es insesgado y ver qué le pasa a la varianza estimada cuando un par nunca sale junto
+      (π<sub>kl</sub> = 0) o incumple Yates–Grundy (π<sub>k</sub>π<sub>l</sub> &lt; π<sub>kl</sub>) (cap. 6, módulos 4 y 7).</p>
+
+    <div class="formula">
+      <math display="block"><msub><mover><mi>t</mi><mo>^</mo></mover><mi>π</mi></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>k</mi><mo>∈</mo><mi>s</mi></mrow></munder><mfrac><msub><mi>y</mi><mi>k</mi></msub><msub><mi>π</mi><mi>k</mi></msub></mfrac><mspace width="2em"/><mi>V</mi><mo stretchy="false">(</mo><msub><mover><mi>t</mi><mo>^</mo></mover><mi>π</mi></msub><mo stretchy="false">)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>k</mi><mo>&lt;</mo><mi>l</mi></mrow></munder><mo stretchy="false">(</mo><msub><mi>π</mi><mi>k</mi></msub><msub><mi>π</mi><mi>l</mi></msub><mo>−</mo><msub><mi>π</mi><mrow><mi>k</mi><mi>l</mi></mrow></msub><mo stretchy="false">)</mo><msup><mrow><mo>(</mo><mfrac><msub><mi>y</mi><mi>k</mi></msub><msub><mi>π</mi><mi>k</mi></msub></mfrac><mo>−</mo><mfrac><msub><mi>y</mi><mi>l</mi></msub><msub><mi>π</mi><mi>l</mi></msub></mfrac><mo>)</mo></mrow><mn>2</mn></msup></math>
+      <p>La varianza en su forma de Sen–Yates–Grundy (Lohr, ec. 6.21). Su estimador, V̂<sub>SYG</sub> (6.23), divide cada
+        término de la muestra por π<sub>kl</sub>: con π<sub>kl</sub> &gt; 0 en todos los pares es insesgado, y si además
+        π<sub>k</sub>π<sub>l</sub> ≥ π<sub>kl</sub>, nunca sale negativo (cap. 6, M7).</p>
+    </div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Con «Barrios», n = 3 y el sistemático con la lista fija: ¿hay pares de barrios que nunca salen juntos? Si los hay,
+      ¿qué les pasa a las varianzas estimadas?</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> Sí: 4 pares. <span class="marca lectura">Lectura</span> Con la lista fija, los
+        puntos están separados exactamente por 1. Dos unidades cuyos tramos, con los que hay entre ellos, caben en un trecho de
+        largo menor que 1 nunca reciben dos puntos: su π<sub>kl</sub> es 0, y ninguna muestra le enseña al estimador cuánto
+        varían juntas. El primer reto de esta pestaña da las consecuencias.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: la matriz π<sub>kl</sub></h3></div>
+    <p>Pulsa una celda para ver el par. En rojo, los pares que nunca salen juntos; con borde naranja, los que incumplen
+      Yates–Grundy. Cambia el diseño en el selector de la población y compara. Con las tiendas y n = 2 queda un solo cupo
+      libre y los tres diseños coinciden: prueba con «Barrios» y n = 3.</p>
+    <div class="tabla-marco"><table class="matriz" id="matriz-pikl"><caption class="sr-only">Probabilidades de inclusión de segundo orden</caption><thead></thead><tbody></tbody></table></div>
+    <div class="caja" id="inspector-par" aria-live="polite"></div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <h4>Lo que cuenta de este diseño</h4>
+    <ul id="lista-pares"></ul>
+    <details>
+      <summary id="resumen-verificaciones">Comprobaciones del cálculo</summary>
+      <ul id="lista-verificaciones"></ul>
+    </details>
+    <div class="tarjetas" id="tarjetas-ht"></div>
+    <h4>El espacio de muestras</h4>
+    <div class="tabla-marco"><table id="tabla-espacio"><caption class="sr-only">Todas las muestras posibles, su probabilidad, la estimación y las varianzas estimadas</caption><thead></thead><tbody></tbody><tfoot></tfoot></table>
+      <div class="paginas" id="paginas-espacio"></div></div>
+
+    <h4>Simula y compara con lo exacto</h4>
+    <p>Las réplicas sortean con el algoritmo de cada diseño (el arranque u del sistemático, o, en el de máxima entropía, un
+      Poisson con las probabilidades ajustadas que se repite hasta dar n), no leyendo las probabilidades de la tabla: así
+      comprueban la enumeración en lugar de copiarla. Con la misma semilla dan siempre lo mismo.</p>
+    <div class="controles">
+      <div class="control">
+        <label for="sel-replicas">Réplicas</label>
+        <select id="sel-replicas"><option value="1000">1000</option><option value="5000" selected>5000</option><option value="20000">20 000</option></select>
+      </div>
+      <div class="control">
+        <label for="campo-semilla">Semilla</label>
+        <input type="number" id="campo-semilla" value="2026" min="1" step="1">
+      </div>
+      <button type="button" class="boton" id="boton-simular">Simular</button>
+    </div>
+    <div id="resultado-replicas" aria-live="polite"></div>
+    <figure class="grafico oculto" id="figura-histograma">
+      <div id="svg-histograma"></div>
+      <div class="leyenda" aria-hidden="true"><span style="--c:#012820">t̂ del diseño elegido</span><span style="--c:#B84A00">t̂ del MAS con el mismo n</span></div>
+      <figcaption id="pie-histograma"></figcaption>
+    </figure>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca lectura">Lectura</span> Los tres diseños tienen las mismas π<sub>k</sub> y por eso el mismo
+      estimador, insesgado en los tres. Se distinguen en las π<sub>kl</sub>, y eso cambia también la varianza verdadera: en
+      «Barrios» con n = 3, V vale 56,9 con la lista fija y 28,1 con máxima entropía. El sistemático con la lista fija concentra
+      la probabilidad en pocas muestras y deja pares fuera; barajar la lista o usar el de máxima entropía la reparte entre
+      muchas más (salvo cuando queda un solo cupo libre, como en las tiendas con n = 2). Con pares fuera, las dos varianzas
+      estimadas se rompen de formas distintas: V̂<sub>SYG</sub> sale negativa en muestras enteras, y V̂<sub>HT</sub>, que suma
+      términos grandes de signos opuestos, se dispara.
+      <span class="marca opinion">Opinión del material</span> Cuando no se conocen las π<sub>kl</sub>, la aproximación con
+      reemplazo (V̂<sub>WR</sub>, Lohr 6.24, aquí sin las forzosas) es la salida práctica: nunca sale negativa. Con diseños de
+      alta entropía y n/N grande tiende a sobrestimar; con el sistemático de lista fija puede quedarse corta, como en
+      «Barrios».</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="3"></div>
+    <details>
+      <summary>En R</summary>
+<pre class="codigo">library(sampling)
+x &lt;- c(120, 250, 420, 600, 810, 1000)   <span class="com"># hogares de los barrios (ejemplo ilustrativo)</span>
+pik &lt;- inclusionprobabilities(x, 3)
+P_sis &lt;- UPsystematicpi2(pik)           <span class="com"># sistemático, la lista en este orden</span>
+sum(P_sis[upper.tri(P_sis)] &lt; 1e-12)    <span class="com"># pares que nunca salen juntos</span>
+<span class="sal">#&gt; [1] 4</span>
+P_me &lt;- UPmaxentropypi2(pik)            <span class="com"># máxima entropía</span>
+sum(P_me[upper.tri(P_me)] &lt; 1e-12)
+<span class="sal">#&gt; [1] 0</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>: módulo 4 (el espacio de muestras y
+          Horvitz–Thompson), módulo 5 (el sistemático y el de máxima entropía) y módulo 7 (Sen–Yates–Grundy y las π<sub>kl</sub>).</li>
+        <li>Lohr, 3.ª ed., §6.4.1: las ecuaciones 6.20 a 6.24.</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- =============================================================== PESTAÑA 4 -->
+  <section role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0" hidden>
+    <p class="objetivo"><strong>Objetivo.</strong> Ver por qué sortear las clases con π<sub>i</sub> proporcional a
+      M<sub>i</sub>, y el mismo número m de estudiantes en cada una, da un diseño autoponderado; cómo se reparte la varianza
+      entre las dos etapas; y qué tan buena es la aproximación con reemplazo (cap. 6, módulo 9; cap. 5, módulos 4, 7 y 8).</p>
+    <p><span class="marca dato">Dato</span> Los tamaños M<sub>i</sub> son los de las 15 clases de estadística de Lohr
+      (ej. 6.11, <code>classes.csv</code>), con K = 647 estudiantes.
+      <span class="marca ilustrativo">Ejemplo ilustrativo</span> Las horas de estudio de cada estudiante se inventan con
+      semilla: Lohr solo publica las de los 20 de la muestra (<code>classpps.csv</code>). La ρ que se pide genera los datos;
+      la que se muestra es la R<sub>a</sub>² que salió.</p>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Con n = 5 clases y m = 4 estudiantes por clase: ¿qué pone más varianza, sortear las clases (etapa 1) o sortear a los
+      estudiantes dentro de cada una (etapa 2)?</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> La etapa 2: 59 % frente a 41 %. <span class="marca lectura">Lectura</span> Con solo
+        4 estudiantes por clase, el total de cada clase se estima con mucho error. En el capítulo 5 (módulo 7), con 20
+        estudiantes por escuela, la etapa 1 ponía el 93,9 %: lo que pesa más depende de m y del parecido dentro de las
+        clases.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: n, m y el parecido dentro de las clases</h3></div>
+    <p>Sube m y mira qué etapa baja; sube la ρ y mira cuál crece. Prueba n = 7 (la clase de 100 pasa a forzosa) o m mayor que
+      15 (la clase más chica se censa) y mira qué le pasa a la autoponderación.</p>
+    <div class="controles">
+      <div class="control"><label for="dos-n">Clases n</label><select id="dos-n"></select></div>
+      <div class="control"><label for="dos-m">Estudiantes por clase m</label><select id="dos-m"></select></div>
+      <div class="control"><label for="dos-diseno">Diseño de la etapa 1</label>
+        <select id="dos-diseno"><option value="maxima_entropia">Máxima entropía</option><option value="sistematico_fijo">Sistemático, lista fija</option></select></div>
+      <div class="control" style="flex:1 1 14rem"><label for="dos-rho">Parecido dentro de las clases, ρ pedida (para generar los datos): <span id="valor-rho" class="num"></span></label>
+        <input type="range" id="dos-rho" min="0" max="0.6" step="0.05" value="0.25"></div>
+      <div class="control"><label for="dos-semilla">Semilla de los datos</label><input type="number" id="dos-semilla" value="2026" min="1" step="1"></div>
+    </div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <div class="formula">
+      <math display="block"><msub><mi>w</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo>=</mo><mfrac><mi>K</mi><mrow><mi>n</mi><mspace width="0.1em"/><msub><mi>M</mi><mi>i</mi></msub></mrow></mfrac><mo>·</mo><mfrac><msub><mi>M</mi><mi>i</mi></msub><mi>m</mi></mfrac><mo>=</mo><mfrac><mi>K</mi><mrow><mi>n</mi><mspace width="0.1em"/><mi>m</mi></mrow></mfrac></math>
+      <p>El primer factor es el inverso de la probabilidad de la clase; el segundo, el de la del estudiante dentro de ella.
+        Si una clase es de inclusión forzosa, o tiene menos de m estudiantes, el M<sub>i</sub> ya no se cancela.</p>
+    </div>
+    <p id="estado-autoponderado"></p>
+    <div class="tabla-marco"><table id="tabla-clases"><caption class="sr-only">Las 15 clases: tamaño, probabilidades y peso</caption><thead></thead><tbody></tbody></table></div>
+
+    <h4>La varianza, etapa por etapa</h4>
+    <div class="formula">
+      <math display="block"><mi>V</mi><mo stretchy="false">(</mo><msub><mover><mi>t</mi><mo>^</mo></mover><mi>π</mi></msub><mo stretchy="false">)</mo><mo>=</mo><msub><mi>V</mi><mn>1</mn></msub><mo>+</mo><msub><mi>V</mi><mn>2</mn></msub></math>
+      <math display="block"><msub><mi>V</mi><mn>1</mn></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow></munder><mo>(</mo><msub><mi>π</mi><mi>i</mi></msub><msub><mi>π</mi><mi>j</mi></msub><mo>−</mo><msub><mi>π</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>)</mo><msup><mrow><mo>(</mo><mfrac><msub><mi>t</mi><mi>i</mi></msub><msub><mi>π</mi><mi>i</mi></msub></mfrac><mo>−</mo><mfrac><msub><mi>t</mi><mi>j</mi></msub><msub><mi>π</mi><mi>j</mi></msub></mfrac><mo>)</mo></mrow><mn>2</mn></msup><mspace width="1.5em"/><mtext>(etapa 1)</mtext></math>
+      <math display="block"><msub><mi>V</mi><mn>2</mn></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><mfrac><mrow><mi>V</mi><mo stretchy="false">(</mo><msub><mover><mi>t</mi><mo>^</mo></mover><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><msub><mi>π</mi><mi>i</mi></msub></mfrac><mspace width="1.5em"/><mtext>(etapa 2)</mtext></math>
+      <p>Lohr, ec. 6.27. El primer término es la varianza entre clases: la que habría si se midiera a todos los estudiantes de
+        las clases sorteadas. El segundo es la que añade sortear m estudiantes dentro de cada una. Este reparto sí separa las
+        dos etapas; los dos sumandos del estimador de la varianza, en cambio, no: el primero arrastra parte de la etapa 2
+        (cap. 5, M7).</p>
+    </div>
+    <div class="barra-etapas" id="barra-etapas" role="img"></div>
+    <div class="tarjetas" id="tarjetas-dos"></div>
+
+    <h4>Cuántos estudiantes por clase, con un presupuesto</h4>
+    <div class="formula">
+      <math display="block"><msub><mi>m</mi><mi>opt</mi></msub><mo>=</mo><msqrt><mfrac><mrow><msub><mi>c</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>ρ</mi><mo stretchy="false">)</mo></mrow><mrow><msub><mi>c</mi><mn>2</mn></msub><mspace width="0.1em"/><mi>ρ</mi></mrow></mfrac></msqrt><mspace width="2em"/><msub><mi>n</mi><mi>opt</mi></msub><mo>=</mo><mfrac><mi>C</mi><mrow><msub><mi>c</mi><mn>1</mn></msub><mo>+</mo><msub><mi>c</mi><mn>2</mn></msub><msub><mi>m</mi><mi>opt</mi></msub></mrow></mfrac></math>
+      <p>Cap. 5, M8 (Lohr, §5.4, ec. 5.36, para conglomerados de igual tamaño y poblaciones grandes: una guía, no una cifra
+        exacta): c<sub>1</sub> es el costo de cada clase, c<sub>2</sub> el de cada estudiante y C el presupuesto. Aquí ρ es la
+        R<sub>a</sub>² de los datos. Los costos son un ejemplo ilustrativo.</p>
+    </div>
+    <div class="controles">
+      <div class="control"><label for="dos-c1">c<sub>1</sub> (por clase)</label><input type="number" id="dos-c1" min="1" step="1"></div>
+      <div class="control"><label for="dos-c2">c<sub>2</sub> (por estudiante)</label><input type="number" id="dos-c2" min="1" step="1"></div>
+      <div class="control"><label for="dos-C">Presupuesto C</label><input type="number" id="dos-C" min="1" step="10"></div>
+    </div>
+    <p id="resultado-costo"></p>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca lectura">Lectura</span> La etapa 1 pesa más cuanto más se parecen los estudiantes de una misma
+      clase (ρ alta): entonces lo que decide es qué clases salen, y conviene sortear más clases con menos estudiantes en cada
+      una. Con ρ baja pasa lo contrario. El m óptimo pone números a esa decisión. Y no hay que comparar el total de esta
+      pestaña con el del bloque de R: el 2232 sale de la muestra real de Lohr; el de la tarjeta, de la población inventada.</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="4"></div>
+    <details>
+      <summary>En R, con la muestra real de Lohr</summary>
+<pre class="codigo">library(survey)
+classpps &lt;- read.csv("classpps.csv")    <span class="com"># 5 clases, 4 estudiantes en cada una</span>
+d &lt;- svydesign(id = ~class, weights = ~finalweight, data = classpps)
+svytotal(~hours, d)                     <span class="com"># con reemplazo: la dispersión entre clases</span>
+<span class="sal">#&gt;        total     SE
+#&gt; hours 2232.2 311.76</span>
+svymean(~hours, d)
+<span class="sal">#&gt;       mean     SE
+#&gt; hours 3.45 0.4819</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>, módulo 9: las clases, el diseño autoponderado y
+          la aproximación con reemplazo.</li>
+        <li><a href="capitulo-5-conglomerados.html">Capítulo 5</a>: módulo 4 (ICC y R<sub>a</sub>²), módulo 7 (la varianza
+          etapa por etapa) y módulo 8 (el m óptimo con presupuesto).</li>
+        <li>Lohr, 3.ª ed.: §6.4.3 (ecs. 6.25 a 6.30) y ej. 6.11; §5.4.</li>
+      </ul>
+    </details>
+  </section>
+</main>
+
+<footer class="pie-pagina">
+  <p>Laboratorio del capítulo 6 · Muestreo Estadístico · Universidad El Bosque, 2026-II. Las cifras se calculan exactas,
+    enumerando las muestras posibles, y se comprobaron contra el paquete <code>sampling</code> de R. Datos de las tiendas y
+    de las clases: Lohr, S. L. (2022).
+    <em>Sampling: Design and Analysis</em>, 3.ª ed. CRC Press.</p>
+</footer>
+
+<script>
+/* motor.js — el cálculo del laboratorio πPT, sin DOM.
+ *
+ * Lo pega dentro de la página `ensambla_laboratorio_ppt.py`, y lo prueban
+ * `precalculo/pruebas/prueba_laboratorio_ppt.js` (Node, identidades) y
+ * `precalculo/verifica_laboratorio_ppt.R` (contra `sampling`). Por qué existe:
+ * el laboratorio original (`Simulador_IProb.html`, fuera de git) topaba las π
+ * en 0,96 en lugar de la inclusión forzosa, calibraba un «Brewer» (en
+ * realidad, máxima entropía) que no convergía y escribía «verificado» sin
+ * calcular nada (T7.118).
+ *
+ * Todo es exacto, por enumeración de las muestras: N ≤ 9 en una etapa, y las
+ * 15 clases de Lohr (ej. 6.11) en dos. Notación de los caps. 5 y 6: ψ_k es la
+ * probabilidad de una extracción (suman 1), π_k la de inclusión (suman n),
+ * π_kl la de segundo orden, t̂_π el estimador de Horvitz–Thompson. Las
+ * ecuaciones citadas son las de Lohr, 3.ª ed., cap. 6.
+ */
+(function (raiz) {
+  'use strict';
+
+  const LIMITE_N = 9;          // una etapa: las muestras se enumeran todas
+  const ESQUEMAS = ['sistematico_fijo', 'sistematico_aleatorio', 'maxima_entropia'];
+  const CERO = 1e-12;
+
+  // ---------------------------------------------------------------- utilidades
+
+  function suma(v) {
+    let s = 0;
+    for (const a of v) s += a;
+    return s;
+  }
+
+  // Todas las combinaciones de `r` elementos de `lista`, en orden lexicográfico.
+  function combinaciones(lista, r) {
+    const salida = [];
+    const actual = [];
+    (function paso(desde) {
+      if (actual.length === r) { salida.push(actual.slice()); return; }
+      for (let i = desde; i <= lista.length - (r - actual.length); i++) {
+        actual.push(lista[i]);
+        paso(i + 1);
+        actual.pop();
+      }
+    })(0);
+    return salida;
+  }
+
+  // Generador con semilla (mulberry32): las réplicas se repiten igual en clase.
+  function generador(semilla) {
+    let a = (Number(semilla) >>> 0) || 1;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Normal estándar por Box–Muller, con el generador de arriba.
+  function normal(azar) {
+    let u = 0;
+    while (u <= 0) u = azar();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * azar());
+  }
+
+  function baraja(lista, azar) {
+    const a = lista.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(azar() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ---------------------------------------------------------------- validación
+
+  // Devuelve la lista de problemas; vacía si la población sirve. Se exige
+  // x > 0 (sin tamaño no hay π) e y ≥ 0 (totales de conteos o montos).
+  function validaPoblacion(unidades, n) {
+    const errores = [];
+    const N = unidades.length;
+    if (N < 3 || N > LIMITE_N) errores.push(`N debe estar entre 3 y ${LIMITE_N}; es ${N}.`);
+    unidades.forEach((u, k) => {
+      const nombre = u.id || `unidad ${k + 1}`;
+      if (!Number.isFinite(u.x) || u.x <= 0) errores.push(`${nombre}: el tamaño x debe ser un número positivo.`);
+      if (!Number.isFinite(u.y) || u.y < 0) errores.push(`${nombre}: y debe ser un número mayor o igual que 0.`);
+    });
+    if (!Number.isInteger(n) || n < 1 || n > N - 1) errores.push(`n debe ser un entero entre 1 y ${N - 1}; es ${n}.`);
+    return errores;
+  }
+
+  // ------------------------------------------------- probabilidades de inclusión
+
+  // π_k ∝ x_k con inclusión forzosa, como `sampling::inclusionprobabilities`:
+  // la que llega a 1 queda en 1, y el cupo que sobra se reparte en proporción a
+  // x entre las demás. Se repite, porque el reparto puede empujar otra a 1.
+  function probabilidadesInclusion(x, n) {
+    const N = x.length;
+    const tx = suma(x);
+    const psi = x.map(v => v / tx);
+    const crudas = x.map(v => n * v / tx);
+    const pi = new Array(N).fill(0);
+    const forzosa = new Array(N).fill(false);
+    let cambio = true;
+    while (cambio) {
+      cambio = false;
+      const resto = [];
+      for (let k = 0; k < N; k++) if (!forzosa[k]) resto.push(k);
+      const cupo = n - (N - resto.length);
+      const txResto = suma(resto.map(k => x[k]));
+      for (const k of resto) pi[k] = cupo * x[k] / txResto;
+      for (const k of resto) {
+        if (pi[k] >= 1 - CERO) { forzosa[k] = true; pi[k] = 1; cambio = true; }
+      }
+    }
+    return { psi, crudas, pi, forzosa, tx };
+  }
+
+  // --------------------------------------------------------- diseños exactos
+
+  // Sistemático sobre una lista ordenada con π < 1 que suman `r` (entero): u en
+  // [0, 1) y los puntos u, u + 1, …, u + r − 1 sobre las π acumuladas. Cada
+  // tramo de u entre dos cortes da siempre la misma muestra; su largo es su
+  // probabilidad.
+  function sistematicoOrden(pis, orden, r) {
+    const acum = [0];
+    for (const k of orden) acum.push(acum[acum.length - 1] + pis[k]);
+    const cortes = [0, 1];
+    for (let j = 1; j < orden.length; j++) {
+      const f = acum[j] - Math.floor(acum[j] + 1e-12);
+      if (f > 1e-12 && f < 1 - 1e-12) cortes.push(f);
+    }
+    cortes.sort((a, b) => a - b);
+    const muestras = new Map();
+    for (let c = 0; c + 1 < cortes.length; c++) {
+      const largo = cortes[c + 1] - cortes[c];
+      if (largo <= 1e-12) continue;
+      const u = (cortes[c] + cortes[c + 1]) / 2;
+      const s = [];
+      let j = 0;
+      for (let p = 0; p < r; p++) {
+        const punto = u + p;
+        while (j < orden.length - 1 && acum[j + 1] <= punto) j++;
+        s.push(orden[j]);
+      }
+      s.sort((a, b) => a - b);
+      const clave = s.join(',');
+      muestras.set(clave, (muestras.get(clave) || 0) + largo);
+    }
+    return muestras;
+  }
+
+  // La regla de la pestaña 1: el sistemático con todas las unidades en el orden
+  // de la tabla. Una forzosa ocupa un tramo de largo 1 y siempre le cae un
+  // punto, así que da lo mismo que `distribucion(…, 'sistematico_fijo')`
+  // (lo comprueba la prueba). `muestraRegla` da la muestra de un u;
+  // `tramosRegla`, los tramos de u en [0, 1) y la muestra de cada uno.
+  function muestraRegla(pi, n, u) {
+    const s = [];
+    let acum = 0;
+    let k = 0;
+    for (let p = 0; p < n; p++) {
+      while (k < pi.length - 1 && acum + pi[k] <= u + p + 1e-12) { acum += pi[k]; k++; }
+      s.push(k);
+    }
+    return s;
+  }
+  function tramosRegla(pi, n) {
+    const cortes = [0, 1];
+    let acum = 0;
+    for (let k = 0; k < pi.length - 1; k++) {
+      acum += pi[k];
+      const f = Math.round((acum - Math.floor(acum + 1e-12)) * 1e12) / 1e12;
+      if (f > 1e-9 && f < 1 - 1e-9) cortes.push(f);
+    }
+    cortes.sort((a, b) => a - b);
+    const tramos = [];
+    for (let c = 0; c + 1 < cortes.length; c++) {
+      if (cortes[c + 1] - cortes[c] <= 1e-9) continue;
+      tramos.push({ desde: cortes[c], hasta: cortes[c + 1], s: muestraRegla(pi, n, (cortes[c] + cortes[c + 1]) / 2) });
+    }
+    return tramos;
+  }
+
+  // Los órdenes distintos para el sistemático con la lista barajada. Girar la
+  // lista o darle la vuelta no cambia el diseño (u es uniforme en el círculo),
+  // así que basta fijar el primero y quedarse con una de cada pareja espejo:
+  // (m − 1)!/2 órdenes en lugar de m!. Con 9 unidades son 20 160.
+  function ordenesCirculares(lista) {
+    if (lista.length <= 2) return [lista.slice()];
+    const [primero, ...resto] = lista;
+    const salida = [];
+    const usado = new Array(resto.length).fill(false);
+    const actual = [];
+    (function paso() {
+      if (actual.length === resto.length) {
+        if (actual[0] < actual[actual.length - 1]) salida.push([primero, ...actual]);
+        return;
+      }
+      for (let i = 0; i < resto.length; i++) {
+        if (usado[i]) continue;
+        usado[i] = true; actual.push(resto[i]);
+        paso();
+        actual.pop(); usado[i] = false;
+      }
+    })();
+    return salida;
+  }
+
+  // El diseño de máxima entropía (Poisson condicionado; cap. 6, M5): entre las
+  // muestras de tamaño r, P(s) ∝ Π_{k∈s} p̃_k/(1 − p̃_k). Las p̃ del Poisson no
+  // son las π: se ajustan hasta que las marginales den las π, con el paso de
+  // `sampling::UPMEpiktildefrompik`, p̃ ← p̃ + (π − π(p̃)). El original
+  // (T7.118) daba 60 pasos amortiguados y paraba lejos. Aquí se para por error
+  // RELATIVO (1e-12): con una π de 1e-5, un error absoluto de 1e-13 ya era
+  // relativo 1e-8, y y/π lo agrandaba hasta marcar ✗ un diseño correcto (T7.121).
+  function maximaEntropia(pis, unidades, r) {
+    const m = unidades.length;
+    const subs = combinaciones(Array.from({ length: m }, (_, j) => j), r);
+    const objetivo = unidades.map(k => pis[k]);
+    // Se itera hasta el error relativo 1e-14 o hasta que deja de bajar (el
+    // redondeo de la máquina), y se queda con el mejor paso. Con 1e-12 las
+    // unidades de π pequeña dejaban E(v̂_HT) a 4e-9 de V en «Barrios».
+    let pt = objetivo.slice();
+    let mejor = null;
+    let sinMejora = 0;
+    let pasos = 0;
+    for (; pasos < 20000; pasos++) {
+      const odds = pt.map(p => p / (1 - p));
+      let probs = subs.map(s => s.reduce((a, j) => a * odds[j], 1));
+      const total = suma(probs);
+      probs = probs.map(p => p / total);
+      const marg = new Array(m).fill(0);
+      subs.forEach((s, i) => { for (const j of s) marg[j] += probs[i]; });
+      const error = Math.max(...marg.map((v, j) => Math.abs(v - objetivo[j]) / objetivo[j]));
+      if (!mejor || error < mejor.error) { mejor = { pt: pt.slice(), probs, error }; sinMejora = 0; } else sinMejora++;
+      if (error < 1e-14 || sinMejora >= 50) break;
+      pt = pt.map((p, j) => Math.min(1 - 1e-15, Math.max(1e-15, p + objetivo[j] - marg[j])));
+    }
+    const { probs, error } = mejor;
+    pt = mejor.pt;
+    const muestras = new Map();
+    subs.forEach((s, i) => muestras.set(s.map(j => unidades[j]).join(','), probs[i]));
+    const poisson = new Array(pis.length).fill(null);
+    unidades.forEach((k, j) => { poisson[k] = pt[j]; });
+    return { muestras, calibracion: { poisson, pasos, error } };
+  }
+
+  // La distribución exacta de las muestras: [{ s: [índices], p }]. Las de
+  // inclusión forzosa entran en todas; el diseño se aplica al resto, con el
+  // cupo que queda.
+  function distribucion(pi, forzosa, n, esquema) {
+    if (!ESQUEMAS.includes(esquema)) throw new Error(`Esquema desconocido: ${esquema}`);
+    const fijas = [];
+    const resto = [];
+    pi.forEach((_, k) => (forzosa[k] ? fijas : resto).push(k));
+    const r = n - fijas.length;
+    let muestras;
+    let calibracion = null;
+    if (r === 0) {
+      muestras = new Map([['', 1]]);
+    } else if (esquema === 'maxima_entropia') {
+      ({ muestras, calibracion } = maximaEntropia(pi, resto, r));
+    } else if (esquema === 'sistematico_fijo') {
+      muestras = sistematicoOrden(pi, resto, r);
+    } else {
+      if (resto.length > LIMITE_N) throw new Error(`El sistemático con la lista barajada se enumera hasta ${LIMITE_N} unidades.`);
+      const ordenes = ordenesCirculares(resto);
+      muestras = new Map();
+      for (const orden of ordenes) {
+        for (const [clave, p] of sistematicoOrden(pi, orden, r)) {
+          muestras.set(clave, (muestras.get(clave) || 0) + p / ordenes.length);
+        }
+      }
+    }
+    const salida = [];
+    for (const [clave, p] of muestras) {
+      const s = (clave === '' ? [] : clave.split(',').map(Number)).concat(fijas).sort((a, b) => a - b);
+      salida.push({ s, p });
+    }
+    salida.sort((a, b) => (a.s.join(',') < b.s.join(',') ? -1 : 1));
+    salida.calibracion = calibracion;     // las p̃ del Poisson, para sortear
+    return salida;
+  }
+
+  // π_k y π_kl leídas de la distribución (no de la fórmula del diseño): así
+  // la comprobación Σ_{s∋k} P(s) = π_k es una cuenta de verdad.
+  function segundoOrden(N, muestras) {
+    const piDist = new Array(N).fill(0);
+    const pikl = Array.from({ length: N }, () => new Array(N).fill(0));
+    for (const { s, p } of muestras) {
+      for (let a = 0; a < s.length; a++) {
+        piDist[s[a]] += p;
+        for (let b = a + 1; b < s.length; b++) {
+          pikl[s[a]][s[b]] += p;
+          pikl[s[b]][s[a]] += p;
+        }
+      }
+    }
+    for (let k = 0; k < N; k++) pikl[k][k] = piDist[k];
+    return { piDist, pikl };
+  }
+
+  // -------------------------------------------------------------- estimadores
+
+  // Las tres estimaciones de varianza para una muestra s (Lohr 6.22–6.24).
+  // v̂_WR se calcula sin las unidades de inclusión forzosa: son un estrato que
+  // se censa y no aportan varianza; con menos de dos unidades sorteadas no
+  // existe (null).
+  function estimaMuestra(y, pi, pikl, forzosa, s) {
+    const t = suma(s.map(k => y[k] / pi[k]));
+    let vHT = 0;
+    let vSYG = 0;
+    for (const k of s) vHT += (1 - pi[k]) * (y[k] / pi[k]) ** 2;
+    for (let a = 0; a < s.length; a++) {
+      for (let b = a + 1; b < s.length; b++) {
+        const k = s[a], l = s[b];
+        const d = pikl[k][l] - pi[k] * pi[l];
+        vHT += 2 * (d / pikl[k][l]) * (y[k] / pi[k]) * (y[l] / pi[l]);
+        vSYG += (-d / pikl[k][l]) * (y[k] / pi[k] - y[l] / pi[l]) ** 2;
+      }
+    }
+    const sorteadas = s.filter(k => !forzosa[k]);
+    let vWR = null;
+    if (sorteadas.length >= 2) {
+      const r = sorteadas.length;
+      const tR = suma(sorteadas.map(k => y[k] / pi[k]));
+      vWR = r / (r - 1) * suma(sorteadas.map(k => (y[k] / pi[k] - tR / r) ** 2));
+    }
+    return { t, vHT, vSYG, vWR };
+  }
+
+  // Varianza exacta de t̂_π en sus dos formas (6.20 y 6.21).
+  function varianzas(y, pi, pikl) {
+    const N = y.length;
+    let formaHT = 0;
+    let formaSYG = 0;
+    for (let k = 0; k < N; k++) {
+      formaHT += (1 - pi[k]) / pi[k] * y[k] ** 2;
+      for (let l = 0; l < N; l++) {
+        if (l === k) continue;
+        formaHT += (pikl[k][l] - pi[k] * pi[l]) / (pi[k] * pi[l]) * y[k] * y[l];
+        if (l > k) formaSYG += (pi[k] * pi[l] - pikl[k][l]) * (y[k] / pi[k] - y[l] / pi[l]) ** 2;
+      }
+    }
+    return { formaHT, formaSYG };
+  }
+
+  // Los diseños de referencia con el mismo n: MAS sin y con reemplazo, y el PPT
+  // con reemplazo (Hansen–Hurwitz, con ψ_k = x_k/t_x). El criterio de Raj del
+  // M5 del cap. 6: V_MRAS − V_HH = (N²/n)·Cov(x, y²/x), covarianza con divisor N.
+  function referencias(x, y, n) {
+    const N = y.length;
+    const t = suma(y);
+    const tx = suma(x);
+    const media = t / N;
+    const ss = suma(y.map(v => (v - media) ** 2));
+    const S2 = ss / (N - 1);
+    const vMAS = N * N * (1 - n / N) * S2 / n;
+    const vMRAS = N * N * (ss / N) / n;
+    const vHH = suma(x.map((xv, k) => (xv / tx) * (y[k] / (xv / tx) - t) ** 2)) / n;
+    const q = x.map((xv, k) => y[k] ** 2 / xv);
+    const covRaj = suma(x.map((xv, k) => xv * q[k])) / N - (tx / N) * (suma(q) / N);
+    const mx = tx / N;
+    const sxx = suma(x.map(v => (v - mx) ** 2));
+    const sxy = suma(x.map((v, k) => (v - mx) * (y[k] - media)));
+    const pendiente = sxx > 0 ? sxy / sxx : 0;
+    const corr = sxx > 0 && ss > 0 ? sxy / Math.sqrt(sxx * ss) : null;
+    return {
+      t, tx, S2, vMAS, vMRAS, vHH, covRaj, rajDiferencia: N * N / n * covRaj,
+      corr, pendiente, corte: media - pendiente * mx,
+      razon: t / tx,                       // la recta por el origen, y = (t/t_x)·x
+      zHH: x.map((xv, k) => y[k] / (xv / tx)),
+    };
+  }
+
+  // La recta de mínimos cuadrados de y sobre x en un subconjunto de unidades.
+  // Con forzosas, la que cuenta para el πPT es la de las demás: entre ellas las
+  // π son proporcionales a x, y las forzosas no aportan varianza (T7.121).
+  function recta(x, y, indices) {
+    if (indices.length < 2) return null;
+    const xs = indices.map(k => x[k]), ys = indices.map(k => y[k]);
+    const mx = suma(xs) / xs.length, my = suma(ys) / ys.length;
+    const sxx = suma(xs.map(v => (v - mx) ** 2));
+    const syy = suma(ys.map(v => (v - my) ** 2));
+    const sxy = suma(xs.map((v, j) => (v - mx) * (ys[j] - my)));
+    const pendiente = sxx > 0 ? sxy / sxx : 0;
+    return { pendiente, corte: my - pendiente * mx, media: my, corr: sxx > 0 && syy > 0 ? sxy / Math.sqrt(sxx * syy) : null,
+      razon: suma(ys) / suma(xs), indices };
+  }
+
+  // -------------------------------------------------------- análisis completo
+
+  // Todo lo de una etapa para una población y un n. `unidades`: [{ id, x, y }].
+  function analiza(unidades, n, esquema) {
+    const errores = validaPoblacion(unidades, n);
+    if (errores.length) return { errores };
+    const N = unidades.length;
+    const x = unidades.map(u => u.x);
+    const y = unidades.map(u => u.y);
+    const inc = probabilidadesInclusion(x, n);
+    const muestras = distribucion(inc.pi, inc.forzosa, n, esquema);
+    const { piDist, pikl } = segundoOrden(N, muestras);
+    const pi = inc.pi;
+    // Con una forzosa, π_kl = π_l exacto: la suma sobre las muestras deja un
+    // residuo de 1e-16 que, multiplicado por (y/π)², hacía salir v̂_SYG = −6e-8.
+    for (let k = 0; k < N; k++) {
+      if (!inc.forzosa[k]) continue;
+      for (let l = 0; l < N; l++) { pikl[k][l] = pi[l]; pikl[l][k] = pi[l]; }
+    }
+    const ref = referencias(x, y, n);
+    const { formaHT, formaSYG } = varianzas(y, pi, pikl);
+
+    let esperanza = 0, vEnum = 0, eHT = 0, eSYG = 0, eWR = 0, hayWR = true, pNegativa = 0;
+    for (const m of muestras) {
+      Object.assign(m, estimaMuestra(y, pi, pikl, inc.forzosa, m.s));
+      esperanza += m.p * m.t;
+      vEnum += m.p * (m.t - ref.t) ** 2;
+      eHT += m.p * m.vHT;
+      eSYG += m.p * m.vSYG;
+      if (m.vWR === null) hayWR = false; else eWR += m.p * m.vWR;
+      if (m.vSYG < -1e-12 * Math.max(1, ref.t * ref.t)) pNegativa += m.p;
+    }
+
+    // Los pares: los que nunca salen juntos (π_kl = 0: v̂ sesgado) y los que
+    // incumplen Yates–Grundy (π_kπ_l − π_kl < 0: v̂_SYG puede salir negativo).
+    const paresCero = [];
+    const paresYG = [];
+    for (let k = 0; k < N; k++) {
+      for (let l = k + 1; l < N; l++) {
+        if (pikl[k][l] <= 1e-12) paresCero.push([k, l]);
+        if (pi[k] * pi[l] - pikl[k][l] < -1e-12) paresYG.push([k, l]);
+      }
+    }
+
+    const escala = Math.max(1, Math.abs(formaSYG), ref.t * ref.t * 1e-12);
+    const filas = Array.from({ length: N }, (_, k) => suma(pikl[k]) - pikl[k][k]);
+    const verificaciones = [
+      ['Σ π_k = n', Math.abs(suma(pi) - n), 1e-9],
+      ['π_k ≤ 1', Math.max(0, ...pi.map(v => v - 1)), 1e-12],
+      ['Σ P(s) = 1', Math.abs(suma(muestras.map(m => m.p)) - 1), 1e-9],
+      ['Σ_{s∋k} P(s) = π_k', Math.max(...piDist.map((v, k) => Math.abs(v - pi[k]))), 1e-9],
+      ['Σ_{l≠k} π_kl = (n − 1)·π_k', Math.max(...filas.map((v, k) => Math.abs(v - (n - 1) * pi[k]))), 1e-9],
+      ['E(t̂_π) = t', Math.abs(esperanza - ref.t) / Math.max(1, ref.t), 1e-9],
+      ['V forma 6.20 = forma 6.21', Math.abs(formaHT - formaSYG) / escala, 1e-9],
+      ['V = Σ P(s)(t̂ − t)²', Math.abs(vEnum - formaSYG) / escala, 1e-9],
+    ].map(([nombre, error, tol]) => ({ nombre, error, ok: error <= tol }));
+    if (paresCero.length === 0) {
+      verificaciones.push(
+        { nombre: 'E(v̂_HT) = V', error: Math.abs(eHT - formaSYG) / escala, ok: Math.abs(eHT - formaSYG) / escala <= 1e-9 },
+        { nombre: 'E(v̂_SYG) = V', error: Math.abs(eSYG - formaSYG) / escala, ok: Math.abs(eSYG - formaSYG) / escala <= 1e-9 });
+    }
+
+    const V = formaSYG;
+    // Con y constante el MAS acierta siempre (V_MAS = 0) y el deff no existe.
+    const deff = ref.vMAS > 1e-12 * Math.max(1, ref.t * ref.t) ? V / ref.vMAS : null;
+    const libres = pi.map((_, k) => k).filter(k => !inc.forzosa[k]);
+    return {
+      errores: [], N, n, esquema, x, y, ids: unidades.map((u, k) => u.id || `U${k + 1}`),
+      psi: inc.psi, crudas: inc.crudas, pi, forzosa: inc.forzosa, tx: inc.tx,
+      muestras, pikl, calibracion: muestras.calibracion,
+      V, formaHT, formaSYG, ee: Math.sqrt(Math.max(0, V)),
+      esperanza, esperanzas: { vHT: eHT, vSYG: eSYG, vWR: hayWR ? eWR : null },
+      paresCero, paresYG, pNegativa,
+      referencias: ref, deff, rectaLibres: recta(x, y, libres),
+      verificaciones, todoOk: verificaciones.every(v => v.ok),
+    };
+  }
+
+  // La muestra que elige el estudiante: tiene que tener n unidades y estar en
+  // el soporte del diseño (P(s) > 0); si no, se dice por qué.
+  function evaluaMuestra(analisis, s) {
+    const orden = s.slice().sort((a, b) => a - b);
+    if (orden.length !== analisis.n) return { error: `La muestra tiene ${orden.length} unidades y el diseño sortea n = ${analisis.n}.` };
+    const clave = orden.join(',');
+    const m = analisis.muestras.find(mu => mu.s.join(',') === clave);
+    if (!m) return { error: 'Este diseño nunca sortea esa muestra: P(s) = 0.' };
+    return m;
+  }
+
+  // Desplaza todas las y en δ: la recta sube o baja sin girar, y la correlación
+  // con x no cambia. Es la palanca de «correlación no es proporcionalidad».
+  function desplazaY(unidades, delta) {
+    return unidades.map(u => ({ ...u, y: Math.max(0, u.y + delta) }));
+  }
+
+  // --------------------------------------------------------------- réplicas
+
+  // Una muestra con el algoritmo real del diseño, no leyendo P(s): así la
+  // simulación comprueba la enumeración en lugar de copiarla.
+  function sortea(analisis, azar) {
+    const { pi, forzosa, n, esquema } = analisis;
+    const fijas = [];
+    const resto = [];
+    pi.forEach((_, k) => (forzosa[k] ? fijas : resto).push(k));
+    const r = n - fijas.length;
+    let elegidas = [];
+    if (r > 0 && esquema === 'maxima_entropia') {
+      // Poisson condicionado: cada unidad entra por su cuenta con su p̃; si no
+      // salen exactamente r, se descarta y se vuelve a sortear.
+      const pt = analisis.calibracion.poisson;
+      let intentos = 0;
+      do {
+        if (++intentos > 1e6) throw new Error('El Poisson condicionado no da muestras de tamaño n: revise las π.');
+        elegidas = resto.filter(k => azar() < pt[k]);
+      } while (elegidas.length !== r);
+    } else if (r > 0) {
+      const orden = esquema === 'sistematico_aleatorio' ? baraja(resto, azar) : resto;
+      const u = azar();
+      let acum = 0;
+      let j = 0;
+      for (let p = 0; p < r; p++) {
+        while (j < orden.length - 1 && acum + pi[orden[j]] <= u + p) { acum += pi[orden[j]]; j++; }
+        elegidas.push(orden[j]);
+      }
+    }
+    return elegidas.concat(fijas).sort((a, b) => a - b);
+  }
+
+  // R réplicas del diseño y del MAS con el mismo n. Devuelve lo que hace falta
+  // para comparar con lo exacto: la media y su error de simulación, el ee, el
+  // ECM, la cobertura de t̂ ± 1,96·√v̂ y cuánto se aparta cada frecuencia de su P(s).
+  function replicas(analisis, R, semilla) {
+    const azar = generador(semilla);
+    const { y, pi, pikl, forzosa, n, N } = analisis;
+    const t = analisis.referencias.t;
+    const valores = [];
+    const valoresMAS = [];
+    const frecuencia = new Map();
+    let cubreSYG = 0, cubreWR = 0, conWR = 0, negativas = 0;
+    const todas = Array.from({ length: N }, (_, k) => k);
+    for (let b = 0; b < R; b++) {
+      const s = sortea(analisis, azar);
+      const e = estimaMuestra(y, pi, pikl, forzosa, s);
+      valores.push(e.t);
+      const clave = s.join(',');
+      frecuencia.set(clave, (frecuencia.get(clave) || 0) + 1);
+      if (e.vSYG < 0) negativas++;
+      else if (Math.abs(e.t - t) <= 1.96 * Math.sqrt(e.vSYG)) cubreSYG++;
+      if (e.vWR !== null) { conWR++; if (Math.abs(e.t - t) <= 1.96 * Math.sqrt(e.vWR)) cubreWR++; }
+      const sm = baraja(todas, azar).slice(0, n);
+      valoresMAS.push(N / n * suma(sm.map(k => y[k])));
+    }
+    const resumen = (v) => {
+      const media = suma(v) / v.length;
+      const de = Math.sqrt(suma(v.map(a => (a - media) ** 2)) / (v.length - 1));
+      return { media, ee: de, eeMedia: de / Math.sqrt(v.length), sesgo: media - t, ecm: suma(v.map(a => (a - t) ** 2)) / v.length };
+    };
+    let apartamiento = 0;
+    for (const m of analisis.muestras) {
+      const f = (frecuencia.get(m.s.join(',')) || 0) / R;
+      const z = Math.abs(f - m.p) / Math.sqrt(Math.max(m.p * (1 - m.p), 1e-12) / R);
+      apartamiento = Math.max(apartamiento, z);
+    }
+    const fuera = [...frecuencia.keys()].filter(c => !analisis.muestras.some(m => m.s.join(',') === c));
+    return {
+      R, semilla, valores, valoresMAS,
+      diseno: resumen(valores), mas: resumen(valoresMAS),
+      coberturaSYG: cubreSYG / R, negativasSYG: negativas / R,
+      coberturaWR: conWR > 0 ? cubreWR / conWR : null,
+      apartamientoMaximo: apartamiento,   // en errores estándar binomiales
+      muestrasFueraDelSoporte: fuera.length,
+    };
+  }
+
+  // ------------------------------------------------------------ dos etapas
+
+  // La población de estudiantes de las clases de Lohr: los M_i son los reales
+  // (classes.csv) y las horas de estudio se inventan con semilla, con un
+  // efecto de clase de varianza ρ y uno individual de varianza 1 − ρ, en una
+  // escala de media 3,5 h y desviación 1,2 h, redondeadas a media hora y sin
+  // negativos. Es un ejemplo ilustrativo: la ρ que se muestra es la R_a² de
+  // estos datos, no la del deslizador.
+  function poblacionClases(M, rho, semilla) {
+    const azar = generador(semilla);
+    const media = 3.5;
+    const de = 1.2;
+    return M.map((Mi) => {
+      const efecto = Math.sqrt(rho) * normal(azar);
+      const horas = [];
+      for (let j = 0; j < Mi; j++) {
+        const v = media + de * (efecto + Math.sqrt(1 - rho) * normal(azar));
+        horas.push(Math.max(0, Math.round(v * 2) / 2));
+      }
+      return horas;
+    });
+  }
+
+  // La R_a² del cap. 5 (M4): 1 − MSW/S², con S² de todos los estudiantes.
+  function anova(yPorClase) {
+    const todos = yPorClase.flat();
+    const K = todos.length;
+    const N = yPorClase.length;
+    const media = suma(todos) / K;
+    const S2 = suma(todos.map(v => (v - media) ** 2)) / (K - 1);
+    let ssw = 0;
+    let ssb = 0;
+    for (const c of yPorClase) {
+      const mi = suma(c) / c.length;
+      ssw += suma(c.map(v => (v - mi) ** 2));
+      ssb += c.length * (mi - media) ** 2;
+    }
+    const MSW = ssw / (K - N);
+    const MSB = ssb / (N - 1);
+    return { K, media, S2, MSW, MSB, Ra2: 1 - MSW / S2 };
+  }
+
+  // m óptimo con presupuesto (cap. 5 M8; Lohr §5.4, ec. 5.36 para N grande):
+  // m* = √(c₁(1 − ρ)/(c₂ρ)) y n* = C/(c₁ + c₂m*). Con ρ ≤ 0 no hay óptimo
+  // finito: conviene tomar cuantos estudiantes quepan en cada clase.
+  function costoOptimo(c1, c2, rho, C) {
+    if (!(c1 > 0 && c2 > 0 && C > 0)) return { error: 'c₁, c₂ y C deben ser positivos.' };
+    if (!(rho > 0)) return { mOpt: Infinity, nOpt: null, nota: 'Con ρ ≤ 0 conviene tomar cuantos estudiantes quepan en cada clase.' };
+    const mOpt = Math.sqrt(c1 * (1 - rho) / (c2 * rho));
+    return { mOpt, nOpt: C / (c1 + c2 * mOpt) };
+  }
+
+  // Dos etapas: clases con π_i ∝ M_i (inclusión forzosa si toca) y m
+  // estudiantes por MAS en cada una (todos, si la clase tiene menos de m).
+  // V(t̂_π) de la ec. 6.27: la etapa 1 es la forma SYG con los totales t_i, y
+  // la etapa 2 es Σ V(t̂_i)/π_i. Esta es una descomposición por etapas de
+  // verdad (ley de la varianza total), no los sumandos de un estimador.
+  function analizaDosEtapas(M, yPorClase, n, m, esquema) {
+    if (esquema === 'sistematico_aleatorio') throw new Error('Con 15 clases, el sistemático con la lista barajada no se enumera.');
+    const N = M.length;
+    const K = suma(M);
+    const inc = probabilidadesInclusion(M, n);
+    const pi = inc.pi;
+    const muestras = distribucion(pi, inc.forzosa, n, esquema);
+    const { pikl } = segundoOrden(N, muestras);
+    const tI = yPorClase.map(c => suma(c));
+    const filas = yPorClase.map((c, i) => {
+      const Mi = M[i];
+      const mi = Math.min(m, Mi);
+      const media = tI[i] / Mi;
+      const S2i = Mi > 1 ? suma(c.map(v => (v - media) ** 2)) / (Mi - 1) : 0;
+      const Vi = Mi * Mi * (1 - mi / Mi) * S2i / mi;
+      return { Mi, mi, ti: tI[i], S2i, Vi, pi: pi[i], piCond: mi / Mi, piFinal: pi[i] * mi / Mi, peso: Mi / (pi[i] * mi) };
+    });
+    const V1 = varianzas(tI, pi, pikl).formaSYG;
+    const V2 = suma(filas.map(f => f.Vi / f.pi));
+    const V = V1 + V2;
+    // La aproximación con reemplazo (ec. 6.30; el s_z²/n del M9 del cap. 6):
+    // su esperanza exacta bajo este diseño, sumando sobre las muestras. Las
+    // clases forzosas van aparte, como un estrato que se censa (igual que en
+    // una etapa): aportan solo su V(t̂_i), que se estima sin sesgo dentro de
+    // ellas. Meterlas en la 6.30 le cargaba a la aproximación un exceso que no
+    // es suyo: +95 % en lugar de +29 % con n = 8 (T7.121).
+    const libresC = M.map((_, i) => i).filter(i => !inc.forzosa[i]);
+    const vForzosas = suma(libresC.length === N ? [] : filas.filter((_, i) => inc.forzosa[i]).map(f => f.Vi));
+    let eWR = 0;
+    for (const { s, p } of muestras) {
+      const sl = s.filter(i => !inc.forzosa[i]);
+      const r = sl.length;
+      if (r < 2) { eWR = null; break; }
+      const a = sl.map(i => tI[i] / pi[i]);
+      eWR += p * (r / (r - 1) * (suma(a.map(v => v * v)) - suma(a) ** 2 / r) + suma(sl.map(i => filas[i].Vi / pi[i] ** 2)));
+    }
+    if (eWR !== null) eWR += vForzosas;
+    const pesos = filas.map(f => f.peso);
+    const autoponderado = Math.max(...pesos) - Math.min(...pesos) <= 1e-9 * Math.max(...pesos);
+    // Por qué se rompe la cancelación de M_i: una clase forzosa tiene π_i = 1 y
+    // no n·M_i/K, y una clase con menos de m estudiantes se censa.
+    const motivos = [];
+    if (inc.forzosa.some(Boolean)) motivos.push('forzosas');
+    if (M.some(Mi => Mi < m)) motivos.push('clases_menores_que_m');
+    const an = anova(yPorClase);
+    // El deff compara con un MAS de tantos estudiantes como los que se esperan,
+    // Σ π_i·m_i (= n·m si ninguna clase tiene menos de m).
+    const estudiantes = suma(filas.map(f => f.pi * f.mi));
+    const vMAS = K * K * (1 - estudiantes / K) * an.S2 / estudiantes;
+    return {
+      N, K, n, m, esquema, pi, forzosa: inc.forzosa, filas, t: suma(tI),
+      V1, V2, V, ee: Math.sqrt(V), parte1: V1 / V, parte2: V2 / V,
+      eWR, sesgoWR: eWR === null ? null : eWR - V,
+      autoponderado, pesoComun: autoponderado ? pesos[0] : null, motivos,
+      anova: an, estudiantes, vMAS, deff: V / vMAS, nEf: estudiantes / (V / vMAS),
+    };
+  }
+
+  // ------------------------------------------------------------- exportación
+
+  const Motor = {
+    LIMITE_N, ESQUEMAS,
+    suma, combinaciones, generador, normal, baraja,
+    validaPoblacion, probabilidadesInclusion, distribucion, segundoOrden,
+    sistematicoOrden, ordenesCirculares, maximaEntropia, muestraRegla, tramosRegla,
+    estimaMuestra, varianzas, referencias, recta, analiza, evaluaMuestra, desplazaY,
+    sortea, replicas,
+    poblacionClases, anova, costoOptimo, analizaDosEtapas,
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = Motor;
+  else raiz.Motor = Motor;
+})(typeof window !== 'undefined' ? window : this);
+
+const ESCENARIOS = {
+ "_leeme": "Escenarios del laboratorio πPT (T7.118 y T7.121). «tiendas» y «clases» son datos de Lohr, 3.ª ed.; los demás son ejemplos ilustrativos inventados para el laboratorio, y la página los marca así. «proposito» dice qué ilustra cada uno (criterio del curso: todo ejemplo con contexto). En «clases» los M_i son los de classes.csv y las horas se generan con semilla en motor.js (poblacionClases).",
+ "una_etapa": [
+  {
+   "clave": "tiendas",
+   "titulo": "Las cuatro tiendas de Lohr",
+   "tipo": "dato",
+   "fuente": "Lohr, 3.ª ed., §6.1 y tabla 6.1; cap. 6, módulos 1 a 5",
+   "proposito": "El ejemplo del capítulo: con n = 2, D es de inclusión forzosa y el πPT deja V = 53.",
+   "x": "Superficie (m²)",
+   "y": "Ventas (miles de USD)",
+   "n": 2,
+   "unidades": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 11
+    },
+    {
+     "id": "B",
+     "x": 200,
+     "y": 20
+    },
+    {
+     "id": "C",
+     "x": 300,
+     "y": 24
+    },
+    {
+     "id": "D",
+     "x": 1000,
+     "y": 245
+    }
+   ]
+  },
+  {
+   "clave": "barrios",
+   "titulo": "Barrios: hogares y hogares con fibra",
+   "tipo": "ilustrativo",
+   "proposito": "Una y casi proporcional a x. Sirve para ver los pares que el sistemático con la lista fija deja fuera.",
+   "x": "Hogares",
+   "y": "Hogares con fibra óptica",
+   "n": 3,
+   "unidades": [
+    {
+     "id": "B1",
+     "x": 120,
+     "y": 98
+    },
+    {
+     "id": "B2",
+     "x": 250,
+     "y": 205
+    },
+    {
+     "id": "B3",
+     "x": 420,
+     "y": 340
+    },
+    {
+     "id": "B4",
+     "x": 600,
+     "y": 492
+    },
+    {
+     "id": "B5",
+     "x": 810,
+     "y": 658
+    },
+    {
+     "id": "B6",
+     "x": 1000,
+     "y": 815
+    }
+   ]
+  },
+  {
+   "clave": "hospitales",
+   "titulo": "Hospitales: camas y urgencias del mes",
+   "tipo": "ilustrativo",
+   "proposito": "Con n = 3, el hospital más grande queda justo en π = 1: de inclusión forzosa.",
+   "x": "Camas",
+   "y": "Urgencias atendidas en el mes",
+   "n": 3,
+   "unidades": [
+    {
+     "id": "H1",
+     "x": 80,
+     "y": 510
+    },
+    {
+     "id": "H2",
+     "x": 140,
+     "y": 820
+    },
+    {
+     "id": "H3",
+     "x": 210,
+     "y": 1390
+    },
+    {
+     "id": "H4",
+     "x": 320,
+     "y": 1960
+    },
+    {
+     "id": "H5",
+     "x": 450,
+     "y": 2890
+    },
+    {
+     "id": "H6",
+     "x": 600,
+     "y": 3740
+    }
+   ]
+  },
+  {
+   "clave": "facturas",
+   "titulo": "Lotes de facturas: valor en libros y valor auditado",
+   "tipo": "ilustrativo",
+   "proposito": "Una auditoría por valor en libros: el valor auditado sigue de cerca al registrado, y el lote mayor es de inclusión forzosa.",
+   "x": "Valor en libros (millones de pesos)",
+   "y": "Valor auditado (millones de pesos)",
+   "n": 3,
+   "unidades": [
+    {
+     "id": "L1",
+     "x": 45,
+     "y": 44
+    },
+    {
+     "id": "L2",
+     "x": 75,
+     "y": 72
+    },
+    {
+     "id": "L3",
+     "x": 160,
+     "y": 155
+    },
+    {
+     "id": "L4",
+     "x": 290,
+     "y": 281
+    },
+    {
+     "id": "L5",
+     "x": 520,
+     "y": 508
+    },
+    {
+     "id": "L6",
+     "x": 890,
+     "y": 865
+    }
+   ]
+  },
+  {
+   "clave": "recta_lejos",
+   "titulo": "Sedes: empleados y factura de energía",
+   "tipo": "ilustrativo",
+   "proposito": "Una relación casi lineal, con una parte fija grande en la factura.",
+   "x": "Empleados",
+   "y": "Factura de energía del año (millones de pesos)",
+   "n": 3,
+   "unidades": [
+    {
+     "id": "S1",
+     "x": 12,
+     "y": 32.4
+    },
+    {
+     "id": "S2",
+     "x": 20,
+     "y": 34.9
+    },
+    {
+     "id": "S3",
+     "x": 30,
+     "y": 35.2
+    },
+    {
+     "id": "S4",
+     "x": 45,
+     "y": 39.9
+    },
+    {
+     "id": "S5",
+     "x": 60,
+     "y": 41.1
+    },
+    {
+     "id": "S6",
+     "x": 80,
+     "y": 46.8
+    }
+   ]
+  },
+  {
+   "clave": "inversa",
+   "titulo": "Sucursales: empleados e incidentes",
+   "tipo": "ilustrativo",
+   "proposito": "Una y que baja cuando x sube.",
+   "x": "Empleados",
+   "y": "Incidentes operativos del año",
+   "n": 3,
+   "unidades": [
+    {
+     "id": "U1",
+     "x": 60,
+     "y": 480
+    },
+    {
+     "id": "U2",
+     "x": 110,
+     "y": 410
+    },
+    {
+     "id": "U3",
+     "x": 190,
+     "y": 310
+    },
+    {
+     "id": "U4",
+     "x": 280,
+     "y": 220
+    },
+    {
+     "id": "U5",
+     "x": 390,
+     "y": 140
+    },
+    {
+     "id": "U6",
+     "x": 520,
+     "y": 95
+    }
+   ]
+  }
+ ],
+ "dos_etapas": {
+  "clave": "clases",
+  "titulo": "Las 15 clases de estadística (Lohr, ej. 6.11)",
+  "fuente": "Lohr, 3.ª ed., ej. 6.11 (classes.csv y classpps.csv); cap. 6, módulo 9",
+  "M": [
+   44,
+   33,
+   26,
+   22,
+   76,
+   63,
+   20,
+   44,
+   54,
+   34,
+   46,
+   24,
+   46,
+   100,
+   15
+  ],
+  "y": "Horas de estudio de estadística a la semana (inventadas)",
+  "n": 5,
+  "m": 4,
+  "rho": 0.25,
+  "semilla": 2026,
+  "costos": {
+   "c1": 120,
+   "c2": 8,
+   "C": 1200,
+   "unidad": "miles de pesos",
+   "tipo": "ilustrativo"
+  }
+ }
+};
+
+/* retos.js — los retos del laboratorio πPT y el formato de las cifras.
+ *
+ * Cada respuesta la calcula el motor en el momento, sobre el escenario, el n y
+ * el diseño que nombra la pregunta: no hay cifras escritas a mano que puedan
+ * quedar desfasadas. La prueba (precalculo/pruebas/prueba_laboratorio_ppt.js)
+ * evalúa todas y busca en ellas las cifras del curso (1/3, 0,8594, 53, 70 120,
+ * 32,35). La auditoría de T7.121 pidió que cada pregunta diga de qué diseño
+ * dependen sus cifras y que la notación sea la del curso (V̂, n_opt).
+ */
+(function (raiz) {
+  'use strict';
+
+  // Cifras como las escribe el curso: coma decimal, y espacio de miles solo
+  // desde cinco cifras (2000, 14 248; T7.110). El espacio es duro para que
+  // «14 248» no se parta al final de una línea.
+  function numero(v, dec = 0) {
+    if (v === null || v === undefined || !Number.isFinite(v)) return '—';
+    const neg = v < 0 && Math.abs(v) >= 0.5 * 10 ** -dec;
+    const [ent, frac] = Math.abs(v).toFixed(dec).split('.');
+    const grupos = ent.length > 4 ? ent.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : ent;
+    return (neg ? '−' : '') + grupos + (frac ? ',' + frac : '');
+  }
+  const pct = (v, dec = 1) => (v === null || !Number.isFinite(v) ? '—' : numero(100 * v, dec) + ' %');
+  const lista = (ids) => ids.length <= 1 ? ids.join('') : ids.slice(0, -1).join(', ') + ' y ' + ids[ids.length - 1];
+  const V = (s) => `V̂<sub>${s}</sub>`;
+
+  function crea(Motor, ESC) {
+    const esc = (clave) => ESC.una_etapa.find(e => e.clave === clave);
+    const D = ESC.dos_etapas;
+    const clases = (rho) => Motor.poblacionClases(D.M, rho, D.semilla);
+
+    return [
+      // ------------------------------------------------------------ pestaña 1
+      {
+        id: 'regla-bd', pestana: 1,
+        pregunta: 'Tiendas, n = 2: ¿qué valores de u dan la muestra {B, D}? ¿Con qué probabilidad sale esa muestra?',
+        respuesta() {
+          const a = Motor.analiza(esc('tiendas').unidades, 2, 'sistematico_fijo');
+          const t = Motor.tramosRegla(a.pi, 2).find(tr => tr.s.join() === '1,3');
+          return `<span class="marca dato">Dato</span> Los u entre ${numero(t.desde, 4)} (1/6) y ${numero(t.hasta, 4)} (1/2): ` +
+            `ahí empieza el tramo de B, y u + 1 cae en el de D. La probabilidad es el largo de ese tramo, ` +
+            `${numero(t.hasta - t.desde, 4)} = 1/3, que es justamente π<sub>B</sub> (cap. 6, M5).`;
+        },
+      },
+      {
+        id: 'psi-pi', pestana: 1,
+        pregunta: 'Tiendas, n = 2: si se sortea con reemplazo (dos extracciones con ψ), ¿con qué probabilidad sale D al menos una vez? ¿Y con el πPT?',
+        respuesta() {
+          const a = Motor.analiza(esc('tiendas').unidades, 2, 'sistematico_fijo');
+          const psiD = a.psi[3];
+          return `<span class="marca dato">Dato</span> Con reemplazo, 1 − (1 − ψ<sub>D</sub>)² = 1 − ${numero(1 - psiD, 3)}² = ${numero(1 - (1 - psiD) ** 2, 4)}; ` +
+            `con el πPT, π<sub>D</sub> = ${numero(a.pi[3], 0)}. <span class="marca lectura">Lectura</span> Con reemplazo, D falta en ` +
+            `${pct((1 - psiD) ** 2)} de las muestras y sale repetida en otras; n·ψ<sub>D</sub> = ${numero(2 * psiD, 2)} no es la probabilidad ` +
+            `de ninguna de las dos cosas (cap. 6, M4).`;
+        },
+      },
+      {
+        id: 'ia-tiendas', pestana: 1,
+        pregunta: 'Con IA: pídele a un asistente el código R de un πPT sistemático con las tiendas y n = 2, y compruébalo con este laboratorio. ¿Le da π<sub>D</sub> = 1 y V = 53? ¿Qué pasa si el código calcula π<sub>k</sub> = 2x<sub>k</sub>/1600 sin más?',
+        respuesta() {
+          const a = Motor.analiza(esc('tiendas').unidades, 2, 'sistematico_fijo');
+          return `<span class="marca dato">Dato</span> Con la inclusión forzosa, π<sub>D</sub> = ${numero(a.pi[3], 0)} y V = ${numero(a.V, 0)}. ` +
+            `Un código que no la trata da π<sub>D</sub> = 2·1000/1600 = ${numero(1.25, 2)}, que no es una probabilidad, ` +
+            `y <code>UPsystematic</code> con esas π no da error: devuelve un vector con un 1,25 donde debería haber un 1. ` +
+            `Si después se filtra con <code>s == 1</code>, D no entra nunca, y el total olvida la tienda que pesa más. ` +
+            `<span class="marca opinion">Opinión del material</span> Como en el resto del curso, el código de un asistente se declara ` +
+            `y se verifica antes de usarlo. Aquí bastan tres comprobaciones: que las π sumen n sin pasar de 1, que D esté en todas las ` +
+            `muestras y que los t̂ posibles sean 311, 305 y 293.`;
+        },
+      },
+
+      // ------------------------------------------------------------ pestaña 2
+      {
+        id: 'raj-tiendas', pestana: 2,
+        pregunta: 'Tiendas, n = 2: ¿cuánto vale Cov(x, y²/x) y qué dice el criterio de Raj?',
+        respuesta() {
+          const r = Motor.analiza(esc('tiendas').unidades, 2, 'maxima_entropia').referencias;
+          return `<span class="marca dato">Dato</span> Cov(x, y²/x) = ${numero(r.covRaj, 0)}, con divisor N. Es positiva: el PPT con reemplazo gana. ` +
+            `La diferencia es (16/2)·${numero(r.covRaj, 0)} = ${numero(r.rajDiferencia, 0)}, ` +
+            `justo ${numero(r.vMRAS, 0)} (MAS con reemplazo) menos ${numero(r.vHH, 0)} (Hansen–Hurwitz), como en el M5 del cap. 6.`;
+        },
+      },
+      {
+        id: 'y-constante', pestana: 2,
+        pregunta: 'Barrios, n = 3, máxima entropía: pulsa «y constante». ¿Qué le pasa al MAS? ¿Y al deff?',
+        respuesta() {
+          const e = esc('barrios');
+          const media = Motor.suma(e.unidades.map(u => u.y)) / e.unidades.length;
+          const a = Motor.analiza(e.unidades.map(u => ({ ...u, y: media })), 3, 'maxima_entropia');
+          return `<span class="marca dato">Dato</span> Con todas las y iguales, el MAS acierta siempre: V<sub>MAS</sub> = ${numero(a.referencias.vMAS, 0)}, ` +
+            `y el deff no existe (no se puede dividir por cero). El πPT, en cambio, deja V = ${numero(a.V, 0)}. ` +
+            `<span class="marca lectura">Lectura</span> Los cocientes y<sub>k</sub>/π<sub>k</sub> son distintos porque las π lo son: ` +
+            `el πPT reparte el esfuerzo según x, y aquí x no dice nada de y.`;
+        },
+      },
+      {
+        id: 'recta-lejos', pestana: 2,
+        pregunta: 'Sedes, n = 3, máxima entropía: la correlación entre x e y es casi 1. ¿Gana el πPT? ¿Y si se lleva la recta al origen?',
+        respuesta() {
+          const e = esc('recta_lejos');
+          const a = Motor.analiza(e.unidades, e.n, 'maxima_entropia');
+          const b = Motor.analiza(Motor.desplazaY(e.unidades, -a.rectaLibres.corte), e.n, 'maxima_entropia');
+          return `<span class="marca dato">Dato</span> Con correlación ${numero(a.referencias.corr, 3)}, el deff es ${numero(a.deff, 2)}: ` +
+            `el πPT ${a.deff > 1 ? 'pierde' : 'gana'}. La recta corta el eje en ${numero(a.rectaLibres.corte, 1)}. ` +
+            `Con «Llevar la recta al origen» la correlación sigue en ${numero(b.referencias.corr, 3)} y el deff baja a ${numero(b.deff, 3)}. ` +
+            `<span class="marca lectura">Lectura</span> La correlación no basta: hace falta que y sea casi proporcional a x, y aquí la ` +
+            `factura tiene una parte fija grande (cap. 6, M5).`;
+        },
+      },
+
+      // ------------------------------------------------------------ pestaña 3
+      {
+        id: 'pares-cero', pestana: 3,
+        pregunta: 'Barrios, n = 3, sistemático con la lista fija: ¿cuántos pares nunca salen juntos? ¿Qué les pasa a las varianzas estimadas?',
+        respuesta() {
+          const a = Motor.analiza(esc('barrios').unidades, 3, 'sistematico_fijo');
+          const b = Motor.analiza(esc('barrios').unidades, 3, 'sistematico_aleatorio');
+          const negativas = a.muestras.filter(m => m.vSYG < 0).length;
+          return `<span class="marca dato">Dato</span> ${a.paresCero.length} pares tienen π<sub>kl</sub> = 0 y ${a.paresYG.length} incumplen Yates–Grundy. ` +
+            `${V('SYG')} sale negativa en ${negativas} de las ${a.muestras.length} muestras posibles, con probabilidad ${pct(a.pNegativa)}, ` +
+            `y promedia ${numero(a.esperanzas.vSYG, 1)} frente a una V de ${numero(a.V, 1)}: sesgada, porque nunca ve los pares que no salen juntos. ` +
+            `Con la lista barajada hay ${b.paresCero.length} pares en cero, y en ese diseño E(${V('SYG')}) = V = ${numero(b.V, 1)}.`;
+        },
+      },
+      {
+        id: 'facturas-yg', pestana: 3,
+        pregunta: 'Facturas, n = 2, sistemático con la lista barajada: ningún par queda en cero. ¿Puede salir negativa la varianza estimada SYG?',
+        respuesta() {
+          const a = Motor.analiza(esc('facturas').unidades, 2, 'sistematico_aleatorio');
+          return `<span class="marca dato">Dato</span> Sí. ${a.paresCero.length ? `Hay ${a.paresCero.length} pares en cero` : 'Ningún par queda en cero'}, pero ${a.paresYG.length === 1 ? 'el par' : 'los pares'} ` +
+            `${lista(a.paresYG.map(p => p.map(k => a.ids[k]).join('–')))} ${a.paresYG.length === 1 ? 'incumple' : 'incumplen'} Yates–Grundy, ` +
+            `y ${V('SYG')} sale negativa con probabilidad ${pct(a.pNegativa)}. Sigue siendo insesgada: E(${V('SYG')}) = V = ${numero(a.V, 1)}. ` +
+            `<span class="marca lectura">Lectura</span> π<sub>kl</sub> &gt; 0 da la insesgadez; π<sub>k</sub>π<sub>l</sub> ≥ π<sub>kl</sub> es lo que ` +
+            `impide los valores negativos (cap. 6, M7).`;
+        },
+      },
+      {
+        id: 'cobertura', pestana: 3,
+        pregunta: 'Hospitales, n = 3, máxima entropía: ¿cubre el intervalo t̂ ± 1,96·√V̂<sub>SYG</sub> el 95 % de las veces? Simula 20 000 réplicas con semilla 2026.',
+        respuesta() {
+          const e = esc('hospitales');
+          const a = Motor.analiza(e.unidades, 3, 'maxima_entropia');
+          const t = a.referencias.t;
+          const exacta = Motor.suma(a.muestras.filter(m => m.vSYG >= 0 && Math.abs(m.t - t) <= 1.96 * Math.sqrt(m.vSYG)).map(m => m.p));
+          const r = Motor.replicas(a, 20000, 2026);
+          const fz = a.ids.filter((_, k) => a.forzosa[k]);
+          return `<span class="marca dato">Dato</span> Cubre el ${pct(exacta)} de las veces, sumando las probabilidades de las muestras que lo ` +
+            `consiguen; las 20 000 réplicas dan ${pct(r.coberturaSYG)}. <span class="marca lectura">Lectura</span> ${lista(fz)} es de inclusión ` +
+            `forzosa (3·600/1800 = 1), así que solo se sortean 2 de los otros 5 y hay ${a.muestras.length} muestras posibles, no las 20 de C(6, 3). ` +
+            `Con tan pocas, t̂ toma pocos valores y la aproximación normal que justifica el 1,96 no tiene de dónde salir: ` +
+            `la cobertura nominal es una promesa para n grande.`;
+        },
+      },
+
+      // ------------------------------------------------------------ pestaña 4
+      {
+        id: 'peso-3235', pestana: 4,
+        pregunta: 'Clases, n = 5 y m = 4: ¿qué peso tiene cada estudiante de la muestra? ¿Por qué todos el mismo?',
+        respuesta() {
+          const d = Motor.analizaDosEtapas(D.M, clases(D.rho), 5, 4, 'maxima_entropia');
+          return `<span class="marca dato">Dato</span> ${numero(d.pesoComun, 2)} = 647/20 (cap. 6, M9). ` +
+            `La clase i sale con π<sub>i</sub> = 5M<sub>i</sub>/647, y dentro de ella cada estudiante con 4/M<sub>i</sub>: el M<sub>i</sub> se cancela ` +
+            `y queda 20/647 para todos.`;
+        },
+      },
+      {
+        id: 'n7-forzosa', pestana: 4,
+        pregunta: 'Clases, n = 7 y m = 2: ¿sigue siendo autoponderado?',
+        respuesta() {
+          const d = Motor.analizaDosEtapas(D.M, clases(D.rho), 7, 2, 'maxima_entropia');
+          const pesos = d.filas.map(f => f.peso);
+          const resto = 647 - 100;
+          return `<span class="marca dato">Dato</span> No. La clase 14 tiene 100 estudiantes y 7·100/647 = ${numero(700 / 647, 3)} pasa de 1: ` +
+            `es de inclusión forzosa, con π = 1 en lugar de 7M<sub>i</sub>/647, y la cancelación se rompe. ` +
+            `Las otras 14 se reparten los 6 cupos que quedan sobre ${resto} estudiantes y pesan ${resto}/(6·2) = ${numero(Math.min(...pesos), 2)}; ` +
+            `los de la clase 14 pesan 100/2 = ${numero(Math.max(...pesos), 2)}. ` +
+            `<span class="marca lectura">Lectura</span> Para que pesaran igual, esa clase necesitaría 100·12/${resto} = ${numero(1200 / resto, 2)} ` +
+            `estudiantes: ningún número entero lo logra.`;
+        },
+      },
+      {
+        id: 'rho-etapas', pestana: 4,
+        pregunta: 'Clases, n = 5, m = 4, máxima entropía: sube la ρ pedida de 0,1 a 0,5. ¿Qué etapa gana peso en la varianza?',
+        respuesta() {
+          const baja = Motor.analizaDosEtapas(D.M, clases(0.1), 5, 4, 'maxima_entropia');
+          const alta = Motor.analizaDosEtapas(D.M, clases(0.5), 5, 4, 'maxima_entropia');
+          return `<span class="marca dato">Dato</span> La etapa 1 pasa del ${pct(baja.parte1)} al ${pct(alta.parte1)} de la varianza ` +
+            `(R<sub>a</sub>² de los datos: ${numero(baja.anova.Ra2, 3)} y ${numero(alta.anova.Ra2, 3)}). ` +
+            `<span class="marca lectura">Lectura</span> Con estudiantes de una misma clase parecidos, lo que más cuenta es qué clases salen.`;
+        },
+      },
+      {
+        id: 'con-reemplazo', pestana: 4,
+        pregunta: 'Clases, n = 5, m = 4, máxima entropía: ¿cuánto sobrestima la varianza la aproximación con reemplazo (s<sub>z</sub>²/n, cap. 6, M9)? ¿De dónde sale el exceso?',
+        respuesta() {
+          const d = Motor.analizaDosEtapas(D.M, clases(D.rho), 5, 4, 'maxima_entropia');
+          const exceso = d.eWR - d.V;
+          return `<span class="marca dato">Dato</span> En promedio da ${numero(d.eWR, 0)} frente a una V de ${numero(d.V, 0)}: ` +
+            `un ${pct(exceso / d.V)} de más. La parte de la etapa 2 sale exacta; todo el exceso está en la etapa 1: ` +
+            `${numero(exceso, 0)} sobre V<sub>1</sub> = ${numero(d.V1, 0)}, un ${pct(exceso / d.V1)}. ` +
+            `<span class="marca lectura">Lectura</span> Es casi exactamente lo que se pierde al ignorar el factor de corrección por población ` +
+            `finita de la primera etapa: con 5 de 15 clases, 1/(1 − 5/15) − 1 = 50 %. Lohr (§6.4.1 y ej. 6.11) advierte que, con una ` +
+            `fracción n/N grande, la aproximación con reemplazo puede sobrestimar.`;
+        },
+      },
+    ];
+  }
+
+  const Retos = { crea, numero, pct, lista };
+  if (typeof module !== 'undefined' && module.exports) module.exports = Retos;
+  else raiz.Retos = Retos;
+})(typeof window !== 'undefined' ? window : this);
+
+/* interfaz.js — el dibujo y los eventos del laboratorio πPT.
+ *
+ * Todo el cálculo está en motor.js; aquí solo se lee el estado, se llama al
+ * motor y se pinta. Dos reglas que corrigen al original (T7.118):
+ *   · la tabla de la población no se reconstruye mientras se escribe en ella
+ *     (el original la rehacía en cada tecla y solo dejaba entrar una cifra);
+ *   · el estado vive en la URL (#…), con su semilla: un enlace reproduce lo que
+ *     se ve, réplicas incluidas.
+ */
+(function () {
+  'use strict';
+  const { numero, pct, lista } = Retos;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const NOMBRE_DISENO = {
+    sistematico_fijo: 'sistemático con la lista fija',
+    sistematico_aleatorio: 'sistemático con la lista barajada',
+    maxima_entropia: 'máxima entropía',
+  };
+  const DOS = ESCENARIOS.dos_etapas;
+  const RETOS = Retos.crea(Motor, ESCENARIOS);
+
+  // Decimales según el tamaño: 14 248 · 305,0 · 2,49 · 0,1667.
+  function cifra(v, ref = v) {
+    const a = Math.abs(ref);
+    return numero(v, a >= 1000 ? 0 : a >= 10 ? 1 : a >= 1 ? 2 : 4);
+  }
+  // Una columna de datos: sin decimales si todos son enteros (100, no 100,00).
+  function columna(valores) {
+    if (valores.every(v => Number.isInteger(v))) return (v) => numero(v, 0);
+    const ref = Motor.suma(valores.map(Math.abs)) / valores.length;
+    return (v) => cifra(v, ref);
+  }
+  // Un sesgo grande se dice en veces, no en un porcentaje de siete cifras.
+  function sesgoRelativo(x, V) {
+    const r = (x - V) / (V || 1);
+    if (Math.abs(r) >= 10) return `${numero(x / (V || 1), 0)} veces V`;
+    return `${r >= 0 ? '+' : ''}${pct(r)}`;
+  }
+  // Los nombres de las verificaciones vienen del motor en texto plano: π_kl → π<sub>kl</sub>.
+  const subindices = (s) => esc(s).replace(/_\{([^}]*)\}/g, '<sub>$1</sub>').replace(/_([a-zπ]+)/g, '<sub>$1</sub>');
+  // 2,2·10⁻¹⁶ en lugar de 2.2e-16.
+  function cientifica(v) {
+    if (v === 0) return '0';
+    const exp = Math.floor(Math.log10(Math.abs(v)));
+    const sup = String(exp).replace('-', '⁻').replace(/\d/g, d => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+    return `${numero(v / 10 ** exp, 1)}·10${sup}`;
+  }
+  const sub = (s) => `<sub>${s}</sub>`;
+  const conjunto = (ids) => `{${ids.map(esc).join(', ')}}`;
+
+  // ------------------------------------------------------------------- estado
+  function inicial() {
+    return {
+      // u empieza en 0,75 ({C, D}): con 0,25 la guía pedía «mover u hasta {B, D}» y ya estaba ahí (T7.121).
+      tab: 1, esc: 'tiendas', n: 2, diseno: 'maxima_entropia', u: 0.75,
+      delta: 0, constante: false, par: [0, 1], semilla: 2026, R: 5000, pagina: 0,
+      dos: { n: DOS.n, m: DOS.m, rho: DOS.rho, semilla: DOS.semilla, diseno: 'maxima_entropia', c1: DOS.costos.c1, c2: DOS.costos.c2, C: DOS.costos.C },
+    };
+  }
+  let E = inicial();
+  let unidades = [];            // la población editable: [{ id, x, y }]
+  let sorteos = 0;              // cuántas veces se pulsó «Sortear u»
+  let simulacion = null;        // { clave, resultado }
+
+  const escenario = () => ESCENARIOS.una_etapa.find(e => e.clave === E.esc) || ESCENARIOS.una_etapa[0];
+  const copia = (us) => us.map(u => ({ id: u.id, x: u.x, y: u.y }));
+  const mediaY = () => Motor.suma(unidades.map(u => u.y)) / unidades.length;
+  // La población que se analiza: la editable, con el δ o la y constante de la pestaña 2.
+  function enUso() {
+    if (E.constante) { const m = mediaY(); return unidades.map(u => ({ ...u, y: m })); }
+    return E.delta ? Motor.desplazaY(unidades, E.delta) : copia(unidades);
+  }
+
+  // Los análisis se recalculan solo si cambia algo de lo que dependen.
+  const memoria = new Map();
+  function analisis(diseno) {
+    const us = enUso();
+    const clave = JSON.stringify([us.map(u => [u.x, u.y]), E.n, diseno]);
+    if (!memoria.has(clave)) {
+      if (memoria.size > 40) memoria.clear();
+      memoria.set(clave, Motor.analiza(us, E.n, diseno));
+    }
+    const a = memoria.get(clave);
+    a.clave = clave;
+    return a;
+  }
+
+  // ------------------------------------------------------------ estado en la URL
+  function aUrl() {
+    const p = new URLSearchParams();
+    p.set('t', E.tab); p.set('e', E.esc); p.set('n', E.n); p.set('d', E.diseno); p.set('u', E.u);
+    if (E.delta) p.set('dl', +E.delta.toFixed(4));
+    if (E.constante) p.set('c', 1);
+    p.set('s', E.semilla); p.set('r', E.R);
+    const base = escenario().unidades;
+    const editada = unidades.length !== base.length || unidades.some((u, k) => u.x !== base[k].x || u.y !== base[k].y);
+    if (editada) p.set('p', unidades.map(u => `${u.id}:${u.x}:${u.y}`).join(';'));
+    const d = E.dos;
+    p.set('dn', d.n); p.set('dm', d.m); p.set('dr', d.rho); p.set('ds', d.semilla); p.set('dd', d.diseno);
+    p.set('c1', d.c1); p.set('c2', d.c2); p.set('pr', d.C);
+    history.replaceState(null, '', '#' + p.toString());
+  }
+  function deUrl() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    const num = (k, def) => (p.has(k) && Number.isFinite(+p.get(k)) ? +p.get(k) : def);
+    if (p.has('e') && ESCENARIOS.una_etapa.some(e => e.clave === p.get('e'))) E.esc = p.get('e');
+    unidades = copia(escenario().unidades);
+    if (p.has('p')) {
+      const leidas = p.get('p').split(';').map(t => t.split(':')).filter(t => t.length === 3)
+        .map(([id, x, y]) => ({ id: id.slice(0, 6), x: +x, y: +y }));
+      // Los nombres llegan de una URL: solo letras, números, «_» y «-», para que nada de
+      // lo que se pegue en ella acabe como marcado en la página.
+      const valida = (u) => /^[\w-]{1,6}$/.test(u.id) && u.x > 0 && Number.isFinite(u.x) && u.y >= 0 && Number.isFinite(u.y);
+      if (leidas.length >= 3 && leidas.length <= Motor.LIMITE_N && leidas.every(valida)) unidades = leidas;
+    }
+    E.tab = Math.min(4, Math.max(1, Math.round(num('t', 1))));
+    E.n = Math.round(num('n', escenario().n));
+    if (Motor.ESQUEMAS.includes(p.get('d'))) E.diseno = p.get('d');
+    E.u = Math.min(0.999, Math.max(0, num('u', 0.75)));
+    // δ al rango del deslizador: un dl=1e200 pegado en la URL dejaba la página en NaN.
+    const ys = unidades.map(u => u.y);
+    E.delta = Math.min(Math.ceil(Math.max(...ys)), Math.max(-Math.floor(Math.min(...ys)), num('dl', 0)));
+    E.constante = p.get('c') === '1';
+    E.semilla = Math.max(1, Math.round(num('s', 2026)));
+    E.R = [1000, 5000, 20000].includes(num('r', 5000)) ? num('r', 5000) : 5000;
+    const d = E.dos;
+    d.n = Math.round(num('dn', d.n)); d.m = Math.round(num('dm', d.m)); d.rho = num('dr', d.rho);
+    d.semilla = Math.max(1, Math.round(num('ds', d.semilla)));
+    if (['maxima_entropia', 'sistematico_fijo'].includes(p.get('dd'))) d.diseno = p.get('dd');
+    const positivo = (k, def) => { const v = num(k, def); return v > 0 ? v : def; };
+    d.c1 = positivo('c1', d.c1); d.c2 = positivo('c2', d.c2); d.C = positivo('pr', d.C);
+    acota();
+  }
+  function acota() {
+    E.n = Math.min(unidades.length - 1, Math.max(1, E.n));
+    E.dos.n = Math.min(8, Math.max(2, E.dos.n));
+    E.dos.m = Math.min(20, Math.max(1, E.dos.m));
+    E.dos.rho = Math.min(0.6, Math.max(0, E.dos.rho));
+  }
+
+  // --------------------------------------------------------------- utilidades SVG
+  function pasoBonito(r) {
+    const e = 10 ** Math.floor(Math.log10(r));
+    const f = r / e;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e;
+  }
+  function marcas(min, max, cuantas = 5) {
+    const paso = pasoBonito((max - min) / cuantas || 1);
+    const salida = [];
+    for (let v = Math.ceil(min / paso) * paso; v <= max + paso * 1e-9; v += paso) salida.push(+v.toFixed(10));
+    return { valores: salida, dec: Math.max(0, -Math.floor(Math.log10(paso) + 1e-9)) };
+  }
+  // El SVG se dibuja al ancho de su caja, dividido por la escala de la letra: en el
+  // modo proyector (letra al 125 %) sale con un viewBox menor y se ve 1,25 veces más grande.
+  const escalaLetra = () => parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
+  const anchoDe = (id, maximo) => Math.max(300, Math.min(maximo, Math.floor(($(id).clientWidth || maximo) / escalaLetra())));
+  const T = (x, y, texto, extra = '') => `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" ${extra}>${esc(texto)}</text>`;
+
+  // ---------------------------------------------------------------- la población
+  function opcionesN(sel, desde, hasta, valor) {
+    sel.innerHTML = '';
+    for (let v = desde; v <= hasta; v++) sel.add(new Option(String(v), String(v), false, v === valor));
+  }
+
+  function construyePoblacion() {
+    const e = escenario();
+    const modificada = E.delta !== 0 || E.constante;
+    $('tabla-poblacion').tHead.innerHTML = `<tr><th scope="col">Unidad</th><th scope="col">x · ${esc(e.x)}</th>` +
+      `<th scope="col">y · ${esc(e.y)}</th>${modificada ? '<th scope="col">y en uso</th>' : ''}` +
+      `<th scope="col">ψ${sub('k')}</th><th scope="col">π${sub('k')}</th></tr>`;
+    const cuerpo = $('tabla-poblacion').tBodies[0];
+    cuerpo.innerHTML = '';
+    unidades.forEach((u, k) => {
+      const fila = cuerpo.insertRow();
+      fila.innerHTML = `<th scope="row">${esc(u.id)}</th>` +
+        `<td><input type="text" inputmode="decimal" data-k="${k}" data-campo="x" value="${String(u.x).replace('.', ',')}" aria-label="x de ${esc(u.id)}"></td>` +
+        `<td><input type="text" inputmode="decimal" data-k="${k}" data-campo="y" value="${String(u.y).replace('.', ',')}" aria-label="y de ${esc(u.id)}"></td>` +
+        (modificada ? `<td class="num" data-uso="${k}"></td>` : '') +
+        `<td class="num" data-psi="${k}"></td><td class="num" data-pi="${k}"></td>`;
+    });
+    opcionesN($('sel-n'), 1, unidades.length - 1, E.n);
+    $('boton-agregar').disabled = unidades.length >= Motor.LIMITE_N;
+    $('boton-quitar').disabled = unidades.length <= 3;
+    $('boton-agregar').title = unidades.length >= Motor.LIMITE_N ? `Hasta ${Motor.LIMITE_N} unidades: con más, las muestras ya no se enumeran todas.` : '';
+    $('boton-quitar').title = unidades.length <= 3 ? 'Con menos de 3 unidades no hay diseño que comparar.' : '';
+    const marca = e.tipo === 'dato' ? '<span class="marca dato">Dato</span>' : '<span class="marca ilustrativo">Ejemplo ilustrativo</span>';
+    $('escenario-fuente').innerHTML = `${marca} ${esc(e.proposito || e.titulo)}${e.fuente ? ` Fuente: ${esc(e.fuente)}.` : ''}`;
+    errores.clear();
+  }
+
+  // Los mensajes de los campos inválidos, por campo: así una edición válida en
+  // otro campo no borra el aviso de uno que sigue mal.
+  const errores = new Map();
+  function muestraErrores(a) {
+    const textos = [...errores.values()];
+    if (a && a.errores.length) textos.push(...a.errores);
+    $('errores-poblacion').textContent = textos.join(' ');
+  }
+
+  function actualizaPoblacion(a) {
+    const us = enUso();
+    const modificada = E.delta !== 0 || E.constante;
+    const aviso = $('aviso-desplazada');
+    aviso.classList.toggle('oculto', !modificada);
+    if (modificada) {
+      aviso.innerHTML = `<p>${E.constante ? 'Las y en uso son todas iguales a su media' : `Las y en uso están desplazadas δ = ${cifra(E.delta)}`}, ` +
+        `desde la pestaña 2. Las pestañas 1, 2 y 3 calculan con ellas. ` +
+        `<button type="button" class="boton secundario" data-accion="delta-cero">Volver a los datos</button></p>`;
+    }
+    muestraErrores(a);
+    if (a.errores.length) return;
+    // Las celdas se leen por su índice; si la tabla aún no se rehízo (por ejemplo, al
+    // reiniciar desde un escenario más largo), las que sobran se saltan.
+    document.querySelectorAll('#tabla-poblacion [data-psi]').forEach(td => { const k = +td.dataset.psi; if (k < a.N) td.textContent = numero(a.psi[k], 4); });
+    document.querySelectorAll('#tabla-poblacion [data-pi]').forEach(td => {
+      const k = +td.dataset.pi;
+      if (k < a.N) td.innerHTML = numero(a.pi[k], 4) + (a.forzosa[k] ? ' <span class="forzosa-etq">forzosa</span>' : '');
+    });
+    const fUso = columna(us.map(u => u.y));
+    document.querySelectorAll('#tabla-poblacion [data-uso]').forEach(td => { const k = +td.dataset.uso; if (k < us.length) td.textContent = fUso(us[k].y); });
+    const nf = a.forzosa.filter(Boolean).length;
+    const fx = columna(unidades.map(u => u.x)), fy = columna(unidades.map(u => u.y));
+    $('tabla-poblacion').tFoot.innerHTML = `<tr class="total"><th scope="row">N = ${a.N}</th><td class="num">t${sub('x')} = ${fx(a.tx)}</td>` +
+      `<td class="num">t = ${fy(Motor.suma(unidades.map(u => u.y)))}</td>${modificada ? `<td class="num">t = ${cifra(a.referencias.t)}</td>` : ''}` +
+      `<td class="num">Σ = 1</td><td class="num">Σ = ${a.n}${nf ? ` (${nf} forzosa${nf > 1 ? 's' : ''})` : ''}</td></tr>`;
+  }
+
+  function leeCampo(input) {
+    const k = +input.dataset.k;
+    const campo = input.dataset.campo;
+    const texto = input.value.trim().replace(/\s/g, '');
+    // «1.000» es mil en Colombia, pero Number() lo lee como 1: se rechaza y se explica.
+    const miles = /^\d{1,3}(\.\d{3})+$/.test(texto);
+    const v = Number(texto.replace(',', '.'));
+    const valido = texto !== '' && !miles && Number.isFinite(v) && (campo === 'x' ? v > 0 : v >= 0);
+    input.setAttribute('aria-invalid', valido ? 'false' : 'true');
+    const clave = `${k}-${campo}`;
+    if (!valido) {
+      const motivo = miles ? 'escribe los miles sin punto (1000) y los decimales con coma (2,5)'
+        : campo === 'x' ? 'x debe ser un número positivo' : 'y debe ser un número mayor o igual que 0';
+      errores.set(clave, `${unidades[k].id}: ${motivo}. Mientras tanto se calcula con el último valor válido, ${String(unidades[k][campo]).replace('.', ',')}.`);
+      muestraErrores();
+      return;
+    }
+    errores.delete(clave);
+    unidades[k][campo] = v;
+    pinta({ tabla: false });
+  }
+
+  // ------------------------------------------------------------------ pestaña 1
+  function pintaRegla(a) {
+    const n = a.n;
+    const W = anchoDe('svg-regla', 900), izq = 26, der = 26, alto = 178, y0 = 64;
+    const escala = (v) => izq + (W - izq - der) * v / n;
+    let acum = 0;
+    const s = Motor.muestraRegla(a.pi, n, E.u);
+    let svg = '';
+    a.pi.forEach((p, k) => {
+      const x1 = escala(acum), x2 = escala(acum + p);
+      const dentro = s.includes(k);
+      // Los tramos de la muestra, con relleno naranja y un filete arriba: el
+      // tono claro de antes no se distinguía al proyectar (1,05:1).
+      svg += `<rect x="${x1.toFixed(1)}" y="${y0}" width="${Math.max(0.5, x2 - x1).toFixed(1)}" height="38" fill="${dentro ? '#FED7AA' : (k % 2 ? '#E2E8F0' : '#F1F5F9')}" stroke="#012820" stroke-width="1"/>` +
+        (dentro ? `<rect x="${x1.toFixed(1)}" y="${y0 - 4}" width="${Math.max(0.5, x2 - x1).toFixed(1)}" height="4" fill="#B84A00"/>` : '');
+      const medio = (x1 + x2) / 2;
+      if (x2 - x1 >= 34) svg += T(medio, y0 + 17, a.ids[k], 'text-anchor="middle" font-size="14" font-weight="700" fill="#012820"');
+      if (x2 - x1 >= 46) svg += T(medio, y0 + 33, numero(p, 3), 'text-anchor="middle" font-size="12" fill="#334155"');
+      acum += p;
+    });
+    // Los tramos angostos seguidos comparten un rótulo debajo («U1–U4»): uno por
+    // tramo se amontonaba en un borrón ilegible.
+    acum = 0;
+    let grupo = null;
+    const grupos = [];
+    a.pi.forEach((p, k) => {
+      const x1 = escala(acum), x2 = escala(acum + p);
+      if (x2 - x1 < 34) {
+        if (grupo && Math.abs(grupo.x2 - x1) < 0.5) { grupo.x2 = x2; grupo.ult = k; } else { grupo = { x1, x2, pri: k, ult: k }; grupos.push(grupo); }
+      } else grupo = null;
+      acum += p;
+    });
+    for (const g of grupos) {
+      const rotulo = g.pri === g.ult ? a.ids[g.pri] : `${a.ids[g.pri]}–${a.ids[g.ult]}`;
+      const medio = Math.min(W - der - 22, Math.max(izq + 22, (g.x1 + g.x2) / 2));
+      svg += `<line x1="${g.x1.toFixed(1)}" y1="${y0 + 43}" x2="${g.x2.toFixed(1)}" y2="${y0 + 43}" stroke="#012820" stroke-width="2"/>` +
+        T(medio, y0 + 58, rotulo, 'text-anchor="middle" font-size="13" font-weight="700" fill="#012820"');
+    }
+    // Abajo, la escala: los enteros 0, 1, …, n, que separan los puntos u, u + 1, …,
+    // y las π acumuladas en los bordes de los tramos, donde quepan (1/6 y 1/2 en las tiendas).
+    for (let j = 0; j <= n; j++) {
+      const x = escala(j);
+      svg += `<line x1="${x}" y1="${y0 + 38}" x2="${x}" y2="${y0 + 74}" stroke="#334155" stroke-width="1.5"/>` + T(x, y0 + 90, String(j), 'text-anchor="middle" font-size="13" font-weight="700" fill="#334155"');
+    }
+    acum = 0;
+    let ultimo = -Infinity;
+    a.pi.slice(0, -1).forEach((p) => {
+      acum += p;
+      const x = escala(acum);
+      const entero = Math.abs(acum - Math.round(acum)) < 1e-9;
+      if (!entero && x - ultimo >= 44 && Math.abs(x - escala(Math.round(acum))) >= 26) {
+        svg += `<line x1="${x.toFixed(1)}" y1="${y0 + 38}" x2="${x.toFixed(1)}" y2="${y0 + 66}" stroke="#64748B" stroke-dasharray="2 2"/>` +
+          T(x, y0 + 80, numero(acum, 3), 'text-anchor="middle" font-size="12" fill="#475569"');
+        ultimo = x;
+      }
+    });
+    // Los puntos: la línea se detiene en el borde del tramo (antes tachaba sus
+    // rótulos), y los rótulos que quedarían a menos de 56 px se escalonan.
+    let previo = -Infinity, fila = 0;
+    for (let j = 0; j < n; j++) {
+      const x = escala(E.u + j);
+      fila = x - previo < 56 ? 1 - fila : 0;
+      previo = x;
+      const yr = fila ? 30 : 14;
+      const texto = j === 0 ? `u = ${numero(E.u, 3)}` : `u + ${j}`;
+      const xr = Math.min(W - 4 - texto.length * 3.3, Math.max(4 + texto.length * 3.3, x));
+      svg += `<line x1="${x.toFixed(1)}" y1="${yr + 4}" x2="${x.toFixed(1)}" y2="${y0 - 6}" stroke="#B84A00" stroke-width="2.5"/>` +
+        `<polygon points="${(x - 6).toFixed(1)},${y0 - 12} ${(x + 6).toFixed(1)},${y0 - 12} ${x.toFixed(1)},${y0 - 2}" fill="#B84A00"/>` +
+        T(xr, yr, texto, 'text-anchor="middle" font-size="12" fill="#B84A00" font-weight="700"');
+    }
+    const ids = s.map(k => esc(a.ids[k]));
+    const descripcion = `Regla de 0 a ${n} con un tramo por unidad; los puntos caen en ${lista(ids)}.`;
+    $('svg-regla').innerHTML = `<svg viewBox="0 0 ${W} ${alto}" role="img" aria-label="${esc(descripcion)}">${svg}</svg>`;
+    $('pie-regla').innerHTML = `Con u = ${numero(E.u, 3)}, los puntos ${lista(Array.from({ length: n }, (_, j) => numero(E.u + j, 3)))} caen en ` +
+      `${lista(ids)}: la muestra es ${conjunto(ids)}. Los tramos van en el orden de la tabla y cada uno lleva su π${sub('k')}. ` +
+      `Debajo, la escala de 0 a n, con las π acumuladas en los bordes de los tramos donde caben.`;
+    return s;
+  }
+
+  function pintaPestana1() {
+    const a = analisis('sistematico_fijo');
+    if (a.errores.length) return;
+    $('rango-u').value = E.u;
+    $('valor-u').textContent = numero(E.u, 3);
+    const s = pintaRegla(a);
+    const t = a.referencias.t;
+    const ref = t / a.N;
+    const tHat = Motor.suma(s.map(k => a.y[k] / a.pi[k]));
+    const fy = columna(a.y);
+    const tm = $('tabla-muestra-u');
+    tm.tHead.innerHTML = `<tr><th scope="col">Unidad</th><th scope="col">y${sub('k')}</th><th scope="col">π${sub('k')}</th><th scope="col">y${sub('k')}/π${sub('k')}</th></tr>`;
+    tm.tBodies[0].innerHTML = s.map(k => `<tr><th scope="row">${esc(a.ids[k])}</th><td class="num">${fy(a.y[k])}</td>` +
+      `<td class="num">${numero(a.pi[k], 4)}</td><td class="num">${cifra(a.y[k] / a.pi[k], t)}</td></tr>`).join('');
+    tm.tFoot.innerHTML = `<tr class="total"><th scope="row" colspan="3">t̂${sub('π')} (suma)</th><td class="num">${cifra(tHat, t)}</td></tr>` +
+      `<tr><th scope="row" colspan="3">t verdadero · error</th><td class="num">${cifra(t)} · ${cifra(tHat - t, t)}</td></tr>`;
+
+    const tramos = Motor.tramosRegla(a.pi, a.n);
+    $('tabla-tramos').tHead.innerHTML = '<tr><th scope="col">u entre</th><th scope="col">Muestra</th><th scope="col">P(s)</th><th scope="col">t̂<sub>π</sub></th></tr>';
+    $('tabla-tramos').tBodies[0].innerHTML = tramos.map(tr => {
+      const actual = E.u >= tr.desde && E.u < tr.hasta;
+      const tt = Motor.suma(tr.s.map(k => a.y[k] / a.pi[k]));
+      return `<tr class="${actual ? 'en-muestra' : ''}"${actual ? ' aria-current="true"' : ''}><td class="num">${numero(tr.desde, 4)} y ${numero(tr.hasta, 4)}</td>` +
+        `<td>${conjunto(tr.s.slice().sort((x, y) => x - y).map(k => a.ids[k]))}</td><td class="num">${numero(tr.hasta - tr.desde, 4)}</td><td class="num">${cifra(tt, t)}</td></tr>`;
+    }).join('');
+
+    $('tabla-psi-pi').tHead.innerHTML = `<tr><th scope="col">Unidad</th><th scope="col">ψ${sub('k')}</th><th scope="col">n·ψ${sub('k')}</th>` +
+      `<th scope="col">Con reemplazo: 1 − (1 − ψ${sub('k')})<sup>n</sup></th><th scope="col">πPT: π${sub('k')}</th></tr>`;
+    $('tabla-psi-pi').tBodies[0].innerHTML = a.ids.map((id, k) => `<tr><th scope="row">${esc(id)}</th><td class="num">${numero(a.psi[k], 4)}</td>` +
+      `<td class="num">${numero(a.crudas[k], 4)}</td><td class="num">${numero(1 - (1 - a.psi[k]) ** a.n, 4)}</td>` +
+      `<td class="num">${numero(a.pi[k], 4)}${a.forzosa[k] ? ' <span class="forzosa-etq">forzosa</span>' : ''}</td></tr>`).join('');
+  }
+
+  // ------------------------------------------------------------------ pestaña 2
+  // La recta que importa para el πPT: la de las unidades no forzosas (con forzosas,
+  // las π son proporcionales a x solo entre las demás). Sin forzosas, la de todas.
+  const rectaQueCuenta = (a) => a.rectaLibres || { corte: a.referencias.corte, pendiente: a.referencias.pendiente, razon: a.referencias.razon, media: a.referencias.t / a.N, indices: a.ids.map((_, k) => k) };
+  // La misma recta con las y de la tabla, sin δ: las forzosas dependen solo de x y n.
+  function rectaBase(a) {
+    const libres = a.ids.map((_, k) => k).filter(k => !a.forzosa[k]);
+    return Motor.recta(unidades.map(u => u.x), unidades.map(u => u.y), libres.length >= 2 ? libres : a.ids.map((_, k) => k));
+  }
+
+  function pintaDispersion(a, e) {
+    const W = anchoDe('svg-dispersion', 900), H = W < 520 ? 320 : 380, m = { i: 60, d: 16, a: 18, b: 52 };
+    const xs = a.x, ys = a.y;
+    const xMax = Math.max(...xs) * 1.08;
+    const r = rectaQueCuenta(a);
+    const yMax = Math.max(...ys, r.corte, 1e-9) * 1.12;
+    const yMin = Math.min(0, r.corte * 1.12);
+    const X = (v) => m.i + (W - m.i - m.d) * v / xMax;
+    const Y = (v) => H - m.b - (H - m.a - m.b) * (v - yMin) / (yMax - yMin);
+    let svg = '';
+    const mx = marcas(0, xMax, W < 520 ? 4 : 6), my = marcas(yMin, yMax);
+    for (const v of my.valores) svg += `<line x1="${m.i}" y1="${Y(v).toFixed(1)}" x2="${W - m.d}" y2="${Y(v).toFixed(1)}" stroke="#EEF2F7"/>` + T(m.i - 6, Y(v) + 4, numero(v, my.dec), 'text-anchor="end" font-size="13" fill="#475569"');
+    for (const v of mx.valores) svg += `<line x1="${X(v).toFixed(1)}" y1="${H - m.b}" x2="${X(v).toFixed(1)}" y2="${H - m.b + 5}" stroke="#475569"/>` + T(X(v), H - m.b + 19, numero(v, mx.dec), 'text-anchor="middle" font-size="13" fill="#475569"');
+    // Ejes en #64748B (4,8:1): el #94A3B8 de antes daba 2,6:1, y el eje y = 0 lleva el mensaje.
+    svg += `<line x1="${m.i}" y1="${Y(0).toFixed(1)}" x2="${W - m.d}" y2="${Y(0).toFixed(1)}" stroke="#64748B"/><line x1="${X(0)}" y1="${m.a}" x2="${X(0)}" y2="${H - m.b}" stroke="#64748B"/>`;
+    svg += T((m.i + W - m.d) / 2, H - 10, e.x, 'text-anchor="middle" font-size="13" fill="#1E293B" font-weight="600"');
+    const rotuloY = e.y.length * 7 > H - m.a - m.b ? e.y.replace(/\s*\(.*\)$/, '') : e.y;
+    svg += T(16, (m.a + H - m.b) / 2, rotuloY, `text-anchor="middle" font-size="13" fill="#1E293B" font-weight="600" transform="rotate(-90 16 ${((m.a + H - m.b) / 2).toFixed(1)})"`);
+    const yA = (v) => r.corte + r.pendiente * v;
+    svg += `<line x1="${X(0)}" y1="${Y(yA(0)).toFixed(1)}" x2="${X(xMax).toFixed(1)}" y2="${Y(Math.min(yMax, Math.max(yMin, yA(xMax)))).toFixed(1)}" stroke="#64748B" stroke-width="2.5"/>`;
+    // La recta por el origen va encima: cuando coinciden, la otra la tapaba entera.
+    // Se recorta donde sale del gráfico (el original la estiraba hasta la esquina).
+    const xFinO = Math.min(xMax, r.razon > 0 ? yMax / r.razon : xMax);
+    svg += `<line x1="${X(0)}" y1="${Y(0).toFixed(1)}" x2="${X(xFinO).toFixed(1)}" y2="${Y(r.razon * xFinO).toFixed(1)}" stroke="#B84A00" stroke-width="2.5" stroke-dasharray="8 5"/>`;
+    // El rótulo del corte: debajo si es positivo (bajo la recta no hay puntos), encima si es negativo
+    // (debajo quedaba en la fila de las marcas del eje x).
+    svg += `<circle cx="${X(0)}" cy="${Y(r.corte).toFixed(1)}" r="5" fill="#fff" stroke="#64748B" stroke-width="2"/>` +
+      T(X(0) + 10, Y(r.corte) + (r.corte >= 0 ? 20 : -10), `corta en ${cifra(r.corte, r.media)}`, 'font-size="13" fill="#1E293B" font-weight="600"');
+    // Los puntos; las forzosas, con un anillo, porque no entran en la recta que cuenta. Un
+    // rótulo que quedaría a menos de 14 px de otro se omite (con 9 unidades se encimaban).
+    const puestos = [];
+    xs.forEach((v, k) => {
+      const cx = X(v), cy = Y(ys[k]);
+      svg += a.forzosa[k]
+        ? `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="6" fill="#fff" stroke="#B84A00" stroke-width="3"/>`
+        : `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="6" fill="#012820"/>`;
+      const lx = cx + 8, ly = cy - 9;
+      if (puestos.every(([px, py]) => Math.hypot(px - lx, py - ly) >= 14)) {
+        svg += T(lx, ly, a.ids[k] + (a.forzosa[k] ? ' (forzosa)' : ''), `font-size="13" fill="${a.forzosa[k] ? '#B84A00' : '#012820'}" font-weight="700"`);
+        puestos.push([lx, ly]);
+      }
+    });
+    const desc = `Dispersión de ${a.N} unidades; la recta ${a.rectaLibres && a.forzosa.some(Boolean) ? 'de las no forzosas ' : ''}corta el eje y en ${cifra(r.corte, r.media)}; correlación ${numero(a.referencias.corr, 3)}.`;
+    $('svg-dispersion').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(desc)}">${svg}</svg>`;
+    return rotuloY !== e.y;
+  }
+
+  function ajustaRangoDelta() {
+    const ys = unidades.map(u => u.y);
+    const min = -Math.floor(Math.min(...ys));
+    const max = Math.ceil(Math.max(...ys));
+    const paso = pasoBonito((max - min) / 400);
+    const rango = $('rango-delta');
+    rango.min = String(min); rango.max = String(max); rango.step = String(paso);
+    rango.value = String(Math.min(max, Math.max(min, E.delta)));
+  }
+
+  function tarjeta(rotulo, valor, detalle = '', clase = '') {
+    return `<div class="tarjeta ${clase}"><div class="rotulo">${rotulo}</div><div class="valor">${valor}</div>${detalle ? `<div class="detalle">${detalle}</div>` : ''}</div>`;
+  }
+
+  function pintaPestana2() {
+    const a = analisis(E.diseno);
+    if (a.errores.length) return;
+    const e = escenario();
+    const r = a.referencias;
+    ajustaRangoDelta();
+    $('leyenda-forzosa').hidden = !a.forzosa.some(Boolean);
+    $('valor-delta').textContent = E.constante ? 'y constante' : cifra(E.delta, r.t / a.N);
+    $('boton-constante').setAttribute('aria-pressed', String(E.constante));
+    $('rango-delta').disabled = E.constante;
+    const acortado = pintaDispersion(a, e);
+    const rc = rectaQueCuenta(a);
+    const conForzosas = a.forzosa.some(Boolean);
+    const forzosas = lista(a.ids.filter((_, k) => a.forzosa[k]).map(esc));
+    $('pie-dispersion').innerHTML = `Correlación r = ${numero(r.corr, 3)}. La recta de mínimos cuadrados ` +
+      `${conForzosas ? `de las unidades no forzosas (${forzosas} ${a.forzosa.filter(Boolean).length > 1 ? 'son forzosas' : 'es forzosa'} y no entra${a.forzosa.filter(Boolean).length > 1 ? 'n' : ''}) ` : ''}` +
+      `corta el eje en ${cifra(rc.corte, rc.media)}, el ${pct(Math.abs(rc.corte) / rc.media, 0)} de su media de y.` +
+      (acortado ? ` Eje y: ${esc(e.y)}.` : '');
+    // El botón lleva al origen la recta que cuenta. Con pendiente ≤ 0 no hay δ que lo
+    // logre sin y negativas, y con y ≥ 0 a veces se queda corto: se dice (T7.121).
+    const rb = rectaBase(a);
+    const tope = -Math.min(...unidades.map(u => u.y));
+    let nota = '';
+    $('boton-origen').disabled = !rb || rb.pendiente <= 0;
+    if (rb && rb.pendiente <= 0) nota = 'Aquí y baja (o no sube) con x: ninguna constante lleva la recta al origen sin volver negativa alguna y.';
+    else if (rb && -rb.corte < tope) nota = `Para llevar la recta al origen haría falta δ = ${cifra(-rb.corte, rb.media)}, pero la menor y ya llega a 0 con δ = ${cifra(tope, rb.media)}.`;
+    if (conForzosas) nota += ` ${forzosas} ${a.forzosa.filter(Boolean).length > 1 ? 'son' : 'es'} de inclusión forzosa: la recta que cuenta es la de las demás unidades, entre las que las π sí son proporcionales a x.`;
+    $('nota-origen').textContent = nota.trim();
+    const media = rc.media;
+    const gana = a.deff !== null && a.deff < 1;
+    $('tarjetas-gana').innerHTML =
+      tarjeta('Correlación r', r.corr === null ? '—' : numero(r.corr, 3), 'No cambia al mover δ.') +
+      tarjeta(conForzosas ? 'Corte de la recta (sin las forzosas)' : 'Corte de la recta', cifra(rc.corte, media), `El ${pct(Math.abs(rc.corte) / media, 0)} de la media de y.`) +
+      tarjeta('V del MAS, mismo n', cifra(r.vMAS, r.vMAS), 'Sin reemplazo.') +
+      tarjeta(`V del πPT (${NOMBRE_DISENO[E.diseno]})`, cifra(a.V, a.V), `ee ${cifra(a.ee, a.ee)}`) +
+      tarjeta('deff = V / V<sub>MAS</sub>', a.deff === null ? 'no existe' : numero(a.deff, a.deff < 0.01 ? 4 : a.deff >= 10 ? 2 : 3),
+        a.deff === null ? 'Con y constante, el MAS acierta siempre: V<sub>MAS</sub> = 0.' : (gana ? 'Menor que 1: gana el πPT.' : 'Mayor que 1: gana el MAS.'),
+        a.deff === null ? 'pierde' : (gana ? 'gana' : 'pierde')) +
+      tarjeta('Criterio de Raj', `Cov ${r.covRaj >= 0 ? '>' : '<'} 0`, `Cov(x, y²/x) = ${cifra(r.covRaj, r.covRaj)}; V${sub('MRAS')} − V${sub('PPT')} = ${cifra(r.rajDiferencia, r.rajDiferencia)}: ` +
+        `${r.covRaj >= 0 ? 'gana' : 'pierde'} el PPT con reemplazo.`, r.covRaj >= 0 ? 'gana' : 'pierde');
+    const tc = $('tabla-cocientes');
+    tc.tHead.innerHTML = `<tr><th scope="col">Unidad</th><th scope="col">x${sub('k')}</th><th scope="col">y${sub('k')} en uso</th><th scope="col">π${sub('k')}</th>` +
+      `<th scope="col">y${sub('k')}/π${sub('k')}</th><th scope="col">ψ${sub('k')}</th><th scope="col">y${sub('k')}/ψ${sub('k')}</th></tr>`;
+    const fx = columna(a.x), fy = columna(a.y);
+    tc.tBodies[0].innerHTML = a.ids.map((id, k) => `<tr><th scope="row">${esc(id)}</th><td class="num">${fx(a.x[k])}</td>` +
+      `<td class="num">${fy(a.y[k])}</td><td class="num">${numero(a.pi[k], 4)}${a.forzosa[k] ? ' <span class="forzosa-etq">forzosa</span>' : ''}</td>` +
+      `<td class="num">${cifra(a.y[k] / a.pi[k], r.t)}</td><td class="num">${numero(a.psi[k], 4)}</td><td class="num">${cifra(r.zHH[k], r.t)}</td></tr>`).join('');
+  }
+
+  // ------------------------------------------------------------------ pestaña 3
+  function pintaMatriz(a) {
+    const [pk, pl] = E.par;
+    const m = $('matriz-pikl');
+    m.tHead.innerHTML = `<tr><th scope="col">π${sub('kl')}</th>${a.ids.map(id => `<th scope="col">${esc(id)}</th>`).join('')}</tr>`;
+    const yg = new Set(a.paresYG.map(p => p.join()));
+    m.tBodies[0].innerHTML = a.ids.map((id, k) => `<tr><th scope="row">${esc(id)}</th>${a.ids.map((id2, l) => {
+      const v = a.pikl[k][l];
+      const clases = [k === l ? 'diagonal' : '', k !== l && v <= 1e-12 ? 'cero' : '', yg.has([Math.min(k, l), Math.max(k, l)].join()) ? 'incumple' : ''].join(' ').trim();
+      const elegido = (k === pk && l === pl) || (k === pl && l === pk);
+      const rotulo = k === l ? `π de ${id}: ${numero(v, 4)}` : `Par ${id} y ${id2}: π${'ₖₗ'} ${numero(v, 4)}`;
+      return `<td><button type="button" class="${clases}" data-par="${k},${l}" aria-pressed="${elegido}" aria-label="${esc(rotulo)}">${numero(v, 3)}</button></td>`;
+    }).join('')}</tr>`).join('');
+    // El inspector del par elegido.
+    const k = Math.min(pk, pl), l = Math.max(pk, pl);
+    if (k === l || l >= a.N) { $('inspector-par').innerHTML = '<p>Elige una celda fuera de la diagonal.</p>'; return; }
+    const prod = a.pi[k] * a.pi[l];
+    const pkl = a.pikl[k][l];
+    const peso = prod - pkl;
+    const dif = (a.y[k] / a.pi[k] - a.y[l] / a.pi[l]) ** 2;
+    const idk = a.ids[k], idl = a.ids[l];
+    let diagnostico;
+    if (pkl <= 1e-12) diagnostico = `<span class="estado no">nunca salen juntos</span> Ninguna muestra contiene a ${esc(idk)} y ${esc(idl)}: el estimador de la varianza nunca ve este término y queda sesgado.`;
+    else if (peso < -1e-12) diagnostico = `<span class="estado no">incumple Yates–Grundy</span> π${sub('kl')} supera a π${sub('k')}π${sub('l')}: en las muestras que los contienen, este término resta, y V̂${sub('SYG')} puede salir negativa.`;
+    else diagnostico = `<span class="estado ok">cumple</span> π${sub('kl')} &gt; 0 y π${sub('k')}π${sub('l')} ≥ π${sub('kl')}.`;
+    if (a.forzosa[k] || a.forzosa[l]) diagnostico += ` Como ${esc(a.forzosa[k] ? idk : idl)} es forzosa, π${sub('kl')} = π de la otra y el término vale 0.`;
+    $('inspector-par').innerHTML = `<p class="caja-titulo">El par ${esc(idk)} y ${esc(idl)}</p>` +
+      `<p>π${sub(esc(idk))} = ${numero(a.pi[k], 4)}, π${sub(esc(idl))} = ${numero(a.pi[l], 4)}, su producto ${numero(prod, 4)}, y π${sub('kl')} = ${numero(pkl, 4)}. ` +
+      `Su término en V es (π${sub('k')}π${sub('l')} − π${sub('kl')})·(y${sub('k')}/π${sub('k')} − y${sub('l')}/π${sub('l')})² = ${numero(peso, 4)} · ${cifra(dif, dif)} = ${cifra(peso * dif, a.V || 1)}.</p>` +
+      `<p>${diagnostico}</p>`;
+  }
+
+  function pintaPestana3() {
+    const a = analisis(E.diseno);
+    if (a.errores.length) return;
+    if (E.par[0] >= a.N || E.par[1] >= a.N) E.par = [0, 1];
+    pintaMatriz(a);
+    // Las comprobaciones del cálculo van plegadas, con su recuento a la vista: ocho
+    // líneas con errores de 10⁻¹⁶ antes de las tarjetas eran carga sin lección (T7.121).
+    const bien = a.verificaciones.filter(v => v.ok).length;
+    $('resumen-verificaciones').innerHTML = `<span class="estado ${bien === a.verificaciones.length ? 'ok' : 'no'}">${bien} de ${a.verificaciones.length} ✓</span> Comprobaciones del cálculo`;
+    $('lista-verificaciones').innerHTML = a.verificaciones.map(v =>
+      `<li><span class="estado ${v.ok ? 'ok' : 'no'}">${v.ok ? '✓' : '✗'}</span> ${subindices(v.nombre)} <span class="num" style="color:#475569">(error ${cientifica(v.error)})</span></li>`).join('');
+    $('lista-pares').innerHTML =
+      `<li>Pares que nunca salen juntos (π${sub('kl')} = 0): <strong>${a.paresCero.length}</strong>${a.paresCero.length ? ` (${a.paresCero.map(p => p.map(k => esc(a.ids[k])).join('–')).join(', ')})` : ''}.</li>` +
+      `<li>Pares que incumplen Yates–Grundy: <strong>${a.paresYG.length}</strong>. Probabilidad de una V̂${sub('SYG')} negativa: <strong>${pct(a.pNegativa)}</strong>.</li>` +
+      (a.n - a.forzosa.filter(Boolean).length < 2 ? `<li>Con un solo cupo sorteado (el resto son forzosas), cada muestra trae una sola unidad sorteada: no hay pares que estimen la varianza, y los tres diseños coinciden.</li>` : '');
+    const V = a.V;
+    const sesgo = (x) => (x === null ? '' : ` (${sesgoRelativo(x, V)})`);
+    $('tarjetas-ht').innerHTML =
+      tarjeta('V(t̂<sub>π</sub>)', cifra(V, V), `ee ${cifra(a.ee, a.ee)} · forma 6.20: ${cifra(a.formaHT, V)}`) +
+      tarjeta('E(V̂<sub>HT</sub>)', cifra(a.esperanzas.vHT, V), a.paresCero.length ? `Sesgada${sesgo(a.esperanzas.vHT)}.` : 'Igual a V: insesgada.') +
+      tarjeta('E(V̂<sub>SYG</sub>)', cifra(a.esperanzas.vSYG, V), a.paresCero.length ? `Sesgada${sesgo(a.esperanzas.vSYG)}.` : 'Igual a V: insesgada.') +
+      tarjeta('E(V̂<sub>WR</sub>)', a.esperanzas.vWR === null ? '—' : cifra(a.esperanzas.vWR, V),
+        a.esperanzas.vWR === null ? 'Necesita al menos dos unidades sorteadas (no forzosas).' : `Con reemplazo (6.24, sin las forzosas)${sesgo(a.esperanzas.vWR)}.`) +
+      tarjeta('Muestras posibles', String(a.muestras.length), `Con P(s) > 0, de ${numero(Motor.combinaciones(Array.from({ length: a.N }, (_, k) => k), a.n).length, 0)} combinaciones.`);
+    pintaEspacio(a);
+    pintaReplicas(a);
+  }
+
+  const FILAS = 25;
+  function pintaEspacio(a) {
+    const t = a.referencias.t;
+    const V = a.V || 1;
+    const paginas = Math.ceil(a.muestras.length / FILAS);
+    E.pagina = Math.min(E.pagina, paginas - 1);
+    const vista = a.muestras.slice(E.pagina * FILAS, (E.pagina + 1) * FILAS);
+    const te = $('tabla-espacio');
+    te.tHead.innerHTML = `<tr><th scope="col">Muestra s</th><th scope="col">P(s)</th><th scope="col">t̂${sub('π')}</th><th scope="col">t̂ − t</th>` +
+      `<th scope="col">V̂${sub('HT')} (6.22)</th><th scope="col">V̂${sub('SYG')} (6.23)</th><th scope="col">V̂${sub('WR')} (6.24, sin forzosas)</th></tr>`;
+    te.tBodies[0].innerHTML = vista.map(m => `<tr><td>${conjunto(m.s.map(k => a.ids[k]))}</td><td class="num">${numero(m.p, 4)}</td>` +
+      `<td class="num">${cifra(m.t, t)}</td><td class="num">${cifra(m.t - t, t)}</td><td class="num">${cifra(m.vHT, V)}</td>` +
+      `<td class="num"${m.vSYG < -1e-9 * V ? ' style="color:#B91C1C;font-weight:700"' : ''}>${cifra(m.vSYG, V)}</td><td class="num">${m.vWR === null ? '—' : cifra(m.vWR, V)}</td></tr>`).join('');
+    const e = a.esperanzas;
+    te.tFoot.innerHTML = `<tr class="total"><th scope="row">Esperanza</th><td class="num">ΣP(s) = ${numero(Motor.suma(a.muestras.map(m => m.p)), 4)}</td>` +
+      `<td class="num">${cifra(a.esperanza, t)} = t</td><td class="num">V = ${cifra(a.V, V)}</td><td class="num">${cifra(e.vHT, V)}</td>` +
+      `<td class="num">${cifra(e.vSYG, V)}</td><td class="num">${e.vWR === null ? '—' : cifra(e.vWR, V)}</td></tr>`;
+    const pg = $('paginas-espacio');
+    pg.innerHTML = paginas > 1
+      ? `<button type="button" class="boton secundario" data-pagina="-1" ${E.pagina === 0 ? 'disabled' : ''}>Anteriores</button>` +
+        `<span>Muestras ${E.pagina * FILAS + 1} a ${Math.min(a.muestras.length, (E.pagina + 1) * FILAS)} de ${a.muestras.length}</span>` +
+        `<button type="button" class="boton secundario" data-pagina="1" ${E.pagina >= paginas - 1 ? 'disabled' : ''}>Siguientes</button>`
+      : `<span class="tabla-pie">Las ${a.muestras.length} muestras con P(s) &gt; 0. La fila de abajo promedia cada columna con P(s).</span>`;
+  }
+
+  function pintaReplicas(a) {
+    const caja = $('resultado-replicas');
+    const figura = $('figura-histograma');
+    $('sel-replicas').value = String(E.R);
+    $('campo-semilla').value = String(E.semilla);
+    const clave = JSON.stringify([a.clave, E.R, E.semilla]);
+    if (!simulacion) { caja.innerHTML = '<p class="tabla-pie" style="padding:0">Pulsa «Simular» para comparar las réplicas con lo exacto.</p>'; figura.classList.add('oculto'); return; }
+    if (simulacion.clave !== clave) {
+      caja.innerHTML = '<p class="caja nota">Los datos, el diseño o la semilla cambiaron desde la última simulación: pulsa «Simular» de nuevo.</p>';
+      figura.classList.add('oculto');
+      return;
+    }
+    const r = simulacion.resultado;
+    const t = a.referencias.t;
+    // La media, con los decimales de su error de simulación: 2608,24 ± 0,21, no 2608,2362.
+    const err = 1.96 * r.diseno.eeMedia;
+    const dec = err >= 10 ? 0 : err >= 1 ? 1 : err >= 0.1 ? 2 : 3;
+    caja.innerHTML = `<div class="tarjetas">` +
+      tarjeta('Media de t̂ en las réplicas', numero(r.diseno.media, dec),
+        `± ${numero(err, dec)} de error de simulación (t = ${cifra(t)}).`) +
+      tarjeta('ee simulado', cifra(r.diseno.ee, a.ee), `Exacto: √V = ${cifra(a.ee, a.ee)}.`) +
+      tarjeta('ECM', cifra(r.diseno.ecm, a.V), `Exacto: V = ${cifra(a.V, a.V)} (es insesgado).`) +
+      tarjeta('Cobertura con V̂<sub>SYG</sub>', pct(r.coberturaSYG), `De t̂ ± 1,96·√V̂; ${pct(r.negativasSYG)} de réplicas con V̂ negativa.`) +
+      tarjeta('Cobertura con V̂<sub>WR</sub>', r.coberturaWR === null ? '—' : pct(r.coberturaWR), 'La aproximación con reemplazo.') +
+      tarjeta('¿Reproduce P(s)?', r.muestrasFueraDelSoporte === 0 && r.apartamientoMaximo < 4.5 ? 'Sí' : 'No',
+        `La frecuencia que más se aparta lo hace por ${numero(r.apartamientoMaximo, 1)} errores estándar.`) +
+      `</div>`;
+    figura.classList.remove('oculto');
+    pintaHistograma(r, a);
+  }
+
+  function pintaHistograma(r, a) {
+    const W = anchoDe('svg-histograma', 900), H = 300, m = { i: 52, d: 14, a: 14, b: 46 };
+    const todos = r.valores.concat(r.valoresMAS);
+    let lo = Math.min(...todos), hi = Math.max(...todos);
+    if (hi - lo < 1e-9 * Math.max(1, Math.abs(hi))) { lo -= 1; hi += 1; }
+    const k = 30;
+    const ancho = (hi - lo) / k;
+    const cuenta = (vals) => { const c = new Array(k).fill(0); for (const v of vals) c[Math.min(k - 1, Math.floor((v - lo) / ancho))]++; return c; };
+    const cD = cuenta(r.valores), cM = cuenta(r.valoresMAS);
+    const fMax = Math.max(...cD, ...cM) / r.R;
+    const X = (v) => m.i + (W - m.i - m.d) * (v - lo) / (hi - lo);
+    const Y = (f) => H - m.b - (H - m.a - m.b) * f / fMax;
+    let svg = '';
+    const my = marcas(0, fMax, 4);
+    for (const v of my.valores) svg += `<line x1="${m.i}" y1="${Y(v).toFixed(1)}" x2="${W - m.d}" y2="${Y(v).toFixed(1)}" stroke="#EEF2F7"/>` + T(m.i - 6, Y(v) + 4, pct(v, 0), 'text-anchor="end" font-size="13" fill="#475569"');
+    const mx = marcas(lo, hi, W < 520 ? 3 : 6);
+    for (const v of mx.valores) svg += T(X(v), H - m.b + 18, numero(v, mx.dec), 'text-anchor="middle" font-size="13" fill="#475569"');
+    const barras = (c, color, desplaza) => c.map((n, i) => n ? `<rect x="${(X(lo + i * ancho) + desplaza).toFixed(1)}" y="${Y(n / r.R).toFixed(1)}" width="${Math.max(1, (W - m.i - m.d) / k / 2 - 1).toFixed(1)}" height="${(H - m.b - Y(n / r.R)).toFixed(1)}" fill="${color}"/>` : '').join('');
+    svg += barras(cM, '#B84A00', (W - m.i - m.d) / k / 2) + barras(cD, '#012820', 0);
+    const t = a.referencias.t;
+    // La marca de t lleva un contorno blanco: sobre las barras verdes no se veía (1,08:1).
+    svg += `<line x1="${X(t).toFixed(1)}" y1="${m.a}" x2="${X(t).toFixed(1)}" y2="${H - m.b}" stroke="#fff" stroke-width="5"/>` +
+      `<line x1="${X(t).toFixed(1)}" y1="${m.a}" x2="${X(t).toFixed(1)}" y2="${H - m.b}" stroke="#1E293B" stroke-width="2" stroke-dasharray="4 3"/>` +
+      T(X(t) + 6, m.a + 14, 't', 'font-size="15" font-weight="700" fill="#1E293B" stroke="#fff" stroke-width="4" paint-order="stroke"');
+    svg += T((m.i + W - m.d) / 2, H - 8, 'Estimación del total, t̂', 'text-anchor="middle" font-size="13" fill="#1E293B" font-weight="600"');
+    const desc = `Histograma de ${r.R} réplicas: el diseño elegido tiene ee ${cifra(r.diseno.ee, a.ee)} y el MAS ${cifra(r.mas.ee, r.mas.ee)}.`;
+    $('svg-histograma').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(desc)}">${svg}</svg>`;
+    $('pie-histograma').innerHTML = `${numero(r.R, 0)} réplicas con semilla ${r.semilla}. Proporción de réplicas por intervalo. ` +
+      `ee del diseño elegido ${cifra(r.diseno.ee, a.ee)}; del MAS, ${cifra(r.mas.ee, r.mas.ee)}.`;
+  }
+
+  // ------------------------------------------------------------------ pestaña 4
+  const poblaciones = new Map();
+  function clases() {
+    const clave = `${E.dos.rho}|${E.dos.semilla}`;
+    if (!poblaciones.has(clave)) poblaciones.set(clave, Motor.poblacionClases(DOS.M, E.dos.rho, E.dos.semilla));
+    return poblaciones.get(clave);
+  }
+  function pintaPestana4() {
+    const d0 = E.dos;
+    opcionesN($('dos-n'), 2, 8, d0.n);
+    opcionesN($('dos-m'), 1, 20, d0.m);
+    $('dos-diseno').value = d0.diseno;
+    $('dos-rho').value = String(d0.rho);
+    $('valor-rho').textContent = numero(d0.rho, 2);
+    $('dos-semilla').value = String(d0.semilla);
+    $('dos-c1').value = String(d0.c1); $('dos-c2').value = String(d0.c2); $('dos-C').value = String(d0.C);
+    for (const id of ['dos-c1', 'dos-c2', 'dos-C']) $(id).setAttribute('aria-invalid', 'false');
+    const d = Motor.analizaDosEtapas(DOS.M, clases(), d0.n, d0.m, d0.diseno);
+    if (d.autoponderado) {
+      $('estado-autoponderado').innerHTML = `<span class="estado ok">Autoponderado</span> Cada estudiante de la muestra pesa ${numero(d.pesoComun, 2)} = ` +
+        `${d.K}/(${d0.n}·${d0.m}).`;
+    } else {
+      const motivos = [];
+      const fz = d.forzosa.map((f, i) => (f ? `la clase ${i + 1}` : null)).filter(Boolean);
+      const chicas = DOS.M.map((Mi, i) => (Mi < d0.m ? `la clase ${i + 1}, con ${Mi} estudiantes,` : null)).filter(Boolean);
+      if (d.motivos.includes('forzosas')) motivos.push(`${lista(fz)} ${fz.length > 1 ? 'son' : 'es'} de inclusión forzosa (π = 1)`);
+      if (d.motivos.includes('clases_menores_que_m')) motivos.push(`${lista(chicas)} ${chicas.length > 1 ? 'tienen' : 'tiene'} menos de m = ${d0.m} y se ${chicas.length > 1 ? 'censan' : 'censa'}`);
+      const texto = motivos.join('; ');
+      $('estado-autoponderado').innerHTML = `<span class="estado no">No es autoponderado</span> ${texto.charAt(0).toUpperCase() + texto.slice(1)}. Los pesos van de ` +
+        `${numero(Math.min(...d.filas.map(f => f.peso)), 2)} a ${numero(Math.max(...d.filas.map(f => f.peso)), 2)}.`;
+    }
+    const tc = $('tabla-clases');
+    tc.tHead.innerHTML = `<tr><th scope="col">Clase</th><th scope="col">M${sub('i')}</th><th scope="col">π${sub('i')}</th><th scope="col">m${sub('i')}</th>` +
+      `<th scope="col">m${sub('i')}/M${sub('i')}</th><th scope="col">π del estudiante</th><th scope="col">Peso</th></tr>`;
+    tc.tBodies[0].innerHTML = d.filas.map((f, i) => `<tr><th scope="row">${i + 1}</th><td class="num">${f.Mi}</td>` +
+      `<td class="num">${numero(f.pi, 4)}${d.forzosa[i] ? ' <span class="forzosa-etq">forzosa</span>' : ''}</td><td class="num">${f.mi}</td>` +
+      `<td class="num">${numero(f.piCond, 4)}</td><td class="num">${numero(f.piFinal, 5)}</td><td class="num">${numero(f.peso, 2)}</td></tr>`).join('') +
+      `<tr class="total"><th scope="row">Total</th><td class="num">K = ${d.K}</td><td class="num">Σ = ${d0.n}</td><td colspan="4"></td></tr>`;
+    const p1 = d.parte1;
+    $('barra-etapas').innerHTML = `<div class="e1" style="width:${(100 * p1).toFixed(2)}%">${p1 > 0.12 ? `Etapa 1 · ${pct(p1, 0)}` : ''}</div>` +
+      `<div class="e2" style="width:${(100 * (1 - p1)).toFixed(2)}%">${1 - p1 > 0.12 ? `Etapa 2 · ${pct(1 - p1, 0)}` : ''}</div>`;
+    $('barra-etapas').setAttribute('aria-label', `La etapa 1 pone el ${pct(p1)} de la varianza y la etapa 2 el ${pct(1 - p1)}.`);
+    const an = d.anova;
+    $('tarjetas-dos').innerHTML =
+      tarjeta('Total de horas, t', numero(d.t, 0), '<span class="marca ilustrativo">Ejemplo ilustrativo</span>') +
+      tarjeta('ee de t̂', numero(d.ee, 1), `cv ${pct(d.ee / d.t)}`) +
+      tarjeta('Etapa 1 · etapa 2', `${numero(d.V1, 0)} · ${numero(d.V2, 0)}`, `V = ${numero(d.V, 0)}`) +
+      tarjeta('R<sub>a</sub>² de los datos', numero(an.Ra2, 3), `ρ pedida: ${numero(d0.rho, 2)}. MSW ${numero(an.MSW, 3)}, S² ${numero(an.S2, 3)}.`) +
+      tarjeta('deff', numero(d.deff, 2), `Frente a un MAS de ${numero(d.estudiantes, Number.isInteger(+d.estudiantes.toFixed(9)) ? 0 : 1)} estudiantes; n${sub('ef')} = ${numero(d.nEf, 1)}.`) +
+      tarjeta('Con reemplazo (s<sub>z</sub>²/n)', d.eWR === null ? '—' : numero(d.eWR, 0),
+        d.eWR === null ? 'Necesita al menos dos clases sorteadas (no forzosas).'
+          : `En promedio, frente a V = ${numero(d.V, 0)}: ${d.sesgoWR >= 0 ? '+' : ''}${pct(d.sesgoWR / d.V)}.${d.forzosa.some(Boolean) ? ' Las clases forzosas van aparte, como en una etapa.' : ''}`);
+    // El m óptimo es una aproximación (Lohr §5.4: conglomerados de igual tamaño,
+    // «solo una guía»). Por eso, además, se prueban los m enteros cercanos con el
+    // presupuesto y se da el de menor V exacta; redondear m_opt no siempre lo es (T7.121).
+    const costos = `<span class="marca ilustrativo">Ejemplo ilustrativo</span> Costos en ${esc(DOS.costos.unidad)}.`;
+    const c = Motor.costoOptimo(d0.c1, d0.c2, an.Ra2, d0.C);
+    const mMax = Math.max(...DOS.M);
+    if (c.error) $('resultado-costo').innerHTML = `${costos} ${esc(c.error)}`;
+    else if (c.mOpt === Infinity || c.mOpt >= mMax) {
+      $('resultado-costo').innerHTML = `${costos} Con ρ = ${numero(an.Ra2, 3)}${c.mOpt === Infinity ? '' : `, m${sub('opt')} = ${numero(c.mOpt, 0)}`}: ` +
+        `los estudiantes de una misma clase casi no se parecen, así que conviene encuestar clases enteras (una etapa) y gastar el resto en más clases.`;
+    } else {
+      const candidatos = [];
+      for (let mm = Math.max(1, Math.floor(c.mOpt) - 2); mm <= Math.ceil(c.mOpt) + 2; mm++) {
+        const nn = Math.floor(d0.C / (d0.c1 + d0.c2 * mm));
+        if (nn >= 2 && nn <= 12) candidatos.push({ m: mm, n: nn, V: Motor.analizaDosEtapas(DOS.M, clases(), nn, mm, d0.diseno).V });
+      }
+      const mejor = candidatos.sort((x, y) => x.V - y.V)[0];
+      $('resultado-costo').innerHTML = `${costos} <span class="marca lectura">Lectura</span> Con ρ = ${numero(an.Ra2, 3)}, la fórmula da ` +
+        `m${sub('opt')} = ${numero(c.mOpt, 2)} y n${sub('opt')} = ${numero(c.nOpt, 2)}, una aproximación para clases de igual tamaño. ` +
+        (mejor ? `<span class="marca dato">Dato</span> Probando los m enteros cercanos con este presupuesto, la menor V exacta la da m = ${mejor.m} con ` +
+          `${mejor.n} clases: V = ${numero(mejor.V, 0)}, por ${numero(mejor.n * (d0.c1 + d0.c2 * mejor.m), 0)} de ${numero(d0.C, 0)}.` +
+          (mejor.m > Math.min(...DOS.M) ? ' Con ese m, alguna clase tiene menos estudiantes: se censaría y el diseño dejaría de ser autoponderado.' : '')
+          : 'Con este presupuesto no alcanza para sortear al menos 2 clases cerca de ese m.');
+    }
+  }
+
+  // --------------------------------------------------------------------- retos
+  function construyeRetos() {
+    document.querySelectorAll('.retos').forEach(caja => {
+      const pestana = +caja.dataset.pestana;
+      caja.innerHTML = RETOS.filter(r => r.pestana === pestana).map(r =>
+        `<details data-reto="${r.id}"><summary>${r.pregunta}</summary><div class="respuesta"><p>Ábrelo después de intentarlo.</p></div></details>`).join('');
+    });
+    document.querySelectorAll('details[data-reto]').forEach(det => det.addEventListener('toggle', () => {
+      if (!det.open || det.dataset.hecho) return;
+      const reto = RETOS.find(r => r.id === det.dataset.reto);
+      det.querySelector('.respuesta').innerHTML = `<p>${reto.respuesta()}</p>`;
+      det.dataset.hecho = '1';
+    }));
+  }
+
+  // ------------------------------------------------------------------- pestañas
+  // `subir`: al cambiar de pestaña desde abajo, se vuelve al principio del panel nuevo
+  // (si no, se caía a la mitad y no se veían el objetivo ni la predicción).
+  function eligePestana(t, foco, subir = false) {
+    E.tab = t;
+    const barra = document.querySelector('.pestanas');
+    document.querySelectorAll('[role="tab"]').forEach((b, i) => {
+      const activa = i + 1 === t;
+      b.setAttribute('aria-selected', String(activa));
+      b.tabIndex = activa ? 0 : -1;
+      if (activa && foco) b.focus({ preventScroll: true });
+      // En el celular la barra se desplaza: la pestaña activa se lleva a la vista.
+      if (activa) barra.scrollLeft = Math.max(0, b.offsetLeft - (barra.clientWidth - b.offsetWidth) / 2);
+    });
+    document.querySelectorAll('[role="tabpanel"]').forEach((p, i) => { p.hidden = i + 1 !== t; });
+    $('poblacion').classList.toggle('oculto', t === 4);
+    pinta({ tabla: false });
+    if (subir) {
+      const destino = (t === 4 ? barra : $('poblacion')).getBoundingClientRect().top + scrollY - 8;
+      const panel = $(`panel-${t}`).getBoundingClientRect().top + scrollY - barra.offsetHeight - 8;
+      if (scrollY > Math.min(destino, panel)) window.scrollTo({ top: t === 4 ? panel : Math.min(destino, panel) });
+    }
+  }
+
+  // Una sola región viva, con un resumen corto y una espera: las rejillas de tarjetas se
+  // anunciaban enteras en cada paso de un deslizador.
+  let esperaAnuncio = null;
+  function anuncia(texto) {
+    clearTimeout(esperaAnuncio);
+    esperaAnuncio = setTimeout(() => { $('resumen-vivo').textContent = texto; }, 600);
+  }
+  function resumenPestana() {
+    if (E.tab === 4) {
+      const d = Motor.analizaDosEtapas(DOS.M, clases(), E.dos.n, E.dos.m, E.dos.diseno);
+      return `Etapa 1: ${pct(d.parte1)} de la varianza. ${d.autoponderado ? `Autoponderado, peso ${numero(d.pesoComun, 2)}.` : 'No es autoponderado.'}`;
+    }
+    const a = analisis(E.tab === 1 ? 'sistematico_fijo' : E.diseno);
+    if (a.errores.length) return a.errores.join(' ');
+    if (E.tab === 1) return `Muestra ${Motor.muestraRegla(a.pi, a.n, E.u).map(k => a.ids[k]).join(', ')}.`;
+    if (E.tab === 2) return a.deff === null ? 'El deff no existe: y constante.' : `deff ${numero(a.deff, 3)}: ${a.deff < 1 ? 'gana el πPT' : 'gana el MAS'}.`;
+    return `${a.paresCero.length} pares en cero; ${a.paresYG.length} incumplen Yates–Grundy.`;
+  }
+
+  // ---------------------------------------------------------------- pintar todo
+  function pinta({ tabla = true } = {}) {
+    acota();
+    if (tabla) construyePoblacion();
+    $('sel-escenario').value = E.esc;
+    $('sel-n').value = String(E.n);
+    $('sel-diseno').value = E.diseno;
+    const a = analisis(E.diseno);
+    actualizaPoblacion(a);
+    if (!a.errores.length) {
+      if (E.tab === 1) pintaPestana1();
+      if (E.tab === 2) pintaPestana2();
+      if (E.tab === 3) pintaPestana3();
+    }
+    if (E.tab === 4) pintaPestana4();
+    aUrl();
+    anuncia(resumenPestana());
+  }
+
+  // ------------------------------------------------------------------- eventos
+  function conecta() {
+    const sel = $('sel-escenario');
+    ESCENARIOS.una_etapa.forEach(e => sel.add(new Option(e.titulo, e.clave)));
+    sel.addEventListener('change', () => {
+      E.esc = sel.value; unidades = copia(escenario().unidades); E.n = escenario().n;
+      E.delta = 0; E.constante = false; E.par = [0, 1]; E.pagina = 0; simulacion = null;
+      pinta();
+    });
+    $('sel-n').addEventListener('change', () => { E.n = +$('sel-n').value; E.pagina = 0; pinta({ tabla: false }); });
+    $('sel-diseno').addEventListener('change', () => { E.diseno = $('sel-diseno').value; E.pagina = 0; pinta({ tabla: false }); });
+    $('tabla-poblacion').addEventListener('input', (ev) => { if (ev.target.matches('input[data-k]')) leeCampo(ev.target); });
+    $('boton-agregar').addEventListener('click', () => {
+      if (unidades.length >= Motor.LIMITE_N) return;
+      const xs = unidades.map(u => u.x), ys = unidades.map(u => u.y);
+      unidades.push({ id: `U${unidades.length + 1}`, x: Math.round(Motor.suma(xs) / xs.length), y: Math.round(Motor.suma(ys) / ys.length) });
+      pinta();
+    });
+    $('boton-quitar').addEventListener('click', () => { if (unidades.length > 3) { unidades.pop(); pinta(); } });
+    $('boton-restaurar').addEventListener('click', () => { unidades = copia(escenario().unidades); E.delta = 0; E.constante = false; pinta(); });
+    $('aviso-desplazada').addEventListener('click', (ev) => { if (ev.target.dataset.accion === 'delta-cero') { E.delta = 0; E.constante = false; pinta(); } });
+
+    document.querySelectorAll('[role="tab"]').forEach((b, i) => {
+      b.addEventListener('click', () => eligePestana(i + 1, false, true));
+      b.addEventListener('keydown', (ev) => {
+        const destino = { ArrowRight: E.tab % 4 + 1, ArrowLeft: (E.tab + 2) % 4 + 1, Home: 1, End: 4 }[ev.key];
+        if (destino) { ev.preventDefault(); eligePestana(destino, true, true); }
+      });
+    });
+
+    $('rango-u').addEventListener('input', () => { E.u = +$('rango-u').value; pintaPestana1(); aUrl(); });
+    $('boton-sortear-u').addEventListener('click', () => {
+      sorteos++;
+      E.u = Math.floor(Motor.generador(E.semilla * 1000 + sorteos)() * 1000) / 1000;
+      pintaPestana1(); aUrl();
+    });
+
+    $('rango-delta').addEventListener('input', () => { E.delta = +$('rango-delta').value; E.constante = false; pinta(); });
+    $('boton-origen').addEventListener('click', () => {
+      const a = analisis(E.diseno);
+      if (a.errores.length) return;
+      const rb = rectaBase(a);
+      if (!rb || rb.pendiente <= 0) return;
+      E.delta = Math.max(-Math.min(...unidades.map(u => u.y)), -rb.corte);
+      E.constante = false; pinta();
+    });
+    $('boton-constante').addEventListener('click', () => { E.constante = !E.constante; pinta(); });
+    $('boton-delta-cero').addEventListener('click', () => { E.delta = 0; E.constante = false; pinta(); });
+
+    $('matriz-pikl').addEventListener('click', (ev) => {
+      const b = ev.target.closest('button[data-par]');
+      if (!b) return;
+      E.par = b.dataset.par.split(',').map(Number);
+      pintaPestana3(); aUrl();
+      // La matriz se rehízo: el foco vuelve a la celda pulsada en lugar de caer en <body>.
+      const de = document.querySelector(`#matriz-pikl button[data-par="${E.par.join(',')}"]`);
+      if (de) de.focus();
+    });
+    $('paginas-espacio').addEventListener('click', (ev) => {
+      const b = ev.target.closest('button[data-pagina]');
+      if (!b) return;
+      const sentido = b.dataset.pagina;
+      E.pagina += +sentido;
+      pintaEspacio(analisis(E.diseno));
+      const igual = document.querySelector(`#paginas-espacio button[data-pagina="${sentido}"]:not([disabled])`) || document.querySelector('#paginas-espacio button:not([disabled])');
+      if (igual) igual.focus();
+    });
+    $('sel-replicas').addEventListener('change', () => { E.R = +$('sel-replicas').value; pinta({ tabla: false }); });
+    $('campo-semilla').addEventListener('change', () => {
+      const v = Math.round(+$('campo-semilla').value);
+      if (Number.isFinite(v) && v >= 1) E.semilla = v;
+      pinta({ tabla: false });
+    });
+    $('boton-simular').addEventListener('click', () => {
+      const a = analisis(E.diseno);
+      if (a.errores.length) return;
+      simulacion = { clave: JSON.stringify([a.clave, E.R, E.semilla]), resultado: Motor.replicas(a, E.R, E.semilla) };
+      pintaPestana3(); aUrl();
+    });
+
+    const dos = (campo, conv) => (ev) => { const v = conv(ev.target.value); if (Number.isFinite(v)) { E.dos[campo] = v; pinta({ tabla: false }); } };
+    $('dos-n').addEventListener('change', dos('n', Number));
+    $('dos-m').addEventListener('change', dos('m', Number));
+    $('dos-diseno').addEventListener('change', (ev) => { E.dos.diseno = ev.target.value; pinta({ tabla: false }); });
+    $('dos-rho').addEventListener('input', dos('rho', Number));
+    $('dos-semilla').addEventListener('change', dos('semilla', (v) => (String(v).trim() === '' ? NaN : Math.max(1, Math.round(+v)))));
+    for (const [id, campo] of [['dos-c1', 'c1'], ['dos-c2', 'c2'], ['dos-C', 'C']]) {
+      $(id).addEventListener('change', (ev) => {
+        const v = +ev.target.value;
+        ev.target.setAttribute('aria-invalid', String(!(v > 0)));
+        if (v > 0) { E.dos[campo] = v; pinta({ tabla: false }); }
+      });
+    }
+
+    $('boton-proyector').addEventListener('click', () => {
+      const activo = document.documentElement.classList.toggle('proyector');
+      $('boton-proyector').setAttribute('aria-pressed', String(activo));
+      // Al proyectar, «Cómo usar» se pliega: con él abierto, la primera pantalla no mostraba el laboratorio.
+      $('como-usar').open = !activo;
+      pinta({ tabla: false });
+      try { localStorage.setItem('laboratorio-ppt-proyector', activo ? '1' : '0'); } catch (e) { /* sin almacenamiento */ }
+    });
+    $('boton-enlace').addEventListener('click', async () => {
+      aUrl();
+      const b = $('boton-enlace');
+      try { await navigator.clipboard.writeText(location.href); b.textContent = 'Enlace copiado'; } catch (e) { b.textContent = 'Copia la dirección de la barra'; }
+      setTimeout(() => { b.textContent = 'Copiar enlace'; }, 2500);
+    });
+    // Primero se rehace la tabla y después se elige la pestaña: al revés, con la tabla
+    // de un escenario más largo todavía en pantalla, saltaba un TypeError (T7.121).
+    $('boton-reiniciar').addEventListener('click', () => {
+      E = inicial(); unidades = copia(escenario().unidades); simulacion = null; sorteos = 0;
+      construyePoblacion(); eligePestana(1, false, true);
+    });
+    // Un enlace del laboratorio pegado en una pestaña donde ya está abierto (o los de la
+    // guía de 10 minutos) solo cambia el #: se relee. `aUrl` usa replaceState, que no
+    // dispara este evento, así que no hay bucle.
+    window.addEventListener('hashchange', () => {
+      deUrl(); simulacion = null; construyePoblacion(); eligePestana(E.tab, false, true);
+      document.querySelector('.pestanas').scrollIntoView({ block: 'start' });
+    });
+  }
+
+  // --------------------------------------------------------------------- inicio
+  let anchoPrevio = 0;
+  let espera = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(espera);
+    espera = setTimeout(() => { if (Math.abs(innerWidth - anchoPrevio) > 20) { anchoPrevio = innerWidth; pinta({ tabla: false }); } }, 150);
+  });
+  function inicia() {
+    anchoPrevio = innerWidth;
+    try {
+      if (localStorage.getItem('laboratorio-ppt-proyector') === '1') {
+        document.documentElement.classList.add('proyector');
+        $('boton-proyector').setAttribute('aria-pressed', 'true');
+        $('como-usar').open = false;
+      }
+    } catch (e) { /* sin almacenamiento */ }
+    conecta();
+    construyeRetos();
+    deUrl();
+    construyePoblacion();
+    eligePestana(E.tab, false);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inicia);
+  else inicia();
+})();
+
+</script>
+</body>
+</html>

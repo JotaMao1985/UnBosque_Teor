@@ -32,7 +32,8 @@ del Corte III](proyecto-integrador-corte-iii.html), con su [plantilla de informe
 diapositivas de clase de los capítulos 4 ([1](diapositivas/capitulo-4-muestreo-estratificado_sesion1.html) y
 [2](diapositivas/capitulo-4-muestreo-estratificado_sesion2.html)), 5 ([1](diapositivas/capitulo-5-conglomerados_sesion1.html) y
 [2](diapositivas/capitulo-5-conglomerados_sesion2.html)) y 6 ([1](diapositivas/capitulo-6-probabilidades-desiguales_sesion1.html) y
-[2](diapositivas/capitulo-6-probabilidades-desiguales_sesion2.html)), en dos sesiones cada uno, con sus fuentes en `diapositivas/fuentes/`. La navegación es siempre por la
+[2](diapositivas/capitulo-6-probabilidades-desiguales_sesion2.html)), en dos sesiones cada uno, con sus fuentes en `diapositivas/fuentes/`. Después de la tarjeta del capítulo 6 va la del
+[laboratorio πPT](laboratorio-ppt.html), que el capítulo enlaza también desde sus módulos 5 y 7. La navegación es siempre por la
 portada: los capítulos no enlazan entre sí, aunque sí se citan («esto se trata en el capítulo 5»).
 
 ## Qué trae cada capítulo
