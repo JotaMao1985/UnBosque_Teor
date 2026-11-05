@@ -1,0 +1,124 @@
+{
+  "_leeme": "Escenarios del laboratorio πPT (T7.118 y T7.121). «tiendas» y «clases» son datos de Lohr, 3.ª ed.; los demás son ejemplos ilustrativos inventados para el laboratorio, y la página los marca así. «proposito» dice qué ilustra cada uno (criterio del curso: todo ejemplo con contexto). En «clases» los M_i son los de classes.csv y las horas se generan con semilla en motor.js (poblacionClases).",
+  "una_etapa": [
+    {
+      "clave": "tiendas",
+      "titulo": "Las cuatro tiendas de Lohr",
+      "tipo": "dato",
+      "fuente": "Lohr, 3.ª ed., §6.1 y tabla 6.1; cap. 6, módulos 1 a 5",
+      "proposito": "El ejemplo del capítulo: con n = 2, D es de inclusión forzosa y el πPT deja V = 53.",
+      "x": "Superficie (m²)",
+      "y": "Ventas (miles de USD)",
+      "n": 2,
+      "unidades": [
+        { "id": "A", "x": 100, "y": 11 },
+        { "id": "B", "x": 200, "y": 20 },
+        { "id": "C", "x": 300, "y": 24 },
+        { "id": "D", "x": 1000, "y": 245 }
+      ]
+    },
+    {
+      "clave": "barrios",
+      "titulo": "Barrios: hogares y hogares con fibra",
+      "tipo": "ilustrativo",
+      "proposito": "Una y casi proporcional a x. Sirve para ver los pares que el sistemático con la lista fija deja fuera.",
+      "x": "Hogares",
+      "y": "Hogares con fibra óptica",
+      "n": 3,
+      "unidades": [
+        { "id": "B1", "x": 120, "y": 98 },
+        { "id": "B2", "x": 250, "y": 205 },
+        { "id": "B3", "x": 420, "y": 340 },
+        { "id": "B4", "x": 600, "y": 492 },
+        { "id": "B5", "x": 810, "y": 658 },
+        { "id": "B6", "x": 1000, "y": 815 }
+      ]
+    },
+    {
+      "clave": "hospitales",
+      "titulo": "Hospitales: camas y urgencias del mes",
+      "tipo": "ilustrativo",
+      "proposito": "Con n = 3, el hospital más grande queda justo en π = 1: de inclusión forzosa.",
+      "x": "Camas",
+      "y": "Urgencias atendidas en el mes",
+      "n": 3,
+      "unidades": [
+        { "id": "H1", "x": 80, "y": 510 },
+        { "id": "H2", "x": 140, "y": 820 },
+        { "id": "H3", "x": 210, "y": 1390 },
+        { "id": "H4", "x": 320, "y": 1960 },
+        { "id": "H5", "x": 450, "y": 2890 },
+        { "id": "H6", "x": 600, "y": 3740 }
+      ]
+    },
+    {
+      "clave": "facturas",
+      "titulo": "Lotes de facturas: valor en libros y valor auditado",
+      "tipo": "ilustrativo",
+      "proposito": "Una auditoría por valor en libros: el valor auditado sigue de cerca al registrado, y el lote mayor es de inclusión forzosa.",
+      "x": "Valor en libros (millones de pesos)",
+      "y": "Valor auditado (millones de pesos)",
+      "n": 3,
+      "unidades": [
+        { "id": "L1", "x": 45, "y": 44 },
+        { "id": "L2", "x": 75, "y": 72 },
+        { "id": "L3", "x": 160, "y": 155 },
+        { "id": "L4", "x": 290, "y": 281 },
+        { "id": "L5", "x": 520, "y": 508 },
+        { "id": "L6", "x": 890, "y": 865 }
+      ]
+    },
+    {
+      "clave": "recta_lejos",
+      "titulo": "Sedes: empleados y factura de energía",
+      "tipo": "ilustrativo",
+      "proposito": "Una relación casi lineal, con una parte fija grande en la factura.",
+      "x": "Empleados",
+      "y": "Factura de energía del año (millones de pesos)",
+      "n": 3,
+      "unidades": [
+        { "id": "S1", "x": 12, "y": 32.4 },
+        { "id": "S2", "x": 20, "y": 34.9 },
+        { "id": "S3", "x": 30, "y": 35.2 },
+        { "id": "S4", "x": 45, "y": 39.9 },
+        { "id": "S5", "x": 60, "y": 41.1 },
+        { "id": "S6", "x": 80, "y": 46.8 }
+      ]
+    },
+    {
+      "clave": "inversa",
+      "titulo": "Sucursales: empleados e incidentes",
+      "tipo": "ilustrativo",
+      "proposito": "Una y que baja cuando x sube.",
+      "x": "Empleados",
+      "y": "Incidentes operativos del año",
+      "n": 3,
+      "unidades": [
+        { "id": "U1", "x": 60, "y": 480 },
+        { "id": "U2", "x": 110, "y": 410 },
+        { "id": "U3", "x": 190, "y": 310 },
+        { "id": "U4", "x": 280, "y": 220 },
+        { "id": "U5", "x": 390, "y": 140 },
+        { "id": "U6", "x": 520, "y": 95 }
+      ]
+    }
+  ],
+  "dos_etapas": {
+    "clave": "clases",
+    "titulo": "Las 15 clases de estadística (Lohr, ej. 6.11)",
+    "fuente": "Lohr, 3.ª ed., ej. 6.11 (classes.csv y classpps.csv); cap. 6, módulo 9",
+    "M": [44, 33, 26, 22, 76, 63, 20, 44, 54, 34, 46, 24, 46, 100, 15],
+    "y": "Horas de estudio de estadística a la semana (inventadas)",
+    "n": 5,
+    "m": 4,
+    "rho": 0.25,
+    "semilla": 2026,
+    "costos": {
+      "c1": 120,
+      "c2": 8,
+      "C": 1200,
+      "unidad": "miles de pesos",
+      "tipo": "ilustrativo"
+    }
+  }
+}

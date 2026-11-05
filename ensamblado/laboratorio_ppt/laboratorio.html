@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio πPT · Capítulo 6 · Muestreo Estadístico · UnBosque</title>
+  <meta name="description" content="Laboratorio del capítulo 6 de Muestreo: el sorteo sistemático πPT, la inclusión forzosa, cuándo gana el πPT, Horvitz–Thompson con las π_kl y el muestreo en dos etapas con las clases de Lohr.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Las fuentes no bloquean el pintado: con una red colgada (portal cautivo), la hoja
+       bloqueante dejaba la página en blanco 75 s (T7.121). Sin ellas, la pila del sistema. -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <style>
+/* @@estilos@@ */
+  </style>
+</head>
+<body>
+<a class="salto" href="#contenido">Saltar al contenido</a>
+
+<header class="cabecera" role="banner">
+  <div class="cabecera-dentro">
+    <div>
+      <h1>Laboratorio πPT</h1>
+      <p class="sub">Probabilidades proporcionales al tamaño · Capítulo 6 · Muestreo Estadístico · UnBosque</p>
+    </div>
+    <nav aria-label="Navegación y herramientas">
+      <a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>
+      <a href="index.html">Portada</a>
+      <button type="button" id="boton-proyector" aria-pressed="false">Modo proyector</button>
+      <button type="button" id="boton-enlace">Copiar enlace</button>
+      <button type="button" id="boton-reiniciar">Reiniciar todo</button>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+  <section aria-labelledby="titulo-uso">
+    <details id="como-usar" open>
+    <summary><h2 id="titulo-uso" style="display:inline;border:0">Cómo usar el laboratorio</h2></summary>
+    <p>Este laboratorio acompaña al capítulo 6. Cada pestaña sigue la misma pauta: un <strong>objetivo</strong>, una
+      <strong>predicción</strong> que conviene escribir antes de tocar nada, los <strong>controles</strong> para comprobarla
+      y una <strong>lectura</strong> de lo que se ve. Al final de cada pestaña hay retos con la respuesta plegada: ábrela
+      después de intentarlo. Las cifras se calculan exactas, enumerando todas las muestras posibles; solo las réplicas de
+      la pestaña 3 son simuladas, con semilla.</p>
+    <p>Las marcas distinguen el tipo de afirmación:
+      <span class="marca dato">Dato</span> cifras de Lohr, de una cuenta exacta o de un sorteo con semilla del laboratorio;
+      <span class="marca lectura">Lectura</span> lo que esas cifras dicen;
+      <span class="marca opinion">Opinión del material</span> una recomendación;
+      <span class="marca ilustrativo">Ejemplo ilustrativo</span> datos inventados para el laboratorio.</p>
+    <details>
+      <summary>Guía de 10 minutos para el repaso en clase (semana 14)</summary>
+      <p>Cada paso es un enlace que deja el laboratorio listo para ese momento.</p>
+      <ol>
+        <li><strong>Minutos 0 a 2 · <a href="#t=1&amp;e=tiendas&amp;n=2&amp;u=0.75">Pestaña 1, tiendas</a>.</strong> Antes de tocar
+          nada: con n = 3, ¿cuántas tiendas serían de inclusión forzosa? Después, con n = 2, mover u hasta que salga {B, D}.</li>
+        <li><strong>Minutos 2 a 5 · <a href="#t=2&amp;e=recta_lejos&amp;n=3&amp;d=maxima_entropia">Pestaña 2, «Sedes»</a>.</strong>
+          La correlación entre x e y es casi 1: ¿gana el πPT? Luego, «Llevar la recta al origen» y ver qué cambia y qué no.</li>
+        <li><strong>Minutos 5 a 8 · <a href="#t=3&amp;e=barrios&amp;n=3&amp;d=sistematico_fijo">Pestaña 3, «Barrios», lista fija</a>.</strong>
+          ¿Qué pares nunca salen juntos? ¿Qué les pasa a las varianzas estimadas? Comparar con
+          <a href="#t=3&amp;e=barrios&amp;n=3&amp;d=sistematico_aleatorio">la lista barajada</a>.</li>
+        <li><strong>Minutos 8 a 10 · <a href="#t=4">Pestaña 4, las clases</a>.</strong> La tarjeta «Con reemplazo»: la
+          aproximación que el capítulo 7 usa en todas sus encuestas, y cuánto exagera aquí. De tarea, los retos de las
+          pestañas 3 y 4.</li>
+      </ol>
+    </details>
+    </details>
+  </section>
+
+  <section id="poblacion" aria-labelledby="titulo-poblacion">
+    <h2 id="titulo-poblacion">La población</h2>
+    <p id="poblacion-nota" class="tabla-pie" style="padding:0">La usan las pestañas 1, 2 y 3. La 4 trae su propia población.</p>
+    <div class="controles">
+      <div class="control">
+        <label for="sel-escenario">Escenario</label>
+        <select id="sel-escenario"></select>
+      </div>
+      <div class="control">
+        <label for="sel-n">Tamaño de muestra n</label>
+        <select id="sel-n"></select>
+      </div>
+      <div class="control">
+        <label for="sel-diseno">Diseño (pestañas 2 y 3)</label>
+        <select id="sel-diseno">
+          <option value="sistematico_fijo">Sistemático, lista fija</option>
+          <option value="sistematico_aleatorio">Sistemático, lista barajada</option>
+          <option value="maxima_entropia">Máxima entropía</option>
+        </select>
+      </div>
+    </div>
+    <p class="tabla-pie" style="padding:0">Los tres diseños dan las mismas π<sub>k</sub> y se distinguen en cómo reparten la
+      probabilidad entre las muestras. El de <strong>máxima entropía</strong> es, entre todos los que tienen esas π, el que
+      la reparte entre más muestras (cap. 6, M5, «Para profundizar»).</p>
+    <p id="escenario-fuente"></p>
+    <div id="aviso-desplazada" class="caja aviso oculto"></div>
+    <div class="tabla-marco">
+      <table id="tabla-poblacion">
+        <caption class="sr-only">Unidades de la población, con su tamaño x, su valor y, ψ y π</caption>
+        <thead></thead>
+        <tbody></tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
+    <div id="errores-poblacion" class="error-campo" role="alert"></div>
+    <div class="controles">
+      <button type="button" class="boton secundario" id="boton-agregar">Agregar una unidad</button>
+      <button type="button" class="boton secundario" id="boton-quitar">Quitar la última</button>
+      <button type="button" class="boton secundario" id="boton-restaurar">Volver a los datos del escenario</button>
+    </div>
+  </section>
+
+  <div class="pestanas" role="tablist" aria-label="Pestañas del laboratorio">
+    <button type="button" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true">1 · La regla sistemática</button>
+    <button type="button" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">2 · ¿Cuándo gana el πPT?</button>
+    <button type="button" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">3 · HT y las π<sub>kl</sub></button>
+    <button type="button" role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" tabindex="-1">4 · Dos etapas</button>
+  </div>
+  <div id="resumen-vivo" class="sr-only" aria-live="polite"></div>
+
+  <!-- =============================================================== PESTAÑA 1 -->
+  <section role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+    <p class="objetivo"><strong>Objetivo.</strong> Ver cómo el sorteo sistemático convierte las π<sub>k</sub> = n·x<sub>k</sub>/t<sub>x</sub>,
+      que suman n, en una muestra de tamaño fijo n; qué es la inclusión forzosa; y en qué se diferencia π<sub>k</sub> de
+      ψ<sub>k</sub> (cap. 6, módulos 1, 4 y 5).</p>
+
+    <div class="formula">
+      <math display="block"><msub><mi>ψ</mi><mi>k</mi></msub><mo>=</mo><mfrac><msub><mi>x</mi><mi>k</mi></msub><msub><mi>t</mi><mi>x</mi></msub></mfrac><mspace width="2em"/><msub><mi>π</mi><mi>k</mi></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mspace width="0.1em"/><msub><mi>x</mi><mi>k</mi></msub></mrow><msub><mi>t</mi><mi>x</mi></msub></mfrac></math>
+      <p>ψ<sub>k</sub> es la probabilidad de salir en <em>una</em> extracción: suman 1. π<sub>k</sub> es la de estar en la
+        muestra: suman n. Si n·x<sub>k</sub>/t<sub>x</sub> pasa de 1, la unidad es de <strong>inclusión forzosa</strong>
+        (π<sub>k</sub> = 1) y los cupos que quedan se reparten entre las demás, en proporción a x, hasta que ninguna pase de 1.</p>
+    </div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Con las tiendas y <strong>n = 3</strong> (sin cambiar todavía el n de arriba, que está en 2): ¿cuántas tiendas quedan de
+      inclusión forzosa, y qué π reciben las demás? Escríbelo antes de seguir.</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> Dos: C y D. Primero D, con 3·1000/1600 = 1,875; quedan 2 cupos para A, B y C, con
+        600 m², y C llega a 2·300/600 = 1, así que también entra siempre. El último cupo se reparte entre A y B:
+        π<sub>A</sub> = 1/3 y π<sub>B</sub> = 2/3. El reparto se repite hasta que ninguna pasa de 1, como hace
+        <code>inclusionprobabilities</code> (cap. 6, M5). Compruébalo poniendo n = 3 arriba.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: la regla del sorteo sistemático</h3></div>
+    <p>Cada unidad ocupa un tramo de largo π<sub>k</sub>, en el orden de la tabla. Se sortea un arranque u entre 0 y 1, y
+      salen las unidades cuyos tramos contienen a u, u + 1, …, u + n − 1. Como cada tramo mide a lo sumo 1, contiene a lo
+      sumo un punto, y lo contiene con probabilidad π<sub>k</sub>. Una forzosa ocupa un tramo entero de largo 1: siempre le
+      cae un punto. Esta regla es el sistemático con la lista fija, sea cual sea el diseño elegido arriba. Mueve u hasta
+      que salga la muestra {B, D}.</p>
+    <div class="controles">
+      <div class="control" style="flex:1 1 18rem">
+        <label for="rango-u">Arranque u: <span id="valor-u" class="num"></span></label>
+        <input type="range" id="rango-u" min="0" max="0.999" step="0.001" value="0.75">
+      </div>
+      <button type="button" class="boton" id="boton-sortear-u">Sortear u</button>
+    </div>
+    <figure class="grafico" id="figura-regla">
+      <div id="svg-regla"></div>
+      <figcaption id="pie-regla"></figcaption>
+    </figure>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <div class="dos-columnas">
+      <div>
+        <h4>La muestra de este u</h4>
+        <div class="tabla-marco"><table id="tabla-muestra-u"><caption class="sr-only">Unidades de la muestra y su aporte al estimador</caption><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
+      </div>
+      <div>
+        <h4>Todas las muestras que puede dar la regla</h4>
+        <div class="tabla-marco"><table id="tabla-tramos"><caption class="sr-only">Tramos de u, la muestra de cada uno y su probabilidad</caption><thead></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+    <h4>ψ frente a π: con reemplazo y sin reemplazo</h4>
+    <p>Con reemplazo (n extracciones con ψ), la probabilidad de que una unidad salga al menos una vez es
+      1 − (1 − ψ<sub>k</sub>)<sup>n</sup>, y una unidad grande puede salir dos veces. El πPT la incluye con π<sub>k</sub>
+      y nunca la repite (cap. 6, M4).</p>
+    <div class="tabla-marco"><table id="tabla-psi-pi"><caption class="sr-only">ψ, n por ψ, probabilidad de salir con reemplazo y π del πPT</caption><thead></thead><tbody></tbody></table></div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca dato">Dato</span> En las tiendas con n = 2, las tres muestras posibles dan t̂ = 311, 305 y 293, y
+      la varianza es 53, frente a 7124 del Hansen–Hurwitz con reemplazo (cap. 6, M2 y M5).
+      <span class="marca lectura">Lectura</span> D entra siempre y aporta lo mismo a todas, 245; lo que cambia es la tienda
+      que la acompaña, y sus cocientes y<sub>k</sub>/π<sub>k</sub> (66, 60 y 48) se parecen. Sortear sin reemplazo y con la
+      inclusión forzosa quita la peor fuente de variación: que D no salga.</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="1"></div>
+    <details>
+      <summary>En R</summary>
+<pre class="codigo">library(sampling)
+x &lt;- c(A = 100, B = 200, C = 300, D = 1000)   <span class="com"># superficie, m²</span>
+y &lt;- c(A = 11, B = 20, C = 24, D = 245)       <span class="com"># ventas, miles de USD</span>
+pik &lt;- inclusionprobabilities(x, 2)           <span class="com"># con la inclusión forzosa</span>
+round(pik, 4)
+<span class="sal">#&gt;      A      B      C      D
+#&gt; 0.1667 0.3333 0.5000 1.0000</span>
+set.seed(2026)
+s &lt;- UPsystematic(pik)                        <span class="com"># 1 = en la muestra</span>
+names(x)[s == 1]
+<span class="sal">#&gt; [1] "C" "D"</span>
+sum(y[s == 1] / pik[s == 1])                  <span class="com"># t̂ de Horvitz–Thompson</span>
+<span class="sal">#&gt; [1] 293</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a> (los módulos se eligen en su menú): módulo 1
+          (una extracción, ψ), módulo 4 (ψ frente a π) y módulo 5 (el πPT, el sorteo sistemático y la inclusión forzosa).</li>
+        <li>Lohr, 3.ª ed.: §6.1 (las tiendas, tabla 6.1) y §6.4.1 (Horvitz–Thompson sin reemplazo).</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- =============================================================== PESTAÑA 2 -->
+  <section role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
+    <p class="objetivo"><strong>Objetivo.</strong> Ver que no basta con que x e y estén correlacionadas: el πPT gana cuando y es
+      casi proporcional a x, es decir, cuando los cocientes y<sub>k</sub>/π<sub>k</sub> se parecen. Eso pide una relación fuerte
+      y una recta que pase cerca del origen (cap. 6, módulo 5).</p>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Elige el escenario «Sedes», con n = 3: la correlación entre empleados y factura de energía es casi 1. ¿Gana el πPT al MAS
+      con el mismo n?</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> No: pierde de lejos, con un deff de 20,9 en el de máxima entropía (18,8 y 23,4 en
+        los dos sistemáticos). <span class="marca lectura">Lectura</span> La
+        factura tiene una parte fija grande: la recta corta el eje lejos del origen y los cocientes y<sub>k</sub>/π<sub>k</sub>
+        quedan muy distintos entre sí.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: dónde corta la recta</h3></div>
+    <p>El control suma la misma cantidad δ a todas las y. La nube sube o baja sin girar: <strong>la correlación no cambia</strong>,
+      pero el corte de la recta con el eje sí. Mientras δ no sea 0, la columna «y en uso» de la tabla de la población muestra
+      las y desplazadas, y las pestañas 1 a 3 calculan con ellas.</p>
+    <div class="controles">
+      <div class="control" style="flex:1 1 18rem">
+        <label for="rango-delta">δ que se suma a cada y: <span id="valor-delta" class="num"></span></label>
+        <input type="range" id="rango-delta" min="-100" max="100" step="1" value="0">
+      </div>
+      <button type="button" class="boton secundario" id="boton-origen">Llevar la recta al origen</button>
+      <button type="button" class="boton secundario" id="boton-constante" aria-pressed="false">y constante</button>
+      <button type="button" class="boton secundario" id="boton-delta-cero">Volver a los datos</button>
+    </div>
+    <p id="nota-origen" class="tabla-pie" style="padding:0"></p>
+    <figure class="grafico">
+      <div id="svg-dispersion"></div>
+      <div class="leyenda" aria-hidden="true"><span style="--c:#012820">Unidades</span><span class="anillo" id="leyenda-forzosa" style="--c:#B84A00">De inclusión forzosa</span><span class="linea discontinua" style="--c:#B84A00">Recta por el origen, y = (t/t<sub>x</sub>)·x</span><span class="linea" style="--c:#64748B">Recta de mínimos cuadrados</span></div>
+      <figcaption id="pie-dispersion"></figcaption>
+    </figure>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <div class="tarjetas" id="tarjetas-gana"></div>
+    <div class="formula">
+      <math display="block"><msub><mi>V</mi><mi>MRAS</mi></msub><mo>−</mo><msub><mi>V</mi><mi>PPT</mi></msub><mo>=</mo><mfrac><msup><mi>N</mi><mn>2</mn></msup><mi>n</mi></mfrac><mspace width="0.2em"/><mi>Cov</mi><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mspace width="0.3em"/><mfrac><msup><mi>y</mi><mn>2</mn></msup><mi>x</mi></mfrac><mo stretchy="false">)</mo></math>
+      <p><strong>El criterio de Raj</strong> (cap. 6, M5, con Gutiérrez, Resultado 4.2.7): compara el MAS con reemplazo con el
+        PPT con reemplazo (Hansen–Hurwitz), con la covarianza de divisor N. Es exacto con reemplazo y orientativo para el πPT.</p>
+    </div>
+    <div class="tabla-marco"><table id="tabla-cocientes"><caption class="sr-only">Cocientes y sobre π y y sobre ψ de cada unidad</caption><thead></thead><tbody></tbody></table></div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca lectura">Lectura</span> Si y<sub>k</sub> es proporcional a x<sub>k</sub>, los cocientes
+      y<sub>k</sub>/π<sub>k</sub> de las unidades no forzosas son todos iguales, las forzosas no aportan varianza, y la del πPT
+      es cero: la idea del capítulo llevada al extremo. Sumar una constante a las y no cambia la correlación, pero separa los
+      cocientes: las unidades chicas, con π pequeña, pasan a tener cocientes enormes. La correlación no basta: hace falta que
+      la relación sea fuerte <em>y</em> que la recta pase cerca del origen. Con forzosas, la recta que cuenta es la de las
+      demás unidades: en las tiendas, «Llevar la recta al origen» de las cuatro empeora el πPT, porque D no entra en la cuenta.</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="2"></div>
+    <details>
+      <summary>En R</summary>
+<pre class="codigo">x &lt;- c(100, 200, 300, 1000); y &lt;- c(11, 20, 24, 245)   <span class="com"># las tiendas</span>
+N &lt;- 4; n &lt;- 2
+cov_N &lt;- mean(x * (y^2 / x)) - mean(x) * mean(y^2 / x) <span class="com"># divisor N</span>
+cov_N
+<span class="sal">#&gt; [1] 8765</span>
+N^2 / n * cov_N                                       <span class="com"># V_MRAS − V_PPT</span>
+<span class="sal">#&gt; [1] 70120</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>, módulo 5: «¿Cuándo gana el πPT?», el criterio de
+          Raj y la recta que pasa por el origen (Gutiérrez, §4.2.3 y §4.2.4); y módulo 2: el Hansen–Hurwitz con reemplazo.</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- =============================================================== PESTAÑA 3 -->
+  <section role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
+    <p class="objetivo"><strong>Objetivo.</strong> Ver todas las muestras posibles de un diseño, comprobar que el estimador de
+      Horvitz–Thompson es insesgado y ver qué le pasa a la varianza estimada cuando un par nunca sale junto
+      (π<sub>kl</sub> = 0) o incumple Yates–Grundy (π<sub>k</sub>π<sub>l</sub> &lt; π<sub>kl</sub>) (cap. 6, módulos 4 y 7).</p>
+
+    <div class="formula">
+      <math display="block"><msub><mover><mi>t</mi><mo>^</mo></mover><mi>π</mi></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>k</mi><mo>∈</mo><mi>s</mi></mrow></munder><mfrac><msub><mi>y</mi><mi>k</mi></msub><msub><mi>π</mi><mi>k</mi></msub></mfrac><mspace width="2em"/><mi>V</mi><mo stretchy="false">(</mo><msub><mover><mi>t</mi><mo>^</mo></mover><mi>π</mi></msub><mo stretchy="false">)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>k</mi><mo>&lt;</mo><mi>l</mi></mrow></munder><mo stretchy="false">(</mo><msub><mi>π</mi><mi>k</mi></msub><msub><mi>π</mi><mi>l</mi></msub><mo>−</mo><msub><mi>π</mi><mrow><mi>k</mi><mi>l</mi></mrow></msub><mo stretchy="false">)</mo><msup><mrow><mo>(</mo><mfrac><msub><mi>y</mi><mi>k</mi></msub><msub><mi>π</mi><mi>k</mi></msub></mfrac><mo>−</mo><mfrac><msub><mi>y</mi><mi>l</mi></msub><msub><mi>π</mi><mi>l</mi></msub></mfrac><mo>)</mo></mrow><mn>2</mn></msup></math>
+      <p>La varianza en su forma de Sen–Yates–Grundy (Lohr, ec. 6.21). Su estimador, V̂<sub>SYG</sub> (6.23), divide cada
+        término de la muestra por π<sub>kl</sub>: con π<sub>kl</sub> &gt; 0 en todos los pares es insesgado, y si además
+        π<sub>k</sub>π<sub>l</sub> ≥ π<sub>kl</sub>, nunca sale negativo (cap. 6, M7).</p>
+    </div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Con «Barrios», n = 3 y el sistemático con la lista fija: ¿hay pares de barrios que nunca salen juntos? Si los hay,
+      ¿qué les pasa a las varianzas estimadas?</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> Sí: 4 pares. <span class="marca lectura">Lectura</span> Con la lista fija, los
+        puntos están separados exactamente por 1. Dos unidades cuyos tramos, con los que hay entre ellos, caben en un trecho de
+        largo menor que 1 nunca reciben dos puntos: su π<sub>kl</sub> es 0, y ninguna muestra le enseña al estimador cuánto
+        varían juntas. El primer reto de esta pestaña da las consecuencias.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: la matriz π<sub>kl</sub></h3></div>
+    <p>Pulsa una celda para ver el par. En rojo, los pares que nunca salen juntos; con borde naranja, los que incumplen
+      Yates–Grundy. Cambia el diseño en el selector de la población y compara. Con las tiendas y n = 2 queda un solo cupo
+      libre y los tres diseños coinciden: prueba con «Barrios» y n = 3.</p>
+    <div class="tabla-marco"><table class="matriz" id="matriz-pikl"><caption class="sr-only">Probabilidades de inclusión de segundo orden</caption><thead></thead><tbody></tbody></table></div>
+    <div class="caja" id="inspector-par" aria-live="polite"></div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <h4>Lo que cuenta de este diseño</h4>
+    <ul id="lista-pares"></ul>
+    <details>
+      <summary id="resumen-verificaciones">Comprobaciones del cálculo</summary>
+      <ul id="lista-verificaciones"></ul>
+    </details>
+    <div class="tarjetas" id="tarjetas-ht"></div>
+    <h4>El espacio de muestras</h4>
+    <div class="tabla-marco"><table id="tabla-espacio"><caption class="sr-only">Todas las muestras posibles, su probabilidad, la estimación y las varianzas estimadas</caption><thead></thead><tbody></tbody><tfoot></tfoot></table>
+      <div class="paginas" id="paginas-espacio"></div></div>
+
+    <h4>Simula y compara con lo exacto</h4>
+    <p>Las réplicas sortean con el algoritmo de cada diseño (el arranque u del sistemático, o, en el de máxima entropía, un
+      Poisson con las probabilidades ajustadas que se repite hasta dar n), no leyendo las probabilidades de la tabla: así
+      comprueban la enumeración en lugar de copiarla. Con la misma semilla dan siempre lo mismo.</p>
+    <div class="controles">
+      <div class="control">
+        <label for="sel-replicas">Réplicas</label>
+        <select id="sel-replicas"><option value="1000">1000</option><option value="5000" selected>5000</option><option value="20000">20 000</option></select>
+      </div>
+      <div class="control">
+        <label for="campo-semilla">Semilla</label>
+        <input type="number" id="campo-semilla" value="2026" min="1" step="1">
+      </div>
+      <button type="button" class="boton" id="boton-simular">Simular</button>
+    </div>
+    <div id="resultado-replicas" aria-live="polite"></div>
+    <figure class="grafico oculto" id="figura-histograma">
+      <div id="svg-histograma"></div>
+      <div class="leyenda" aria-hidden="true"><span style="--c:#012820">t̂ del diseño elegido</span><span style="--c:#B84A00">t̂ del MAS con el mismo n</span></div>
+      <figcaption id="pie-histograma"></figcaption>
+    </figure>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca lectura">Lectura</span> Los tres diseños tienen las mismas π<sub>k</sub> y por eso el mismo
+      estimador, insesgado en los tres. Se distinguen en las π<sub>kl</sub>, y eso cambia también la varianza verdadera: en
+      «Barrios» con n = 3, V vale 56,9 con la lista fija y 28,1 con máxima entropía. El sistemático con la lista fija concentra
+      la probabilidad en pocas muestras y deja pares fuera; barajar la lista o usar el de máxima entropía la reparte entre
+      muchas más (salvo cuando queda un solo cupo libre, como en las tiendas con n = 2). Con pares fuera, las dos varianzas
+      estimadas se rompen de formas distintas: V̂<sub>SYG</sub> sale negativa en muestras enteras, y V̂<sub>HT</sub>, que suma
+      términos grandes de signos opuestos, se dispara.
+      <span class="marca opinion">Opinión del material</span> Cuando no se conocen las π<sub>kl</sub>, la aproximación con
+      reemplazo (V̂<sub>WR</sub>, Lohr 6.24, aquí sin las forzosas) es la salida práctica: nunca sale negativa. Con diseños de
+      alta entropía y n/N grande tiende a sobrestimar; con el sistemático de lista fija puede quedarse corta, como en
+      «Barrios».</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="3"></div>
+    <details>
+      <summary>En R</summary>
+<pre class="codigo">library(sampling)
+x &lt;- c(120, 250, 420, 600, 810, 1000)   <span class="com"># hogares de los barrios (ejemplo ilustrativo)</span>
+pik &lt;- inclusionprobabilities(x, 3)
+P_sis &lt;- UPsystematicpi2(pik)           <span class="com"># sistemático, la lista en este orden</span>
+sum(P_sis[upper.tri(P_sis)] &lt; 1e-12)    <span class="com"># pares que nunca salen juntos</span>
+<span class="sal">#&gt; [1] 4</span>
+P_me &lt;- UPmaxentropypi2(pik)            <span class="com"># máxima entropía</span>
+sum(P_me[upper.tri(P_me)] &lt; 1e-12)
+<span class="sal">#&gt; [1] 0</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>: módulo 4 (el espacio de muestras y
+          Horvitz–Thompson), módulo 5 (el sistemático y el de máxima entropía) y módulo 7 (Sen–Yates–Grundy y las π<sub>kl</sub>).</li>
+        <li>Lohr, 3.ª ed., §6.4.1: las ecuaciones 6.20 a 6.24.</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- =============================================================== PESTAÑA 4 -->
+  <section role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0" hidden>
+    <p class="objetivo"><strong>Objetivo.</strong> Ver por qué sortear las clases con π<sub>i</sub> proporcional a
+      M<sub>i</sub>, y el mismo número m de estudiantes en cada una, da un diseño autoponderado; cómo se reparte la varianza
+      entre las dos etapas; y qué tan buena es la aproximación con reemplazo (cap. 6, módulo 9; cap. 5, módulos 4, 7 y 8).</p>
+    <p><span class="marca dato">Dato</span> Los tamaños M<sub>i</sub> son los de las 15 clases de estadística de Lohr
+      (ej. 6.11, <code>classes.csv</code>), con K = 647 estudiantes.
+      <span class="marca ilustrativo">Ejemplo ilustrativo</span> Las horas de estudio de cada estudiante se inventan con
+      semilla: Lohr solo publica las de los 20 de la muestra (<code>classpps.csv</code>). La ρ que se pide genera los datos;
+      la que se muestra es la R<sub>a</sub>² que salió.</p>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Predice</h3></div>
+    <p>Con n = 5 clases y m = 4 estudiantes por clase: ¿qué pone más varianza, sortear las clases (etapa 1) o sortear a los
+      estudiantes dentro de cada una (etapa 2)?</p>
+    <details>
+      <summary>Respuesta</summary>
+      <p><span class="marca dato">Dato</span> La etapa 2: 59 % frente a 41 %. <span class="marca lectura">Lectura</span> Con solo
+        4 estudiantes por clase, el total de cada clase se estima con mucho error. En el capítulo 5 (módulo 7), con 20
+        estudiantes por escuela, la etapa 1 ponía el 93,9 %: lo que pesa más depende de m y del parecido dentro de las
+        clases.</p>
+    </details>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Mueve: n, m y el parecido dentro de las clases</h3></div>
+    <p>Sube m y mira qué etapa baja; sube la ρ y mira cuál crece. Prueba n = 7 (la clase de 100 pasa a forzosa) o m mayor que
+      15 (la clase más chica se censa) y mira qué le pasa a la autoponderación.</p>
+    <div class="controles">
+      <div class="control"><label for="dos-n">Clases n</label><select id="dos-n"></select></div>
+      <div class="control"><label for="dos-m">Estudiantes por clase m</label><select id="dos-m"></select></div>
+      <div class="control"><label for="dos-diseno">Diseño de la etapa 1</label>
+        <select id="dos-diseno"><option value="maxima_entropia">Máxima entropía</option><option value="sistematico_fijo">Sistemático, lista fija</option></select></div>
+      <div class="control" style="flex:1 1 14rem"><label for="dos-rho">Parecido dentro de las clases, ρ pedida (para generar los datos): <span id="valor-rho" class="num"></span></label>
+        <input type="range" id="dos-rho" min="0" max="0.6" step="0.05" value="0.25"></div>
+      <div class="control"><label for="dos-semilla">Semilla de los datos</label><input type="number" id="dos-semilla" value="2026" min="1" step="1"></div>
+    </div>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Comprueba</h3></div>
+    <div class="formula">
+      <math display="block"><msub><mi>w</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mo>=</mo><mfrac><mi>K</mi><mrow><mi>n</mi><mspace width="0.1em"/><msub><mi>M</mi><mi>i</mi></msub></mrow></mfrac><mo>·</mo><mfrac><msub><mi>M</mi><mi>i</mi></msub><mi>m</mi></mfrac><mo>=</mo><mfrac><mi>K</mi><mrow><mi>n</mi><mspace width="0.1em"/><mi>m</mi></mrow></mfrac></math>
+      <p>El primer factor es el inverso de la probabilidad de la clase; el segundo, el de la del estudiante dentro de ella.
+        Si una clase es de inclusión forzosa, o tiene menos de m estudiantes, el M<sub>i</sub> ya no se cancela.</p>
+    </div>
+    <p id="estado-autoponderado"></p>
+    <div class="tabla-marco"><table id="tabla-clases"><caption class="sr-only">Las 15 clases: tamaño, probabilidades y peso</caption><thead></thead><tbody></tbody></table></div>
+
+    <h4>La varianza, etapa por etapa</h4>
+    <div class="formula">
+      <math display="block"><mi>V</mi><mo stretchy="false">(</mo><msub><mover><mi>t</mi><mo>^</mo></mover><mi>π</mi></msub><mo stretchy="false">)</mo><mo>=</mo><msub><mi>V</mi><mn>1</mn></msub><mo>+</mo><msub><mi>V</mi><mn>2</mn></msub></math>
+      <math display="block"><msub><mi>V</mi><mn>1</mn></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow></munder><mo>(</mo><msub><mi>π</mi><mi>i</mi></msub><msub><mi>π</mi><mi>j</mi></msub><mo>−</mo><msub><mi>π</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>)</mo><msup><mrow><mo>(</mo><mfrac><msub><mi>t</mi><mi>i</mi></msub><msub><mi>π</mi><mi>i</mi></msub></mfrac><mo>−</mo><mfrac><msub><mi>t</mi><mi>j</mi></msub><msub><mi>π</mi><mi>j</mi></msub></mfrac><mo>)</mo></mrow><mn>2</mn></msup><mspace width="1.5em"/><mtext>(etapa 1)</mtext></math>
+      <math display="block"><msub><mi>V</mi><mn>2</mn></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><mfrac><mrow><mi>V</mi><mo stretchy="false">(</mo><msub><mover><mi>t</mi><mo>^</mo></mover><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><msub><mi>π</mi><mi>i</mi></msub></mfrac><mspace width="1.5em"/><mtext>(etapa 2)</mtext></math>
+      <p>Lohr, ec. 6.27. El primer término es la varianza entre clases: la que habría si se midiera a todos los estudiantes de
+        las clases sorteadas. El segundo es la que añade sortear m estudiantes dentro de cada una. Este reparto sí separa las
+        dos etapas; los dos sumandos del estimador de la varianza, en cambio, no: el primero arrastra parte de la etapa 2
+        (cap. 5, M7).</p>
+    </div>
+    <div class="barra-etapas" id="barra-etapas" role="img"></div>
+    <div class="tarjetas" id="tarjetas-dos"></div>
+
+    <h4>Cuántos estudiantes por clase, con un presupuesto</h4>
+    <div class="formula">
+      <math display="block"><msub><mi>m</mi><mi>opt</mi></msub><mo>=</mo><msqrt><mfrac><mrow><msub><mi>c</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>ρ</mi><mo stretchy="false">)</mo></mrow><mrow><msub><mi>c</mi><mn>2</mn></msub><mspace width="0.1em"/><mi>ρ</mi></mrow></mfrac></msqrt><mspace width="2em"/><msub><mi>n</mi><mi>opt</mi></msub><mo>=</mo><mfrac><mi>C</mi><mrow><msub><mi>c</mi><mn>1</mn></msub><mo>+</mo><msub><mi>c</mi><mn>2</mn></msub><msub><mi>m</mi><mi>opt</mi></msub></mrow></mfrac></math>
+      <p>Cap. 5, M8 (Lohr, §5.4, ec. 5.36, para conglomerados de igual tamaño y poblaciones grandes: una guía, no una cifra
+        exacta): c<sub>1</sub> es el costo de cada clase, c<sub>2</sub> el de cada estudiante y C el presupuesto. Aquí ρ es la
+        R<sub>a</sub>² de los datos. Los costos son un ejemplo ilustrativo.</p>
+    </div>
+    <div class="controles">
+      <div class="control"><label for="dos-c1">c<sub>1</sub> (por clase)</label><input type="number" id="dos-c1" min="1" step="1"></div>
+      <div class="control"><label for="dos-c2">c<sub>2</sub> (por estudiante)</label><input type="number" id="dos-c2" min="1" step="1"></div>
+      <div class="control"><label for="dos-C">Presupuesto C</label><input type="number" id="dos-C" min="1" step="10"></div>
+    </div>
+    <p id="resultado-costo"></p>
+
+    <div class="paso"><span class="paso-num" aria-hidden="true">4</span><h3>Lectura</h3></div>
+    <p><span class="marca lectura">Lectura</span> La etapa 1 pesa más cuanto más se parecen los estudiantes de una misma
+      clase (ρ alta): entonces lo que decide es qué clases salen, y conviene sortear más clases con menos estudiantes en cada
+      una. Con ρ baja pasa lo contrario. El m óptimo pone números a esa decisión. Y no hay que comparar el total de esta
+      pestaña con el del bloque de R: el 2232 sale de la muestra real de Lohr; el de la tarjeta, de la población inventada.</p>
+
+    <h3>Retos</h3>
+    <div class="retos" data-pestana="4"></div>
+    <details>
+      <summary>En R, con la muestra real de Lohr</summary>
+<pre class="codigo">library(survey)
+classpps &lt;- read.csv("classpps.csv")    <span class="com"># 5 clases, 4 estudiantes en cada una</span>
+d &lt;- svydesign(id = ~class, weights = ~finalweight, data = classpps)
+svytotal(~hours, d)                     <span class="com"># con reemplazo: la dispersión entre clases</span>
+<span class="sal">#&gt;        total     SE
+#&gt; hours 2232.2 311.76</span>
+svymean(~hours, d)
+<span class="sal">#&gt;       mean     SE
+#&gt; hours 3.45 0.4819</span></pre>
+    </details>
+    <details>
+      <summary>Para ampliar</summary>
+      <ul>
+        <li><a href="capitulo-6-probabilidades-desiguales.html">Capítulo 6</a>, módulo 9: las clases, el diseño autoponderado y
+          la aproximación con reemplazo.</li>
+        <li><a href="capitulo-5-conglomerados.html">Capítulo 5</a>: módulo 4 (ICC y R<sub>a</sub>²), módulo 7 (la varianza
+          etapa por etapa) y módulo 8 (el m óptimo con presupuesto).</li>
+        <li>Lohr, 3.ª ed.: §6.4.3 (ecs. 6.25 a 6.30) y ej. 6.11; §5.4.</li>
+      </ul>
+    </details>
+  </section>
+</main>
+
+<footer class="pie-pagina">
+  <p>Laboratorio del capítulo 6 · Muestreo Estadístico · Universidad El Bosque, 2026-II. Las cifras se calculan exactas,
+    enumerando las muestras posibles, y se comprobaron contra el paquete <code>sampling</code> de R. Datos de las tiendas y
+    de las clases: Lohr, S. L. (2022).
+    <em>Sampling: Design and Analysis</em>, 3.ª ed. CRC Press.</p>
+</footer>
+
+<script>
+// @@motor@@
+// @@escenarios@@
+// @@interfaz@@
+</script>
+</body>
+</html>

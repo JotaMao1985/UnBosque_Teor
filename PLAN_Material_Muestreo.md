@@ -8649,3 +8649,254 @@ gusto en este punto».
 portada). El build de Pages terminó en `built`; la portada servida coincide byte a byte con la rama y
 `verifica_publicado.py --solo-huella` da la huella de las 11 páginas. En vivo, a 1366 px y con la consola limpia,
 el calendario marca la ficha y el protocolo como cerrados y el avance como «Próxima · cierra en 2 días».
+
+### T7.118 — El laboratorio πPT, fase 1: un motor correcto y probado (2026-11-04)
+
+Pedido de Javier: revisar `Simulador_IProb.html` (raíz de la copia principal, fuera de git, 2 nov) y proponer un plan
+de mejora de contenido, pedagogía, interfaz y experiencia de uso. Tres lectores lo revisaron en solo lectura:
+estadística (ES, contra `sampling` y Lohr 3.ª ed.), pedagogía y encaje con los caps. 5 y 6 (PE), e interfaz
+y accesibilidad (VI). El plan quedó en cuatro fases, con una parada de Javier al final de cada una.
+
+**Decisiones de Javier:**
+- una página del sitio, `laboratorio-ppt.html`, con tarjeta en la portada y enlazada desde M5 y M7 del cap. 6;
+- la pestaña de dos etapas, rehecha con classes;
+- Monte Carlo, fundido en la pestaña de Horvitz–Thompson;
+- uso como tarea y 10 minutos de repaso del cap. 6 en la semana 14;
+- el diseño de **máxima entropía**, que es lo que el original llamaba «Brewer», calibrado hasta converger. Primero se eligió
+  Sampford, pero no aparece ni en el cap. 6 ni en Lohr; el de máxima entropía sí (M5 y M6), y Javier lo cambió en la fase 2.
+
+**Por qué no servía el original** (lo que esta fase arregla):
+- **Topaba las π en 0,96** en vez de la inclusión forzosa. En las tiendas daba V = 1554,9 donde el cap. 6 dice 53, y
+  con n = 5 salían π > 1 y ΣP(s) = 0,84.
+- **Su «Brewer» era Poisson condicionado y no convergía** (60 iteraciones): las formas 6.20 y 6.21 diferían hasta un 15 %.
+- **«✓ Verificado exactamente» era texto fijo.**
+- **Las desviaciones internas de la pestaña de dos etapas eran imposibles** (cv del 489 %), y su ρ no entraba en la
+  varianza.
+
+**El motor nuevo**, `ensamblado/laboratorio_ppt/motor.js` (cálculo puro, sin DOM):
+- **π con inclusión forzosa iterada**, como `inclusionprobabilities`. Las forzosas entran en todas las muestras y el diseño
+  se aplica al resto.
+- **Tres diseños exactos por enumeración** (N ≤ 9): sistemático de lista fija, sistemático con la lista barajada y
+  máxima entropía (Poisson condicionado: las p̃ del Poisson se ajustan con el paso de `UPMEpiktildefrompik` hasta un
+  error < 1e-13, en 15 a 33 pasos; el original daba 60 pasos amortiguados y paraba lejos). El barajado se reduce a (m − 1)!/2 órdenes circulares, porque girar la lista o darle la vuelta
+  no cambia el diseño, así que es exacto hasta N = 9 y no aproximado desde N = 7 como el original.
+- **Verificaciones calculadas de verdad:** Σπ = n; π ≤ 1; ΣP(s) = 1; Σ_{s∋k}P(s) = π_k; Σ_l π_kl = (n − 1)π_k;
+  E(t̂) = t; 6.20 = 6.21 = ΣP(s)(t̂ − t)²; E(v̂_HT) = E(v̂_SYG) = V. Los pares con π_kl = 0 y los que incumplen
+  Yates–Grundy se cuentan aparte.
+- **Por muestra, v̂_HT, v̂_SYG y v̂_WR** (6.22–6.24), con las forzosas como un estrato censado en v̂_WR.
+- **El deff no existe con y constante.** Se avisa cuando n_ef > N.
+- **El MAS, el MAS con reemplazo, Hansen–Hurwitz y el criterio de Raj del M5**, más un desplazamiento de y que mueve
+  la recta sin cambiar la correlación.
+- **Réplicas con semilla y con el algoritmo real** de cada diseño (el Poisson condicionado, que se repite hasta dar n), no leyendo P(s). Dan
+  el error de simulación, el ECM y la cobertura con v̂_SYG y v̂_WR.
+- **Dos etapas sobre classes:** los 15 M_i reales (K = 647) y unas horas de estudio inventadas con semilla y ρ.
+  - Calcula V1 + V2 (6.27), la R_a² de los datos, el peso común (32,35 con n = 5 y m = 4) y por qué deja de serlo
+    (clases forzosas, o clases con menos de m).
+  - Da la esperanza exacta de la aproximación con reemplazo (6.30), que con n = 5 de 15 sobrestima un 21 %, como
+    advierte Lohr, y m_opt y n* con presupuesto.
+- **Validación:** x > 0, y ≥ 0, 1 ≤ n ≤ N − 1, |s| = n, y que la muestra esté en el soporte del diseño.
+
+`escenarios.json` lleva las tiendas de Lohr como escenario por defecto, cuatro ejemplos ilustrativos (los del
+original sin sus S_i, que ya no hacen falta), uno nuevo con la recta lejos del origen y correlación casi 1, y
+classes.
+
+**Comprobado:**
+- `node precalculo/pruebas/prueba_laboratorio_ppt.js`: **9869/9869** (con lo que añadió la fase 2).
+  - Las cifras del curso: π de las tiendas; t̂ de 311, 305 y 293; V = 53; 7124; 77 244; Cov 8765; Raj 70 120.
+  - 984 diseños: seis escenarios × cada n × tres diseños, más 300 poblaciones al azar.
+  - Máxima entropía no incumple Yates–Grundy en ninguno.
+  - Los órdenes circulares coinciden con todas las permutaciones.
+  - Las réplicas reproducen P(s), con z < 4,5 y ninguna muestra fuera del soporte.
+  - En dos etapas, 6.27 coincide con la varianza total calculada sobre las muestras.
+- `precalculo/verifica_laboratorio_ppt.R` (R 4.4, `sampling` 2.11): **1337/1337**. Compara con `inclusionprobabilities`,
+  `UPsystematicpi2`, el camino de `UPmaxentropypi2` (con eps = 1e-13) y el promedio de `UPsystematicpi2` sobre todas las permutaciones, en 264 diseños.
+  También V1, V2 y la R_a² de classes con `aov`.
+- El caso más pesado (N = 9 con la lista barajada) tarda 60 ms, y 10 000 réplicas, 20 ms.
+
+**Antes y después** (el original corrido en Node con los mismos datos):
+
+| Caso | Antes | Ahora |
+|---|---|---|
+| tiendas, n = 2, sistemático fijo | π_D = 0,96; V = 1554,9 | π_D = 1; V = 53 |
+| municipios, n = 4, sistemático fijo | V = 4241,1 | V = 14,5 |
+| facturas, n = 3, sistemático fijo | V = 5286,7 | V = 3,9 |
+| municipios, n = 5, sistemático fijo | π = 1,009; ΣP(s) = 0,964; V = 0 en una forma y 29 886 en la otra | V = 0,3 |
+| hospitales, n = 3, «Brewer» | 6.20 = 34 031 y 6.21 = 31 370 | máxima entropía, V = 30 960 |
+| inversa, n = 3, «Brewer» | deff 11,68 | máxima entropía, deff 11,76 |
+| dos etapas, municipios, n = 3 | cv del 489 %, el 100 % en la etapa 2 | classes, n = 5, m = 4: cv 8,8 %, etapa 1 el 41 % |
+
+En los casos sin forzosas, el sistemático da lo mismo que antes. «Brewer» y máxima entropía son el mismo diseño, ahora
+convergido y con la inclusión forzosa.
+
+**Sin commit y sin publicar.** El original no se tocó. Siguen la fase 2 (las pestañas en el orden del capítulo, con
+objetivo, predicción, retos y R), la 3 (interfaz y accesibilidad) y la 4 (integración y auditoría habitual), cada una con
+el visto bueno de Javier.
+
+### T7.119 — El laboratorio πPT, fase 2: la experiencia de aprendizaje (2026-11-04)
+
+Javier aprobó la fase 1 y pidió la 2. Al empezarla se encontró un error propio. La pregunta del diseño decía que el cap. 6
+menciona a Sampford, y no: no aparece ni en el cap. 6 ni en Lohr. El de máxima entropía sí, en M5 y M6. Javier eligió
+**máxima entropía**, y el motor y las dos pruebas se rehicieron con él (ver T7.118).
+
+**La página**, `sitio/muestreo/laboratorio-ppt.html` (134 KB), es un solo archivo. La ensambla
+`ensamblado/ensambla_laboratorio_ppt.py` (con `--revisar`) a partir de `ensamblado/laboratorio_ppt/`: `laboratorio.html`,
+`estilos.css`, `motor.js`, `escenarios.json`, `retos.js` e `interfaz.js`. No carga nada de internet salvo las fuentes, y el
+ensamblador aborta si aparece un CDN.
+- **Antes de las pestañas:** cómo usarlo, la leyenda de las marcas (Dato, Lectura, Opinión del material, Ejemplo
+  ilustrativo) y una guía plegada de 10 minutos para el repaso de la semana 14.
+- **La población:** escenario, n y diseño. La tabla es editable de verdad (no se rehace al escribir), valida lo que se
+  escribe y muestra ψ y π, con las forzosas marcadas.
+- **Cuatro pestañas, en el orden del capítulo,** cada una con la pauta objetivo → predice → mueve → comprueba → lectura:
+  1. **La regla del sistemático.** La regla con sus puntos u, u + 1, …, la muestra de ese u con su t̂, los tramos de u
+     con su P(s) (311, 305 y 293 en las tiendas) y ψ frente a π (1 − (1 − ψ)ⁿ contra π).
+  2. **¿Cuándo gana el πPT?** Un δ que mueve la recta sin cambiar la correlación, «Llevar la recta al origen» e «y
+     constante». La dispersión con la recta por el origen y la de mínimos cuadrados, el deff, el criterio de Raj y los
+     cocientes y/π e y/ψ. En «Sedes», la correlación es 0,987 y el deff pasa de 20,93 a 0,033.
+  3. **Horvitz–Thompson y las π_kl.**
+     - La matriz π_kl con un inspector del par, que marca en rojo los pares que nunca salen juntos y con borde los que
+       incumplen Yates–Grundy.
+     - Las verificaciones calculadas y el espacio de muestras paginado, con su fila de esperanzas.
+     - «Simula y compara»: réplicas con semilla, que se marcan como desactualizadas si cambian los datos.
+     - En municipios con el sistemático de lista fija: 4 pares en cero, 5 que incumplen Yates–Grundy, un 63,4 % de
+       probabilidad de una v̂_SYG negativa y una E(v̂_SYG) sesgada un −74 %.
+  4. **Dos etapas: las clases.**
+     - La tabla de las 15 clases con su peso, y el estado de la autoponderación con su motivo.
+     - La barra de las etapas y las cifras de la varianza, la R_a² obtenida frente a la ρ pedida y el deff.
+     - La aproximación con reemplazo frente a la V exacta, y m_opt y n* con presupuesto.
+- **Fórmulas en MathML**, que el navegador dibuja sin red. La 6.27 va en dos líneas, V₁ y V₂, porque con llaves se leía
+  mal.
+- **Retos:** 13, con la respuesta plegada. Cada respuesta la calcula el motor al abrirla, así que no hay cifras escritas a
+  mano. Uno es de IA: pedir el πPT de las tiendas y comprobar π_D = 1 y V = 53. Se comprobó en R que `UPsystematic` con
+  π_D = 1,25 no avisa y devuelve un 1,25.
+- **«En R»** en cada pestaña, con las salidas reales de R 4.4: `inclusionprobabilities` y `UPsystematic` sobre las
+  tiendas; el Raj de 8765 y 70 120; 4 pares en cero con `UPsystematicpi2` y 0 con `UPmaxentropypi2`; y `svytotal`
+  sobre `classpps`, que da 2232,2 con ee 311,76. Cada pestaña tiene además su «Para ampliar», con el módulo y Lohr.
+- **El estado vive en la URL**, con la semilla. Hay «Copiar enlace», «Reiniciar todo» y un modo proyector (letra al 125 %).
+
+**Comprobado:**
+- La prueba en Node, **9869/9869**: los retos, con las cifras del curso, y la regla, que da lo mismo que el sistemático
+  de lista fija.
+- R, **1337/1337**.
+- `node --check` del JS en línea, y `--revisar` dice «al día».
+- En el navegador, a 1280 px: las cuatro pestañas sin errores de consola.
+- A 375 px, ninguna pestaña desborda la página; solo se desplazan el código y la barra de pestañas.
+
+**Encontrado de paso y no tocado:** los capítulos no navegan con `#modulo-N`, porque `loadModule(1)` se fija al cargar.
+Los enlaces del «Para ampliar», como los de las diapositivas, abren el capítulo en el módulo 1.
+
+**Sin commit y sin publicar.** El prototipo se sirve en `localhost:8791/laboratorio-ppt.html` (configuración
+«laboratorio» de `.claude/launch.json`). Siguen la fase 3 (interfaz y accesibilidad: sin red, contraste medido,
+teclado, modo proyector y capturas a 1280, 1024 y 375 px) y la 4 (enlaces del cap. 6, tarjeta de la portada,
+`cuenta_sitio.py`, README y auditoría habitual).
+
+### T7.120 — El laboratorio πPT, fase 3: interfaz y accesibilidad (2026-11-04)
+
+Javier aprobó el prototipo y pidió la fase 3. Primero se midió y después se corrigió.
+
+**Medido:**
+- **Contraste (WCAG).** Todos los pares de texto pasan el AA; el más justo es el naranja #B84A00 sobre #FFEDD5, con 4,56:1.
+  Solo fallaba el contorno de foco #FF6600 sobre blanco, con 2,94:1.
+- **Cifras.** No queda ningún punto decimal en el texto visible. Los únicos están en las salidas de R y en los números de
+  sección.
+- **Teclado.** Las pestañas siguen el patrón ARIA: flechas, Inicio y Fin, la vuelta de la última a la primera y un solo
+  `tabindex=0`.
+- **Edición de la tabla.** «1500» entra entero sin perder el foco; «−5» marca el campo como inválido, lo explica y se
+  sigue calculando con el último valor válido. La URL guarda la población editada.
+- **Casos extremos.** Con 9 unidades, «Agregar» se desactiva y explica por qué, y la lista barajada tarda 9 ms.
+
+**Corregido:**
+- **La regla agrupa los tramos angostos seguidos bajo un solo rótulo** («U1–U5»): uno por tramo se amontonaba.
+- **Los tres gráficos se dibujan al ancho real de su caja.** La letra queda a 12–13 px en cualquier pantalla (en el
+  celular, el original la dejaba en unos 4 px), y se redibujan al cambiar el ancho. En el modo proyector salen con un
+  viewBox menor y se ven más grandes. En pantallas estrechas el rótulo largo del eje y se acorta.
+- **La barra de pestañas queda fija arriba** al desplazarse.
+- **El foco se marca con #B84A00** (5,23:1), y con blanco sobre la cabecera.
+- **En el celular, todo control mide al menos 44 px:** la cabecera, las celdas de la matriz, los campos y los
+  plegables (estos con relleno y no con flex, para que conserven su flecha).
+- **El pie de la población** escribe sin decimales los totales de datos enteros.
+
+**Comprobado:**
+- **Sin red** (Chrome con `--host-resolver-rules=MAP * ~NOTFOUND`): las cuatro pestañas se ven y calculan igual; solo
+  cambia la fuente, que pasa a la del sistema.
+- **A 375 px** (en el navegador de la app; el Chrome sin interfaz de macOS no baja de unos 500 px): ninguna pestaña
+  desborda la página, la matriz se desplaza dentro de su marco con la primera columna fija y no queda ningún control
+  por debajo de 44 px.
+- **A 1024 px con el modo proyector** (letra de 20 px), sin desborde.
+- **En la consola, 0 errores.** Node **9869/9869**, R **1337/1337**, `node --check` y `--revisar` «al día».
+
+**Sin commit y sin publicar.** Sigue la fase 4: los enlaces de M5 y M7 del cap. 6, la tarjeta de la portada,
+`cuenta_sitio.py`, el README y la auditoría habitual. Después vendrán el commit, el push y la publicación, cada uno con su
+permiso.
+
+### T7.121 — El laboratorio πPT, fase 4: integración y auditoría (2026-11-05)
+
+Javier pidió la fase 4. Primero se integró el laboratorio en el sitio y después pasó la auditoría habitual: el protocolo
+mecánico y cinco lectores (ES, CL, PE, CO y VI) sobre una copia congelada.
+
+**Integración:**
+- **La portada lleva la tarjeta del laboratorio** después de la del cap. 6: «Semanas 12–14», «4 pestañas» y «13 retos con
+  respuesta».
+- **El README** dice dónde va la tarjeta.
+- **El cap. 6 enlaza el laboratorio** desde el «Para ampliar» de dos módulos:
+  - el M5 abre la pestaña 1;
+  - el M7 abre la pestaña 3, en «Barrios», con n = 3 y la lista fija.
+
+**Hallazgos:** 24 errores, 61 mejoras y 8 dudas en total (con solapes entre lectores).
+- ES no halló ningún error de cálculo en el motor: lo comparó con R en 147 casos de una etapa y 350 de dos.
+- Los errores estaban en la prosa, en la interfaz y en un caso del código.
+- El detalle, con cada ID, está en `PLAN_Auditoria_Laboratorio_PPT.md`, fuera de git.
+
+**Corregidos todos los errores**, entre ellos:
+- **«Lo que decide no es la correlación» (ES-1)** era falso con forzosas. Ahora dice que la correlación no basta: hace
+  falta una relación fuerte y una recta cerca del origen.
+- **Los 12 enlaces «módulo N» llevaban siempre al módulo 1 (PE-1 y CL-1).** Ahora van al capítulo y nombran el módulo.
+- **«Llevar la recta al origen» empeoraba el πPT en las tiendas (PE-2).** Ahora usa la recta de las unidades no forzosas.
+- **«Reiniciar todo» daba un TypeError (CO-1).**
+- **Con ρ ≈ 0, el m óptimo daba cifras absurdas (ES-3).** Ahora busca el m entero con la menor V exacta, o aconseja censar
+  clases enteras.
+- **Sin red, la página quedaba en blanco 75 s (VI-1).** Las fuentes ya no bloquean.
+- **El foco no se veía en la matriz (VI-2).**
+- **La URL no se acotaba ni se atendía al cambiar (VI-7).**
+
+**Aplicadas también las mejoras baratas y claras:**
+- dos retos nuevos, `psi-pi` y `facturas-yg`;
+- un «Predice» nuevo en la pestaña 4: qué etapa pone más varianza (la segunda, 59 %);
+- las comprobaciones del cálculo, plegadas;
+- en dos etapas, las clases forzosas van aparte en la aproximación con reemplazo, como un estrato que se censa. Con
+  n = 8, el exceso baja de +95 % a +29 %;
+- el ensamblador rechaza piezas que cortarían el `<script>` o el `<style>`, y cualquier servidor que no sea el de las
+  fuentes.
+
+**Dos cosas que cazaron las pruebas nuevas:**
+- **El criterio relativo de 1e-12 de máxima entropía no bastaba.** Dejaba E(V̂_HT) a 4e-9 de V en «Barrios» y «Facturas»,
+  y la página habría mostrado ✗. Ahora itera hasta 1e-14, o hasta que deja de bajar.
+- **Las unidades de «Barrios» seguían llamándose M1 a M6.** Eran un resto de «municipios»; ahora son B1 a B6.
+
+**Comprobado:**
+- **Node, 9971/9971.** La sección 9 es nueva y calcula por fuera del motor: V̂_WR a mano, la cobertura exacta y las dos
+  etapas por fuerza bruta, enumerando también los estudiantes. También coteja con el motor las cifras escritas a mano en
+  la plantilla y en la tarjeta.
+- **R, 1341/1341.** El `Rscript` del PATH es ahora R 4.6 sin `sampling`; se corre con el de
+  `/Library/Frameworks/R.framework/Versions/4.4-arm64/`.
+- **El ensamblado** es idéntico byte a byte en dos pasadas, y `node --check` pasa.
+- **Los verificadores del cap. 6** están en verde. `cuenta_sitio.py` da 0 desajustes y no se modificó: la tarjeta del
+  laboratorio no tiene módulos ni minutos, y sus dos cifras las coteja la prueba de Node.
+- **En el navegador, a 1280 y 375 px:** 0 errores de consola, sin desborde. La guía, «Reiniciar todo», la matriz y el
+  modo proyector funcionan.
+
+**Quedan para Javier**, en el informe:
+- **Mejoras que cambian el diseño del material:**
+  - PE-8, retos nuevos;
+  - PE-12, enmarcar la tarea de la semana 14;
+  - PE-13, la lectura de la pestaña 1;
+  - el resto de PE-14;
+  - CO-12 y CO-13.
+- **Cinco dudas:**
+  - «miles de USD»;
+  - la regla de navegación del README;
+  - «conservadora: sobrestima» en el M7 del cap. 6;
+  - la t̂ en Montserrat;
+  - la barra naranja, y Safari.
+- **Un seguimiento fuera del laboratorio:** los capítulos no abren el módulo de `#modulo-N`.
+
+**Sin commit y sin publicar.** El commit, el push a `main` y la publicación en gh-pages van cada uno con su permiso.
