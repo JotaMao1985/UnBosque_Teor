@@ -8978,3 +8978,38 @@ sobre él con el número T7.122.
 - `verifica_publicado.py --solo-huella` da la huella de las 12 páginas, y el código servido del cap. 5 arranca.
 - En vivo, el M12 tiene 12 preguntas, 0 `.katex-error` y la consola sin errores; entregar en blanco da la
   corrección de las doce.
+
+### T7.123 — El quiz del cap. 5 pasa a 15 preguntas, y el M12 lo dice (2026-11-05)
+
+Pedido de Javier (5 nov): «Al quiz que se va a aplicar en brightspace agrega preguntas similares a las que
+aparecen en la autoevaluación del mismo capítulo, la idea es que el quiz tenga 15 preguntas».
+
+**El quiz es privado** (`quiz_cap5/`, fuera de git; su bitácora es la QZ.6 de `quiz_cap5/PLAN_Quiz_Cap5.md`).
+- Las 12 preguntas que ya tenía no cambian.
+- Al final van tres de repaso, gemelas de los ítems 1, 7 y 8 de la autoevaluación del M11, que el quiz no cubría:
+  estratos o conglomerados, la π de un hogar si su manzana tuviera el doble de hogares, y más manzanas o más hogares
+  con la varianza separada por etapas.
+- Javier eligió las tres, y que el simulacro siga con 12.
+- Sigue en 50 minutos.
+
+**Aquí entra solo el texto del módulo 12:**
+- el quiz tiene quince preguntas, seis de cifra y nueve de selección;
+- las tres últimas son de repaso, con sus módulos (1 y 4, 2 y 6, 7 y 8);
+- se practican con la autoevaluación del módulo 11;
+- al ritmo del quiz, las doce del simulacro caben en unos cuarenta minutos.
+
+El simulacro y su registro no cambian. `precalculo/referencias_cruzadas.json` gana las 8 referencias del texto nuevo,
+revisadas a mano.
+
+**Verificado:**
+- reensamblado idéntico;
+- `verifica_bloques --prosa`: 177/177 y 0 sin respaldo;
+- `verifica_publicado --local` arranca;
+- `verifica_referencias`: solo la ambigüedad que ya existía;
+- `cuenta_sitio`: 0 desajustes;
+- el M12 a 1014 y 375 px sin desborde ni errores;
+- del lado del quiz: el auditor da 0 fallos, el arnés 32/32 y R 0 discrepancias. La lectura la hicieron tres
+  resolutores a ciegas (15/15 en cada versión), dos lectores y una relectura de lo corregido; el arnés da 32/32.
+
+**Commit** con el permiso de Javier («Sí, haz commit», 5 nov). El push a `main` y la publicación en gh-pages van
+cada uno con su propio permiso.
