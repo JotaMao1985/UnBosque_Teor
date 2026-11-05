@@ -8965,4 +8965,16 @@ Comprobado en R: el error estándar del estrato es el de la segunda etapa, y no 
 
 **Commit** con el permiso de Javier («Tienes el permiso para los comits», 5 nov). Se hizo sobre `a188a44` como
 T7.118; antes del push entró en `main` el laboratorio πPT (`fe71724`, T7.118 a T7.121), y el commit se rebasó
-sobre él con el número T7.122. El push a `main` y la publicación en gh-pages van cada uno con su propio permiso.
+sobre él con el número T7.122.
+
+**Publicado** el 2026-11-05 con el visto bueno de Javier («Sí, push 296fcf9»; luego «Cap. 5 y laboratorio»):
+- `main` `296fcf9`, empujado sobre `fe71724` sin nada más.
+- `gh-pages` `0cbd9ec`, construido con `git commit-tree` del árbol `296fcf9:sitio` sobre la punta `918fa58`.
+  - Esa punta la había dejado minutos antes la sesión del laboratorio, con el árbol de `fe71724:sitio`.
+  - Entraron 3 archivos: el cap. 5, la portada y el README.
+- El build de Pages terminó en `built`.
+- Las cinco páginas tocadas por los dos commits, servidas, coinciden byte a byte con la rama: cap. 5, cap. 6,
+  laboratorio, portada y README.
+- `verifica_publicado.py --solo-huella` da la huella de las 12 páginas, y el código servido del cap. 5 arranca.
+- En vivo, el M12 tiene 12 preguntas, 0 `.katex-error` y la consola sin errores; entregar en blanco da la
+  corrección de las doce.
