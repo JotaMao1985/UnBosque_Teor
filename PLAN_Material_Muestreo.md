@@ -8900,3 +8900,59 @@ mecánico y cinco lectores (ES, CL, PE, CO y VI) sobre una copia congelada.
 - **Un seguimiento fuera del laboratorio:** los capítulos no abren el módulo de `#modulo-N`.
 
 **Sin commit y sin publicar.** El commit, el push a `main` y la publicación en gh-pages van cada uno con su permiso.
+
+### T7.122 — El simulacro del quiz del cap. 5, como módulo 12, y la UPM de certeza en el M9 (2026-11-04)
+
+Pedido de Javier (4 nov): «el quiz y simulacro de quiz, similar a como se hizo con el capítulo 7 de diseño de
+experimentos», teniendo en cuenta lo visto en el capítulo y en la actividad en clase.
+
+**El quiz es privado.** Lo calificable está en `quiz_cap5/`, fuera de git: tres versiones por grupos, 12
+preguntas en 50 minutos, el viernes 13 nov. Sus decisiones y su bitácora están en `quiz_cap5/PLAN_Quiz_Cap5.md`.
+Aquí entra solo lo público.
+
+**Módulo 12, «Simulacro del quiz»**
+- Es una cuarta versión con otro contexto (una cooperativa lechera, veredas y predios). **Se corrige al
+  entregar**, como el 7.13 de Diseño.
+- Las seis de cifra siguen el diseño del quiz. Las seis de selección miran los mismos módulos desde otro ángulo,
+  así que no repiten ninguna afirmación del quiz.
+- **Piezas:** `ensamblado/modulos/cap5/modulo_12_simulacro.html`, `simulacro.js` (el motor del 7.13 de Diseño
+  con la copia en sessionStorage del cap. 3) y `simulacro.css`.
+- El registro lo escribe `quiz_cap5/codigo/exporta_simulacro.py` entre dos marcadores, después de comprobar
+  que no regala nada del quiz.
+- **`ensambla_cap5.py`:**
+  - el módulo, el CSS y el motor;
+  - las guardas: cada pieza una vez, lista blanca del registro con sus tipos y nada privado;
+  - el conteo de simuladores sin el simulacro.
+- **`precalculo/cifras_prosa.json`:** las 42 cifras del simulacro, con la justificación «simulacro M12». Las
+  escribe `quiz_cap5/codigo/registra_cifras.py`, solo si son del simulacro.
+- **`precalculo/referencias_cruzadas.json`:** las 14 referencias del módulo 12, revisadas a mano.
+- **Portada y README:** el cap. 5 pasa a 12 módulos y 290 min, y el sitio a 94 módulos.
+
+**El M9 gana un párrafo.** La V2 del quiz preguntaba por la UPM única que entra con certeza, que el capítulo no
+enseñaba, y cuatro lectores de la auditoría lo señalaron. Javier decidió el 5 nov que la 11 sea igual en las tres
+versiones, con una manzana sorteada. El párrafo se queda porque es correcto y cierra el hueco. En la caja del «requisito técnico: al menos 2 UPM por
+estrato», un párrafo nuevo explica:
+- si un estrato tiene una sola UPM y entra siempre (n_h = N_h = 1), su primera etapa no tiene azar;
+- es el estrato censado del capítulo 4;
+- la segunda etapa sí se estima;
+- `survey` lo reconoce sin avisos.
+
+Comprobado en R: el error estándar del estrato es el de la segunda etapa, y no hay avisos.
+
+**Verificado**
+- `verifica_bloques.py --prosa`: 177/177, y 0 cifras de prosa sin respaldo.
+- `verifica_publicado.py --local`: el código publicado arranca.
+- `verifica_referencias.py`: solo la ambigüedad que ya existía.
+- `cuenta_sitio.py`: 0 desajustes.
+- Reensamblado idéntico byte a byte y `node --check` sin errores.
+- En el navegador:
+  - el M12 sin errores de consola ni de KaTeX;
+  - entrega en blanco, con todo bien y con rutas erróneas;
+  - el doble clic de Borrar, 4 y 5 decimales, el botón del final;
+  - a 375 px sin desborde.
+- La auditoría del quiz y del simulacro tuvo dos rondas de lectores. Está en `quiz_cap5/PLAN_Quiz_Cap5.md` y
+  `quiz_cap5/revision/`.
+
+**Commit** con el permiso de Javier («Tienes el permiso para los comits», 5 nov). Se hizo sobre `a188a44` como
+T7.118; antes del push entró en `main` el laboratorio πPT (`fe71724`, T7.118 a T7.121), y el commit se rebasó
+sobre él con el número T7.122. El push a `main` y la publicación en gh-pages van cada uno con su propio permiso.

@@ -57,6 +57,66 @@ def bloques_de(ruta):
     return out
 
 
+# Lo único que puede traer el registro del simulacro (módulo 12). Es una lista blanca: un campo nuevo del
+# generador, se llame como se llame («auditoria», «rol», «semillas»…), para el ensamblado en vez de
+# publicarse. Este simulacro SÍ lleva su clave (se corrige al entregar, D4 de quiz_cap5/PLAN_Quiz_Cap5.md):
+# lo que no puede viajar es lo privado del generador.
+CAMPOS_SIMULACRO = {"numero": {"clave", "cuenta", "rutas"}, "opcion": {"opciones", "correcta"}}
+MINUTOS_SIMULACRO, PREGUNTAS_SIMULACRO = 50, 12
+
+
+def revisa_registro_simulacro(registro):
+    """Los fallos del registro SIMULACROS['cap5-simulacro']: 50 minutos, una versión, las preguntas 1 a 12
+    en orden, y en cada una solo los campos de su tipo."""
+    m = re.search(r"SIMULACROS\['cap5-simulacro'\] = (\{.*\});\n", registro, re.S)
+    if not m:
+        return ["no encuentro el registro SIMULACROS['cap5-simulacro'] entre los marcadores"]
+    try:
+        sim = json.loads(m.group(1))
+    except ValueError as e:
+        return [f"el registro del simulacro no es JSON: {e}"]
+    fallos = []
+    if set(sim) != {"minutos", "titulo", "etapas", "versiones"}:
+        fallos.append(f"el registro del simulacro trae los campos {sorted(sim)}")
+    if sim.get("minutos") != MINUTOS_SIMULACRO:
+        fallos.append(f"el simulacro dura {sim.get('minutos')} minutos, no {MINUTOS_SIMULACRO}")
+    versiones = sim.get("versiones") or []
+    if len(versiones) != 1 or set(versiones[0]) != {"numero", "caso", "preguntas"}:
+        fallos.append("el simulacro no trae exactamente una versión con numero, caso y preguntas")
+        return fallos
+    preguntas = versiones[0]["preguntas"]
+    if [p.get("n") for p in preguntas] != list(range(1, PREGUNTAS_SIMULACRO + 1)):
+        fallos.append(f"las preguntas del simulacro no van de la 1 a la {PREGUNTAS_SIMULACRO}, en orden")
+    for p in preguntas:
+        tipo = p.get("tipo")
+        if tipo not in CAMPOS_SIMULACRO:
+            fallos.append(f"simulacro, pregunta {p.get('n')}: tipo desconocido {tipo!r}")
+            continue
+        esperados = {"n", "etapa", "etiqueta", "tipo", "enunciado"} | CAMPOS_SIMULACRO[tipo]
+        if set(p) != esperados:
+            fallos.append(f"simulacro, pregunta {p['n']}: sobran {sorted(set(p) - esperados)} y faltan "
+                          f"{sorted(esperados - set(p))}")
+            continue
+        # Con los tipos: «"correcta": true» y «"valor": "51"» pasaban y se publicaban (CO-9 de la ronda 1).
+        es_cifra = lambda x: type(x) in (int, float) and x == x and abs(x) != float("inf")
+        if p["etapa"] not in sim.get("etapas", {}):
+            fallos.append(f"simulacro, pregunta {p['n']}: la etapa {p['etapa']!r} no está en «etapas»")
+        if tipo == "numero":
+            if set(p["clave"]) != {"valor", "tol", "texto"} or any(set(r) != {"valor", "cifra", "texto"}
+                                                                   for r in p["rutas"]):
+                fallos.append(f"simulacro, pregunta {p['n']}: la clave o las rutas traen otros campos")
+            elif not (es_cifra(p["clave"]["valor"]) and es_cifra(p["clave"]["tol"]) and p["clave"]["tol"] > 0
+                      and all(es_cifra(r["valor"]) for r in p["rutas"])):
+                fallos.append(f"simulacro, pregunta {p['n']}: una clave, una tolerancia o una ruta no es una cifra")
+        else:
+            ops = p["opciones"]
+            if not (2 <= len(ops) <= 8) or any(set(o) != {"texto", "retro"} for o in ops):
+                fallos.append(f"simulacro, pregunta {p['n']}: las opciones traen otros campos")
+            if not (type(p["correcta"]) is int and 0 <= p["correcta"] < len(ops)):
+                fallos.append(f"simulacro, pregunta {p['n']}: «correcta» no es un índice de sus opciones")
+    return fallos
+
+
 def main():
     html = PLANTILLA.read_text(encoding="utf-8")
 
@@ -107,7 +167,7 @@ def main():
     # ---------------------------------------------------------------- módulos
     modulos = "".join((RAIZ / "ensamblado" / "modulos" / "cap5" / f).read_text(encoding="utf-8")
                       for f in ["modulos_1_3.html", "modulos_4_6.html",
-                                "modulos_7_9.html", "modulos_10_11.html"])
+                                "modulos_7_9.html", "modulos_10_11.html", "modulo_12_simulacro.html"])
     antes, despues = corta(
         html,
         "  <!-- ============================================================ -->\n  <!-- MÓDULO 1 · Cajas y tipografía",
@@ -130,7 +190,8 @@ def main():
         { id: 8, title: "Cuántos y de qué tamaño", shortTitle: "n y m", duration: "18 min" },
         { id: 9, title: "Estratos × conglomerados", shortTitle: "Combinados", duration: "18 min" },
         { id: 10, title: "Datos agrupados en ciencia de datos", shortTitle: "Ciencia de datos", duration: "20 min" },
-        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" }
+        { id: 11, title: "Autoevaluación y ejercicios guiados", shortTitle: "Autoevaluación", duration: "35 min" },
+        { id: 12, title: "Simulacro del quiz", shortTitle: "Simulacro", duration: "50 min" }
       ]
     };
 
@@ -149,8 +210,23 @@ def main():
         "courseData")
     html = antes + course + "\n" + despues
 
+    # ---------------------------------------------------------------- CSS del simulacro
+    # El componente .simulacro (módulo 12) es de este capítulo y del 3, cada uno con el suyo, así que no
+    # vive en la plantilla: se añade aquí, al final del <style>. Si la plantilla ya lo trajera, habría dos
+    # copias que divergen en silencio.
+    if "Componente .simulacro —" in html:
+        sys.exit("ABORTA: la plantilla ya trae el CSS de .simulacro; quítalo de uno de los dos sitios")
+    css_simulacro = (RAIZ / "ensamblado" / "modulos" / "cap5" / "simulacro.css").read_text(encoding="utf-8")
+    if html.count("\n  </style>\n</head>") != 1:
+        sys.exit("ABORTA: no encuentro el cierre del <style> de la cabecera")
+    html = html.replace("\n  </style>\n</head>", "\n" + css_simulacro.rstrip("\n") + "\n  </style>\n</head>")
+
     # ---------------------------------------------------------------- simuladores + quiz
+    # simulacro.js va detrás de simuladores.js: se engancha al registro SIMULADORES, y su registro
+    # SIMULACROS['cap5-simulacro'] lo escribe, entre dos marcadores, quiz_cap5/codigo/exporta_simulacro.py,
+    # que vive fuera del repositorio con las tres versiones del quiz.
     sims = (RAIZ / "ensamblado" / "modulos" / "cap5" / "simuladores.js").read_text(encoding="utf-8")
+    sims += "\n" + (RAIZ / "ensamblado" / "modulos" / "cap5" / "simulacro.js").read_text(encoding="utf-8")
     antes, despues = corta(
         html,
         "    // ================================================================\n    // Simuladores de demostración",
@@ -180,11 +256,40 @@ def main():
     if sin_usar:
         print(f"  aviso: bloques ejecutados que no se insertaron: {sin_usar}")
 
+    # ---------------------------------------------------------------- el simulacro
+    # Cada pieza exactamente una vez: dos copias del registro o del componente dejan de coincidir sin que
+    # nadie lo note.
+    fallos = []
+    for pieza in ['<div class="simulacro" data-simulador="cap5-simulacro">',
+                  "SIMULACROS['cap5-simulacro'] = ", "const SIMULACROS = {};",
+                  "function pintarSimulacro(", "Componente .simulacro —", "    .simulacro-opcion {",
+                  "    // [inicio · simulacro del quiz]", "    // [fin · simulacro del quiz]",
+                  '<div class="simulacro-preguntas"></div>', '<div class="simulacro-caso"></div>',
+                  'class="simulacro-empezar"', 'class="simulacro-reloj"', 'class="simulacro-conteo"',
+                  'class="simulacro-entregar"', 'class="simulacro-borrar"', 'class="simulacro-resumen"',
+                  'class="simulacro-nota"', 'class="simulacro-entregar-final"', 'class="simulacro-reloj-final"',
+                  '<template id="module-12">']:
+        if html.count(pieza) != 1:
+            fallos.append(f"simulacro del quiz: '{pieza}' aparece {html.count(pieza)} veces, no 1")
+    # Y lo que NO puede llevar: lo privado del generador, que vive con las tres versiones del quiz.
+    if not fallos:
+        registro = html[html.index("    // [inicio · simulacro del quiz]"):
+                        html.index("    // [fin · simulacro del quiz]")]
+        for pista in ('"auditoria"', '"rol"', '"semillas"', "version_1", "</script", "quiz_cap5/salidas"):
+            if pista in registro:
+                fallos.append(f"el simulacro publica «{pista}»: eso es del generador, no de la página")
+        fallos += revisa_registro_simulacro(registro)
+    if fallos:
+        sys.exit("ABORTA:\n  " + "\n  ".join(fallos))
+
     DESTINO.write_text(html, encoding="utf-8")
     DESTINO.chmod(0o644)
     # Solo las registraciones reales: `SIMULADORES['id']` aparece también dentro
-    # de un comentario de documentación, y contarlo inflaría el total.
-    n_sim = len(re.findall(r"\n    SIMULADORES\['", html))
+    # de un comentario de documentación, y contarlo inflaría el total. El
+    # simulacro del módulo 12 se registra ahí para que loadModule() lo arranque,
+    # pero no es un simulador: no entra en la cuenta (la misma regla que
+    # precalculo/cuenta_sitio.py).
+    n_sim = len(re.findall(r"\n    SIMULADORES\['(?![\w-]*-simulacro')", html))
     n_cod = len(re.findall(r'class="language-', html))
     n_preg = len(re.findall(r'\n        tipo: ', html))
     print("  escrito {}: {:,} caracteres, {} módulos, {} simuladores, {} bloques de código, "

@@ -1,0 +1,458 @@
+    /* ------------------------------------------------------------------
+       Componente .simulacro — el simulacro del quiz del capítulo 5 (módulo
+       12), que se responde, se cronometra y SE CORRIGE AL ENTREGAR.
+
+       Copiado del componente del capítulo 7 de Diseño de Experimentos
+       (Htmls/capitulo-7-factoriales.html, 4 nov 2026), que viene del módulo
+       11 del capítulo 3 de Series de Tiempo, sin tocar una declaración —los
+       cursos comparten paleta— salvo tres cosas: sin el selector de versión
+       ni la rejilla del cuadro latino, que aquí no se usan; el resumen en
+       <code>, como el del capítulo 3; y la figura hasta 46rem, para que los
+       tres paneles del piloto quepan en una fila. Es de este capítulo y de
+       nadie más: lo inserta ensamblado/ensambla_cap5.py al final del
+       <style>, junto con ensamblado/modulos/cap5/simulacro.js.
+       ------------------------------------------------------------------ */
+    .simulacro {
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .simulacro h4 {
+      color: #012820;
+      margin-top: 0;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .simulacro > h4 + p {
+      margin-top: 0.6rem;
+    }
+
+    .simulacro-mandos {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1rem 0 0.5rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .simulacro-empezar,
+    .simulacro-borrar {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .simulacro-empezar {
+      color: white;
+      background: #012820;
+      border: none;
+    }
+
+    .simulacro-empezar:hover {
+      background: #FF6600;
+    }
+
+    .simulacro-borrar {
+      color: #012820;
+      background: white;
+      border: 1px solid rgba(1, 40, 32, 0.25);
+    }
+
+    .simulacro-borrar:hover {
+      background: #f1f5f9;
+    }
+
+    .simulacro-reloj {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #012820;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .simulacro-reloj.acabado {
+      color: #b91c1c;
+    }
+
+    .simulacro-conteo {
+      font-size: 0.8125rem;
+      color: #475569;
+    }
+
+    .simulacro-pregunta {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1.1rem 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .simulacro-etiqueta {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #475569;
+      background: #f1f5f9;
+      border-radius: 50px;
+      padding: 0.15rem 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .simulacro-enunciado {
+      color: #1f2937;
+    }
+
+    .simulacro-enunciado table {
+      border-collapse: collapse;
+    }
+
+    .simulacro-opciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+    }
+
+    .simulacro-opcion {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      color: #1f2937;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .simulacro-opcion:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .simulacro-opcion:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 1px;
+    }
+
+    .simulacro-opcion.marcada {
+      border-color: #012820;
+      background: #ecfdf5;
+    }
+
+    .simulacro-letra {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #475569;
+      flex: none;
+    }
+
+    .simulacro-opcion.marcada .simulacro-letra {
+      color: #012820;
+    }
+
+    .simulacro-resumen {
+      font-size: 0.8125rem;
+      color: #475569;
+      margin-top: 1rem;
+    }
+
+    .simulacro-resumen code {
+      font-family: 'Fira Code', monospace;
+      color: #012820;
+    }
+
+    .simulacro-caso {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1.1rem 1.25rem;
+      margin-top: 1rem;
+      color: #1f2937;
+      overflow-x: auto;
+    }
+
+    /* Las tablas del caso son las del encabezado de Brightspace, con su
+       fondo claro en línea; el `table th` del curso les pone letra blanca, y
+       sin esto la cabecera sale blanca sobre blanco. Se vio en la primera
+       captura. */
+    .simulacro-caso table th {
+      color: #012820;
+    }
+
+    .simulacro-caso h3 {
+      font-size: 1.1rem;
+      margin-top: 0;
+    }
+
+    .simulacro-caso h4 {
+      font-size: 1rem;
+      margin-top: 1.1rem;
+    }
+
+    .simulacro-respuesta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .simulacro-numero {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9375rem;
+      color: #1f2937;
+      width: 10rem;
+      max-width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      padding: 0.45rem 0.7rem;
+    }
+
+    .simulacro-numero:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 1px;
+    }
+
+    /* --- Las piezas del preparcial (módulo 6.13), que se corrige --------- */
+    
+
+    .simulacro-entregar {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    
+    
+
+    
+
+    /* #C2410C y no #FF6600: con letra blanca, el naranja de la paleta da 2,9:1 (VI-6 de la ronda 1). */
+    .simulacro-entregar,
+    .simulacro-entregar-final {
+      color: white;
+      background: #C2410C;
+      border: none;
+    }
+
+    .simulacro-entregar:hover,
+    .simulacro-entregar-final:hover {
+      background: #012820;
+    }
+
+    .simulacro-entregar:focus-visible,
+    .simulacro-entregar-final:focus-visible {
+      outline: 2px solid #FF6600;
+      outline-offset: 1px;
+    }
+
+    .simulacro-entregar:disabled,
+    .simulacro-empezar:disabled,
+    .simulacro-opcion:disabled {
+      opacity: 0.65;
+      cursor: default;
+    }
+
+    .simulacro-pregunta.acierto {
+      border-left: 4px solid #10b981;
+    }
+
+    .simulacro-pregunta.fallo {
+      border-left: 4px solid #dc2626;
+    }
+
+    .simulacro-pregunta.vacia {
+      border-left: 4px solid #94a3b8;
+    }
+
+    .simulacro-opcion.correcta {
+      opacity: 1;
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .simulacro-opcion.equivocada {
+      opacity: 1;
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+
+    .simulacro-retro {
+      margin-top: 0.9rem;
+      padding: 0.8rem 1rem;
+      background: #f8fafc;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: #334155;
+    }
+
+    .simulacro-retro p {
+      margin: 0.35rem 0;
+    }
+
+    .simulacro-veredicto {
+      font-weight: 700;
+      color: #065f46;
+    }
+
+    .simulacro-pregunta.fallo .simulacro-veredicto {
+      color: #b91c1c;
+    }
+
+    .simulacro-pregunta.vacia .simulacro-veredicto {
+      color: #475569;
+    }
+
+    .simulacro-aviso {
+      font-weight: 600;
+      color: #9a3412;
+    }
+
+    .simulacro-errores {
+      font-size: 0.8125rem;
+      color: #475569;
+    }
+
+    .simulacro-nota {
+      font-weight: 700;
+      color: #012820;
+      margin-top: 1rem;
+    }
+
+    .simulacro-nota:empty {
+      display: none;
+    }
+
+    
+    /* Un gráfico dentro de un enunciado: uno o varios paneles SVG que se
+       acomodan en rejilla y se apilan en un teléfono. El ancho máximo deja
+       caber dos paneles por fila y nunca tres: con 40rem, los cuatro del
+       diagnóstico quedaban en 3 + 1. El SVG lleva sus colores y su letra en
+       atributos; aquí solo va la maqueta. */
+    .simulacro-figura {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      max-width: 46rem;
+      margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .simulacro-figura svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      background-color: #ffffff;
+      border-radius: 0.375rem;
+    }
+
+    /* Un solo panel ocupa la fila entera: el pie se extiende a todas las
+       columnas, así que auto-fit no colapsaría la que queda vacía. */
+    .simulacro-figura > svg:only-of-type {
+      grid-column: 1 / -1;
+      max-width: 32rem;
+    }
+
+    .simulacro-figura figcaption {
+      grid-column: 1 / -1;
+      font-size: 0.8125rem;
+      color: #475569;
+    }
+    /* Lo que añadió la ronda 1 de lectores (4 nov 2026), y lo que corrigió la ronda 2:
+       · los tres paneles, con 200 px como mínimo: con 160 la letra bajaba a 9 px y el pie abría una cuarta
+         columna vacía (R2CV-1); que a 1024 se partan en 2 + 1 (VI-3) es el precio de leerlos;
+       · la figura de una sola gráfica, con un ancho mínimo y su propio desplazamiento: en la columna de un
+         teléfono la letra de los 40 intervalos bajaba a 5 px (VI-2, VI-4);
+       · la tabla del caso a su ancho natural, no estirada a toda la columna (VI-5);
+       · un segundo «Entregar» al final de las doce, con el reloj (VI-1). */
+    .simulacro-figura {
+      overflow-x: auto;
+    }
+
+    .simulacro-figura > svg:only-of-type {
+      min-width: 26rem;
+    }
+
+    .simulacro-caso table {
+      width: auto;
+    }
+
+    .simulacro-pie {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .simulacro-entregar-final {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+    }
+
+    .simulacro-entregar-final:disabled {
+      opacity: 0.65;
+      cursor: default;
+    }
+
+    .simulacro-reloj-final {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #012820;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .simulacro-reloj-final.acabado {
+      color: #b91c1c;
+    }
+    /* «Corregido», con su contraste: la opacidad 0,65 sobre el naranja dejaba 2,9:1 (R2CV-3). */
+    .simulacro-entregar:disabled,
+    .simulacro-entregar-final:disabled {
+      opacity: 1;
+      background: #475569;
+    }
+
+    /* En un teléfono, la figura de una gráfica se desliza: que se diga (R2CV-2). */
+    @media (max-width: 40rem) {
+      .simulacro-figura > svg:only-of-type ~ figcaption::before {
+        content: "Desliza la figura hacia los lados para verla entera. ";
+        font-weight: 600;
+      }
+    }
+    /* ------------------- fin del componente .simulacro ------------------- */
