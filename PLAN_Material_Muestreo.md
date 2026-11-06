@@ -9011,5 +9011,12 @@ revisadas a mano.
 - del lado del quiz: el auditor da 0 fallos, el arnés 32/32 y R 0 discrepancias. La lectura la hicieron tres
   resolutores a ciegas (15/15 en cada versión), dos lectores y una relectura de lo corregido; el arnés da 32/32.
 
-**Commit** con el permiso de Javier («Sí, haz commit», 5 nov). El push a `main` y la publicación en gh-pages van
-cada uno con su propio permiso.
+**Publicado** con el visto bueno de Javier, cada paso con el suyo («Sí, haz commit»; «Sí, push 6cda126»;
+«Sí, publica»):
+- `main` `6cda126`, empujado sobre `ba6141e` sin nada más;
+- `gh-pages` `7f2089e`, construido con `git commit-tree` del árbol `6cda126:sitio` sobre la punta `0cbd9ec` (el árbol
+  de `ba6141e:sitio`, nada ajeno). Entró un solo archivo, el cap. 5.
+- El build de Pages terminó en `built`. El cap. 5, la portada y el README servidos coinciden byte a byte con la rama;
+  `--solo-huella` da las 12 páginas, y el código servido del cap. 5 arranca.
+- En vivo, el M12 dice «quince preguntas» y trae el párrafo de las tres de repaso; el simulacro sigue con 12, sin
+  `.katex-error` y con la consola limpia.
