@@ -9020,3 +9020,55 @@ revisadas a mano.
   `--solo-huella` da las 12 páginas, y el código servido del cap. 5 arranca.
 - En vivo, el M12 dice «quince preguntas» y trae el párrafo de las tres de repaso; el simulacro sigue con 12, sin
   `.katex-error` y con la consola limpia.
+
+### T7.124 — La gestión documental: ninguna cita de memoria (2026-11-10)
+
+Pedido de Javier (10 nov): mejorar el contenido del curso por fases, empezando por la gestión documental, «para
+reducir la probabilidad de alucinación pero sobre todo para mejorar el contenido». Después viene la mejora del
+capítulo 1, con plan propio.
+
+**El plan y sus decisiones** están en `PLAN_Gestion_Documental.md` (fuera de git), y la norma común a los cursos, en
+el vault de docencia (`Estandar/Capa de fuentes.md`). Aquí queda el resumen.
+
+**Qué existe ahora** (`bibliografia/README.md` lo explica entero; las reglas, en `CLAUDE.md`):
+- **Catálogo.** Zotero es la fuente; `bibliografia/referencias.json` es su instantánea (28 obras por DOI). Las
+  correcciones de metadatos van en `enmiendas.yml` con su evidencia. Lohr 3.ª ed. se cita como 2022.
+- **Ejemplares.** Tres registrados por su huella —Lohr 3.ª, Lohr 1.ª y Portela y Villeta— y un índice de qué
+  secciones, ejemplos, ejercicios y páginas existen en cada uno. Ni los libros ni su texto entran al repositorio.
+- **Auditor.** `precalculo/verifica_citas.py`: las citas marcadas fallan siempre; las escritas a mano van contra una
+  línea base que solo encoge. Su arnés le inyecta 60 defectos.
+- **Registro de contraste.** `bibliografia/contraste/capN.yml`: cada afirmación que exige fuente, su veredicto y
+  quién la leyó. El pasaje leído queda fuera de git; en el registro van la página y una huella.
+- **Generador.** `precalculo/genera_referencias.py` escribe el texto de cada cita y, cuando un capítulo esté
+  migrado entero, su pie de referencias. `ensamblado/ensambla_cap1.py` ya admite ese pie.
+
+**Lo que se midió** (informe `INFORME_Linea_Base_Citas.md`, fuera de git):
+- el sitio tiene 256 citas escritas a mano, de las que 148 se pueden cotejar con los tres ejemplares;
+- 17 localizadores apuntan a otro sitio del libro: 9 en el capítulo 1, 7 en el 8 y 1 en el 4;
+- la «2.ª ed.» de Lohr que cita el capítulo 3 usa la numeración del ejemplar de la 1.ª;
+- 73 citas dan sección o página de obras sin ejemplar registrado, 49 de ellas de Gutiérrez.
+
+Nada de eso se corrigió: es el insumo del plan de cada capítulo.
+
+**El piloto**, en el módulo 1 del capítulo 1 (el caso del *Literary Digest*):
+- dos lectores independientes verificaron 13 afirmaciones contra el ejemplar y coincidieron en los 13 pasajes;
+- seis afirmaciones quedaron registradas (cuatro respaldadas y dos con matiz) y el módulo lleva cinco citas
+  generadas, una de ellas de segunda mano;
+- quedaron sin tocar, para el plan del capítulo: el recuento 1 293 669 / 972 897 no está en el ejemplo 1.1 (el
+  ejercicio 15.8 da otro par, el que usa el capítulo 8); «veinte años acertando» no está en el libro, que habla de
+  cinco elecciones seguidas; y los 523 votos electorales están en el ejemplo 15.12.
+
+**Verificado:**
+- `verifica_citas`: 5 citas marcadas, 0 hallazgos nuevos, 9 pasajes comprobados en el ejemplar;
+- `prueba_citas`: 19 lecturas, 5 citas generadas y 60 inyecciones, todas detectadas;
+- reensamblado del capítulo 1 idéntico en dos pasadas; `sitio/` cambia en 21 líneas, todas de cita;
+- `verifica_bloques --solo-prosa` y `--solo-latex`, `verifica_referencias` y `cuenta_sitio` dan lo mismo que antes;
+- el módulo 1 a escritorio y a 375 px, sin desborde ni errores de consola.
+
+**Pendiente de decidir** (Checkpoint GD): si el pie de referencias se regenera en todas las páginas de una vez o
+capítulo a capítulo; si la regla que quita la cursiva a `<cite>` entra en la plantilla; y las aclaraciones a la
+norma. Faltan los ejemplares de Gutiérrez, Särndal et al., Cochran, Kish y Levy y Lemeshow.
+
+**No publicado.** Todo está en la rama `claude/course-content-improvement-2f816c`; no se ha hecho `push` ni se ha tocado
+`gh-pages`.
+

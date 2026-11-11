@@ -1,0 +1,261 @@
+# Registro de contraste del capítulo 1 (encuestas, sesgos y error total).
+# Qué es cada campo: precalculo/_contraste.py. Lo valida precalculo/verifica_citas.py.
+#
+# SEMILLA (2026-11-10, tarea GD-D3). Son los hechos documentales de los módulos 1 y 4, tal como
+# los declara la cabecera «PROCEDENCIA» de precalculo/genera_cap1.R, más los que el material
+# afirma sin declarar de dónde salen. En una `pendiente`, `fuentes` solo dice dónde mirar.
+#
+# PILOTO (2026-11-10, tarea GD-D5). Seis afirmaciones del Digest (01, 02, 04, 05, 06 y 12) las
+# contrastaron dos verificadores de contexto limpio, cada uno por su cuenta, contra el ejemplar
+# de Lohr 3.ª; coincidieron en los pasajes y en las páginas. Los pasajes están en
+# bibliografia/_local/pasajes.yml.
+afirmaciones:
+
+# --- Módulo 1 · The Literary Digest (1936) ---------------------------------------------------
+- id: c1-m1-01
+  tipo: dato
+  afirmacion: >-
+    En 1936 el Literary Digest envió diez millones de papeletas y le devolvieron más de 2,3 millones.
+  hash_texto: c384ed370f7da629
+  veredicto: respaldada
+  redactado_por: material publicado antes de la Fase GD
+  verificado_por: verificadores independientes Opus 5.5 y Sonnet 5.5 (contexto limpio)
+  fecha: 2026-11-10
+  fuentes:
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1
+    pagina: 2
+    hash_pasaje: 33069c911f4fefc9
+
+- id: c1-m1-02
+  tipo: dato
+  afirmacion: >-
+    El sondeo predijo Landon 54 % y Roosevelt 41 %; en la elección, Roosevelt obtuvo el 61 % y
+    Landon el 37 %.
+  hash_texto: 2690265934bbd7f9
+  veredicto: respaldada
+  redactado_por: material publicado antes de la Fase GD
+  verificado_por: verificadores independientes Opus 5.5 y Sonnet 5.5 (contexto limpio)
+  fecha: 2026-11-10
+  fuentes:
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1
+    pagina: 2
+    hash_pasaje: a20f5c4f48bb40ec
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1
+    pagina: 2
+    hash_pasaje: 70c4aedda46cdea5
+
+- id: c1-m1-03
+  tipo: dato
+  afirmacion: >-
+    El recuento del propio sondeo fue de 1 293 669 papeletas para Landon y 972 897 para Roosevelt.
+  ancla: 1 293 669 papeletas para Landon y 972 897 para Roosevelt
+  veredicto: pendiente
+  motivo: >-
+    Los dos verificadores (10 nov): las dos cifras NO están en el ejemplo 1.1 ni en ningún pasaje del
+    libro; aparecen solo como título del artículo «Literary Digest (1936a, October 31)» en la lista de
+    referencias de Lohr (pp. 617–618). El ejercicio 15.8 (p. 547) da otras: 1 286 511 y 966 352. La cita
+    correcta es de segunda mano y pide la ficha del artículo en el catálogo. Decide Javier qué par se usa.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+  fuentes:
+  - {clave: lohr2022sampling, loc: ejemplo 1.1}
+
+- id: c1-m1-04
+  tipo: historica
+  afirmacion: >-
+    La lista de envío se armó con guías de teléfono, registros de automóviles, listas de
+    suscriptores y padrones electorales.
+  hash_texto: 549b1cc4df6caaad
+  veredicto: con-matiz
+  matiz: >-
+    Ningún pasaje da las cuatro fuentes juntas. En el ejemplo 1.1 Lohr nombra, con cautela («sources such
+    as»), las guías de teléfono y los registros de automóviles; los padrones salen de la descripción que
+    la propia revista hizo de su lista, que Lohr cita; y las listas de suscriptores están en el ejemplo
+    15.12. La revista nombra además directorios de ciudad y listas de clubes, que el material omite.
+  redactado_por: material publicado antes de la Fase GD
+  verificado_por: verificadores independientes Opus 5.5 y Sonnet 5.5 (contexto limpio)
+  fecha: 2026-11-10
+  fuentes:
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1; ejemplo 15.12
+    pagina: 2
+    hash_pasaje: 20dedd3661d06cf9
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1; ejemplo 15.12
+    pagina: 2
+    hash_pasaje: 1f63dc8d00d5e8cf
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1; ejemplo 15.12
+    pagina: 533
+    hash_pasaje: b4b8e2e03b84f926
+
+- id: c1-m1-05
+  tipo: dato
+  afirmacion: >-
+    Contestó menos de una cuarta parte de los solicitados.
+  hash_texto: f34953c030d62e90
+  veredicto: respaldada
+  redactado_por: material publicado antes de la Fase GD
+  verificado_por: verificadores independientes Opus 5.5 y Sonnet 5.5 (contexto limpio)
+  fecha: 2026-11-10
+  fuentes:
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1
+    pagina: 2
+    hash_pasaje: 4c26c0f3129d3243
+
+- id: c1-m1-06
+  tipo: historica
+  afirmacion: >-
+    En Allentown (Pensilvania) la revista escribió a todos los votantes registrados, solo un
+    tercio devolvió la papeleta y el resultado fue igualmente erróneo.
+  hash_texto: 520f2f0721d86f5a
+  veredicto: respaldada
+  redactado_por: material publicado antes de la Fase GD
+  verificado_por: verificadores independientes Opus 5.5 y Sonnet 5.5 (contexto limpio)
+  fecha: 2026-11-10
+  fuentes:
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1
+    pagina: 2
+    hash_pasaje: 99235c4a0ac0f060
+
+- id: c1-m1-07
+  tipo: historica
+  afirmacion: En 1932 el Digest predijo un 56 % para Roosevelt y el resultado fue 57 %.
+  ancla: En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %
+  veredicto: pendiente
+  motivo: >-
+    Los dos verificadores (10 nov) lo hallaron en el ejemplo 1.1, p. 2 (56 % predicho y 57 % real en
+    1932). Falta marcarlo y registrar el pasaje; no entró en el piloto.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+
+- id: c1-m1-08
+  tipo: historica
+  afirmacion: Roosevelt ganó 523 de los 531 votos electorales y la revista desapareció en 1938.
+  ancla: Roosevelt ganó 523 de los 531 votos electorales
+  veredicto: pendiente
+  motivo: >-
+    Los dos verificadores (10 nov): los 523 de 531 votos electorales están en el ejemplo 15.12 (p. 533),
+    no en el 1.1; del cierre, el ejemplo 1.1 (p. 2) dice que el fracaso «contribuyó a la desaparición de la
+    revista en 1938», con cautela sobre la causa. Falta marcarlo; no entró en el piloto.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+
+- id: c1-m1-12
+  tipo: atribucion
+  afirmacion: >-
+    Los partidarios de Landon devolvieron la papeleta con mucha más frecuencia que los de Roosevelt.
+  hash_texto: 3fdd9ac8481b9da1
+  veredicto: con-matiz
+  matiz: >-
+    Lohr no lo afirma por su cuenta: lo atribuye a Squire (1988), y dice que era «mucho más probable»
+    que la devolvieran. La cita lo recoge como de segunda mano; Squire (1988) está en el catálogo, sin
+    ejemplar.
+  redactado_por: material publicado antes de la Fase GD
+  verificado_por: verificadores independientes Opus 5.5 y Sonnet 5.5 (contexto limpio)
+  fecha: 2026-11-10
+  fuentes:
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1
+    pagina: 2
+    hash_pasaje: 5d377380863c0de9
+
+- id: c1-m1-13
+  tipo: historica
+  afirmacion: El Digest llevaba veinte años acertando elecciones.
+  ancla: llevaba veinte años acertando elecciones
+  veredicto: pendiente
+  motivo: >-
+    Los dos verificadores (10 nov): «veinte años» no está en el libro. El ejemplo 1.1 (p. 3) dice que el
+    sondeo acertó en cinco elecciones seguidas (1916–1932), y la de 1916 solo cubrió cinco estados. La
+    cifra del material es una cuenta propia; conviene decir «cinco elecciones seguidas».
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+  fuentes:
+  - {clave: lohr2022sampling, loc: ejemplo 1.1}
+
+# --- Módulo 1 · Shere Hite (1987) ------------------------------------------------------------
+- id: c1-m1-09
+  tipo: dato
+  afirmacion: Hite envió 100 000 cuestionarios a organizaciones de mujeres y le devolvieron el 4,5 %.
+  ancla: Se enviaron 100 000 cuestionarios
+  veredicto: pendiente
+  motivo: >-
+    genera_cap1.R lo atribuye al capítulo 1 de Lohr 1.ª. Hite está en las pp. 1–3 de ese ejemplar
+    y no aparece en la 3.ª (D2). Lohr 1.ª aún no está en el catálogo: falta su ficha en Zotero.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+  fuentes:
+  - {clave: lohr1999sampling, loc: cap. 1}
+
+- id: c1-m1-10
+  tipo: dato
+  afirmacion: >-
+    Los cuatro porcentajes del libro de Hite (84 %, 70 %, 95 % y 84 %), con sus páginas
+    (804, 856, 810 y 809).
+  ancla: el 84 % de las mujeres «no están satisfechas emocionalmente con sus relaciones» (p. 804)
+  veredicto: pendiente
+  motivo: >-
+    genera_cap1.R lo atribuye al capítulo 1 de Lohr 1.ª; las páginas son las del libro de Hite
+    tal como las da Lohr, es decir, de segunda mano.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+  fuentes:
+  - {clave: lohr1999sampling, loc: cap. 1}
+
+- id: c1-m1-11
+  tipo: dato
+  afirmacion: El cuestionario de Hite tenía 127 preguntas abiertas, la mayoría con varias partes.
+  ancla: El cuestionario tenía 127 preguntas abiertas
+  veredicto: pendiente
+  motivo: Sin procedencia declarada en genera_cap1.R; presumiblemente del mismo pasaje de Lohr 1.ª.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+  fuentes:
+  - {clave: lohr1999sampling, loc: cap. 1}
+
+# --- Módulo 4 · Las dos encuestas de Heck, Simons y Chabris (2018) -----------------------------
+- id: c1-m4-01
+  tipo: dato
+  afirmacion: >-
+    La encuesta 1 marcó 79 014 números de línea fija al azar y obtuvo 1 838 entrevistas; la
+    encuesta 2 reclutó a 983 voluntarios en Mechanical Turk pagando 0,25 dólares.
+  ancla: La encuesta 1 marcó 79 014 números de línea fija al azar y obtuvo 1 838 entrevistas
+  veredicto: pendiente
+  motivo: >-
+    genera_cap1.R lo atribuye a Heck et al. (2018) «vía Lohr 3.ª, ejercicio 15.13» y a la
+    documentación de SDAResources. En el ejemplar, Heck está en el ejercicio 15.5, p. 546 (D2).
+    El artículo es de acceso abierto y Zotero ya guarda su PDF: se puede leer directamente.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+  fuentes:
+  - {clave: heck201865, loc: cap. 1}
+  - {clave: lohr2022sampling, loc: ejercicio 15.5}
+
+- id: c1-m4-02
+  tipo: dato
+  afirmacion: >-
+    En 2009 el 24,5 % de los hogares de Estados Unidos solo tenía móvil y otro 2 % no tenía teléfono.
+  ancla: el 24,5 % de los hogares de Estados Unidos solo tenía móvil y otro 2 % no tenía teléfono
+  veredicto: pendiente
+  motivo: >-
+    genera_cap1.R lo atribuye a Blumberg y Luke (2010), que el material no cita en ningún sitio
+    visible y que no está en el catálogo ni tiene ejemplar.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+
+- id: c1-m4-03
+  tipo: dato
+  afirmacion: En 2009 y 2011 se preguntó a adultos de Estados Unidos por su acuerdo con la frase «soy más inteligente que la persona promedio».
+  ancla: En 2009 y 2011 se preguntó a adultos de Estados Unidos por su acuerdo con la frase
+  veredicto: pendiente
+  motivo: genera_cap1.R da el ítem en inglés y las fechas (junio de 2009; julio-agosto de 2011) sin localizador.
+  redactado_por: material publicado antes de la Fase GD
+  fecha: 2026-11-10
+  fuentes:
+  - {clave: heck201865, loc: cap. 1}

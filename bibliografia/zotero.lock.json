@@ -1,0 +1,231 @@
+{
+  "coleccion": "Docencia/20939 Muestreo Estadístico",
+  "coleccion_clave": "8593NSUW",
+  "obras": {
+    "arnold1991intraclutch": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "3Q59LD3X"
+    },
+    "beygelzimer2009importance": {
+      "adjuntos": [
+        {
+          "archivo": "Beygelzimer et al. - 2009 - Importance weighted active learning.pdf",
+          "modo": "imported_url",
+          "sha256": "b6381912c3b3922dbf36e1f0c6d521981c440bcbdda1ed9b10ca2202ac50c030",
+          "zotero": "HC6MR6A7"
+        }
+      ],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "conferencePaper",
+      "zotero": "8LZR9RJF"
+    },
+    "buuren2011mice": {
+      "adjuntos": [
+        {
+          "archivo": "Buuren and Groothuis-Oudshoorn - 2011 - mice  Multivariate Imputation by Chained Equations in R.pdf",
+          "modo": "imported_url",
+          "sha256": "dfebf1d7cf3791c4817394093dcc816e4831badf39827d31c4079e3462d25644",
+          "zotero": "SAYJY8G4"
+        }
+      ],
+      "etiquetas": [],
+      "rol": "datos",
+      "tipo": "journalArticle",
+      "zotero": "NXLIYXXV"
+    },
+    "dalenius1959minimum": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "9VA4FTCU"
+    },
+    "deville1992calibration": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "PKMC4YQF"
+    },
+    "deville1998unequal": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "4R4NH7JF"
+    },
+    "gelman2006data": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "complementaria",
+      "tipo": "book",
+      "zotero": "LB6JY9AG"
+    },
+    "groves2006nonresponse": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "PUH75CG6"
+    },
+    "hansen1946problem": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "FB293JVN"
+    },
+    "heck201865": {
+      "adjuntos": [
+        {
+          "archivo": "Heck et al. - 2018 - 65% of Americans believe they are above average in intelligence Results of two nationally represent.pdf",
+          "modo": "imported_url",
+          "sha256": "593b4cedc3580a4b7265961732d5ee90d272f96d455fa132aa36b95a13190e5f",
+          "zotero": "TUEQ57JS"
+        }
+      ],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "7G6YXUBA"
+    },
+    "holt1979post": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "3SHEQARX"
+    },
+    "kim2019sampling": {
+      "adjuntos": [
+        {
+          "archivo": "Kim and Wang - 2019 - Sampling Techniques for Big Data Analysis.pdf",
+          "modo": "imported_url",
+          "sha256": "f745db2e0ee2554d4de6edc77558ee50b0e3c296a9de75be2ddd1c6ca42cf3ad",
+          "zotero": "VZZXFQ58"
+        }
+      ],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "N5AXKW8F"
+    },
+    "levy2008sampling": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "complementaria",
+      "tipo": "book",
+      "zotero": "K92T4W35"
+    },
+    "little2019statistical": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "complementaria",
+      "tipo": "book",
+      "zotero": "Q43CLRH7"
+    },
+    "lohr2022sampling": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "basica",
+      "tipo": "book",
+      "zotero": "NJEAP27S"
+    },
+    "lumley2004analysis": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "datos",
+      "tipo": "journalArticle",
+      "zotero": "H2SRPDMH"
+    },
+    "lumley2010complex": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "complementaria",
+      "tipo": "book",
+      "zotero": "MMSTNL9S"
+    },
+    "meng2018statistical": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "2RYJQRD5"
+    },
+    "neyman1934two": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "YIMLZNGS"
+    },
+    "rao1988resampling": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "K9TDTQ4V"
+    },
+    "rubin1976inference": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "DY3TWUCI"
+    },
+    "rubin1987multiple": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "complementaria",
+      "tipo": "book",
+      "zotero": "TQ869LEX"
+    },
+    "sarndal1992model": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "basica",
+      "tipo": "book",
+      "zotero": "CC6ERYNH"
+    },
+    "siniff1964aerial": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "3QY8ZKEP"
+    },
+    "squire1988why": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "BZLNPMPI"
+    },
+    "thompson2012sampling": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "basica",
+      "tipo": "book",
+      "zotero": "X8GCGFVT"
+    },
+    "yates1953selection": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "MXB26IBH"
+    },
+    "zhang2020professional": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "journalArticle",
+      "zotero": "MLZ63TEE"
+    }
+  },
+  "zotero": "10.0.6"
+}

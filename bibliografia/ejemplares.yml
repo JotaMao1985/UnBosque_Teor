@@ -1,0 +1,33 @@
+# Ejemplares leídos: la huella de cada archivo, nunca el archivo.
+# `archivo`, `formato`, `sha256`, `paginas` y `paginas_sin_texto` los escribe extrae_fuente.py.
+# `edicion_comprobada`, `desfase` (página del archivo − página impresa) y `procedencia`
+# se llenan a mano mirando la portada; los guiones los respetan.
+lohr1999sampling:
+  archivo: lohr1999sampling.pdf
+  desfase: 9
+  edicion_comprobada: '1.ª ed. por la portada (Duxbury Press, sello de Brooks/Cole, ITP) y por la numeración
+    (cap. 3 razón y regresión, cap. 4 estratificado). El escaneo no trae página de créditos: el año no
+    se lee en el ejemplar.'
+  formato: pdf
+  paginas: 503
+  paginas_sin_texto: 8
+  procedencia: null
+  sha256: a28b60eac8f1ecaf3841945b2169ccc44a347456c4ab9fd55863c93bb108f977
+lohr2022sampling:
+  archivo: lohr2022sampling.epub
+  desfase: 0
+  edicion_comprobada: '3.ª ed. (OPF del EPUB: © 2022, publicado 2021-09-21; Crossref: edición 3)'
+  formato: epub
+  paginas: 650
+  paginas_sin_texto: 2
+  procedencia: null
+  sha256: 0ff10e70347a8777122bb6bb7b3a2a8fdbeada6f70799ebf5ffe07a37f445f4c
+portela2007tecnicas:
+  archivo: portela2007tecnicas.pdf
+  desfase: 1
+  edicion_comprobada: 1.ª ed., 2007 (página de créditos del PDF)
+  formato: pdf
+  paginas: 474
+  paginas_sin_texto: 0
+  procedencia: null
+  sha256: 6d3b6013b1926c733bc5063fe1eabac5c766928e880309a4961d9c05b45f19c7

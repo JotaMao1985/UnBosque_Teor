@@ -1,0 +1,3623 @@
+{
+ "_leeme": "Lo escribe precalculo/inventario_citas.py. No se edita a mano. Las etiquetas de obra son provisionales: la clave de cita la asigna exporta_zotero.py.",
+ "diapositivas": {
+  "cap4_sesion1.md": {
+   "menciones": {
+    "censo-agricola-1992": 3,
+    "lohr": 18,
+    "siniff-skoog-1964": 1
+   },
+   "sin_reconocer": []
+  },
+  "cap4_sesion2.md": {
+   "menciones": {
+    "gutierrez-estrategias": 2,
+    "kish-1965": 3,
+    "kohavi-1995": 1,
+    "lohr": 15,
+    "rsample": 4,
+    "teachingsampling": 4
+   },
+   "sin_reconocer": []
+  },
+  "cap5_sesion1.md": {
+   "menciones": {
+    "arnold-1991": 1,
+    "censo-agricola-1992": 1,
+    "gutierrez-estrategias": 1,
+    "kish-1965": 6,
+    "lohr": 54
+   },
+   "sin_reconocer": []
+  },
+  "cap5_sesion2.md": {
+   "menciones": {
+    "gutierrez-estrategias": 3,
+    "kish-1965": 1,
+    "lohr": 25,
+    "teachingsampling": 2
+   },
+   "sin_reconocer": []
+  },
+  "cap6_sesion1.md": {
+   "menciones": {
+    "gutierrez-estrategias": 15,
+    "lohr": 19,
+    "yates-grundy-1953": 1
+   },
+   "sin_reconocer": []
+  },
+  "cap6_sesion2.md": {
+   "menciones": {
+    "basu-1971": 2,
+    "gutierrez-estrategias": 9,
+    "lohr": 15,
+    "teachingsampling": 1
+   },
+   "sin_reconocer": []
+  }
+ },
+ "guiones": {
+  "cifras_prosa.json": {
+   "menciones": {
+    "kish-1965": 4,
+    "lohr": 6,
+    "meng-2018": 1,
+    "nhanes": 5,
+    "portela-villeta": 6,
+    "teachingsampling": 2
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap1.R": {
+   "menciones": {
+    "blumberg-luke-2010": 1,
+    "heck-2018": 2,
+    "hite-1987": 3,
+    "literary-digest-1936": 2,
+    "lohr": 6,
+    "sdaresources": 1,
+    "teachingsampling": 2
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap2.R": {
+   "menciones": {
+    "lohr": 1
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap3.R": {
+   "menciones": {
+    "kish-1965": 1,
+    "lohr": 9,
+    "portela-villeta": 1
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap4.R": {
+   "menciones": {
+    "lohr": 2,
+    "teachingsampling": 1
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap5.R": {
+   "menciones": {
+    "lohr": 5,
+    "teachingsampling": 1
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap6.R": {
+   "menciones": {
+    "lohr": 3,
+    "teachingsampling": 1
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap7.R": {
+   "menciones": {
+    "kish-1965": 1,
+    "nhanes": 4
+   },
+   "sin_reconocer": []
+  },
+  "genera_cap8.R": {
+   "menciones": {
+    "aapor": 1,
+    "gnap-1995": 1,
+    "lohr": 3,
+    "meng-2018": 1
+   },
+   "sin_reconocer": []
+  },
+  "genera_preparcial.R": {
+   "menciones": {},
+   "sin_reconocer": []
+  },
+  "genera_preparcial2.R": {
+   "menciones": {
+    "kish-1965": 1,
+    "lohr": 1
+   },
+   "sin_reconocer": []
+  },
+  "genera_soluciones.R": {
+   "menciones": {
+    "lohr": 3
+   },
+   "sin_reconocer": []
+  },
+  "genera_taller1_recurso.R": {
+   "menciones": {
+    "lohr": 1
+   },
+   "sin_reconocer": []
+  }
+ },
+ "obras": {
+  "aapor": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "AAPOR, Standard Definitions (sin edición en el material)"
+  },
+  "arnold-1991": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Arnold (1991)"
+  },
+  "basu-1971": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Basu (1971)"
+  },
+  "beygelzimer-2009": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Beygelzimer, Dasgupta y Langford (2009)"
+  },
+  "blumberg-luke-2010": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Blumberg y Luke (2010)"
+  },
+  "censo-agricola-1992": {
+   "clase": "datos",
+   "como_la_nombra_el_material": "Censo Agrícola de EE. UU. de 1992"
+  },
+  "cochran-1977": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Cochran (1977), Sampling Techniques"
+  },
+  "dalenius-hodges-1959": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Dalenius y Hodges (1959)"
+  },
+  "deville-sarndal-1992": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Deville y Särndal (1992), estimadores de calibración"
+  },
+  "deville-tille-1998": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Deville y Tillé (1998)"
+  },
+  "gelman-hill": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Gelman y Hill (sin año en el material)"
+  },
+  "gnap-1995": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Gnap (1995)"
+  },
+  "groves-2006": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Groves (2006)"
+  },
+  "groves-et-al": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Groves et al. (sin año en el material)"
+  },
+  "guerrero-1993": {
+   "clase": "heredado",
+   "como_la_nombra_el_material": "Guerrero (1993): código heredado del motor de Series de Tiempo"
+  },
+  "gutierrez-estrategias": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Gutiérrez, Estrategias de muestreo (sin año en el material)"
+  },
+  "hajek-1960": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Hájek (1960)"
+  },
+  "hansen-hurwitz-1946": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Hansen y Hurwitz (1946)"
+  },
+  "heck-2018": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Heck, Simons y Chabris (2018), PLOS ONE"
+  },
+  "hite-1987": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Hite (1987), Women and Love"
+  },
+  "holt-smith-1979": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Holt y Smith (1979)"
+  },
+  "kim-wang-2019": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Kim y Wang (2019)"
+  },
+  "kish-1965": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Kish (1965), Survey Sampling"
+  },
+  "kohavi-1995": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Kohavi (1995)"
+  },
+  "lahiri-1951": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Lahiri (1951)"
+  },
+  "literary-digest-1936": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Literary Digest, números de 1936"
+  },
+  "little-rubin": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Little y Rubin (sin año en el material)"
+  },
+  "lohr": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Lohr, Sampling: Design and Analysis (la edición va aparte)"
+  },
+  "lumley-complex": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Lumley, Complex Surveys"
+  },
+  "lumley-survey": {
+   "clase": "software",
+   "como_la_nombra_el_material": "Lumley, paquete survey"
+  },
+  "meng-2018": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Meng (2018), Annals of Applied Statistics"
+  },
+  "mice": {
+   "clase": "software",
+   "como_la_nombra_el_material": "paquete mice"
+  },
+  "neyman-1934": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Neyman (1934)"
+  },
+  "nhanes": {
+   "clase": "datos",
+   "como_la_nombra_el_material": "NHANES"
+  },
+  "owen": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Owen (sin año en el material)"
+  },
+  "portela-villeta": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Portela y Villeta, Técnicas básicas de muestreo con SAS"
+  },
+  "rao-wu-1988": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Rao y Wu (1988)"
+  },
+  "rsample": {
+   "clase": "software",
+   "como_la_nombra_el_material": "paquete rsample"
+  },
+  "rubin-1976": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Rubin (1976)"
+  },
+  "rubin-1987": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Rubin (1987)"
+  },
+  "sarndal-1992": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Särndal, Swensson y Wretman (1992), Model Assisted Survey Sampling"
+  },
+  "schaul-2016": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Schaul, Quan, Antonoglou y Silver (2016)"
+  },
+  "schouten-2009": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Schouten, Cobben y Bethlehem (2009)"
+  },
+  "scikit-learn-guia": {
+   "clase": "software",
+   "como_la_nombra_el_material": "scikit-learn, User Guide"
+  },
+  "sdaresources": {
+   "clase": "datos",
+   "como_la_nombra_el_material": "paquete SDAResources (datos de Lohr)"
+  },
+  "settles": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Settles (sin año en el material)"
+  },
+  "siniff-skoog-1964": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Siniff y Skoog (1964)"
+  },
+  "teachingsampling": {
+   "clase": "software",
+   "como_la_nombra_el_material": "Gutiérrez, paquete TeachingSampling"
+  },
+  "yates-grundy-1953": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Yates y Grundy (1953)"
+  },
+  "zhang-2020": {
+   "clase": "obra",
+   "como_la_nombra_el_material": "Zhang et al. (2020)"
+  }
+ },
+ "paginas": {
+  "index.html": {
+   "entradas": [],
+   "li": 0,
+   "menciones": {
+    "gutierrez-estrategias": {
+     "prosa": 1
+    },
+    "lohr": {
+     "prosa": 1
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-1-encuestas-sesgos.html": {
+   "entradas": [
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 1.1",
+      "ejemplo 1.1"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, S.L. (2021). Sampling: Design and Analysis (3.ª ed.), sección 1.1 y ejemplo 1.1 — de ahí salen todas las cifras del Digest que se citan aquí, incluido el caso de Allentown."
+    },
+    {
+     "ediciones": [
+      "1"
+     ],
+     "interna": false,
+     "localizadores": [
+      "capítulo 1"
+     ],
+     "modulo": 1,
+     "obras": [
+      "hite-1987",
+      "lohr"
+     ],
+     "texto": "Lohr, S.L. (1999). Sampling: Design and Analysis (1.ª ed.), capítulo 1 — el análisis del estudio de Hite, con las páginas exactas del libro original."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 1"
+     ],
+     "modulo": 1,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, H.A. Estrategias de muestreo , capítulo 1 — el mismo argumento desde la teoría de diseños, de acceso abierto ."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 1.2"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), sección 1.2 — población objetivo, marco, unidad de muestreo y de observación, con los ejemplos que se reutilizan en los ejercicios del módulo 10."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 1.2"
+     ],
+     "modulo": 2,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , sección 1.2 — la misma partición con la notación $U$, $y_k$, $t_y$ que usa este material."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "secciones 1.3 y 1.6"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), secciones 1.3 y 1.6 — qué hace buena a una muestra y por qué se muestrea en vez de censar."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 1.3",
+      "capítulo 2"
+     ],
+     "modulo": 3,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman (1992). Model Assisted Survey Sampling , sección 1.3 — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 1.4",
+      "sección 8.2"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), sección 1.4 — la tipología del sesgo de selección; y sección 8.2 , donde la fórmula del sesgo de no respuesta se demuestra en general."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 4,
+     "obras": [
+      "heck-2018"
+     ],
+     "texto": "Heck, P.R., Simons, D.J. y Chabris, C.F. (2018). «65 % of Americans believe they are above average in intelligence: Results of two nationally representative surveys». PLOS ONE 13(7) — el artículo del que salen las dos encuestas de este módulo, de acceso abierto."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "ejercicio 15.13"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), ejercicio 15.13 — la comparación de las dos encuestas, planteada como ejercicio sobre muestras no probabilísticas."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 1.5",
+      "sección 16.3"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), sección 1.5 y sección 16.3 — el sesgo de medición y los modelos de error de medición en encuestas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 1.4"
+     ],
+     "modulo": 5,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , sección 1.4 — los errores ajenos al muestreo en el marco de la teoría del error total."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 1.5",
+      "sección 16.2"
+     ],
+     "modulo": 6,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), sección 1.5 y sección 16.2 — redacción de preguntas y diseño de cuestionarios, con ejemplos de experimentos de redacción."
+    },
+    {
+     "ediciones": [
+      "1"
+     ],
+     "interna": false,
+     "localizadores": [
+      "capítulo 1"
+     ],
+     "modulo": 6,
+     "obras": [
+      "hite-1987",
+      "lohr"
+     ],
+     "texto": "Lohr (1999), capítulo 1 — el análisis del cuestionario de Hite, de donde sale el primer ítem del auditor."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 1.6",
+      "sección 15.5"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), sección 1.6 — la clasificación del error total de encuesta que sigue el árbol de este módulo; y sección 15.5 , donde el ECM de una muestra no probabilística se desarrolla en general."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 1.4"
+     ],
+     "modulo": 7,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , sección 1.4 — la descomposición $\\text{ECM} = B^2 + V$ con la demostración completa."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "ejemplo 2.5",
+      "apéndice "
+     ],
+     "modulo": 8,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), ejemplo 2.5 y apéndice de datos — la descripción de agpop y de las muestras derivadas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 8,
+     "obras": [
+      "teachingsampling"
+     ],
+     "texto": "Gutiérrez, H.A. TeachingSampling — el paquete en CRAN , con la documentación de BigLucy y de las funciones de selección."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "capítulo 15"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2021), capítulo 15 — muestras no probabilísticas: cuándo se pueden usar, qué supuestos hacen falta y cómo se mide su error cuadrático medio."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 9,
+     "obras": [
+      "meng-2018"
+     ],
+     "texto": "Meng, X.-L. (2018). «Statistical paradises and paradoxes in big data (I)». The Annals of Applied Statistics 12(2) — el resultado general del que el «tamaño efectivo» del módulo 7 es un caso particular."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "capítulo 1"
+     ],
+     "modulo": 10,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, S.L. (2021). Sampling: Design and Analysis (3.ª ed.), capítulo 1 completo — es la lectura obligatoria de las semanas 1 y 2, y la fuente de los dos casos del módulo 1 y de los cinco ejercicios de este módulo."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 1"
+     ],
+     "modulo": 10,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, H.A. Estrategias de muestreo: diseño de encuestas y estimación de parámetros , capítulo 1 — el mismo material desde la teoría de diseños, y la introducción de la notación $U$, $y_k$, $t_y$ que se usa en todo este material. De acceso abierto ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 10,
+     "obras": [
+      "heck-2018"
+     ],
+     "texto": "Heck, P.R., Simons, D.J. y Chabris, C.F. (2018). «65 % of Americans believe they are above average in intelligence». PLOS ONE 13(7) — las dos encuestas del módulo 4, con la metodología completa. Acceso abierto."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "capítulo 15"
+     ],
+     "modulo": 10,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, S.L. (2021), capítulo 15 — muestras no probabilísticas. Es la continuación natural del módulo 9 y la referencia para el proyecto integrador."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 2"
+     ],
+     "modulo": 10,
+     "obras": [
+      "lumley-survey"
+     ],
+     "texto": "Lumley, T. survey: Analysis of Complex Survey Samples — la documentación del paquete que se usa desde el capítulo 2 en adelante."
+    }
+   ],
+   "li": 25,
+   "menciones": {
+    "censo-agricola-1992": {
+     "prosa": 2
+    },
+    "cochran-1977": {
+     "pie": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 10,
+     "js": 2,
+     "pie": 2,
+     "prosa": 3
+    },
+    "heck-2018": {
+     "bloque": 2,
+     "js": 1
+    },
+    "hite-1987": {
+     "bloque": 2,
+     "js": 3,
+     "prosa": 5
+    },
+    "literary-digest-1936": {
+     "prosa": 1
+    },
+    "lohr": {
+     "bloque": 14,
+     "js": 4,
+     "pie": 1,
+     "prosa": 16
+    },
+    "lumley-survey": {
+     "bloque": 1,
+     "pie": 1
+    },
+    "meng-2018": {
+     "bloque": 1
+    },
+    "sarndal-1992": {
+     "bloque": 2,
+     "pie": 2
+    },
+    "teachingsampling": {
+     "bloque": 1,
+     "prosa": 3
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-2-diseno-mas-sistematico.html": {
+   "entradas": [
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 2"
+     ],
+     "modulo": 2,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 2 — la construcción de $p(s)$, $\\pi_k$ y $\\pi_{kl}$ con más detalle y con las demostraciones completas. De acceso abierto ."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 2.1"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, Sampling: Design and Analysis (3.ª ed.), sección 2.1 — el mismo marco con la notación del texto guía."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "capítulo 2"
+     ],
+     "modulo": 11,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, S.L. (2021). Sampling: Design and Analysis (3.ª ed.), capítulo 2 completo — el MAS, los intervalos, el tamaño de muestra y el sistemático, con la notación del texto guía. Es la lectura obligatoria de las semanas 3 y 4."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulos 2 y 3"
+     ],
+     "modulo": 11,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, H.A. Estrategias de muestreo , capítulos 2 y 3 — el marco $p(s)$, $\\pi_k$, $\\pi_{kl}$ y Horvitz–Thompson con las demostraciones completas, y el MAS y el Bernoulli como casos particulares. De acceso abierto : es la referencia que sostiene los módulos 1 a 4."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "secciones 2.2 a 2.8"
+     ],
+     "modulo": 11,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman (1992). Model Assisted Survey Sampling , secciones 2.2 a 2.8 — la fuente de la notación que usa este material y el tratamiento canónico de la varianza de Horvitz–Thompson."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 11,
+     "obras": [
+      "lumley-survey"
+     ],
+     "texto": "Lumley, T. survey: Analysis of Complex Survey Samples — la documentación del paquete , en particular la viñeta sobre svydesign y el argumento fpc ."
+    }
+   ],
+   "li": 6,
+   "menciones": {
+    "cochran-1977": {
+     "pie": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 4,
+     "js": 3,
+     "pie": 2,
+     "prosa": 3
+    },
+    "hajek-1960": {
+     "prosa": 1
+    },
+    "lohr": {
+     "bloque": 2,
+     "js": 3,
+     "pie": 1,
+     "prosa": 13
+    },
+    "lumley-survey": {
+     "bloque": 1,
+     "pie": 1
+    },
+    "sarndal-1992": {
+     "bloque": 2,
+     "pie": 2,
+     "prosa": 2
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-3-razon-y-regresion.html": {
+   "entradas": [
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.1",
+      "capítulo 4"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, Sampling: Design and Analysis , sección 3.1 (2.ª ed.) o 4.1 (3.ª ed.) — razón y variables auxiliares. La numeración cambió entre ediciones: en la 3.ª, razón y regresión es el capítulo 4."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 8"
+     ],
+     "modulo": 1,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 8 — el mismo material con la notación $\\pi$ y sin suponer muestreo aleatorio simple. De acceso abierto ."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "secciones 3.1 y 3.1.1"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, secciones 3.1 y 3.1.1 (2.ª ed.) o 4.1 y 4.1.1 (3.ª ed.) — el estimador de razón, su error estándar y los ejemplos con agsrs que se reproducen aquí."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 8.2"
+     ],
+     "modulo": 2,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, sección 8.2 — la razón poblacional como parámetro no lineal, con la linealización hecha en el marco $\\pi$ general."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.1.1"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.1.1 (2.ª ed.) o 4.1.1 y 4.1.5 (3.ª ed.) — cuándo usar el estimador de razón. Son dos sitios: el 4.1.1 da el motivo, y la regla sobre las correlaciones y los coeficientes de variación está en «Advantages of Ratio Estimation», al final del 4.1, con la desigualdad $\\rho \\ge \\mathrm{CV}(x) / [2\\,\\mathrm{CV}(y)]$ escrita tal cual — ojo, Lohr escribe $R$ donde este material escribe $\\rho$, y esa $R$ es la correlación, no la razón poblacional."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.2",
+      "sección 3.2.2",
+      "ejercicio 32",
+      "capítulo 4"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.2 (2.ª ed.) o 4.2 (3.ª ed.) — la regresión, que aquí solo se anuncia para poder comparar. La diferencia es la sección 3.2.2 en la 2.ª ed.; en la 3.ª deja de ser sección y queda como el ejercicio 32 del capítulo 4. Los módulos 6 y 7 las construyen, y el 7 pone los cuatro estimadores en una misma tabla."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.1.2"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.1.2 (2.ª ed.) o 4.1.2 (3.ª ed.) — sesgo y error cuadrático medio del estimador de razón, con la aproximación de Taylor completa."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 8.3",
+      "capítulos 7 y 8"
+     ],
+     "modulo": 4,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, sección 8.3 — linealización de parámetros no lineales en el marco $\\pi$, que es la herramienta que reaparece en los capítulos 7 y 8."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 4,
+     "obras": [
+      "kish-1965",
+      "portela-villeta"
+     ],
+     "texto": "Kish, L. (1965). Survey Sampling . Wiley — el origen de la regla del 0,1–0,2, que este módulo usa por su nombre y hasta ahora citaba sin fuente. La referencia la da Portela en su bibliografía."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 7.1.2",
+      "pp. 211–214"
+     ],
+     "modulo": 4,
+     "obras": [
+      "kish-1965",
+      "portela-villeta"
+     ],
+     "texto": "Portela, J. y Villeta, M. Técnicas de muestreo estadístico , sección 7.1.2 (pp. 211–214) — la cota del sesgo relativo con su demostración, la regla de Kish y los tres factores. Ojo: el libro trabaja siempre bajo m.a.s., sin $\\pi_k$, y su software es SAS."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.1.3",
+      "sección 3.3"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.1.3 (2.ª ed.) o 4.1.3 (3.ª ed.) — razones con variables indicadoras y estimación de proporciones. Los dominios no están ahí: son la sección 3.3 (2.ª ed.) o 4.3 (3.ª ed.), que es el módulo 9."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 7.1.1",
+      "pp. 208–209"
+     ],
+     "modulo": 5,
+     "obras": [
+      "portela-villeta"
+     ],
+     "texto": "Portela, J. y Villeta, M. Técnicas de muestreo estadístico , sección 7.1.1 (pp. 208–209) — el ejemplo de la epidemia, que abre su capítulo con esta misma confusión. Ojo: el libro trabaja siempre bajo m.a.s., sin $\\pi_k$, y su software es SAS."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.2"
+     ],
+     "modulo": 6,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.2 (2.ª ed.) o 4.2 (3.ª ed.) — el estimador de regresión y su varianza."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 6,
+     "obras": [
+      "lumley-complex"
+     ],
+     "texto": "Lumley, T. Complex Surveys: A Guide to Analysis Using R — el capítulo sobre calibrate() , que explica el estimador de varianza que usa el paquete."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 7.2.3",
+      "pp. 229–232"
+     ],
+     "modulo": 6,
+     "obras": [
+      "portela-villeta"
+     ],
+     "texto": "Portela, J. y Villeta, M. Técnicas de muestreo estadístico , sección 7.2.3 (pp. 229–232) — el criterio del intercepto para elegir entre razón y regresión, con dos ejemplos resueltos. Ojo: el libro trabaja siempre bajo m.a.s., sin $\\pi_k$, y su software es SAS."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.2.2",
+      "ejercicio 32",
+      "capítulo 4"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.2.2 (2.ª ed.) — el estimador de diferencia. En la 3.ª ed. deja de ser sección: la diferencia queda como el ejercicio 32 del capítulo 4, planteada como el caso de la regresión con la pendiente fijada en 1, que es exactamente lo que dice el cuadrado perfecto de arriba."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.2",
+      "Ejemplo 4.7",
+      "ejercicio 4"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.2 (2.ª ed.) o 4.2 (3.ª ed.), Ejemplo 4.7 — el ejemplo de los árboles muertos, que es el ejercicio 4 del módulo 14. Ojo: Lohr lo resuelve por regresión , no por diferencia."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 7.2.3",
+      "pp. 228–229"
+     ],
+     "modulo": 7,
+     "obras": [
+      "portela-villeta"
+     ],
+     "texto": "Portela, J. y Villeta, M. Técnicas de muestreo estadístico , sección 7.2.3 (pp. 228–229) — las dos desigualdades con sus condiciones de igualdad, y las salvedades sobre $\\hat{b}_1$ estimado. Ojo: el libro trabaja siempre bajo m.a.s., sin $\\pi_k$, y su software es SAS."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 7.2.4",
+      "pp. 232–239",
+      "Ejemplo 7.9"
+     ],
+     "modulo": 8,
+     "obras": [
+      "portela-villeta"
+     ],
+     "texto": "Portela, J. y Villeta, M. Técnicas de muestreo estadístico , sección 7.2.4 (pp. 232–239) — la estimación separada y combinada de regresión, y este Ejemplo 7.9 con sus figuras. Ojo: el libro trabaja siempre bajo m.a.s., sin $\\pi_k$, y su software es SAS."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 4.5"
+     ],
+     "modulo": 8,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 4.5 (3.ª ed.) — razón con muestreo estratificado, separada y combinada, que es la maquinaria completa de la que aquí solo se toma prestada la independencia entre estratos."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "capítulo 4"
+     ],
+     "modulo": 8,
+     "obras": [],
+     "texto": "El módulo 12 del capítulo 4 , «Razón en el estratificado», donde esa maquinaria se construye con el diseño ya presentado."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.3"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.3 (2.ª ed.) o 4.3 (3.ª ed.) — estimación en dominios, con el ejemplo de los condados con 600 granjas o más que se reproduce en el bloque de arriba."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "ejercicio 26",
+      "capítulo 4"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, ejercicio 26 del capítulo 4 (3.ª ed.) — la demostración de que $\\mathrm{Cov}(\\hat{\\bar y}_1, \\hat{\\bar y}_2) \\approx 0$ para dos dominios disjuntos bajo m.a.s."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 11.3",
+      "capítulo 14"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 11.3 (3.ª ed.), «Using Regression to Compare Domain Means» — comparar dominios en diseños complejos, donde la covarianza deja de ser nula; y el capítulo 14 (3.ª ed.) — estimación en áreas pequeñas, que es lo que se hace cuando $n_d$ es demasiado pequeño para este enfoque."
+    },
+    {
+     "ediciones": [
+      "2",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 3.4"
+     ],
+     "modulo": 10,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 3.4 (2.ª ed.) o 4.6 (3.ª ed.) — modelos para la razón y la regresión, y el análisis basado en modelos de agsrs ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 17"
+     ],
+     "modulo": 10,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 17 — el enfoque asistido por modelos desarrollado en general."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulos 5 y 6"
+     ],
+     "modulo": 10,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman (1992), capítulos 5 y 6 — la referencia canónica del enfoque asistido por modelos y del GREG."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 6"
+     ],
+     "modulo": 11,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman (1992), capítulo 6 — el GREG en su forma general, con la demostración de la insesgadez asintótica de diseño."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulos 10 y 17"
+     ],
+     "modulo": 11,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , capítulos 10 y 17 — calibración y estimadores asistidos por modelos."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 11,
+     "obras": [
+      "deville-sarndal-1992"
+     ],
+     "texto": "Deville, J.-C. y Särndal, C.-E. (1992). «Calibration estimators in survey sampling». Journal of the American Statistical Association 87 — el artículo que fundó la calibración moderna."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "secciones 8.2 y 8.3"
+     ],
+     "modulo": 12,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo , secciones 8.2 y 8.3 — parámetros no lineales, la razón poblacional y los cuantiles estimados desde $\\hat{F}$."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "sección 7.3"
+     ],
+     "modulo": 12,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, sección 7.3 (3.ª ed.) — estimación de cuantiles en encuestas complejas y sus intervalos de confianza."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 12,
+     "obras": [
+      "lumley-survey"
+     ],
+     "texto": "Lumley, T. — la documentación de svyquantile , con la descripción de los doce convenios de qrule , nueve de ellos los de Hyndman y Fan."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "sección 7.3",
+      "pp. 239–241",
+      "capítulo 4"
+     ],
+     "modulo": 13,
+     "obras": [
+      "portela-villeta"
+     ],
+     "texto": "Portela, J. y Villeta, M. Técnicas de muestreo estadístico , sección 7.3 (pp. 239–241) — el formulario completo, del que aquí están las dos primeras tablas; las otras dos son las del estimador separado y combinado, que corresponden al capítulo 4."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "secciones 4.1 y 4.2"
+     ],
+     "modulo": 13,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, secciones 4.1 y 4.2 (3.ª ed.) — las mismas fórmulas con la deducción completa y los ejemplos."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulo 8"
+     ],
+     "modulo": 13,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, capítulo 8 — las versiones $\\pi$, que son las que sobreviven cuando el diseño deja de ser m.a.s. De acceso abierto ."
+    },
+    {
+     "ediciones": [
+      "2"
+     ],
+     "interna": false,
+     "localizadores": [
+      "capítulo 3",
+      "capítulo 4"
+     ],
+     "modulo": 14,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, S.L. Sampling: Design and Analysis , capítulo 3 completo en la 2.ª edición —que es el capítulo 4 en la 3.ª —. Es la lectura obligatoria de las semanas 5 y 6, y la fuente de los cuatro ejercicios de este módulo. La numeración cambió entre ediciones: si tienes la 3.ª, razón y regresión está en el 4 y el 3 es muestreo estratificado."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulos 8 y 9"
+     ],
+     "modulo": 14,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, H.A. Estrategias de muestreo , capítulos 8 y 9 — la razón y los parámetros no lineales en el marco $\\pi$ general, sin suponer muestreo aleatorio simple, y con las demostraciones que aquí solo se enuncian. De acceso abierto ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulos 10 y 17"
+     ],
+     "modulo": 14,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, capítulos 10 y 17 — calibración y estimadores asistidos por modelos, que es adonde lleva el módulo 11."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "capítulos 5 a 7"
+     ],
+     "modulo": 14,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, C.-E., Swensson, B. y Wretman, J. (1992). Model Assisted Survey Sampling , capítulos 5 a 7 — la referencia canónica del GREG y de la inferencia asistida por modelos."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 14,
+     "obras": [
+      "lumley-survey"
+     ],
+     "texto": "Lumley, T. survey: Analysis of Complex Survey Samples — la documentación del paquete , en particular svyratio , calibrate , svyby y svyquantile ."
+    }
+   ],
+   "li": 41,
+   "menciones": {
+    "censo-agricola-1992": {
+     "prosa": 1
+    },
+    "cochran-1977": {
+     "pie": 1
+    },
+    "deville-sarndal-1992": {
+     "bloque": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 14,
+     "js": 2,
+     "pie": 2,
+     "prosa": 2
+    },
+    "kish-1965": {
+     "bloque": 2,
+     "js": 2,
+     "prosa": 3
+    },
+    "lohr": {
+     "bloque": 19,
+     "js": 4,
+     "pie": 1,
+     "prosa": 10
+    },
+    "lumley-complex": {
+     "bloque": 1
+    },
+    "lumley-survey": {
+     "bloque": 2,
+     "pie": 1
+    },
+    "portela-villeta": {
+     "bloque": 7,
+     "prosa": 7
+    },
+    "sarndal-1992": {
+     "bloque": 4,
+     "pie": 2
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-4-muestreo-estratificado.html": {
+   "entradas": [
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "cap. 4",
+      "cap. 3",
+      "§1"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr, Sampling: Design and Analysis — cap. 4 (1.ª ed.) / cap. 3 (3.ª ed.), §1: qué es y por qué funciona. Ojo: la numeración de capítulos cambió entre ediciones."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 5"
+     ],
+     "modulo": 1,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez, Estrategias de muestreo — cap. 5: el estratificado dentro del marco π."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.2",
+      "§3.2"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.2 (1.ª ed.) / §3.2 (3.ª ed.): teoría del muestreo estratificado."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.1"
+     ],
+     "modulo": 2,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §5.1–5.2: STSI como caso del π-estimador, con las mismas π que aquí."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§3.7."
+     ],
+     "modulo": 2,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman, Model Assisted Survey Sampling — §3.7."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.3",
+      "§3.3"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.3 (1.ª ed.) / §3.3 (3.ª ed.): pesos de muestreo en el estratificado."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 2"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lumley-complex"
+     ],
+     "texto": "Lumley, Complex Surveys: A Guide to Analysis Using R — cap. 2: svydesign con estratos y fpc."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.4",
+      "§3.4"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.4 (1.ª ed.) / §3.4 (3.ª ed.): asignación de observaciones."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§3.4.4",
+      "Ej. 3.12"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §3.4.4 (3.ª ed.) y Ej. 3.12: qué asignación usar, y el ejemplo con el que muestra que la óptima para una variable puede ser mala para otra."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.4.3",
+      "Ej. 4.9",
+      "§3.4.3",
+      "Ej. 3.11"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.4.3 y Ej. 4.9 (1.ª ed.) / §3.4.3 y Ej. 3.11 (3.ª ed.): asignación para una precisión fijada dentro de cada estrato."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "Ej. 4.8",
+      "Tabla 4.4",
+      "Ej. 3.10"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — Ej. 4.8 y Tabla 4.4 (1.ª ed.) / Ej. 3.10 (3.ª ed.): Neyman en la práctica, con el mínimo por estrato del conteo de caribú."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 4,
+     "obras": [
+      "neyman-1934"
+     ],
+     "texto": "Neyman (1934), «On the two different aspects of the representative method» — el artículo que fundó esto y de paso el muestreo probabilístico moderno."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.4.2",
+      "§3.4.2"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.4.2 (1.ª ed.) / §3.4.2 (3.ª ed.): asignación con costos."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.4.4",
+      "§3.4.5",
+      "ecs. 3.16"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.4.4 (1.ª ed.) / §3.4.5 (3.ª ed.), ecs. 3.16 a 3.18: el tamaño total a partir del margen de error, y por qué debe cubrir todas las variables clave."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "Ej. 3.8"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — Ej. 3.8 y término clave certainty stratum (3.ª ed.): los estratos que se censan."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.5"
+     ],
+     "modulo": 5,
+     "obras": [
+      "cochran-1977"
+     ],
+     "texto": "Cochran, Sampling Techniques — §5.5: el tratamiento clásico, con costo fijo $c_0$ incluido."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.5",
+      "§3.5"
+     ],
+     "modulo": 6,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.5 (1.ª ed.) / §3.5 (3.ª ed.): definición de estratos, con la regla de «más información, más estratos» y por qué clasificar mal no invalida la estimación."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "Ej. 3.13"
+     ],
+     "modulo": 6,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — Ej. 3.13 (3.ª ed.): el conteo de personas sin hogar de Nueva York, con los datos de pitcount.csv ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 6,
+     "obras": [
+      "dalenius-hodges-1959"
+     ],
+     "texto": "Dalenius y Hodges (1959): el método clásico de cortes óptimos por cuantiles acumulados de $\\sqrt{f}$."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.4.1",
+      "ec. 4.11)",
+      "§3.4.1",
+      "ecs. 3.12"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.4.1 (1.ª ed., ec. 4.11) / §3.4.1 (3.ª ed., ecs. 3.12–3.13): cuándo la asignación proporcional pierde contra el MAS."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.6",
+      "§3.6"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.6 (1.ª ed.) / §3.6 (3.ª ed.): el modelo del muestreo estratificado, y por qué su error cuadrático medio coincide término a término con la varianza de diseño."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 17"
+     ],
+     "modulo": 7,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — cap. 17: el enfoque asistido por modelos, del que este módulo es un caso."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.2"
+     ],
+     "modulo": 8,
+     "obras": [
+      "kish-1965"
+     ],
+     "texto": "Kish, Survey Sampling (1965) — §8.2: el efecto de diseño original."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§7.5",
+      "§7.4"
+     ],
+     "modulo": 8,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §7.5 (1.ª ed.) / §7.4 (3.ª ed.): deff en encuestas complejas, el destino de esta idea."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.3"
+     ],
+     "modulo": 9,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §5.3: el diseño STPPS con S.STPPS / E.STPPS y BigLucy, que este módulo reproduce."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.2",
+      "capítulo 6"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §6.2 (ambas ediciones): muestreo con probabilidades desiguales con reemplazo, la teoría que el capítulo 6 desarrolla."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.7",
+      "§4.4",
+      "ecs. 4.26"
+     ],
+     "modulo": 10,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.7 (1.ª ed.) / §4.4 (3.ª ed.): postestratificación, con su derivación como razón y los pesos ajustados (ecs. 4.26 a 4.29 de la 3.ª)."
+    },
+    {
+     "ediciones": [
+      "1",
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§3.3",
+      "§4.3"
+     ],
+     "modulo": 10,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §3.3 (1.ª ed.) / §4.3 (3.ª ed.): estimación en dominios, de la que el postestrato es el caso con $N_h$ conocido."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§10.1"
+     ],
+     "modulo": 10,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §10.1: calibración, donde esta idea se vuelve sistema."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 10,
+     "obras": [
+      "holt-smith-1979"
+     ],
+     "texto": "Holt y Smith (1979), «Post stratification» — la defensa clásica del análisis condicional."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 11,
+     "obras": [
+      "kohavi-1995"
+     ],
+     "texto": "Kohavi (1995), «A study of cross-validation and bootstrap» — la recomendación empírica original de estratificar la validación cruzada."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§3.1"
+     ],
+     "modulo": 11,
+     "obras": [
+      "rsample",
+      "scikit-learn-guia"
+     ],
+     "texto": "scikit-learn, User Guide §3.1 (Cross-validation) y rsample::vfold_cv — la documentación de pool que este módulo invita a leer con lupa."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.5"
+     ],
+     "modulo": 12,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.5 (3.ª ed.): razón combinada y separada, con la observación de que la postestratificación es un caso particular de la separada. Se cita solo por la 3.ª edición a propósito : en la 1.ª, el capítulo de razón y regresión no tiene una sección dedicada a esto, y la 2.ª no está disponible para comprobarlo."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§4.1.2"
+     ],
+     "modulo": 12,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §4.1.2 (3.ª ed.): el sesgo del estimador de razón, que es el que la separada comete $H$ veces."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [],
+     "modulo": 12,
+     "obras": [],
+     "texto": "Capítulo 3, módulos 2 a 4: el estimador de razón de donde sale todo esto. El 4 es donde se mide su sesgo."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [],
+     "modulo": 12,
+     "obras": [],
+     "texto": "Capítulo 3, módulo 8: un estimador distinto en cada estrato, sumados después. La separada es el caso en que todos son de razón."
+    }
+   ],
+   "li": 36,
+   "menciones": {
+    "cochran-1977": {
+     "bloque": 1,
+     "pie": 1
+    },
+    "dalenius-hodges-1959": {
+     "bloque": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 6,
+     "js": 3,
+     "pie": 2,
+     "prosa": 3
+    },
+    "holt-smith-1979": {
+     "bloque": 1
+    },
+    "kish-1965": {
+     "bloque": 1,
+     "js": 3,
+     "prosa": 2
+    },
+    "kohavi-1995": {
+     "bloque": 1,
+     "js": 1
+    },
+    "lohr": {
+     "bloque": 20,
+     "js": 10,
+     "pie": 1,
+     "prosa": 31
+    },
+    "lumley-complex": {
+     "bloque": 1
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "neyman-1934": {
+     "bloque": 1
+    },
+    "rsample": {
+     "bloque": 1,
+     "js": 2,
+     "prosa": 3
+    },
+    "sarndal-1992": {
+     "bloque": 2,
+     "pie": 2
+    },
+    "scikit-learn-guia": {
+     "bloque": 1
+    },
+    "teachingsampling": {
+     "prosa": 1
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-5-conglomerados.html": {
+   "entradas": [
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "cap. 5",
+      "§5.1"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — cap. 5 (3.ª ed.), la introducción («Why use cluster samples?»): por qué y cuándo conglomerar; §5.1, la notación."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 6"
+     ],
+     "modulo": 1,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — cap. 6: el muestreo de conglomerados en el marco π."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.1",
+      "§6.1",
+      "§7.1."
+     ],
+     "modulo": 2,
+     "obras": [
+      "gutierrez-estrategias",
+      "lohr"
+     ],
+     "texto": "Lohr — §5.1, tabla de notación; Gutiérrez — §6.1 ($N_I$, $n_I$) y §7.1."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "capítulo 4"
+     ],
+     "modulo": 2,
+     "obras": [],
+     "texto": "El diagrama de dos etapas de este módulo, frente al de una etapa del capítulo 4, módulo 1."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.2.1"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §5.2.1: conglomerados de igual tamaño; el ejemplo de las suites es el 5.2."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.2"
+     ],
+     "modulo": 3,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §6.2: el diseño SI de conglomerados como π-estimador."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.2.2"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §5.2.2: ICC y ANOVA poblacional; la $R_a^2$ ajustada."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.4"
+     ],
+     "modulo": 4,
+     "obras": [
+      "kish-1965"
+     ],
+     "texto": "Kish, Survey Sampling — §5.4: la fórmula deff = 1 + (M̄ − 1)ρ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.2.3",
+      "§5.3",
+      "ej. 5.8"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §5.2.3: tamaños desiguales; §5.3, ej. 5.8: las fochas (Arnold, 1991), que en el libro son de dos etapas porque de cada nidada se miden dos huevos."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [],
+     "modulo": 5,
+     "obras": [],
+     "texto": "Capítulo 3 de este material — el estimador de razón, del que este módulo es un caso."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.3"
+     ],
+     "modulo": 6,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §5.3: dos etapas; el ejemplo de las escuelas es el 5.7."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.2"
+     ],
+     "modulo": 6,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §7.2: el diseño SI-SI y E.2SI , que este módulo reproduce."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 4"
+     ],
+     "modulo": 6,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman — cap. 4: la teoría general multietapa."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.3",
+      "ecs. 5.28",
+      "ej. 5.7",
+      "§6.3"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §5.3, «Simplified variance estimation» (ecs. 5.28 y 5.29), antes del ej. 5.7; §6.3, la varianza con reemplazo del conglomerado último."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.3"
+     ],
+     "modulo": 7,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman — §4.3: la descomposición general por etapas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§5.4"
+     ],
+     "modulo": 8,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §5.4: diseño de muestras por conglomerados con costos."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§10.6"
+     ],
+     "modulo": 8,
+     "obras": [
+      "cochran-1977"
+     ],
+     "texto": "Cochran, Sampling Techniques — §10.6: la deducción clásica del m óptimo."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.1"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §7.1 («Assembling Design Components»): los diseños complejos como estratos × conglomerados × etapas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 7"
+     ],
+     "modulo": 9,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — cap. 7: diseños en dos etapas con estratificación de UPM."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§3.1.2"
+     ],
+     "modulo": 10,
+     "obras": [
+      "scikit-learn-guia"
+     ],
+     "texto": "scikit-learn, User Guide §3.1.2: particiones por grupos (GroupKFold y familia)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 12"
+     ],
+     "modulo": 10,
+     "obras": [
+      "gelman-hill"
+     ],
+     "texto": "Gelman y Hill, Data Analysis Using Regression and Multilevel Models — cap. 12: la ICC en modelos jerárquicos."
+    }
+   ],
+   "li": 21,
+   "menciones": {
+    "cochran-1977": {
+     "bloque": 1,
+     "pie": 1
+    },
+    "gelman-hill": {
+     "bloque": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 5,
+     "js": 1,
+     "pie": 2,
+     "prosa": 4
+    },
+    "kish-1965": {
+     "bloque": 1,
+     "js": 5,
+     "prosa": 6
+    },
+    "lohr": {
+     "bloque": 9,
+     "js": 3,
+     "pie": 1,
+     "prosa": 18
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "sarndal-1992": {
+     "bloque": 2,
+     "pie": 2
+    },
+    "scikit-learn-guia": {
+     "bloque": 1
+    },
+    "teachingsampling": {
+     "prosa": 1
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-6-probabilidades-desiguales.html": {
+   "entradas": [
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 6",
+      "§6.1"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — cap. 6 (ambas ediciones), §6.1: el ejemplo de las cuatro tiendas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 4",
+      "§4.1",
+      "§4.2",
+      "§4.3"
+     ],
+     "modulo": 1,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — cap. 4: Poisson (§4.1), PPT con reemplazo (§4.2) y πPT (§4.3–4.4), cada diseño con su algoritmo de selección y un ejemplo pequeño resuelto a mano."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.2",
+      "§6.2.2",
+      "ecs. 6.7"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §6.2: muestreo con reemplazo de una etapa; la demostración de insesgadez está en §6.2.2 (ecs. 6.7–6.9)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.2",
+      "Resultado 4.2.4"
+     ],
+     "modulo": 2,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §4.2: el diseño PPT con reemplazo; su Resultado 4.2.4 da el estimador de Hansen–Hurwitz, su varianza y la varianza estimada."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "ejercicio 1"
+     ],
+     "modulo": 2,
+     "obras": [],
+     "texto": "Este material — ejercicio 1 del módulo 11: una muestra Hansen–Hurwitz de 10 estados con $\\psi$ proporcional a la población."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "capítulo 7"
+     ],
+     "modulo": 2,
+     "obras": [],
+     "texto": "Este material — módulo 9 y capítulo 7: estimar la varianza como si las UPM se hubieran sorteado con reemplazo es la base de la estimación de varianza en las encuestas complejas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.2.1"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §6.2.1: método acumulativo y método de Lahiri, con el ejemplo de las clases."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.2.1"
+     ],
+     "modulo": 3,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §4.2.1: el método acumulativo total y el de Lahiri, paso a paso."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.4",
+      "ejemplos 6.8",
+      "Tabla 6.6",
+      "§6.6"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §6.4: muestreo sin reemplazo con probabilidades desiguales; sus ejemplos 6.8 y 6.9 son estas cuatro tiendas, sorteadas extracción a extracción (Tabla 6.6, con las $\\pi_{kl}$). §6.6 para las demostraciones."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.3",
+      "cap. 2"
+     ],
+     "modulo": 4,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §4.3: el diseño πPT como caso general de los diseños sin reemplazo; con $x$ constante se reduce al MAS del cap. 2."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 2"
+     ],
+     "modulo": 4,
+     "obras": [
+      "gutierrez-estrategias",
+      "lohr"
+     ],
+     "texto": "Este material — cap. 2, módulos 1–4: el diseño $p(s)$, las $\\pi_k$ y el HT; y la tabla de notación del módulo 11, con $\\psi$ y $\\pi$ en Lohr y en Gutiérrez."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.4.1",
+      "ejemplo 6.10"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §6.4.1–6.4.2: el muestreo sin reemplazo con probabilidades desiguales y cómo sortearlo; su ejemplo 6.10 es agpps (módulo 7). Los estados ( statepps ) salen en sus ejercicios, y allí con reemplazo."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.2.3",
+      "Resultado 4.2.7",
+      "§4.2.4",
+      "§4.3",
+      "ej. 4.3.1",
+      "§4.4",
+      "ej. 4.4.2"
+     ],
+     "modulo": 5,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §4.2.3: el criterio de Raj (Resultado 4.2.7); §4.2.4: su ejemplo con BigLucy, donde el ingreso es la medida de tamaño (la recta de los empleados sobre el ingreso corta el eje en 29, y la de los impuestos, en −13,7; el módulo 10 invierte los papeles); §4.3: $\\pi_k \\propto x_k$ y la inclusión forzosa (ej. 4.3.1); §4.4: Brewer, Sunter y la escisión (ej. 4.4.2). No trata el sistemático."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 5,
+     "obras": [
+      "deville-tille-1998"
+     ],
+     "texto": "Deville y Tillé (1998), «Unequal probability sampling without replacement through a splitting method», Biometrika 85: el método de escisión."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [],
+     "modulo": 5,
+     "obras": [],
+     "texto": "Este material — el laboratorio πPT : la regla del sorteo sistemático, la inclusión forzosa y, en su pestaña 2, cuándo gana el πPT, con las tiendas y otros cinco escenarios."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.1",
+      "§4.1.1",
+      "§4.1.3",
+      "ejemplo 6.14",
+      "cap. 6"
+     ],
+     "modulo": 6,
+     "obras": [
+      "gutierrez-estrategias",
+      "lohr"
+     ],
+     "texto": "Gutiérrez — §4.1: el diseño de Poisson, con su algoritmo (§4.1.1) y el resultado sobre $\\pi \\propto y$ y el estimador alternativo (§4.1.3). Lohr lo presenta en su ejemplo 6.14 (el muestreo 3-P de los forestales, un caso de Poisson) y lo desarrolla en un ejercicio del cap. 6."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§3.2"
+     ],
+     "modulo": 6,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal, Swensson y Wretman — §3.2: Poisson como familia de diseños «de lista»."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 2",
+      "cap. 3"
+     ],
+     "modulo": 6,
+     "obras": [],
+     "texto": "Este material — cap. 2, módulo 8: Bernoulli, el caso de $\\pi$ constante; cap. 3: el estimador de razón."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.4.1",
+      "ecs. 6.22",
+      "ejemplo 6.10."
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §6.4.1: los dos estimadores (ecs. 6.22 y 6.23) y la aproximación con reemplazo (6.24); agpps es su ejemplo 6.10."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "Resultado 4.3.1",
+      "§4.4.3",
+      "§2.8"
+     ],
+     "modulo": 7,
+     "obras": [
+      "gutierrez-estrategias",
+      "sarndal-1992"
+     ],
+     "texto": "Gutiérrez — Resultado 4.3.1: la varianza del HT y su estimador escritos con $\\Delta_{kl}$, la forma SYG; §4.4.3: la aproximación de Hájek–Deville, que no pide $\\pi_{kl}$. Särndal et al. §2.8 para la teoría fina."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 2"
+     ],
+     "modulo": 7,
+     "obras": [],
+     "texto": "Este material — cap. 2, módulo 3: donde SYG apareció por primera vez."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [],
+     "modulo": 7,
+     "obras": [],
+     "texto": "Este material — el laboratorio πPT , pestaña 3: la matriz $\\pi_{kl}$ de tres diseños con las mismas $\\pi_k$, los pares que nunca salen juntos y el espacio de muestras completo."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.7"
+     ],
+     "modulo": 8,
+     "obras": [
+      "basu-1971",
+      "lohr"
+     ],
+     "texto": "Lohr — §6.7: los elefantes de Basu (1971), el ejemplo clásico de un HT insesgado e inútil cuando las π no acompañan a la variable, y cómo lo habría salvado el estimador de razón."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§2.8"
+     ],
+     "modulo": 8,
+     "obras": [
+      "sarndal-1992"
+     ],
+     "texto": "Särndal et al. — §2.8: condiciones para que el π-estimador sea eficiente."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§6.3",
+      "§6.4.3",
+      "ejemplo 6.11",
+      "ejemplo 6.12"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §6.3: dos etapas con reemplazo; §6.4.3–6.4.4: sin reemplazo, con el ejemplo 6.11 ( classpps ); ejemplo 6.12: por qué las encuestas grandes en persona sortean sus UPM con pps."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.3.1"
+     ],
+     "modulo": 9,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §7.3.1: diseños autoponderados (πPT en la primera etapa y el mismo número de unidades en la segunda)."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 5"
+     ],
+     "modulo": 9,
+     "obras": [],
+     "texto": "Este material — cap. 5, módulos 2 y 6: la notación y el caso de probabilidades iguales."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 9"
+     ],
+     "modulo": 10,
+     "obras": [
+      "owen"
+     ],
+     "texto": "Owen — Monte Carlo theory , cap. 9: importance sampling, con la mezcla defensiva (libre en línea)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.1",
+      "§6.6"
+     ],
+     "modulo": 10,
+     "obras": [
+      "beygelzimer-2009",
+      "schaul-2016",
+      "settles"
+     ],
+     "texto": "Settles — Active Learning Literature Survey : §4.1 y §6.6 advierten que los datos etiquetados activamente son una muestra sesgada. La corrección con pesos $1/\\psi$ es la de Beygelzimer, Dasgupta y Langford (2009), Importance weighted active learning . El replay priorizado es de Schaul, Quan, Antonoglou y Silver (2016), Prioritized experience replay ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§4.2",
+      "Resultado 4.2.4",
+      "§4.2.4"
+     ],
+     "modulo": 10,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §4.2, Resultado 4.2.4: la varianza del PPT con reemplazo, la que aquí se reinterpreta; §4.2.4 presenta BigLucy."
+    }
+   ],
+   "li": 30,
+   "menciones": {
+    "basu-1971": {
+     "bloque": 1,
+     "prosa": 3
+    },
+    "beygelzimer-2009": {
+     "bloque": 1
+    },
+    "cochran-1977": {
+     "pie": 1
+    },
+    "deville-tille-1998": {
+     "bloque": 1,
+     "prosa": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 10,
+     "js": 4,
+     "pie": 2,
+     "prosa": 24
+    },
+    "lahiri-1951": {
+     "prosa": 1
+    },
+    "lohr": {
+     "bloque": 10,
+     "js": 5,
+     "pie": 1,
+     "prosa": 31
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "owen": {
+     "bloque": 1
+    },
+    "sarndal-1992": {
+     "bloque": 3,
+     "pie": 2,
+     "prosa": 1
+    },
+    "schaul-2016": {
+     "bloque": 1
+    },
+    "settles": {
+     "bloque": 1
+    },
+    "teachingsampling": {
+     "prosa": 5
+    },
+    "yates-grundy-1953": {
+     "prosa": 1
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-7-encuestas-complejas.html": {
+   "entradas": [
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.1",
+      "§7.5",
+      "§9.2.2",
+      "Ej. 9.4"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lohr",
+      "nhanes"
+     ],
+     "texto": "Lohr — §7.1: las piezas de un diseño complejo; NHANES en §7.5 y SYC en §9.2.2 (Ej. 9.4)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 10"
+     ],
+     "modulo": 1,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — cap. 10: estimadores de calibración, los pesos ajustados del módulo 6."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "caps. 2"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lumley-complex"
+     ],
+     "texto": "Lumley — Complex Surveys: A Guide to Analysis Using R , caps. 2–3."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.2",
+      "§7.5"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §7.2 y §7.5: construcción de pesos y su interpretación."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 10"
+     ],
+     "modulo": 2,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — cap. 10, introducción: pesos de diseño frente a pesos calibrados."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 6"
+     ],
+     "modulo": 2,
+     "obras": [],
+     "texto": "Este material — cap. 6, módulo 9: los pesos de dos etapas y el diseño autoponderado."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.4"
+     ],
+     "modulo": 3,
+     "obras": [
+      "kish-1965",
+      "lohr"
+     ],
+     "texto": "Lohr — §7.4: efecto de diseño y tamaño efectivo; Kish (1965) es la fuente original."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 2",
+      "cap. 4",
+      "cap. 5"
+     ],
+     "modulo": 3,
+     "obras": [],
+     "texto": "Este material — cap. 2, módulo 9 (Definición 2.10, el deff frente al MAS), cap. 4, módulo 8 (el deff del estratificado) y cap. 5, módulo 4 (ICC y deff)."
+    },
+    {
+     "ediciones": [
+      "3"
+     ],
+     "interna": false,
+     "localizadores": [
+      "§9.1",
+      "§5.5"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr",
+      "sarndal-1992"
+     ],
+     "texto": "Lohr — §9.1 (3.ª ed.): linealización; Särndal et al. §5.5 para el caso general."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 3"
+     ],
+     "modulo": 4,
+     "obras": [],
+     "texto": "Este material — cap. 3, módulos 2 y 4 (la razón linealizada y el término que se desprecia), 9 (dominios) y 12 (la mediana por Woodruff)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§9.3"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §9.3: jackknife, BRR y bootstrap para encuestas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 2"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lumley-complex"
+     ],
+     "texto": "Lumley — Complex Surveys , cap. 2: as.svrepdesign y sus tipos."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 5,
+     "obras": [
+      "rao-wu-1988"
+     ],
+     "texto": "Rao y Wu (1988): el bootstrap para muestras complejas que implementa subbootstrap ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§10.1"
+     ],
+     "modulo": 6,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — §10.1–10.5: calibración, la fuente principal de este módulo."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.6"
+     ],
+     "modulo": 6,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §8.6: post-estratificación y raking como ajuste por no respuesta."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 6,
+     "obras": [
+      "deville-sarndal-1992"
+     ],
+     "texto": "Deville y Särndal (1992): el artículo que fundó la calibración moderna."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 4",
+      "cap. 3"
+     ],
+     "modulo": 6,
+     "obras": [],
+     "texto": "Este material — cap. 4, módulo 10 (la postestratificación como calibración) y cap. 3, módulos 6 y 11 (la regresión con calibrate() y el GREG)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.5",
+      "§9.2.2",
+      "Ej. 9.4"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr",
+      "nhanes"
+     ],
+     "texto": "Lohr — §7.5: el diseño y los pesos de NHANES; SYC, en §9.2.2 (Ej. 9.4)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 3"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lumley-complex",
+      "nhanes"
+     ],
+     "texto": "Lumley — Complex Surveys , cap. 3: NHANES como ejemplo recurrente."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§7.4",
+      "Ej. 7.7",
+      "§7.5",
+      "§7.2.1"
+     ],
+     "modulo": 8,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §7.4 (Ej. 7.7): el deff como precio del diseño; §7.5, lo que pasa si se ignoran los pesos; §7.2.1, sobre el recorte de los pesos grandes."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 5"
+     ],
+     "modulo": 8,
+     "obras": [],
+     "texto": "Este material — cap. 5, módulo 3: el mismo error, medido sobre conglomerados de igual tamaño."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 1",
+      "§1.3",
+      "§1.5",
+      "cap. 8"
+     ],
+     "modulo": 9,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — cap. 1 (§1.3 a §1.5: sesgo de selección, error de medición y cuestionario) y cap. 8 (no respuesta) cierran el ciclo."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 9,
+     "obras": [
+      "groves-et-al"
+     ],
+     "texto": "Groves et al. — Survey Methodology : el ciclo completo, con el error total como hilo."
+    }
+   ],
+   "li": 23,
+   "menciones": {
+    "aapor": {
+     "prosa": 1
+    },
+    "cochran-1977": {
+     "pie": 1
+    },
+    "deville-sarndal-1992": {
+     "bloque": 1
+    },
+    "groves-et-al": {
+     "bloque": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 3,
+     "js": 2,
+     "pie": 2,
+     "prosa": 1
+    },
+    "kish-1965": {
+     "bloque": 1,
+     "js": 6,
+     "prosa": 13
+    },
+    "lohr": {
+     "bloque": 9,
+     "js": 3,
+     "pie": 1,
+     "prosa": 7
+    },
+    "lumley-complex": {
+     "bloque": 3
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "meng-2018": {
+     "prosa": 1
+    },
+    "nhanes": {
+     "bloque": 3,
+     "js": 21,
+     "prosa": 33
+    },
+    "rao-wu-1988": {
+     "bloque": 1
+    },
+    "sarndal-1992": {
+     "bloque": 1,
+     "pie": 2
+    },
+    "teachingsampling": {
+     "prosa": 1
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/capitulo-8-no-respuesta-ponderacion.html": {
+   "entradas": [
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.1",
+      "§8.2"
+     ],
+     "modulo": 1,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §8.1 y §8.2: efectos de la no respuesta y los mecanismos."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 1"
+     ],
+     "modulo": 1,
+     "obras": [
+      "little-rubin"
+     ],
+     "texto": "Little y Rubin — Statistical Analysis with Missing Data , cap. 1: la formalización original de MCAR / MAR / MNAR."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 1"
+     ],
+     "modulo": 1,
+     "obras": [],
+     "texto": "Este material — cap. 1, módulo 4: el sesgo de selección, del que la no respuesta es un caso."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.2",
+      "§8.3",
+      "ej. 15.14"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §8.2 (el sesgo), §8.3 (dos fases) y ej. 15.14 (el Digest con la identidad)."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 2,
+     "obras": [
+      "meng-2018"
+     ],
+     "texto": "Meng (2018) — Statistical paradises and paradoxes in big data : la identidad y el «paradoja del big data»."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 2,
+     "obras": [
+      "hansen-hurwitz-1946"
+     ],
+     "texto": "Hansen y Hurwitz (1946) — el diseño de dos fases para no respuesta, todavía vigente."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.4"
+     ],
+     "modulo": 3,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §8.4: ajuste de pesos por clases y sus supuestos."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 7"
+     ],
+     "modulo": 3,
+     "obras": [],
+     "texto": "Este material — cap. 7, módulo 2: los tres factores del peso final, del que este es el segundo."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 5"
+     ],
+     "modulo": 3,
+     "obras": [],
+     "texto": "Este material — cap. 5: la fórmula de varianza para conglomerados que se reutiliza aquí."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.5",
+      "cap. 15",
+      "ej. 9"
+     ],
+     "modulo": 4,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §8.5 y cap. 15 (ej. 9 y 10): post-estratificación con los datos de este módulo."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 7",
+      "cap. 4"
+     ],
+     "modulo": 4,
+     "obras": [],
+     "texto": "Este material — cap. 7, módulo 6: el IPFP paso a paso, y cap. 4, módulo 10: post-estratificación como caso de calibración."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 4,
+     "obras": [
+      "zhang-2020"
+     ],
+     "texto": "Zhang et al. (2020) — el estudio original sobre respondientes profesionales."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.6"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §8.6: los métodos de imputación, con este mismo archivo."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "caps. 4 y 5"
+     ],
+     "modulo": 5,
+     "obras": [
+      "little-rubin"
+     ],
+     "texto": "Little y Rubin — caps. 4 y 5: imputación por regresión y sus variantes."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 5,
+     "obras": [
+      "mice"
+     ],
+     "texto": "En R, el paquete estándar es mice ; aquí se implementa a mano porque la mecánica es la lección. Para producción, mice y luego mitools::MIcombine ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§8.7"
+     ],
+     "modulo": 6,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — §8.7: varianza con datos imputados."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 6,
+     "obras": [
+      "rubin-1987"
+     ],
+     "texto": "Rubin (1987) — Multiple Imputation for Nonresponse in Surveys : la fuente de las reglas."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 7"
+     ],
+     "modulo": 6,
+     "obras": [],
+     "texto": "Este material — cap. 7, módulo 8: el mismo tipo de medición sobre el error de ignorar los conglomerados, que costaba mucho más."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 7,
+     "obras": [
+      "aapor"
+     ],
+     "texto": "AAPOR — Standard Definitions : los códigos de disposición y las fórmulas RR1 a RR6."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 7,
+     "obras": [
+      "schouten-2009"
+     ],
+     "texto": "Schouten, Cobben y Bethlehem (2009) — el R-indicator y su uso en encuestas oficiales."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 7,
+     "obras": [
+      "groves-2006"
+     ],
+     "texto": "Groves (2006) — por qué la tasa de respuesta predice mal el sesgo de no respuesta."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 7"
+     ],
+     "modulo": 8,
+     "obras": [],
+     "texto": "Este material — cap. 7, módulo 9: el ciclo completo de diseño de una encuesta, del que este taller es la versión ejecutable."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 8",
+      "§1.2"
+     ],
+     "modulo": 8,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr — cap. 8 y §1.2: el proceso de una encuesta de principio a fin."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 1"
+     ],
+     "modulo": 9,
+     "obras": [],
+     "texto": "Este material — cap. 1, módulo 9: sesgo de muestreo en ciencia de datos e IA, que este módulo cierra."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 9,
+     "obras": [
+      "meng-2018"
+     ],
+     "texto": "Meng (2018) — por qué «más datos» empeora el problema cuando el mecanismo no está controlado."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 9,
+     "obras": [
+      "kim-wang-2019"
+     ],
+     "texto": "Kim y Wang (2019) — Sampling techniques for big data analysis : el diseño muestral en fuentes de datos no probabilísticas."
+    },
+    {
+     "ediciones": [],
+     "interna": true,
+     "localizadores": [
+      "cap. 1"
+     ],
+     "modulo": 10,
+     "obras": [],
+     "texto": "Este material — cap. 1, módulo 7: el árbol del error total, primera versión."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 10,
+     "obras": [
+      "groves-et-al"
+     ],
+     "texto": "Groves et al. — Survey Methodology : el paradigma del error total de encuesta."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [],
+     "modulo": 10,
+     "obras": [
+      "gutierrez-estrategias"
+     ],
+     "texto": "Gutiérrez — Estrategias de muestreo : el marco $\\pi$ completo, con los diseños que este curso solo nombró."
+    }
+   ],
+   "li": 29,
+   "menciones": {
+    "aapor": {
+     "bloque": 1,
+     "prosa": 5
+    },
+    "cochran-1977": {
+     "pie": 1
+    },
+    "gnap-1995": {
+     "js": 4,
+     "prosa": 8
+    },
+    "groves-2006": {
+     "bloque": 1
+    },
+    "groves-et-al": {
+     "bloque": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "bloque": 2,
+     "js": 2,
+     "pie": 2,
+     "prosa": 2
+    },
+    "hansen-hurwitz-1946": {
+     "bloque": 1,
+     "prosa": 1
+    },
+    "kim-wang-2019": {
+     "bloque": 1
+    },
+    "kish-1965": {
+     "js": 6,
+     "prosa": 7
+    },
+    "little-rubin": {
+     "bloque": 2
+    },
+    "lohr": {
+     "bloque": 7,
+     "js": 2,
+     "pie": 1,
+     "prosa": 7
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "meng-2018": {
+     "bloque": 2,
+     "js": 1,
+     "prosa": 4
+    },
+    "mice": {
+     "bloque": 2
+    },
+    "nhanes": {
+     "js": 1
+    },
+    "rubin-1976": {
+     "prosa": 1
+    },
+    "rubin-1987": {
+     "bloque": 1
+    },
+    "sarndal-1992": {
+     "pie": 2
+    },
+    "schouten-2009": {
+     "bloque": 1,
+     "prosa": 1
+    },
+    "zhang-2020": {
+     "bloque": 1,
+     "prosa": 1
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/index.html": {
+   "entradas": [],
+   "li": 0,
+   "menciones": {
+    "cochran-1977": {
+     "pie": 1
+    },
+    "gutierrez-estrategias": {
+     "pie": 2,
+     "prosa": 2
+    },
+    "lohr": {
+     "pie": 1,
+     "prosa": 10
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "sarndal-1992": {
+     "pie": 2
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/laboratorio-ppt.html": {
+   "entradas": [],
+   "li": 0,
+   "menciones": {
+    "gutierrez-estrategias": {
+     "prosa": 2
+    },
+    "lohr": {
+     "js": 11,
+     "pie": 1,
+     "prosa": 12
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/preparcial-corte-1.html": {
+   "entradas": [],
+   "li": 0,
+   "menciones": {
+    "cochran-1977": {
+     "pie": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "js": 1,
+     "pie": 2,
+     "prosa": 1
+    },
+    "lohr": {
+     "js": 4,
+     "pie": 1,
+     "prosa": 50
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "sarndal-1992": {
+     "pie": 2
+    }
+   },
+   "sin_reconocer": []
+  },
+  "muestreo/proyecto-integrador-corte-iii.html": {
+   "entradas": [],
+   "li": 0,
+   "menciones": {
+    "cochran-1977": {
+     "pie": 1
+    },
+    "guerrero-1993": {
+     "js": 1
+    },
+    "gutierrez-estrategias": {
+     "js": 1,
+     "pie": 2,
+     "prosa": 1
+    },
+    "lohr": {
+     "js": 1,
+     "pie": 1,
+     "prosa": 1
+    },
+    "lumley-survey": {
+     "pie": 1
+    },
+    "sarndal-1992": {
+     "pie": 2
+    }
+   },
+   "sin_reconocer": []
+  }
+ }
+}

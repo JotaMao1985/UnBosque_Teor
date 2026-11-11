@@ -1,0 +1,1143 @@
+[
+  {
+    "DOI": "10.2307/1368601",
+    "ISSN": "00105422, 1938-5129",
+    "URL": "https://academic.oup.com/condor/article/93/1/19-27/5185336",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Arnold",
+        "given": "Todd W."
+      }
+    ],
+    "container-title": "The Condor",
+    "id": "arnold1991intraclutch",
+    "issue": "1",
+    "issued": {
+      "date-parts": [
+        [
+          "1991",
+          2
+        ]
+      ]
+    },
+    "journalAbbreviation": "The Condor",
+    "page": "19-27",
+    "source": "DOI.org (Crossref)",
+    "title": "Intraclutch Variation in Egg Size of American Coots",
+    "type": "article-journal",
+    "volume": "93"
+  },
+  {
+    "DOI": "10.1145/1553374.1553381",
+    "ISBN": "978-1-60558-516-1",
+    "URL": "https://dl.acm.org/doi/10.1145/1553374.1553381",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Beygelzimer",
+        "given": "Alina"
+      },
+      {
+        "family": "Dasgupta",
+        "given": "Sanjoy"
+      },
+      {
+        "family": "Langford",
+        "given": "John"
+      }
+    ],
+    "container-title": "Proceedings of the 26th Annual International Conference on Machine Learning",
+    "event-title": "ICML '09: The 26th Annual International Conference on Machine Learning held in conjunction with the 2007 International Conference on Inductive Logic Programming",
+    "id": "beygelzimer2009importance",
+    "issued": {
+      "date-parts": [
+        [
+          "2009",
+          6,
+          14
+        ]
+      ]
+    },
+    "language": "en",
+    "page": "49-56",
+    "publisher": "ACM",
+    "publisher-place": "Montreal Quebec Canada",
+    "source": "DOI.org (Crossref)",
+    "title": "Importance weighted active learning",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.18637/jss.v045.i03",
+    "ISSN": "1548-7660",
+    "URL": "http://www.jstatsoft.org/v45/i03/",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Buuren",
+        "given": "Stef Van"
+      },
+      {
+        "family": "Groothuis-Oudshoorn",
+        "given": "Karin"
+      }
+    ],
+    "container-title": "Journal of Statistical Software",
+    "id": "buuren2011mice",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          "2011"
+        ]
+      ]
+    },
+    "journalAbbreviation": "J. Stat. Soft.",
+    "language": "en",
+    "source": "DOI.org (Crossref)",
+    "title": "mice: Multivariate Imputation by Chained Equations in R",
+    "title-short": "<b>mice</b>",
+    "type": "article-journal",
+    "volume": "45"
+  },
+  {
+    "DOI": "10.1080/01621459.1959.10501501",
+    "ISSN": "0162-1459, 1537-274X",
+    "URL": "http://www.tandfonline.com/doi/abs/10.1080/01621459.1959.10501501",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Dalenius",
+        "given": "Tore"
+      },
+      {
+        "family": "Hodges",
+        "given": "Joseph L."
+      }
+    ],
+    "container-title": "Journal of the American Statistical Association",
+    "id": "dalenius1959minimum",
+    "issue": "285",
+    "issued": {
+      "date-parts": [
+        [
+          "1959",
+          3
+        ]
+      ]
+    },
+    "journalAbbreviation": "Journal of the American Statistical Association",
+    "language": "en",
+    "page": "88-101",
+    "source": "DOI.org (Crossref)",
+    "title": "Minimum Variance Stratification",
+    "type": "article-journal",
+    "volume": "54"
+  },
+  {
+    "DOI": "10.1080/01621459.1992.10475217",
+    "ISSN": "0162-1459, 1537-274X",
+    "URL": "https://www.tandfonline.com/doi/full/10.1080/01621459.1992.10475217",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Deville",
+        "given": "Jean-Claude"
+      },
+      {
+        "family": "Särndal",
+        "given": "Carl-Erik"
+      }
+    ],
+    "container-title": "Journal of the American Statistical Association",
+    "id": "deville1992calibration",
+    "issue": "418",
+    "issued": {
+      "date-parts": [
+        [
+          "1992",
+          6
+        ]
+      ]
+    },
+    "journalAbbreviation": "Journal of the American Statistical Association",
+    "language": "en",
+    "page": "376-382",
+    "source": "DOI.org (Crossref)",
+    "title": "Calibration Estimators in Survey Sampling",
+    "type": "article-journal",
+    "volume": "87"
+  },
+  {
+    "DOI": "10.1093/biomet/85.1.89",
+    "ISSN": "0006-3444, 1464-3510",
+    "URL": "https://academic.oup.com/biomet/article-lookup/doi/10.1093/biomet/85.1.89",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Deville",
+        "given": "J.-C."
+      },
+      {
+        "family": "Tillé",
+        "given": "Yves"
+      }
+    ],
+    "container-title": "Biometrika",
+    "id": "deville1998unequal",
+    "issue": "1",
+    "issued": {
+      "date-parts": [
+        [
+          "1998",
+          3,
+          1
+        ]
+      ]
+    },
+    "journalAbbreviation": "Biometrika",
+    "language": "en",
+    "page": "89-101",
+    "source": "DOI.org (Crossref)",
+    "title": "Unequal probability sampling without replacement through a splitting method",
+    "type": "article-journal",
+    "volume": "85"
+  },
+  {
+    "DOI": "10.1017/CBO9780511790942",
+    "ISBN": "978-0-521-86706-1",
+    "URL": "https://www.cambridge.org/core/product/identifier/9780511790942/type/book",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Gelman",
+        "given": "Andrew"
+      },
+      {
+        "family": "Hill",
+        "given": "Jennifer"
+      }
+    ],
+    "edition": "1",
+    "id": "gelman2006data",
+    "issued": {
+      "date-parts": [
+        [
+          "2006",
+          12,
+          18
+        ]
+      ]
+    },
+    "license": "https://www.cambridge.org/core/terms",
+    "publisher": "Cambridge University Press",
+    "source": "DOI.org (Crossref)",
+    "title": "Data Analysis Using Regression and Multilevel/Hierarchical Models",
+    "type": "book"
+  },
+  {
+    "DOI": "10.1093/poq/nfl033",
+    "ISSN": "1537-5331, 0033-362X",
+    "URL": "http://academic.oup.com/poq/article/70/5/646/4084443/Nonresponse-Rates-and-Nonresponse-Bias-in",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Groves",
+        "given": "Robert M."
+      }
+    ],
+    "container-title": "Public Opinion Quarterly",
+    "id": "groves2006nonresponse",
+    "issue": "5",
+    "issued": {
+      "date-parts": [
+        [
+          "2006"
+        ]
+      ]
+    },
+    "language": "en",
+    "page": "646-675",
+    "source": "DOI.org (Crossref)",
+    "title": "Nonresponse Rates and Nonresponse Bias in Household Surveys",
+    "type": "article-journal",
+    "volume": "70"
+  },
+  {
+    "DOI": "10.1080/01621459.1946.10501894",
+    "ISSN": "0162-1459, 1537-274X",
+    "URL": "http://www.tandfonline.com/doi/abs/10.1080/01621459.1946.10501894",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Hansen",
+        "given": "Morris H."
+      },
+      {
+        "family": "Hurwitz",
+        "given": "William N."
+      }
+    ],
+    "container-title": "Journal of the American Statistical Association",
+    "id": "hansen1946problem",
+    "issue": "236",
+    "issued": {
+      "date-parts": [
+        [
+          "1946",
+          12
+        ]
+      ]
+    },
+    "journalAbbreviation": "Journal of the American Statistical Association",
+    "language": "en",
+    "page": "517-529",
+    "source": "DOI.org (Crossref)",
+    "title": "The Problem of Non-Response in Sample Surveys",
+    "type": "article-journal",
+    "volume": "41"
+  },
+  {
+    "DOI": "10.1371/journal.pone.0200103",
+    "ISSN": "1932-6203",
+    "URL": "https://dx.plos.org/10.1371/journal.pone.0200103",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Heck",
+        "given": "Patrick R."
+      },
+      {
+        "family": "Simons",
+        "given": "Daniel J."
+      },
+      {
+        "family": "Chabris",
+        "given": "Christopher F."
+      }
+    ],
+    "container-title": "PLOS ONE",
+    "editor": [
+      {
+        "family": "Van Amelsvoort",
+        "given": "Therese"
+      }
+    ],
+    "id": "heck201865",
+    "issue": "7",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          7,
+          3
+        ]
+      ]
+    },
+    "journalAbbreviation": "PLoS ONE",
+    "language": "en",
+    "page": "e0200103",
+    "source": "DOI.org (Crossref)",
+    "title": "65% of Americans believe they are above average in intelligence: Results of two nationally representative surveys",
+    "title-short": "65% of Americans believe they are above average in intelligence",
+    "type": "article-journal",
+    "volume": "13"
+  },
+  {
+    "DOI": "10.2307/2344652",
+    "ISSN": "00359238",
+    "URL": "https://www.jstor.org/stable/10.2307/2344652?origin=crossref",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Holt",
+        "given": "D."
+      },
+      {
+        "family": "Smith",
+        "given": "T. M. F."
+      }
+    ],
+    "container-title": "Journal of the Royal Statistical Society. Series A (General)",
+    "id": "holt1979post",
+    "issue": "1",
+    "issued": {
+      "date-parts": [
+        [
+          "1979"
+        ]
+      ]
+    },
+    "journalAbbreviation": "Journal of the Royal Statistical Society. Series A (General)",
+    "page": "33",
+    "source": "DOI.org (Crossref)",
+    "title": "Post Stratification",
+    "type": "article-journal",
+    "volume": "142"
+  },
+  {
+    "DOI": "10.1111/insr.12290",
+    "ISSN": "0306-7734, 1751-5823",
+    "URL": "https://onlinelibrary.wiley.com/doi/10.1111/insr.12290",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Kim",
+        "given": "Jae Kwang"
+      },
+      {
+        "family": "Wang",
+        "given": "Zhonglei"
+      }
+    ],
+    "container-title": "International Statistical Review",
+    "id": "kim2019sampling",
+    "issue": "S1",
+    "issued": {
+      "date-parts": [
+        [
+          "2019",
+          5
+        ]
+      ]
+    },
+    "journalAbbreviation": "Int Statistical Rev",
+    "language": "en",
+    "source": "DOI.org (Crossref)",
+    "title": "Sampling Techniques for Big Data Analysis",
+    "type": "article-journal",
+    "volume": "87"
+  },
+  {
+    "DOI": "10.1002/9780470374597",
+    "ISBN": "978-0-470-04007-2",
+    "URL": "https://onlinelibrary.wiley.com/doi/book/10.1002/9780470374597",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Levy",
+        "given": "Paul S."
+      },
+      {
+        "family": "Lemeshow",
+        "given": "Stanley"
+      }
+    ],
+    "edition": "4",
+    "id": "levy2008sampling",
+    "issued": {
+      "date-parts": [
+        [
+          "2008",
+          7,
+          15
+        ]
+      ]
+    },
+    "language": "en",
+    "publisher": "Wiley",
+    "source": "DOI.org (Crossref)",
+    "title": "Sampling of Populations: Methods and Applications",
+    "title-short": "Sampling of Populations",
+    "type": "book"
+  },
+  {
+    "DOI": "10.1002/9781119482260",
+    "ISBN": "978-0-470-52679-8",
+    "URL": "https://onlinelibrary.wiley.com/doi/book/10.1002/9781119482260",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Little",
+        "given": "Roderick"
+      },
+      {
+        "family": "Rubin",
+        "given": "Donald"
+      }
+    ],
+    "collection-title": "Wiley Series in Probability and Statistics",
+    "edition": "3",
+    "id": "little2019statistical",
+    "issued": {
+      "date-parts": [
+        [
+          "2019",
+          4,
+          17
+        ]
+      ]
+    },
+    "language": "en",
+    "license": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "publisher": "Wiley",
+    "source": "DOI.org (Crossref)",
+    "title": "Statistical Analysis with Missing Data",
+    "type": "book"
+  },
+  {
+    "DOI": "10.1201/9780429298899",
+    "ISBN": "978-0-429-29889-9",
+    "URL": "https://www.taylorfrancis.com/books/9780429298899",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Lohr",
+        "given": "Sharon L."
+      }
+    ],
+    "edition": "3",
+    "id": "lohr2022sampling",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "language": "en",
+    "publisher": "Chapman and Hall/CRC",
+    "publisher-place": "Boca Raton",
+    "source": "DOI.org (Crossref)",
+    "title": "Sampling: Design and Analysis",
+    "title-short": "Sampling",
+    "type": "book"
+  },
+  {
+    "DOI": "10.18637/jss.v009.i08",
+    "ISSN": "1548-7660",
+    "URL": "http://www.jstatsoft.org/v09/i08/",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Lumley",
+        "given": "Thomas"
+      }
+    ],
+    "container-title": "Journal of Statistical Software",
+    "id": "lumley2004analysis",
+    "issue": "8",
+    "issued": {
+      "date-parts": [
+        [
+          "2004"
+        ]
+      ]
+    },
+    "journalAbbreviation": "J. Stat. Soft.",
+    "language": "en",
+    "source": "DOI.org (Crossref)",
+    "title": "Analysis of Complex Survey Samples",
+    "type": "article-journal",
+    "volume": "9"
+  },
+  {
+    "DOI": "10.1002/9780470580066",
+    "ISBN": "978-0-470-28430-8",
+    "URL": "https://onlinelibrary.wiley.com/doi/book/10.1002/9780470580066",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Lumley",
+        "given": "Thomas"
+      }
+    ],
+    "edition": "1",
+    "id": "lumley2010complex",
+    "issued": {
+      "date-parts": [
+        [
+          "2010",
+          2,
+          15
+        ]
+      ]
+    },
+    "language": "en",
+    "publisher": "Wiley",
+    "source": "DOI.org (Crossref)",
+    "title": "Complex Surveys: A Guide to Analysis Using R",
+    "title-short": "Complex Surveys",
+    "type": "book"
+  },
+  {
+    "DOI": "10.1214/18-AOAS1161SF",
+    "ISSN": "1932-6157, 1941-7330",
+    "URL": "https://projecteuclid.org/journals/annals-of-applied-statistics/volume-12/issue-2/Statistical-paradises-and-paradoxes-in-big-data-I--Law/10.1214/18-AOAS1161SF.full",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Meng",
+        "given": "Xiao-Li"
+      }
+    ],
+    "container-title": "The Annals of Applied Statistics",
+    "id": "meng2018statistical",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          "2018",
+          6,
+          1
+        ]
+      ]
+    },
+    "journalAbbreviation": "Ann. Appl. Stat.",
+    "page": "685-726",
+    "source": "DOI.org (Crossref)",
+    "title": "Statistical paradises and paradoxes in big data (I): Law of large populations, big data paradox, and the 2016 US presidential election",
+    "title-short": "Statistical paradises and paradoxes in big data (I)",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "DOI": "10.2307/2342192",
+    "ISSN": "09528385",
+    "URL": "https://www.jstor.org/stable/10.2307/2342192?origin=crossref",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Neyman",
+        "given": "Jerzy"
+      }
+    ],
+    "container-title": "Journal of the Royal Statistical Society",
+    "id": "neyman1934two",
+    "issue": "4",
+    "issued": {
+      "date-parts": [
+        [
+          "1934"
+        ]
+      ]
+    },
+    "journalAbbreviation": "Journal of the Royal Statistical Society",
+    "page": "558",
+    "source": "DOI.org (Crossref)",
+    "title": "On the Two Different Aspects of the Representative Method: The Method of Stratified Sampling and the Method of Purposive Selection",
+    "title-short": "On the Two Different Aspects of the Representative Method",
+    "type": "article-journal",
+    "volume": "97"
+  },
+  {
+    "DOI": "10.1080/01621459.1988.10478591",
+    "ISSN": "0162-1459, 1537-274X",
+    "URL": "https://www.tandfonline.com/doi/full/10.1080/01621459.1988.10478591",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Rao",
+        "given": "J. N. K."
+      },
+      {
+        "family": "Wu",
+        "given": "C. F. J."
+      }
+    ],
+    "container-title": "Journal of the American Statistical Association",
+    "id": "rao1988resampling",
+    "issue": "401",
+    "issued": {
+      "date-parts": [
+        [
+          "1988",
+          3
+        ]
+      ]
+    },
+    "journalAbbreviation": "Journal of the American Statistical Association",
+    "language": "en",
+    "page": "231-241",
+    "source": "DOI.org (Crossref)",
+    "title": "Resampling Inference with Complex Survey Data",
+    "type": "article-journal",
+    "volume": "83"
+  },
+  {
+    "DOI": "10.1093/biomet/63.3.581",
+    "ISSN": "0006-3444, 1464-3510",
+    "URL": "https://academic.oup.com/biomet/article-lookup/doi/10.1093/biomet/63.3.581",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Rubin",
+        "given": "Donald B."
+      }
+    ],
+    "container-title": "Biometrika",
+    "id": "rubin1976inference",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          "1976"
+        ]
+      ]
+    },
+    "journalAbbreviation": "Biometrika",
+    "language": "en",
+    "page": "581-592",
+    "source": "DOI.org (Crossref)",
+    "title": "Inference and missing data",
+    "type": "article-journal",
+    "volume": "63"
+  },
+  {
+    "DOI": "10.1002/9780470316696",
+    "ISBN": "978-0-471-08705-2",
+    "URL": "https://onlinelibrary.wiley.com/doi/book/10.1002/9780470316696",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Rubin",
+        "given": "Donald B."
+      }
+    ],
+    "collection-title": "Wiley Series in Probability and Statistics",
+    "edition": "1",
+    "id": "rubin1987multiple",
+    "issued": {
+      "date-parts": [
+        [
+          "1987",
+          6,
+          9
+        ]
+      ]
+    },
+    "language": "en",
+    "license": "http://doi.wiley.com/10.1002/tdm_license_1.1, http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "publisher": "Wiley",
+    "source": "DOI.org (Crossref)",
+    "title": "Multiple Imputation for Nonresponse in Surveys",
+    "type": "book"
+  },
+  {
+    "DOI": "10.1007/978-1-4612-4378-6",
+    "ISBN": "978-0-387-40620-6",
+    "URL": "http://link.springer.com/10.1007/978-1-4612-4378-6",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Särndal",
+        "given": "Carl-Erik"
+      },
+      {
+        "family": "Swensson",
+        "given": "Bengt"
+      },
+      {
+        "family": "Wretman",
+        "given": "Jan"
+      }
+    ],
+    "collection-title": "Springer Series in Statistics",
+    "id": "sarndal1992model",
+    "issued": {
+      "date-parts": [
+        [
+          "1992"
+        ]
+      ]
+    },
+    "license": "http://www.springer.com/tdm",
+    "publisher": "Springer New York",
+    "publisher-place": "New York, NY",
+    "source": "DOI.org (Crossref)",
+    "title": "Model Assisted Survey Sampling",
+    "type": "book"
+  },
+  {
+    "DOI": "10.2307/3798104",
+    "ISSN": "0022541X",
+    "URL": "https://www.jstor.org/stable/3798104?origin=crossref",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Siniff",
+        "given": "Donald B."
+      },
+      {
+        "family": "Skoog",
+        "given": "Ronald O."
+      }
+    ],
+    "container-title": "The Journal of Wildlife Management",
+    "id": "siniff1964aerial",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          "1964",
+          4
+        ]
+      ]
+    },
+    "journalAbbreviation": "The Journal of Wildlife Management",
+    "page": "391",
+    "source": "DOI.org (Crossref)",
+    "title": "Aerial Censusing of Caribou Using Stratified Random Sampling",
+    "type": "article-journal",
+    "volume": "28"
+  },
+  {
+    "DOI": "10.1086/269085",
+    "ISSN": "0033362X",
+    "URL": "https://academic.oup.com/poq/article-lookup/doi/10.1086/269085",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Squire",
+        "given": "Peverill"
+      }
+    ],
+    "container-title": "Public Opinion Quarterly",
+    "id": "squire1988why",
+    "issue": "1",
+    "issued": {
+      "date-parts": [
+        [
+          "1988"
+        ]
+      ]
+    },
+    "page": "125",
+    "source": "DOI.org (Crossref)",
+    "title": "Why the 1936 Literary Digest Poll Failed",
+    "type": "article-journal",
+    "volume": "52"
+  },
+  {
+    "DOI": "10.1002/9781118162934",
+    "ISBN": "978-0-470-40231-3",
+    "URL": "https://onlinelibrary.wiley.com/doi/book/10.1002/9781118162934",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Thompson",
+        "given": "Steven K."
+      }
+    ],
+    "collection-title": "Wiley Series in Probability and Statistics",
+    "edition": "1",
+    "id": "thompson2012sampling",
+    "issued": {
+      "date-parts": [
+        [
+          "2012",
+          2,
+          23
+        ]
+      ]
+    },
+    "language": "en",
+    "license": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "publisher": "Wiley",
+    "source": "DOI.org (Crossref)",
+    "title": "Sampling",
+    "type": "book"
+  },
+  {
+    "DOI": "10.1111/j.2517-6161.1953.tb00140.x",
+    "ISSN": "1369-7412, 1467-9868",
+    "URL": "https://academic.oup.com/jrsssb/article/15/2/253/7026606",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Yates",
+        "given": "F."
+      },
+      {
+        "family": "Grundy",
+        "given": "P. M."
+      }
+    ],
+    "container-title": "Journal of the Royal Statistical Society Series B: Statistical Methodology",
+    "id": "yates1953selection",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          "1953",
+          7,
+          1
+        ]
+      ]
+    },
+    "language": "en",
+    "license": "https://academic.oup.com/journals/pages/open_access/funder_policies/chorus/standard_publication_model",
+    "page": "253-261",
+    "source": "DOI.org (Crossref)",
+    "title": "Selection without Replacement from within Strata with Probability Proportional to Size",
+    "type": "article-journal",
+    "volume": "15"
+  },
+  {
+    "DOI": "10.1177/0894439319845102",
+    "ISSN": "0894-4393, 1552-8286",
+    "URL": "https://journals.sagepub.com/doi/10.1177/0894439319845102",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          10
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "Zhang",
+        "given": "Chan"
+      },
+      {
+        "family": "Antoun",
+        "given": "Christopher"
+      },
+      {
+        "family": "Yan",
+        "given": "H. Yanna"
+      },
+      {
+        "family": "Conrad",
+        "given": "Frederick G."
+      }
+    ],
+    "container-title": "Social Science Computer Review",
+    "id": "zhang2020professional",
+    "issue": "6",
+    "issued": {
+      "date-parts": [
+        [
+          "2020",
+          12
+        ]
+      ]
+    },
+    "journalAbbreviation": "Social Science Computer Review",
+    "language": "en",
+    "page": "703-719",
+    "source": "DOI.org (Crossref)",
+    "title": "Professional Respondents in Opt-in Online Panels: What Do We Really Know?",
+    "title-short": "Professional Respondents in Opt-in Online Panels",
+    "type": "article-journal",
+    "volume": "38"
+  }
+]

@@ -39,6 +39,22 @@ Paquetes disponibles en el R 4.4: `survey` 4.5, `sampling`, `TeachingSampling` 4
 | `anota_salidas.py` | reescribe la cadena | anota en cada grupo `#>` la salida real de SUS sentencias; aborta si no puede colocarla (ver el docstring: los dos estilos de anotación) |
 | `pruebas/prueba_anotador.py` | consola | regresión del anotador; la primera prueba es que no duplique una cadena intercalada |
 
+### Fuentes y citas
+
+Lo mismo que arriba, para las citas: **ninguna se escribe de memoria.** Qué es cada archivo de
+`bibliografia/` y el camino completo de una cita están en `bibliografia/README.md`.
+
+| Script | Produce | Notas |
+|---|---|---|
+| `inventario_citas.py` | `bibliografia/inventario_citas.json` | qué obras nombra hoy el sitio, y dónde; solo lee y solo cuenta |
+| `exporta_zotero.py` | `bibliografia/referencias.json`, `claves.json`, `zotero.lock.json` | el catálogo, leído de Zotero por su API local; aplica `enmiendas.yml`; `--comprobar` dice si el repo coincide con Zotero |
+| `extrae_fuente.py` | `bibliografia/ejemplares.yml` y el texto por página, **fuera de git** | la huella de cada ejemplar leído; `--registra CLAVE RUTA` |
+| `indexa_epub.py`, `indexa_pdf.py` | `bibliografia/indices/<clave>.json` | qué secciones, ejemplos, ejercicios, ecuaciones, tablas y páginas existen en un ejemplar; sin texto |
+| `genera_referencias.py` | reescribe `ensamblado/modulos/capN/*.html` | el texto visible de cada cita y, con `--pie capN`, el pie propio del capítulo; después hay que reensamblar |
+| `verifica_citas.py` | consola, `bibliografia/uso_fuentes.json` | el auditor de citas: catálogo, localizadores, edición, registro de contraste y pie; lo escrito a mano va contra una línea base que solo encoge |
+| `pruebas/prueba_citas.py` | consola | le inyecta 60 defectos al auditor y exige el código exacto de cada uno; usa pandoc |
+| `_fuentes.py`, `_contraste.py` | — | lo que comparten los anteriores: rutas, vocabulario de localizadores y el registro de contraste |
+
 ## Convenciones
 
 - Todo script empieza cargando `_comun.R`, que fija

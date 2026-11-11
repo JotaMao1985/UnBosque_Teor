@@ -14,6 +14,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pie_referencias  # noqa: E402
+
 # Se ejecuta desde la raíz del repositorio (la carpeta Muestreo/).
 RAIZ = Path(__file__).resolve().parent.parent
 PLANTILLA = RAIZ / "plantilla" / "plantilla-capitulo-muestreo.html"
@@ -115,6 +118,9 @@ def main():
         "\n  <script>\n    // ================================================================\n    // Configuración del capítulo",
         "los templates de los módulos")
     html = antes + modulos + despues
+
+    # El pie de referencias propio del capítulo, si ya se generó (si no, queda el de la plantilla).
+    html = pie_referencias.aplica(html, RAIZ / "ensamblado" / "modulos" / "cap1")
 
     # ---------------------------------------------------------------- courseData + datos
     datos = json.loads((RAIZ / "precalculo" / "salidas" / "cap1_datos.json").read_text(encoding="utf-8"))

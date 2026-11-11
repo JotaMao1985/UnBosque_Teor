@@ -1,0 +1,326 @@
+{
+  "norma": 1,
+  "curso": 20939,
+  "generado": "2026-11-10",
+  "obras": {
+    "arnold1991intraclutch": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "beygelzimer2009importance": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "buuren2011mice": {
+      "rol": "datos",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "dalenius1959minimum": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        4
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "deville1992calibration": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        3,
+        7
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 2
+    },
+    "deville1998unequal": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        6
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "gelman2006data": {
+      "rol": "complementaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        5
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "groves2006nonresponse": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "hansen1946problem": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "heck201865": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        1
+      ],
+      "citas": 0,
+      "afirmaciones": {
+        "pendiente": 2
+      },
+      "sin_marcar": 2
+    },
+    "holt1979post": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        4
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "kim2019sampling": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "levy2008sampling": {
+      "rol": "complementaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "little2019statistical": {
+      "rol": "complementaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 2
+    },
+    "lohr2022sampling": {
+      "rol": "basica",
+      "ejemplar": true,
+      "edicion_comprobada": "3.ª ed. (OPF del EPUB: © 2022, publicado 2021-09-21; Crossref: edición 3)",
+      "capitulos": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "citas": 4,
+      "afirmaciones": {
+        "respaldada": 4,
+        "pendiente": 3,
+        "con-matiz": 2
+      },
+      "sin_marcar": 135
+    },
+    "lumley2004analysis": {
+      "rol": "datos",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        1,
+        2,
+        3
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 4
+    },
+    "lumley2010complex": {
+      "rol": "complementaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        3,
+        4,
+        7
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 5
+    },
+    "meng2018statistical": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        1,
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 3
+    },
+    "neyman1934two": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        4
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "rao1988resampling": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        7
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "rubin1976inference": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "rubin1987multiple": {
+      "rol": "complementaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    },
+    "sarndal1992model": {
+      "rol": "basica",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 13
+    },
+    "siniff1964aerial": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "squire1988why": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        1
+      ],
+      "citas": 1,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "thompson2012sampling": {
+      "rol": "basica",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "yates1953selection": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
+    "zhang2020professional": {
+      "rol": "primaria",
+      "ejemplar": false,
+      "edicion_comprobada": null,
+      "capitulos": [
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 1
+    }
+  }
+}

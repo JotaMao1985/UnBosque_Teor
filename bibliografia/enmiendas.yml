@@ -1,0 +1,41 @@
+# Campos que el traductor de Zotero no trajo, o trajo mal, con la evidencia de cada uno.
+# Las aplica precalculo/exporta_zotero.py. Lo correcto a la larga es llevar el dato a
+# Zotero y borrar la enmienda: el guion avisa cuando una ya sobra.
+lohr2022sampling:
+  issued:
+    valor:
+      date-parts: [[2022]]
+    evidencia: "OPF del ejemplar: «© 2022 Sharon L. Lohr», publicado el 2021-09-21. Crossref da 2021."
+    consulta: 2026-11-10
+    nota: "Decisión de Javier del 2026-11-10: en todo el curso se cita el año de copyright, 2022."
+deville1998unequal:
+  author:
+    valor:
+      - {family: Deville, given: J.-C.}
+      - {family: Tillé, given: Yves}
+    evidencia: https://api.semanticscholar.org/graph/v1/paper/DOI:10.1093/biomet/85.1.89?fields=title,year,authors
+    consulta: 2026-11-10
+    nota: "Crossref y OpenAlex solo registran a Deville; Semantic Scholar registra a Deville y a Yves Tillé. Conviene confirmarlo en la primera página del artículo cuando haya ejemplar."
+buuren2011mice:
+  title:
+    valor: "mice: Multivariate Imputation by Chained Equations in R"
+    evidencia: https://api.crossref.org/works/10.18637/jss.v045.i03
+    consulta: 2026-11-10
+    nota: "El registro trae el título con marcas <b> e <i>; aquí va sin ellas."
+little2019statistical:
+  edition:
+    valor: "3"
+    evidencia: https://api.crossref.org/works/10.1002/9781119482260
+    consulta: 2026-11-10
+    nota: "El propio título del registro dice «Third Edition»; su campo de edición dice 1."
+  title:
+    valor: "Statistical Analysis with Missing Data"
+    evidencia: https://api.crossref.org/works/10.1002/9781119482260
+    consulta: 2026-11-10
+    nota: "Se quita «, Third Edition» del título para que la edición no salga dos veces en la referencia."
+levy2008sampling:
+  edition:
+    valor: "4"
+    evidencia: https://api.crossref.org/works/10.1111/j.1541-0420.2009.01247_13.x
+    consulta: 2026-11-10
+    nota: "Reseña en Biometrics 65 titulada «Sampling of Populations: Methods and Applications, 4th edition». El registro del libro dice edición 1."

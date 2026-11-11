@@ -9,11 +9,13 @@
 
 !/.gitignore
 !/README.md
+!/CLAUDE.md
 !/PLAN_Material_Muestreo.md
 !/sitio/
 !/plantilla/
 !/precalculo/
 !/ensamblado/
+!/bibliografia/
 !/CSV data sets for SDA 3e/
 !/*.Rmd
 
@@ -24,6 +26,10 @@
 # escaneado sería redistribución no autorizada, además de inflar el historial.
 *.pdf
 *.epub
+
+# Bibliografía (norma: Bosque 2026/Vault/Estandar/Capa de fuentes.md). Se versiona el
+# catálogo y la huella de cada ejemplar; nunca el ejemplar ni su texto extraído.
+bibliografia/_local/
 
 # macOS
 .DS_Store
