@@ -25,9 +25,13 @@
       "rol": "primaria",
       "ejemplar": true,
       "edicion_comprobada": "Entrega de julio-diciembre de 2009, por la portada: «(Released 05/12/2010) Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July-December 2009». El pie de cada página trae su número, y el de la primera es 1.",
-      "capitulos": [],
+      "capitulos": [
+        1
+      ],
       "citas": 0,
-      "afirmaciones": {},
+      "afirmaciones": {
+        "respaldada": 1
+      },
       "sin_marcar": 0
     },
     "buuren2011mice": {
@@ -250,8 +254,8 @@
       ],
       "citas": 4,
       "afirmaciones": {
-        "respaldada": 4,
-        "pendiente": 3,
+        "respaldada": 5,
+        "pendiente": 2,
         "con-matiz": 2
       },
       "sin_marcar": 135

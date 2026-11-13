@@ -167,17 +167,17 @@ afirmaciones:
 
 - id: c1-m1-13
   tipo: historica
-  afirmacion: El Digest llevaba veinte años acertando elecciones.
-  ancla: llevaba veinte años acertando elecciones
-  veredicto: pendiente
-  motivo: >-
-    Los dos verificadores (10 nov): «veinte años» no está en el libro. El ejemplo 1.1 (p. 3) dice que el
-    sondeo acertó en cinco elecciones seguidas (1916–1932), y la de 1916 solo cubrió cinco estados. La
-    cifra del material es una cuenta propia; conviene decir «cinco elecciones seguidas».
-  redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  afirmacion: El Digest había acertado las cinco elecciones anteriores.
+  ancla: había acertado las cinco elecciones anteriores
+  veredicto: respaldada
+  redactado_por: corrección de la Fase 2 (sesión maestra), 2026-11-13
+  verificado_por: lector FU de la auditoría del capítulo 1; el pasaje se rehízo por guion
+  fecha: 2026-11-13
   fuentes:
-  - {clave: lohr2022sampling, loc: ejemplo 1.1}
+  - clave: lohr2022sampling
+    loc: ejemplo 1.1
+    pagina: 3
+    hash_pasaje: c2dcae05f7167ad6
 
 # --- Módulo 1 · Shere Hite (1987) ------------------------------------------------------------
 - id: c1-m1-09
@@ -240,14 +240,18 @@ afirmaciones:
 - id: c1-m4-02
   tipo: dato
   afirmacion: >-
-    En 2009 el 24,5 % de los hogares de Estados Unidos solo tenía móvil y otro 2 % no tenía teléfono.
-  ancla: el 24,5 % de los hogares de Estados Unidos solo tenía móvil y otro 2 % no tenía teléfono
-  veredicto: pendiente
-  motivo: >-
-    genera_cap1.R lo atribuye a Blumberg y Luke (2010), que el material no cita en ningún sitio
-    visible y que no está en el catálogo ni tiene ejemplar.
-  redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+    En la segunda mitad de 2009 el 24,5 % de los hogares de Estados Unidos solo tenía móvil y otro
+    2,0 % no tenía teléfono.
+  ancla: el 24,5 % de los hogares de Estados
+  veredicto: respaldada
+  redactado_por: corrección de la Fase 2 (sesión maestra), 2026-11-13
+  verificado_por: lector FU de la auditoría del capítulo 1; el pasaje se rehízo por guion
+  fecha: 2026-11-13
+  fuentes:
+  - clave: blumberg2010wireless
+    loc: p. 3
+    pagina: 3
+    hash_pasaje: 920b4f30a2d780b3
 
 - id: c1-m4-03
   tipo: dato

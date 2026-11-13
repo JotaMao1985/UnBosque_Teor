@@ -9247,3 +9247,42 @@ consola, ni de KaTeX.
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Con esto la Fase 0 queda
 completa y sigue la Fase 1: la auditoría del capítulo con siete lectores.
 
+### T7.131 — La auditoría del capítulo 1 y la corrección de 40 errores (2026-11-13)
+
+Fase 1 y Fase 2 del plan del capítulo 1, en el mismo día.
+
+**La auditoría.** Siete lectores independientes —estadística, claridad, pedagogía, código, visual, fuentes y
+narrativa entre capítulos— sobre una copia congelada con su huella, sin ver lo que encontraban los demás ni los
+hallazgos previos de la sesión. **Cada hallazgo se rehízo aquí** antes de aceptarlo: con R, con el texto de los
+ejemplares, con el índice de localizadores o en el navegador. Resultado: **44 errores confirmados** en siete
+familias, más de cien mejoras y las dudas, en `PLAN_Auditoria_Cap1.md` (fuera de git). Tres defectos los vieron tres
+o cuatro lectores por separado. El informe trae además las nueve decisiones del Checkpoint 1.
+
+**Lo que destapó el lector de fuentes.** El par «1 293 669 / 972 897» que el curso presenta como el recuento del
+*Digest* **no está en el ejemplo 1.1**: es el título del artículo de la revista, en la lista de referencias, y
+cuando Lohr da un recuento (ejercicio 15.8) da otro par. Y «veinte años acertando» es, en la 3.ª edición, «cinco
+elecciones seguidas».
+
+**Las 40 correcciones.** Las cifras y los hechos (incluida la definición de sesgo de selección, los −99 como dato
+suprimido por confidencialidad y el ejemplo del árbol con la corrección por población finita); los **nueve
+localizadores de Lohr** y las **tres citas de Gutiérrez**, que apuntaban a secciones que no existen; Särndal sin
+localizador por no tener ejemplar; **las 13 apariciones de «Lohr (2021)» pasadas a 2022**; las promesas que el curso
+no cumplía (`BigLucy`, el entrevistador, los −99, el reparto de la calibración); nueve contradicciones internas; los
+dos ejercicios a los que les faltaba el dato que usa su solución; y las categorías de raza e ingreso del simulador,
+armonizadas, traducidas y ordenadas en el precálculo.
+
+**Una corrección de la auditoría misma.** El lector de estadística daba por errónea la cifra 29,6 de la
+autoevaluación porque 47,8 − 18,1 = 29,7. Al publicar el cálculo, el desvío exacto resultó ser 29,6: la cifra estaba
+bien y la resta partía de números ya redondeados. Se revirtió.
+
+**Verificado:** `verifica_bloques --prosa --todos` da **0 cifras sin respaldo** (las dos del árbol y el número de
+reclutados pasaron al precálculo); el código de las 12 páginas arranca con el R 4.4; reensamblar dos veces da el
+mismo archivo; el auditor de citas, el arnés, el contrato, el inventario y los ejemplares, en 0. Con el visto bueno
+de Javier, las 17 lecturas con el localizador corregido quedaron admitidas en la línea base, que se queda en 130
+defectos conocidos; migrarlas a citas marcadas es la Fase 3.
+
+**Queda pendiente** la decisión sobre el par de cifras del *Digest*, la celda que muestra 1,0 donde sin redondear es
+1,1, los `import` de los bloques de Python, las rutas del repositorio y todo lo visual y de plantilla.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

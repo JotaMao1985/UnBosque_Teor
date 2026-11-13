@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <p>Pongamos las dos encuestas de este capítulo una al lado de la otra. El <em>Literary Digest</em> recogió
+      <p>Pongamos el sondeo del <em>Literary Digest</em> al lado de una encuesta que nadie hizo: una muestra aleatoria de mil votantes. El <em>Literary Digest</em> recogió
         <strong>2 266 566</strong> papeletas y falló por <strong>19,3 puntos</strong>. Una muestra aleatoria de
         <strong>1 000</strong> personas falla, típicamente, por 1,5 —la cifra sale del cálculo que cierra este
         módulo—. Midiendo el error de las dos con la misma vara,
@@ -200,18 +200,17 @@
       <div class="note">
         <p><strong>Por qué esto no es un truco retórico.</strong> El cálculo es honesto en las dos direcciones: si el
           sondeo hubiera sido insesgado, su error estándar habría sido de 0,0003 —una precisión inalcanzable para
-          cualquier encuesta real—. Toda su ventaja de tamaño existía; simplemente estaba multiplicada por un factor
-          que no dependía del tamaño. Esa es la aritmética que hay que tener en la cabeza cada vez que alguien
+          cualquier encuesta real—. Toda su ventaja de tamaño existía; simplemente quedó enterrada bajo un sumando, el sesgo al cuadrado, que no dependía del tamaño. Esa es la aritmética que hay que tener en la cabeza cada vez que alguien
           presenta un conjunto de datos enorme como si el volumen fuera una garantía.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>sección 1.6</strong> — la clasificación del error total de encuesta que sigue el
-            árbol de este módulo; y <strong>sección 15.5</strong>, donde el ECM de una muestra no probabilística se
+          <li>Lohr (2022), <strong>sección 1.6</strong> — la clasificación del error total de encuesta que sigue el
+            árbol de este módulo; y <strong>sección 15.2</strong>, donde el ECM de una muestra no probabilística se
             desarrolla en general.</li>
-          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.4</strong> — la descomposición
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 2, sección 2.1.6</strong> — la descomposición
             $\text{ECM} = B^2 + V$ con la demostración completa.</li>
         </ul>
       </div>
@@ -233,8 +232,7 @@
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Conocer las dos poblaciones que aparecen en los ocho
-              capítulos, y ver por qué su forma condiciona todo lo que viene después.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Conocer las dos poblaciones que más se repiten en el curso, y ver por qué su forma condiciona todo lo que viene después.</p>
           </div>
         </div>
       </div>
@@ -297,8 +295,8 @@
 
       <div class="space-y-4">
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <h4 class="text-primary font-bold" style="margin-top:0;"><code>agpop</code> · 3 078 condados agrícolas</h4>
-          <p class="text-sm">Censo agrícola de Estados Unidos de 1992, con la superficie sembrada en 1992, 1987 y 1982,
+          <h4 class="text-primary font-bold" style="margin-top:0;"><code>agpop</code> · 3 078 condados y equivalentes</h4>
+          <p class="text-sm">Censo agrícola de Estados Unidos de 1992, con la superficie dedicada a explotaciones agrícolas en 1992, 1987 y 1982,
             el número de granjas y la región. Es el hilo conductor de Lohr y de este material.</p>
           <p class="text-sm" style="margin-bottom:0;">Su forma importa: coeficiente de variación <strong>1,38</strong>
             y asimetría <strong>5,32</strong>. Es una población fuertemente asimétrica, y eso tendrá tres
@@ -310,7 +308,7 @@
           <h4 class="text-primary font-bold" style="margin-top:0;"><code>BigLucy</code> · 85 296 empresas</h4>
           <p class="text-sm">La población sintética de <em>Estrategias de muestreo</em>, con ingresos, número de
             empleados, impuestos, nivel, zona y variables auxiliares. Aparece cuando el ejemplo viene de Gutiérrez, en
-            particular en el marco $\pi$ del capítulo 2 y en los diseños con probabilidades desiguales del capítulo 6.</p>
+            particular en el estratificado con probabilidades desiguales del capítulo 4 (módulo 9), en las dos etapas del capítulo 5 (módulos 7 y 8) y en el muestreo por importancia del capítulo 6 (módulo 10).</p>
           <p class="text-sm" style="margin-bottom:0;">Se instala con el paquete <code>TeachingSampling</code>, y su
             tamaño —28 veces <code>agpop</code>— la hace útil para ver comportamientos asintóticos sin esperar.</p>
         </div>
@@ -326,7 +324,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>ejemplo 2.5 y apéndice de datos</strong> — la descripción de <code>agpop</code> y de
+          <li>Lohr (2022), <strong>ejemplo 2.6</strong> — la descripción de <code>agpop</code>; al final del libro se describen
             las muestras derivadas.</li>
           <li>Gutiérrez, H.A. <em>TeachingSampling</em> —
             <a href="https://cran.r-project.org/package=TeachingSampling" target="_blank" rel="noopener">el paquete en
@@ -400,13 +398,13 @@
           <h4 class="text-primary font-bold" style="margin-top:0;">Un panel en línea como el de Mechanical Turk</h4>
           <p class="text-sm" style="margin-bottom:0;">Es el ejemplo del módulo 4, y sigue siendo la fuente de una
             fracción enorme de los datos de comportamiento que alimentan modelos hoy. Edad media 33,7 años frente a los
-            60,7 de una muestra probabilística de la misma población.</p>
+            60,7 de la encuesta telefónica de la misma población: ninguna de las dos es la población, y fallan hacia lados opuestos.</p>
         </div>
       </div>
 
       <div class="warning">
         <p><strong>Lo que sí ayuda, y lo que no.</strong> Ponderar por variables observables —lo que en encuestas se
-          llama postestratificación y calibración, capítulos 7 y 8— corrige la parte del sesgo que va por esas
+          llama postestratificación en el capítulo 4, calibración en el 7 y ajuste por no respuesta en el 8— corrige la parte del sesgo que va por esas
           variables, y nada más. El módulo 4 lo enseñó con datos: calibrar las dos encuestas por sexo, edad y raza no
           las acercó. Lo que de verdad ayuda es lo caro: conseguir una muestra probabilística, aunque sea pequeña, y
           usarla como referencia para medir cuánto se desvía la grande.</p>
@@ -423,7 +421,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>capítulo 15</strong> — muestras no probabilísticas: cuándo se pueden usar, qué
+          <li>Lohr (2022), <strong>capítulo 15</strong> — muestras no probabilísticas: cuándo se pueden usar, qué
             supuestos hacen falta y cómo se mide su error cuadrático medio.</li>
           <li>Meng, X.-L. (2018). «Statistical paradises and paradoxes in big data (I)». <em>The Annals of Applied
             Statistics</em> 12(2) — el resultado general del que el «tamaño efectivo» del módulo 7 es un caso

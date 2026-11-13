@@ -22,12 +22,16 @@
 #     las páginas del libro de Hite (804, 856, 810, 809).
 #
 #   Encuestas intell — Heck, Simons y Chabris (2018), PLOS ONE 13(7), vía Lohr 3.ª ed.,
-#     ejercicio 15.13 y la documentación del paquete SDAResources:
+#     ejercicio 15.5 (p. 546; NO el 15.13, que es de teoría: corregido en la
+#     auditoría del 2026-11-13) y la documentación del paquete SDAResources:
 #     Encuesta 1 (telefónica, RDD de línea fija, junio de 2009): 79 014 números
-#     marcados, 1 838 entrevistas completas; no se llamó a ningún móvil, y en 2009
-#     el 24,5 % de los hogares de EE. UU. solo tenía móvil y otro 2 % no tenía
-#     teléfono (Blumberg y Luke, 2010). Encuesta 2 (Mechanical Turk, julio-agosto de
-#     2011): 983 respondientes reclutados con un pago de 0,25 dólares.
+#     marcados —Heck los llama llamadas, y fueron automáticas—, 1 838 entrevistas
+#     completas; no se llamó a ningún móvil, y en la segunda mitad de 2009 el 24,5 %
+#     de los hogares de EE. UU. solo tenía móvil y otro 2,0 % no tenía teléfono
+#     (Blumberg y Luke, 2010, entrega de julio-diciembre de 2009, tabla 1, p. 6; en
+#     el primer semestre eran 22,7 % y 1,9 %). Encuesta 2 (Mechanical Turk,
+#     julio-agosto de 2011): 1 020 personas reclutadas, de las que 983 completaron
+#     la encuesta, con un pago de 0,25 dólares.
 #     Ítem: acuerdo con "I am more intelligent than the average person",
 #     1 = Strongly Agree, 2 = Mostly Agree, 3 = Mostly Disagree,
 #     4 = Strongly Disagree, 5 = Don't Know or Not Sure.
@@ -204,12 +208,45 @@ cat(sprintf("  contraste con el título del artículo (65 %%): %.1f %%\n", 100 *
 stopifnot(abs(100 * ag_te["con"] - 65) < 3)
 
 cv <- function(w) sd(w) / mean(w)
+# Los dos archivos codifican distinto las mismas categorías —la telefónica dice
+# «Black», «Hispanic», «Asian», «Other»; la del panel, «African American»,
+# «Hispanic American», «Asian American», «Another origin»— y escriben el tramo
+# medio de ingreso con y sin el segundo símbolo de dólar («$40-$80k» frente a
+# «$40-80k»). Sin armonizar, el simulador dibujaba cada categoría dos veces, con
+# una barra a cero: nueve niveles de raza y cinco de ingreso para cinco y cuatro
+# categorías reales (auditoría del capítulo 1, 2026-11-13). Se armonizan aquí, se
+# traducen y se ordenan como se leen: de menos a más, y el «sin dato» al final.
+ETIQUETAS <- list(
+  race = c("White" = "Blanca", "Black" = "Negra", "African American" = "Negra",
+           "Hispanic" = "Hispana", "Hispanic American" = "Hispana",
+           "Asian" = "Asiática", "Asian American" = "Asiática",
+           "Other" = "Otra", "Another origin" = "Otra"),
+  education = c("No College" = "Sin universidad", "Some College" = "Universidad parcial",
+                "College Grad" = "Universitario", "Grad School" = "Posgrado",
+                "MISSING" = "Sin dato"),
+  region = c("Northeast" = "Nordeste", "Midwest" = "Centro-Norte",
+             "South" = "Sur", "West" = "Oeste"),
+  income = c("<$40k" = "Menos de 40k $", "$40-$80k" = "De 40k a 80k $",
+             "$40-80k" = "De 40k a 80k $", ">$80k" = "Más de 80k $",
+             "MISSING" = "Sin dato")
+)
+ORDEN <- list(
+  race      = c("Blanca", "Negra", "Hispana", "Asiática", "Otra"),
+  education = c("Sin universidad", "Universidad parcial", "Universitario", "Posgrado", "Sin dato"),
+  region    = c("Nordeste", "Centro-Norte", "Sur", "Oeste"),
+  income    = c("Menos de 40k $", "De 40k a 80k $", "Más de 80k $", "Sin dato")
+)
+
 comp <- function(d, v) {
-  tb <- prop.table(table(d[[v]]))
+  x <- ETIQUETAS[[v]][as.character(d[[v]])]
+  if (any(is.na(x))) stop("sin etiqueta para: ", paste(unique(as.character(d[[v]])[is.na(x)]), collapse = ", "))
+  tb <- prop.table(table(x))
   setNames(as.numeric(tb), names(tb))
 }
 reparto <- function(v) {
-  niveles <- sort(union(names(comp(on, v)), names(comp(te, v))))
+  presentes <- union(names(comp(on, v)), names(comp(te, v)))
+  niveles <- ORDEN[[v]][ORDEN[[v]] %in% presentes]
+  stopifnot(setequal(niveles, presentes))
   a <- comp(on, v)[niveles]; b <- comp(te, v)[niveles]
   a[is.na(a)] <- 0; b[is.na(b)] <- 0
   list(niveles = niveles, online = 100 * as.numeric(a), tel = 100 * as.numeric(b))
@@ -219,7 +256,7 @@ intell <- list(
   documental = list(
     telNumeros = 79014, telEntrevistas = 1838,
     telSoloMovil = 24.5, telSinTelefono = 2.0,
-    onlineN = 983, onlinePago = 0.25,
+    onlineN = 983, onlineReclutados = 1020, onlinePago = 0.25,
     escala = c("Muy de acuerdo", "Bastante de acuerdo", "Bastante en desacuerdo",
                "Muy en desacuerdo", "No sé / no estoy seguro")
   ),
@@ -427,7 +464,13 @@ errorTotal <- list(
   nEfectivo = n_efectivo,
   curva = curva_recm,
   # Para el simulador de descomposición sobre agpop: la varianza del MAS con fpc.
-  agpop = list(N = nrow(agpop), S2 = S2_agpop, media = media_marco)
+  agpop = list(N = nrow(agpop), S2 = S2_agpop, media = media_marco,
+    # El árbol del error compara dos tamaños sobre agpop. Las dos cifras salen de
+    # aquí, con la corrección por población finita que el propio módulo 7 escribe:
+    # sin ella el ejemplo decía 24 500 y «se parte por la mitad», y con ella ni la
+    # cifra ni la mitad son ciertas (auditoría del capítulo 1, 2026-11-13).
+    eeMedia300  = sqrt((1 - 300 / nrow(agpop)) * S2_agpop / 300),
+    eeMedia1200 = sqrt((1 - 1200 / nrow(agpop)) * S2_agpop / 1200))
 )
 
 # ===========================================================================

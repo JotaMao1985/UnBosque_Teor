@@ -3628,8 +3628,8 @@
 
       <h3>Caso 2 · <em>The Literary Digest</em> (1936)</h3>
 
-      <p><em>The Literary Digest</em> era una de las revistas más respetadas de Estados Unidos y llevaba veinte años
-        acertando elecciones. En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %. <span data-afirma="c1-m1-01">En 1936 envió
+      <p><em>The Literary Digest</em> era una de las revistas más respetadas de Estados Unidos y había acertado las cinco elecciones
+        anteriores. En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %. <span data-afirma="c1-m1-01">En 1936 envió
         <strong>diez millones de papeletas</strong> y le devolvieron <strong>más de 2,3 millones</strong>
         <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1)</span></cite></span>.</p>
 
@@ -3696,8 +3696,7 @@
           <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
             estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
             naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
-            resultado que se publicó. Recórrela —mucha no cobertura y poca no respuesta, o justo al revés— y el punto
-            negro sigue encima de ella: el sondeo sale idéntico en los dos casos.</p>
+            resultado que se publicó. Lleva el punto negro a un extremo —mucha no cobertura y poca no respuesta— y después al otro: mientras caiga sobre la curva, el sondeo sale idéntico en los dos casos.</p>
           <p><strong>Y ahí está la trampa.</strong> Si escenarios distintos producen el mismo dato observado, el dato no
             puede decirte en cuál estabas. Ninguna cantidad de papeletas arregla eso, porque no es un problema de ruido:
             la información no está. Lo que zanjó el caso no fue el resultado nacional, sino Allentown: allí el marco era
@@ -3778,7 +3777,7 @@ print(pd.Series({"p_C": p_C, "rho": rho, "p_estimado": p_hat,
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura &lt;- p_C - p                        # aunque contestaran todos
-sesgo_respuesta &lt;- p_hat - p_C                    # aunque el marco fuera perfecto
+sesgo_respuesta &lt;- p_hat - p_C                    # dentro de este marco       
 round(c(sesgo_cobertura    = sesgo_cobertura,
         sesgo_no_respuesta = sesgo_respuesta,
         suma               = sesgo_cobertura + sesgo_respuesta,
@@ -3793,7 +3792,7 @@ round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12)
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python"># Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura = p_C - p                 # aunque contestaran todos
-sesgo_respuesta = p_hat - p_C             # aunque el marco fuera perfecto
+sesgo_respuesta = p_hat - p_C             # dentro de este marco       
 print(pd.Series({"sesgo_cobertura": sesgo_cobertura,
                  "sesgo_no_respuesta": sesgo_respuesta,
                  "suma": sesgo_cobertura + sesgo_respuesta,
@@ -3820,7 +3819,7 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, S.L. (2021). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>sección 1.1 y ejemplo
+          <li>Lohr, S.L. (2022). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>sección 1.1 y ejemplo
             1.1</strong> — de ahí salen todas las cifras del <em>Digest</em> que se citan aquí, incluido el caso de
             Allentown.</li>
           <li>Lohr, S.L. (1999). <em>Sampling: Design and Analysis</em> (1.ª ed.), <strong>capítulo 1</strong> — el
@@ -3894,8 +3893,8 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
 
       <h3>La población del curso</h3>
 
-      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: los 3 078 condados agrícolas de Estados
-        Unidos en el censo agrícola de 1992. Tiene una propiedad que ninguna población real tiene en el trabajo diario
+      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: los 3 078 condados y equivalentes de Estados Unidos en el censo
+        agrícola de 1992. Tiene una propiedad que ninguna población real tiene en el trabajo diario
         y que la hace insustituible para aprender: <strong>está entera</strong>, así que cualquier estimación se puede
         comparar con la verdad. Aquí se presenta solo lo justo para trabajar con ella; su <em>forma</em> —muy
         asimétrica, y esa asimetría condiciona todos los diseños del curso— se mira en el módulo 8, que es donde
@@ -4005,16 +4004,19 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           $N = 3\,078$</strong>, sin excluir nada, que es lo que hace el texto guía. Conviene saber exactamente lo que
           eso cuesta: la media poblacional que se usa aquí es <strong>306 677</strong> acres, y la de los 3 059
           condados con dato válido sería 308 582, es decir, 1 905 acres —un 0,6 %— por encima. Todo lo demás del curso
-          es exacto para esa población; lo único que no lo es, es la superficie sembrada media de verdad. Los 19 códigos
-          <code>-99</code> son un caso de <em>no respuesta de ítem</em>, y se tratan en el capítulo 8.</p>
+          es exacto para esa población; lo único que no lo es, es la superficie media de verdad dedicada a explotaciones agrícolas. Los 19 códigos
+          <code>-99</code> no son un dato que falte porque alguien no contestara: el censo midió esos condados y el
+          dato se suprimió para no revelar los de explotaciones individuales. La no respuesta de ítem, que es otra
+          cosa, se trata en el capítulo 8 (módulos 5 y 6) y con otro archivo; estos 19 se quedan como están en todo
+          el curso.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>sección 1.2</strong> — población objetivo, marco, unidad de muestreo y de
+          <li>Lohr (2022), <strong>sección 1.2</strong> — población objetivo, marco, unidad de muestreo y de
             observación, con los ejemplos que se reutilizan en los ejercicios del módulo 10.</li>
-          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.2</strong> — la misma partición con la
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 2, sección 2.1.5</strong> — la misma partición con la
             notación $U$, $y_k$, $t_y$ que usa este material.</li>
         </ul>
       </div>
@@ -4091,10 +4093,9 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>secciones 1.3 y 1.6</strong> — qué hace buena a una muestra y por qué se muestrea en
+          <li>Lohr (2022), <strong>secciones 1.2 y 1.7</strong> — qué hace buena a una muestra y por qué se muestrea en
             vez de censar.</li>
-          <li>Särndal, Swensson y Wretman (1992). <em>Model Assisted Survey Sampling</em>, <strong>sección
-            1.3</strong> — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2.</li>
+          <li>Särndal, Swensson y Wretman (1992). <em>Model Assisted Survey Sampling</em> — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2.</li>
         </ul>
       </div>
     </div>
@@ -4123,9 +4124,12 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
 
       <div class="definition">
         <h4>Definición</h4>
-        <p style="margin-bottom:0;">Hay sesgo de selección cuando la probabilidad de que una unidad acabe observada
-          <strong>depende de su propio valor</strong> $y_k$. Da igual si esa dependencia la introduce el marco, la
-          unidad o el investigador: el efecto es el mismo y no lo corrige el tamaño de muestra.</p>
+        <p style="margin-bottom:0;">Hay sesgo de selección cuando las unidades acaban observadas con una
+          <strong>probabilidad distinta de la que el diseño pretendía</strong> —desconocida, o cero para una parte de
+          la población— y esa diferencia está relacionada con $y_k$. Que la probabilidad dependa de $y_k$ no es malo
+          en sí: el capítulo 6 la hace depender a propósito del tamaño de la unidad, y no hay sesgo porque se conoce y
+          el peso la compensa. Lo que sesga es que dependa <em>sin saberlo</em>. Da igual si la dependencia la
+          introduce el marco, la unidad o el investigador: el efecto es el mismo y no lo corrige el tamaño de muestra.</p>
       </div>
 
       <h3>Las tres formas</h3>
@@ -4135,8 +4139,8 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           <h4 class="text-primary font-bold" style="margin-top:0;">1 · No cobertura</h4>
           <p class="text-sm">El marco deja fuera parte de la población: esas unidades tienen probabilidad cero.</p>
           <p class="text-xs text-gray-500" style="margin-bottom:0;"><em>Ejemplo:</em> la encuesta telefónica de 2009 de
-            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de móvil. Ese año, el 24,5 % de
-            los hogares de Estados Unidos solo tenía móvil y otro 2 % no tenía teléfono: uno de cada cuatro hogares
+            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de móvil. En la segunda mitad de ese año, el 24,5 % de los hogares de Estados
+        Unidos solo tenía móvil y otro 2,0 % no tenía teléfono: uno de cada cuatro hogares
             estaba fuera del marco por construcción.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4166,7 +4170,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
 
       <p>En 2009 y 2011 se preguntó a adultos de Estados Unidos por su acuerdo con la frase «soy más inteligente que la
         persona promedio». La <strong>encuesta 1</strong> marcó 79 014 números de línea fija al azar y obtuvo 1 838
-        entrevistas. La <strong>encuesta 2</strong> reclutó a 983 voluntarios en Mechanical Turk pagando 0,25 dólares.
+        entrevistas. La <strong>encuesta 2</strong> reclutó en Mechanical Turk a 1 020 personas, de las que 983 completaron la encuesta, pagando 0,25 dólares.
         Las dos se calibraron después al censo de 2010 sobre las mismas ocho celdas de sexo, edad y raza.</p>
 
       <div class="definition">
@@ -4178,7 +4182,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         <p style="margin-bottom:0;"><strong>Calibrar</strong> es retocar esos pesos hasta que la muestra reproduzca
           unos totales que se conocen por otra vía: aquí, cuánta gente de cada sexo, edad y raza dice el censo de
           2010 que hay. De dónde salen los pesos cuando el diseño es probabilístico se construye en el capítulo 2;
-          cómo se calibran, en el capítulo 4 y en el 7. Para este módulo basta con saber qué prometen, porque lo que
+          cómo se calibran, en el capítulo 4 (módulo 10) y en el 7 (módulo 6). Para este módulo basta con saber qué prometen, porque lo que
           se va a comprobar es <strong>hasta dónde llega esa promesa</strong>.</p>
       </div>
 
@@ -4232,7 +4236,7 @@ print(pd.Series({"suma_tel": censo_tel.sum(), "suma_online": censo_online.sum(),
         </div>
       </div>
 
-      <p>Coinciden con una discrepancia máxima de 0,28 sobre 750, que es el redondeo de los pesos a tres decimales. Con
+      <p>Coinciden con una discrepancia máxima de 0,28 sobre 750, el tamaño que el censo asigna a esa celda en la escala del archivo, y se debe al redondeo de los pesos a tres decimales. Con
         el censo en la mano se puede ver a quién representa realmente cada muestra.</p>
 
       <div class="code-tabs">
@@ -4331,7 +4335,7 @@ print(pd.Series({"edad_telefonica": tel["age"].mean(),
             <span class="rotulo">La idea que se lleva</span>
             La ponderación arregla lo que mides, no lo que te falta. Antes de aceptar una estimación ponderada, pregunta
             siempre por qué variables se calibró y cuáles quedaron fuera. Es el mecanismo completo del capítulo 4
-            (postestratificación) y del 8 (ponderación por no respuesta).
+            (postestratificación, módulo 10) y del 8 (ponderación por no respuesta, módulos 3 y 4).
           </p>
         </div>
       </details>
@@ -4533,8 +4537,7 @@ print((pd.Series({
       </div>
 
       <div class="warning">
-        <p><strong>El resultado que sorprende a todo el mundo.</strong> Una tasa de respuesta del 10 % pareja en las
-          cuatro regiones da sesgo <strong>cero</strong>, exactamente el mismo que una del 60 %. Lo que sesga no es que
+        <p><strong>El resultado que sorprende a todo el mundo.</strong> Una tasa de respuesta del 10 % pareja en las cuatro regiones —y, dentro de cada región, sin relación con el tamaño del condado, que es lo que supone el simulador— da sesgo <strong>cero</strong>, exactamente el mismo que una del 60 %. Lo que sesga no es que
           falte gente: es que <em>falte de manera desigual</em>. Una tasa baja pero pareja destroza la varianza y deja
           intacta la insesgadez; una tasa alta pero desigual hace justo lo contrario. Por eso las agencias estadísticas
           vigilan las tasas <em>por subgrupo</em> y no solo la global.</p>
@@ -4580,13 +4583,13 @@ print((pd.Series({
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>sección 1.4</strong> — la tipología del sesgo de selección; y
-            <strong>sección 8.2</strong>, donde la fórmula del sesgo de no respuesta se demuestra en general.</li>
+          <li>Lohr (2022), <strong>sección 1.3</strong> — la tipología del sesgo de selección; y
+            <strong>sección 8.1</strong>, donde la fórmula del sesgo de no respuesta se obtiene como aproximación.</li>
           <li>Heck, P.R., Simons, D.J. y Chabris, C.F. (2018). «65 % of Americans believe they are above average in
             intelligence: Results of two nationally representative surveys».
             <a href="https://doi.org/10.1371/journal.pone.0200103" target="_blank" rel="noopener"><em>PLOS ONE</em>
             13(7)</a> — el artículo del que salen las dos encuestas de este módulo, de acceso abierto.</li>
-          <li>Lohr (2021), <strong>ejercicio 15.13</strong> — la comparación de las dos encuestas, planteada como
+          <li>Lohr (2022), <strong>ejercicio 15.5</strong> — la comparación de las dos encuestas, planteada como
             ejercicio sobre muestras no probabilísticas.</li>
         </ul>
       </div>
@@ -4647,15 +4650,14 @@ print((pd.Series({
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Memoria y telescopaje</h4>
           <p class="text-sm" style="margin-bottom:0;">Preguntar «¿cuántas veces en el último año?» produce respuestas
-            que arrastran hechos anteriores hacia el periodo de referencia. El error no es simétrico: se recuerda de
-            más, casi nunca de menos.</p>
+            que arrastran hechos anteriores hacia el periodo de referencia. El error va en las dos direcciones: se olvidan hechos que sí
+        ocurrieron y se arrastran al periodo otros anteriores.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">El entrevistador</h4>
           <p class="text-sm" style="margin-bottom:0;">El tono, el énfasis y hasta las características visibles de quien
             pregunta mueven las respuestas. Como cada entrevistador atiende a un grupo de unidades, su efecto se
-            comporta como un conglomerado: no solo sesga, también correlaciona respuestas dentro del grupo. El
-            capítulo 5 explica por qué eso además infla la varianza.</p>
+            comporta como un conglomerado: no solo sesga, también correlaciona respuestas dentro del grupo. El capítulo 5 (módulo 4) explica el mecanismo por el que unidades que comparten algo inflan la varianza —la correlación intraclase—; allí se aplica a conglomerados, no a entrevistadores.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">El modo de recolección</h4>
@@ -4676,10 +4678,10 @@ print((pd.Series({
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>sección 1.5</strong> y <strong>sección 16.3</strong> — el sesgo de medición y los
+          <li>Lohr (2022), <strong>sección 1.4</strong> y <strong>sección 16.3</strong> — el error de medición y los
             modelos de error de medición en encuestas.</li>
-          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.4</strong> — los errores ajenos al
-            muestreo en el marco de la teoría del error total.</li>
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 1</strong> — el mismo argumento desde la teoría de
+            diseños; la clasificación del error total es de este módulo, no suya.</li>
         </ul>
       </div>
     </div>
@@ -4748,8 +4750,7 @@ print((pd.Series({
         <h4><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Auditor de preguntas</h4>
         <p class="simulador-intro">Elige un ítem, marca los defectos que creas que tiene y comprueba tu diagnóstico. La
           reformulación aparece cuando estén todos identificados. No hay ningún porcentaje aquí, y es deliberado: el
-          efecto de una redacción concreta sobre una respuesta concreta no se puede leer de estos datos, y ponerle una
-          cifra inventada sería exactamente el error que este capítulo enseña a no cometer.</p>
+          efecto de una redacción concreta sobre una respuesta concreta no se puede medir sin un experimento que este material no tiene, y ponerle una cifra inventada sería exactamente el error que este capítulo enseña a no cometer.</p>
         <div class="simulador-controles"></div>
         <div class="warning" data-panel="original"></div>
         <div class="note" data-panel="corregida"></div>
@@ -4789,7 +4790,7 @@ print((pd.Series({
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>sección 1.5 y sección 16.2</strong> — redacción de preguntas y diseño de
+          <li>Lohr (2022), <strong>sección 1.5</strong> — redacción de preguntas y diseño de
             cuestionarios, con ejemplos de experimentos de redacción.</li>
           <li>Lohr (1999), <strong>capítulo 1</strong> — el análisis del cuestionario de Hite, de donde sale el primer
             ítem del auditor.</li>
@@ -4819,7 +4820,7 @@ print((pd.Series({
         </div>
       </div>
 
-      <p>Pongamos las dos encuestas de este capítulo una al lado de la otra. El <em>Literary Digest</em> recogió
+      <p>Pongamos el sondeo del <em>Literary Digest</em> al lado de una encuesta que nadie hizo: una muestra aleatoria de mil votantes. El <em>Literary Digest</em> recogió
         <strong>2 266 566</strong> papeletas y falló por <strong>19,3 puntos</strong>. Una muestra aleatoria de
         <strong>1 000</strong> personas falla, típicamente, por 1,5 —la cifra sale del cálculo que cierra este
         módulo—. Midiendo el error de las dos con la misma vara,
@@ -5096,18 +5097,17 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
       <div class="note">
         <p><strong>Por qué esto no es un truco retórico.</strong> El cálculo es honesto en las dos direcciones: si el
           sondeo hubiera sido insesgado, su error estándar habría sido de 0,0003 —una precisión inalcanzable para
-          cualquier encuesta real—. Toda su ventaja de tamaño existía; simplemente estaba multiplicada por un factor
-          que no dependía del tamaño. Esa es la aritmética que hay que tener en la cabeza cada vez que alguien
+          cualquier encuesta real—. Toda su ventaja de tamaño existía; simplemente quedó enterrada bajo un sumando, el sesgo al cuadrado, que no dependía del tamaño. Esa es la aritmética que hay que tener en la cabeza cada vez que alguien
           presenta un conjunto de datos enorme como si el volumen fuera una garantía.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>sección 1.6</strong> — la clasificación del error total de encuesta que sigue el
-            árbol de este módulo; y <strong>sección 15.5</strong>, donde el ECM de una muestra no probabilística se
+          <li>Lohr (2022), <strong>sección 1.6</strong> — la clasificación del error total de encuesta que sigue el
+            árbol de este módulo; y <strong>sección 15.2</strong>, donde el ECM de una muestra no probabilística se
             desarrolla en general.</li>
-          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.4</strong> — la descomposición
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 2, sección 2.1.6</strong> — la descomposición
             $\text{ECM} = B^2 + V$ con la demostración completa.</li>
         </ul>
       </div>
@@ -5129,8 +5129,7 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Conocer las dos poblaciones que aparecen en los ocho
-              capítulos, y ver por qué su forma condiciona todo lo que viene después.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Conocer las dos poblaciones que más se repiten en el curso, y ver por qué su forma condiciona todo lo que viene después.</p>
           </div>
         </div>
       </div>
@@ -5230,8 +5229,8 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
 
       <div class="space-y-4">
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <h4 class="text-primary font-bold" style="margin-top:0;"><code>agpop</code> · 3 078 condados agrícolas</h4>
-          <p class="text-sm">Censo agrícola de Estados Unidos de 1992, con la superficie sembrada en 1992, 1987 y 1982,
+          <h4 class="text-primary font-bold" style="margin-top:0;"><code>agpop</code> · 3 078 condados y equivalentes</h4>
+          <p class="text-sm">Censo agrícola de Estados Unidos de 1992, con la superficie dedicada a explotaciones agrícolas en 1992, 1987 y 1982,
             el número de granjas y la región. Es el hilo conductor de Lohr y de este material.</p>
           <p class="text-sm" style="margin-bottom:0;">Su forma importa: coeficiente de variación <strong>1,38</strong>
             y asimetría <strong>5,32</strong>. Es una población fuertemente asimétrica, y eso tendrá tres
@@ -5243,7 +5242,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           <h4 class="text-primary font-bold" style="margin-top:0;"><code>BigLucy</code> · 85 296 empresas</h4>
           <p class="text-sm">La población sintética de <em>Estrategias de muestreo</em>, con ingresos, número de
             empleados, impuestos, nivel, zona y variables auxiliares. Aparece cuando el ejemplo viene de Gutiérrez, en
-            particular en el marco $\pi$ del capítulo 2 y en los diseños con probabilidades desiguales del capítulo 6.</p>
+            particular en el estratificado con probabilidades desiguales del capítulo 4 (módulo 9), en las dos etapas del capítulo 5 (módulos 7 y 8) y en el muestreo por importancia del capítulo 6 (módulo 10).</p>
           <p class="text-sm" style="margin-bottom:0;">Se instala con el paquete <code>TeachingSampling</code>, y su
             tamaño —28 veces <code>agpop</code>— la hace útil para ver comportamientos asintóticos sin esperar.</p>
         </div>
@@ -5259,7 +5258,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>ejemplo 2.5 y apéndice de datos</strong> — la descripción de <code>agpop</code> y de
+          <li>Lohr (2022), <strong>ejemplo 2.6</strong> — la descripción de <code>agpop</code>; al final del libro se describen
             las muestras derivadas.</li>
           <li>Gutiérrez, H.A. <em>TeachingSampling</em> —
             <a href="https://cran.r-project.org/package=TeachingSampling" target="_blank" rel="noopener">el paquete en
@@ -5333,13 +5332,13 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           <h4 class="text-primary font-bold" style="margin-top:0;">Un panel en línea como el de Mechanical Turk</h4>
           <p class="text-sm" style="margin-bottom:0;">Es el ejemplo del módulo 4, y sigue siendo la fuente de una
             fracción enorme de los datos de comportamiento que alimentan modelos hoy. Edad media 33,7 años frente a los
-            60,7 de una muestra probabilística de la misma población.</p>
+            60,7 de la encuesta telefónica de la misma población: ninguna de las dos es la población, y fallan hacia lados opuestos.</p>
         </div>
       </div>
 
       <div class="warning">
         <p><strong>Lo que sí ayuda, y lo que no.</strong> Ponderar por variables observables —lo que en encuestas se
-          llama postestratificación y calibración, capítulos 7 y 8— corrige la parte del sesgo que va por esas
+          llama postestratificación en el capítulo 4, calibración en el 7 y ajuste por no respuesta en el 8— corrige la parte del sesgo que va por esas
           variables, y nada más. El módulo 4 lo enseñó con datos: calibrar las dos encuestas por sexo, edad y raza no
           las acercó. Lo que de verdad ayuda es lo caro: conseguir una muestra probabilística, aunque sea pequeña, y
           usarla como referencia para medir cuánto se desvía la grande.</p>
@@ -5356,7 +5355,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>capítulo 15</strong> — muestras no probabilísticas: cuándo se pueden usar, qué
+          <li>Lohr (2022), <strong>capítulo 15</strong> — muestras no probabilísticas: cuándo se pueden usar, qué
             supuestos hacen falta y cómo se mide su error cuadrático medio.</li>
           <li>Meng, X.-L. (2018). «Statistical paradises and paradoxes in big data (I)». <em>The Annals of Applied
             Statistics</em> 12(2) — el resultado general del que el «tamaño efectivo» del módulo 7 es un caso
@@ -5417,8 +5416,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
             Marijuana» informó de que <strong>más del 75 %</strong> de los lectores que participaron en una encuesta
             telefónica opinaba que la marihuana debía ser legal. La encuesta se anunció en la revista y los lectores
             debían llamar a un número 1-900 con un costo de 75 centavos. Describe población objetivo, marco, unidad de
-            muestreo y de observación, y las fuentes de sesgo. Después responde con la fórmula del módulo 4: si en la
-            población real el apoyo fuera del 30 %, ¿qué tendrían que opinar los que no llamaron?</p>
+            muestreo y de observación, y las fuentes de sesgo. Después responde con la fórmula del módulo 4: si en la población real el apoyo fuera del 30 % y hubiera llamado el 1 % de los lectores, ¿qué tendrían que opinar los que no llamaron?</p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e1-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -5579,7 +5577,7 @@ print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
               por los «no entregables»: ¿qué tipo de persona tiene una dirección desactualizada?</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap1-e3-sol" hidden>
-            <p><strong>Se retiene el 48,16 % del marco, y las tres pérdidas van en la misma dirección: hacia jurados
+            <p><strong>Se retiene el 48,16 % de las citaciones enviadas, y las tres pérdidas van en la misma dirección: hacia jurados
               más estables económicamente y con más arraigo residencial.</strong></p>
             <div class="code-tabs">
               <div class="code-tabs-nav" role="tablist" aria-label="El flujo de las citaciones, del marco a la muestra">
@@ -5693,7 +5691,7 @@ print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
             </div>
             <p>Si todos aceptan, los ocho primeros del directorio entran con certeza y los seis últimos no entran
               nunca. La suma da 8 —la identidad $\sum_U \pi_k = n$ se cumple, y en el capítulo 2 se demostrará que
-              siempre se cumple—, pero eso no salva nada: el requisito del módulo 3 es que <em>todas</em> las
+              se cumple en todo diseño de tamaño fijo—, pero eso no salva nada: el requisito del módulo 3 es que <em>todas</em> las
               $\pi_k$ sean positivas, y aquí seis no lo son. Ningún estimador puede ser insesgado para la población de
               los catorce.</p>
             <p style="margin-bottom:0;">Hay un segundo defecto, más sutil. Si <em>no</em> todos aceptan, quién entra
@@ -5707,9 +5705,7 @@ print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">5.</span>Un bibliotecario selecciona 100
             ubicaciones al azar en las estanterías, va a cada una y registra si el libro que está ahí necesita
-            reencuadernación. Identifica la unidad de muestreo y la de observación, y cuantifica el sesgo: si una
-            fracción $f$ de los libros está prestada y su tasa de necesidad de reencuadernación es la mitad de la de
-            los que están en el estante, ¿cuánto se sobreestima?</p>
+            reencuadernación. Identifica la unidad de muestreo y la de observación, y cuantifica el sesgo: si el 30 % de los libros que están en el estante necesita reencuadernación, una fracción $f$ de los libros está prestada y entre los prestados la tasa es la mitad, ¿cuánto se sobreestima?</p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -5786,7 +5782,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, S.L. (2021). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>capítulo 1
+          <li>Lohr, S.L. (2022). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>capítulo 1
             completo</strong> — es la lectura obligatoria de las semanas 1 y 2, y la fuente de los dos casos del
             módulo 1 y de los cinco ejercicios de este módulo.</li>
           <li>Gutiérrez, H.A. <em>Estrategias de muestreo: diseño de encuestas y estimación de parámetros</em>,
@@ -5798,7 +5794,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
             intelligence».
             <a href="https://doi.org/10.1371/journal.pone.0200103" target="_blank" rel="noopener"><em>PLOS ONE</em>
             13(7)</a> — las dos encuestas del módulo 4, con la metodología completa. Acceso abierto.</li>
-          <li>Lohr, S.L. (2021), <strong>capítulo 15</strong> — muestras no probabilísticas. Es la continuación
+          <li>Lohr, S.L. (2022), <strong>capítulo 15</strong> — muestras no probabilísticas. Es la continuación
             natural del módulo 9 y la referencia para el proyecto integrador.</li>
           <li>Lumley, T. <em>survey: Analysis of Complex Survey Samples</em> — la
             <a href="https://cran.r-project.org/package=survey" target="_blank" rel="noopener">documentación del
@@ -5840,7 +5836,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
     // semilla 2026. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP1 = {"meta":{"capitulo":1,"semilla":2026,"generado":"2026-07-27","r":"R 4.4.1","script":"precalculo/genera_cap1.R"},"digest":{"documental":{"enviadas":10000000,"devueltas":2300000,"landonSondeo":1293669,"rooseveltSondeo":972897,"prediccionLandon":54,"prediccionRoosevelt":41,"eleccionRoosevelt":61,"eleccionLandon":37,"tasaRespuesta":0.2266566},"pSondeo":0.42923833,"pEleccion":0.62244898,"sesgo":-0.19321065,"coberturaRef":0.55,"isoResultado":{"brecha":[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4],"rho":[0.4561583,0.46495662,0.47388402,0.48294337,0.49213761,0.50146977,0.51094298,0.52056047,0.53032555,0.54024166,0.55031231,0.56054116,0.57093195,0.58148857,0.59221502,0.60311543,0.61419406,0.62545532,0.63690377,0.64854411,0.6603812,0.67242009,0.68466596,0.69712422,0.70980042,0.72270035,0.73582997,0.74919547,0.76280328,0.77666003,0.79077263,0.80514822,0.81979423,0.83471836,0.84992861,0.86543328,0.881241,0.89736076,0.91380187,0.93057406,0.94768741]},"rhoSoloNoRespuesta":0.4561583,"brechaSoloCobertura":0.429357},"hite":{"enviados":100000,"tasa":0.045,"devueltos":4500,"muR":0.84,"cifras":[{"pct":84,"texto":"no están satisfechas emocionalmente con sus relaciones","pagina":804},{"pct":70,"texto":"casadas cinco o más años tienen relaciones fuera del matrimonio","pagina":856},{"pct":95,"texto":"reportan formas de acoso emocional y psicológico","pagina":810},{"pct":84,"texto":"reportan formas de condescendencia","pagina":809}],"inverso":{"mu":[0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.84],"muM":[0.06513089,0.11748691,0.16984293,0.22219895,0.27455497,0.37926702,0.48397906,0.5886911,0.69340314,0.84]}},"intell":{"documental":{"telNumeros":79014,"telEntrevistas":1838,"telSoloMovil":24.5,"telSinTelefono":2,"onlineN":983,"onlinePago":0.25,"escala":["Muy de acuerdo","Bastante de acuerdo","Bastante en desacuerdo","Muy en desacuerdo","No sé / no estoy seguro"]},"celdas":[{"celda":"Female · Young · Nonwhite","sexo":"Female","edad":"Young","raza":"Nonwhite","telN":47,"onlineN":116,"telPeso":1.213,"onlinePeso":0.491,"pctTel":2.55712731,"pctOnline":11.80061038,"pctCenso":7.5982255},{"celda":"Female · Young · White","sexo":"Female","edad":"Young","raza":"White","telN":114,"onlineN":312,"telPeso":1.192,"onlinePeso":0.435,"pctTel":6.20239391,"pctOnline":31.73957274,"pctCenso":18.10821406},{"celda":"Female · Old · Nonwhite","sexo":"Female","edad":"Old","raza":"Nonwhite","telN":112,"onlineN":14,"telPeso":0.509,"onlinePeso":4.072,"pctTel":6.09357998,"pctOnline":1.4242116,"pctCenso":7.60149235},{"celda":"Female · Old · White","sexo":"Female","edad":"Old","raza":"White","telN":878,"onlineN":135,"telPeso":0.155,"onlinePeso":1.006,"pctTel":47.76931447,"pctOnline":13.73346897,"pctCenso":18.12768182},{"celda":"Male · Young · Nonwhite","sexo":"Male","edad":"Young","raza":"Nonwhite","telN":27,"onlineN":81,"telPeso":1.994,"onlinePeso":0.665,"pctTel":1.46898803,"pctOnline":8.24008138,"pctCenso":7.18060211},{"celda":"Male · Young · White","sexo":"Male","edad":"Young","raza":"White","telN":93,"onlineN":254,"telPeso":1.38,"onlinePeso":0.505,"pctTel":5.05984766,"pctOnline":25.83926755,"pctCenso":17.1082914},{"celda":"Male · Old · Nonwhite","sexo":"Male","edad":"Old","raza":"Nonwhite","telN":89,"onlineN":8,"telPeso":0.605,"onlinePeso":6.729,"pctTel":4.8422198,"pctOnline":0.8138352,"pctCenso":7.17886868},{"celda":"Male · Old · White","sexo":"Male","edad":"Old","raza":"White","telN":478,"onlineN":63,"telPeso":0.268,"onlinePeso":2.037,"pctTel":26.00652884,"pctOnline":6.40895219,"pctCenso":17.09662408}],"agree":{"tel":{"sinPesos":61.64309032,"conPesos":64.76448842},"online":{"sinPesos":67.54832146,"conPesos":65.62909813}},"noSe":{"tel":8.81392818,"online":15.86978637},"edadMedia":{"tel":60.74863983,"online":33.71414039},"cvPesos":{"tel":1.03299929,"online":1.03125185},"reparto":{"raza":{"niveles":["African American","Another origin","Asian","Asian American","Black","Hispanic","Hispanic American","Other","White"],"online":[7.52797558,2.4415056,0,6.71414039,0,0,5.59511699,0,77.72126144],"tel":[0,0,1.41458107,0,7.45375408,3.15560392,0,2.93797606,85.03808487]},"educacion":{"niveles":["College Grad","Grad School","MISSING","No College","Some College"],"online":[24.51678535,16.98880977,0.1017294,12.30925738,46.08341811],"tel":[16.32208923,20.23939064,0.81610446,26.11534276,36.50707291]},"region":{"niveles":["Midwest","Northeast","South","West"],"online":[22.38046796,19.63377416,36.41912513,21.56663276],"tel":[28.1828074,18.71599565,37.70402612,15.39717084]},"ingreso":{"niveles":["$40-$80k","$40-80k","<$40k",">$80k","MISSING"],"online":[0,32.34994914,51.0681587,16.58189217,0],"tel":[33.84113166,0,39.60826986,21.38193689,5.16866159]}},"escalaConteo":{"niveles":[1,2,3,4,5],"tel":[305,828,468,75,162],"online":[185,479,145,18,156]}},"agpop":{"N":3078,"media":306676.97141001,"mediaValidos":308582.41222622,"S2":180358776382.88388,"S":424686.68025132,"cv":1.38480134,"asimetria":5.32011371,"faltantes":{"acres92":19,"acres87":23,"acres82":17},"totalReal":943951718,"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"hist":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[476,494,367,317,264,192,191,122,104,98,69,57,44,39,31,12,22,16,8,11,10,6,9,8,8,8,8,9,6,6,1,7,5,3,4,4,4,2,3,33],"tope":2077248.03,"piso":-99},"histRegion":{"W":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[43,28,30,22,27,18,19,13,17,15,8,8,11,12,14,5,10,12,4,4,3,3,6,5,7,8,4,5,5,4,0,6,2,2,3,3,4,2,2,28],"tope":2077248.03,"piso":-99},"NC":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[56,70,86,138,152,120,122,75,55,34,30,26,19,12,9,5,8,2,2,5,6,1,3,3,1,0,3,4,1,0,0,1,1,1,0,1,0,0,0,2],"tope":2077248.03,"piso":-99},"S":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[295,333,217,135,73,51,48,32,32,49,31,23,14,15,8,2,4,2,2,2,1,2,0,0,0,0,1,0,0,2,1,0,2,0,1,0,0,0,1,3],"tope":2077248.03,"piso":-99},"NE":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[82,63,34,22,12,3,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"tope":2077248.03,"piso":-99}}},"biglucy":{"N":85296,"columnas":11,"nombres":["ID","Ubication","Level","Zone","Income","Employees","Taxes","SPAM","ISO","Years","Segments"],"ingresoMedio":429.50118411,"ingresoTotal":36634733,"cv":0.61905945,"asimetria":1.39622127,"empleadosMedio":63.21506284,"nivel":{"Big":2905,"Medium":25795,"Small":56596},"zona":{"County1":614,"County10":330,"County100":330,"County11":614,"County12":1454,"County13":1948,"County14":446,"County15":330,"County16":614,"County17":1454,"County18":1948,"County19":446,"County2":1454,"County20":330,"County21":614,"County22":1454,"County23":1948,"County24":446,"County25":330,"County26":614,"County27":1454,"County28":1948,"County29":446,"County3":1948,"County30":330,"County31":614,"County32":1454,"County33":1948,"County34":446,"County35":330,"County36":614,"County37":1454,"County38":1948,"County39":446,"County4":446,"County40":330,"County41":614,"County42":1454,"County43":1948,"County44":446,"County45":330,"County46":614,"County47":1454,"County48":1948,"County49":446,"County5":330,"County50":330,"County51":614,"County52":1454,"County53":1948,"County54":446,"County55":330,"County56":614,"County57":1454,"County58":1948,"County59":446,"County6":614,"County60":330,"County61":614,"County62":1454,"County63":1948,"County64":446,"County65":330,"County66":614,"County67":1454,"County68":1948,"County69":446,"County7":1454,"County70":330,"County71":404,"County72":1320,"County73":1720,"County74":223,"County75":165,"County76":307,"County77":727,"County78":974,"County79":223,"County8":1948,"County80":165,"County81":307,"County82":727,"County83":974,"County84":223,"County85":165,"County86":307,"County87":727,"County88":974,"County89":223,"County9":446,"County90":165,"County91":307,"County92":727,"County93":974,"County94":223,"County95":165,"County96":614,"County97":1454,"County98":1948,"County99":446},"spam":60.89500094,"hist":{"centros":[17.9875,51.9625,85.9375,119.9125,153.8875,187.8625,221.8375,255.8125,289.7875,323.7625,357.7375,391.7125,425.6875,459.6625,493.6375,527.6125,561.5875,595.5625,629.5375,663.5125,697.4875,731.4625,765.4375,799.4125,833.3875,867.3625,901.3375,935.3125,969.2875,1003.2625,1037.2375,1071.2125,1105.1875,1139.1625,1173.1375,1207.1125,1241.0875,1275.0625,1309.0375,1343.0125],"conteo":[432,756,2880,4392,4464,4885,5005,4615,4408,4778,4349,4031,4606,4203,4472,2975,3290,3850,2625,2450,1680,1050,1225,1155,1085,700,595,700,490,525,350,245,420,210,105,105,70,35,175,910],"tope":1360,"piso":1}},"noRespuesta":{"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"escenarios":[{"nombre":"Todas al 60 %","region":["W","NC","S","NE"],"r":[0.6,0.6,0.6,0.6],"sesgo":5.82076609e-11},{"nombre":"Todas al 10 %","region":["W","NC","S","NE"],"r":[0.1,0.1,0.1,0.1],"sesgo":-5.82076609e-11},{"nombre":"Desiguales (el Oeste responde poco)","region":["W","NC","S","NE"],"r":[0.2,0.5,0.35,0.65],"sesgo":-30359.12446711}]},"errorTotal":{"p":0.62244898,"S2":0.23500625,"sesgoDigest":-0.19321065,"nDigest":2266566,"nMas":1000,"ecmDigest":0.03733046,"ecmMas":0.00023501,"recmDigest":0.19321092,"recmMas":0.01532991,"razonRecm":12.60352318,"nEfectivo":6.29529478,"curva":{"n":[10,13,16,20,25,32,40,50,63,79,100,126,158,200,251,316,398,501,631,794,1000,1259,1585,1995,2512,3162,3981,5012,6310,7943,10000,12589,15849,19953,25119,31623,39811,50119,63096,79433,100000,125893,158489,199526,251189,316228,398107,501187,630957,794328,1000000,1258925,1584893,1995262,2511886,3162278,3981072,5011872,6309573,7943282,10000000],"insesgado":[0.15329913,0.13445224,0.12119361,0.10839886,0.09695489,0.08569682,0.07664957,0.06855746,0.06107584,0.05454138,0.04847744,0.04318714,0.03856658,0.03427873,0.03059869,0.02727069,0.02429955,0.02165812,0.01929857,0.017204,0.01532991,0.0136624,0.01217657,0.01085346,0.0096723,0.00862102,0.00768323,0.00684753,0.00610274,0.00543936,0.00484774,0.0043206,0.00385069,0.00343191,0.00305871,0.00272608,0.00242962,0.0021654,0.00192992,0.00172004,0.00153299,0.00136628,0.0012177,0.00108528,0.00096725,0.00086206,0.00076832,0.00068476,0.0006103,0.00054393,0.00048477,0.00043206,0.00038507,0.00034319,0.00030587,0.00027261,0.00024296,0.00021654,0.00019299,0.000172,0.0001533],"sesgado":[0.24663937,0.23538853,0.22807509,0.22154157,0.21617263,0.21136296,0.20785936,0.20501337,0.20263419,0.20076135,0.19919944,0.1979785,0.19702217,0.1962279,0.1956186,0.19512572,0.1947327,0.19442076,0.19417206,0.19397508,0.19381786,0.1936931,0.19359397,0.19351525,0.1934526,0.19340289,0.19336336,0.19333195,0.19330701,0.1932872,0.19327146,0.19325895,0.19324902,0.19324113,0.19323486,0.19322988,0.19322593,0.19322279,0.19322029,0.19321831,0.19321673,0.19321548,0.19321449,0.1932137,0.19321307,0.19321257,0.19321218,0.19321187,0.19321162,0.19321142,0.19321126,0.19321113,0.19321104,0.19321096,0.19321089,0.19321084,0.1932108,0.19321077,0.19321075,0.19321073,0.19321071]},"agpop":{"N":3078,"S2":180358776382.88388,"media":306676.97141001}}};
+    const DATOS_CAP1 = {"meta":{"capitulo":1,"semilla":2026,"generado":"2026-11-13","r":"R 4.4.1","script":"precalculo/genera_cap1.R"},"digest":{"documental":{"enviadas":10000000,"devueltas":2300000,"landonSondeo":1293669,"rooseveltSondeo":972897,"prediccionLandon":54,"prediccionRoosevelt":41,"eleccionRoosevelt":61,"eleccionLandon":37,"tasaRespuesta":0.2266566},"pSondeo":0.42923833,"pEleccion":0.62244898,"sesgo":-0.19321065,"coberturaRef":0.55,"isoResultado":{"brecha":[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4],"rho":[0.4561583,0.46495662,0.47388402,0.48294337,0.49213761,0.50146977,0.51094298,0.52056047,0.53032555,0.54024166,0.55031231,0.56054116,0.57093195,0.58148857,0.59221502,0.60311543,0.61419406,0.62545532,0.63690377,0.64854411,0.6603812,0.67242009,0.68466596,0.69712422,0.70980042,0.72270035,0.73582997,0.74919547,0.76280328,0.77666003,0.79077263,0.80514822,0.81979423,0.83471836,0.84992861,0.86543328,0.881241,0.89736076,0.91380187,0.93057406,0.94768741]},"rhoSoloNoRespuesta":0.4561583,"brechaSoloCobertura":0.429357},"hite":{"enviados":100000,"tasa":0.045,"devueltos":4500,"muR":0.84,"cifras":[{"pct":84,"texto":"no están satisfechas emocionalmente con sus relaciones","pagina":804},{"pct":70,"texto":"casadas cinco o más años tienen relaciones fuera del matrimonio","pagina":856},{"pct":95,"texto":"reportan formas de acoso emocional y psicológico","pagina":810},{"pct":84,"texto":"reportan formas de condescendencia","pagina":809}],"inverso":{"mu":[0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.84],"muM":[0.06513089,0.11748691,0.16984293,0.22219895,0.27455497,0.37926702,0.48397906,0.5886911,0.69340314,0.84]}},"intell":{"documental":{"telNumeros":79014,"telEntrevistas":1838,"telSoloMovil":24.5,"telSinTelefono":2,"onlineN":983,"onlineReclutados":1020,"onlinePago":0.25,"escala":["Muy de acuerdo","Bastante de acuerdo","Bastante en desacuerdo","Muy en desacuerdo","No sé / no estoy seguro"]},"celdas":[{"celda":"Female · Young · Nonwhite","sexo":"Female","edad":"Young","raza":"Nonwhite","telN":47,"onlineN":116,"telPeso":1.213,"onlinePeso":0.491,"pctTel":2.55712731,"pctOnline":11.80061038,"pctCenso":7.5982255},{"celda":"Female · Young · White","sexo":"Female","edad":"Young","raza":"White","telN":114,"onlineN":312,"telPeso":1.192,"onlinePeso":0.435,"pctTel":6.20239391,"pctOnline":31.73957274,"pctCenso":18.10821406},{"celda":"Female · Old · Nonwhite","sexo":"Female","edad":"Old","raza":"Nonwhite","telN":112,"onlineN":14,"telPeso":0.509,"onlinePeso":4.072,"pctTel":6.09357998,"pctOnline":1.4242116,"pctCenso":7.60149235},{"celda":"Female · Old · White","sexo":"Female","edad":"Old","raza":"White","telN":878,"onlineN":135,"telPeso":0.155,"onlinePeso":1.006,"pctTel":47.76931447,"pctOnline":13.73346897,"pctCenso":18.12768182},{"celda":"Male · Young · Nonwhite","sexo":"Male","edad":"Young","raza":"Nonwhite","telN":27,"onlineN":81,"telPeso":1.994,"onlinePeso":0.665,"pctTel":1.46898803,"pctOnline":8.24008138,"pctCenso":7.18060211},{"celda":"Male · Young · White","sexo":"Male","edad":"Young","raza":"White","telN":93,"onlineN":254,"telPeso":1.38,"onlinePeso":0.505,"pctTel":5.05984766,"pctOnline":25.83926755,"pctCenso":17.1082914},{"celda":"Male · Old · Nonwhite","sexo":"Male","edad":"Old","raza":"Nonwhite","telN":89,"onlineN":8,"telPeso":0.605,"onlinePeso":6.729,"pctTel":4.8422198,"pctOnline":0.8138352,"pctCenso":7.17886868},{"celda":"Male · Old · White","sexo":"Male","edad":"Old","raza":"White","telN":478,"onlineN":63,"telPeso":0.268,"onlinePeso":2.037,"pctTel":26.00652884,"pctOnline":6.40895219,"pctCenso":17.09662408}],"agree":{"tel":{"sinPesos":61.64309032,"conPesos":64.76448842},"online":{"sinPesos":67.54832146,"conPesos":65.62909813}},"noSe":{"tel":8.81392818,"online":15.86978637},"edadMedia":{"tel":60.74863983,"online":33.71414039},"cvPesos":{"tel":1.03299929,"online":1.03125185},"reparto":{"raza":{"niveles":["Blanca","Negra","Hispana","Asiática","Otra"],"online":[77.72126144,7.52797558,5.59511699,6.71414039,2.4415056],"tel":[85.03808487,7.45375408,3.15560392,1.41458107,2.93797606]},"educacion":{"niveles":["Sin universidad","Universidad parcial","Universitario","Posgrado","Sin dato"],"online":[12.30925738,46.08341811,24.51678535,16.98880977,0.1017294],"tel":[26.11534276,36.50707291,16.32208923,20.23939064,0.81610446]},"region":{"niveles":["Nordeste","Centro-Norte","Sur","Oeste"],"online":[19.63377416,22.38046796,36.41912513,21.56663276],"tel":[18.71599565,28.1828074,37.70402612,15.39717084]},"ingreso":{"niveles":["Menos de 40k $","De 40k a 80k $","Más de 80k $","Sin dato"],"online":[51.0681587,32.34994914,16.58189217,0],"tel":[39.60826986,33.84113166,21.38193689,5.16866159]}},"escalaConteo":{"niveles":[1,2,3,4,5],"tel":[305,828,468,75,162],"online":[185,479,145,18,156]}},"agpop":{"N":3078,"media":306676.97141001,"mediaValidos":308582.41222622,"S2":180358776382.88388,"S":424686.68025132,"cv":1.38480134,"asimetria":5.32011371,"faltantes":{"acres92":19,"acres87":23,"acres82":17},"totalReal":943951718,"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"hist":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[476,494,367,317,264,192,191,122,104,98,69,57,44,39,31,12,22,16,8,11,10,6,9,8,8,8,8,9,6,6,1,7,5,3,4,4,4,2,3,33],"tope":2077248.03,"piso":-99},"histRegion":{"W":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[43,28,30,22,27,18,19,13,17,15,8,8,11,12,14,5,10,12,4,4,3,3,6,5,7,8,4,5,5,4,0,6,2,2,3,3,4,2,2,28],"tope":2077248.03,"piso":-99},"NC":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[56,70,86,138,152,120,122,75,55,34,30,26,19,12,9,5,8,2,2,5,6,1,3,3,1,0,3,4,1,0,0,1,1,1,0,1,0,0,0,2],"tope":2077248.03,"piso":-99},"S":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[295,333,217,135,73,51,48,32,32,49,31,23,14,15,8,2,4,2,2,2,1,2,0,0,0,0,1,0,0,2,1,0,2,0,1,0,0,0,1,3],"tope":2077248.03,"piso":-99},"NE":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[82,63,34,22,12,3,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"tope":2077248.03,"piso":-99}}},"biglucy":{"N":85296,"columnas":11,"nombres":["ID","Ubication","Level","Zone","Income","Employees","Taxes","SPAM","ISO","Years","Segments"],"ingresoMedio":429.50118411,"ingresoTotal":36634733,"cv":0.61905945,"asimetria":1.39622127,"empleadosMedio":63.21506284,"nivel":{"Big":2905,"Medium":25795,"Small":56596},"zona":{"County1":614,"County10":330,"County100":330,"County11":614,"County12":1454,"County13":1948,"County14":446,"County15":330,"County16":614,"County17":1454,"County18":1948,"County19":446,"County2":1454,"County20":330,"County21":614,"County22":1454,"County23":1948,"County24":446,"County25":330,"County26":614,"County27":1454,"County28":1948,"County29":446,"County3":1948,"County30":330,"County31":614,"County32":1454,"County33":1948,"County34":446,"County35":330,"County36":614,"County37":1454,"County38":1948,"County39":446,"County4":446,"County40":330,"County41":614,"County42":1454,"County43":1948,"County44":446,"County45":330,"County46":614,"County47":1454,"County48":1948,"County49":446,"County5":330,"County50":330,"County51":614,"County52":1454,"County53":1948,"County54":446,"County55":330,"County56":614,"County57":1454,"County58":1948,"County59":446,"County6":614,"County60":330,"County61":614,"County62":1454,"County63":1948,"County64":446,"County65":330,"County66":614,"County67":1454,"County68":1948,"County69":446,"County7":1454,"County70":330,"County71":404,"County72":1320,"County73":1720,"County74":223,"County75":165,"County76":307,"County77":727,"County78":974,"County79":223,"County8":1948,"County80":165,"County81":307,"County82":727,"County83":974,"County84":223,"County85":165,"County86":307,"County87":727,"County88":974,"County89":223,"County9":446,"County90":165,"County91":307,"County92":727,"County93":974,"County94":223,"County95":165,"County96":614,"County97":1454,"County98":1948,"County99":446},"spam":60.89500094,"hist":{"centros":[17.9875,51.9625,85.9375,119.9125,153.8875,187.8625,221.8375,255.8125,289.7875,323.7625,357.7375,391.7125,425.6875,459.6625,493.6375,527.6125,561.5875,595.5625,629.5375,663.5125,697.4875,731.4625,765.4375,799.4125,833.3875,867.3625,901.3375,935.3125,969.2875,1003.2625,1037.2375,1071.2125,1105.1875,1139.1625,1173.1375,1207.1125,1241.0875,1275.0625,1309.0375,1343.0125],"conteo":[432,756,2880,4392,4464,4885,5005,4615,4408,4778,4349,4031,4606,4203,4472,2975,3290,3850,2625,2450,1680,1050,1225,1155,1085,700,595,700,490,525,350,245,420,210,105,105,70,35,175,910],"tope":1360,"piso":1}},"noRespuesta":{"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"escenarios":[{"nombre":"Todas al 60 %","region":["W","NC","S","NE"],"r":[0.6,0.6,0.6,0.6],"sesgo":5.82076609e-11},{"nombre":"Todas al 10 %","region":["W","NC","S","NE"],"r":[0.1,0.1,0.1,0.1],"sesgo":-5.82076609e-11},{"nombre":"Desiguales (el Oeste responde poco)","region":["W","NC","S","NE"],"r":[0.2,0.5,0.35,0.65],"sesgo":-30359.12446711}]},"errorTotal":{"p":0.62244898,"S2":0.23500625,"sesgoDigest":-0.19321065,"nDigest":2266566,"nMas":1000,"ecmDigest":0.03733046,"ecmMas":0.00023501,"recmDigest":0.19321092,"recmMas":0.01532991,"razonRecm":12.60352318,"nEfectivo":6.29529478,"curva":{"n":[10,13,16,20,25,32,40,50,63,79,100,126,158,200,251,316,398,501,631,794,1000,1259,1585,1995,2512,3162,3981,5012,6310,7943,10000,12589,15849,19953,25119,31623,39811,50119,63096,79433,100000,125893,158489,199526,251189,316228,398107,501187,630957,794328,1000000,1258925,1584893,1995262,2511886,3162278,3981072,5011872,6309573,7943282,10000000],"insesgado":[0.15329913,0.13445224,0.12119361,0.10839886,0.09695489,0.08569682,0.07664957,0.06855746,0.06107584,0.05454138,0.04847744,0.04318714,0.03856658,0.03427873,0.03059869,0.02727069,0.02429955,0.02165812,0.01929857,0.017204,0.01532991,0.0136624,0.01217657,0.01085346,0.0096723,0.00862102,0.00768323,0.00684753,0.00610274,0.00543936,0.00484774,0.0043206,0.00385069,0.00343191,0.00305871,0.00272608,0.00242962,0.0021654,0.00192992,0.00172004,0.00153299,0.00136628,0.0012177,0.00108528,0.00096725,0.00086206,0.00076832,0.00068476,0.0006103,0.00054393,0.00048477,0.00043206,0.00038507,0.00034319,0.00030587,0.00027261,0.00024296,0.00021654,0.00019299,0.000172,0.0001533],"sesgado":[0.24663937,0.23538853,0.22807509,0.22154157,0.21617263,0.21136296,0.20785936,0.20501337,0.20263419,0.20076135,0.19919944,0.1979785,0.19702217,0.1962279,0.1956186,0.19512572,0.1947327,0.19442076,0.19417206,0.19397508,0.19381786,0.1936931,0.19359397,0.19351525,0.1934526,0.19340289,0.19336336,0.19333195,0.19330701,0.1932872,0.19327146,0.19325895,0.19324902,0.19324113,0.19323486,0.19322988,0.19322593,0.19322279,0.19322029,0.19321831,0.19321673,0.19321548,0.19321449,0.1932137,0.19321307,0.19321257,0.19321218,0.19321187,0.19321162,0.19321142,0.19321126,0.19321113,0.19321104,0.19321096,0.19321089,0.19321084,0.1932108,0.19321077,0.19321075,0.19321073,0.19321071]},"agpop":{"N":3078,"S2":180358776382.88388,"media":306676.97141001,"eeMedia300":23293.77229185,"eeMedia1200":9576.16241651}}};
 
     // ================================================================
     // Estado y elementos del DOM
@@ -8652,10 +8648,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
       intro: 'Pulsa cualquier nodo para ver su ficha. Lo que hay que retener de cada hoja son ' +
         'dos cosas: si desplaza la estimación o solo la dispersa, y si aumentar el tamaño de ' +
         'muestra sirve de algo.',
-      nota: 'De las nueve hojas, solo mejoran al aumentar $n$ las <strong>dos</strong> que cuelgan ' +
-        'del error de muestreo. Las otras siete no se mueven, y son las que hunden a las encuestas ' +
-        'que salen mal. Los capítulos 2 a 6 tratan de cómo hacer pequeñas las dos primeras con el ' +
-        'menor costo posible; los capítulos 7 y 8, de qué hacer con las otras siete.',
+      nota: 'De las nueve hojas, las <strong>dos</strong> que cuelgan del error de muestreo son las ' +
+        'únicas que se arreglan solo con más muestra. De las otras siete, lo sistemático no se mueve ' +
+        '—y es lo que hunde a las encuestas que salen mal—; la parte aleatoria del error de medición ' +
+        'sí se promedia, como explica el módulo 5. Los capítulos 2 a 7 tratan de cómo hacer pequeñas ' +
+        'las dos primeras con el menor costo posible y de cómo medirlas; de las otras siete, cinco se ' +
+        'tratan en este mismo capítulo (módulos 2, 4, 5 y 6) y las dos de no respuesta, en el ' +
+        'capítulo 8.',
       raiz: {
         etiqueta: 'Error total de encuesta',
         resumen: 'La distancia entre lo que publica la encuesta y el valor verdadero en la ' +
@@ -8672,7 +8671,8 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
               'muestra y se puede reducir pagando más unidades.',
             efecto: 'varianza', nAyuda: true, donde: 'Capítulos 2 a 7',
             ejemplo: 'con $n = 300$ sobre <code>agpop</code>, el error estándar de la media es ' +
-              'de unos 24 500 acres; con $n = 1\\,200$ se parte por la mitad.',
+              'de 23 294 acres; con $n = 1\\,200$ baja a 9 576, menos de la mitad, ' +
+            'porque además actúa la corrección por población finita.',
             hijos: [
               {
                 etiqueta: 'Varianza de diseño',
@@ -8698,7 +8698,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
             resumen: 'Todo lo demás. No lo produce el azar sino el procedimiento, no se estima ' +
               'de la muestra y <strong>no baja con $n$</strong>. Es donde se pierden casi todas ' +
               'las encuestas que salen mal.',
-            efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1, 7 y 8',
+            efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1 y 8',
             ejemplo: 'los 19,3 puntos del <em>Literary Digest</em>, con 2,3 millones de papeletas.',
             hijos: [
               {
@@ -8847,7 +8847,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         alto: 220,
         descripcionGrafico: 'Composición por sexo, edad y raza de la encuesta telefónica y del panel online, frente al censo de 2010',
         pregunta: 'Las barras grises son el censo de 2010. ¿Qué se puede afirmar de las dos encuestas?',
-        pista: 'Mira las cuatro celdas de la izquierda (menores de 44 años) y compáralas entre las tres series.',
+        pista: 'Mira las cuatro celdas rotuladas «&lt;44» y compáralas con las cuatro «≥44» en las tres series.',
         dibujar: canvas => {
           const c = DATOS_CAP1.intell.celdas;
           const CORTO = { Female: 'M', Male: 'H', Young: '<44', Old: '≥44',
@@ -8913,7 +8913,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           { texto: 'No tiene defecto: es una pregunta cerrada y clara.', correcta: false,
             retro: 'Piensa en alguien a quien le encanta el precio y le parece pésima la calidad. Cualquier cosa que conteste será una respuesta a otra pregunta.' },
           { texto: 'Produce error de muestreo, que baja al aumentar $n$.', correcta: false,
-            retro: 'Al contrario: con más respuestas se acumula el mismo defecto. El error de medición es sistemático, y ese es todo el punto del módulo 7.' }
+            retro: 'Al contrario: con más respuestas se acumula el mismo defecto. Una pregunta mal hecha desplaza todas las respuestas hacia el mismo lado, y eso es justo lo que el módulo 5 enseña que no se promedia.' }
         ]
       },
       {
@@ -8952,7 +8952,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: 'Un modelo se entrena con reseñas escritas por usuarios que decidieron escribirlas y se despliega sobre todos los compradores. ¿A qué se parece eso?',
         pista: 'Piensa en quién decide entrar en la muestra y en qué correlaciona con esa decisión.',
         opciones: [
-          { texto: 'A una muestra autoseleccionada: el conjunto de entrenamiento es el marco, y quien escribe una reseña no es una unidad cualquiera de la población de compradores.', correcta: true,
+          { texto: 'A una muestra autoseleccionada: el conjunto de entrenamiento es la muestra observada, y quien escribe una reseña no es una unidad cualquiera de la población de compradores.', correcta: true,
             retro: 'Correcto, y la fórmula del sesgo es literalmente la misma del módulo 4. Cambia el vocabulario —«datos de entrenamiento» en vez de «marco»— pero no la matemática.' },
           { texto: 'A un muestreo aleatorio simple, porque las reseñas llegan en orden aleatorio.', correcta: false,
             retro: 'El orden de llegada no tiene nada que ver con la probabilidad de inclusión. Lo que importa es <em>quién</em> decide escribir, y eso correlaciona con la satisfacción.' },

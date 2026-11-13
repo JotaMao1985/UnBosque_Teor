@@ -73,9 +73,9 @@
    "menciones": {
     "blumberg-luke-2010": 1,
     "heck-2018": 2,
-    "hite-1987": 3,
+    "hite-1987": 2,
     "literary-digest-1936": 2,
-    "lohr": 6,
+    "lohr": 5,
     "sdaresources": 1,
     "teachingsampling": 2
    },
@@ -387,7 +387,7 @@
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr, S.L. (2021). Sampling: Design and Analysis (3.ª ed.), sección 1.1 y ejemplo 1.1 — de ahí salen todas las cifras del Digest que se citan aquí, incluido el caso de Allentown."
+     "texto": "Lohr, S.L. (2022). Sampling: Design and Analysis (3.ª ed.), sección 1.1 y ejemplo 1.1 — de ahí salen todas las cifras del Digest que se citan aquí, incluido el caso de Allentown."
     },
     {
      "ediciones": [
@@ -428,19 +428,20 @@
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), sección 1.2 — población objetivo, marco, unidad de muestreo y de observación, con los ejemplos que se reutilizan en los ejercicios del módulo 10."
+     "texto": "Lohr (2022), sección 1.2 — población objetivo, marco, unidad de muestreo y de observación, con los ejemplos que se reutilizan en los ejercicios del módulo 10."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "sección 1.2"
+      "capítulo 2",
+      "sección 2.1.5"
      ],
      "modulo": 2,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, Estrategias de muestreo , sección 1.2 — la misma partición con la notación $U$, $y_k$, $t_y$ que usa este material."
+     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 2, sección 2.1.5 — la misma partición con la notación $U$, $y_k$, $t_y$ que usa este material."
     },
     {
      "ediciones": [
@@ -448,26 +449,25 @@
      ],
      "interna": false,
      "localizadores": [
-      "secciones 1.3 y 1.6"
+      "secciones 1.2 y 1.7"
      ],
      "modulo": 3,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), secciones 1.3 y 1.6 — qué hace buena a una muestra y por qué se muestrea en vez de censar."
+     "texto": "Lohr (2022), secciones 1.2 y 1.7 — qué hace buena a una muestra y por qué se muestrea en vez de censar."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "sección 1.3",
       "capítulo 2"
      ],
      "modulo": 3,
      "obras": [
       "sarndal-1992"
      ],
-     "texto": "Särndal, Swensson y Wretman (1992). Model Assisted Survey Sampling , sección 1.3 — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2."
+     "texto": "Särndal, Swensson y Wretman (1992). Model Assisted Survey Sampling — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2."
     },
     {
      "ediciones": [
@@ -475,14 +475,14 @@
      ],
      "interna": false,
      "localizadores": [
-      "sección 1.4",
-      "sección 8.2"
+      "sección 1.3",
+      "sección 8.1"
      ],
      "modulo": 4,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), sección 1.4 — la tipología del sesgo de selección; y sección 8.2 , donde la fórmula del sesgo de no respuesta se demuestra en general."
+     "texto": "Lohr (2022), sección 1.3 — la tipología del sesgo de selección; y sección 8.1 , donde la fórmula del sesgo de no respuesta se obtiene como aproximación."
     },
     {
      "ediciones": [],
@@ -500,13 +500,13 @@
      ],
      "interna": false,
      "localizadores": [
-      "ejercicio 15.13"
+      "ejercicio 15.5"
      ],
      "modulo": 4,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), ejercicio 15.13 — la comparación de las dos encuestas, planteada como ejercicio sobre muestras no probabilísticas."
+     "texto": "Lohr (2022), ejercicio 15.5 — la comparación de las dos encuestas, planteada como ejercicio sobre muestras no probabilísticas."
     },
     {
      "ediciones": [
@@ -514,26 +514,26 @@
      ],
      "interna": false,
      "localizadores": [
-      "sección 1.5",
+      "sección 1.4",
       "sección 16.3"
      ],
      "modulo": 5,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), sección 1.5 y sección 16.3 — el sesgo de medición y los modelos de error de medición en encuestas."
+     "texto": "Lohr (2022), sección 1.4 y sección 16.3 — el error de medición y los modelos de error de medición en encuestas."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "sección 1.4"
+      "capítulo 1"
      ],
      "modulo": 5,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, Estrategias de muestreo , sección 1.4 — los errores ajenos al muestreo en el marco de la teoría del error total."
+     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 1 — el mismo argumento desde la teoría de diseños; la clasificación del error total es de este módulo, no suya."
     },
     {
      "ediciones": [
@@ -541,14 +541,13 @@
      ],
      "interna": false,
      "localizadores": [
-      "sección 1.5",
-      "sección 16.2"
+      "sección 1.5"
      ],
      "modulo": 6,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), sección 1.5 y sección 16.2 — redacción de preguntas y diseño de cuestionarios, con ejemplos de experimentos de redacción."
+     "texto": "Lohr (2022), sección 1.5 — redacción de preguntas y diseño de cuestionarios, con ejemplos de experimentos de redacción."
     },
     {
      "ediciones": [
@@ -572,25 +571,26 @@
      "interna": false,
      "localizadores": [
       "sección 1.6",
-      "sección 15.5"
+      "sección 15.2"
      ],
      "modulo": 7,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), sección 1.6 — la clasificación del error total de encuesta que sigue el árbol de este módulo; y sección 15.5 , donde el ECM de una muestra no probabilística se desarrolla en general."
+     "texto": "Lohr (2022), sección 1.6 — la clasificación del error total de encuesta que sigue el árbol de este módulo; y sección 15.2 , donde el ECM de una muestra no probabilística se desarrolla en general."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "sección 1.4"
+      "capítulo 2",
+      "sección 2.1.6"
      ],
      "modulo": 7,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, Estrategias de muestreo , sección 1.4 — la descomposición $\\text{ECM} = B^2 + V$ con la demostración completa."
+     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 2, sección 2.1.6 — la descomposición $\\text{ECM} = B^2 + V$ con la demostración completa."
     },
     {
      "ediciones": [
@@ -598,14 +598,14 @@
      ],
      "interna": false,
      "localizadores": [
-      "ejemplo 2.5",
+      "ejemplo 2.6",
       "apéndice "
      ],
      "modulo": 8,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), ejemplo 2.5 y apéndice de datos — la descripción de agpop y de las muestras derivadas."
+     "texto": "Lohr (2022), ejemplo 2.6 — la descripción de agpop ; el apéndice de datos del libro describe las muestras derivadas."
     },
     {
      "ediciones": [],
@@ -629,7 +629,7 @@
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2021), capítulo 15 — muestras no probabilísticas: cuándo se pueden usar, qué supuestos hacen falta y cómo se mide su error cuadrático medio."
+     "texto": "Lohr (2022), capítulo 15 — muestras no probabilísticas: cuándo se pueden usar, qué supuestos hacen falta y cómo se mide su error cuadrático medio."
     },
     {
      "ediciones": [],
@@ -653,7 +653,7 @@
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr, S.L. (2021). Sampling: Design and Analysis (3.ª ed.), capítulo 1 completo — es la lectura obligatoria de las semanas 1 y 2, y la fuente de los dos casos del módulo 1 y de los cinco ejercicios de este módulo."
+     "texto": "Lohr, S.L. (2022). Sampling: Design and Analysis (3.ª ed.), capítulo 1 completo — es la lectura obligatoria de las semanas 1 y 2, y la fuente de los dos casos del módulo 1 y de los cinco ejercicios de este módulo."
     },
     {
      "ediciones": [],
@@ -689,7 +689,7 @@
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr, S.L. (2021), capítulo 15 — muestras no probabilísticas. Es la continuación natural del módulo 9 y la referencia para el proyecto integrador."
+     "texto": "Lohr, S.L. (2022), capítulo 15 — muestras no probabilísticas. Es la continuación natural del módulo 9 y la referencia para el proyecto integrador."
     },
     {
      "ediciones": [],

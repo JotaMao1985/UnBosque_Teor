@@ -58,8 +58,8 @@
 
       <h3>Caso 2 · <em>The Literary Digest</em> (1936)</h3>
 
-      <p><em>The Literary Digest</em> era una de las revistas más respetadas de Estados Unidos y llevaba veinte años
-        acertando elecciones. En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %. <span data-afirma="c1-m1-01">En 1936 envió
+      <p><em>The Literary Digest</em> era una de las revistas más respetadas de Estados Unidos y había acertado las cinco elecciones
+        anteriores. En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %. <span data-afirma="c1-m1-01">En 1936 envió
         <strong>diez millones de papeletas</strong> y le devolvieron <strong>más de 2,3 millones</strong>
         <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1)</span></cite></span>.</p>
 
@@ -126,8 +126,7 @@
           <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
             estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
             naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
-            resultado que se publicó. Recórrela —mucha no cobertura y poca no respuesta, o justo al revés— y el punto
-            negro sigue encima de ella: el sondeo sale idéntico en los dos casos.</p>
+            resultado que se publicó. Lleva el punto negro a un extremo —mucha no cobertura y poca no respuesta— y después al otro: mientras caiga sobre la curva, el sondeo sale idéntico en los dos casos.</p>
           <p><strong>Y ahí está la trampa.</strong> Si escenarios distintos producen el mismo dato observado, el dato no
             puede decirte en cuál estabas. Ninguna cantidad de papeletas arregla eso, porque no es un problema de ruido:
             la información no está. Lo que zanjó el caso no fue el resultado nacional, sino Allentown: allí el marco era
@@ -183,7 +182,7 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, S.L. (2021). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>sección 1.1 y ejemplo
+          <li>Lohr, S.L. (2022). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>sección 1.1 y ejemplo
             1.1</strong> — de ahí salen todas las cifras del <em>Digest</em> que se citan aquí, incluido el caso de
             Allentown.</li>
           <li>Lohr, S.L. (1999). <em>Sampling: Design and Analysis</em> (1.ª ed.), <strong>capítulo 1</strong> — el
@@ -257,8 +256,8 @@
 
       <h3>La población del curso</h3>
 
-      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: los 3 078 condados agrícolas de Estados
-        Unidos en el censo agrícola de 1992. Tiene una propiedad que ninguna población real tiene en el trabajo diario
+      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: los 3 078 condados y equivalentes de Estados Unidos en el censo
+        agrícola de 1992. Tiene una propiedad que ninguna población real tiene en el trabajo diario
         y que la hace insustituible para aprender: <strong>está entera</strong>, así que cualquier estimación se puede
         comparar con la verdad. Aquí se presenta solo lo justo para trabajar con ella; su <em>forma</em> —muy
         asimétrica, y esa asimetría condiciona todos los diseños del curso— se mira en el módulo 8, que es donde
@@ -300,16 +299,19 @@
           $N = 3\,078$</strong>, sin excluir nada, que es lo que hace el texto guía. Conviene saber exactamente lo que
           eso cuesta: la media poblacional que se usa aquí es <strong>306 677</strong> acres, y la de los 3 059
           condados con dato válido sería 308 582, es decir, 1 905 acres —un 0,6 %— por encima. Todo lo demás del curso
-          es exacto para esa población; lo único que no lo es, es la superficie sembrada media de verdad. Los 19 códigos
-          <code>-99</code> son un caso de <em>no respuesta de ítem</em>, y se tratan en el capítulo 8.</p>
+          es exacto para esa población; lo único que no lo es, es la superficie media de verdad dedicada a explotaciones agrícolas. Los 19 códigos
+          <code>-99</code> no son un dato que falte porque alguien no contestara: el censo midió esos condados y el
+          dato se suprimió para no revelar los de explotaciones individuales. La no respuesta de ítem, que es otra
+          cosa, se trata en el capítulo 8 (módulos 5 y 6) y con otro archivo; estos 19 se quedan como están en todo
+          el curso.</p>
       </div>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>sección 1.2</strong> — población objetivo, marco, unidad de muestreo y de
+          <li>Lohr (2022), <strong>sección 1.2</strong> — población objetivo, marco, unidad de muestreo y de
             observación, con los ejemplos que se reutilizan en los ejercicios del módulo 10.</li>
-          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>sección 1.2</strong> — la misma partición con la
+          <li>Gutiérrez, <em>Estrategias de muestreo</em>, <strong>capítulo 2, sección 2.1.5</strong> — la misma partición con la
             notación $U$, $y_k$, $t_y$ que usa este material.</li>
         </ul>
       </div>
@@ -386,10 +388,9 @@
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr (2021), <strong>secciones 1.3 y 1.6</strong> — qué hace buena a una muestra y por qué se muestrea en
+          <li>Lohr (2022), <strong>secciones 1.2 y 1.7</strong> — qué hace buena a una muestra y por qué se muestrea en
             vez de censar.</li>
-          <li>Särndal, Swensson y Wretman (1992). <em>Model Assisted Survey Sampling</em>, <strong>sección
-            1.3</strong> — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2.</li>
+          <li>Särndal, Swensson y Wretman (1992). <em>Model Assisted Survey Sampling</em> — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2.</li>
         </ul>
       </div>
     </div>

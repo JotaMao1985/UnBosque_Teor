@@ -522,10 +522,13 @@
       intro: 'Pulsa cualquier nodo para ver su ficha. Lo que hay que retener de cada hoja son ' +
         'dos cosas: si desplaza la estimación o solo la dispersa, y si aumentar el tamaño de ' +
         'muestra sirve de algo.',
-      nota: 'De las nueve hojas, solo mejoran al aumentar $n$ las <strong>dos</strong> que cuelgan ' +
-        'del error de muestreo. Las otras siete no se mueven, y son las que hunden a las encuestas ' +
-        'que salen mal. Los capítulos 2 a 6 tratan de cómo hacer pequeñas las dos primeras con el ' +
-        'menor costo posible; los capítulos 7 y 8, de qué hacer con las otras siete.',
+      nota: 'De las nueve hojas, las <strong>dos</strong> que cuelgan del error de muestreo son las ' +
+        'únicas que se arreglan solo con más muestra. De las otras siete, lo sistemático no se mueve ' +
+        '—y es lo que hunde a las encuestas que salen mal—; la parte aleatoria del error de medición ' +
+        'sí se promedia, como explica el módulo 5. Los capítulos 2 a 7 tratan de cómo hacer pequeñas ' +
+        'las dos primeras con el menor costo posible y de cómo medirlas; de las otras siete, cinco se ' +
+        'tratan en este mismo capítulo (módulos 2, 4, 5 y 6) y las dos de no respuesta, en el ' +
+        'capítulo 8.',
       raiz: {
         etiqueta: 'Error total de encuesta',
         resumen: 'La distancia entre lo que publica la encuesta y el valor verdadero en la ' +
@@ -542,7 +545,8 @@
               'muestra y se puede reducir pagando más unidades.',
             efecto: 'varianza', nAyuda: true, donde: 'Capítulos 2 a 7',
             ejemplo: 'con $n = 300$ sobre <code>agpop</code>, el error estándar de la media es ' +
-              'de unos 24 500 acres; con $n = 1\\,200$ se parte por la mitad.',
+              'de 23 294 acres; con $n = 1\\,200$ baja a 9 576, menos de la mitad, ' +
+            'porque además actúa la corrección por población finita.',
             hijos: [
               {
                 etiqueta: 'Varianza de diseño',
@@ -568,7 +572,7 @@
             resumen: 'Todo lo demás. No lo produce el azar sino el procedimiento, no se estima ' +
               'de la muestra y <strong>no baja con $n$</strong>. Es donde se pierden casi todas ' +
               'las encuestas que salen mal.',
-            efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1, 7 y 8',
+            efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1 y 8',
             ejemplo: 'los 19,3 puntos del <em>Literary Digest</em>, con 2,3 millones de papeletas.',
             hijos: [
               {
@@ -717,7 +721,7 @@
         alto: 220,
         descripcionGrafico: 'Composición por sexo, edad y raza de la encuesta telefónica y del panel online, frente al censo de 2010',
         pregunta: 'Las barras grises son el censo de 2010. ¿Qué se puede afirmar de las dos encuestas?',
-        pista: 'Mira las cuatro celdas de la izquierda (menores de 44 años) y compáralas entre las tres series.',
+        pista: 'Mira las cuatro celdas rotuladas «&lt;44» y compáralas con las cuatro «≥44» en las tres series.',
         dibujar: canvas => {
           const c = DATOS_CAP1.intell.celdas;
           const CORTO = { Female: 'M', Male: 'H', Young: '<44', Old: '≥44',
@@ -783,7 +787,7 @@
           { texto: 'No tiene defecto: es una pregunta cerrada y clara.', correcta: false,
             retro: 'Piensa en alguien a quien le encanta el precio y le parece pésima la calidad. Cualquier cosa que conteste será una respuesta a otra pregunta.' },
           { texto: 'Produce error de muestreo, que baja al aumentar $n$.', correcta: false,
-            retro: 'Al contrario: con más respuestas se acumula el mismo defecto. El error de medición es sistemático, y ese es todo el punto del módulo 7.' }
+            retro: 'Al contrario: con más respuestas se acumula el mismo defecto. Una pregunta mal hecha desplaza todas las respuestas hacia el mismo lado, y eso es justo lo que el módulo 5 enseña que no se promedia.' }
         ]
       },
       {
@@ -822,7 +826,7 @@
         pregunta: 'Un modelo se entrena con reseñas escritas por usuarios que decidieron escribirlas y se despliega sobre todos los compradores. ¿A qué se parece eso?',
         pista: 'Piensa en quién decide entrar en la muestra y en qué correlaciona con esa decisión.',
         opciones: [
-          { texto: 'A una muestra autoseleccionada: el conjunto de entrenamiento es el marco, y quien escribe una reseña no es una unidad cualquiera de la población de compradores.', correcta: true,
+          { texto: 'A una muestra autoseleccionada: el conjunto de entrenamiento es la muestra observada, y quien escribe una reseña no es una unidad cualquiera de la población de compradores.', correcta: true,
             retro: 'Correcto, y la fórmula del sesgo es literalmente la misma del módulo 4. Cambia el vocabulario —«datos de entrenamiento» en vez de «marco»— pero no la matemática.' },
           { texto: 'A un muestreo aleatorio simple, porque las reseñas llegan en orden aleatorio.', correcta: false,
             retro: 'El orden de llegada no tiene nada que ver con la probabilidad de inclusión. Lo que importa es <em>quién</em> decide escribir, y eso correlaciona con la satisfacción.' },

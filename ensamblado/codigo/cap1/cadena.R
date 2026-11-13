@@ -26,7 +26,7 @@ round(c(p_C = p_C, rho = rho, p_estimado = p_hat, p_publicado = p_obs), 5)
 cat("\n###BLOQUE-RP2###\n")
 # Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura <- p_C - p                        # aunque contestaran todos
-sesgo_respuesta <- p_hat - p_C                    # aunque el marco fuera perfecto
+sesgo_respuesta <- p_hat - p_C                    # dentro de este marco       
 round(c(sesgo_cobertura    = sesgo_cobertura,
         sesgo_no_respuesta = sesgo_respuesta,
         suma               = sesgo_cobertura + sesgo_respuesta,
