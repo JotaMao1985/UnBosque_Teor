@@ -1005,6 +1005,13 @@
       font-style: italic;
     }
 
+    /* Una cita del texto va en redonda. El navegador pone <cite> en cursiva, y
+       dentro de un párrafo eso se lee como énfasis y no como fuente. Lo dice la
+       hoja una vez para que el generador de citas no lo escriba en cada una. */
+    cite.cita {
+      font-style: normal;
+    }
+
     blockquote cite {
       display: block;
       margin-top: 1rem;
@@ -7637,6 +7644,13 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
             y: {
               suggestedMin: opciones.min !== undefined ? opciones.min : -1,
               suggestedMax: opciones.max !== undefined ? opciones.max : 1,
+              // Sin título, una barra no dice en qué está medida. Misma regla
+              // que el eje x: sin `tituloY`, no se dibuja.
+              title: {
+                display: !!opciones.tituloY,
+                text: opciones.tituloY,
+                font: { family: 'Montserrat', size: 11 }
+              },
               ticks: { font: { family: 'Fira Code', size: 11 } },
               grid: { color: 'rgba(148, 163, 184, 0.2)' }
             }

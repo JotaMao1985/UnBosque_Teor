@@ -67,9 +67,8 @@ RE_CITA = re.compile(
 RE_ATRIBUTO = re.compile(r'(data-[a-z]+)="([^"]*)"')
 RE_PIE = re.compile(r"<!--PIE-REFERENCIAS:inicio-->.*?<!--PIE-REFERENCIAS:fin-->", re.S)
 MODOS = ("parentesis", "narrativa", "suelta")
-# `<cite>` sale en cursiva en todos los navegadores y la plantilla aún no dice otra cosa. Hasta
-# que la plantilla lleve la regla `cite.cita { font-style: normal }`, la lleva cada cita.
-ESTILO = ' style="font-style:normal"'
+# La cursiva con que el navegador pinta `<cite>` la quita la regla `cite.cita` de la plantilla
+# (ensamblado/retropropaga_cita_y_eje_y.py, 2026-11-13). Hasta entonces la traía cada cita.
 
 
 class ErrorDeCita(Exception):
@@ -212,8 +211,8 @@ def rellena_citas(texto: str, biblioteca: dict[str, dict], con_pie: bool,
         visible = texto_cita(autores, anios, clave, via, a.get("data-loc", ""), modo)
         leida = via or clave
         titulo = plano(entradas[leida])
-        dentro = (f'<a class="cita-enlace" href="#pie-{leida}" title="{titulo}"{ESTILO}>{visible}</a>'
-                  if con_pie else f'<span title="{titulo}"{ESTILO}>{visible}</span>')
+        dentro = (f'<a class="cita-enlace" href="#pie-{leida}" title="{titulo}">{visible}</a>'
+                  if con_pie else f'<span title="{titulo}">{visible}</span>')
         return f'<cite{m.group("atributos")}>{dentro}</cite>'
 
     return RE_CITA.sub(cita, texto)

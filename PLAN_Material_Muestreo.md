@@ -9218,3 +9218,32 @@ el auditor de citas, el arnés, el contrato de fuentes y los cinco ejemplares, e
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.130 — La cita en redonda y el eje vertical con título, en la plantilla (2026-11-13)
+
+Cierra la Fase 0 del plan del capítulo 1. Las dos reglas salieron de la exploración del capítulo y Javier decidió
+arreglarlas «en la plantilla, para todos», no página a página.
+
+- **La cita va en redonda.** El navegador pinta `<cite>` en cursiva, y dentro de un párrafo eso se lee como énfasis y
+  no como fuente. Mientras la hoja no dijera otra cosa, el generador escribía `style="font-style:normal"` en cada
+  cita; ahora lo dice la hoja una vez y el generador dejó de escribirlo. Las cinco citas del capítulo 1 se
+  regeneraron sin él.
+- **`crearGraficoBarras` admite `tituloY`.** Admitía `tituloX` y no su pareja, así que cuatro gráficas del capítulo 1
+  muestran barras sin decir en qué están medidas. Ahora acepta el título del eje vertical con la misma tipografía y
+  la misma regla que el eje horizontal: sin título, no se dibuja nada. Ninguna gráfica lo usa todavía: titularlas es
+  la tanda de gráficas (fase 5). `crearGraficoXY` ya lo hacía bien; la excepción era la de barras.
+
+El guion es `ensamblado/retropropaga_cita_y_eje_y.py`, idempotente y con `--seco`. Alcanza a la plantilla, a las 12
+páginas publicadas y a la hoja del laboratorio πPT, que no sale de esta plantilla sino de `ensamblado/laboratorio_ppt/`:
+parchear su página publicada no habría servido, porque el siguiente ensamblado la habría devuelto a como estaba. Las
+dos portadas, que se editan a mano y no tienen gráficas, reciben solo la regla de la cita.
+
+**Verificado:** reensamblar las 12 páginas no cambia un solo byte respecto del parche, y correr el guion dos veces
+tampoco; las cinco citas salen en redonda en el navegador y sin estilo en línea; `tituloY` dibuja el título cuando se
+pasa y no dibuja nada cuando no; `verifica_bloques --prosa --todos` da 224 cifras respaldadas y ninguna sin respaldo;
+el código de las 12 páginas arranca con el R 4.4 del framework; `anota_salidas --check` no ve ninguna salida distinta;
+el auditor de citas, el arnés, el inventario y el catálogo, en 0; a 1280 y a 375 px no hay desborde, ni errores de
+consola, ni de KaTeX.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Con esto la Fase 0 queda
+completa y sigue la Fase 1: la auditoría del capítulo con siete lectores.
+

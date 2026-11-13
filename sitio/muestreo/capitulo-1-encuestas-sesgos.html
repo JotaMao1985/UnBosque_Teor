@@ -1005,6 +1005,13 @@
       font-style: italic;
     }
 
+    /* Una cita del texto va en redonda. El navegador pone <cite> en cursiva, y
+       dentro de un párrafo eso se lee como énfasis y no como fuente. Lo dice la
+       hoja una vez para que el generador de citas no lo escriba en cada una. */
+    cite.cita {
+      font-style: normal;
+    }
+
     blockquote cite {
       display: block;
       margin-top: 1rem;
@@ -3624,7 +3631,7 @@
       <p><em>The Literary Digest</em> era una de las revistas más respetadas de Estados Unidos y llevaba veinte años
         acertando elecciones. En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %. <span data-afirma="c1-m1-01">En 1936 envió
         <strong>diez millones de papeletas</strong> y le devolvieron <strong>más de 2,3 millones</strong>
-        <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899" style="font-style:normal">(Lohr, 2022, ejemplo 1.1)</span></cite></span>.</p>
+        <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1)</span></cite></span>.</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4" data-afirma="c1-m1-02">
         <div class="bg-red-50 p-3 rounded">
@@ -3635,7 +3642,7 @@
           <p class="font-bold text-center" style="margin:0;">Elección</p>
           <p class="text-center text-2xl font-bold" style="margin:0;">Roosevelt 61 % · Landon 37 %</p>
         </div>
-        <p class="md:col-span-2 text-sm text-center" style="margin:0;">Fuente: <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1" data-modo="narrativa"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899" style="font-style:normal">Lohr (2022, ejemplo 1.1)</span></cite></p>
+        <p class="md:col-span-2 text-sm text-center" style="margin:0;">Fuente: <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1" data-modo="narrativa"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, ejemplo 1.1)</span></cite></p>
       </div>
 
       <p>Roosevelt ganó 523 de los 531 votos electorales. La revista desapareció en 1938. El recuento del propio sondeo
@@ -3647,14 +3654,14 @@
         <h4>Las dos causas, y por qué hay que separarlas</h4>
         <p><strong>No cobertura.</strong> <span data-afirma="c1-m1-04">La lista se armó con guías de teléfono, registros de automóviles, listas de
           suscriptores y padrones electorales
-          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899" style="font-style:normal">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</span></cite></span>. En 1936, tener teléfono o coche era señal de estar por encima de la
+          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</span></cite></span>. En 1936, tener teléfono o coche era señal de estar por encima de la
           media, y la opinión sobre las políticas de Roosevelt dependía justamente de la posición económica.</p>
         <p style="margin-bottom:0;"><strong>No respuesta.</strong> <span data-afirma="c1-m1-05">Contestó menos de una cuarta parte de los
           solicitados</span>, y <span data-afirma="c1-m1-12">los partidarios de Landon devolvieron la papeleta con mucha más frecuencia
-          <cite class="cita" data-ref="squire1988why" data-via="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899" style="font-style:normal">(Squire, 1988, citado en Lohr, 2022, ejemplo 1.1)</span></cite></span>. <span data-afirma="c1-m1-06">En Allentown
+          <cite class="cita" data-ref="squire1988why" data-via="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Squire, 1988, citado en Lohr, 2022, ejemplo 1.1)</span></cite></span>. <span data-afirma="c1-m1-06">En Allentown
           (Pensilvania) la revista escribió a <em>todos</em> los votantes registrados —marco perfecto, cero no
           cobertura— y el resultado seguía siendo erróneo, porque solo devolvió la papeleta un tercio
-          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899" style="font-style:normal">(Lohr, 2022, ejemplo 1.1)</span></cite></span>.</p>
+          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><span title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1)</span></cite></span>.</p>
       </div>
 
       <p>El caso de Allentown es el que zanja el argumento: <strong>la no respuesta sola basta para arruinar una
@@ -6381,6 +6388,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
             y: {
               suggestedMin: opciones.min !== undefined ? opciones.min : -1,
               suggestedMax: opciones.max !== undefined ? opciones.max : 1,
+              // Sin título, una barra no dice en qué está medida. Misma regla
+              // que el eje x: sin `tituloY`, no se dibuja.
+              title: {
+                display: !!opciones.tituloY,
+                text: opciones.tituloY,
+                font: { family: 'Montserrat', size: 11 }
+              },
               ticks: { font: { family: 'Fira Code', size: 11 } },
               grid: { color: 'rgba(148, 163, 184, 0.2)' }
             }

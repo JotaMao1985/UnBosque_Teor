@@ -14,6 +14,8 @@ delimitadas sobre el capítulo anterior conserva todo lo demás intacto.
 
 - `ensambla_capN.py` — construye el capítulo N a partir del N−1.
 - `retropropaga_*.py` — lleva un componente nuevo a los capítulos ya hechos y a la plantilla.
+  El último, `retropropaga_cita_y_eje_y.py`, lleva además la regla `cite.cita` a la hoja del
+  laboratorio πPT, que no sale de esta plantilla: después hay que reensamblarlo.
   **Un componente no está terminado hasta que está en la plantilla y en los capítulos
   anteriores que lo necesiten.**
 - `componentes/` — el marcado y el CSS de cada componente, en un solo sitio.
