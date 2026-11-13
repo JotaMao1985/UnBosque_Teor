@@ -72,6 +72,15 @@
       "tipo": "journalArticle",
       "zotero": "PUH75CG6"
     },
+    "gutierrez2016estrategias": {
+      "adjuntos": [],
+      "etiquetas": [
+        "origen: portada"
+      ],
+      "rol": "complementaria",
+      "tipo": "book",
+      "zotero": "JB2554AB"
+    },
     "hansen1946problem": {
       "adjuntos": [],
       "etiquetas": [],
@@ -227,5 +236,5 @@
       "zotero": "MLZ63TEE"
     }
   },
-  "zotero": "10.0.6"
+  "zotero": "10.0.9"
 }

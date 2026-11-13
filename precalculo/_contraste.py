@@ -27,6 +27,11 @@ afirmación que exige fuente, en `bibliografia/contraste/capN.yml`.
         pagina: 1                  # página impresa del ejemplar donde está el pasaje
         hash_pasaje: 0c1d…         # huella del pasaje leído
 
+Si la obra se leyó en la web, la fuente lleva `instantanea: <nombre>` en lugar de `pagina`: el
+nombre de la página guardada con `extrae_fuente.py --web` (`bibliografia/instantaneas.yml` guarda
+su URL, la fecha de consulta y la huella del texto). El pasaje se busca entonces dentro de la
+sección que nombra el localizador.
+
 El repositorio es público, así que el pasaje literal NO va aquí: vive en
 `bibliografia/_local/pasajes.yml` (huella → texto), fuera de git, y en el registro queda el
 puntero —obra, localizador, página— y la huella. Con el corpus delante, el auditor busca el
@@ -159,8 +164,12 @@ def esquema(entradas: list[dict], nombre: str, capitulo: int) -> list[tuple[str,
             for campo in ("clave", "loc", "hash_pasaje"):
                 if not f.get(campo):
                     h.append(("R1", aqui, f"falta `{campo}`"))
-            if not isinstance(f.get("pagina"), int):
-                h.append(("R1", aqui, "falta `pagina` (la página impresa del pasaje, un entero)"))
+            con_pagina, con_web = isinstance(f.get("pagina"), int), bool(f.get("instantanea"))
+            if con_pagina and con_web:
+                h.append(("R1", aqui, "lleva `pagina` e `instantanea` a la vez: el pasaje se leyó en un sitio"))
+            elif not con_pagina and not con_web:
+                h.append(("R1", aqui, "falta `pagina` (la página impresa del pasaje, un entero) "
+                                      "o `instantanea` (si la obra se leyó en la web)"))
     return h
 
 
@@ -176,10 +185,97 @@ def _paginas_de_la_cita(cat, clave: str, loc: str) -> list[tuple[int, int]]:
     return tramos
 
 
+def seccion_de(texto: str, numero: str) -> str | None:
+    """El texto de la sección `numero` de una instantánea: de su encabezado al siguiente de su nivel.
+
+    None si el encabezado no está. Una instantánea suele ser un capítulo entero; sin esto «§1.3» y
+    «§1.4» serían indistinguibles y lo comprobado sería el capítulo, no el localizador.
+    """
+    lineas = texto.splitlines()
+    encabezado = re.compile(r"^(\d+(?:\.\d+)+)\s{1,4}\S")
+    inicio = next((i for i, l in enumerate(lineas)
+                   if (e := encabezado.match(l)) and e.group(1) == numero), None)
+    if inicio is None:
+        return None
+    fin = next((i for i in range(inicio + 1, len(lineas))
+                if (e := encabezado.match(lineas[i])) and not e.group(1).startswith(numero + ".")),
+               len(lineas))
+    return "\n".join(lineas[inicio:fin])
+
+
+def texto_de_instantanea(dir_bib: pathlib.Path, clave: str, nombre: str) -> tuple[str | None, str | None]:
+    """(texto, sha256 del archivo) de una instantánea web guardada, o (None, None)."""
+    ruta = dir_bib / "_local" / "web" / clave / f"{nombre}.txt"
+    if not ruta.is_file():
+        return None, None
+    crudo = ruta.read_bytes()
+    return crudo.decode("utf-8", "replace"), hashlib.sha256(crudo).hexdigest()
+
+
+def guarda_pasaje_web(dir_bib: pathlib.Path, clave: str, nombre: str, literal: str) -> str:
+    """Como `guarda_pasaje`, para una obra leída en la web."""
+    texto, _ = texto_de_instantanea(dir_bib, clave, nombre)
+    if texto is None:
+        raise SystemExit(f"FALLA  no hay instantánea «{nombre}» de «{clave}» en bibliografia/_local/web/")
+    if len(literal.split()) < MIN_PALABRAS_PASAJE:
+        raise SystemExit(f"FALLA  el pasaje tiene menos de {MIN_PALABRAS_PASAJE} palabras: no sirve de evidencia")
+    if normaliza(literal) not in normaliza(texto):
+        raise SystemExit(f"FALLA  el pasaje NO está en la instantánea «{nombre}» de «{clave}»")
+    ruta = dir_bib / "_local" / "pasajes.yml"
+    pasajes = F.lee_yaml(ruta)
+    pasajes[huella(literal)] = normaliza(literal)
+    F.escribe_yaml(ruta, pasajes, CABECERA_PASAJES)
+    return huella(literal)
+
+
+def evidencia_web(cat, dir_bib: pathlib.Path, f: dict, pasajes: dict[str, str], sin_corpus: bool,
+                  cuenta: dict) -> str | None:
+    """None si el pasaje está en la sección citada de la instantánea registrada; si no, por qué no."""
+    clave, nombre, sello = f["clave"], str(f["instantanea"]), f["hash_pasaje"]
+    registrada = (cat.instantaneas.get(clave) or {}).get(nombre)
+    if registrada is None:
+        return f"la instantánea «{nombre}» de «{clave}» no está en instantaneas.yml"
+    tabla = (cat.indices.get(clave) or {}).get("loc", {})
+    partes = str(f.get("loc") or "").split("; ")
+    ajenas = [p for p in partes if tabla.get(p) != nombre]
+    if ajenas:
+        return (f"«{ajenas[0]}» no está en la instantánea «{nombre}» de «{clave}»: "
+                "el pasaje y el localizador no casan")
+    literal = pasajes.get(sello)
+    texto, sha = texto_de_instantanea(dir_bib, clave, nombre)
+    if literal is None or texto is None:
+        cuenta["sin_corpus"] += 1
+        if sin_corpus:
+            return None
+        falta = "el pasaje" if literal is None else f"la instantánea «{nombre}»"
+        return (f"falta {falta} de «{clave}» en bibliografia/_local/: no comprobable aquí "
+                "(con --sin-corpus se informa y no falla)")
+    if sha != registrada.get("sha256"):
+        return (f"la instantánea «{nombre}» guardada no es la que se registró (huella distinta): "
+                "la página cambió o se volvió a bajar; hay que releer")
+    if huella(literal) != sello:
+        return "el pasaje guardado en _local/pasajes.yml no es el que se registró (huella distinta)"
+    if len(literal.split()) < MIN_PALABRAS_PASAJE:
+        return f"el pasaje tiene menos de {MIN_PALABRAS_PASAJE} palabras: no sirve de evidencia"
+    donde = []
+    for p in partes:
+        tramo = seccion_de(texto, p[1:]) if p.startswith("§") else texto
+        if tramo is not None:
+            donde.append(tramo)
+    if not any(normaliza(literal) in normaliza(t) for t in donde):
+        return f"el pasaje NO está en «{f.get('loc')}» de la instantánea «{nombre}» de «{clave}»"
+    cuenta["comprobadas"] += 1
+    return None
+
+
 def evidencia(cat, dir_bib: pathlib.Path, f: dict, pasajes: dict[str, str], sin_corpus: bool,
               cuenta: dict) -> str | None:
     """None si el pasaje registrado está en esa página del ejemplar; si no, por qué no."""
     clave, pagina, sello = f.get("clave"), f.get("pagina"), f.get("hash_pasaje")
+    if f.get("instantanea"):
+        if isinstance(pagina, int) or not (clave and sello):
+            return None                              # ya lo dijo el esquema
+        return evidencia_web(cat, dir_bib, f, pasajes, sin_corpus, cuenta)
     if not (clave and isinstance(pagina, int) and sello):
         return None                                  # ya lo dijo el esquema
     tramos = _paginas_de_la_cita(cat, clave, f.get("loc") or "")

@@ -88,6 +88,24 @@
       "afirmaciones": {},
       "sin_marcar": 1
     },
+    "gutierrez2016estrategias": {
+      "rol": "complementaria",
+      "ejemplar": true,
+      "edicion_comprobada": null,
+      "capitulos": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 54
+    },
     "hansen1946problem": {
       "rol": "primaria",
       "ejemplar": false,

@@ -1,0 +1,88 @@
+# Páginas web leídas: URL, fecha de consulta y huella del texto guardado.
+# El texto vive en bibliografia/_local/web/ (fuera de git).
+gutierrez2016estrategias:
+  cap1:
+    consulta: '2026-11-10'
+    palabras: 5045
+    sha256: fe39f617d7dafa12cc6df4b7154fca87a204066846d5f2fa82c0cc1f6d67fb93
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap1.html
+  cap10:
+    consulta: '2026-11-10'
+    palabras: 11012
+    sha256: 2fa60241c2572a412453f7fa3525c98eab3aefd81851f92c08ddec7795422542
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap10.html
+  cap11:
+    consulta: '2026-11-10'
+    palabras: 3572
+    sha256: fe0d701f3fc6e6174a2cd1bab4dd538868a87c8667ac03a93b391866c3b60940
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap11.html
+  cap12:
+    consulta: '2026-11-10'
+    palabras: 7202
+    sha256: ed6d6c67e7fcaebbeee8e08680992a9a7394a2dc2f4408d473a6a3153f913472
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap12.html
+  cap13:
+    consulta: '2026-11-10'
+    palabras: 3811
+    sha256: ddef2207eb9e0d792f81d05f9aec7998f4af873d9c229edf192c2f7f89c69335
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap13.html
+  cap14:
+    consulta: '2026-11-10'
+    palabras: 6734
+    sha256: f93d119cf7d3a2fb531bd73d24c61b2492b0ab9cd374c06363540867b03a5d2d
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap14.html
+  cap15:
+    consulta: '2026-11-10'
+    palabras: 10000
+    sha256: 0bfc0761b4968215bc511f416b7f0c1aa2433dce24826bc73778e378d75fec11
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap15.html
+  cap2:
+    consulta: '2026-11-10'
+    palabras: 13253
+    sha256: 8ebcc8977a4fa2b6711f96c5cd35c678d5276a9ec7af6214bfd5bec5643b0cc7
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap2.html
+  cap3:
+    consulta: '2026-11-10'
+    palabras: 16598
+    sha256: f3e003d312316b3103d49b62793717bef8a12da7c85f06c767c423cad274773d
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap3.html
+  cap4:
+    consulta: '2026-11-10'
+    palabras: 12946
+    sha256: 4218532587baf134356a00c853fea7c97fc650db23aa60c58e458388305ba610
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap4.html
+  cap5:
+    consulta: '2026-11-10'
+    palabras: 10986
+    sha256: bc724d5b62f5bafeeccc73917599e7020df24e0edb3139585809b136fa89a8ab
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap5.html
+  cap6:
+    consulta: '2026-11-10'
+    palabras: 7151
+    sha256: 0a1a5385cf52fb020b5a69609e07d66690b053f5a6805a53353e8214ec62f7ae
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap6.html
+  cap7:
+    consulta: '2026-11-10'
+    palabras: 9329
+    sha256: b43f4629a7f9ae8b693808d8a6c7eaa0297effa3ba977ce66d411cd5bb43dc63
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap7.html
+  cap8:
+    consulta: '2026-11-10'
+    palabras: 12406
+    sha256: 3599227cdc48cc501e3b53576866e01ed2cfb175508f6abad744c4cd46085255
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap8.html
+  cap9:
+    consulta: '2026-11-10'
+    palabras: 5977
+    sha256: aa0806ce3918e76886273b37b6975ffee9fac7c2d7525e997bdc9fe0bba2af47
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/cap9.html
+  portada:
+    consulta: '2026-11-10'
+    palabras: 112
+    sha256: 4581fd964d2b2879ce7fcb9f3dcb4c40dbf98ce868e77f71f8de58df52a2103b
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/index.html
+  prologo:
+    consulta: '2026-11-10'
+    palabras: 1583
+    sha256: 18d8699dbbc92dcd1d317dc6670c38b04dc754562813dc7a91ff13877d117d60
+    url: https://psirusteam.github.io/EstrategiasDeMuestreo/chapters/frontmatter.html

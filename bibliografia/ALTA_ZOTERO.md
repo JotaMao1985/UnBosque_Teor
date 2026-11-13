@@ -33,6 +33,16 @@ avisa cuando una ya sobra porque el dato se corrigió en Zotero.
 | Levy y Lemeshow | Edición 4 (Crossref dice 1) |
 | van Buuren y Groothuis-Oudshoorn | Título sin marcas `<b>` e `<i>`. Su clave es `buuren2011mice` |
 
+## Gutiérrez, el 2026-11-10 (tarea 0.3 del plan del capítulo 1)
+
+- **Ficha a mano** en `2 Complementaria`, clave `gutierrez2016estrategias`, con la etiqueta
+  `origen: portada`. Zotero no resolvió el ISBN 978-958-762-586-8 («Lookup Failed»). Los datos
+  son los de «Cómo citar este libro», en la portada del libro en línea: Gutiérrez, A. (2016),
+  2.ª ed., Ediciones de la U.
+- **Ejemplar:** instantánea de las 17 páginas de https://psirusteam.github.io/EstrategiasDeMuestreo/
+  (`instantaneas.yml`), indexada con `indexa_web.py`: 15 capítulos y 262 secciones.
+- La página no declara licencia. El texto queda en `bibliografia/_local/web/`, fuera de git.
+
 ## Lo que falta
 
 - **Portela y Villeta (2007):** Zotero no resolvió el ISBN 9788496866133 («Lookup Failed»).
@@ -44,7 +54,7 @@ avisa cuando una ya sobra porque el dato se corrigió en Zotero.
   enmendarlo: se comprueba en la portada cuando haya ejemplar.
 - **Etiqueta `rol: texto-guia`** en la ficha de Lohr 3.ª.
 - **Esperan ejemplar** (el ISBN se toma de su portada): Cochran (1977), Kish (1965), Groves
-  et al. (*Survey Methodology*), Gutiérrez (*Estrategias de muestreo*, hoy solo la web).
+  et al. (*Survey Methodology*).
 - **Web o informe:** Owen, Settles, AAPOR *Standard Definitions*, Penn State STAT 506, guía de
   scikit-learn, NHANES, Blumberg y Luke (2010).
 - **Sin DOI:** Kohavi (1995), Schouten, Cobben y Bethlehem (2009), Schaul et al. (2016),
@@ -63,3 +73,8 @@ propio, van como cita de segunda mano y en la lista de referencias aparece Lohr.
 - En «Nueva colección», el nombre provisional se reemplaza con doble clic sobre la palabra y
   escribiendo encima.
 - Tras cada envío, se comprueba por la API local que los ítems cayeron en la subcolección debida.
+- **Una ficha a mano no se puede rellenar en segundo plano.** `Archivo › Nuevo ítem` sí la crea,
+  y los campos aceptan el texto, pero Zotero solo guarda un campo cuando su ventana está activa:
+  al cambiar de ítem, lo escrito desaparece. Hace falta tomar la pantalla (con permiso), escribir
+  cada campo y confirmarlo con Intro. Conviene rellenar de abajo arriba: el título, al ocupar
+  varias líneas, desplaza los campos que tiene debajo.

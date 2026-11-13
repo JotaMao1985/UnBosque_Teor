@@ -9072,3 +9072,64 @@ norma. Faltan los ejemplares de Gutiérrez, Särndal et al., Cochran, Kish y Lev
 **No publicado.** Todo está en la rama `claude/course-content-improvement-2f816c`; no se ha hecho `push` ni se ha tocado
 `gh-pages`.
 
+### T7.125 — Una obra leída en la web también tiene ejemplar (2026-11-10)
+
+Primera tarea de herramienta del plan de mejora del capítulo 1 (`PLAN_Cap1_Mejora.md`, fuera de git; aprobado por
+Javier el 10 nov). Javier decidió que Gutiérrez, *Estrategias de muestreo*, se verifique contra una instantánea de la
+web oficial del autor. Con eso la norma común pasa a la versión 1.1.
+
+**Qué cambia:**
+- una obra tiene ejemplar si tiene PDF o EPUB registrado **o** una instantánea web (`bibliografia/instantaneas.yml`:
+  URL, fecha de consulta y huella del texto, que queda fuera de git);
+- `precalculo/indexa_web.py` dice qué capítulos, secciones y ejemplos existen en cada instantánea;
+- en el registro de contraste, una fuente lleva `instantanea` en lugar de `pagina`, y el pasaje se busca dentro de
+  la sección citada, no en toda la página;
+- una obra leída en la web se cita por sección: una página es un error;
+- si la página cambia después de registrarla, el auditor lo dice y hay que releer;
+- el vocabulario de localizadores admite numeración de cualquier profundidad («ejemplo 4.3.1»).
+
+No se registró todavía ninguna instantánea real: eso es la tarea siguiente.
+
+**Verificado:**
+- `prueba_citas`: 70 defectos inyectados y un control, todos con su código exacto; 11 son de obras web. Tres
+  sabotajes a lo nuevo, los tres cazados;
+- `verifica_citas`: nada nuevo respecto de la línea base; el sitio no cambia.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
+### T7.126 — Gutiérrez ya se puede comprobar: 60 de sus 70 localizadores existen (2026-11-10)
+
+Segunda tarea de preparación del plan del capítulo 1. *Estrategias de muestreo* era la obra más citada sin ejemplar:
+el auditor no podía decir nada de sus secciones.
+
+**Qué se hizo:**
+- **Catálogo.** Ficha en Zotero, a mano, porque el ISBN 978-958-762-586-8 no resuelve; clave
+  `gutierrez2016estrategias`. Los datos son los de «Cómo citar este libro» en la portada del libro en línea:
+  Gutiérrez, A. (2016), 2.ª ed., Ediciones de la U. El catálogo pasa a 29 obras.
+- **Ejemplar.** Instantánea de las 17 páginas de la edición en línea del autor (`bibliografia/instantaneas.yml`:
+  URL, fecha y huella; el texto, fuera de git). Índice: 15 capítulos y 262 secciones.
+- **Línea base.** Las 49 citas que estaban anotadas como «obra sin ejemplar» y las 9 de «obra fuera del catálogo»
+  se retiraron; ahora cada localizador se comprueba contra el índice.
+
+**Lo que salió al comprobar** (10 localizadores que no existen en la edición en línea; Javier los vio el 13 nov y
+autorizó admitirlos en la línea base como defectos conocidos):
+- capítulo 1, módulos 5 y 7: «sección 1.4». El capítulo 1 en línea solo tiene las secciones 1.1 y 1.2;
+- capítulos 3 y 4, cuatro veces: «capítulo 17». El libro en línea tiene 15 capítulos;
+- capítulo 6, cuatro veces: «ejemplo 4.3.1» y «ejemplo 4.4.2». La edición en línea no numera sus ejemplos ni sus
+  resultados, así que tampoco existen ahí los «Resultado 4.2.4» y similares que ya estaban anotados.
+
+Los otros 60 existen. Que digan lo que el material les atribuye es otra cosa: en el capítulo 1, «sección 1.2» existe
+pero se titula «Marco y Lucy», no la partición de la población que el material le atribuye. Eso lo verá el lector de
+fuentes de la auditoría.
+
+**Admitidos el 13 nov** con `verifica_citas.py --anota --admite`, tras leer la salida: 12 entradas nuevas y
+ninguna retirada; la línea base pasa de 138 a 150 defectos conocidos y el auditor vuelve a salir en 0. Los del
+capítulo 1 se corrigen en la Fase 2 del plan del capítulo; los de los capítulos 3, 4 y 6 quedan anotados para sus
+propios planes. Al refrescar el candado se vio que Zotero pasó de 10.0.6 a 10.0.9; ninguna obra ni clave cambió.
+
+**Verificado:** `exporta_zotero --comprobar` coincide; las demás colecciones de Zotero tienen los mismos ítems que
+antes; `prueba_citas` en verde; el sitio no cambia. `verifica_citas`, `--uso-comprobar`, `genera_referencias --comprobar`,
+`inventario_citas --comprobar`, `verifica_referencias` y `cuenta_sitio` salen en 0.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

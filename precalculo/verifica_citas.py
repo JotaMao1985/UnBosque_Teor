@@ -164,6 +164,7 @@ class Catalogo:
     indices: dict[str, dict]
     claves: dict[str, str | None]          # etiqueta de inventario_citas → clave de cita
     filas: list[dict]
+    instantaneas: dict[str, dict] = dataclasses.field(default_factory=dict)   # obras leídas en la web
     cuenta: dict = dataclasses.field(default_factory=lambda: {"veredictos": {}, "comprobadas": 0,
                                                               "sin_corpus": 0})
 
@@ -180,14 +181,16 @@ class Catalogo:
                 filas = list(csv.DictReader(f, delimiter="\t"))
         claves = {fila["etiqueta"]: (fila.get("clave") or "").strip() or None for fila in filas}
         return cls(directorio, {r["id"]: r for r in referencias}, candado,
-                   F.lee_yaml(directorio / "ejemplares.yml"), indices, claves, filas)
+                   F.lee_yaml(directorio / "ejemplares.yml"), indices, claves, filas,
+                   F.lee_yaml(directorio / "instantaneas.yml"))
 
     def anio(self, clave: str) -> str:
         partes = (self.referencias.get(clave, {}).get("issued") or {}).get("date-parts") or [[None]]
         return str(partes[0][0]) if partes[0] and partes[0][0] else ""
 
     def tiene_ejemplar(self, clave: str | None) -> bool:
-        return bool(clave) and clave in self.ejemplares
+        """Un PDF o EPUB registrado, o una instantánea de la obra leída en la web (norma v1.1)."""
+        return bool(clave) and (clave in self.ejemplares or clave in self.instantaneas)
 
     def paginas_de(self, clave: str, loc: str) -> list[int] | None:
         """El tramo de páginas de un localizador estructural, o None."""
@@ -201,6 +204,8 @@ class Catalogo:
             return f"«{clave}» no tiene índice de localizadores: no comprobable aquí"
         tabla = indice.get("loc", {})
         m = re.fullmatch(r"pp?\. (\d+)(?:–(\d+))?", loc)
+        if m and indice.get("calidad") == "web":
+            return f"«{clave}» se leyó en la web y no tiene páginas: cítese por sección"
         if m:
             desde, hasta = int(m.group(1)), int(m.group(2) or m.group(1))
             tramo = indice.get("paginas")
@@ -297,6 +302,19 @@ def comprueba_catalogo(cat: Catalogo) -> list[Hallazgo]:
         if citada and leida and citada.group(0) != leida.group(1):
             h.append(Hallazgo("L3", donde, f"el catálogo dice edición {citada.group(0)} y la portada "
                                            f"del ejemplar, «{edicion}»"))
+    for clave, paginas in cat.instantaneas.items():
+        donde = f"instantaneas.yml · {clave}"
+        indice = cat.indices.get(clave)
+        if indice is None:
+            h.append(Hallazgo("K1", donde, "la obra leída en la web no tiene índice en bibliografia/indices/"))
+            continue
+        for nombre, sha in (indice.get("instantaneas") or {}).items():
+            if (paginas.get(nombre) or {}).get("sha256") != sha:
+                h.append(Hallazgo("K1", donde, f"el índice se construyó con otra versión de la instantánea "
+                                               f"«{nombre}» (sha256): hay que volver a indexar"))
+        for nombre, ficha in paginas.items():
+            if not (ficha.get("url") and ficha.get("consulta")):
+                h.append(Hallazgo("K1", donde, f"la instantánea «{nombre}» no dice su URL o su fecha de consulta"))
     return h
 
 
@@ -1075,17 +1093,23 @@ def main() -> int:
     ap.add_argument("--cierre", type=int, nargs="?", const=0, metavar="CAP",
                     help="falla si queda algo pendiente, por reverificar o que discrepa (en ese capítulo, o en todos)")
     ap.add_argument("--huella", metavar="ID", help="imprime la huella actual de una afirmación (`data-afirma`)")
-    ap.add_argument("--pasaje", nargs=3, metavar=("CLAVE", "PAGINA", "TEXTO"),
-                    help="comprueba que el pasaje está en esa página impresa, lo guarda fuera de git y da su huella")
+    ap.add_argument("--pasaje", nargs=3, metavar=("CLAVE", "LUGAR", "TEXTO"),
+                    help="comprueba que el pasaje está en esa página impresa (un número) o en esa instantánea "
+                         "web (su nombre), lo guarda fuera de git y da su huella")
     args = ap.parse_args()
     if args.admite and not args.anota:
         ap.error("--admite solo tiene sentido con --anota")
 
     if args.pasaje:
-        clave, pagina, literal = args.pasaje
+        clave, lugar, literal = args.pasaje
+        if not lugar.isdigit():
+            sello = C.guarda_pasaje_web(args.bib, clave, lugar, literal)
+            print(f"OK     el pasaje está en la instantánea «{lugar}» de «{clave}»\n"
+                  f"       instantanea: {lugar}\n       hash_pasaje: {sello}")
+            return 0
         desfase = (F.lee_yaml(args.bib / "ejemplares.yml").get(clave) or {}).get("desfase") or 0
-        sello = C.guarda_pasaje(args.bib, clave, int(pagina), desfase, literal)
-        print(f"OK     el pasaje está en la p. {pagina} de «{clave}»\n       pagina: {pagina}\n       hash_pasaje: {sello}")
+        sello = C.guarda_pasaje(args.bib, clave, int(lugar), desfase, literal)
+        print(f"OK     el pasaje está en la p. {lugar} de «{clave}»\n       pagina: {lugar}\n       hash_pasaje: {sello}")
         return 0
 
     hallazgos, paginas, cat = audita(args.bib, args.sitio, sin_corpus=args.sin_corpus)

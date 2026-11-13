@@ -328,6 +328,29 @@
     "volume": "70"
   },
   {
+    "ISBN": "978-958-762-586-8",
+    "URL": "https://psirusteam.github.io/EstrategiasDeMuestreo/",
+    "author": [
+      {
+        "family": "Gutiérrez",
+        "given": "Andrés"
+      }
+    ],
+    "citation-key": "gutierrez2016estrategias",
+    "edition": "2",
+    "id": "gutierrez2016estrategias",
+    "issued": {
+      "date-parts": [
+        [
+          "2016"
+        ]
+      ]
+    },
+    "publisher": "Ediciones de la U",
+    "title": "Estrategias de muestreo: diseño de encuestas y estimación de parámetros",
+    "type": "book"
+  },
+  {
     "DOI": "10.1080/01621459.1946.10501894",
     "ISSN": "0162-1459, 1537-274X",
     "URL": "http://www.tandfonline.com/doi/abs/10.1080/01621459.1946.10501894",

@@ -7,11 +7,13 @@ Dónde vive cada cosa:
 
   bibliografia/ejemplares.yml        en git   la HUELLA de cada ejemplar: sha256, páginas, edición
                                               comprobada contra la portada, desfase, procedencia
+  bibliografia/instantaneas.yml      en git   las obras leídas en la web: URL, fecha y huella
   bibliografia/indices/<clave>.json  en git   índice delgado: qué localizadores existen y en qué
-                                              páginas. Sin títulos y sin texto
+                                              páginas (o en qué instantánea). Sin títulos y sin texto
   bibliografia/_local/               fuera    todo lo que tiene derechos de autor:
       rutas.json                              clave → dónde está el ejemplar en este equipo
       texto/<clave>/p0001.txt                 el texto, una página impresa por archivo
+      web/<clave>/<nombre>.txt                el texto de cada página web leída
       indices/<clave>.json                    el índice completo, con títulos
 
 Las claves de cita siguen la regla de la norma (apellido + año + primera palabra del título).
@@ -45,10 +47,13 @@ CABECERA_EJEMPLARES = (
 )
 
 # Vocabulario cerrado de localizadores (norma, «Vocabulario de localizadores»).
+# La numeración admite cualquier profundidad («ejemplo 4.3.1»): hay libros que numeran por sección.
+_N = r"[\dA-Z]+(?:\.\d+)+"
 RE_LOCALIZADOR = re.compile(
-    r"^(?:cap\. \d+|§[\dA-Z]+(?:\.\d+)*|ejemplo [\dA-Z]+\.\d+|(?:ejercicio|problema) [\dA-Z]+\.\d+"
-    r"|ec\. [\dA-Z]+\.\d+|tabla [\dA-Z]+\.\d+|fig\. [\dA-Z]+\.\d+|pp?\. \d+(?:–\d+)?|ap\. [A-Z])$"
+    rf"^(?:cap\. \d+|§[\dA-Z]+(?:\.\d+)*|ejemplo {_N}|(?:ejercicio|problema) {_N}"
+    rf"|ec\. {_N}|tabla {_N}|fig\. {_N}|pp?\. \d+(?:–\d+)?|ap\. [A-Z])$"
 )
+INSTANTANEAS = BIB / "instantaneas.yml"
 
 
 def sha256(ruta: pathlib.Path) -> str:

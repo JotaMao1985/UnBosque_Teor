@@ -19,7 +19,8 @@ El repositorio es público. **Aquí no hay ningún libro, ni su texto, ni pasaje
 | `obras.tsv` | Todas las obras que el material nombra, con su identificador y su clave | a mano; el auditor la vigila |
 | `inventario_citas.json` | Qué obras nombra hoy el sitio, y dónde | `precalculo/inventario_citas.py` |
 | `ejemplares.yml` | La huella de cada ejemplar leído: sha256, páginas, **edición comprobada contra la portada**, procedencia | `precalculo/extrae_fuente.py`; lo de la portada, a mano |
-| `indices/<clave>.json` | Qué secciones, ejemplos, ejercicios, ecuaciones, tablas y páginas existen en ese ejemplar. Sin títulos y sin texto | `precalculo/indexa_epub.py`, `indexa_pdf.py` |
+| `instantaneas.yml` | Las obras leídas en la web: URL, fecha de consulta y huella del texto de cada página guardada | `precalculo/extrae_fuente.py --web` |
+| `indices/<clave>.json` | Qué secciones, ejemplos, ejercicios, ecuaciones, tablas y páginas existen en ese ejemplar. Sin títulos y sin texto | `precalculo/indexa_epub.py`, `indexa_pdf.py`, `indexa_web.py` |
 | `contraste/capN.yml` | El registro de contraste: cada afirmación que exige fuente, su veredicto y quién la leyó | a mano, con los verificadores |
 | `linea_base_citas.json` | Las citas escritas a mano que el material ya traía, y sus defectos conocidos. Solo encoge | `precalculo/verifica_citas.py --anota` |
 | `uso_fuentes.json` | El contrato con el vault: por obra, capítulos, citas y afirmaciones | `precalculo/verifica_citas.py --uso` |
@@ -34,6 +35,9 @@ El repositorio es público. **Aquí no hay ningún libro, ni su texto, ni pasaje
 2. **El ejemplar se registra y se indexa.** `extrae_fuente.py --registra CLAVE RUTA` guarda su
    huella y su texto por página (fuera de git); `indexa_epub.py` o `indexa_pdf.py` dicen qué
    localizadores existen. La edición se comprueba mirando la portada y se anota a mano.
+   Una obra que se lee en la web se registra con `extrae_fuente.py --web CLAVE URL`, una
+   instantánea por página, y se indexa con `indexa_web.py CLAVE`. Se cita por sección: no tiene
+   páginas.
 3. **Quien redacta** envuelve la afirmación con `data-afirma="c1-m1-03"` y deja la cita vacía,
    en la fuente del módulo (`ensamblado/modulos/capN/`):
 
@@ -49,10 +53,12 @@ El repositorio es público. **Aquí no hay ningún libro, ni su texto, ni pasaje
 
    ```bash
    python3 precalculo/verifica_citas.py --pasaje lohr2022sampling 2 "texto leído, de 5 a 25 palabras"
+   python3 precalculo/verifica_citas.py --pasaje CLAVE cap1 "texto leído"   # en una instantánea web
    python3 precalculo/verifica_citas.py --huella c1-m1-03      # la huella de la prosa
    ```
 
-   En el registro quedan la página, la huella del pasaje y la de la prosa. Un `discrepa` solo
+   En el registro quedan la página (o el nombre de la instantánea), la huella del pasaje y la
+   de la prosa. Un `discrepa` solo
    lo cierra Javier.
 5. **El generador escribe el texto** y el capítulo se reensambla:
 

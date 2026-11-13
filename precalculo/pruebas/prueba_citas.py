@@ -34,6 +34,7 @@ import tempfile
 RAIZ = pathlib.Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(RAIZ / "precalculo"))
 
+import indexa_web  # noqa: E402
 import verifica_citas as V  # noqa: E402
 
 G = V.G
@@ -45,6 +46,7 @@ PIE_A_MANO = """  <footer>
     <ul>
       <li>Lohr, S.L. (2022). <em>Sampling: Design and Analysis</em> (3rd ed.).</li>
       <li>Särndal, C.E., Swensson, B., &amp; Wretman, J. (1992). <em>Model Assisted Survey Sampling</em>.</li>
+      <li>Gutiérrez, H.A. <em>Estrategias de muestreo</em>.</li>
     </ul>
   </footer>"""
 
@@ -60,6 +62,7 @@ PIE_GENERADO = """  <footer>
 CITA_A = '<cite class="cita" data-ref="lohr2022sampling" data-loc="§1.1; ejemplo 1.1"></cite>'
 CITA_B = '<cite class="cita" data-ref="meng2018statistical" data-via="lohr2022sampling" data-loc="§1.2"></cite>'
 CITA_C = '<cite class="cita" data-ref="sarndal1992model"></cite>'
+CITA_W = '<cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§1.4"></cite>'
 LI_LOHR = "<li>Lohr (2021), <strong>sección 1.2</strong> — población objetivo y marco.</li>"
 LI_COCHRAN = "<li>Cochran, <em>Sampling Techniques</em> — §5.5: el tratamiento clásico.</li>"
 
@@ -69,6 +72,7 @@ HTML = f"""<!DOCTYPE html>
   <template id="module-1">
     <p data-afirma="c1-m1-01">La revista envió diez millones de papeletas {CITA_A}.</p>
     <p data-afirma="c1-m1-02">La identidad está en el artículo original {CITA_B}.</p>
+    <p data-afirma="c1-m1-03">El marco es el dispositivo que permite ubicar a las unidades {CITA_W}.</p>
     <div class="references">
       <ul>
         <li>{CITA_C} — la teoría general, para quien quiera seguir.</li>
@@ -100,10 +104,13 @@ REFERENCIAS = [
     {"id": "meng2018statistical", "type": "article-journal", "title": "Statistical paradises",
      "DOI": "10.1/meng", "author": [{"family": "Meng", "given": "Xiao-Li"}],
      "issued": {"date-parts": [[2018]]}},
+    {"id": "gutierrez2016estrategias", "type": "book", "title": "Estrategias de muestreo",
+     "URL": "https://ejemplo.invalid/libro/", "author": [{"family": "Gutiérrez", "given": "Hugo Andrés"}],
+     "issued": {"date-parts": [[2016]]}},
 ]
 CANDADO = {"zotero": "0", "coleccion": "Prueba", "obras": {
     "lohr2022sampling": {"rol": "basica"}, "sarndal1992model": {"rol": "basica"},
-    "meng2018statistical": {"rol": "primaria"}}}
+    "meng2018statistical": {"rol": "primaria"}, "gutierrez2016estrategias": {"rol": "complementaria"}}}
 EJEMPLARES = """lohr2022sampling:
   archivo: lohr2022sampling.epub
   desfase: 0
@@ -119,6 +126,7 @@ OBRAS = ("etiqueta\tclave\tsubcoleccion\tobra\talta\tidentificador\n"
          "lohr\tlohr2022sampling\t1 Básica\tLohr\tdoi\t10.1/lohr\n"
          "sarndal-1992\tsarndal1992model\t1 Básica\tSärndal\tdoi\t10.1/sarndal\n"
          "meng-2018\tmeng2018statistical\t3 Fuentes primarias\tMeng\tdoi\t10.1/meng\n"
+         "gutierrez-estrategias\tgutierrez2016estrategias\t2 Complementaria\tGutiérrez\turl\thttps://ejemplo.invalid/libro/\n"
          "cochran-1977\t\t1 Básica\tCochran\tejemplar\t\n")
 
 
@@ -127,6 +135,29 @@ PAGINA_3 = "Example 1.1\n\nThe magazine mailed ten million ballots to the people
 PAGINA_6 = "1.2 Another section\n\nThe identity was first derived in the original article, and it is\nexact for any sample.\n"
 PASAJE_1 = "The magazine mailed ten million ballots to the people on its lists"
 PASAJE_2 = "The identity was first derived in the original article"
+# Una página de un libro en línea que tampoco existe, tal como la deja pandoc en texto plano.
+PAGINA_WEB = """-   1.3 Población y muestra
+-   1.4 Marco de muestreo
+
+Capítulo 1 Encuestas
+
+Texto de apertura del capítulo, sin número de sección.
+
+1.3 Población y muestra
+
+La población es el conjunto de unidades sobre el que se quiere decir algo con la encuesta.
+
+1.4 Marco de muestreo
+
+El marco de muestreo es el dispositivo que permite identificar y ubicar a las unidades de la población.
+
+Ejemplo 1.4.1 Un directorio de empresas es un marco de lista.
+
+1.5 Lo que viene
+
+Nada de lo anterior se repite aquí.
+"""
+PASAJE_W = "el dispositivo que permite identificar y ubicar a las unidades"
 
 REGISTRO = """afirmaciones:
 - id: c1-m1-01
@@ -156,6 +187,19 @@ REGISTRO = """afirmaciones:
     loc: §1.2
     pagina: 6
     hash_pasaje: {p2}
+- id: c1-m1-03
+  tipo: definicion
+  afirmacion: El marco es el dispositivo que permite ubicar a las unidades.
+  hash_texto: {h3}
+  veredicto: respaldada
+  redactado_por: material-prueba
+  verificado_por: verificador-c
+  fecha: 2026-11-07
+  fuentes:
+  - clave: gutierrez2016estrategias
+    loc: §1.4
+    instantanea: cap1
+    hash_pasaje: {p3}
 - id: c1-m2-01
   tipo: definicion
   afirmacion: El marco es la lista de la que se sortea la muestra.
@@ -188,12 +232,22 @@ def monta(raiz: pathlib.Path) -> tuple[pathlib.Path, pathlib.Path, pathlib.Path]
     (texto / "p0003.txt").write_text(PAGINA_3, "utf-8")
     (texto / "p0006.txt").write_text(PAGINA_6, "utf-8")
     (bib / "_local" / "pasajes.yml").write_text(
-        f"{V.C.huella(PASAJE_1)}: {PASAJE_1}\n{V.C.huella(PASAJE_2)}: {PASAJE_2}\n", "utf-8")
+        f"{V.C.huella(PASAJE_1)}: {PASAJE_1}\n{V.C.huella(PASAJE_2)}: {PASAJE_2}\n"
+        f"{V.C.huella(PASAJE_W)}: {PASAJE_W}\n", "utf-8")
+    web = bib / "_local" / "web" / "gutierrez2016estrategias"
+    web.mkdir(parents=True)
+    (web / "cap1.txt").write_text(PAGINA_WEB, "utf-8")
+    (bib / "instantaneas.yml").write_text(
+        "gutierrez2016estrategias:\n  cap1:\n    url: https://ejemplo.invalid/libro/cap1.html\n"
+        "    consulta: 2026-11-10\n    sha256: "
+        + __import__("hashlib").sha256(PAGINA_WEB.encode("utf-8")).hexdigest() + "\n", "utf-8")
+    indexa_web.indexa(bib, "gutierrez2016estrategias")
     prosa = V.lee_pagina(pagina).afirmaciones
     (bib / "contraste").mkdir()
     (bib / "contraste" / "cap1.yml").write_text(REGISTRO.format(
         h1=V.C.huella(prosa["c1-m1-01"][1]), h2=V.C.huella(prosa["c1-m1-02"][1]),
-        p1=V.C.huella(PASAJE_1), p2=V.C.huella(PASAJE_2)), "utf-8")
+        h3=V.C.huella(prosa["c1-m1-03"][1]),
+        p1=V.C.huella(PASAJE_1), p2=V.C.huella(PASAJE_2), p3=V.C.huella(PASAJE_W)), "utf-8")
     return bib, sitio, pagina
 
 
@@ -263,6 +317,12 @@ def a_mano(muta):
 def vacia_una_cita(bib, pagina):
     texto = pagina.read_text("utf-8")
     pagina.write_text(G.RE_CITA.sub(lambda m: f'<cite{m.group("atributos")}></cite>', texto, count=1), "utf-8")
+
+
+def web_y_registro(nuevo: str):
+    """Cambia el localizador de la cita de la obra web en el HTML y en su fuente del registro."""
+    return las_dos(en_pagina('data-loc="§1.4"', f'data-loc="{nuevo}"'),
+                   en_archivo("contraste/cap1.yml", "loc: §1.4\n", f"loc: {nuevo}\n"))
 
 
 def crea(nombre: str, contenido: str):
@@ -341,7 +401,7 @@ INYECCIONES = [
      en_archivo(REG, "pagina: 3", "pagina: 40"), "no casan"),
     ("sin corpus: no comprobable, no aprobado", {"R4"},
      borra("_local/pasajes.yml"), "no comprobable aquí"),
-    ("registro: tipo que no existe", {"R1"}, en_archivo(REG, "tipo: definicion", "tipo: cifra"), "`tipo` desconocido"),
+    ("registro: tipo que no existe", {"R1"}, en_archivo(REG, "tipo: atribucion", "tipo: cifra"), "`tipo` desconocido"),
     ("registro: veredicto que no existe", {"R1"},
      en_archivo(REG, "veredicto: pendiente", "veredicto: dudosa"), "`veredicto` desconocido"),
     ("registro: id de otro capítulo", {"R1"}, en_archivo(REG, "id: c1-m2-01", "id: c2-m2-01"), "otro capítulo"),
@@ -354,6 +414,28 @@ INYECCIONES = [
      en_archivo(REG, "  ancla: El marco es la lista de la que se sortea\n", ""), "no tiene ancla"),
     ("registro de un capítulo que no tiene página", {"K1"},
      crea("contraste/cap9.yml", "afirmaciones: []\n"), "no hay página"),
+    # --- obras leídas en la web ---------------------------------------------------------
+    ("web: el pasaje está en otra sección de la misma página", {"R4"},
+     web_y_registro("§1.3"), "NO está en «§1.3»"),
+    ("web: sección que no existe en la obra", {"L2"}, web_y_registro("§1.9"), "no existe"),
+    ("web: una obra leída en la web no tiene páginas", {"L2"}, web_y_registro("p. 12"), "no tiene páginas"),
+    ("web (control, no es un defecto): un ejemplo numerado por sección junto a su sección", set(),
+     web_y_registro("ejemplo 1.4.1; §1.4"), ""),
+    ("web: la página cambió después de registrarla", {"R4"},
+     en_archivo("_local/web/gutierrez2016estrategias/cap1.txt", "Nada de lo anterior", "Nada de lo dicho"),
+     "no es la que se registró"),
+    ("web: instantánea que no está registrada", {"R4"},
+     en_archivo(REG, "    instantanea: cap1\n", "    instantanea: cap9\n"), "no está en instantaneas.yml"),
+    ("web: fuente sin página ni instantánea", {"R1"},
+     en_archivo(REG, "    instantanea: cap1\n", ""), "o `instantanea`"),
+    ("web: fuente con página e instantánea a la vez", {"R1"},
+     en_archivo(REG, "    instantanea: cap1\n", "    instantanea: cap1\n    pagina: 3\n"), "a la vez"),
+    ("web: el índice se hizo con otra versión de la página", {"K1", "R4"},
+     en_archivo("instantaneas.yml", "sha256: ", "sha256: 0"), "otra versión de la instantánea"),
+    ("web: instantánea sin fecha de consulta", {"K1"},
+     en_archivo("instantaneas.yml", "    consulta: 2026-11-10\n", ""), "fecha de consulta"),
+    ("web: obra con instantánea y sin índice", {"K1", "L2"},
+     borra("indices/gutierrez2016estrategias.json"), "no tiene índice"),
     # --- el ejemplar y el catálogo ------------------------------------------------------
     ("se leyó una edición y se cita otra (número)", {"L3"},
      en_archivo("ejemplares.yml", "3.ª ed. (© 2022)", "2.ª ed. (© 2022)"), "edición 3"),
@@ -370,7 +452,7 @@ INYECCIONES = [
     # --- lo que escribe el generador ----------------------------------------------------
     ("cita marcada que nadie pasó por el generador", {"L7"}, a_mano(vacia_una_cita), "no llevan el texto"),
     ("texto de una cita retocado a mano", {"L7"},
-     a_mano(en_pagina("(Lohr, 2022, §1.1; ejemplo 1.1)", "(Lohr, 2021, §1.1; ejemplo 1.1)")), "1 de 3 citas"),
+     a_mano(en_pagina("(Lohr, 2022, §1.1; ejemplo 1.1)", "(Lohr, 2021, §1.1; ejemplo 1.1)")), "1 de 4 citas"),
     ("localizador cambiado sin volver a generar", {"L7", "R2"},
      a_mano(en_pagina('data-loc="§1.1; ejemplo 1.1"', 'data-loc="§1.2"')), "no llevan el texto"),
     # --- el pie de referencias ----------------------------------------------------------
@@ -530,7 +612,7 @@ def main() -> int:
                 genera(caso / "bibliografia", caso / "sitio" / "muestreo" / "capitulo-1-prueba.html")
             fallas, *_ = audita(caso / "bibliografia", caso / "sitio")
             vistos = {x.codigo for x in fallas}
-            dicho = any(debe_decir in str(x) for x in fallas)
+            dicho = not esperados or any(debe_decir in str(x) for x in fallas)
             informa(vistos == esperados and dicho, f"inyección: {nombre}",
                     f"esperaba {sorted(esperados)} con «{debe_decir}»; salió {[str(x)[:110] for x in fallas]}")
 
@@ -560,12 +642,12 @@ def main() -> int:
         shutil.rmtree(caso / "bibliografia" / "_local")
         fallas, *_ = audita(caso / "bibliografia", caso / "sitio", sin_corpus=True)
         _, _, cat = V.audita(caso / "bibliografia", caso / "sitio", sin_corpus=True)
-        informa(not fallas and cat.cuenta["sin_corpus"] == 2 and cat.cuenta["comprobadas"] == 0,
+        informa(not fallas and cat.cuenta["sin_corpus"] == 3 and cat.cuenta["comprobadas"] == 0,
                 "en un clon sin corpus, --sin-corpus informa y no aprueba nada",
                 f"{[str(x) for x in fallas]} · {cat.cuenta}")
         _, _, cat = V.audita(bib, sitio)
-        informa(cat.cuenta["comprobadas"] == 2 and cat.cuenta["veredictos"] == {"respaldada": 1, "con-matiz": 1, "pendiente": 1},
-                "con el corpus delante, los dos pasajes se encuentran en su página", str(cat.cuenta))
+        informa(cat.cuenta["comprobadas"] == 3 and cat.cuenta["veredictos"] == {"respaldada": 2, "con-matiz": 1, "pendiente": 1},
+                "con el corpus delante, los tres pasajes se encuentran en su página o en su sección", str(cat.cuenta))
 
         # 4c. Un capítulo migrado entero, con el pie generado, pasa sin línea base
         caso = tmp / "migrado"
@@ -596,7 +678,9 @@ def main() -> int:
         informa(lohr["citas"] == 1 and lohr["sin_marcar"] == 2 and lohr["capitulos"] == [1]
                 and lohr["afirmaciones"] == {"respaldada": 1, "con-matiz": 1, "pendiente": 1}
                 and lohr["ejemplar"] and lohr["rol"] == "basica" and not uso["sarndal1992model"]["ejemplar"]
-                and uso["meng2018statistical"]["citas"] == 1,
+                and uso["meng2018statistical"]["citas"] == 1
+                and uso["gutierrez2016estrategias"]["ejemplar"] and uso["gutierrez2016estrategias"]["citas"] == 1
+                and uso["gutierrez2016estrategias"]["edicion_comprobada"] is None,
                 "uso_fuentes: citas, capítulos, ejemplar y rol por obra", json.dumps(uso, ensure_ascii=False))
 
     print(f"\n{'OK    ' if not malas else 'FALLA '} prueba_citas: "
