@@ -9133,3 +9133,88 @@ antes; `prueba_citas` en verde; el sitio no cambia. `verifica_citas`, `--uso-com
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.127 — Las fuentes del capítulo 1: datos leídos y un informe oficial con ejemplar (2026-11-13)
+
+Tercera tarea de preparación del plan del capítulo 1: dar de alta las obras que el capítulo cita y no están en el
+catálogo. **Queda a medias**: los datos están reunidos y verificados, pero las fichas no se pudieron crear porque el
+control del ordenador está desactivado en los ajustes de la aplicación, y en segundo plano Zotero no deja ni cambiar
+la colección seleccionada ni guardar los campos de una ficha nueva.
+
+**Las seis obras, con sus datos ya leídos** (en `bibliografia/ALTA_ZOTERO.md`, cada uno con su fuente): Lohr 1.ª ed.,
+Hite (1987), los dos números del *Literary Digest* de 1936, el paquete TeachingSampling y el informe de Blumberg y
+Luke. Dos entran por ISBN; las otras cuatro, a mano.
+
+**De dónde salió cada dato:**
+- La portada del ejemplar de Lohr 1.ª no trae año ni ISBN (el escaneo no incluye la página de créditos). Los da el
+  catálogo de Open Library: Duxbury Press, 15 de diciembre de 1999, «1 edition», ISBN 9780534353612, con LCCN y
+  signatura de la Biblioteca del Congreso. La 2.ª edición es otro registro, así que no hay confusión.
+- Hite (1987) y los dos números del *Literary Digest* están en la **lista de referencias de Lohr 1.ª** (pp. 483 y
+  485 del escaneo), que es la vía por la que el curso los cita.
+- TeachingSampling: `citation("TeachingSampling")` con el R 4.4 del framework. Lo firma Hugo Andrés Gutiérrez Rojas
+  —el mismo autor de *Estrategias de muestreo*—, versión 4.1.1 de 2020.
+
+**El informe de Blumberg y Luke ya tiene ejemplar.** Las URL vivas de los CDC devuelven 404; la copia está en el
+archivo de los propios CDC. Se descargaron las tres entregas (ene–jun 2009, jul–dic 2009 y ene–jun 2010) y la que
+el material cita es la de **julio-diciembre de 2009, publicada el 12 de mayo de 2010**: es la que trae las dos
+cifras del módulo 4, «homes (24.5%) had only wireless» y «Approximately 2.0% of households had no telephone
+service». La de diciembre de 2010 ya da 26,6 %. El ejemplar quedó registrado, con su texto por página, su portada
+comprobada, su procedencia y un índice por páginas; los PDF viven fuera de git, en `Muestreo/fuentes/`.
+`indexa_pdf.py` aprendió a indexar un informe sin secciones numeradas, que se cita por página.
+
+**Un hallazgo para la Fase 3:** el recuento «Landon, 1,293,669: Roosevelt, 972,897» **es el título** del número del
+*Literary Digest* del 31 de octubre de 1936. Por eso no aparecía en el ejemplo 1.1 de Lohr, sino en su lista de
+referencias. Cuando Javier decida qué par de cifras usa el curso, esa es la fuente primaria.
+
+**Verificado:** el arnés de citas, el auditor, el contrato de fuentes, los ejemplares y la coincidencia con Zotero,
+todos en 0. El sitio no cambia.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
+### T7.128 — El artículo de Heck y otros ya es un ejemplar leído (2026-11-13)
+
+Cuarta tarea de preparación del plan del capítulo 1, y la más corta: el módulo 4 compara dos encuestas que salen de
+un artículo de acceso abierto, y Zotero ya tenía su PDF descargado desde el día del alta por DOI.
+
+- Ese PDF queda **registrado como ejemplar** (`heck201865`): 11 páginas con su texto, huella que coincide con la que
+  anotó el candado de Zotero, portada comprobada (*PLOS ONE* 13(7): e0200103, 3 de julio de 2018) y procedencia.
+- Índice **por páginas**, como el informe de los CDC: un artículo no tiene secciones numeradas.
+- Con esto, las cuatro afirmaciones del módulo 4 que apuntan a Heck y otros se pueden comprobar en la Fase 1, sin
+  que el lector de fuentes tenga que buscar el artículo.
+
+**Verificado:** los cinco ejemplares coinciden con su registro; el auditor de citas, en 0.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
+### T7.129 — Las seis fichas del capítulo 1 ya están en el catálogo (2026-11-13)
+
+Cierra la tarea 0.4, que había quedado a medias: con el control del ordenador activado, las seis obras se dieron de
+alta en `Docencia › 20939 Muestreo Estadístico`. El catálogo pasa de 29 a **35 obras** (3 básicas, 7 complementarias,
+22 fuentes primarias, 3 de datos y software).
+
+| Obra | Cómo entró |
+|---|---|
+| Lohr, 1.ª ed. (`lohr1999sampling`) | Por ISBN. Zotero la trajo del catálogo K10plus: Duxbury Press, Pacific Grove, 1999, 494 pp. |
+| Hite (1987) (`hite1987women`) | Por ISBN, de la Biblioteca del Congreso |
+| *Literary Digest*, 31 oct 1936 (`literarydigest1936landon`) | A mano, con la revista como autora |
+| *Literary Digest*, 14 nov 1936 (`literarydigest1936polls`) | A mano, igual |
+| TeachingSampling (`gutierrez2020teachingsampling`) | A mano, tipo software, con su versión y su licencia |
+| Blumberg y Luke (2010) (`blumberg2010wireless`) | A mano, tipo informe, con el organismo y la copia archivada |
+
+**La línea base encogió.** Al existir las fichas desaparecieron cinco defectos heredados: las citas de la 1.ª edición
+de Lohr en los capítulos 1, 4 y 6, y las de TeachingSampling en el capítulo 1. Queda uno nuevo, que es el mismo de
+antes con otro nombre: el pie del capítulo 1 todavía no es el generado, así que sigue sin traer el paquete. De 150
+defectos conocidos se pasa a 146.
+
+**Tres cosas que conviene saber:**
+- El catálogo titula el libro de Hite «The Hite report: women and love…»; Lohr lo cita como «Women and love». Se deja
+  el título del catálogo y se anota la diferencia, porque no hay ejemplar propio.
+- El mismo autor aparece de dos formas: «Gutiérrez, Andrés» en el libro (así lo dice su portada) y «Gutierrez Rojas,
+  Hugo Andres» en el paquete (así lo dice su DESCRIPTION). Si se quiere unificar, va en `enmiendas.yml`.
+- Al dar de alta la 1.ª edición de Lohr, Zotero le adjuntó por su cuenta un PDF: **solo el índice del libro** (cinco
+  páginas, «Table of Contents PDF»), no la obra. Si no se quiere, se borra desde la ficha.
+
+**Verificado:** la colección del curso tiene 35 ítems y ninguna otra colección cambió; el repo coincide con Zotero;
+el auditor de citas, el arnés, el contrato de fuentes y los cinco ejemplares, en 0. Las notas del vault pasan a 58.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

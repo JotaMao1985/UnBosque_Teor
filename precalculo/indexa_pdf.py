@@ -50,6 +50,15 @@ PERFILES = {
         "ejemplo": re.compile(r"^\s*EXAMPLE\s+(\d+)\s*\.\s*(\d+)\b"),
         "tabla": re.compile(r"^\s*TABLE\s+(\d+)\s*\.\s*(\d+)\b"),
     },
+    # Un informe o un artículo no tienen secciones numeradas: se citan por página.
+    "blumberg2010wireless": {
+        "calidad": "paginas",
+        "secciones": "ninguna",
+    },
+    "heck201865": {
+        "calidad": "paginas",
+        "secciones": "ninguna",
+    },
     "portela2007tecnicas": {
         "calidad": "paginas",
         "secciones": "indice",
@@ -217,7 +226,9 @@ def main() -> int:
           + ("" if manual is not None else "; falta fijarlo a mano en ejemplares.yml"))
 
     loc: dict[str, dict] = {}
-    if perfil["secciones"] == "indice":
+    if perfil["secciones"] == "ninguna":
+        inicios, rangos = {}, {}
+    elif perfil["secciones"] == "indice":
         inicios = secciones_por_indice(hojas, desfase)
         capitulos = {}
         for numero, pagina in inicios.items():
@@ -233,6 +244,8 @@ def main() -> int:
     for c, p in rangos.items():
         loc[f"cap. {c}"] = {"p": p}
     for tipo in ("ejemplo", "tabla"):
+        if tipo not in perfil:
+            continue
         for numero, pagina in rotulos(hojas, desfase, perfil[tipo]).items():
             loc[f"{tipo} {numero}"] = {"p": [pagina, pagina]}
 
@@ -241,6 +254,8 @@ def main() -> int:
     cuenta = collections.Counter(k.split(" ")[0] if not k.startswith("§") else "§" for k in loc)
     print(f"OK     {args.clave} ({perfil['calidad']}): " + ", ".join(f"{n} {t}" for t, n in cuenta.items()))
     for tipo in ("ejemplo", "tabla"):
+        if tipo not in perfil:
+            continue
         por_cap = collections.defaultdict(list)
         for k in loc:
             if k.startswith(tipo + " "):

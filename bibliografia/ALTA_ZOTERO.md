@@ -43,23 +43,79 @@ avisa cuando una ya sobra porque el dato se corrigió en Zotero.
   (`instantaneas.yml`), indexada con `indexa_web.py`: 15 capítulos y 262 secciones.
 - La página no declara licencia. El texto queda en `bibliografia/_local/web/`, fuera de git.
 
+## Las seis fichas del capítulo 1, dadas de alta el 2026-11-13 (tarea 0.4)
+
+**Hechas.** El catálogo pasa de 29 a 35 obras. Los datos de abajo están **leídos**, no recordados;
+cada uno dice dónde. Las dos primeras entraron por identificador; las otras cuatro, a mano.
+
+| Ficha | Tipo | Subcolección | Clave | Identificador |
+|---|---|---|---|---|
+| Lohr, 1.ª ed. | Book | 2 Complementaria | `lohr1999sampling` | ISBN 9780534353612 ✓ |
+| Hite (1987) | Book | 3 Fuentes primarias | `hite1987women` | ISBN 9780394530529 ✓ |
+| *Literary Digest*, 31 oct 1936 | Magazine Article | 3 Fuentes primarias | `literarydigest1936landon` | — |
+| *Literary Digest*, 14 nov 1936 | Magazine Article | 3 Fuentes primarias | `literarydigest1936polls` | — |
+| TeachingSampling | Computer Program | 4 Datos y software | `gutierrez2020teachingsampling` | — |
+| Blumberg y Luke (2010) | Report | 3 Fuentes primarias | `blumberg2010wireless` | — |
+
+**Lohr, 1.ª ed.** — portada del ejemplar (`lohr1999sampling`, p. 1 del escaneo): «Sampling: Design
+and Analysis. Sharon L. Lohr. Arizona State University. Duxbury Press, An Imprint of Brooks/Cole
+Publishing Company». El escaneo no trae página de créditos: **ni el año ni el ISBN están en el
+ejemplar**. Los da Open Library, consultada el 13 nov: edición OL7784218M, «publish_date:
+December 15, 1999», «edition_name: 1 edition», «publishers: [Duxbury Press]», ISBN-10 0534353614,
+ISBN-13 9780534353612; y la edición OL382186M, «1999», «Pacific Grove, CA», LCCN 98044566,
+signatura HA31.2 .L64 1999, «xv, 494 p.». Las dos coinciden en el ISBN-10. La 2.ª edición es
+otra (OL7651311M, 2009, ISBN 9780495105275), así que no hay confusión posible.
+
+**Hite (1987)** — leído en la lista de referencias de Lohr 1.ª ed. (p. 483 del escaneo):
+«Hite, S. 1987. Women and love: A cultural revolution in progress. New York: Knopf.» El ISBN
+9780394530529 resolvió en la Biblioteca del Congreso y devolvió Knopf, Nueva York, 1987, «1st ed»,
+922 pp., con la signatura HQ1206 .H54 1987: coincide con la referencia de Lohr. El catálogo la
+titula «The Hite report: women and love: a cultural revolution in progress»; Lohr la cita como
+«Women and love». Se deja el título del catálogo, porque no hay ejemplar propio para comprobar la
+portada. Sin ejemplar, se cita de segunda mano vía Lohr 1.ª.
+
+**Literary Digest** — leídos en la misma lista de referencias (p. 485 del escaneo):
+- 1936b: «Landon, 1,293,669: Roosevelt, 972,897». *Literary Digest* 122 (October 31): 5–6.
+- 1936c: «What went wrong with the polls?». *Literary Digest* 122 (November 14): 7–8.
+- (la lista trae además 1932, 114 (November 5): 8–9, y 1936a, 122 (August 22): 3–4.)
+El recuento que el material atribuye al ejemplo 1.1 **es el título del número del 31 de octubre**.
+
+**TeachingSampling** — `citation("TeachingSampling")` con el R 4.4 del framework, versión 4.1.1
+instalada: «Rojas HAG (2020). *TeachingSampling: Selection of Samples and Parameter Estimation in
+Finite Population*. R package version 4.1.1». Autor del DESCRIPTION: Hugo Andres Gutierrez Rojas;
+fecha 2020-04-21; URL https://CRAN.R-project.org/package=TeachingSampling. Es el mismo autor que
+*Estrategias de muestreo*.
+
+**Blumberg y Luke (2010)** — portada del informe (ejemplar `blumberg2010wireless`, p. 1):
+«(Released 05/12/2010) Wireless Substitution: Early Release of Estimates From the National Health
+Interview Survey, July–December 2009. by Stephen J. Blumberg, Ph.D., and Julian V. Luke. Division
+of Health Interview Statistics, National Center for Health Statistics». Es la entrega que trae
+las dos cifras del módulo 4 («homes (24.5%) had only wireless» y «Approximately 2.0% of households
+had no telephone service»), no la de diciembre de 2010, que ya da 26,6 %.
+
+## Al dar de alta, Zotero adjuntó un PDF
+
+A la 1.ª edición de Lohr le adjuntó por su cuenta un **«Table of Contents PDF»**: cinco páginas con
+el índice del libro, no la obra. Es su comportamiento por defecto; si no se quiere, se borra desde
+la ficha.
+
 ## Lo que falta
 
 - **Portela y Villeta (2007):** Zotero no resolvió el ISBN 9788496866133 («Lookup Failed»).
   Hay que crear la ficha a mano desde la página de créditos del PDF, con la etiqueta
   `origen: portada`. El ejemplar ya está registrado e indexado como `portela2007tecnicas`.
-- **Lohr 1.ª ed. (1999):** ficha a mano desde la portada, etiqueta `origen: portada`. El
-  ejemplar ya está registrado e indexado como `lohr1999sampling`.
 - **Thompson (2012):** Crossref dice edición 1 y el syllabus dice 3.ª. Falta evidencia para
   enmendarlo: se comprueba en la portada cuando haya ejemplar.
 - **Etiqueta `rol: texto-guia`** en la ficha de Lohr 3.ª.
 - **Esperan ejemplar** (el ISBN se toma de su portada): Cochran (1977), Kish (1965), Groves
   et al. (*Survey Methodology*).
 - **Web o informe:** Owen, Settles, AAPOR *Standard Definitions*, Penn State STAT 506, guía de
-  scikit-learn, NHANES, Blumberg y Luke (2010).
+  scikit-learn, NHANES.
 - **Sin DOI:** Kohavi (1995), Schouten, Cobben y Bethlehem (2009), Schaul et al. (2016),
-  Basu (1971), Hájek (1960), Lahiri (1951), Gnap (1995), Hite (1987), *Literary Digest* (1936).
-- **Paquetes de R:** TeachingSampling, rsample, SDAResources (con `citation("paquete")`).
+  Basu (1971), Hájek (1960), Lahiri (1951), Gnap (1995).
+- **Paquetes de R:** rsample y SDAResources (con `citation("paquete")`).
+- **Dos formas del mismo autor:** «Gutiérrez, Andrés» (el libro, por su portada) y «Gutierrez Rojas,
+  Hugo Andres» (el paquete, por su DESCRIPTION). Unificarlo, si se quiere, va en `enmiendas.yml`.
 
 Varias de las obras sin DOI el material las cita **a través de Lohr**. Mientras no haya ejemplar
 propio, van como cita de segunda mano y en la lista de referencias aparece Lohr.

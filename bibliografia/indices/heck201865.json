@@ -1,0 +1,11 @@
+{
+ "calidad": "paginas",
+ "clave": "heck201865",
+ "ejemplar_sha256": "593b4cedc3580a4b7265961732d5ee90d272f96d455fa132aa36b95a13190e5f",
+ "extractor": "indexa_pdf@3",
+ "loc": {},
+ "paginas": [
+  1,
+  11
+ ]
+}

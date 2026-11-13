@@ -84,6 +84,34 @@
     "type": "paper-conference"
   },
   {
+    "URL": "https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf",
+    "author": [
+      {
+        "family": "Blumberg",
+        "given": "Stephen J."
+      },
+      {
+        "family": "Luke",
+        "given": "Julian V."
+      }
+    ],
+    "citation-key": "blumberg2010wireless",
+    "id": "blumberg2010wireless",
+    "issued": {
+      "date-parts": [
+        [
+          "2010",
+          5,
+          12
+        ]
+      ]
+    },
+    "page": "17",
+    "publisher": "National Center for Health Statistics",
+    "title": "Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009",
+    "type": "report"
+  },
+  {
     "DOI": "10.18637/jss.v045.i03",
     "ISSN": "1548-7660",
     "URL": "http://www.jstatsoft.org/v45/i03/",
@@ -351,6 +379,30 @@
     "type": "book"
   },
   {
+    "URL": "https://CRAN.R-project.org/package=TeachingSampling",
+    "author": [
+      {
+        "family": "Gutierrez Rojas",
+        "given": "Hugo Andres"
+      }
+    ],
+    "citation-key": "gutierrez2020teachingsampling",
+    "id": "gutierrez2020teachingsampling",
+    "issued": {
+      "date-parts": [
+        [
+          "2020",
+          4,
+          21
+        ]
+      ]
+    },
+    "license": "GPL (>= 2)",
+    "title": "TeachingSampling: Selection of Samples and Parameter Estimation in Finite Population",
+    "type": "software",
+    "version": "4.1.1"
+  },
+  {
     "DOI": "10.1080/01621459.1946.10501894",
     "ISSN": "0162-1459, 1537-274X",
     "URL": "http://www.tandfonline.com/doi/abs/10.1080/01621459.1946.10501894",
@@ -445,6 +497,33 @@
     "title-short": "65% of Americans believe they are above average in intelligence",
     "type": "article-journal",
     "volume": "13"
+  },
+  {
+    "ISBN": "978-0-394-53052-9",
+    "author": [
+      {
+        "family": "Hite",
+        "given": "Shere"
+      }
+    ],
+    "call-number": "HQ1206 .H54 1987",
+    "citation-key": "hite1987women",
+    "edition": "1",
+    "id": "hite1987women",
+    "issued": {
+      "date-parts": [
+        [
+          "1987"
+        ]
+      ]
+    },
+    "number-of-pages": "922",
+    "publisher": "Knopf",
+    "publisher-place": "New York",
+    "source": "Library of Congress ISBN",
+    "title": "The Hite report: women and love: a cultural revolution in progress",
+    "title-short": "The Hite report",
+    "type": "book"
   },
   {
     "DOI": "10.2307/2344652",
@@ -569,6 +648,52 @@
     "type": "book"
   },
   {
+    "author": [
+      {
+        "literal": "Literary Digest"
+      }
+    ],
+    "citation-key": "literarydigest1936landon",
+    "container-title": "The Literary Digest",
+    "id": "literarydigest1936landon",
+    "issued": {
+      "date-parts": [
+        [
+          "1936",
+          10,
+          31
+        ]
+      ]
+    },
+    "page": "5-6",
+    "title": "Landon, 1,293,669: Roosevelt, 972,897",
+    "type": "article-magazine",
+    "volume": "122"
+  },
+  {
+    "author": [
+      {
+        "literal": "Literary Digest"
+      }
+    ],
+    "citation-key": "literarydigest1936polls",
+    "container-title": "The Literary Digest",
+    "id": "literarydigest1936polls",
+    "issued": {
+      "date-parts": [
+        [
+          "1936",
+          11,
+          14
+        ]
+      ]
+    },
+    "page": "7-8",
+    "title": "What went wrong with the polls?",
+    "type": "article-magazine",
+    "volume": "122"
+  },
+  {
     "DOI": "10.1002/9781119482260",
     "ISBN": "978-0-470-52679-8",
     "URL": "https://onlinelibrary.wiley.com/doi/book/10.1002/9781119482260",
@@ -608,6 +733,33 @@
     "publisher": "Wiley",
     "source": "DOI.org (Crossref)",
     "title": "Statistical Analysis with Missing Data",
+    "type": "book"
+  },
+  {
+    "ISBN": "978-0-534-35361-2",
+    "author": [
+      {
+        "family": "Lohr",
+        "given": "Sharon L."
+      }
+    ],
+    "citation-key": "lohr1999sampling",
+    "edition": "1",
+    "id": "lohr1999sampling",
+    "issued": {
+      "date-parts": [
+        [
+          "1999"
+        ]
+      ]
+    },
+    "language": "eng",
+    "number-of-pages": "494",
+    "publisher": "Duxbury Press",
+    "publisher-place": "Pacific Grove, Calif.",
+    "source": "K10plus ISBN",
+    "title": "Sampling: design and analysis",
+    "title-short": "Sampling",
     "type": "book"
   },
   {

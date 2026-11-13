@@ -23,6 +23,13 @@
       "tipo": "conferencePaper",
       "zotero": "8LZR9RJF"
     },
+    "blumberg2010wireless": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "report",
+      "zotero": "FL3Z79MG"
+    },
     "buuren2011mice": {
       "adjuntos": [
         {
@@ -81,6 +88,13 @@
       "tipo": "book",
       "zotero": "JB2554AB"
     },
+    "gutierrez2020teachingsampling": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "datos",
+      "tipo": "computerProgram",
+      "zotero": "B3GT58SE"
+    },
     "hansen1946problem": {
       "adjuntos": [],
       "etiquetas": [],
@@ -101,6 +115,19 @@
       "rol": "primaria",
       "tipo": "journalArticle",
       "zotero": "7G6YXUBA"
+    },
+    "hite1987women": {
+      "adjuntos": [],
+      "etiquetas": [
+        "Interpersonal relations",
+        "Love",
+        "Psychology",
+        "Sex role",
+        "Women"
+      ],
+      "rol": "primaria",
+      "tipo": "book",
+      "zotero": "T7ZW6JZ9"
     },
     "holt1979post": {
       "adjuntos": [],
@@ -130,12 +157,33 @@
       "tipo": "book",
       "zotero": "K92T4W35"
     },
+    "literarydigest1936landon": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "magazineArticle",
+      "zotero": "J8R44DID"
+    },
+    "literarydigest1936polls": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "primaria",
+      "tipo": "magazineArticle",
+      "zotero": "VL78A4UF"
+    },
     "little2019statistical": {
       "adjuntos": [],
       "etiquetas": [],
       "rol": "complementaria",
       "tipo": "book",
       "zotero": "Q43CLRH7"
+    },
+    "lohr1999sampling": {
+      "adjuntos": [],
+      "etiquetas": [],
+      "rol": "complementaria",
+      "tipo": "book",
+      "zotero": "HSEET8EV"
     },
     "lohr2022sampling": {
       "adjuntos": [],

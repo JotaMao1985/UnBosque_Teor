@@ -1,0 +1,11 @@
+{
+ "calidad": "paginas",
+ "clave": "blumberg2010wireless",
+ "ejemplar_sha256": "bab540fd4a88a0a46469812b1d83cf568d566d5d9ead1cbc9bf57312428d9bf2",
+ "extractor": "indexa_pdf@3",
+ "loc": {},
+ "paginas": [
+  1,
+  17
+ ]
+}
