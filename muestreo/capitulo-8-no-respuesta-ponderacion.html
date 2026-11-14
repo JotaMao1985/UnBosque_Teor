@@ -1005,6 +1005,13 @@
       font-style: italic;
     }
 
+    /* Una cita del texto va en redonda. El navegador pone <cite> en cursiva, y
+       dentro de un párrafo eso se lee como énfasis y no como fuente. Lo dice la
+       hoja una vez para que el generador de citas no lo escriba en cada una. */
+    cite.cita {
+      font-style: normal;
+    }
+
     blockquote cite {
       display: block;
       margin-top: 1rem;
@@ -3460,6 +3467,67 @@
       border-color: #fbbf24;
       color: #78350f;
     }
+    /* Auditoría del capítulo 1 (2026-11-14): seis arreglos de la plantilla.
+       Van al final de la hoja a propósito: así pesan más que las reglas de
+       arriba sin tener que editarlas una a una. */
+
+    @media (max-width: 767px) {
+      /* 1 · El menú de módulos, que en el móvil no se abría. El botón ya quita
+         `sidebar-collapsed`; lo que faltaba era que la hoja hiciera caso. */
+      .sidebar-container:not(.sidebar-collapsed) {
+        display: block;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 60;
+        width: min(86vw, 320px);
+        max-width: 320px;
+        overflow-y: auto;
+        background: #ffffff;
+        box-shadow: 0 0 24px rgba(0, 0, 0, 0.25);
+      }
+
+      /* 2 · El botón que lo abre, fuera de la columna de lectura. */
+      #sidebarToggle {
+        top: auto;
+        bottom: 1rem;
+        left: 1rem;
+        z-index: 70;
+      }
+
+      /* 6 · Justificar una columna de 375 px abre ríos entre las palabras. */
+      p,
+      li {
+        text-align: left;
+      }
+    }
+
+    /* 3 · El botón «volver arriba» tapaba el final de las líneas. */
+    #scrollToTopBtn {
+      opacity: 0.55;
+      transition: opacity 0.2s ease;
+    }
+
+    #scrollToTopBtn:hover,
+    #scrollToTopBtn:focus {
+      opacity: 1;
+    }
+
+    /* 4 · Un h3 de sección pesaba menos que los h4 que cuelgan de él. */
+    .animate-fade-in h3:not([class]) {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-top: 1.75rem;
+    }
+
+    /* 5 · Contraste del texto pequeño: el naranja de marca da 2,94 sobre
+       blanco y el mínimo es 4,5. Solo donde es texto, no en las gráficas. */
+    .rotulo,
+    .sidebar-title {
+      color: #C2410C;
+    }
+
   </style>
 </head>
 
@@ -5903,7 +5971,19 @@ round(c(ajustado = as.numeric(svymean(~assist, disa)),
     }
 
     function setupEventListeners() {
-      sidebarToggle.addEventListener('click', () => {
+      // En el movil el panel arranca cerrado: hasta la auditoria del capitulo 1
+    // (2026-11-14) no se podia abrir, y ahora se superpone al contenido.
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      sidebar.classList.add('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-expanded', 'false');
+      const iconoInicial = sidebarToggle.querySelector('i');
+      if (iconoInicial) {
+        iconoInicial.classList.remove('fa-chevron-left');
+        iconoInicial.classList.add('fa-chevron-right');
+      }
+    }
+
+    sidebarToggle.addEventListener('click', () => {
         sidebar.classList.toggle('sidebar-collapsed');
         const icon = sidebarToggle.querySelector('i');
         if (sidebar.classList.contains('sidebar-collapsed')) {
@@ -6345,6 +6425,13 @@ round(c(ajustado = as.numeric(svymean(~assist, disa)),
             y: {
               suggestedMin: opciones.min !== undefined ? opciones.min : -1,
               suggestedMax: opciones.max !== undefined ? opciones.max : 1,
+              // Sin título, una barra no dice en qué está medida. Misma regla
+              // que el eje x: sin `tituloY`, no se dibuja.
+              title: {
+                display: !!opciones.tituloY,
+                text: opciones.tituloY,
+                font: { family: 'Montserrat', size: 11 }
+              },
               ticks: { font: { family: 'Fira Code', size: 11 } },
               grid: { color: 'rgba(148, 163, 184, 0.2)' }
             }
