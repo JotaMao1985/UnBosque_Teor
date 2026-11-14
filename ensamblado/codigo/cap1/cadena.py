@@ -28,6 +28,8 @@ print(pd.Series({"p_C": p_C, "rho": rho, "p_estimado": p_hat,
 #> p_publicado    0.42924
 
 print("\n###BLOQUE-P2###\n")
+import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
 # Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura = p_C - p                 # aunque contestaran todos
 sesgo_respuesta = p_hat - p_C             # dentro de este marco       
@@ -45,6 +47,7 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
 #> 0.0
 
 print("\n###BLOQUE-PR1###\n")
+import numpy as np, pandas as pd
 # agpop: los 3078 condados agricolas de EE.UU. (censo agricola de 1992).
 # Es la POBLACION del curso, y como esta entera se puede comprobar cualquier
 # estimacion contra el valor verdadero. Fuera de un aula eso no pasa nunca.
@@ -67,6 +70,8 @@ print(agpop[["county", "state", "acres92", "region"]].head(3).to_string(index=Fa
 #>        FAIRBANKS AREA    AK   141338      W
 
 print("\n###BLOQUE-PR2###\n")
+import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
 # Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
 # NO-VALOR disfrazado de numero, y pandas lo promedia sin protestar.
 print(pd.Series({v: int((agpop[v] == -99).sum())
@@ -87,6 +92,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
 #> diferencia_pct         0.6213
 
 print("\n###BLOQUE-PR3###\n")
+import numpy as np, pandas as pd
 # Dos encuestas sobre el mismo item -"soy mas inteligente que la persona
 # promedio"- en la misma poblacion. Una es telefonica por marcacion aleatoria
 # (1838 entrevistas de 79014 numeros); la otra es un panel de voluntarios de
@@ -108,22 +114,27 @@ print(pd.Series({"suma_tel": censo_tel.sum(), "suma_online": censo_online.sum(),
 #> discrepancia_maxima      0.280
 
 print("\n###BLOQUE-PR4###\n")
-# La composicion demografica de cada muestra frente a la del censo. Los
-# porcentajes se redondean ANTES de restar, igual que en la pestana de R: si se
-# restara antes de redondear, la ultima cifra de sesgo_online no coincidiria.
+import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# La composicion demografica de cada muestra frente a la del censo. El sesgo se
+# calcula con los porcentajes sin redondear y se redondea al final, igual que en
+# la pestana de R: restando los ya redondeados, una celda salia 1,0 donde el
+# valor es 1,1.
+pct_censo  = 100 * censo_tel / censo_tel.sum()
+pct_online = 100 * pesos["online_n"] / pesos["online_n"].sum()
 comp = pd.DataFrame({
     "celda":  pesos["sex"] + " " + pesos["agegroup"] + " " + pesos["race"],
-    "censo":  (100 * censo_tel / censo_tel.sum()).round(1),
+    "censo":  pct_censo.round(1),
     "telef":  (100 * pesos["tel_n"] / pesos["tel_n"].sum()).round(1),
-    "online": (100 * pesos["online_n"] / pesos["online_n"].sum()).round(1)})
-comp["sesgo_online"] = comp["online"] - comp["censo"]
+    "online": pct_online.round(1)})
+comp["sesgo_online"] = (pct_online - pct_censo).round(1)
 print(comp.to_string(index=False))
 #>                 celda  censo  telef  online  sesgo_online
 #> Female Young Nonwhite    7.6    2.6    11.8           4.2
 #>    Female Young White   18.1    6.2    31.7          13.6
 #>   Female Old Nonwhite    7.6    6.1     1.4          -6.2
 #>      Female Old White   18.1   47.8    13.7          -4.4
-#>   Male Young Nonwhite    7.2    1.5     8.2           1.0
+#>   Male Young Nonwhite    7.2    1.5     8.2           1.1
 #>      Male Young White   17.1    5.1    25.8           8.7
 #>     Male Old Nonwhite    7.2    4.8     0.8          -6.4
 #>        Male Old White   17.1   26.0     6.4         -10.7
@@ -135,6 +146,8 @@ print(pd.Series({"edad_telefonica": tel["age"].mean(),
 #> edad_online        33.71414
 
 print("\n###BLOQUE-PR5###\n")
+import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
 # El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
 # acuerdo" (2). El 5 es "no se", que cuenta como 0.
 agree_tel    = tel["int"].isin([1, 2]).astype(int)
@@ -152,6 +165,7 @@ print(pd.DataFrame(
 # Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
 # y raza no arregla una seleccion que fallo por otras variables.
 print("\n###BLOQUE-P3###\n")
+import numpy as np, pandas as pd
 # La formula del sesgo de no respuesta, termino a termino.
 #   mu = r mu_R + (1 - r) mu_M     =>     mu_R - mu = (1 - r)(mu_R - mu_M)
 r, mu_R, mu_M = 0.045, 0.84, 0.30
@@ -168,6 +182,10 @@ print(pd.Series({"tasa_respuesta": r, "media_respondientes": mu_R,
 #> sesgo_por_la_formula      0.5157
 
 print("\n###BLOQUE-PR6###\n")
+import numpy as np, pandas as pd
+# agpop se leyo en el modulo 2; se vuelve a leer para que este bloque corra suelto.
+agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
+
 # Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
 # hacen de clases; r_h es la tasa de respuesta de cada una.
 #
@@ -207,6 +225,7 @@ print((pd.Series({
 #> desiguales    -30359.12
 
 print("\n###BLOQUE-PR7###\n")
+import numpy as np, pandas as pd
 # Error total = error de muestreo + error ajeno al muestreo. En terminos de
 # error cuadratico medio,  ECM = sesgo^2 + varianza,  y solo el segundo
 # sumando baja con n.
@@ -231,6 +250,7 @@ print(pd.Series({"n_digest": n_digest, "p_sondeo": p_sondeo,
 #> sesgo           -0.19321
 
 print("\n###BLOQUE-P4###\n")
+import numpy as np, pandas as pd
 # El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
 #
 # Los tres numeros se vuelven a declarar, ya redondeados, para que el bloque se
@@ -271,6 +291,13 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
 #> 6.3
 
 print("\n###BLOQUE-PR9###\n")
+import numpy as np, pandas as pd
+# Este bloque usa agpop, que se leyo en el modulo 2, y las cuatro regiones del
+# modulo 4. Se rehacen aqui para que el bloque corra suelto:
+agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
+reg = agpop.groupby("region")["acres92"]
+N_h = reg.size(); mu_h = reg.mean()
+
 # Las dos poblaciones del curso. agpop, por region:
 resumen = pd.DataFrame({"N": N_h,
                         "media": mu_h.round().astype(int),
@@ -283,9 +310,13 @@ print(resumen.sort_values("media", ascending=False).to_string())
 #> NE   220   90619   79365
 
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
-# dentro del paquete TeachingSampling, que no existe para Python; aqui se lee el
-# CSV que exporta precalculo/exporta_biglucy.R desde ese mismo paquete. Las dos
-# pestanas calculan sobre el mismo dato en vez de copiarse las cifras.
+# dentro del paquete TeachingSampling, que no existe para Python. Si no tienes el
+# archivo, exportalo una vez desde R y deja el CSV junto a los datos del curso:
+#
+#   data(BigLucy, package = "TeachingSampling")
+#   write.csv(BigLucy, "BigLucy.csv", row.names = FALSE)
+#
+# Las dos pestanas calculan sobre el mismo dato en vez de copiarse las cifras.
 big = pd.read_csv("precalculo/salidas/BigLucy.csv.gz")
 print(pd.Series({"empresas": len(big), "variables": big.shape[1],
                  "ingreso_medio": big["Income"].mean(),
@@ -297,6 +328,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
 #> pct_spam           60.8950
 
 print("\n###BLOQUE-PS1###\n")
+import numpy as np, pandas as pd
 # Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
 #   mu = r mu_R + (1 - r) mu_M
 # Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
@@ -311,6 +343,7 @@ print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
 #> si_la_poblacion_fuera  0.2000  0.3000  0.4000  0.5000
 #> los_que_no_llamaron    0.1944  0.2955  0.3965  0.4975
 print("\n###BLOQUE-PS2###\n")
+import numpy as np, pandas as pd
 # Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
 # reparte la misma probabilidad de inclusion a todo lo que este en la lista.
 N_lista = 1250              # supongamos que el periodico publica 1250 fondos
@@ -324,6 +357,7 @@ print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
 #> suma_pi       125.0
 #> n_esperado    125.0
 print("\n###BLOQUE-PS3###\n")
+import numpy as np, pandas as pd
 # Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
 citaciones    = 100300
 no_entregada  =  23000
@@ -340,6 +374,7 @@ print(pd.Series({"citaciones": citaciones, "quedan": quedan,
 #> retencion_pct       48.16
 #> perdida_pct         51.84
 print("\n###BLOQUE-PS4###\n")
+import numpy as np, pandas as pd
 # Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
 # conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
 # son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
@@ -355,6 +390,7 @@ print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
 #> n          8
 #> minimo     0
 print("\n###BLOQUE-PS5###\n")
+import numpy as np, pandas as pd
 # Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de
 # necesidad de reencuadernacion es la mitad de la de los que si estan:

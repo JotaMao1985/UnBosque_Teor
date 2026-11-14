@@ -9286,3 +9286,33 @@ defectos conocidos; migrarlas a citas marcadas es la Fase 3.
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.132 — El código del capítulo 1, ejecutable bloque a bloque (2026-11-14)
+
+Segunda tanda de la Fase 2, con lo que el lector de código encontró y lo que quedaba de cifras.
+
+- **Los `import`.** Los 17 bloques de Python usan `pd` o `np` y solo uno los importaba: copiado tal cual de la
+  página, un bloque fallaba con `NameError`. Ahora los importa cada uno. **De 1 bloque suelto que corría se pasa a
+  13 de 17**, comprobado copiando los 34 bloques de la página a un directorio limpio y ejecutándolos.
+- **Las dependencias.** Los que usaban variables de otro módulo —el del módulo 8, que tomaba `agpop` del 2 y las
+  regiones del 4, y dos del 7 y el 4— se rehacen solos, con las líneas que el lector ya había probado y que dan la
+  misma salida. Los cuatro que continúan del bloque anterior dentro del mismo módulo lo dicen en su primera línea.
+  En R, de 10 a 13 sueltos que corren.
+- **Las rutas del repositorio** salen del texto del módulo 10 y del comentario de `BigLucy`, que ahora explica cómo
+  exportarlo desde R. Queda `precalculo/salidas/BigLucy.csv.gz`, porque dónde viva ese archivo depende de cómo se
+  le entreguen los datos al estudiante, que es una decisión abierta del Checkpoint.
+- **Una cifra mal redondeada.** El sesgo por celda se calculaba restando porcentajes ya redondeados: una celda
+  mostraba 1,0 donde el valor es 1,1, que es además lo que muestra el simulador. Las dos pestañas restan ahora sin
+  redondear; las salidas anotadas se regeneraron.
+- **La corrección por población finita** queda nombrada en el módulo 7, donde el factor aparecía sin nombre, y se
+  dice qué es $S^2$. El quiz usaba el término sin que el capítulo lo presentara.
+
+De los 44 errores de la auditoría quedan tres sin corregir: el par de cifras del *Digest* (espera decisión), y las
+tres preguntas que faltan en la autoevaluación junto con el auditor del módulo 6 sin distractores, que son de la
+tanda de ejercicios. Y los seis defectos de la plantilla, que esperan decisión.
+
+**Verificado:** el código de las 12 páginas arranca con el R 4.4 del framework, las 48 salidas anotadas coinciden,
+0 cifras sin respaldo en todo el sitio, reensamblar dos veces da el mismo archivo, y el auditor de citas, el arnés,
+el inventario y el contrato, en 0.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

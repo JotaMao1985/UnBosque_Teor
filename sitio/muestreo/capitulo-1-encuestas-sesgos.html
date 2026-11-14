@@ -3775,7 +3775,8 @@ print(pd.Series({"p_C": p_C, "rho": rho, "p_estimado": p_hat,
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
+          <pre><code class="language-r"># Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura &lt;- p_C - p                        # aunque contestaran todos
 sesgo_respuesta &lt;- p_hat - p_C                    # dentro de este marco       
 round(c(sesgo_cobertura    = sesgo_cobertura,
@@ -3790,7 +3791,9 @@ round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12)
 #&gt; [1] 0</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura = p_C - p                 # aunque contestaran todos
 sesgo_respuesta = p_hat - p_C             # dentro de este marco       
 print(pd.Series({"sesgo_cobertura": sesgo_cobertura,
@@ -3927,7 +3930,8 @@ head(agpop[, c("county", "state", "acres92", "region")], 3)
 #&gt; 3        FAIRBANKS AREA    AK  141338      W</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># agpop: los 3078 condados agricolas de EE.UU. (censo agricola de 1992).
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# agpop: los 3078 condados agricolas de EE.UU. (censo agricola de 1992).
 # Es la POBLACION del curso, y como esta entera se puede comprobar cualquier
 # estimacion contra el valor verdadero. Fuera de un aula eso no pasa nunca.
 agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
@@ -3961,7 +3965,8 @@ print(agpop[["county", "state", "acres92", "region"]].head(3).to_string(index=Fa
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
+          <pre><code class="language-r"># Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
 # NO-VALOR disfrazado de numero, y R lo promedia sin protestar.
 sapply(c("acres92", "acres87", "acres82"), function(v) sum(agpop[[v]] == -99))
 #&gt; acres92 acres87 acres82
@@ -3978,7 +3983,9 @@ round(c(marco_completo = mean(agpop$acres92),
 #&gt;    306676.9714    308582.4122         0.6213</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
 # NO-VALOR disfrazado de numero, y pandas lo promedia sin protestar.
 print(pd.Series({v: int((agpop[v] == -99).sum())
                  for v in ["acres92", "acres87", "acres82"]}).to_string())
@@ -4214,7 +4221,8 @@ c(suma_tel = sum(censo_tel), suma_online = sum(censo_online),
 #&gt;             750.124             749.792               0.280</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Dos encuestas sobre el mismo item -"soy mas inteligente que la persona
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# Dos encuestas sobre el mismo item -"soy mas inteligente que la persona
 # promedio"- en la misma poblacion. Una es telefonica por marcacion aleatoria
 # (1838 entrevistas de 79014 numeros); la otra es un panel de voluntarios de
 # Mechanical Turk (983 personas pagadas a 0,25 dolares).
@@ -4245,20 +4253,25 @@ print(pd.Series({"suma_tel": censo_tel.sum(), "suma_online": censo_online.sum(),
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># La composicion demografica de cada muestra frente a la del censo.
+          <pre><code class="language-r"># Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# La composicion demografica de cada muestra frente a la del censo.
+pct_censo  &lt;- 100 * censo_tel / sum(censo_tel)
+pct_online &lt;- 100 * pesos$online_n / sum(pesos$online_n)
 comp &lt;- data.frame(
   celda  = paste(pesos$sex, pesos$agegroup, pesos$race),
-  censo  = round(100 * censo_tel / sum(censo_tel), 1),
+  censo  = round(pct_censo, 1),
   telef  = round(100 * pesos$tel_n / sum(pesos$tel_n), 1),
-  online = round(100 * pesos$online_n / sum(pesos$online_n), 1))
-comp$sesgo_online &lt;- comp$online - comp$censo
+  online = round(pct_online, 1))
+# El sesgo se calcula con los porcentajes sin redondear y se redondea al final:
+# restando los ya redondeados, una celda salia 1,0 donde el valor es 1,1.
+comp$sesgo_online &lt;- round(pct_online - pct_censo, 1)
 print(comp, row.names = FALSE)
 #&gt;                  celda censo telef online sesgo_online
 #&gt;  Female Young Nonwhite   7.6   2.6   11.8          4.2
 #&gt;     Female Young White  18.1   6.2   31.7         13.6
 #&gt;    Female Old Nonwhite   7.6   6.1    1.4         -6.2
 #&gt;       Female Old White  18.1  47.8   13.7         -4.4
-#&gt;    Male Young Nonwhite   7.2   1.5    8.2          1.0
+#&gt;    Male Young Nonwhite   7.2   1.5    8.2          1.1
 #&gt;       Male Young White  17.1   5.1   25.8          8.7
 #&gt;      Male Old Nonwhite   7.2   4.8    0.8         -6.4
 #&gt;         Male Old White  17.1  26.0    6.4        -10.7
@@ -4269,22 +4282,27 @@ c(edad_telefonica = mean(tel$age), edad_online = mean(online$age))
 #&gt;        60.74864        33.71414</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># La composicion demografica de cada muestra frente a la del censo. Los
-# porcentajes se redondean ANTES de restar, igual que en la pestana de R: si se
-# restara antes de redondear, la ultima cifra de sesgo_online no coincidiria.
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# La composicion demografica de cada muestra frente a la del censo. El sesgo se
+# calcula con los porcentajes sin redondear y se redondea al final, igual que en
+# la pestana de R: restando los ya redondeados, una celda salia 1,0 donde el
+# valor es 1,1.
+pct_censo  = 100 * censo_tel / censo_tel.sum()
+pct_online = 100 * pesos["online_n"] / pesos["online_n"].sum()
 comp = pd.DataFrame({
     "celda":  pesos["sex"] + " " + pesos["agegroup"] + " " + pesos["race"],
-    "censo":  (100 * censo_tel / censo_tel.sum()).round(1),
+    "censo":  pct_censo.round(1),
     "telef":  (100 * pesos["tel_n"] / pesos["tel_n"].sum()).round(1),
-    "online": (100 * pesos["online_n"] / pesos["online_n"].sum()).round(1)})
-comp["sesgo_online"] = comp["online"] - comp["censo"]
+    "online": pct_online.round(1)})
+comp["sesgo_online"] = (pct_online - pct_censo).round(1)
 print(comp.to_string(index=False))
 #&gt;                 celda  censo  telef  online  sesgo_online
 #&gt; Female Young Nonwhite    7.6    2.6    11.8           4.2
 #&gt;    Female Young White   18.1    6.2    31.7          13.6
 #&gt;   Female Old Nonwhite    7.6    6.1     1.4          -6.2
 #&gt;      Female Old White   18.1   47.8    13.7          -4.4
-#&gt;   Male Young Nonwhite    7.2    1.5     8.2           1.0
+#&gt;   Male Young Nonwhite    7.2    1.5     8.2           1.1
 #&gt;      Male Young White   17.1    5.1    25.8           8.7
 #&gt;     Male Old Nonwhite    7.2    4.8     0.8          -6.4
 #&gt;        Male Old White   17.1   26.0     6.4         -10.7
@@ -4346,7 +4364,8 @@ print(pd.Series({"edad_telefonica": tel["age"].mean(),
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
+          <pre><code class="language-r"># Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
 # acuerdo" (2). El 5 es "no se", que cuenta como 0.
 agree_tel    &lt;- as.integer(tel$int    %in% c(1, 2))
 agree_online &lt;- as.integer(online$int %in% c(1, 2))
@@ -4364,7 +4383,9 @@ round(rbind(
 # y raza no arregla una seleccion que fallo por otras variables.</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
+# El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
 # acuerdo" (2). El 5 es "no se", que cuenta como 0.
 agree_tel    = tel["int"].isin([1, 2]).astype(int)
 agree_online = online["int"].isin([1, 2]).astype(int)
@@ -4437,7 +4458,8 @@ round(c(tasa_respuesta         = r,
 #&gt;                 0.3243                 0.5157                 0.5157</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># La formula del sesgo de no respuesta, termino a termino.
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# La formula del sesgo de no respuesta, termino a termino.
 #   mu = r mu_R + (1 - r) mu_M     =&gt;     mu_R - mu = (1 - r)(mu_R - mu_M)
 r, mu_R, mu_M = 0.045, 0.84, 0.30
 mu = r * mu_R + (1 - r) * mu_M
@@ -4467,7 +4489,10 @@ print(pd.Series({"tasa_respuesta": r, "media_respondientes": mu_R,
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
+          <pre><code class="language-r"># agpop se leyo en el modulo 2; se vuelve a leer para que este bloque corra suelto.
+agpop &lt;- read.csv("CSV data sets for SDA 3e/agpop.csv")
+
+# Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
 # hacen de clases; r_h es la tasa de respuesta de cada una.
 #
 # Ojo al reutilizar nombres: el bloque anterior deja `mu` valiendo una
@@ -4496,7 +4521,11 @@ round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
 #&gt;        0.00        0.00   -30359.12</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# agpop se leyo en el modulo 2; se vuelve a leer para que este bloque corra suelto.
+agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
+
+# Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
 # hacen de clases; r_h es la tasa de respuesta de cada una.
 #
 # Ojo al reutilizar nombres: el bloque anterior deja `mu` valiendo una
@@ -4863,8 +4892,10 @@ print((pd.Series({
             </li>
             <li>
               <p style="margin-bottom:0;">La consecuencia práctica está en el papel de $n$. Bajo muestreo aleatorio
-                simple la varianza vale $V = (1 - n/N)\,S^2/n$ —es la fórmula que el capítulo 2 construye desde el
-                diseño; aquí se usa solo para mirar dónde aparece $n$— y tiende a cero cuando $n \to N$. El sesgo $B$ no contiene $n$ por
+                simple la varianza vale $V = (1 - n/N)\,S^2/n$, donde $S^2$ es la varianza de $y$ en la población
+                y el factor $(1 - n/N)$ se llama <strong>corrección por población finita</strong> —es la fórmula que
+                el capítulo 2 construye desde el diseño; aquí se usa solo para mirar dónde aparece $n$— y tiende a
+                cero cuando $n \to N$. El sesgo $B$ no contiene $n$ por
                 ningún lado: es una propiedad del <em>procedimiento</em>, no del tamaño. Un censo hace $V = 0$ y deja
                 $B$ intacto.</p>
             </li>
@@ -4954,7 +4985,8 @@ round(c(n_digest = n_digest, p_sondeo = p_sondeo, p_real = p_real, sesgo = sesgo
 #&gt; 2266566.00000       0.42924       0.62245      -0.19321</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Error total = error de muestreo + error ajeno al muestreo. En terminos de
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# Error total = error de muestreo + error ajeno al muestreo. En terminos de
 # error cuadratico medio,  ECM = sesgo^2 + varianza,  y solo el segundo
 # sumando baja con n.
 #
@@ -4985,7 +5017,14 @@ print(pd.Series({"n_digest": n_digest, "p_sondeo": p_sondeo,
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
+          <pre><code class="language-r"># Las cuatro cantidades vienen del bloque anterior; se rehacen para que este
+# corra suelto, igual que hace la pestaña de Python:
+n_digest &lt;- 1293669 + 972897
+p_real   &lt;- 61 / (61 + 37)
+sesgo    &lt;- 972897 / n_digest - p_real
+S2       &lt;- p_real * (1 - p_real)
+
+# El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
 ecm_digest &lt;- sesgo^2 + S2 / n_digest
 ecm_mas    &lt;- S2 / 1000
 round(c(recm_digest = sqrt(ecm_digest), recm_mas = sqrt(ecm_mas),
@@ -5013,7 +5052,8 @@ round(S2 / ecm_digest, 2)
 #&gt; [1] 6.3</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
 #
 # Los tres numeros se vuelven a declarar, ya redondeados, para que el bloque se
 # pueda ejecutar suelto. Se comprobo que no cambia nada de lo publicado: partir
@@ -5145,7 +5185,13 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Las dos poblaciones del curso. agpop, por region:
+          <pre><code class="language-r"># Este bloque usa agpop, que se leyo en el modulo 2, y las cuatro regiones del
+# modulo 4. Se rehacen aqui para que el bloque corra suelto:
+agpop &lt;- read.csv("CSV data sets for SDA 3e/agpop.csv")
+reg   &lt;- split(agpop$acres92, agpop$region)
+N_h   &lt;- sapply(reg, length); mu_h &lt;- sapply(reg, mean)
+
+# Las dos poblaciones del curso. agpop, por region:
 tabla &lt;- data.frame(N = N_h, media = round(mu_h), sd = round(sapply(reg, sd)))
 print(tabla[order(-tabla$media), ])
 #&gt;       N  media     sd
@@ -5162,7 +5208,14 @@ c(empresas = nrow(BigLucy), variables = ncol(BigLucy),
 #&gt;    85296.0000       11.0000      429.5012       60.8950</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
-          <pre><code class="language-python"># Las dos poblaciones del curso. agpop, por region:
+          <pre><code class="language-python">import numpy as np, pandas as pd
+# Este bloque usa agpop, que se leyo en el modulo 2, y las cuatro regiones del
+# modulo 4. Se rehacen aqui para que el bloque corra suelto:
+agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
+reg = agpop.groupby("region")["acres92"]
+N_h = reg.size(); mu_h = reg.mean()
+
+# Las dos poblaciones del curso. agpop, por region:
 resumen = pd.DataFrame({"N": N_h,
                         "media": mu_h.round().astype(int),
                         "sd": reg.std().round().astype(int)}).rename_axis(None)
@@ -5174,9 +5227,13 @@ print(resumen.sort_values("media", ascending=False).to_string())
 #&gt; NE   220   90619   79365
 
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
-# dentro del paquete TeachingSampling, que no existe para Python; aqui se lee el
-# CSV que exporta precalculo/exporta_biglucy.R desde ese mismo paquete. Las dos
-# pestanas calculan sobre el mismo dato en vez de copiarse las cifras.
+# dentro del paquete TeachingSampling, que no existe para Python. Si no tienes el
+# archivo, exportalo una vez desde R y deja el CSV junto a los datos del curso:
+#
+#   data(BigLucy, package = "TeachingSampling")
+#   write.csv(BigLucy, "BigLucy.csv", row.names = FALSE)
+#
+# Las dos pestanas calculan sobre el mismo dato en vez de copiarse las cifras.
 big = pd.read_csv("precalculo/salidas/BigLucy.csv.gz")
 print(pd.Series({"empresas": len(big), "variables": big.shape[1],
                  "ingreso_medio": big["Income"].mean(),
@@ -5405,11 +5462,10 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
 
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
-        <p class="text-sm" style="margin-bottom:0.5rem;">Los cinco son encuestas reales. Para cada una hay que
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cinco son situaciones de muestreo tomadas de Lohr. Para cada una hay que
           identificar la población objetivo, el marco muestral, la unidad de muestreo y la de observación, y las
-          fuentes de error. Cuando hay números, las cifras de la solución salen de ejecutar de verdad
-          <code>ensamblado/codigo/cap1/cadena.R</code> y <code>cadena.py</code>: cada solución trae las dos
-          versiones, y las dos publican la misma cifra.</p>
+          fuentes de error. Cuando hay números, las cifras de la solución salen de ejecutar de verdad el código
+          que viene con ella: cada solución trae su versión en R y en Python, y las dos publican la misma cifra.</p>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>El artículo «What Readers Say About
@@ -5468,7 +5524,8 @@ rbind(si_la_poblacion_fuera = mu,
 #&gt; los_que_no_llamaron   0.1944 0.2955 0.3965 0.4975</code></pre>
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
-                <pre><code class="language-python"># Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
 #   mu = r mu_R + (1 - r) mu_M
 # Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
 # esto es lo que tendrian que opinar los que NO llamaron para que el
@@ -5533,7 +5590,8 @@ c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
 # cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.</code></pre>
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
-                <pre><code class="language-python"># Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
 # reparte la misma probabilidad de inclusion a todo lo que este en la lista.
 N_lista = 1250              # supongamos que el periodico publica 1250 fondos
 k = 10
@@ -5598,7 +5656,8 @@ round(c(citaciones = citaciones, quedan = quedan,
 #&gt;     100300.00      48300.00         48.16         51.84</code></pre>
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
-                <pre><code class="language-python"># Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
 citaciones    = 100300
 no_entregada  =  23000
 no_calificado =   7000
@@ -5673,7 +5732,8 @@ c(suma_pi = sum(pi_arq), n = n_arq, minimo = min(pi_arq))
 # insesgado para la poblacion de los catorce.</code></pre>
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
-                <pre><code class="language-python"># Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
 # conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
 # son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
 N_arq, n_arq = 14, 8
@@ -5753,7 +5813,8 @@ rbind(fraccion_prestada = f,
 #&gt; sesgo             0.015 0.03 0.045</code></pre>
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
-                <pre><code class="language-python"># Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de
 # necesidad de reencuadernacion es la mitad de la de los que si estan:
 p_estante = 0.30                      # tasa entre los libros presentes

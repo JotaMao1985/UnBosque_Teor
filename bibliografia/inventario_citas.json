@@ -598,14 +598,13 @@
      ],
      "interna": false,
      "localizadores": [
-      "ejemplo 2.6",
-      "apéndice "
+      "ejemplo 2.6"
      ],
      "modulo": 8,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2022), ejemplo 2.6 — la descripción de agpop ; el apéndice de datos del libro describe las muestras derivadas."
+     "texto": "Lohr (2022), ejemplo 2.6 — la descripción de agpop ; al final del libro se describen las muestras derivadas."
     },
     {
      "ediciones": [],
@@ -737,7 +736,7 @@
      "bloque": 14,
      "js": 4,
      "pie": 1,
-     "prosa": 16
+     "prosa": 17
     },
     "lumley-survey": {
      "bloque": 1,
@@ -752,7 +751,7 @@
     },
     "teachingsampling": {
      "bloque": 1,
-     "prosa": 3
+     "prosa": 4
     }
    },
    "sin_reconocer": []

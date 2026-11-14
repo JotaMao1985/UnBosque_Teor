@@ -24,6 +24,7 @@ round(c(p_C = p_C, rho = rho, p_estimado = p_hat, p_publicado = p_obs), 5)
 #>     0.50995     0.72270     0.42924     0.42924
 
 cat("\n###BLOQUE-RP2###\n")
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
 # Con esos cuatro numeros, el sesgo se parte en dos sumandos exactos.
 sesgo_cobertura <- p_C - p                        # aunque contestaran todos
 sesgo_respuesta <- p_hat - p_C                    # dentro de este marco       
@@ -60,6 +61,7 @@ head(agpop[, c("county", "state", "acres92", "region")], 3)
 #> 3        FAIRBANKS AREA    AK  141338      W
 
 cat("\n###BLOQUE-R2###\n")
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
 # Lohr codifica el dato faltante como -99. No es un valor pequeno: es un
 # NO-VALOR disfrazado de numero, y R lo promedia sin protestar.
 sapply(c("acres92", "acres87", "acres82"), function(v) sum(agpop[[v]] == -99))
@@ -96,20 +98,25 @@ c(suma_tel = sum(censo_tel), suma_online = sum(censo_online),
 #>             750.124             749.792               0.280
 
 cat("\n###BLOQUE-R4###\n")
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
 # La composicion demografica de cada muestra frente a la del censo.
+pct_censo  <- 100 * censo_tel / sum(censo_tel)
+pct_online <- 100 * pesos$online_n / sum(pesos$online_n)
 comp <- data.frame(
   celda  = paste(pesos$sex, pesos$agegroup, pesos$race),
-  censo  = round(100 * censo_tel / sum(censo_tel), 1),
+  censo  = round(pct_censo, 1),
   telef  = round(100 * pesos$tel_n / sum(pesos$tel_n), 1),
-  online = round(100 * pesos$online_n / sum(pesos$online_n), 1))
-comp$sesgo_online <- comp$online - comp$censo
+  online = round(pct_online, 1))
+# El sesgo se calcula con los porcentajes sin redondear y se redondea al final:
+# restando los ya redondeados, una celda salia 1,0 donde el valor es 1,1.
+comp$sesgo_online <- round(pct_online - pct_censo, 1)
 print(comp, row.names = FALSE)
 #>                  celda censo telef online sesgo_online
 #>  Female Young Nonwhite   7.6   2.6   11.8          4.2
 #>     Female Young White  18.1   6.2   31.7         13.6
 #>    Female Old Nonwhite   7.6   6.1    1.4         -6.2
 #>       Female Old White  18.1  47.8   13.7         -4.4
-#>    Male Young Nonwhite   7.2   1.5    8.2          1.0
+#>    Male Young Nonwhite   7.2   1.5    8.2          1.1
 #>       Male Young White  17.1   5.1   25.8          8.7
 #>      Male Old Nonwhite   7.2   4.8    0.8         -6.4
 #>         Male Old White  17.1  26.0    6.4        -10.7
@@ -120,6 +127,7 @@ c(edad_telefonica = mean(tel$age), edad_online = mean(online$age))
 #>        60.74864        33.71414
 
 cat("\n###BLOQUE-R5###\n")
+# Continua del bloque anterior de este mismo modulo: usa las variables que deja.
 # El estimando de Lohr: agree = 1 si elige "muy de acuerdo" (1) o "bastante de
 # acuerdo" (2). El 5 es "no se", que cuenta como 0.
 agree_tel    <- as.integer(tel$int    %in% c(1, 2))
@@ -153,6 +161,9 @@ round(c(tasa_respuesta         = r,
 #>                 0.3243                 0.5157                 0.5157
 
 cat("\n###BLOQUE-R6###\n")
+# agpop se leyo en el modulo 2; se vuelve a leer para que este bloque corra suelto.
+agpop <- read.csv("CSV data sets for SDA 3e/agpop.csv")
+
 # Sesgo de no respuesta con clases de respuesta. Las cuatro regiones de agpop
 # hacen de clases; r_h es la tasa de respuesta de cada una.
 #
@@ -199,6 +210,13 @@ round(c(n_digest = n_digest, p_sondeo = p_sondeo, p_real = p_real, sesgo = sesgo
 #> 2266566.00000       0.42924       0.62245      -0.19321
 
 cat("\n###BLOQUE-R8###\n")
+# Las cuatro cantidades vienen del bloque anterior; se rehacen para que este
+# corra suelto, igual que hace la pestaña de Python:
+n_digest <- 1293669 + 972897
+p_real   <- 61 / (61 + 37)
+sesgo    <- 972897 / n_digest - p_real
+S2       <- p_real * (1 - p_real)
+
 # El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
 ecm_digest <- sesgo^2 + S2 / n_digest
 ecm_mas    <- S2 / 1000
@@ -227,6 +245,12 @@ round(S2 / ecm_digest, 2)
 #> [1] 6.3
 
 cat("\n###BLOQUE-R9###\n")
+# Este bloque usa agpop, que se leyo en el modulo 2, y las cuatro regiones del
+# modulo 4. Se rehacen aqui para que el bloque corra suelto:
+agpop <- read.csv("CSV data sets for SDA 3e/agpop.csv")
+reg   <- split(agpop$acres92, agpop$region)
+N_h   <- sapply(reg, length); mu_h <- sapply(reg, mean)
+
 # Las dos poblaciones del curso. agpop, por region:
 tabla <- data.frame(N = N_h, media = round(mu_h), sd = round(sapply(reg, sd)))
 print(tabla[order(-tabla$media), ])
