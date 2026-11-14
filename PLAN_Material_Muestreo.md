@@ -9347,3 +9347,18 @@ código de las 12 páginas arrancando con el R 4.4.
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+**Publicado el 2026-11-14** con el visto bueno de Javier, paso a paso (T7.124 a T7.133). `origin/main` pasó de
+`2fd8d0a` a `44c26e9` por avance rápido, sin mover el `main` local del checkout principal, donde otras sesiones
+tienen cambios sin commitear. `gh-pages` pasó de `7f2089e` a `766da2e`, construido con `git commit-tree` del árbol
+`44c26e9:sitio` sobre la punta. El invariante `origin/gh-pages^{tree}` = `origin/main:sitio` sigue en verde.
+Sobre **lo servido**, con Pages ya construido en `766da2e`:
+- las 13 páginas en vivo son **byte a byte** las de `44c26e9:sitio` (`cmp`);
+- las frases nuevas están («tituló su último artículo», «cinco elecciones», «condados y equivalentes», la nota sobre
+  los datos) y ya no aparecen «veinte años acertando» ni «Lohr (2021)»;
+- en el navegador, a 375 px: el menú del móvil entra cerrado, se abre a 320 px y se cierra; 0 `.katex-error`, sin
+  desborde, consola limpia y las citas en redonda.
+
+**Una trampa de esta publicación, para la próxima.** En zsh, `"$SHA:refs/heads/gh-pages"` no es lo que parece: `:r`
+es un modificador de variable de zsh, se comió «:r» y el push murió con `766da2e…efs/heads/gh-pages does not match
+any`, sin publicar nada. Se escribe `"${SHA}:refs/heads/gh-pages"`, con llaves.
+
