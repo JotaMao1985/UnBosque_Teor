@@ -50,18 +50,23 @@ afirmaciones:
 - id: c1-m1-03
   tipo: dato
   afirmacion: >-
-    El recuento del propio sondeo fue de 1 293 669 papeletas para Landon y 972 897 para Roosevelt.
-  ancla: 1 293 669 papeletas para Landon y 972 897 para Roosevelt
-  veredicto: pendiente
+    La revista tituló su último artículo antes de la elección «Landon, 1 293 669; Roosevelt,
+    972 897», y sobre esos dos candidatos el sondeo dio el 42,92 % a Roosevelt.
+  ancla: La propia revista tituló su último artículo antes de la elección
+  veredicto: respaldada
   motivo: >-
-    Los dos verificadores (10 nov): las dos cifras NO están en el ejemplo 1.1 ni en ningún pasaje del
-    libro; aparecen solo como título del artículo «Literary Digest (1936a, October 31)» en la lista de
-    referencias de Lohr (pp. 617–618). El ejercicio 15.8 (p. 547) da otras: 1 286 511 y 966 352. La cita
-    correcta es de segunda mano y pide la ficha del artículo en el catálogo. Decide Javier qué par se usa.
-  redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+    El lector FU de la auditoría mostró que ese par no está en el ejemplo 1.1, sino en la lista de
+    referencias, como título del artículo del Digest; y que el ejercicio 15.8 da otro par como
+    recuento (966 352 y 1 286 511). Javier decidió el 2026-11-14 citarlo como lo que es: el
+    titular. Con eso la afirmación queda respaldada y las cifras del capítulo no cambian.
+  redactado_por: corrección de la Fase 2 (sesión maestra), 2026-11-14
+  verificado_por: lector FU de la auditoría del capítulo 1; el pasaje se rehízo por guion
+  fecha: 2026-11-14
   fuentes:
-  - {clave: lohr2022sampling, loc: ejemplo 1.1}
+  - clave: lohr2022sampling
+    loc: p. 618
+    pagina: 618
+    hash_pasaje: b2cfc3df5bdb040f
 
 - id: c1-m1-04
   tipo: historica

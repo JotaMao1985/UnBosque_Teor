@@ -9316,3 +9316,34 @@ el inventario y el contrato, en 0.
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.133 — Las tres decisiones del Checkpoint 1, y el menú del móvil (2026-11-14)
+
+Javier decidió las tres cuestiones abiertas de la auditoría del capítulo 1.
+
+- **El *Digest*, citado como titular.** El par «1 293 669 / 972 897» no es el recuento: es el título del último
+  artículo de la revista antes de la elección, como recoge Lohr en su lista de referencias (p. 618). El módulo 1 lo
+  dice así y el módulo 7 pasa a «2 266 566 papeletas para esos dos candidatos», con lo que desaparece la incoherencia
+  con «más de 2,3 millones». La afirmación del registro pasa de `discrepa` a `respaldada`, con su pasaje registrado.
+  Ninguna cifra cambió.
+- **Los datos se obtienen clonando el repositorio.** El módulo 2 abre con una nota que lo explica, antes del primer
+  bloque que lee un archivo.
+- **Los defectos visuales se arreglan en la plantilla, para los doce archivos**, con
+  `ensamblado/retropropaga_movil_y_jerarquia.py`, idempotente:
+  - **el menú de módulos funciona en el móvil.** Antes, a 375 px, el panel medía 0 px antes y después de pulsar el
+    botón: para ir del módulo 1 al 10 había que pasar nueve pantallas. Ahora entra cerrado, se abre superpuesto a
+    320 px y se cierra. Hizo falta una línea de JavaScript además del CSS, porque el panel arrancaba abierto;
+  - el botón que lo abre se va abajo a la izquierda, fuera de la columna de lectura;
+  - el botón «volver arriba» queda translúcido hasta que se le pasa por encima;
+  - los títulos de sección pasan de 16 px / 400 a 18,4 px / 700, por encima de los `h4` que cuelgan de ellos;
+  - el texto deja de justificarse por debajo de 768 px.
+  El laboratorio πPT recibe las reglas en su propia hoja, porque no sale de esta plantilla.
+
+**No quedó:** el contraste del rótulo naranja «MÓDULO N»; la regla apunta a una clase que en las páginas es verde, y
+el naranja viene de otra. Anotado para la tanda de gráficas.
+
+**Verificado** en el navegador a 375 y 1280 px (sin desbordes ni errores de consola), reensamblando las doce páginas
+dos veces (estables), y con el auditor de citas, el arnés, el inventario, las referencias, 0 cifras sin respaldo y el
+código de las 12 páginas arrancando con el R 4.4.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
