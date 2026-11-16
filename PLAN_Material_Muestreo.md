@@ -9384,3 +9384,30 @@ reensamblado estable, 0 cifras sin respaldo, referencias cruzadas en orden.
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.135 — Fase 3 del cap. 1, tarea 3.2: las 48 afirmaciones pendientes, leídas en las fuentes (2026-11-16)
+
+Un lector de fuentes independiente (Sonnet, contexto limpio y solo lectura) leyó en los ejemplares las 48
+afirmaciones que la tarea 3.1 dejó pendientes. Ninguno de sus pasajes se aceptó sin rehacerlo: los 93 se buscaron por
+guion (`verifica_citas.py --pasaje`) en la página que él decía, y solo entonces entraron al registro con su huella.
+Resultado en `bibliografia/contraste/cap1.yml`: **28 respaldadas, 18 con matiz, 10 que discrepan y 1 sin encontrar.**
+
+**Lo que cambia el capítulo**, comprobado también aparte:
+- **Los cinco ejercicios del módulo 10 no son de la 3.ª edición de Lohr**, sino los ejercicios 1 a 5 de la §1.7 de
+  la 1.ª (1999, p. 17); el caso de Hite tampoco está en la 3.ª. El material los atribuía al capítulo 1 de Lohr 2022.
+- El 65 % del título del artículo de Heck y otros es el de las dos encuestas combinadas, no el de la telefónica.
+- Gutiérrez enuncia ECM = sesgo² + varianza pero deja la demostración como ejercicio; su notación U, y_k, t_y está en
+  el capítulo 2, no en el 1; y la 3.ª ed. de Lohr no describe las muestras de agpop «al final del libro».
+- «El sesgo más estudiado y el más difícil de eliminar» no está en Lohr.
+- El 62,24 % de Roosevelt sale de porcentajes redondeados (61/98); Lohr da los votos (ejercicio 15.8, p. 547), que
+  dan 62,47 %.
+
+Las dieciocho con matiz son de redacción: una lista de destinatarios de Hite que no es la de Lohr, comillas de cita
+literal sobre una paráfrasis, «amante» por «husband/lover», conductas de deseabilidad social que la fuente no nombra,
+localizadores que necesitan una sección más.
+
+**Verificado:** auditor de citas sin nada nuevo (85 pasajes comprobados en el ejemplar), arnés con las 71
+inyecciones detectadas, generador sin cambios. El HTML no se ha tocado en esta tarea.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Espera la decisión de Javier sobre
+las correcciones y sobre el 62,24 %.
+

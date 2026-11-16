@@ -132,24 +132,39 @@ afirmaciones:
   tipo: historica
   afirmacion: En 1932 el Digest predijo un 56 % para Roosevelt y el resultado fue 57 %.
   ancla: En 1932 predijo un 56 % para Roosevelt y el resultado fue 57 %
-  veredicto: pendiente
-  motivo: >-
-    Los dos verificadores (10 nov) lo hallaron en el ejemplo 1.1, p. 2 (56 % predicho y 57 % real en
-    1932). Falta marcarlo y registrar el pasaje; no entró en el piloto.
+  veredicto: respaldada
   redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
+  fuentes:
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 2
+    hash_pasaje: f909df69e64f3028
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 2
+    hash_pasaje: 2afd431b30ca0534
 
 - id: c1-m1-08
   tipo: historica
   afirmacion: Roosevelt ganó 523 de los 531 votos electorales y la revista desapareció en 1938.
   ancla: Roosevelt ganó 523 de los 531 votos electorales
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Los dos verificadores (10 nov): los 523 de 531 votos electorales están en el ejemplo 15.12 (p. 533),
-    no en el 1.1; del cierre, el ejemplo 1.1 (p. 2) dice que el fracaso «contribuyó a la desaparición de la
-    revista en 1938», con cautela sobre la causa. Falta marcarlo; no entró en el piloto.
+    Los 523 de 531 votos electorales están en el ejemplo 15.12, no en el 1.1; la desaparición en 1938 está en el ejemplo 1.1, con cautela sobre la causa («contributed to»).
   redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
+  fuentes:
+  - clave: lohr2022sampling
+    loc: 'ejemplo 15.12'
+    pagina: 533
+    hash_pasaje: ea5a7ae801e96be8
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 2
+    hash_pasaje: 0b7130ec37ef5f85
 
 - id: c1-m1-12
   tipo: atribucion
@@ -189,14 +204,29 @@ afirmaciones:
   tipo: dato
   afirmacion: Hite envió 100 000 cuestionarios a organizaciones de mujeres y le devolvieron el 4,5 %.
   ancla: Se enviaron 100 000 cuestionarios
-  veredicto: pendiente
-  motivo: >-
-    genera_cap1.R lo atribuye al capítulo 1 de Lohr 1.ª. Hite está en las pp. 1–3 de ese ejemplar
-    y no aparece en la 3.ª (D2). Lohr 1.ª aún no está en el catálogo: falta su ficha en Zotero.
+  veredicto: con-matiz
+  matiz: >-
+    Las cifras coinciden (100 000 enviados, 4,5 % devueltos). La lista de destinatarios no: Lohr dice «professional women's groups, counseling centers, church societies, and senior citizens' centers»; el material la parte en «organizaciones de mujeres» y «asociaciones profesionales» y omite los centros para adultos mayores.
   redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr1999sampling, loc: cap. 1}
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: 84679985856d7f52
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: 357fe04ae46c855b
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: f6a9aca97b8f4e34
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: d12ebbcacf9ef36f
 
 - id: c1-m1-10
   tipo: dato
@@ -204,25 +234,43 @@ afirmaciones:
     Los cuatro porcentajes del libro de Hite (84 %, 70 %, 95 % y 84 %), con sus páginas
     (804, 856, 810 y 809).
   ancla: el 84 % de las mujeres «no están satisfechas emocionalmente con sus relaciones» (p. 804)
-  veredicto: pendiente
-  motivo: >-
-    genera_cap1.R lo atribuye al capítulo 1 de Lohr 1.ª; las páginas son las del libro de Hite
-    tal como las da Lohr, es decir, de segunda mano.
+  veredicto: con-matiz
+  matiz: >-
+    Las cuatro cifras y sus páginas coinciden. Pero Lohr entrecomilla solo las tres primeras; la del 84 % de condescendencia es paráfrasis suya y el material la muestra entre comillas como cita literal.
   redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr1999sampling, loc: cap. 1}
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 1
+    hash_pasaje: 6dfe28094437a42d
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 1
+    hash_pasaje: 4a3293311cac3fb9
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 1
+    hash_pasaje: 326a66bc41162581
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 1
+    hash_pasaje: 4f052eb79343bdc3
 
 - id: c1-m1-11
   tipo: dato
   afirmacion: El cuestionario de Hite tenía 127 preguntas abiertas, la mayoría con varias partes.
   ancla: El cuestionario tenía 127 preguntas abiertas
-  veredicto: pendiente
-  motivo: Sin procedencia declarada en genera_cap1.R; presumiblemente del mismo pasaje de Lohr 1.ª.
+  veredicto: respaldada
   redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr1999sampling, loc: cap. 1}
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: 38000ad9ee9c2c90
 
 # --- Módulo 4 · Las dos encuestas de Heck, Simons y Chabris (2018) -----------------------------
 - id: c1-m4-01
@@ -232,16 +280,29 @@ afirmaciones:
     encuesta 2 reclutó en Mechanical Turk a 1 020 personas, de las que 983 completaron la encuesta,
     pagando 0,25 dólares.
   ancla: La encuesta 1 marcó 79 014 números de línea fija al azar y obtuvo 1 838 entrevistas
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    genera_cap1.R lo atribuye a Heck et al. (2018) «vía Lohr 3.ª, ejercicio 15.13» y a la
-    documentación de SDAResources. En el ejemplar, Heck está en el ejercicio 15.5, p. 546 (D2).
-    El artículo es de acceso abierto y Zotero ya guarda su PDF: se puede leer directamente.
+    Heck da N = 983 = 1 020 − 37 y aclara que la telefónica fue automatizada, sin entrevistador humano.
   redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: heck201865, loc: cap. 1}
-  - {clave: lohr2022sampling, loc: ejercicio 15.5}
+  - clave: heck201865
+    loc: 'p. 2'
+    pagina: 2
+    hash_pasaje: e59a5f1294a3f88d
+  - clave: heck201865
+    loc: 'p. 2'
+    pagina: 2
+    hash_pasaje: bc67522e0ba91bbb
+  - clave: heck201865
+    loc: 'p. 2'
+    pagina: 2
+    hash_pasaje: df739cfbe686fdcf
+  - clave: lohr2022sampling
+    loc: 'ejercicio 15.5'
+    pagina: 546
+    hash_pasaje: e91bfdff756badae
 
 - id: c1-m4-02
   tipo: dato
@@ -263,12 +324,21 @@ afirmaciones:
   tipo: dato
   afirmacion: En 2009 y 2011 se preguntó a adultos de Estados Unidos por su acuerdo con la frase «soy más inteligente que la persona promedio».
   ancla: En 2009 y 2011 se preguntó a adultos de Estados Unidos por su acuerdo con la frase
-  veredicto: pendiente
-  motivo: genera_cap1.R da el ítem en inglés y las fechas (junio de 2009; julio-agosto de 2011) sin localizador.
+  veredicto: con-matiz
+  matiz: >-
+    Frase y fechas coinciden (junio de 2009, julio-agosto de 2011); la fuente dice «Americans», no «adultos».
   redactado_por: material publicado antes de la Fase GD
-  fecha: 2026-11-10
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: heck201865, loc: cap. 1}
+  - clave: heck201865
+    loc: 'p. 2'
+    pagina: 2
+    hash_pasaje: a9ee9f3436cda0e0
+  - clave: heck201865
+    loc: 'p. 2'
+    pagina: 2
+    hash_pasaje: b78442d3a6460d14
 
 # --- Fase 3 del plan del cap. 1 (2026-11-14): inventario de lo que el capítulo afirma con fuente.
 # Todas pendientes y ancladas a su literal; en `fuentes` solo dice dónde mirar. Las verifica el
@@ -278,223 +348,331 @@ afirmaciones:
   afirmacion: >-
     El libro de Hite de 1987 se titula «Women and Love: A Cultural Revolution in Progress».
   ancla: A Cultural Revolution in Progress
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: respaldada
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr1999sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 1
+    hash_pasaje: 5100f35a51b9607f
 
 - id: c1-m1-15
   tipo: atribucion
   afirmacion: >-
     La sección 1.1 y el ejemplo 1.1 de Lohr (2022) cuentan el caso del Digest, incluido Allentown. (La prosa dice «de ahí salen todas las cifras del Digest», y el titular del último artículo está en la p. 618, en la lista de referencias: se corrige al marcarla.)
   ancla: que se citan aquí, incluido el caso de Allentown
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    La sección 1.1 y el ejemplo 1.1 cuentan el Digest y Allentown; pero no salen de ahí «todas las cifras»: los 523 de 531 votos son del ejemplo 15.12 (p. 533), el titular está en la lista de referencias (p. 618), y 2 266 566, 42,92 % y 62,24 % son cálculos del material.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.1; ejemplo 1.1'}
-  - {clave: lohr2022sampling, loc: 'p. 618'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 1
+    hash_pasaje: 12e62b94e2070d45
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 2
+    hash_pasaje: b74cc39e2c079888
+  - clave: lohr2022sampling
+    loc: 'p. 618'
+    pagina: 618
+    hash_pasaje: a8bed136a34d1197
+  - clave: lohr2022sampling
+    loc: 'ejemplo 15.12'
+    pagina: 533
+    hash_pasaje: aae9c3706a964e6b
 
 - id: c1-m1-16
   tipo: atribucion
   afirmacion: >-
     El capítulo 1 de Lohr (1999) analiza el estudio de Hite y da las páginas del libro original de donde salen sus cifras.
   ancla: análisis del estudio de Hite, con las páginas exactas del libro original
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    Las «páginas exactas» son las del libro de Hite (804, 856, 810, 809), tal como las da Lohr.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr1999sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 1
+    hash_pasaje: 6dfe28094437a42d
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: 17399d4e69b23558
 
 - id: c1-m1-17
   tipo: atribucion
   afirmacion: >-
     El capítulo 1 de Gutiérrez plantea, desde la teoría de diseños, el mismo argumento del módulo 1: que el tamaño de muestra no protege de una selección defectuosa.
   ancla: el mismo argumento desde la teoría de diseños, de
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    El cap. 1 de Gutiérrez trata el sesgo de selección (conveniencia, voluntarios, ausencia de respuesta) en una introducción no matemática; no es «teoría de diseños» ni dice que el tamaño no compense una selección defectuosa. Lo más cercano: que una muestra bien seleccionada de unos miles basta.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: gutierrez2016estrategias, loc: 'cap. 1'}
+  - clave: gutierrez2016estrategias
+    loc: 'cap. 1'
+    instantanea: cap1
+    hash_pasaje: 50764875370757a2
+  - clave: gutierrez2016estrategias
+    loc: 'cap. 1'
+    instantanea: cap1
+    hash_pasaje: d1031fc6edc9a7f2
 
 - id: c1-m2-01
   tipo: dato
   afirmacion: >-
     agpop son los 3 078 condados y equivalentes de Estados Unidos del censo agrícola de 1992.
   ancla: condados y equivalentes de Estados Unidos en el censo
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El archivo reúne datos de 1982, 1987 y 1992 del Censo Agrícola.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejemplo 2.6'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 2.6'
+    pagina: 40
+    hash_pasaje: 6690d9206b652dde
 
 - id: c1-m2-02
   tipo: dato
   afirmacion: >-
     En los archivos de Lohr el −99 es el código de dato faltante; en agpop esos condados se midieron y el dato se suprimió para no revelar los de explotaciones individuales.
   ancla: el dato se suprimió para no revelar
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    La supresión para no revelar datos de explotaciones individuales está en Lohr 2022 (ejemplo 2.6). El código −99 no aparece en el texto de la 3.ª ed.; sí en el apéndice de datos de la 1.ª (p. 437). «Se midieron» es inferencia, no lo dice el texto.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejemplo 2.6'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 2.6'
+    pagina: 40
+    hash_pasaje: af89ec35e8e9986f
+  - clave: lohr1999sampling
+    loc: 'p. 437'
+    pagina: 437
+    hash_pasaje: 3e802f815128642e
 
 - id: c1-m2-03
   tipo: atribucion
   afirmacion: >-
     Lohr trabaja con agpop completo, N = 3 078, sin excluir los condados con −99.
   ancla: sin excluir nada, que es lo que hace el texto guía
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    Lohr usa N = 3078 en todos los cálculos con agpop, pero no dice cómo entran los condados sin dato en la media poblacional ni que no los excluya: «sin excluir los −99» es inferencia del material.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejemplo 2.6'}
+  - clave: lohr2022sampling
+    loc: 'p. 43'
+    pagina: 43
+    hash_pasaje: 50e3430f603506a8
 
 - id: c1-m2-04
   tipo: dato
   afirmacion: >-
     La lista de envío del Digest se armó con guías de teléfono, registros de automóviles y otras listas.
   ancla: teléfono, registros de automóviles y otras listas
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    Lohr cita además clubes, directorios urbanos y listas de votantes registrados.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejemplo 1.1'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 2
+    hash_pasaje: e1a233d8a4ee137a
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 2
+    hash_pasaje: 33069c911f4fefc9
 
 - id: c1-m2-05
   tipo: atribucion
   afirmacion: >-
     La sección 1.2 de Lohr (2022) trata población objetivo, marco, unidad de muestreo y de observación, con ejemplos que reaparecen en los ejercicios del módulo 10.
   ancla: con los ejemplos que se reutilizan en los ejercicios del módulo 10
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    La sección 1.2 define población objetivo, marco, unidad de muestreo y de observación. Pero sus ejemplos (ACS, encuesta agrícola por áreas, Digest, sondeos) no son los de los ejercicios del módulo 10, que vienen de la 1.ª ed., §1.7.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.2'}
+  - clave: lohr2022sampling
+    loc: '§1.2'
+    pagina: 4
+    hash_pasaje: 265686da18c1dabc
+  - clave: lohr2022sampling
+    loc: '§1.2'
+    pagina: 4
+    hash_pasaje: 8155491340168f91
 
 - id: c1-m2-06
   tipo: atribucion
   afirmacion: >-
     La sección 2.1.5 del capítulo 2 de Gutiérrez hace la misma partición (población, marco, unidades) con la notación U, y_k, t_y.
   ancla: la misma partición con la notación
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    y_k y t_y están en §2.1.5; U se define en §2.1.1. La sección 2.1.5 trata la característica y los parámetros de interés, no la partición población-marco-unidades, que está en el cap. 1.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: gutierrez2016estrategias, loc: '§2.1.5'}
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.1'
+    instantanea: cap2
+    hash_pasaje: df234009db595b5d
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.5'
+    instantanea: cap2
+    hash_pasaje: e08aff594fe235c0
 
 - id: c1-m3-01
   tipo: atribucion
   afirmacion: >-
     Las secciones 1.2 y 1.7 de Lohr (2022) tratan qué hace buena a una muestra y por qué se muestrea en vez de censar.
   ancla: qué hace buena a una muestra y por qué se muestrea en vez de censar
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    §1.7 es «Why Use Sampling?»; §1.2 trata la muestra representativa.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.2; §1.7'}
+  - clave: lohr2022sampling
+    loc: '§1.7'
+    pagina: 19
+    hash_pasaje: 77ff5d5b9b06e3f1
+  - clave: lohr2022sampling
+    loc: '§1.2'
+    pagina: 3
+    hash_pasaje: c0f6fc2d426b847c
 
 - id: c1-m4-04
   tipo: dato
   afirmacion: >-
     Las dos encuestas sobre inteligencia se calibraron al censo de 2010 por las mismas ocho celdas de sexo, edad y raza.
   ancla: Las dos se calibraron después al censo de 2010
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    Heck habla de ponderar («weighted»), no de calibrar.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: heck201865, loc: 'cap. 1'}
-  - {clave: lohr2022sampling, loc: 'ejercicio 15.5'}
+  - clave: heck201865
+    loc: 'p. 3'
+    pagina: 3
+    hash_pasaje: 4fb3a2d1b97d7a71
+  - clave: lohr2022sampling
+    loc: 'ejercicio 15.5'
+    pagina: 546
+    hash_pasaje: bacf80318eee5abe
 
 - id: c1-m4-05
   tipo: atribucion
   afirmacion: >-
     El título del artículo de Heck y otros, «65 % of Americans believe they are above average in intelligence», sale de la estimación ponderada de la encuesta telefónica.
   ancla: es la que da título al artículo original
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El 65 % del título es el de las dos encuestas ponderadas combinadas (1 500 participantes); la telefónica sola da 65 % y el panel 66 %. El artículo no da 64,8 %, que es cálculo del material. No se puede atribuir el título a la telefónica sola.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: heck201865, loc: 'cap. 1'}
+  - clave: heck201865
+    loc: 'p. 3'
+    pagina: 3
+    hash_pasaje: ae02b7b3d7a3d7cb
 
 - id: c1-m4-06
   tipo: atribucion
   afirmacion: >-
     La sección 1.3 de Lohr (2022) da la tipología del sesgo de selección, y en la sección 8.1 la fórmula del sesgo de no respuesta se obtiene como aproximación.
   ancla: la tipología del sesgo de selección; y
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    En §8.1 la fórmula del sesgo es explícitamente aproximada.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.3; §8.1'}
+  - clave: lohr2022sampling
+    loc: '§1.3'
+    pagina: 6
+    hash_pasaje: a46b8e8cb323ecc6
+  - clave: lohr2022sampling
+    loc: '§8.1'
+    pagina: 313
+    hash_pasaje: af4d0d2d8a5975e8
 
 - id: c1-m4-07
   tipo: atribucion
   afirmacion: >-
     El ejercicio 15.5 de Lohr (2022) plantea la comparación de las dos encuestas sobre inteligencia como ejercicio sobre muestras no probabilísticas.
   ancla: la comparación de las dos encuestas, planteada como
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: respaldada
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejercicio 15.5'}
+  - clave: lohr2022sampling
+    loc: 'ejercicio 15.5'
+    pagina: 546
+    hash_pasaje: b775899fe58f5701
 
 - id: c1-m4-08
   tipo: dato
   afirmacion: >-
     La encuesta telefónica de 2009 marcó solo números de línea fija, ninguno de móvil.
   ancla: números de línea fija y ninguno de móvil
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: respaldada
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: heck201865, loc: 'cap. 1'}
+  - clave: lohr2022sampling
+    loc: 'ejercicio 15.5'
+    pagina: 546
+    hash_pasaje: 9700ce074637f133
 
 - id: c1-m5-01
   tipo: regla
   afirmacion: >-
     Por deseabilidad social se declaran de más el ejercicio, la lectura y el voto, y de menos el alcohol y los ingresos.
   ancla: se declara más ejercicio, más lectura y más participación
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    Lohr respalda el ejercicio de más y el alcohol de menos (§1.5, no §1.4). No figuran ni la lectura ni el voto como conductas sobreinformadas, y los ingresos de menos aparecen por miedo a sanciones fiscales, no por deseabilidad social.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.4'}
+  - clave: lohr2022sampling
+    loc: '§1.5'
+    pagina: 16
+    hash_pasaje: 994a9ea28ab0e8a6
 
 - id: c1-m5-02
   tipo: atribucion
@@ -503,7 +681,9 @@ afirmaciones:
   ancla: Es el sesgo más estudiado y el más difícil de eliminar
   veredicto: pendiente
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El lector FU no lo encontró (2026-11-16): buscó en §1.4, §1.5, §16.3 y en las entradas «social desirability»
+    del índice. Lohr habla de una amplia literatura sobre cómo obtener respuestas veraces a preguntas sensibles y de
+    un reto particular, no de que sea el sesgo de medición más estudiado ni el más difícil de eliminar.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
   fecha: 2026-11-14
   fuentes:
@@ -514,296 +694,469 @@ afirmaciones:
   afirmacion: >-
     Preguntar por un periodo de referencia produce telescopaje (se arrastran hechos anteriores al periodo) y olvido.
   ancla: que arrastran hechos anteriores hacia el periodo de referencia
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    Lohr describe el fenómeno sin usar el término «telescopaje».
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.4'}
+  - clave: lohr2022sampling
+    loc: '§1.4'
+    pagina: 11
+    hash_pasaje: ad1290f2349de2ce
 
 - id: c1-m5-04
   tipo: regla
   afirmacion: >-
     El entrevistador mueve las respuestas, y su efecto correlaciona las respuestas de las unidades que atiende.
   ancla: mueven las respuestas. Como cada entrevistador
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    El efecto del entrevistador está en §1.4; que correlacione las respuestas de sus unidades, como un conglomerado, está en §16.3.1.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.4'}
+  - clave: lohr2022sampling
+    loc: '§1.4'
+    pagina: 12
+    hash_pasaje: 7073bb85302e342b
+  - clave: lohr2022sampling
+    loc: '§16.3.1'
+    pagina: 567
+    hash_pasaje: 9d6784418cd15c63
 
 - id: c1-m5-05
   tipo: regla
   afirmacion: >-
     Sin interlocutor humano la deseabilidad social baja: el modo de recolección cambia las respuestas.
   ancla: sin interlocutor humano, la deseabilidad social baja
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    Lohr lo formula con «may», no como regla. La frase que sigue en la prosa («separarlas es un problema abierto») no tiene fuente.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.4; §1.5'}
+  - clave: lohr2022sampling
+    loc: '§1.4'
+    pagina: 11
+    hash_pasaje: 45bea11c2098b733
+  - clave: lohr2022sampling
+    loc: '§1.4'
+    pagina: 12
+    hash_pasaje: b139caa8657b9388
 
 - id: c1-m5-06
   tipo: atribucion
   afirmacion: >-
     La sección 1.4 de Lohr (2022) trata el error de medición y la sección 16.3, los modelos de error de medición en encuestas.
   ancla: el error de medición y los
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: respaldada
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.4; §16.3'}
+  - clave: lohr2022sampling
+    loc: '§1.4'
+    pagina: 10
+    hash_pasaje: c9f31e4fc2537caa
+  - clave: lohr2022sampling
+    loc: '§16.3'
+    pagina: 565
+    hash_pasaje: 97c095ad1f6b6084
 
 - id: c1-m5-07
   tipo: atribucion
   afirmacion: >-
     El capítulo 1 de Gutiérrez trata el error en las encuestas desde la teoría de diseños, sin la clasificación del error total que usa el módulo.
   ancla: la clasificación del error total es de este módulo
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    El cap. 1 distingue sesgo de selección, sesgo de medición y defectos del marco, en una introducción no matemática; no es «teoría de diseños».
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: gutierrez2016estrategias, loc: 'cap. 1'}
+  - clave: gutierrez2016estrategias
+    loc: 'cap. 1'
+    instantanea: cap1
+    hash_pasaje: aa39939b3f96d661
 
 - id: c1-m6-01
   tipo: regla
   afirmacion: >-
     En las preguntas cerradas, el orden de las opciones y la presencia o ausencia de un punto medio cambian el reparto de respuestas.
   ancla: el orden de las opciones y la presencia o ausencia de un punto medio
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    §1.5 muestra que la escala de opciones cambia el reparto y que importa el orden de las preguntas; no trata el orden de las opciones ni el punto medio.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.5'}
+  - clave: lohr2022sampling
+    loc: '§1.5'
+    pagina: 15
+    hash_pasaje: d878b09a0e588d26
+  - clave: lohr2022sampling
+    loc: '§1.5'
+    pagina: 17
+    hash_pasaje: 05fa7d01bf7a9e1f
 
 - id: c1-m6-02
   tipo: atribucion
   afirmacion: >-
     El primer ítem del auditor de preguntas («¿Tu amante te ve como igual? ¿O hay veces que parece tratarte como inferior? ¿Te deja fuera de las decisiones? ¿Actúa de superior?») traduce una pregunta del cuestionario de Hite que analiza el capítulo 1 de Lohr (1999).
   ancla: el análisis del cuestionario de Hite, de donde sale el primer
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    La pregunta es real y Lohr la da como ejemplo de pregunta sugestiva. La traducción difiere: «husband/lover» pasó a «amante», que en español sugiere una relación extramarital.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr1999sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: 7074cb2dd9e9dced
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: 17399d4e69b23558
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 2
+    hash_pasaje: d765335822a8ff46
 
 - id: c1-m6-03
   tipo: atribucion
   afirmacion: >-
     La sección 1.5 de Lohr (2022) trata la redacción de preguntas y el diseño de cuestionarios, con ejemplos de experimentos de redacción.
   ancla: cuestionarios, con ejemplos de experimentos de redacción
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: respaldada
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.5'}
+  - clave: lohr2022sampling
+    loc: '§1.5'
+    pagina: 13
+    hash_pasaje: 8fd5a8ba1e47f619
 
 - id: c1-m7-01
   tipo: atribucion
   afirmacion: >-
     La sección 1.6 de Lohr (2022) da la clasificación del error total de encuesta que sigue el árbol del módulo, y la sección 15.2 desarrolla el ECM de una muestra no probabilística.
   ancla: la clasificación del error total de encuesta que sigue el
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    §1.6 solo da la dicotomía error de muestreo / ajeno al muestreo; la clasificación en cinco fuentes que sigue el árbol está en la introducción del cap. 16. §15.2 sí desarrolla el ECM de una muestra no probabilística.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: '§1.6; §15.2'}
+  - clave: lohr2022sampling
+    loc: '§1.6'
+    pagina: 17
+    hash_pasaje: d9b18aebe81ef28a
+  - clave: lohr2022sampling
+    loc: 'cap. 16'
+    pagina: 558
+    hash_pasaje: 6f8fc15a3769ce7a
+  - clave: lohr2022sampling
+    loc: '§15.2'
+    pagina: 524
+    hash_pasaje: 82b07bb5c478168a
 
 - id: c1-m7-02
   tipo: atribucion
   afirmacion: >-
     La sección 2.1.6 de Gutiérrez da la descomposición ECM = B² + V con su demostración.
   ancla: con la demostración completa
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    §2.1.6 enuncia ECM = Var + B² sin demostrarlo; la demostración queda como ejercicio 1 de §2.4. «Con la demostración completa» es falso: quien la desarrolla es el propio módulo 7.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: gutierrez2016estrategias, loc: '§2.1.6'}
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.6'
+    instantanea: cap2
+    hash_pasaje: 4865a9f61f4f8ff8
+  - clave: gutierrez2016estrategias
+    loc: '§2.4'
+    instantanea: cap2
+    hash_pasaje: c591adda93d9b0d6
 
 - id: c1-m8-01
   tipo: dato
   afirmacion: >-
     agpop trae la superficie de explotaciones agrícolas de 1992, 1987 y 1982, el número de granjas y la región.
   ancla: con la superficie dedicada a explotaciones agrícolas en 1992, 1987 y 1982
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    La variable región solo se lista en el apéndice de datos de la 1.ª ed.; en la 3.ª se ve por uso.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejemplo 2.6'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 2.6'
+    pagina: 40
+    hash_pasaje: 3eca44b8a4954e28
+  - clave: lohr2022sampling
+    loc: 'ejemplo 3.2'
+    pagina: 80
+    hash_pasaje: e1a0aaea1a203411
 
 - id: c1-m8-02
   tipo: atribucion
   afirmacion: >-
     BigLucy es la población sintética de Estrategias de muestreo, con ingresos, empleados, impuestos, nivel, zona y variables auxiliares, y se instala con el paquete TeachingSampling.
   ancla: con ingresos, número de empleados, impuestos, nivel, zona y variables auxiliares
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: con-matiz
+  matiz: >-
+    BigLucy está en TeachingSampling con esas variables y 85 296 filas; el texto no la llama «sintética» ni dice que «se instala» (se carga con library). El texto de §1.2 describe otra población, Lucy, de 2 396 empresas.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: gutierrez2016estrategias, loc: 'cap. 1'}
+  - clave: gutierrez2016estrategias
+    loc: '§1.2'
+    instantanea: cap1
+    hash_pasaje: 1559098213384f60
+  - clave: gutierrez2016estrategias
+    loc: '§1.2'
+    instantanea: cap1
+    hash_pasaje: 046c0d3650c0f4a3
 
 - id: c1-m8-03
   tipo: atribucion
   afirmacion: >-
     Lohr distribuye con agpop las muestras agsrs (aleatoria simple, n = 300), agstrat (estratificada por región) y agpps (con probabilidades proporcionales al tamaño).
   ancla: Lohr distribuye, junto a
-  veredicto: pendiente
+  veredicto: respaldada
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    agpps es una muestra de tamaño 15, no 300.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejemplo 2.6'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 4.2'
+    pagina: 125
+    hash_pasaje: 7cbf8a983ea581b9
+  - clave: lohr2022sampling
+    loc: 'p. 81'
+    pagina: 81
+    hash_pasaje: 2590248fe69ed8c7
+  - clave: lohr2022sampling
+    loc: 'ejemplo 6.10'
+    pagina: 238
+    hash_pasaje: f8380b989109c8f4
 
 - id: c1-m8-04
   tipo: atribucion
   afirmacion: >-
     El ejemplo 2.6 de Lohr (2022) describe agpop, y al final del libro se describen las muestras derivadas.
   ancla: al final del libro se describen
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El ejemplo 2.6 describe agpop, pero en la 3.ª ed. no hay descripción de los datos «al final del libro»: el apéndice A es de probabilidad, y el prefacio remite a los libros-compañero y al sitio web. Era la 1.ª ed. la que traía un apéndice de datos (sin agpps).
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'ejemplo 2.6'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 2.6'
+    pagina: 40
+    hash_pasaje: 3eca44b8a4954e28
+  - clave: lohr1999sampling
+    loc: 'p. 438'
+    pagina: 438
+    hash_pasaje: 272765f6d3084157
 
 - id: c1-m9-01
   tipo: atribucion
   afirmacion: >-
     El capítulo 15 de Lohr (2022) trata las muestras no probabilísticas: cuándo usarlas, con qué supuestos y cómo medir su error cuadrático medio.
   ancla: 'muestras no probabilísticas: cuándo se pueden usar'
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: respaldada
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 15'}
+  - clave: lohr2022sampling
+    loc: 'cap. 15'
+    pagina: 517
+    hash_pasaje: 465c8866b6139e30
+  - clave: lohr2022sampling
+    loc: 'cap. 15'
+    pagina: 517
+    hash_pasaje: 75cbcc1b708ce102
 
 - id: c1-m10-01
   tipo: atribucion
   afirmacion: >-
     El ejercicio 1 adapta un ejercicio del capítulo 1 de Lohr (2022): la encuesta telefónica de pago (1-900, 75 centavos) del artículo «What Readers Say About Marijuana», con más del 75 % a favor de legalizar.
   ancla: What Readers Say About
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El ejercicio 1 no es de Lohr 2022: es el ejercicio 1 de §1.7 de la 1.ª ed. (1999, p. 17), con los mismos datos. La 3.ª ed. no lo trae (o trae otra versión). Las hipótesis numéricas de la solución son del material.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: aa89ff3354c2d31f
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: 02061605420a7d21
 
 - id: c1-m10-02
   tipo: atribucion
   afirmacion: >-
     El ejercicio 2 adapta un ejercicio del capítulo 1 de Lohr (2022): los fondos mutuos tomados de uno de cada diez de las listas de un periódico.
   ancla: porcentaje de fondos mutuos que subieron de precio
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El ejercicio 2 no es de Lohr 2022: es el ejercicio 2 de §1.7 de la 1.ª ed. (1999, p. 17), con los mismos datos. La 3.ª ed. no lo trae (o trae otra versión). Las hipótesis numéricas de la solución son del material.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: 22f7cea351909d27
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: b5e592dc17257e99
 
 - id: c1-m10-03
   tipo: atribucion
   afirmacion: >-
     El ejercicio 3 adapta un ejercicio del capítulo 1 de Lohr (2022): las citaciones a jurado del condado de Maricopa (100 300 enviadas; 23 000 no entregables, 7 000 no califican, 22 000 excusadas).
   ancla: Maricopa envía 100 300 citaciones
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El ejercicio 3 no es de Lohr 2022: es el ejercicio 3 de §1.7 de la 1.ª ed. (1999, p. 17), con los mismos datos. La 3.ª ed. no lo trae (o trae otra versión). Las hipótesis numéricas de la solución son del material.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: 4d0bf115826f250a
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: cb159f4200ba5f16
 
 - id: c1-m10-04
   tipo: atribucion
   afirmacion: >-
     El ejercicio 4 adapta un ejercicio del capítulo 1 de Lohr (2022): 14 arquitectos de una ciudad, se llama por orden del directorio hasta tener 8 entrevistas.
   ancla: arquitectos y se quiere una muestra de
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El ejercicio 4 no es de Lohr 2022: es el ejercicio 4 de §1.7 de la 1.ª ed. (1999, p. 17), con los mismos datos. La 3.ª ed. no lo trae (o trae otra versión). Las hipótesis numéricas de la solución son del material.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: d0ec20d17b511b30
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: f92d1589aa5fe491
 
 - id: c1-m10-05
   tipo: atribucion
   afirmacion: >-
     El ejercicio 5 adapta un ejercicio del capítulo 1 de Lohr (2022): un bibliotecario elige 100 ubicaciones al azar en las estanterías y mira si el libro necesita reencuadernación.
   ancla: ubicaciones al azar en las estanterías
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El ejercicio 5 no es de Lohr 2022: es el ejercicio 5 de §1.7 de la 1.ª ed. (1999, p. 17), con los mismos datos. La 3.ª ed. no lo trae (o trae otra versión). Las hipótesis numéricas de la solución son del material.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 1'}
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: 2e0f2227cd0b32ad
+  - clave: lohr1999sampling
+    loc: '§1.7'
+    pagina: 17
+    hash_pasaje: b3b48a3296c7abcf
 
 - id: c1-m10-06
   tipo: atribucion
   afirmacion: >-
     El capítulo 1 de Lohr (2022) es la fuente de los dos casos del módulo 1 (Hite y el Digest) y de los cinco ejercicios del módulo 10.
   ancla: la fuente de los dos casos del
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    Del cap. 1 de Lohr 2022 solo sale el Digest. Hite no está en la 3.ª ed. (está en la 1.ª, cap. 1), y los cinco ejercicios son de la 1.ª ed., §1.7.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 1'}
+  - clave: lohr2022sampling
+    loc: 'ejemplo 1.1'
+    pagina: 1
+    hash_pasaje: 12e62b94e2070d45
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 1
+    hash_pasaje: 5100f35a51b9607f
 
 - id: c1-m10-07
   tipo: atribucion
   afirmacion: >-
     El capítulo 1 de Gutiérrez introduce la notación U, y_k, t_y (el módulo 2 la sitúa en la sección 2.1.5 del capítulo 2: una de las dos está mal).
   ancla: y la introducción de la notación
-  veredicto: pendiente
+  veredicto: discrepa
   motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+    El cap. 1 de Gutiérrez no trae esa notación; está en el cap. 2: U en §2.1.1 y y_k, t_y en §2.1.5.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: gutierrez2016estrategias, loc: 'cap. 1'}
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.1'
+    instantanea: cap2
+    hash_pasaje: df234009db595b5d
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.5'
+    instantanea: cap2
+    hash_pasaje: e08aff594fe235c0
 
 - id: c1-m10-08
   tipo: atribucion
   afirmacion: >-
     El capítulo 15 de Lohr (2022) trata las muestras no probabilísticas.
   ancla: muestras no probabilísticas. Es la continuación
-  veredicto: pendiente
-  motivo: >-
-    Registrada en el inventario de la Fase 3; falta leerla en el ejemplar.
+  veredicto: respaldada
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  fecha: 2026-11-14
+  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-16
   fuentes:
-  - {clave: lohr2022sampling, loc: 'cap. 15'}
+  - clave: lohr2022sampling
+    loc: 'cap. 15'
+    pagina: 517
+    hash_pasaje: 465c8866b6139e30
+
