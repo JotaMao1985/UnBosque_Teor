@@ -9362,3 +9362,25 @@ Sobre **lo servido**, con Pages ya construido en `766da2e`:
 es un modificador de variable de zsh, se comió «:r» y el push murió con `766da2e…efs/heads/gh-pages does not match
 any`, sin publicar nada. Se escribe `"${SHA}:refs/heads/gh-pages"`, con llaves.
 
+### T7.134 — Fase 3 del cap. 1, tarea 3.1: lo que el capítulo afirma con fuente, registrado (2026-11-14)
+
+Primera de las cuatro tareas de la Fase 3 (fuentes) del plan de mejora del capítulo 1. Antes de marcar ninguna cita, el
+registro de contraste recoge **todo lo que el capítulo afirma apoyándose en una obra**: 41 afirmaciones nuevas en
+`bibliografia/contraste/cap1.yml` (57 en total), todas `pendiente` y ancladas a su literal en la prosa. Son los datos de
+agpop y de las dos encuestas sobre inteligencia que aún no estaban, las reglas del error de medición y de redacción
+que el material atribuye a Lohr, las lecturas de los diez módulos y la procedencia de los cinco ejercicios.
+
+El orden es a propósito: una cita con localizador sobre una afirmación pendiente falla (L6), así que primero se
+registra, después lee el lector de fuentes (3.2) y solo entonces se marca el HTML (3.3).
+
+**Cuatro frases corregidas** que el inventario destapó:
+- el M2 llamaba «papeletas devueltas» a las 2 266 566 del titular del *Digest* (las devueltas fueron más de 2,3
+  millones) y reducía el marco a teléfono y automóvil, contra lo que dice el M1;
+- la prueba piloto del M6 llevaba «quince personas» sin fuente: ahora «unas pocas»;
+- el M9 decía sin fuente que Mechanical Turk alimenta «una fracción enorme» de los datos de los modelos: se quita.
+
+**Verificado:** auditor de citas sin nada nuevo, arnés con las 71 inyecciones detectadas, generador sin cambios,
+reensamblado estable, 0 cifras sin respaldo, referencias cruzadas en orden.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
