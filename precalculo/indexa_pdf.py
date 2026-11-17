@@ -59,6 +59,10 @@ PERFILES = {
         "calidad": "paginas",
         "secciones": "ninguna",
     },
+    "dane2019omision": {
+        "calidad": "paginas",
+        "secciones": "ninguna",
+    },
     "portela2007tecnicas": {
         "calidad": "paginas",
         "secciones": "indice",

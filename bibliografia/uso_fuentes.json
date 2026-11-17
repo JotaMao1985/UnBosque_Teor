@@ -56,6 +56,15 @@
       "afirmaciones": {},
       "sin_marcar": 1
     },
+    "dane2019omision": {
+      "rol": "primaria",
+      "ejemplar": true,
+      "edicion_comprobada": "Comunicado de prensa del 17 de octubre de 2019, por la primera página: «Comunicado de prensa · Bogotá · 17 de octubre de 2019 · Resultados proceso de omisión censal · Censo nacional de Población y Vivienda CNPV - 2018», con el código COM-030-PD-001-r-002 V9. El pie de cada página trae su número desde la 2, y la primera es la 1.",
+      "capitulos": [],
+      "citas": 0,
+      "afirmaciones": {},
+      "sin_marcar": 0
+    },
     "deville1992calibration": {
       "rol": "primaria",
       "ejemplar": false,

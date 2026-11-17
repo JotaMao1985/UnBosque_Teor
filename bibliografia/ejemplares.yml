@@ -14,23 +14,40 @@ blumberg2010wireless:
   procedencia: Copia archivada por los propios CDC, descargada el 2026-11-13 de https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf
     (la URL original en www.cdc.gov ya no responde).
   sha256: bab540fd4a88a0a46469812b1d83cf568d566d5d9ead1cbc9bf57312428d9bf2
+dane2019omision:
+  archivo: dane2019omision.pdf
+  desfase: 0
+  edicion_comprobada: 'Comunicado de prensa del 17 de octubre de 2019, por la primera página: «Comunicado de
+    prensa · Bogotá · 17 de octubre de 2019 · Resultados proceso de omisión censal · Censo nacional de
+    Población y Vivienda CNPV - 2018», con el código COM-030-PD-001-r-002 V9. El pie de cada página trae su
+    número desde la 2, y la primera es la 1.'
+  formato: pdf
+  paginas: 9
+  paginas_sin_texto: 0
+  procedencia: Descargado del sitio del DANE el 2026-11-13, en la auditoría del cap. 1. El 2026-11-16 se localizó
+    su URL oficial, https://www.dane.gov.co/files/censo2018/informacion-tecnica/cnpv-2018-omision-censal.pdf,
+    que sirve el mismo comunicado (mismo título, fecha y código); no se comparó la huella con la copia en línea.
+  sha256: 81d1b8e79120398758d6bcdc929e05b4b97bda56e0a9559c8d1edfff7e21aca4
 heck201865:
   archivo: heck201865.pdf
   desfase: 0
-  edicion_comprobada: 'Artículo de PLOS ONE 13(7): e0200103, publicado el 3 de julio de 2018, por su\n    primera página y por el pie de cada una: «PLOS ONE | https://doi.org/10.1371/journal.pone.0200103\n    July 3, 2018   N / 11». Las 11 páginas del PDF son las 11 del artículo.'
+  edicion_comprobada: 'Artículo de PLOS ONE 13(7): e0200103, publicado el 3 de julio de 2018, por su\n    primera
+    página y por el pie de cada una: «PLOS ONE | https://doi.org/10.1371/journal.pone.0200103\n    July
+    3, 2018   N / 11». Las 11 páginas del PDF son las 11 del artículo.'
   formato: pdf
   paginas: 11
   paginas_sin_texto: 0
-  procedencia: 'PDF de acceso abierto que Zotero descargó al dar de alta la obra por su DOI\n    (adjunto TUEQ57JS); su huella coincide con la que anotó el candado de Zotero.'
+  procedencia: PDF de acceso abierto que Zotero descargó al dar de alta la obra por su DOI\n    (adjunto
+    TUEQ57JS); su huella coincide con la que anotó el candado de Zotero.
   sha256: 593b4cedc3580a4b7265961732d5ee90d272f96d455fa132aa36b95a13190e5f
 lohr1999sampling:
   archivo: lohr1999sampling.pdf
   desfase: 9
-  edicion_comprobada: '1.ª ed. por la portada (Duxbury Press, sello de Brooks/Cole, ITP) y por la
-    numeración (cap. 3 razón y regresión, cap. 4 estratificado). El escaneo no trae página de créditos,
-    así que el año no se lee en el ejemplar: 1999 y el ISBN 978-0-534-35361-2 los da Open Library
-    (ediciones OL7784218M, «December 15, 1999», «1 edition», y OL382186M, LCCN 98044566, consultadas
-    el 2026-11-13), y concuerdan con la portada en editorial y lugar.'
+  edicion_comprobada: '1.ª ed. por la portada (Duxbury Press, sello de Brooks/Cole, ITP) y por la numeración
+    (cap. 3 razón y regresión, cap. 4 estratificado). El escaneo no trae página de créditos, así que el
+    año no se lee en el ejemplar: 1999 y el ISBN 978-0-534-35361-2 los da Open Library (ediciones OL7784218M,
+    «December 15, 1999», «1 edition», y OL382186M, LCCN 98044566, consultadas el 2026-11-13), y concuerdan
+    con la portada en editorial y lugar.'
   formato: pdf
   paginas: 503
   paginas_sin_texto: 8

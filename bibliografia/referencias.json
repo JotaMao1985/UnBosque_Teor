@@ -195,6 +195,40 @@
     "volume": "54"
   },
   {
+    "URL": "https://www.dane.gov.co/files/censo2018/informacion-tecnica/cnpv-2018-omision-censal.pdf",
+    "accessed": {
+      "date-parts": [
+        [
+          "2026",
+          11,
+          16
+        ]
+      ]
+    },
+    "author": [
+      {
+        "literal": "Departamento Administrativo Nacional de Estadística"
+      }
+    ],
+    "citation-key": "dane2019omision",
+    "genre": "Comunicado de prensa",
+    "id": "dane2019omision",
+    "issued": {
+      "date-parts": [
+        [
+          "2019",
+          10,
+          17
+        ]
+      ]
+    },
+    "language": "es",
+    "publisher": "Departamento Administrativo Nacional de Estadística (DANE)",
+    "publisher-place": "Bogotá",
+    "title": "Resultados proceso de omisión censal: Censo Nacional de Población y Vivienda CNPV 2018",
+    "type": "report"
+  },
+  {
     "DOI": "10.1080/01621459.1992.10475217",
     "ISSN": "0162-1459, 1537-274X",
     "URL": "https://www.tandfonline.com/doi/full/10.1080/01621459.1992.10475217",

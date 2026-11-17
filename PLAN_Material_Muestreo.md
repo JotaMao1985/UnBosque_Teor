@@ -9466,3 +9466,28 @@ desbordes ni errores de KaTeX, todas las citas escritas y enlazadas con su entra
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Las dos citas a mano del cap. 8
 que cambiaron de 15.14 a 15.8 se admitieron en la línea base con el visto bueno de Javier (230 sin marcar, 125
 defectos).
+
+### T7.137 — Fase 3 del cap. 1, tarea 3.4: el comunicado del DANE, en el catálogo (2026-11-16)
+
+Última tarea de la Fase 3. El caso colombiano que Javier eligió en el Checkpoint 1 —la omisión censal del CNPV 2018—
+ya puede entrar en el material con su fuente: el **comunicado de prensa del DANE del 17 de octubre de 2019**,
+«Resultados proceso de omisión censal», está en el catálogo y registrado como ejemplar.
+
+- **Zotero:** ficha a mano (un comunicado no tiene DOI ni ISBN), de tipo informe, «Comunicado de prensa», con autor
+  institucional, en `Docencia › 20939 › 3 Fuentes primarias` (22 → 23 obras; las otras tres colecciones del curso no
+  cambian). Clave `dane2019omision`. Se hizo con control de pantalla, autorizado por Javier, porque una ficha a mano no
+  se guarda en segundo plano. Comprobada por la API local de solo lectura.
+- **URL oficial:** https://www.dane.gov.co/files/censo2018/informacion-tecnica/cnpv-2018-omision-censal.pdf, que sirve
+  el mismo comunicado (título, fecha y código COM-030-PD-001-r-002 V9). La huella del PDF no se comparó con la copia en
+  línea.
+- **Catálogo:** 36 obras; fila nueva en `obras.tsv`. De paso, Blumberg y Squire pasan a «citada en c1», que lo están
+  desde la 3.3.
+- **Ejemplar:** `dane2019omision`, 9 páginas, desfase 0 (el pie de cada página trae su número), portada comprobada,
+  procedencia anotada, texto por página fuera de git, índice por páginas (`indexa_pdf.py`, perfil nuevo).
+
+**Verificado:** auditor de citas sin nada nuevo y `--cierre 1` en verde, catálogo coherente con Zotero, ejemplares
+al día, uso de fuentes e inventario al día, arnés con las 71 inyecciones detectadas. El registro de ejemplares se
+reescribió al registrar: solo cambió el formato de Heck y Lohr 1999, no su contenido.
+
+**Con esto la Fase 3 queda completa.** No publicado: en la rama `claude/course-content-improvement-2f816c`, sin commit.
+

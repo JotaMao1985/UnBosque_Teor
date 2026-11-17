@@ -1,0 +1,11 @@
+{
+ "calidad": "paginas",
+ "clave": "dane2019omision",
+ "ejemplar_sha256": "81d1b8e79120398758d6bcdc929e05b4b97bda56e0a9559c8d1edfff7e21aca4",
+ "extractor": "indexa_pdf@3",
+ "loc": {},
+ "paginas": [
+  1,
+  9
+ ]
+}
