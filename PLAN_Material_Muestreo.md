@@ -9613,3 +9613,27 @@ reensamblado estable, referencias, 0 cifras sin respaldo (también las del JavaS
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.143 — Fase 4 del cap. 1, tarea 4.5: los simuladores de los módulos 3 y 5 (2026-11-16)
+
+Los otros dos recursos que Javier eligió. Con ellos, ningún módulo del capítulo es solo prosa, y **la Fase 4 queda
+completa**.
+- **Módulo 3 · «Los 14 arquitectos, mil veces».** La ciudad del ejercicio 4: tres maneras de sacar 8 de 14 (los ocho
+  primeros del directorio, por orden hasta que 8 acepten —con un deslizador para la probabilidad de aceptar— y un
+  sorteo), repetidas mil veces con semilla fija. Cada barra estima la $\pi_k$ de un arquitecto. Con los ocho primeros,
+  seis no entran nunca aunque las $\pi_k$ sumen 8; por orden, la probabilidad baja con la posición; solo el sorteo las
+  iguala en 8/14. Va antes de «¿por qué no un censo?», con su lectura guiada.
+- **Módulo 5 · «La balanza descalibrada, sobre `agpop`».** El modelo del módulo, $y^{obs} = y + b + \varepsilon$, con
+  deslizadores para el desplazamiento $b$ y el ruido $\varepsilon$: para cada tamaño de muestra, el centro y el
+  intervalo del 95 % de la media estimada, como error relativo a la media verdadera. Es la fórmula, sin muestreo: el
+  intervalo se cierra alrededor de $b$, no del 0, y midiendo los 3 078 condados la verdad queda fuera en cuanto $b$
+  supera el semiancho. El eje se fija en ±20 % para que eso se vea (con $n = 10$ el intervalo pasa del ±90 %).
+- Al revisarlos a 375 px (ancho comprobado) se acortaron rótulos que se cortaban y se fijó ese eje.
+- El capítulo pasa a 11 simuladores y el curso a 76: portada y README al día.
+
+**Verificado:** en el navegador a 375 y 1024 px, los dos con sus tres estados (procedimientos; desplazamiento 0 y
+distinto de 0), sin errores de consola ni de KaTeX y sin desborde en los diez módulos; auditor y `--cierre 1`,
+generador, reensamblado estable, referencias, 0 cifras sin respaldo (también en el JavaScript), conteos al día, código
+de las 12 páginas.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

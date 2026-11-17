@@ -4225,6 +4225,34 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         </div>
       </div>
 
+      <div class="simulador" data-simulador="arquitectos">
+        <h4><i class="fas fa-users" aria-hidden="true"></i> Los 14 arquitectos, mil veces</h4>
+        <p class="simulador-intro">La ciudad del ejercicio 4 del módulo 10: hay 14 arquitectos y se quieren 8. Elige
+          cómo se escogen y el simulador repite la selección mil veces: cada barra dice en qué fracción de las
+          repeticiones entró cada arquitecto, que es una estimación de su probabilidad de inclusión $\pi_k$.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Fracción de repeticiones en que entra cada arquitecto" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+        <p class="text-xs text-gray-500" style="margin:0.5rem 0 0;">Fuente: elaboración propia con la situación de <cite class="cita" data-ref="lohr1999sampling" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999)</a></cite>.</p>
+      </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El procedimiento, y en el segundo, la probabilidad de que cada arquitecto
+            acepte cuando lo llaman.</p>
+          <p><strong>Qué se ve.</strong> Con los ocho primeros del directorio (si todos aceptan), las barras son todo o nada: ocho
+            arquitectos entran siempre y seis no entran nunca, aunque las $\pi_k$ sumen 8. Llamando por orden, la
+            probabilidad baja con la posición en la lista, y depende de quién acepta. Solo el sorteo deja las catorce
+            barras a la misma altura, sobre la línea naranja.</p>
+          <p style="margin-bottom:0;"><strong>Por qué importa.</strong> El requisito 2 no es «que haya azar», sino
+            conocer cada $\pi_k$ y que ninguna sea cero. El primer procedimiento la conoce y no la cumple; el segundo
+            ni siquiera la conoce, porque depende de quién conteste el teléfono.</p>
+        </div>
+      </details>
+
       <div class="note">
         <p><strong>Y entonces, ¿por qué no un censo?</strong> Porque una muestra bien tomada suele ser
           <em>mejor</em>, no solo más barata: llega más rápido, permite controlar la calidad de la medición sobre pocos
@@ -4825,6 +4853,34 @@ print((pd.Series({
         con más muestra. Un instrumento desviado es un error que ninguna cantidad de datos arregla, y que además no
         deja rastro en los propios datos: la estimación sale con un intervalo de confianza estrecho y perfectamente
         centrado… en el valor equivocado.</p>
+
+      <div class="simulador" data-simulador="balanza">
+        <h4><i class="fas fa-weight-scale" aria-hidden="true"></i> La balanza descalibrada, sobre <code>agpop</code></h4>
+        <p class="simulador-intro">Imagina que la superficie de cada condado se mide con un instrumento que suma un
+          desplazamiento $b$ fijo y un ruido $\varepsilon$. El gráfico da, para cada tamaño de muestra, dónde queda la
+          media estimada y su intervalo del 95 %, como error en porcentaje de la media verdadera: la verdad es el 0. Con pocas unidades el intervalo se sale
+          del gráfico por arriba y por abajo.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Centro e intervalo de la media estimada según el tamaño de muestra" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+        <p class="text-xs text-gray-500" style="margin:0.5rem 0 0;">Fuente: elaboración propia sobre <code>agpop</code>, de <cite class="cita" data-ref="lohr2022sampling" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022)</a></cite>.</p>
+      </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El desplazamiento $b$, que es el sesgo de medición, y el ruido
+            $\varepsilon$, que es la parte aleatoria.</p>
+          <p><strong>Qué se ve.</strong> Al crecer $n$, el intervalo se estrecha… alrededor de $b$, no alrededor del 0.
+            Sube el ruido y el intervalo se ensancha, pero sigue centrado en el mismo sitio. Midiendo los 3 078 condados
+            se obtiene el intervalo más estrecho de todos, y en cuanto $b$ supera su semiancho la verdad queda
+            fuera: la lectura de abajo lo dice.</p>
+          <p style="margin-bottom:0;"><strong>Por qué importa.</strong> Es la frase del módulo hecha gráfico: el
+            ruido se paga con más muestra; el desplazamiento no se paga con nada. El módulo 7 lo pondrá en una fórmula.</p>
+        </div>
+      </details>
 
       <h3>De dónde sale el desplazamiento sistemático</h3>
 
@@ -9054,6 +9110,139 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           { valor: 'biglucy', texto: 'BigLucy · 85 296 empresas' }
         ]
       }, params, pintar);
+      pintar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
+    // M3 · Los 14 arquitectos del ejercicio 4: qué es «probabilística»
+    //
+    // Tres maneras de sacar 8 de 14, repetidas 1 000 veces con una semilla
+    // fija (la misma figura en cada visita). Cada barra es la fracción de
+    // repeticiones en que entró ese arquitecto: una estimación de su π_k.
+    // ---------------------------------------------------------------
+    SIMULADORES['arquitectos'] = function (raiz) {
+      const N_ARQ = 14, N_MUESTRA = 8, REPS = 1000;
+      const params = { proc: 'directorio', acepta: 0.7 };
+      const etiquetas = Array.from({ length: N_ARQ }, (_, i) => String(i + 1));
+      const g = crearGraficoBarras(raiz.querySelector('canvas'), etiquetas, etiquetas.map(() => 0), {
+        etiqueta: 'entró (% de las repeticiones)', color: COLORES_GRAFICO.primario,
+        tituloX: 'Posición en el directorio', tituloY: '% de repeticiones',
+        min: 0, max: 100,
+        lineas: [{ valor: 100 * N_MUESTRA / N_ARQ, etiqueta: 'sorteo de 8 de 14',
+                   color: COLORES_GRAFICO.secundario }]
+      });
+
+      function simular() {
+        const azar = azarEstable(semillaDeTexto('arquitectos-' + params.proc + '-' + params.acepta));
+        const veces = new Array(N_ARQ).fill(0);
+        let tamTotal = 0;
+        for (let r = 0; r < REPS; r++) {
+          let elegidos = [];
+          if (params.proc === 'directorio') {
+            elegidos = Array.from({ length: N_MUESTRA }, (_, i) => i);
+          } else if (params.proc === 'mas') {
+            const orden = Array.from({ length: N_ARQ }, (_, i) => i);
+            for (let i = N_ARQ - 1; i > 0; i--) {            // Fisher-Yates
+              const j = Math.floor(azar() * (i + 1));
+              [orden[i], orden[j]] = [orden[j], orden[i]];
+            }
+            elegidos = orden.slice(0, N_MUESTRA);
+          } else {                                         // por orden, hasta 8 que acepten
+            for (let i = 0; i < N_ARQ && elegidos.length < N_MUESTRA; i++) {
+              if (azar() < params.acepta) elegidos.push(i);
+            }
+          }
+          elegidos.forEach(i => { veces[i]++; });
+          tamTotal += elegidos.length;
+        }
+        return { pct: veces.map(v => 100 * v / REPS), tamMedio: tamTotal / REPS };
+      }
+
+      function pintar() {
+        const { pct, tamMedio } = simular();
+        g.data.datasets[0].data = pct;
+        g.update('none');
+        const ceros = pct.filter(p => p === 0).length;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'arquitectos que nunca entran:', valor: `${ceros} de ${N_ARQ}` },
+          { etiqueta: 'suma de las π estimadas:', valor: fmtNum(pct.reduce((a, b) => a + b, 0) / 100, 2) },
+          { etiqueta: 'tamaño medio de la muestra:', valor: fmtNum(tamMedio, 2) },
+          { etiqueta: 'repeticiones:', valor: fmtNum(REPS, 0) }
+        ]);
+      }
+
+      function montar() {
+        const cont = raiz.querySelector('.simulador-controles');
+        cont.innerHTML = '';
+        crearSelector(cont, { clave: 'proc', etiqueta: 'Procedimiento', opciones: [
+          { valor: 'directorio', texto: 'Los 8 primeros del directorio' },
+          { valor: 'orden', texto: 'Por orden, hasta que 8 acepten' },
+          { valor: 'mas', texto: 'Sorteo de 8 de los 14 (MAS)' }
+        ] }, params, montar);
+        if (params.proc === 'orden') {
+          crearControles(cont, [{ clave: 'acepta', etiqueta: 'Probabilidad de que cada uno acepte',
+            min: 0.3, max: 1, paso: 0.05 }], params, pintar);
+        }
+        pintar();
+      }
+
+      montar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
+    // M5 · La balanza descalibrada, sobre agpop
+    //
+    // Modelo del módulo: y_obs = y + b + ε. Con muestreo aleatorio simple, la
+    // media observada tiene esperanza μ + b y varianza (1 − n/N) S²/n + σ²/n.
+    // Todo se expresa como error relativo a la media verdadera de agpop, en
+    // %: la verdad es el 0. No se muestrea nada: es la fórmula, tamaño a tamaño.
+    // ---------------------------------------------------------------
+    SIMULADORES['balanza'] = function (raiz) {
+      const mu = D1.agpop.media, S2 = D1.agpop.S2, N = D1.agpop.N;
+      const params = { b: 5, ruido: 50 };              // b en % de la media; ruido, σ en % de S
+      const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'n = N' : 'n = ' + fmtNum(n, 0)));
+      const serie = (etiqueta, color, extra) => Object.assign({ label: etiqueta, data: TAMANOS.map(() => 0),
+        borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 3 }, extra || {});
+      const g = crearGraficoLinea(raiz.querySelector('canvas'), etiquetas, [
+        serie('verdad (error 0)', COLORES_GRAFICO.primario, { borderDash: [6, 4], pointRadius: 0 }),
+        serie('centro de la estimación', COLORES_GRAFICO.secundario),
+        serie('intervalo del 95 %', COLORES_GRAFICO.gris, { borderWidth: 1, pointRadius: 0, fill: '+1',
+          backgroundColor: 'rgba(148, 163, 184, 0.25)' }),
+        serie('', COLORES_GRAFICO.gris, { borderWidth: 1, pointRadius: 0 })
+      ]);
+      // Se ajusta después de crearlo: pasar `plugins` o `scales` al crearlo borraría los estilos de la plantilla.
+      g.options.plugins.legend.labels.filter = it => it.text !== '';
+      // El eje se fija en ±20 %: con n = 10 el intervalo pasa del ±90 % y aplastaría lo que importa, que es
+      // dónde se queda la banda cuando n crece. Lo que se sale del eje se corta.
+      g.options.scales.y.min = -20; g.options.scales.y.max = 20;
+      g.options.scales.y.title = { display: true, text: 'error en % de la media verdadera',
+                                   font: { family: 'Montserrat', size: 11 } };
+      g.options.scales.x.title = { display: true, text: 'tamaño de la muestra',
+                                   font: { family: 'Montserrat', size: 11 } };
+
+      function pintar() {
+        const sigma = params.ruido / 100 * Math.sqrt(S2);
+        const semi = TAMANOS.map(n => 1.96 * Math.sqrt((1 - n / N) * S2 / n + sigma * sigma / n) / mu * 100);
+        g.data.datasets[1].data = TAMANOS.map(() => params.b);
+        g.data.datasets[2].data = semi.map(h => params.b + h);
+        g.data.datasets[3].data = semi.map(h => params.b - h);
+        g.update('none');
+        const hCenso = semi[semi.length - 1];
+        const fuera = Math.abs(params.b) > hCenso;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'desplazamiento:', valor: fmtNum(params.b * mu / 100, 0) + ' acres por condado' },
+          { etiqueta: 'semiancho con n = 10:', valor: fmtNum(semi[0], 1) + ' %' },
+          { etiqueta: 'semiancho midiendo los 3 078:', valor: fmtNum(hCenso, 2) + ' %' },
+          { etiqueta: 'la verdad, dentro del intervalo del censo:', valor: fuera ? 'no' : 'sí' }
+        ]);
+      }
+
+      crearControles(raiz.querySelector('.simulador-controles'), [
+        { clave: 'b', etiqueta: 'Desplazamiento b del instrumento (% de la media)', min: -10, max: 10, paso: 0.5 },
+        { clave: 'ruido', etiqueta: 'Ruido ε del instrumento (σ en % de S)', min: 0, max: 200, paso: 10 }
+      ], params, pintar);
       pintar();
       return [g];
     };

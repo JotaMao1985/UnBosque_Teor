@@ -9,13 +9,13 @@ de Lohr, con los datos oficiales de *Sampling: Design and Analysis*.
 
 ## Contenido
 
-Ocho capítulos que cubren las 16 semanas del cronograma. **94 módulos, 74 simuladores,
+Ocho capítulos que cubren las 16 semanas del cronograma. **94 módulos, 76 simuladores,
 138 preguntas de autoevaluación, 43 ejercicios guiados y 231 bloques de código** (177 de R,
 54 de Python) con **3 237 cifras contrastadas contra la salida real**.
 
 | # | Capítulo | Semanas | Temas | Módulos | Simuladores |
 |---|---|:---:|---|:---:|:---:|
-| 1 | [Encuestas, sesgos y error total](capitulo-1-encuestas-sesgos.html) | 1–2 | *Literary Digest* y Hite, marco muestral, sesgo de selección y de medición, cuestionarios, árbol del error total, sesgo en ciencia de datos | 10 | 9 |
+| 1 | [Encuestas, sesgos y error total](capitulo-1-encuestas-sesgos.html) | 1–2 | *Literary Digest* y Hite, marco muestral, sesgo de selección y de medición, cuestionarios, árbol del error total, sesgo en ciencia de datos | 10 | 11 |
 | 2 | [Diseño muestral, MAS y sistemático](capitulo-2-diseno-mas-sistematico.html) | 3–4 | El diseño `p(s)`, probabilidades de inclusión, Horvitz–Thompson, MAS, intervalos, tamaño de muestra, Bernoulli, sistemático | 11 | 10 |
 | 3 | [Estimación de razón y regresión](capitulo-3-razon-y-regresion.html) | 5–6 | Variables auxiliares, razón, sesgo y ECM, regresión, diferencia, dominios, GREG, mediana, formulario, simulacro del quiz | 15 | 9 |
 | 4 | [Muestreo estratificado](capitulo-4-muestreo-estratificado.html) | 7–9 | Estratos y pesos, asignación proporcional, de Neyman y con costos, construcción de estratos, postestratificación, PPT estratificado, muestreo estratificado en machine learning, razón en el estratificado, preparcial del Corte II | 14 | 9 |

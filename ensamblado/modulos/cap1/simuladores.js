@@ -645,6 +645,139 @@
       return [g];
     };
 
+    // ---------------------------------------------------------------
+    // M3 · Los 14 arquitectos del ejercicio 4: qué es «probabilística»
+    //
+    // Tres maneras de sacar 8 de 14, repetidas 1 000 veces con una semilla
+    // fija (la misma figura en cada visita). Cada barra es la fracción de
+    // repeticiones en que entró ese arquitecto: una estimación de su π_k.
+    // ---------------------------------------------------------------
+    SIMULADORES['arquitectos'] = function (raiz) {
+      const N_ARQ = 14, N_MUESTRA = 8, REPS = 1000;
+      const params = { proc: 'directorio', acepta: 0.7 };
+      const etiquetas = Array.from({ length: N_ARQ }, (_, i) => String(i + 1));
+      const g = crearGraficoBarras(raiz.querySelector('canvas'), etiquetas, etiquetas.map(() => 0), {
+        etiqueta: 'entró (% de las repeticiones)', color: COLORES_GRAFICO.primario,
+        tituloX: 'Posición en el directorio', tituloY: '% de repeticiones',
+        min: 0, max: 100,
+        lineas: [{ valor: 100 * N_MUESTRA / N_ARQ, etiqueta: 'sorteo de 8 de 14',
+                   color: COLORES_GRAFICO.secundario }]
+      });
+
+      function simular() {
+        const azar = azarEstable(semillaDeTexto('arquitectos-' + params.proc + '-' + params.acepta));
+        const veces = new Array(N_ARQ).fill(0);
+        let tamTotal = 0;
+        for (let r = 0; r < REPS; r++) {
+          let elegidos = [];
+          if (params.proc === 'directorio') {
+            elegidos = Array.from({ length: N_MUESTRA }, (_, i) => i);
+          } else if (params.proc === 'mas') {
+            const orden = Array.from({ length: N_ARQ }, (_, i) => i);
+            for (let i = N_ARQ - 1; i > 0; i--) {            // Fisher-Yates
+              const j = Math.floor(azar() * (i + 1));
+              [orden[i], orden[j]] = [orden[j], orden[i]];
+            }
+            elegidos = orden.slice(0, N_MUESTRA);
+          } else {                                         // por orden, hasta 8 que acepten
+            for (let i = 0; i < N_ARQ && elegidos.length < N_MUESTRA; i++) {
+              if (azar() < params.acepta) elegidos.push(i);
+            }
+          }
+          elegidos.forEach(i => { veces[i]++; });
+          tamTotal += elegidos.length;
+        }
+        return { pct: veces.map(v => 100 * v / REPS), tamMedio: tamTotal / REPS };
+      }
+
+      function pintar() {
+        const { pct, tamMedio } = simular();
+        g.data.datasets[0].data = pct;
+        g.update('none');
+        const ceros = pct.filter(p => p === 0).length;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'arquitectos que nunca entran:', valor: `${ceros} de ${N_ARQ}` },
+          { etiqueta: 'suma de las π estimadas:', valor: fmtNum(pct.reduce((a, b) => a + b, 0) / 100, 2) },
+          { etiqueta: 'tamaño medio de la muestra:', valor: fmtNum(tamMedio, 2) },
+          { etiqueta: 'repeticiones:', valor: fmtNum(REPS, 0) }
+        ]);
+      }
+
+      function montar() {
+        const cont = raiz.querySelector('.simulador-controles');
+        cont.innerHTML = '';
+        crearSelector(cont, { clave: 'proc', etiqueta: 'Procedimiento', opciones: [
+          { valor: 'directorio', texto: 'Los 8 primeros del directorio' },
+          { valor: 'orden', texto: 'Por orden, hasta que 8 acepten' },
+          { valor: 'mas', texto: 'Sorteo de 8 de los 14 (MAS)' }
+        ] }, params, montar);
+        if (params.proc === 'orden') {
+          crearControles(cont, [{ clave: 'acepta', etiqueta: 'Probabilidad de que cada uno acepte',
+            min: 0.3, max: 1, paso: 0.05 }], params, pintar);
+        }
+        pintar();
+      }
+
+      montar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
+    // M5 · La balanza descalibrada, sobre agpop
+    //
+    // Modelo del módulo: y_obs = y + b + ε. Con muestreo aleatorio simple, la
+    // media observada tiene esperanza μ + b y varianza (1 − n/N) S²/n + σ²/n.
+    // Todo se expresa como error relativo a la media verdadera de agpop, en
+    // %: la verdad es el 0. No se muestrea nada: es la fórmula, tamaño a tamaño.
+    // ---------------------------------------------------------------
+    SIMULADORES['balanza'] = function (raiz) {
+      const mu = D1.agpop.media, S2 = D1.agpop.S2, N = D1.agpop.N;
+      const params = { b: 5, ruido: 50 };              // b en % de la media; ruido, σ en % de S
+      const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'n = N' : 'n = ' + fmtNum(n, 0)));
+      const serie = (etiqueta, color, extra) => Object.assign({ label: etiqueta, data: TAMANOS.map(() => 0),
+        borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 3 }, extra || {});
+      const g = crearGraficoLinea(raiz.querySelector('canvas'), etiquetas, [
+        serie('verdad (error 0)', COLORES_GRAFICO.primario, { borderDash: [6, 4], pointRadius: 0 }),
+        serie('centro de la estimación', COLORES_GRAFICO.secundario),
+        serie('intervalo del 95 %', COLORES_GRAFICO.gris, { borderWidth: 1, pointRadius: 0, fill: '+1',
+          backgroundColor: 'rgba(148, 163, 184, 0.25)' }),
+        serie('', COLORES_GRAFICO.gris, { borderWidth: 1, pointRadius: 0 })
+      ]);
+      // Se ajusta después de crearlo: pasar `plugins` o `scales` al crearlo borraría los estilos de la plantilla.
+      g.options.plugins.legend.labels.filter = it => it.text !== '';
+      // El eje se fija en ±20 %: con n = 10 el intervalo pasa del ±90 % y aplastaría lo que importa, que es
+      // dónde se queda la banda cuando n crece. Lo que se sale del eje se corta.
+      g.options.scales.y.min = -20; g.options.scales.y.max = 20;
+      g.options.scales.y.title = { display: true, text: 'error en % de la media verdadera',
+                                   font: { family: 'Montserrat', size: 11 } };
+      g.options.scales.x.title = { display: true, text: 'tamaño de la muestra',
+                                   font: { family: 'Montserrat', size: 11 } };
+
+      function pintar() {
+        const sigma = params.ruido / 100 * Math.sqrt(S2);
+        const semi = TAMANOS.map(n => 1.96 * Math.sqrt((1 - n / N) * S2 / n + sigma * sigma / n) / mu * 100);
+        g.data.datasets[1].data = TAMANOS.map(() => params.b);
+        g.data.datasets[2].data = semi.map(h => params.b + h);
+        g.data.datasets[3].data = semi.map(h => params.b - h);
+        g.update('none');
+        const hCenso = semi[semi.length - 1];
+        const fuera = Math.abs(params.b) > hCenso;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'desplazamiento:', valor: fmtNum(params.b * mu / 100, 0) + ' acres por condado' },
+          { etiqueta: 'semiancho con n = 10:', valor: fmtNum(semi[0], 1) + ' %' },
+          { etiqueta: 'semiancho midiendo los 3 078:', valor: fmtNum(hCenso, 2) + ' %' },
+          { etiqueta: 'la verdad, dentro del intervalo del censo:', valor: fuera ? 'no' : 'sí' }
+        ]);
+      }
+
+      crearControles(raiz.querySelector('.simulador-controles'), [
+        { clave: 'b', etiqueta: 'Desplazamiento b del instrumento (% de la media)', min: -10, max: 10, paso: 0.5 },
+        { clave: 'ruido', etiqueta: 'Ruido ε del instrumento (σ en % de S)', min: 0, max: 200, paso: 10 }
+      ], params, pintar);
+      pintar();
+      return [g];
+    };
+
     // ================================================================
     // Glosario de notación del capítulo 1
     // ================================================================

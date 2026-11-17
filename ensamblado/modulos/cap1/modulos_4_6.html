@@ -346,6 +346,34 @@
         deja rastro en los propios datos: la estimación sale con un intervalo de confianza estrecho y perfectamente
         centrado… en el valor equivocado.</p>
 
+      <div class="simulador" data-simulador="balanza">
+        <h4><i class="fas fa-weight-scale" aria-hidden="true"></i> La balanza descalibrada, sobre <code>agpop</code></h4>
+        <p class="simulador-intro">Imagina que la superficie de cada condado se mide con un instrumento que suma un
+          desplazamiento $b$ fijo y un ruido $\varepsilon$. El gráfico da, para cada tamaño de muestra, dónde queda la
+          media estimada y su intervalo del 95 %, como error en porcentaje de la media verdadera: la verdad es el 0. Con pocas unidades el intervalo se sale
+          del gráfico por arriba y por abajo.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Centro e intervalo de la media estimada según el tamaño de muestra" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+        <p class="text-xs text-gray-500" style="margin:0.5rem 0 0;">Fuente: elaboración propia sobre <code>agpop</code>, de <cite class="cita" data-ref="lohr2022sampling" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022)</a></cite>.</p>
+      </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El desplazamiento $b$, que es el sesgo de medición, y el ruido
+            $\varepsilon$, que es la parte aleatoria.</p>
+          <p><strong>Qué se ve.</strong> Al crecer $n$, el intervalo se estrecha… alrededor de $b$, no alrededor del 0.
+            Sube el ruido y el intervalo se ensancha, pero sigue centrado en el mismo sitio. Midiendo los 3 078 condados
+            se obtiene el intervalo más estrecho de todos, y en cuanto $b$ supera su semiancho la verdad queda
+            fuera: la lectura de abajo lo dice.</p>
+          <p style="margin-bottom:0;"><strong>Por qué importa.</strong> Es la frase del módulo hecha gráfico: el
+            ruido se paga con más muestra; el desplazamiento no se paga con nada. El módulo 7 lo pondrá en una fórmula.</p>
+        </div>
+      </details>
+
       <h3>De dónde sale el desplazamiento sistemático</h3>
 
       <div class="space-y-4">

@@ -426,6 +426,34 @@
         </div>
       </div>
 
+      <div class="simulador" data-simulador="arquitectos">
+        <h4><i class="fas fa-users" aria-hidden="true"></i> Los 14 arquitectos, mil veces</h4>
+        <p class="simulador-intro">La ciudad del ejercicio 4 del módulo 10: hay 14 arquitectos y se quieren 8. Elige
+          cómo se escogen y el simulador repite la selección mil veces: cada barra dice en qué fracción de las
+          repeticiones entró cada arquitecto, que es una estimación de su probabilidad de inclusión $\pi_k$.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Fracción de repeticiones en que entra cada arquitecto" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+        <p class="text-xs text-gray-500" style="margin:0.5rem 0 0;">Fuente: elaboración propia con la situación de <cite class="cita" data-ref="lohr1999sampling" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999)</a></cite>.</p>
+      </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El procedimiento, y en el segundo, la probabilidad de que cada arquitecto
+            acepte cuando lo llaman.</p>
+          <p><strong>Qué se ve.</strong> Con los ocho primeros del directorio (si todos aceptan), las barras son todo o nada: ocho
+            arquitectos entran siempre y seis no entran nunca, aunque las $\pi_k$ sumen 8. Llamando por orden, la
+            probabilidad baja con la posición en la lista, y depende de quién acepta. Solo el sorteo deja las catorce
+            barras a la misma altura, sobre la línea naranja.</p>
+          <p style="margin-bottom:0;"><strong>Por qué importa.</strong> El requisito 2 no es «que haya azar», sino
+            conocer cada $\pi_k$ y que ninguna sea cero. El primer procedimiento la conoce y no la cumple; el segundo
+            ni siquiera la conoce, porque depende de quién conteste el teléfono.</p>
+        </div>
+      </details>
+
       <div class="note">
         <p><strong>Y entonces, ¿por qué no un censo?</strong> Porque una muestra bien tomada suele ser
           <em>mejor</em>, no solo más barata: llega más rápido, permite controlar la calidad de la medición sobre pocos
