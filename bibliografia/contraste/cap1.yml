@@ -329,6 +329,31 @@ afirmaciones:
     pagina: 17
     hash_pasaje: 4760611db1a059f3
 
+- id: c1-m3-03
+  tipo: dato
+  afirmacion: >-
+    Tras el CNPV 2018, el DANE calculó la omisión censal y ajustó la cobertura en un 8,5 % para el total nacional, un
+    6,4 % en las cabeceras municipales y un 15,0 % en los centros poblados y el rural disperso.
+  hash_texto: a3a2bb5d35813710
+  veredicto: respaldada
+  motivo: >-
+    El lector FU leyó las nueve páginas (y las pp. 1, 2 y 4 del PDF, cuyo diagrama y recuadro son imagen): las tres
+    cifras, su ámbito y el término «ajuste de cobertura» son los del comunicado; la omisión incluye las viviendas con
+    personas ausentes, cuyo número se imputa. Corrigió además el párrafo propio que sigue: la omisión fuera de las
+    cabeceras es más del doble como proporción, no en número de personas.
+  redactado_por: sesión maestra, Fase 4 del plan del cap. 1 (tarea 4.3)
+  verificado_por: lector FU de la tarea 4.3 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  fecha: 2026-11-16
+  fuentes:
+  - clave: dane2019omision
+    loc: 'p. 3'
+    pagina: 3
+    hash_pasaje: cc9fbe0a914ae857
+  - clave: dane2019omision
+    loc: 'p. 3'
+    pagina: 3
+    hash_pasaje: 9aca87e25a39e3e0
+
 - id: c1-m4-01
   tipo: dato
   afirmacion: >-

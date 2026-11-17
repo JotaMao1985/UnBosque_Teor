@@ -9570,3 +9570,26 @@ en el navegador las nueve frases de paso, el cierre y los diez módulos sin erro
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.141 — Fase 4 del cap. 1, tarea 4.3: el caso colombiano, en el módulo 3 (2026-11-16)
+
+Donde el módulo 3 se pregunta «¿por qué no un censo?», un recuadro nuevo: **el censo también pierde gente.** Tras el
+CNPV 2018, el DANE calculó la omisión censal y ajustó la cobertura en un 8,5 % para el total nacional, 6,4 % en las
+cabeceras municipales y 15,0 % en los centros poblados y el rural disperso (DANE, 2019, p. 3). El párrafo siguiente,
+propio del material, saca la consecuencia: la no cobertura no se reparte pareja y un censo sin ajustar estima con
+sesgo; es lo que el módulo 7 pone en fórmula.
+
+- Las tres cifras (y la población censada, 48 258 494) entran en `genera_cap1.R`, con su procedencia, como `dane` del
+  JSON del capítulo; ninguna está a mano.
+- La afirmación `c1-m3-03` la leyó el lector FU en las nueve páginas del comunicado y en las pp. 1, 2 y 4 del PDF,
+  cuyo diagrama y recuadro son imagen: **respaldada**. Corrigió además el párrafo propio: la omisión fuera de las
+  cabeceras es más del doble **como proporción**, no en número de personas (con las tres cifras del DANE, la mayoría de
+  los omitidos serían de las cabeceras, que tienen más población).
+- El DANE entra en el pie del capítulo (once obras) y en `obras.tsv` pasa a «citada en c1».
+- **Para decidir más adelante (estilo):** la cita en el texto sale larga, «(Departamento Administrativo Nacional de
+  Estadística, 2019, p. 3)», y el pie repite la institución como autora y como editora.
+
+**Verificado:** auditor y `--cierre 1` (62 afirmaciones), arnés, generador, reensamblado estable, referencias
+cruzadas, 0 cifras sin respaldo, uso e inventario al día, y en el navegador el recuadro enlazado con su entrada del pie.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

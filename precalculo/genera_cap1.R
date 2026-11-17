@@ -20,6 +20,12 @@
 #     millones y Landon 16,675 millones. Hasta el 2026-11-16 se usaba 61 / (61 + 37),
 #     con los porcentajes redondeados del ejemplo 1.1 (62,24 % en vez de 62,47 %).
 #
+#   Omisión censal del CNPV 2018 — DANE, comunicado de prensa del 17 de octubre de 2019,
+#     «Resultados proceso de omisión censal» (ejemplar dane2019omision): ajuste de
+#     cobertura a partir del cálculo de la omisión censal de 8,5 % en el total nacional,
+#     6,4 % en cabeceras y 15,0 % en centros poblados y rural disperso (p. 1 y tabla de
+#     la p. 3); población censada, 48 258 494 (p. 2). Caso colombiano del módulo 3.
+#
 #   Hite 1987 — Lohr, Sampling: Design and Analysis, 1.ª ed., capítulo 1:
 #     100 000 cuestionarios enviados, 4,5 % devueltos; los cuatro porcentajes con
 #     las páginas del libro de Hite (804, 856, 810, 809).
@@ -494,6 +500,9 @@ datos <- list(
   intell = intell,
   agpop = agpop_json,
   biglucy = biglucy,
+  dane = list(ajusteNacional = 8.5, ajusteCabeceras = 6.4, ajusteRural = 15.0,
+              poblacionCensada = 48258494,
+              razonRuralCabeceras = 15.0 / 6.4),
   noRespuesta = list(regiones = regiones, escenarios = escenarios_json),
   errorTotal = errorTotal
 )
