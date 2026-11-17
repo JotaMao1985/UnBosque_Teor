@@ -156,7 +156,7 @@ c(sd_y = sd(teL$hrwork, na.rm = TRUE),
 #>        3.476573       10.000000
 
 cat("\n###BLOQUE-R6###\n")
-# El Literary Digest, ahora con la formula. Cifras de Lohr 3a ed., ej. 15.14:
+# El Literary Digest, ahora con la formula. Cifras de Lohr 3a ed., ej. 15.8:
 # votos reales y papeletas devueltas a los dos candidatos principales.
 votos <- c(Roosevelt = 27753000, Landon = 16675000)
 papel <- c(Roosevelt = 966352,   Landon = 1286511)

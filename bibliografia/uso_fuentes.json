@@ -1,7 +1,7 @@
 {
   "norma": 1,
   "curso": 20939,
-  "generado": "2026-11-13",
+  "generado": "2026-11-16",
   "obras": {
     "arnold1991intraclutch": {
       "rol": "primaria",
@@ -28,7 +28,7 @@
       "capitulos": [
         1
       ],
-      "citas": 0,
+      "citas": 1,
       "afirmaciones": {
         "respaldada": 1
       },
@@ -115,9 +115,11 @@
         7,
         8
       ],
-      "citas": 0,
-      "afirmaciones": {},
-      "sin_marcar": 54
+      "citas": 7,
+      "afirmaciones": {
+        "respaldada": 6
+      },
+      "sin_marcar": 49
     },
     "gutierrez2020teachingsampling": {
       "rol": "datos",
@@ -126,9 +128,9 @@
       "capitulos": [
         1
       ],
-      "citas": 0,
+      "citas": 2,
       "afirmaciones": {},
-      "sin_marcar": 1
+      "sin_marcar": 0
     },
     "hansen1946problem": {
       "rol": "primaria",
@@ -148,18 +150,20 @@
       "capitulos": [
         1
       ],
-      "citas": 0,
+      "citas": 7,
       "afirmaciones": {
-        "pendiente": 2
+        "respaldada": 4
       },
-      "sin_marcar": 2
+      "sin_marcar": 0
     },
     "hite1987women": {
       "rol": "primaria",
       "ejemplar": false,
       "edicion_comprobada": null,
-      "capitulos": [],
-      "citas": 0,
+      "capitulos": [
+        1
+      ],
+      "citas": 5,
       "afirmaciones": {},
       "sin_marcar": 0
     },
@@ -198,8 +202,10 @@
       "rol": "primaria",
       "ejemplar": false,
       "edicion_comprobada": null,
-      "capitulos": [],
-      "citas": 0,
+      "capitulos": [
+        1
+      ],
+      "citas": 1,
       "afirmaciones": {},
       "sin_marcar": 0
     },
@@ -232,11 +238,11 @@
         4,
         6
       ],
-      "citas": 0,
+      "citas": 12,
       "afirmaciones": {
-        "pendiente": 3
+        "respaldada": 14
       },
-      "sin_marcar": 18
+      "sin_marcar": 16
     },
     "lohr2022sampling": {
       "rol": "basica",
@@ -252,13 +258,12 @@
         7,
         8
       ],
-      "citas": 4,
+      "citas": 46,
       "afirmaciones": {
-        "respaldada": 5,
-        "pendiente": 2,
+        "respaldada": 37,
         "con-matiz": 2
       },
-      "sin_marcar": 135
+      "sin_marcar": 122
     },
     "lumley2004analysis": {
       "rol": "datos",
@@ -269,9 +274,9 @@
         2,
         3
       ],
-      "citas": 0,
+      "citas": 1,
       "afirmaciones": {},
-      "sin_marcar": 4
+      "sin_marcar": 3
     },
     "lumley2010complex": {
       "rol": "complementaria",
@@ -294,9 +299,9 @@
         1,
         8
       ],
-      "citas": 0,
+      "citas": 1,
       "afirmaciones": {},
-      "sin_marcar": 3
+      "sin_marcar": 2
     },
     "neyman1934two": {
       "rol": "primaria",
@@ -353,9 +358,9 @@
         6,
         7
       ],
-      "citas": 0,
+      "citas": 1,
       "afirmaciones": {},
-      "sin_marcar": 13
+      "sin_marcar": 12
     },
     "siniff1964aerial": {
       "rol": "primaria",

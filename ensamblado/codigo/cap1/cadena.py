@@ -13,7 +13,7 @@ import numpy as np, pandas as pd   # las dos unicas dependencias del capitulo
 #   d    cuanto MAS apoyaban a Roosevelt los que quedaron fuera del marco
 #   rho  tasa de respuesta de los partidarios de Roosevelt dividida por la de
 #        los de Landon
-p, C, d = 0.62245, 0.55, 0.25
+p, C, d = 0.62467, 0.55, 0.25
 p_obs = 972897 / (1293669 + 972897)       # lo que publico el sondeo
 
 p_C = p - (1 - C) * d                     # apoyo dentro del marco
@@ -22,8 +22,8 @@ p_hat = p_C * rho / (p_C * rho + (1 - p_C))
 
 print(pd.Series({"p_C": p_C, "rho": rho, "p_estimado": p_hat,
                  "p_publicado": p_obs}).round(5).to_string())
-#> p_C            0.50995
-#> rho            0.72270
+#> p_C            0.51217
+#> rho            0.71631
 #> p_estimado     0.42924
 #> p_publicado    0.42924
 
@@ -38,9 +38,9 @@ print(pd.Series({"sesgo_cobertura": sesgo_cobertura,
                  "suma": sesgo_cobertura + sesgo_respuesta,
                  "sesgo_total": p_hat - p}).round(5).to_string())
 #> sesgo_cobertura      -0.11250
-#> sesgo_no_respuesta   -0.08071
-#> suma                 -0.19321
-#> sesgo_total          -0.19321
+#> sesgo_no_respuesta   -0.08293
+#> suma                 -0.19543
+#> sesgo_total          -0.19543
 
 # Los dos sumandos dan el total EXACTAMENTE: no es una aproximacion.
 print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
@@ -57,7 +57,7 @@ agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
 #   poblacion objetivo  -> los condados agricolas de EE.UU.
 #   marco muestral      -> la lista de 3078 filas de este archivo
 #   unidad              -> un condado (una fila)
-#   variable de interes -> acres92, la superficie sembrada en 1992
+#   variable de interes -> acres92, la superficie en explotaciones agricolas en 1992
 print(pd.Series({"condados": len(agpop), "variables": agpop.shape[1],
                  "estados": agpop["state"].nunique()}).to_string())
 #> condados     3078
@@ -235,7 +235,7 @@ digest_landon    = 1293669
 digest_roosevelt =  972897
 n_digest = digest_landon + digest_roosevelt
 p_sondeo = digest_roosevelt / n_digest
-p_real   = 61 / (61 + 37)             # Roosevelt 61 %, Landon 37 % en la eleccion
+p_real   = 27.753 / (27.753 + 16.675)     # votos de 1936, en millones de votos
 sesgo    = p_sondeo - p_real
 S2       = p_real * (1 - p_real)
 # float_format explicito: sin el, pandas ve juntos 2,3 millones y 0,43 y pasa
@@ -246,8 +246,8 @@ print(pd.Series({"n_digest": n_digest, "p_sondeo": p_sondeo,
       .to_string(float_format=lambda v: f"{v:.5f}"))
 #> n_digest   2266566.00000
 #> p_sondeo         0.42924
-#> p_real           0.62245
-#> sesgo           -0.19321
+#> p_real           0.62467
+#> sesgo           -0.19544
 
 print("\n###BLOQUE-P4###\n")
 import numpy as np, pandas as pd
@@ -257,7 +257,7 @@ import numpy as np, pandas as pd
 # pueda ejecutar suelto. Se comprobo que no cambia nada de lo publicado: partir
 # de estos valores redondeados o de los exactos del bloque anterior da las
 # mismas cifras en las dos tablas, hasta el ultimo decimal que se imprime.
-p_real, sesgo, n_digest = 0.62245, -0.19321, 2266566
+p_real, sesgo, n_digest = 0.62467, -0.19544, 2266566
 S2 = p_real * (1 - p_real)
 
 ecm_digest = sesgo**2 + S2 / n_digest
@@ -265,9 +265,9 @@ ecm_mas    = S2 / 1000
 print(pd.Series({"recm_digest": np.sqrt(ecm_digest),
                  "recm_mas":    np.sqrt(ecm_mas),
                  "veces_peor":  np.sqrt(ecm_digest / ecm_mas)}).round(4).to_string())
-#> recm_digest     0.1932
+#> recm_digest     0.1954
 #> recm_mas        0.0153
-#> veces_peor     12.6035
+#> veces_peor     12.7639
 
 # El suelo, tamano a tamano. Solo la varianza baja con n: la columna insesgada
 # tiende a cero y la sesgada se para en el sesgo y ya no se mueve.
@@ -279,16 +279,16 @@ tabla = pd.DataFrame({
     "recm_sesgado":   [np.sqrt(ecm(n, sesgo)) for n in tamanos]})
 print(tabla.round(5).to_string(index=False))
 #>       n  recm_insesgado  recm_sesgado
-#>    1000         0.01533       0.19382
-#>   10000         0.00485       0.19327
-#>  100000         0.00153       0.19322
-#> 1000000         0.00048       0.19321
-#> 2266566         0.00032       0.19321
+#>    1000         0.01531       0.19604
+#>   10000         0.00484       0.19550
+#>  100000         0.00153       0.19545
+#> 1000000         0.00048       0.19544
+#> 2266566         0.00032       0.19544
 
 # Tamano efectivo del sondeo sesgado: el n de un muestreo aleatorio simple con
 # el mismo error cuadratico medio.
 print(round(S2 / ecm(n_digest, sesgo), 2))
-#> 6.3
+#> 6.14
 
 print("\n###BLOQUE-PR9###\n")
 import numpy as np, pandas as pd

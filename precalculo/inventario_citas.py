@@ -47,9 +47,10 @@ OBRAS = [
     ("sarndal-1992", "obra", "Särndal, Swensson y Wretman (1992), Model Assisted Survey Sampling",
      r"Särndal(?:, C\.-?E\.)?,? (?:Swensson|et al)|Model Assisted"),
     ("lohr", "obra", "Lohr, Sampling: Design and Analysis (la edición va aparte)", r"\bLohr\b"),
-    ("teachingsampling", "software", "Gutiérrez, paquete TeachingSampling", r"TeachingSampling"),
+    ("teachingsampling", "software", "Gutiérrez, paquete TeachingSampling", r"TeachingSampling|Gutiérrez \(2020"),
+    # «Gutiérrez (2020)» es como la cita el texto generado desde el catálogo (cap. 1, 2026-11-16).
     ("gutierrez-estrategias", "obra", "Gutiérrez, Estrategias de muestreo (sin año en el material)",
-     r"Estrategias de [Mm]uestreo|Gutiérrez(?!,? H\.A\. TeachingSampling)"),
+     r"Estrategias de [Mm]uestreo|Gutiérrez(?!,? H\.A\. TeachingSampling| \(2020)"),
     ("portela-villeta", "obra", "Portela y Villeta, Técnicas básicas de muestreo con SAS", r"\bPortela\b"),
     ("lumley-complex", "obra", "Lumley, Complex Surveys", r"Complex Surveys"),
     ("lumley-survey", "software", "Lumley, paquete survey", r"Lumley(?!(?:,| —)? (?:T\.? )?Complex)"),

@@ -61,7 +61,7 @@
   "cifras_prosa.json": {
    "menciones": {
     "kish-1965": 4,
-    "lohr": 6,
+    "lohr": 7,
     "meng-2018": 1,
     "nhanes": 5,
     "portela-villeta": 6,
@@ -375,87 +375,79 @@
   "muestreo/capitulo-1-encuestas-sesgos.html": {
    "entradas": [
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "sección 1.1",
       "ejemplo 1.1"
      ],
      "modulo": 1,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr, S.L. (2022). Sampling: Design and Analysis (3.ª ed.), sección 1.1 y ejemplo 1.1 — de ahí salen todas las cifras del Digest que se citan aquí, incluido el caso de Allentown."
+     "texto": "Lohr (2022, ejemplo 1.1) — el caso del Digest , incluido Allentown."
     },
     {
-     "ediciones": [
-      "1"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 1"
+      "cap. 1"
      ],
      "modulo": 1,
      "obras": [
       "hite-1987",
       "lohr"
      ],
-     "texto": "Lohr, S.L. (1999). Sampling: Design and Analysis (1.ª ed.), capítulo 1 — el análisis del estudio de Hite, con las páginas exactas del libro original."
+     "texto": "Lohr (1999, cap. 1) — el análisis del estudio de Hite (1987) , con las páginas del libro original de donde salen sus cifras."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 1"
+      "cap. 1"
      ],
      "modulo": 1,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, H.A. Estrategias de muestreo , capítulo 1 — el mismo argumento desde la teoría de diseños, de acceso abierto ."
-    },
-    {
-     "ediciones": [
-      "3"
-     ],
-     "interna": false,
-     "localizadores": [
-      "sección 1.2"
-     ],
-     "modulo": 2,
-     "obras": [
-      "lohr"
-     ],
-     "texto": "Lohr (2022), sección 1.2 — población objetivo, marco, unidad de muestreo y de observación, con los ejemplos que se reutilizan en los ejercicios del módulo 10."
+     "texto": "Gutiérrez (2016, cap. 1) — una introducción sin fórmulas al sesgo de selección: la conveniencia, los voluntarios y la falta de respuesta. De acceso abierto ."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 2",
-      "sección 2.1.5"
+      "§1.2"
+     ],
+     "modulo": 2,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2022, §1.2) — población objetivo, marco, unidad de muestreo y de observación."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§2.1.1",
+      "§2.1.5"
      ],
      "modulo": 2,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 2, sección 2.1.5 — la misma partición con la notación $U$, $y_k$, $t_y$ que usa este material."
+     "texto": "Gutiérrez (2016, §2.1.1; §2.1.5) — la notación $U$, $y_k$, $t_y$ que usa este material."
     },
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "secciones 1.2 y 1.7"
+      "§1.2",
+      "§1.7"
      ],
      "modulo": 3,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2022), secciones 1.2 y 1.7 — qué hace buena a una muestra y por qué se muestrea en vez de censar."
+     "texto": "Lohr (2022, §1.2; §1.7) — qué hace representativa a una muestra y por qué se muestrea en vez de censar."
     },
     {
      "ediciones": [],
@@ -467,22 +459,20 @@
      "obras": [
       "sarndal-1992"
      ],
-     "texto": "Särndal, Swensson y Wretman (1992). Model Assisted Survey Sampling — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2."
+     "texto": "Särndal et al. (1992) — la formulación canónica del muestreo probabilístico que sostiene todo el capítulo 2."
     },
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "sección 1.3",
-      "sección 8.1"
+      "§1.3",
+      "§8.1"
      ],
      "modulo": 4,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2022), sección 1.3 — la tipología del sesgo de selección; y sección 8.1 , donde la fórmula del sesgo de no respuesta se obtiene como aproximación."
+     "texto": "Lohr (2022, §1.3; §8.1) — la tipología del sesgo de selección, y la fórmula del sesgo de no respuesta, que allí se obtiene como aproximación."
     },
     {
      "ediciones": [],
@@ -492,12 +482,10 @@
      "obras": [
       "heck-2018"
      ],
-     "texto": "Heck, P.R., Simons, D.J. y Chabris, C.F. (2018). «65 % of Americans believe they are above average in intelligence: Results of two nationally representative surveys». PLOS ONE 13(7) — el artículo del que salen las dos encuestas de este módulo, de acceso abierto."
+     "texto": "Heck et al. (2018) — el artículo del que salen las dos encuestas de este módulo, de acceso abierto ."
     },
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
       "ejercicio 15.5"
@@ -506,96 +494,87 @@
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2022), ejercicio 15.5 — la comparación de las dos encuestas, planteada como ejercicio sobre muestras no probabilísticas."
-    },
-    {
-     "ediciones": [
-      "3"
-     ],
-     "interna": false,
-     "localizadores": [
-      "sección 1.4",
-      "sección 16.3"
-     ],
-     "modulo": 5,
-     "obras": [
-      "lohr"
-     ],
-     "texto": "Lohr (2022), sección 1.4 y sección 16.3 — el error de medición y los modelos de error de medición en encuestas."
+     "texto": "Lohr (2022, ejercicio 15.5) — la comparación de las dos encuestas, planteada como ejercicio del capítulo sobre muestras no probabilísticas."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 1"
+      "§1.4",
+      "§16.3"
+     ],
+     "modulo": 5,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2022, §1.4; §16.3) — el error de medición y sus modelos en las encuestas."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "cap. 1"
      ],
      "modulo": 5,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 1 — el mismo argumento desde la teoría de diseños; la clasificación del error total es de este módulo, no suya."
+     "texto": "Gutiérrez (2016, cap. 1) — una introducción sin fórmulas a los sesgos de selección y de medición; la clasificación del error total es de este módulo, no suya."
     },
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "sección 1.5"
+      "§1.5"
      ],
      "modulo": 6,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2022), sección 1.5 — redacción de preguntas y diseño de cuestionarios, con ejemplos de experimentos de redacción."
+     "texto": "Lohr (2022, §1.5) — redacción de preguntas y diseño de cuestionarios, con ejemplos de experimentos de redacción."
     },
     {
-     "ediciones": [
-      "1"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 1"
+      "cap. 1"
      ],
      "modulo": 6,
      "obras": [
       "hite-1987",
       "lohr"
      ],
-     "texto": "Lohr (1999), capítulo 1 — el análisis del cuestionario de Hite, de donde sale el primer ítem del auditor."
-    },
-    {
-     "ediciones": [
-      "3"
-     ],
-     "interna": false,
-     "localizadores": [
-      "sección 1.6",
-      "sección 15.2"
-     ],
-     "modulo": 7,
-     "obras": [
-      "lohr"
-     ],
-     "texto": "Lohr (2022), sección 1.6 — la clasificación del error total de encuesta que sigue el árbol de este módulo; y sección 15.2 , donde el ECM de una muestra no probabilística se desarrolla en general."
+     "texto": "Lohr (1999, cap. 1) — el análisis del cuestionario de Hite (1987) , de donde sale el primer ítem del auditor."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 2",
-      "sección 2.1.6"
+      "§1.6",
+      "cap. 16",
+      "§15.2"
+     ],
+     "modulo": 7,
+     "obras": [
+      "lohr"
+     ],
+     "texto": "Lohr (2022, §1.6) — la distinción entre errores de muestreo y ajenos al muestreo. La clasificación en cinco fuentes, que el árbol de este módulo recorre, abre el capítulo sobre la calidad de las encuestas (Lohr, 2022, cap. 16) , y el ECM de una muestra no probabilística se desarrolla en general (Lohr, 2022, §15.2) ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§2.1.6",
+      "§2.4"
      ],
      "modulo": 7,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, Estrategias de muestreo , capítulo 2, sección 2.1.6 — la descomposición $\\text{ECM} = B^2 + V$ con la demostración completa."
+     "texto": "Gutiérrez (2016, §2.1.6) — la descomposición $\\text{ECM} = B^2 + V$, enunciada; su demostración queda como ejercicio (Gutiérrez, 2016, §2.4) , y es la que desarrolla este módulo."
     },
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
       "ejemplo 2.6"
@@ -604,7 +583,7 @@
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2022), ejemplo 2.6 — la descripción de agpop ; al final del libro se describen las muestras derivadas."
+     "texto": "Lohr (2022, ejemplo 2.6) — la descripción de agpop ."
     },
     {
      "ediciones": [],
@@ -614,21 +593,19 @@
      "obras": [
       "teachingsampling"
      ],
-     "texto": "Gutiérrez, H.A. TeachingSampling — el paquete en CRAN , con la documentación de BigLucy y de las funciones de selección."
+     "texto": "Gutiérrez (2020) — el paquete en CRAN , con la documentación de BigLucy y de las funciones de selección."
     },
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 15"
+      "cap. 15"
      ],
      "modulo": 9,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr (2022), capítulo 15 — muestras no probabilísticas: cuándo se pueden usar, qué supuestos hacen falta y cómo se mide su error cuadrático medio."
+     "texto": "Lohr (2022, cap. 15) — muestras no probabilísticas: cuándo se pueden usar, qué supuestos hacen falta y cómo se mide su error cuadrático medio."
     },
     {
      "ediciones": [],
@@ -638,33 +615,34 @@
      "obras": [
       "meng-2018"
      ],
-     "texto": "Meng, X.-L. (2018). «Statistical paradises and paradoxes in big data (I)». The Annals of Applied Statistics 12(2) — el resultado general del que el «tamaño efectivo» del módulo 7 es un caso particular."
-    },
-    {
-     "ediciones": [
-      "3"
-     ],
-     "interna": false,
-     "localizadores": [
-      "capítulo 1"
-     ],
-     "modulo": 10,
-     "obras": [
-      "lohr"
-     ],
-     "texto": "Lohr, S.L. (2022). Sampling: Design and Analysis (3.ª ed.), capítulo 1 completo — es la lectura obligatoria de las semanas 1 y 2, y la fuente de los dos casos del módulo 1 y de los cinco ejercicios de este módulo."
+     "texto": "Meng (2018) — el resultado general del que el «tamaño efectivo» del módulo 7 es un caso particular."
     },
     {
      "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 1"
+      "cap. 1",
+      "cap. 1"
+     ],
+     "modulo": 10,
+     "obras": [
+      "hite-1987",
+      "lohr"
+     ],
+     "texto": "Lohr (2022, cap. 1) — la lectura obligatoria de las semanas 1 y 2, con el caso del Digest . El caso de Hite (1987) y los cinco ejercicios de este módulo vienen de la primera edición (Lohr, 1999, cap. 1) ."
+    },
+    {
+     "ediciones": [],
+     "interna": false,
+     "localizadores": [
+      "§2.1.1",
+      "§2.1.5"
      ],
      "modulo": 10,
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez, H.A. Estrategias de muestreo: diseño de encuestas y estimación de parámetros , capítulo 1 — el mismo material desde la teoría de diseños, y la introducción de la notación $U$, $y_k$, $t_y$ que se usa en todo este material. De acceso abierto ."
+     "texto": "Gutiérrez (2016, §2.1.1; §2.1.5) — la notación $U$, $y_k$, $t_y$ que se usa en todo este material. De acceso abierto ."
     },
     {
      "ediciones": [],
@@ -674,21 +652,19 @@
      "obras": [
       "heck-2018"
      ],
-     "texto": "Heck, P.R., Simons, D.J. y Chabris, C.F. (2018). «65 % of Americans believe they are above average in intelligence». PLOS ONE 13(7) — las dos encuestas del módulo 4, con la metodología completa. Acceso abierto."
+     "texto": "Heck et al. (2018) — las dos encuestas del módulo 4, con la metodología completa. De acceso abierto ."
     },
     {
-     "ediciones": [
-      "3"
-     ],
+     "ediciones": [],
      "interna": false,
      "localizadores": [
-      "capítulo 15"
+      "cap. 15"
      ],
      "modulo": 10,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr, S.L. (2022), capítulo 15 — muestras no probabilísticas. Es la continuación natural del módulo 9 y la referencia para el proyecto integrador."
+     "texto": "Lohr (2022, cap. 15) — muestras no probabilísticas. Es la continuación natural del módulo 9 y la referencia para el proyecto integrador."
     },
     {
      "ediciones": [],
@@ -700,58 +676,64 @@
      "obras": [
       "lumley-survey"
      ],
-     "texto": "Lumley, T. survey: Analysis of Complex Survey Samples — la documentación del paquete que se usa desde el capítulo 2 en adelante."
+     "texto": "Lumley (2004) — el artículo que presenta el paquete survey , que se usa desde el capítulo 2; su documentación está en CRAN."
     }
    ],
    "li": 25,
    "menciones": {
+    "blumberg-luke-2010": {
+     "pie": 1,
+     "prosa": 1
+    },
     "censo-agricola-1992": {
      "prosa": 2
-    },
-    "cochran-1977": {
-     "pie": 1
     },
     "guerrero-1993": {
      "js": 1
     },
     "gutierrez-estrategias": {
-     "bloque": 10,
+     "bloque": 6,
      "js": 2,
-     "pie": 2,
-     "prosa": 3
+     "pie": 3,
+     "prosa": 4
     },
     "heck-2018": {
      "bloque": 2,
-     "js": 1
+     "js": 1,
+     "pie": 1,
+     "prosa": 5
     },
     "hite-1987": {
-     "bloque": 2,
+     "bloque": 3,
      "js": 3,
-     "prosa": 5
+     "pie": 2,
+     "prosa": 8
     },
     "literary-digest-1936": {
      "prosa": 1
     },
     "lohr": {
-     "bloque": 14,
+     "bloque": 17,
      "js": 4,
-     "pie": 1,
-     "prosa": 18
+     "pie": 2,
+     "prosa": 58
     },
     "lumley-survey": {
      "bloque": 1,
      "pie": 1
     },
     "meng-2018": {
-     "bloque": 1
+     "bloque": 1,
+     "pie": 1
     },
     "sarndal-1992": {
-     "bloque": 2,
+     "bloque": 1,
      "pie": 2
     },
     "teachingsampling": {
      "bloque": 1,
-     "prosa": 4
+     "pie": 2,
+     "prosa": 5
     }
    },
    "sin_reconocer": []
@@ -3164,13 +3146,13 @@
      "localizadores": [
       "§8.2",
       "§8.3",
-      "ej. 15.14"
+      "ej. 15.8"
      ],
      "modulo": 2,
      "obras": [
       "lohr"
      ],
-     "texto": "Lohr — §8.2 (el sesgo), §8.3 (dos fases) y ej. 15.14 (el Digest con la identidad)."
+     "texto": "Lohr — §8.2 (el sesgo), §8.3 (dos fases) y ej. 15.8 (el Digest con la identidad)."
     },
     {
      "ediciones": [],
@@ -3485,7 +3467,7 @@
      "bloque": 7,
      "js": 2,
      "pie": 1,
-     "prosa": 7
+     "prosa": 6
     },
     "lumley-survey": {
      "pie": 1

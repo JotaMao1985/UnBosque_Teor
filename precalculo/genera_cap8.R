@@ -635,7 +635,7 @@ cat("8 · R-indicator:", fmt(R_ind, 4), "· sd de la propensión:", fmt(s_p, 4),
 # ===========================================================================
 # 9 · El Literary Digest, con la fórmula del sesgo ya formalizada
 # ===========================================================================
-# Cifras de Lohr, 3.ª ed., ejercicio 15.14: votos reales y papeletas devueltas
+# Cifras de Lohr, 3.ª ed., ejercicio 15.8: votos reales y papeletas devueltas
 # a los dos candidatos principales.
 votos_R <- 27753000; votos_L <- 16675000
 pap_R <- 966352;     pap_L <- 1286511

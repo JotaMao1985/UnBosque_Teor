@@ -39,3 +39,17 @@ levy2008sampling:
     evidencia: https://api.crossref.org/works/10.1111/j.1541-0420.2009.01247_13.x
     consulta: 2026-11-10
     nota: "Reseña en Biometrics 65 titulada «Sampling of Populations: Methods and Applications, 4th edition». El registro del libro dice edición 1."
+gutierrez2016estrategias:
+  author:
+    valor:
+      - {family: Gutiérrez, given: Hugo Andrés}
+    evidencia: "Instantánea de la web del libro (2026-11-10): portada «Andrés Gutiérrez»; el prólogo dice que el paquete TeachingSampling lo «elaboró él mismo», y CRAN lo firma «Hugo Andres Gutierrez Rojas»."
+    consulta: 2026-11-16
+    nota: "Decisión de Javier del 2026-11-16: el mismo autor se cita igual en sus dos obras, «Gutiérrez, H. A.». El libro, en su «cómo citar», usa «Gutiérrez, A.»."
+gutierrez2020teachingsampling:
+  author:
+    valor:
+      - {family: Gutiérrez, given: Hugo Andrés}
+    evidencia: https://CRAN.R-project.org/package=TeachingSampling
+    consulta: 2026-11-16
+    nota: "Decisión de Javier del 2026-11-16: «Gutiérrez, H. A.» en las dos obras del autor. CRAN escribe «Gutierrez Rojas», sin tildes y con los dos apellidos."

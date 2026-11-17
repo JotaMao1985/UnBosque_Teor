@@ -12,7 +12,7 @@ cat("\n###BLOQUE-RP1###\n")
 #   d    cuanto MAS apoyaban a Roosevelt los que quedaron fuera del marco
 #   rho  tasa de respuesta de los partidarios de Roosevelt dividida por la de
 #        los de Landon
-p <- 0.62245; C <- 0.55; d <- 0.25
+p <- 0.62467; C <- 0.55; d <- 0.25
 p_obs <- 972897 / (1293669 + 972897)              # lo que publico el sondeo
 
 p_C   <- p - (1 - C) * d                          # apoyo dentro del marco
@@ -21,7 +21,7 @@ p_hat <- p_C * rho / (p_C * rho + (1 - p_C))
 
 round(c(p_C = p_C, rho = rho, p_estimado = p_hat, p_publicado = p_obs), 5)
 #>         p_C         rho  p_estimado p_publicado
-#>     0.50995     0.72270     0.42924     0.42924
+#>     0.51217     0.71631     0.42924     0.42924
 
 cat("\n###BLOQUE-RP2###\n")
 # Continua del bloque anterior de este mismo modulo: usa las variables que deja.
@@ -33,7 +33,7 @@ round(c(sesgo_cobertura    = sesgo_cobertura,
         suma               = sesgo_cobertura + sesgo_respuesta,
         sesgo_total        = p_hat - p), 5)
 #>    sesgo_cobertura sesgo_no_respuesta               suma        sesgo_total
-#>           -0.11250           -0.08071           -0.19321           -0.19321
+#>           -0.11250           -0.08293           -0.19543           -0.19543
 
 # Los dos sumandos dan el total EXACTAMENTE: no es una aproximacion.
 round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12)
@@ -49,7 +49,7 @@ agpop <- read.csv("CSV data sets for SDA 3e/agpop.csv")
 #   poblacion objetivo  -> los condados agricolas de EE.UU.
 #   marco muestral      -> la lista de 3078 filas de este archivo
 #   unidad              -> un condado (una fila)
-#   variable de interes -> acres92, la superficie sembrada en 1992
+#   variable de interes -> acres92, la superficie en explotaciones agricolas en 1992
 c(condados = nrow(agpop), variables = ncol(agpop),
   estados = length(unique(agpop$state)))
 #>  condados variables   estados
@@ -202,18 +202,18 @@ digest_landon    <- 1293669
 digest_roosevelt <-  972897
 n_digest <- digest_landon + digest_roosevelt
 p_sondeo   <- digest_roosevelt / n_digest
-p_real     <- 61 / (61 + 37)          # Roosevelt 61 %, Landon 37 % en la eleccion
+p_real     <- 27.753 / (27.753 + 16.675)   # votos de 1936, en millones de votos
 sesgo      <- p_sondeo - p_real
 S2         <- p_real * (1 - p_real)
 round(c(n_digest = n_digest, p_sondeo = p_sondeo, p_real = p_real, sesgo = sesgo), 5)
 #>      n_digest      p_sondeo        p_real         sesgo
-#> 2266566.00000       0.42924       0.62245      -0.19321
+#> 2266566.00000       0.42924       0.62467      -0.19544
 
 cat("\n###BLOQUE-R8###\n")
 # Las cuatro cantidades vienen del bloque anterior; se rehacen para que este
 # corra suelto, igual que hace la pestaña de Python:
 n_digest <- 1293669 + 972897
-p_real   <- 61 / (61 + 37)
+p_real   <- 27.753 / (27.753 + 16.675)
 sesgo    <- 972897 / n_digest - p_real
 S2       <- p_real * (1 - p_real)
 
@@ -223,7 +223,7 @@ ecm_mas    <- S2 / 1000
 round(c(recm_digest = sqrt(ecm_digest), recm_mas = sqrt(ecm_mas),
         veces_peor  = sqrt(ecm_digest / ecm_mas)), 4)
 #> recm_digest    recm_mas  veces_peor
-#>      0.1932      0.0153     12.6035
+#>      0.1954      0.0153     12.7636
 
 # El suelo, tamano a tamano. Solo la varianza baja con n: la columna insesgada
 # tiende a cero y la sesgada se para en el sesgo y ya no se mueve.
@@ -233,16 +233,16 @@ data.frame(n              = tamanos,
            recm_insesgado = round(sqrt(ecm(tamanos, 0)), 5),
            recm_sesgado   = round(sqrt(ecm(tamanos, sesgo)), 5))
 #>         n recm_insesgado recm_sesgado
-#> 1    1000        0.01533      0.19382
-#> 2   10000        0.00485      0.19327
-#> 3  100000        0.00153      0.19322
-#> 4 1000000        0.00048      0.19321
-#> 5 2266566        0.00032      0.19321
+#> 1    1000        0.01531      0.19603
+#> 2   10000        0.00484      0.19550
+#> 3  100000        0.00153      0.19544
+#> 4 1000000        0.00048      0.19544
+#> 5 2266566        0.00032      0.19544
 
 # Tamano efectivo: el n de un muestreo aleatorio con el MISMO error cuadratico
 # medio que el sondeo sesgado. Se despeja de  S2 / n = ECM.
 round(S2 / ecm_digest, 2)
-#> [1] 6.3
+#> [1] 6.14
 
 cat("\n###BLOQUE-R9###\n")
 # Este bloque usa agpop, que se leyo en el modulo 2, y las cuatro regiones del

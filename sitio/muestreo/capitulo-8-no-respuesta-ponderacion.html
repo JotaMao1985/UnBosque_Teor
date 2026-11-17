@@ -4079,7 +4079,7 @@ for n in [25, 100, 400, 1600, 6400, 25600]:
 
       <p>El capítulo 1 abrió el curso con el desastre de 1936: la revista predijo Landon 54 % / Roosevelt 41 %
         con más de dos millones de papeletas, y Roosevelt ganó con el 61 %. Aquel capítulo ya midió cuánto se
-        equivocó —un sesgo de −19,32 puntos (módulo 1) y la precisión de un muestreo aleatorio de 6,30
+        equivocó —un sesgo de −19,54 puntos (módulo 1) y la precisión de un muestreo aleatorio de 6,1
         votantes (módulo 7)—. Lo que queda es ver <strong>de qué depende</strong>. El bloque rehace la cuenta
         con la identidad de Meng, que se presenta justo después:</p>
 
@@ -4088,7 +4088,7 @@ for n in [25, 100, 400, 1600, 6400, 25600]:
           <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># El Literary Digest, ahora con la formula. Cifras de Lohr 3a ed., ej. 15.14:
+          <pre><code class="language-r"># El Literary Digest, ahora con la formula. Cifras de Lohr 3a ed., ej. 15.8:
 # votos reales y papeletas devueltas a los dos candidatos principales.
 votos &lt;- c(Roosevelt = 27753000, Landon = 16675000)
 papel &lt;- c(Roosevelt = 966352,   Landon = 1286511)
@@ -4116,16 +4116,16 @@ c(corr_R_y = rho, mas_equivalente = f / ((1 - f) * rho^2))
 
       <div class="warning">
         <p><strong>Este bloque y el capítulo 1 usan recuentos distintos del mismo sondeo, y conviene saber
-          por qué.</strong> El capítulo 1 trabaja con las cifras del relato de Lohr §1.1 —1 293 669 papeletas
-          para Landon y 972 897 para Roosevelt, y los porcentajes redondeados de la elección (61 % y 37 %)—
-          y con ellas el sesgo sale de <strong>−19,32 puntos</strong>. Este módulo usa las del ejercicio
-          15.14 de la 3.ª edición —1 286 511 y 966 352 papeletas, y los votos exactos, 27,753 y 16,675
-          millones—, y el sesgo sale de <strong>−19,57 puntos</strong>.</p>
-        <p style="margin-bottom:0;">La diferencia, un cuarto de punto sobre casi veinte, no cambia ninguna
-          conclusión, y las dos versiones son de la misma autora. Se declara por la regla del curso: cuando dos
+          por qué.</strong> El capítulo 1 trabaja con el recuento que la propia revista publicó como titular de su
+          último artículo —1 293 669 papeletas para Landon y 972 897 para Roosevelt— y con los votos de la
+          elección, 27,753 y 16,675 millones; con ellos el sesgo sale de <strong>−19,54 puntos</strong>. Este
+          módulo usa el recuento del ejercicio 15.8 de la 3.ª edición —1 286 511 y 966 352 papeletas— con los
+          mismos votos, y el sesgo sale de <strong>−19,57 puntos</strong>.</p>
+        <p style="margin-bottom:0;">La diferencia, unas centésimas de punto sobre casi veinte, no cambia
+          ninguna conclusión, y las dos versiones son de la misma autora. Se declara por la regla del curso: cuando dos
           fuentes de un mismo dato no coinciden, se dice cuál se usa y por qué, en vez de elegir la que salga
-          mejor. Aquí se usan las del ejercicio 15.14 porque son las que traen los votos <em>sin redondear</em>,
-          y la identidad de Meng necesita $\sigma_y$ y $f$ exactos. Por lo mismo, las 2 252 863 papeletas de
+          mejor. Aquí se usa el recuento del ejercicio 15.8 porque es el que el libro pone junto a los votos para
+          esta cuenta, y la identidad de Meng necesita $\sigma_y$ y $f$ calculados sobre unas mismas cifras. Por lo mismo, las 2 252 863 papeletas de
           este bloque son solo las de los dos candidatos principales: el total devuelto, con los menores,
           fue el «más de 2,3 millones» que cita el capítulo 1.</p>
       </div>
@@ -4145,7 +4145,7 @@ c(corr_R_y = rho, mas_equivalente = f / ((1 - f) * rho^2))
           puntos porcentuales. Y al igualar el error cuadrático medio con el de un muestreo aleatorio simple,
           sale que la encuesta del <em>Literary Digest</em>, con <strong>2 252 863 papeletas</strong>, tenía
           la precisión de un MAS de <strong>6 personas</strong>.</p>
-        <p style="margin-bottom:0;">El capítulo 1 ya había llegado a ese número —6,30 votantes, con su
+        <p style="margin-bottom:0;">El capítulo 1 ya había llegado a ese número —6,1 votantes, con su
           recuento de papeletas— comparando errores cuadráticos medios a mano. Lo que cambia aquí es que ya
           no hace falta comparar: la identidad da el resultado en una línea y, sobre todo, dice
           <strong>de qué depende</strong>. El tamaño de una muestra no informa de su calidad si el mecanismo
@@ -4171,7 +4171,7 @@ c(corr_R_y = rho, mas_equivalente = f / ((1 - f) * rho^2))
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §8.2 (el sesgo), §8.3 (dos fases) y ej. 15.14 (el <em>Digest</em> con la identidad).</li>
+          <li>Lohr — §8.2 (el sesgo), §8.3 (dos fases) y ej. 15.8 (el <em>Digest</em> con la identidad).</li>
           <li>Meng (2018) — <em>Statistical paradises and paradoxes in big data</em>: la identidad y el
             «paradoja del big data».</li>
           <li>Hansen y Hurwitz (1946) — el diseño de dos fases para no respuesta, todavía vigente.</li>

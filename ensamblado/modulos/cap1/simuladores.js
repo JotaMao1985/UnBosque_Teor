@@ -236,7 +236,7 @@
       {
         id: 'hite',
         titulo: 'Del cuestionario de Hite (1987)',
-        original: '¿Tu amante te ve como igual? ¿O hay veces que parece tratarte como inferior? ' +
+        original: '¿Tu esposo o pareja te ve como igual? ¿O hay veces que parece tratarte como inferior? ' +
           '¿Te deja fuera de las decisiones? ¿Actúa de superior?',
         defectos: [
           { clave: 'sugestiva', etiqueta: 'Sugestiva',
@@ -436,7 +436,7 @@
           const alto = Math.max(...h.conteo) * 1.05;
           series = [serieHistograma(h, 'acres92 (3 078 condados)', COLORES_GRAFICO.primario),
                     serieVertical(D1.agpop.media, alto, 'media poblacional', COLORES_GRAFICO.secundario)];
-          xMax = h.tope; tituloX = 'Superficie sembrada en 1992 (acres)';
+          xMax = h.tope; tituloX = 'Superficie en explotaciones agrícolas, 1992 (acres)';
           lectura = [
             { etiqueta: 'N =', valor: fmtNum(D1.agpop.N, 0) + ' condados' },
             { etiqueta: 'media =', valor: fmtNum(D1.agpop.media, 0) + ' acres' },
@@ -451,7 +451,7 @@
           series = D1.agpop.regiones.map(r =>
             serieHistograma(D1.agpop.histRegion[r.region], r.nombre, COLOR_REGION[r.region]));
           series.push(serieVertical(D1.agpop.media, alto, 'media global', '#dc2626'));
-          xMax = D1.agpop.hist.tope; tituloX = 'Superficie sembrada en 1992 (acres)';
+          xMax = D1.agpop.hist.tope; tituloX = 'Superficie en explotaciones agrícolas, 1992 (acres)';
           lectura = D1.agpop.regiones.map(r => ({
             etiqueta: r.nombre + ':', valor: `N = ${fmtNum(r.N, 0)}, media = ${fmtNum(r.media, 0)}`
           }));
@@ -535,7 +535,7 @@
           'población objetivo. Se mide con el error cuadrático medio, $\\text{ECM} = B^2 + V$, ' +
           'que junta las dos familias de abajo en un solo número.',
         efecto: 'ambos', donde: 'Todo el curso',
-        ejemplo: 'el sondeo del <em>Literary Digest</em> se equivocó en 19,3 puntos, de los ' +
+        ejemplo: 'el sondeo del <em>Literary Digest</em> se equivocó en 19,5 puntos, de los ' +
           'cuales prácticamente ninguno era error de muestreo.',
         hijos: [
           {
@@ -573,7 +573,7 @@
               'de la muestra y <strong>no baja con $n$</strong>. Es donde se pierden casi todas ' +
               'las encuestas que salen mal.',
             efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1 y 8',
-            ejemplo: 'los 19,3 puntos del <em>Literary Digest</em>, con 2,3 millones de papeletas.',
+            ejemplo: 'los 19,5 puntos del <em>Literary Digest</em>, con 2,3 millones de papeletas.',
             hijos: [
               {
                 etiqueta: 'Errores de representación',
@@ -645,7 +645,7 @@
                     resumen: 'Codificación, digitación, transformaciones mal hechas y códigos ' +
                       'de faltante tratados como números. Silencioso y perfectamente evitable.',
                     efecto: 'ambos', nAyuda: false, donde: 'Capítulo 1, módulo 2',
-                    ejemplo: 'promediar el −99 de Lohr como si fuera una superficie sembrada.'
+                    ejemplo: 'promediar el −99 de Lohr como si fuera una superficie.'
                   }
                 ]
               }
@@ -678,12 +678,12 @@
       {
         tipo: 'numerica',
         modulo: 1,
-        pregunta: 'El sondeo estimó un 42,92 % de apoyo a Roosevelt y el resultado real fue 62,24 % (base de dos candidatos). ¿Cuánto vale el sesgo, en puntos porcentuales? Usa dos decimales y el signo.',
+        pregunta: 'El sondeo estimó un 42,92 % de apoyo a Roosevelt y el resultado real fue 62,47 % (base de dos candidatos). ¿Cuánto vale el sesgo, en puntos porcentuales? Usa dos decimales y el signo.',
         pista: 'Sesgo = lo que estimó − lo que era. El signo importa: dice hacia dónde se equivocó.',
-        respuesta: -19.32,
+        respuesta: -19.54,
         tolerancia: 0.05,
-        retroAcierto: '$42{,}92 - 62{,}24 = -19{,}32$ puntos. El signo negativo dice que el sondeo <em>infravaloró</em> a Roosevelt, que es justo lo que hacían tanto el marco como la no respuesta.',
-        retroFallo: 'Es $42{,}92 - 62{,}24 = -19{,}32$. Un error frecuente es dar el valor absoluto: el sesgo tiene dirección, y saber hacia dónde apunta es la mitad del diagnóstico.'
+        retroAcierto: '$42{,}923 - 62{,}467 = -19{,}54$ puntos (restando los valores ya redondeados sale $-19{,}55$, y también vale). El signo negativo dice que el sondeo <em>infravaloró</em> a Roosevelt, que es justo lo que hacían tanto el marco como la no respuesta.',
+        retroFallo: 'Es $42{,}923 - 62{,}467 = -19{,}54$. Un error frecuente es dar el valor absoluto: el sesgo tiene dirección, y saber hacia dónde apunta es la mitad del diagnóstico.'
       },
       {
         tipo: 'multiple',

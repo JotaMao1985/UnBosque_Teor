@@ -9095,7 +9095,8 @@ No se registró todavía ninguna instantánea real: eso es la tarea siguiente.
   sabotajes a lo nuevo, los tres cazados;
 - `verifica_citas`: nada nuevo respecto de la línea base; el sitio no cambia.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.126 — Gutiérrez ya se puede comprobar: 60 de sus 70 localizadores existen (2026-11-10)
 
@@ -9131,7 +9132,8 @@ propios planes. Al refrescar el candado se vio que Zotero pasó de 10.0.6 a 10.0
 antes; `prueba_citas` en verde; el sitio no cambia. `verifica_citas`, `--uso-comprobar`, `genera_referencias --comprobar`,
 `inventario_citas --comprobar`, `verifica_referencias` y `cuenta_sitio` salen en 0.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.127 — Las fuentes del capítulo 1: datos leídos y un informe oficial con ejemplar (2026-11-13)
 
@@ -9168,7 +9170,8 @@ referencias. Cuando Javier decida qué par de cifras usa el curso, esa es la fue
 **Verificado:** el arnés de citas, el auditor, el contrato de fuentes, los ejemplares y la coincidencia con Zotero,
 todos en 0. El sitio no cambia.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.128 — El artículo de Heck y otros ya es un ejemplar leído (2026-11-13)
 
@@ -9183,7 +9186,8 @@ un artículo de acceso abierto, y Zotero ya tenía su PDF descargado desde el d�
 
 **Verificado:** los cinco ejemplares coinciden con su registro; el auditor de citas, en 0.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.129 — Las seis fichas del capítulo 1 ya están en el catálogo (2026-11-13)
 
@@ -9216,7 +9220,8 @@ defectos conocidos se pasa a 146.
 **Verificado:** la colección del curso tiene 35 ítems y ninguna otra colección cambió; el repo coincide con Zotero;
 el auditor de citas, el arnés, el contrato de fuentes y los cinco ejemplares, en 0. Las notas del vault pasan a 58.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.130 — La cita en redonda y el eje vertical con título, en la plantilla (2026-11-13)
 
@@ -9284,7 +9289,8 @@ defectos conocidos; migrarlas a citas marcadas es la Fase 3.
 **Queda pendiente** la decisión sobre el par de cifras del *Digest*, la celda que muestra 1,0 donde sin redondear es
 1,1, los `import` de los bloques de Python, las rutas del repositorio y todo lo visual y de plantilla.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.132 — El código del capítulo 1, ejecutable bloque a bloque (2026-11-14)
 
@@ -9314,7 +9320,8 @@ tanda de ejercicios. Y los seis defectos de la plantilla, que esperan decisión.
 0 cifras sin respaldo en todo el sitio, reensamblar dos veces da el mismo archivo, y el auditor de citas, el arnés,
 el inventario y el contrato, en 0.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.133 — Las tres decisiones del Checkpoint 1, y el menú del móvil (2026-11-14)
 
@@ -9345,7 +9352,8 @@ el naranja viene de otra. Anotado para la tanda de gráficas.
 dos veces (estables), y con el auditor de citas, el arnés, el inventario, las referencias, 0 cifras sin respaldo y el
 código de las 12 páginas arrancando con el R 4.4.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 **Publicado el 2026-11-14** con el visto bueno de Javier, paso a paso (T7.124 a T7.133). `origin/main` pasó de
 `2fd8d0a` a `44c26e9` por avance rápido, sin mover el `main` local del checkout principal, donde otras sesiones
@@ -9382,7 +9390,8 @@ registra, después lee el lector de fuentes (3.2) y solo entonces se marca el HT
 **Verificado:** auditor de citas sin nada nuevo, arnés con las 71 inyecciones detectadas, generador sin cambios,
 reensamblado estable, 0 cifras sin respaldo, referencias cruzadas en orden.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Falta que Javier decida si se
+admiten en la línea base las dos citas a mano del cap. 8 que cambiaron de 15.14 a 15.8.
 
 ### T7.135 — Fase 3 del cap. 1, tarea 3.2: las 48 afirmaciones pendientes, leídas en las fuentes (2026-11-16)
 
@@ -9411,3 +9420,49 @@ inyecciones detectadas, generador sin cambios. El HTML no se ha tocado en esta t
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Espera la decisión de Javier sobre
 las correcciones y sobre el 62,24 %.
 
+### T7.136 — Fase 3 del cap. 1, tarea 3.3: las citas marcadas, el pie propio y el *Digest* con los votos (2026-11-16)
+
+El capítulo 1 es el primero del curso con **todas sus citas marcadas**: 85, cada una con su texto escrito por
+`genera_referencias.py` y enlazada con un **pie de referencias propio** (`--pie cap1`, diez obras, solo las que cita).
+No le queda nada en la línea base de citas, y `verifica_citas.py --cierre 1` pasa.
+
+**Lo que cambió para el estudiante:**
+- Las lecturas de los diez módulos son citas; los cinco ejercicios dicen «Adaptado de Lohr (1999, §1.7)»; cada
+  gráfica lleva su «Fuente:».
+- Las correcciones de la 3.2: Hite y los ejercicios, citados de la 1.ª ed.; el 65 % de Heck, de las dos encuestas;
+  Gutiérrez enuncia el ECM y deja la demostración; su notación, en el cap. 2; la lista de destinatarios de Hite; las
+  conductas de deseabilidad social que da Lohr; «a veces» y no «a menudo»; el −99, solo de los archivos agrícolas;
+  «esposo o pareja» en el ítem del auditor; la marihuana «tan legal como las bebidas alcohólicas»; las cifras
+  aproximadas de Maricopa.
+- **El *Digest* con los votos** (decisión de Javier, 16 nov): el valor real pasa de 62,24 % (61/98) a **62,47 %**
+  (27,753 y 16,675 millones, Lohr 2022, ejercicio 15.8). Sesgo −19,54 puntos, tamaño efectivo 6,14 votantes, 12,8
+  veces peor que un MAS de mil, unas 369 000 papeletas por votante. Todo sale de `genera_cap1.R`; el código de R y
+  Python reanotado.
+
+**Cómo se verificó lo corregido.** Cada frase que cambió de sentido volvió al lector FU, de contexto limpio, hasta
+quedar respaldada tal como queda: 31 frases en la relectura, 8 en la tercera y 3 en la última. Las que el material
+razona por su cuenta (el entrevistador «funciona como un conglomerado») quedan fuera de lo atribuido.
+
+**Dos cosas que destapó la tarea:**
+- El 0,571 (8/14) del ejercicio 4 tenía «respaldo» por casualidad: casaba con un valor de la curva del simulador del
+  *Digest*. Al cambiar la curva se vio; ahora tiene su línea en `cifras_prosa.json`.
+- `inventario_citas.py` no reconocía «Gutierrez Rojas (2020)», la forma que da el pie generado: se añade al patrón.
+
+**El capítulo 8, en el mismo cambio** (decisión de Javier): citaba del 1 «−19,32» y «6,30 votantes» y explicaba que el
+1 usa porcentajes redondeados. Ahora da −19,54 y 6,1, y su caja dice que los dos capítulos usan los mismos votos y solo
+difieren en el recuento del sondeo (el titular de la revista frente al del ejercicio 15.8). De paso, «ejercicio
+15.14» pasa a **15.8**, que es donde está el *Digest* con la correlación de Meng (pp. 547–548): en la prosa, la
+lectura, el comentario del código y el precálculo del cap. 8.
+
+**Gutiérrez, un solo nombre** (decisión de Javier): el pie decía «Gutiérrez, A. (2016)» y «Gutierrez Rojas, H. A.
+(2020)» para el mismo autor. Ahora «Gutiérrez, H. A.» en las dos, por enmienda con su evidencia en
+`bibliografia/enmiendas.yml`. `inventario_citas.py` reconoce «Gutiérrez (2020)» como el paquete, no el libro.
+
+**Verificado:** auditor y `--cierre 1`, arnés con las 71 inyecciones, generador sin cambios, reensamblado estable, 0
+cifras sin respaldo en el sitio, el código de las 12 páginas arrancando con el R 4.4, salidas anotadas en R y Python,
+referencias cruzadas, uso de fuentes e inventario al día; en el navegador, los diez módulos a 1280 y 375 px sin
+desbordes ni errores de KaTeX, todas las citas escritas y enlazadas con su entrada del pie.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit. Las dos citas a mano del cap. 8
+que cambiaron de 15.14 a 15.8 se admitieron en la línea base con el visto bueno de Javier (230 sin marcar, 125
+defectos).

@@ -16,6 +16,9 @@
 #     en la bibliografía de Lohr) fue "Landon, 1,293,669: Roosevelt, 972,897".
 #     El caso de Allentown (marco completo, un tercio devuelto, resultado igualmente
 #     erróneo) es de Literary Digest 122, 14-XI-1936, citado en el mismo ejemplo.
+#     El resultado real en votos es del ejercicio 15.8 (p. 547): Roosevelt 27,753
+#     millones y Landon 16,675 millones. Hasta el 2026-11-16 se usaba 61 / (61 + 37),
+#     con los porcentajes redondeados del ejemplo 1.1 (62,24 % en vez de 62,47 %).
 #
 #   Hite 1987 — Lohr, Sampling: Design and Analysis, 1.ª ed., capítulo 1:
 #     100 000 cuestionarios enviados, 4,5 % devueltos; los cuatro porcentajes con
@@ -75,7 +78,9 @@ digest_devueltas_dos    <- digest_landon_sondeo + digest_roosevelt_sondeo
 # capítulo, porque los porcentajes que cita Lohr (54 / 41 y 61 / 37) están sobre
 # el total de papeletas y de votos, que incluye a los demás candidatos.
 p_sondeo_dos   <- digest_roosevelt_sondeo / digest_devueltas_dos
-p_eleccion_dos <- 61 / (61 + 37)
+eleccion_roosevelt_votos <- 27.753e6   # Lohr 2022, ejercicio 15.8, p. 547
+eleccion_landon_votos    <- 16.675e6
+p_eleccion_dos <- eleccion_roosevelt_votos / (eleccion_roosevelt_votos + eleccion_landon_votos)
 sesgo_digest   <- p_sondeo_dos - p_eleccion_dos
 
 cat(sprintf("Digest: sondeo %.5f, elección %.5f, sesgo %.5f\n",
@@ -122,6 +127,7 @@ digest <- list(
     landonSondeo = digest_landon_sondeo, rooseveltSondeo = digest_roosevelt_sondeo,
     prediccionLandon = 54, prediccionRoosevelt = 41,
     eleccionRoosevelt = 61, eleccionLandon = 37,
+    votosRooseveltM = eleccion_roosevelt_votos / 1e6, votosLandonM = eleccion_landon_votos / 1e6,
     tasaRespuesta = digest_devueltas_dos / 10000000
   ),
   pSondeo = p_sondeo_dos, pEleccion = p_eleccion_dos, sesgo = sesgo_digest,
@@ -462,6 +468,7 @@ errorTotal <- list(
   recmDigest = sqrt(ecm_digest), recmMas = sqrt(ecm_mas),
   razonRecm = sqrt(ecm_digest / ecm_mas),
   nEfectivo = n_efectivo,
+  papeletasPorVotante = n_digest / n_efectivo,   # «cada votante al azar valía lo que …»
   curva = curva_recm,
   # Para el simulador de descomposición sobre agpop: la varianza del MAS con fpc.
   agpop = list(N = nrow(agpop), S2 = S2_agpop, media = media_marco,
