@@ -363,16 +363,22 @@ afirmaciones:
 - id: c1-m4-02
   tipo: dato
   afirmacion: >-
-    En la segunda mitad de 2009 el 24,5 % de los hogares de Estados Unidos solo tenía móvil y otro
+    En la segunda mitad de 2009 el 24,5 % de los hogares de Estados Unidos solo tenía celular y otro
     2,0 % no tenía teléfono.
-  hash_texto: d7d8fd8dcd908bef
+  hash_texto: 9823642424c032f7
   veredicto: respaldada
+  motivo: >-
+    El localizador era «p. 3», donde el 24,5 % es el de los hombres: el de hogares está en la p. 1 y el 2,0 % en la p. 3 (lector FU, 16 nov). «Móvil» pasó a «celular».
   redactado_por: corrección de la Fase 2 (sesión maestra), 2026-11-13
-  verificado_por: lector FU de la auditoría del capítulo 1; el pasaje se rehízo por guion
-  fecha: 2026-11-13
+  verificado_por: lector FU de la tarea 4.1 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  fecha: 2026-11-16
   fuentes:
   - clave: blumberg2010wireless
-    loc: p. 3
+    loc: 'pp. 1–3'
+    pagina: 1
+    hash_pasaje: 87cee206096b4c75
+  - clave: blumberg2010wireless
+    loc: 'pp. 1–3'
     pagina: 3
     hash_pasaje: 920b4f30a2d780b3
 
@@ -583,12 +589,12 @@ afirmaciones:
   tipo: atribucion
   afirmacion: >-
     Gutiérrez define U en su §2.1.1 y y_k y t_y en su §2.1.5.
-  hash_texto: c55e60ca567d1556
+  hash_texto: 3f81cb0ab2f60489
   veredicto: respaldada
   motivo: >-
-    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
+    Reescrita en la 4.1: este material escribe el total t; lo atribuido a Gutiérrez (U, y_k, t_y) se releyó el 16 nov.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
+  verificado_por: lector FU de la tarea 4.1 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
   fecha: 2026-11-16
   fuentes:
   - clave: gutierrez2016estrategias
@@ -599,6 +605,52 @@ afirmaciones:
     loc: '§2.1.1; §2.1.5'
     instantanea: cap2
     hash_pasaje: e08aff594fe235c0
+
+- id: c1-m2-08
+  tipo: atribucion
+  afirmacion: >-
+    En la tabla de notación del módulo 2, la columna de Lohr es como escribe Lohr (2022, §2.2): 𝒰, N, i, y_i, t,
+    ȳ_𝒰, S², 𝒮, n, Bias y MSE; y la de Gutiérrez, como escribe Gutiérrez (§2.1.1, §2.1.5, §2.1.6): U, N, k, y_k,
+    t_y, ȳ_U, S²_yU, s, n, T̂, B(T̂) y ECM(T̂).
+  hash_texto: ed605257a2d940de
+  veredicto: respaldada
+  motivo: >-
+    La tabla vive en simuladores.js y el auditor no la lee: esta afirmación, junto a la tabla en el HTML, la respalda.
+    El lector FU la comparó fila a fila con las dos obras; tres celdas de Gutiérrez decían θ̂ y él escribe T̂ (se
+    corrigieron con lo que leyó), y la fila «población objetivo» pasó a «población (conjunto de unidades)», porque
+    ninguna de las dos obras da símbolo a la población objetivo.
+  redactado_por: sesión maestra, Fase 4 del plan del cap. 1 (tarea 4.1)
+  verificado_por: lector FU de la tarea 4.1 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  fecha: 2026-11-16
+  fuentes:
+  - clave: lohr2022sampling
+    loc: '§2.2'
+    pagina: 34
+    hash_pasaje: e2a14c31fb43e03f
+  - clave: lohr2022sampling
+    loc: '§2.2'
+    pagina: 35
+    hash_pasaje: 95c202829393d445
+  - clave: lohr2022sampling
+    loc: '§2.2'
+    pagina: 37
+    hash_pasaje: 961743aeb52908da
+  - clave: lohr2022sampling
+    loc: '§2.2'
+    pagina: 38
+    hash_pasaje: e4865081906ac818
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.1; §2.1.5; §2.1.6'
+    instantanea: cap2
+    hash_pasaje: 6c7912608612e9ca
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.1; §2.1.5; §2.1.6'
+    instantanea: cap2
+    hash_pasaje: 708a1d66243c2b67
+  - clave: gutierrez2016estrategias
+    loc: '§2.1.1; §2.1.5; §2.1.6'
+    instantanea: cap2
+    hash_pasaje: 88b62ead8e5fd1f1
 
 - id: c1-m3-01
   tipo: atribucion
@@ -699,10 +751,12 @@ afirmaciones:
   tipo: dato
   afirmacion: >-
     La encuesta telefónica de 2009 marcó solo números de línea fija, ninguno de móvil.
-  hash_texto: 8f3b66e1934fdf40
+  hash_texto: 46d078cf4c0b8312
   veredicto: respaldada
+  motivo: >-
+    «móvil» pasó a «celular» en la 4.1 (léxico de Colombia); la fuente dice «cell phone».
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  verificado_por: lector FU de la tarea 4.1 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
   fecha: 2026-11-16
   fuentes:
   - clave: lohr2022sampling
@@ -1183,12 +1237,12 @@ afirmaciones:
   tipo: atribucion
   afirmacion: >-
     Gutiérrez define U en su §2.1.1 y y_k y t_y en su §2.1.5.
-  hash_texto: 7eef00c1fc989c4c
+  hash_texto: 48dec60b3edb8e96
   veredicto: respaldada
   motivo: >-
-    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
+    Reescrita en la 4.1: este material escribe el total t; lo atribuido a Gutiérrez (U, y_k, t_y) se releyó el 16 nov.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
+  verificado_por: lector FU de la tarea 4.1 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
   fecha: 2026-11-16
   fuentes:
   - clave: gutierrez2016estrategias

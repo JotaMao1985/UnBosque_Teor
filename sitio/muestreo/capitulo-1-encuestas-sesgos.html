@@ -3743,7 +3743,7 @@
         <h4>Las dos causas, y por qué hay que separarlas</h4>
         <p><strong>No cobertura.</strong> <span data-afirma="c1-m1-04">La lista se armó con guías de teléfono, registros de automóviles, listas de
           suscriptores y padrones electorales
-          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</a></cite></span>. En 1936, tener teléfono o coche era señal de estar por encima de la
+          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</a></cite></span>. En 1936, tener teléfono o carro era señal de estar por encima de la
           media, y la opinión sobre las políticas de Roosevelt dependía justamente de la posición económica.</p>
         <p style="margin-bottom:0;"><strong>No respuesta.</strong> <span data-afirma="c1-m1-05">Contestó menos de una cuarta parte de los
           solicitados</span>, y <span data-afirma="c1-m1-12">los partidarios de Landon devolvieron la papeleta con mucha más frecuencia
@@ -3760,7 +3760,8 @@
       <div class="simulador" data-simulador="digest">
         <h4><i class="fas fa-vote-yea" aria-hidden="true"></i> El sesgo del <em>Digest</em>, partido en dos</h4>
         <p class="simulador-intro">Mueve la cobertura del marco $C$, la brecha de apoyo entre los que quedaron dentro y
-          fuera, y la respuesta relativa $\rho$ de los partidarios de Roosevelt. La primera gráfica compara el apoyo
+          fuera, y la respuesta relativa $\rho$: la tasa de respuesta de los partidarios de Roosevelt dividida por la de los
+          de Landon. La primera gráfica compara el apoyo
           real, el apoyo dentro del marco y lo que acaba viendo el sondeo. La segunda dibuja <strong>todas</strong> las
           combinaciones que reproducen exactamente el 42,9 % publicado: cuando el punto negro cae sobre la curva
           naranja, tu escenario es indistinguible del que ocurrió.</p>
@@ -3782,7 +3783,8 @@
         <div class="lectura-guiada-cuerpo">
           <p><strong>Qué mueves.</strong> Los tres deslizadores reparten la culpa entre las dos causas: $C$ dice cuánta
             población entró en el marco, la brecha dice cuánto se diferenciaban los que quedaron fuera, y $\rho$, cuánto
-            más devolvían la papeleta los partidarios de un candidato que los del otro.</p>
+            devolvían la papeleta los partidarios de Roosevelt en comparación con los de Landon: por debajo de 1,
+            los de Roosevelt la devolvían menos.</p>
           <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
             estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
             naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
@@ -3982,6 +3984,9 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
       </div>
 
       <div class="glosario-notacion" data-glosario="conceptos"></div>
+      <p class="text-xs text-gray-500" style="margin-top:0.5rem;" data-afirma="c1-m2-08">Las columnas de Lohr y de
+        Gutiérrez, tal como escribe cada uno: <cite class="cita" data-ref="lohr2022sampling" data-loc="§2.2" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, §2.2)</a></cite>
+        y <cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5; §2.1.6" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5; §2.1.6)</a></cite>.</p>
 
       <h3>La población del curso</h3>
 
@@ -4119,8 +4124,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         <ul style="margin-bottom:0;">
           <li data-afirma="c1-m2-05"><cite class="cita" data-ref="lohr2022sampling" data-loc="§1.2" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, §1.2)</a></cite> — población objetivo, marco, unidad de muestreo y de
             observación.</li>
-          <li data-afirma="c1-m2-06"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$, $y_k$, $t_y$ que usa este
-            material.</li>
+          <li data-afirma="c1-m2-06"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$ y $y_k$ que usa este material; el total, que aquí se escribe $t$, allí es $t_y$.</li>
         </ul>
       </div>
     </div>
@@ -4154,8 +4158,9 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
       <div class="definition">
         <h4>Muestra probabilística</h4>
         <p style="margin-bottom:0;">Una muestra es probabilística cuando se conoce, antes de seleccionarla, la
-          probabilidad con la que cada unidad de la población puede entrar; y esa probabilidad es <strong>positiva para
-          todas</strong>. Solo entonces tienen sentido las palabras «insesgado», «varianza» y «error estándar»: las
+          probabilidad con la que cada unidad de la población puede entrar —su <strong>probabilidad de
+          inclusión</strong>, que para la unidad $k$ se escribe $\pi_k$—; y esa probabilidad es <strong>positiva para
+          todas</strong>: $\pi_k > 0$ para toda $k$. Solo entonces tienen sentido las palabras «insesgado», «varianza» y «error estándar»: las
           tres son esperanzas respecto de ese mecanismo de selección.</p>
       </div>
 
@@ -4175,7 +4180,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">2 · Un mecanismo de selección aleatorio y conocido</h4>
           <p class="text-sm" style="margin-bottom:0;">No basta con que sea aleatorio: hay que <em>saber</em> con qué
-            probabilidad entra cada unidad, porque esas probabilidades son las que después ponderan la estimación. Es
+            probabilidad entra cada unidad, porque esas probabilidades, las $\pi_k$, son las que después ponderan la estimación. Es
             el objeto que se construye en el capítulo 2.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4242,8 +4247,8 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           <h4 class="text-primary font-bold" style="margin-top:0;">1 · No cobertura</h4>
           <p class="text-sm">El marco deja fuera parte de la población: esas unidades tienen probabilidad cero.</p>
           <p class="text-xs text-gray-500" style="margin-bottom:0;"><em>Ejemplo:</em> <span data-afirma="c1-m4-08">la encuesta telefónica de 2009 de
-            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de móvil <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.5"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.5)</a></cite></span>. <span data-afirma="c1-m4-02">En la segunda mitad de ese año, el 24,5 % de los hogares de Estados
-        Unidos solo tenía móvil y otro 2,0 % no tenía teléfono <cite class="cita" data-ref="blumberg2010wireless" data-loc="p. 3"><a class="cita-enlace" href="#pie-blumberg2010wireless" title="Blumberg, S. J., y Luke, J. V. (2010). Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009. National Center for Health Statistics. https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf">(Blumberg y Luke, 2010, p. 3)</a></cite></span>: uno de cada cuatro hogares
+            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de celular <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.5"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.5)</a></cite></span>. <span data-afirma="c1-m4-02">En la segunda mitad de ese año, el 24,5 % de los hogares de Estados
+        Unidos solo tenía celular y otro 2,0 % no tenía teléfono <cite class="cita" data-ref="blumberg2010wireless" data-loc="pp. 1–3"><a class="cita-enlace" href="#pie-blumberg2010wireless" title="Blumberg, S. J., y Luke, J. V. (2010). Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009. National Center for Health Statistics. https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf">(Blumberg y Luke, 2010, pp. 1–3)</a></cite></span>: uno de cada cuatro hogares
             estaba fuera del marco por construcción.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4264,8 +4269,9 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Dos parientes: conveniencia y juicio</h4>
           <p class="text-sm" style="margin-bottom:0;">Muestrear lo que está a mano, o lo que «parece representativo»,
-            no es un diseño con probabilidades desconocidas: es un diseño <em>sin</em> probabilidades. No hay $p(s)$
-            respecto de la cual tomar esperanzas, así que ni el sesgo ni la varianza están definidos.</p>
+            no es un diseño con probabilidades desconocidas: es un diseño <em>sin</em> probabilidades. No hay un diseño
+            $p(s)$ —la probabilidad de cada muestra posible, que el capítulo 2 construye— respecto del cual tomar
+            esperanzas, así que ni el sesgo ni la varianza están definidos.</p>
         </div>
       </div>
 
@@ -4285,7 +4291,8 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           <em>ponderado</em> por lo que cada respuesta representa.</p>
         <p style="margin-bottom:0;"><strong>Calibrar</strong> es retocar esos pesos hasta que la muestra reproduzca
           unos totales que se conocen por otra vía: aquí, cuánta gente de cada sexo, edad y raza dice el censo de
-          2010 que hay. De dónde salen los pesos cuando el diseño es probabilístico se construye en el capítulo 2;
+          2010 que hay. Cuando el diseño es probabilístico, el peso de la unidad $k$ es $d_k = 1/\pi_k$, la inversa de su
+          probabilidad de inclusión, y el capítulo 2 lo construye;
           cómo se calibran, en el capítulo 4 (módulo 10) y en el 7 (módulo 6). Para este módulo basta con saber qué prometen, porque lo que
           se va a comprobar es <strong>hasta dónde llega esa promesa</strong>.</p>
       </div>
@@ -4445,7 +4452,7 @@ print(pd.Series({"edad_telefonica": tel["age"].mean(),
             general; las acercó en las variables por las que se ponderó, y en ninguna más.</p>
           <p><strong>Por qué importa.</strong> Un peso de calibración no es un corrector de sesgo: es una promesa
             condicional. Dice «dentro de cada celda, quien contestó se parece a quien no contestó». Si la razón por la
-            que alguien coge el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
+            que alguien contesta el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
             raza—, la promesa es falsa y los pesos no lo detectan.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
@@ -4575,8 +4582,9 @@ print(pd.Series({"tasa_respuesta": r, "media_respondientes": mu_R,
         </div>
       </div>
 
-      <p>Cuando la población se puede partir en <strong>clases de respuesta</strong> con tasas $r_h$ distintas, la
-        media de los respondientes es un promedio ponderado por $N_h r_h$ en vez de por $N_h$:</p>
+      <p>Cuando la población se puede partir en <strong>clases de respuesta</strong> $h = 1, \dots, H$, cada una
+        con $N_h$ unidades, media $\bar{y}_h$ y su propia tasa de respuesta $r_h$, la media de los respondientes
+        es un promedio ponderado por $N_h r_h$ en vez de por $N_h$:</p>
 
       <div class="formula">
         $$\bar{y}_R = \frac{\sum_h N_h\, r_h\, \bar{y}_h}{\sum_h N_h\, r_h}$$
@@ -4696,14 +4704,14 @@ print((pd.Series({
             sola hundida: la naranja se despega de inmediato. Fíjate en que puedes llegar a la misma tasa global de
             respuesta con la naranja pegada a la verde o muy lejos de ella.</p>
           <p><strong>La consecuencia práctica.</strong> La tasa global de respuesta —la cifra que se reporta, la que
-            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de coste, no de
+            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de costo, no de
             puntería. Y hay algo que este simulador puede enseñar y una encuesta real no: aquí ves la línea verde
             porque <code>agpop</code> es una población completa. En campo, esa línea no existe; solo tienes la naranja,
             y nada dentro de los datos te dice a qué distancia quedó.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
             No sesga que falte gente: sesga que falte de manera <strong>desigual</strong>. De ahí que el capítulo 8
-            empiece por construir clases de respuesta: sin partir la población en grupos, no hay forma de saber si lo
+            ajuste los pesos por clases de respuesta (su módulo 3): sin partir la población en grupos, no hay forma de saber si lo
             que falta se reparte parejo o se concentra en un sitio.
           </p>
         </div>
@@ -4959,7 +4967,8 @@ print((pd.Series({
 
       <div class="definition">
         <h4>La descomposición</h4>
-        <p>La calidad de una estimación $\hat\theta$ se mide con el <strong>error cuadrático medio</strong>, que se
+        <p>La calidad de un estimador $\hat\theta$ de un parámetro $\theta$ —una media, un total, una
+          proporción— se mide con el <strong>error cuadrático medio</strong>, que se
           parte en dos piezas y nada más que dos:</p>
         <p style="text-align:center;">$$\text{ECM}(\hat\theta) = \underbrace{\big[E(\hat\theta) - \theta\big]^2}_{\text{sesgo}^2} + \underbrace{V(\hat\theta)}_{\text{varianza}}$$</p>
         <p style="margin-bottom:0;">La varianza baja con $n$; el sesgo, no. Todo el capítulo cabe en esa frase.</p>
@@ -4986,7 +4995,7 @@ print((pd.Series({
             </li>
             <li>
               <p>El término cruzado se anula, porque $E[\hat\theta - E\hat\theta] = 0$ por definición de esperanza. Lo
-                que queda son los dos sumandos:</p>
+                que queda son los dos sumandos, con $B(\hat\theta) = E(\hat\theta) - \theta$, el sesgo:</p>
               $$\text{ECM} = V(\hat\theta) + B(\hat\theta)^2$$
             </li>
             <li>
@@ -5413,7 +5422,8 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <p><strong>Las muestras que las acompañan.</strong> <span data-afirma="c1-m8-03">Lohr distribuye, junto a <code>agpop</code>, muestras ya
           extraídas de ella con distintos diseños: <code>agsrs</code> (aleatoria simple, $n = 300$) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 4.2"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 4.2)</a></cite>,
           <code>agstrat</code> (estratificada por región) <cite class="cita" data-ref="lohr2022sampling" data-loc="p. 81"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, p. 81)</a></cite> y <code>agpps</code> (con probabilidades proporcionales al
-          tamaño) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 6.10"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 6.10)</a></cite></span>. Cada capítulo usa la que le toca, y la comparación entre ellas es el hilo que une el curso.</p>
+          tamaño) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 6.10"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 6.10)</a></cite></span>. <code>agsrs</code> vuelve en los capítulos 2 a 4, <code>agstrat</code> en el 4 y <code>agpps</code> en el
+          6, y la comparación entre ellas es el hilo de esos capítulos; en los demás entran otras encuestas.</p>
       </div>
 
       <div class="references">
@@ -5478,7 +5488,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Un modelo entrenado con reseñas</h4>
           <p class="text-sm" style="margin-bottom:0;">Quien escribe una reseña no es un comprador cualquiera: escribe
-            quien está muy satisfecho o muy enfadado. El corpus es una muestra autoseleccionada de la población de
+            quien está muy satisfecho o muy molesto. El corpus es una muestra autoseleccionada de la población de
             compradores, y su distribución de satisfacción está vaciada por el centro. Es Hite con otro nombre.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -5507,8 +5517,8 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <p><strong>La pregunta que hay que hacerse siempre.</strong> Ante cualquier conjunto de datos, antes de
           entrenar nada: <em>¿qué tuvo que pasar para que esta fila exista?</em> Si la respuesta involucra una decisión
           de la propia unidad, o un filtro correlacionado con lo que se quiere predecir, ya se sabe hacia dónde va a
-          apuntar el error. El capítulo 8 vuelve sobre esto en el módulo de auditoría de IA aplicada al diseño
-          muestral.</p>
+          apuntar el error. El capítulo 8 vuelve sobre esto en su módulo 9, «IA asistida en diseño
+          muestral».</p>
       </div>
 
       <div class="references">
@@ -5948,8 +5958,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           <li data-afirma="c1-m10-06"><cite class="cita" data-ref="lohr2022sampling" data-loc="cap. 1" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, cap. 1)</a></cite> — la lectura obligatoria de las semanas 1 y 2, con el caso
             del <em>Digest</em>. El caso de <cite class="cita" data-ref="hite1987women" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-hite1987women" title="Hite, S. (1987). The Hite report: women and love: a cultural revolution in progress (1.ª ed.). Knopf.">Hite (1987)</a></cite> y los cinco ejercicios de este módulo vienen de la primera edición
             <cite class="cita" data-ref="lohr1999sampling" data-loc="cap. 1"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">(Lohr, 1999, cap. 1)</a></cite>.</li>
-          <li data-afirma="c1-m10-07"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$, $y_k$, $t_y$ que se usa en todo
-            este material. De
+          <li data-afirma="c1-m10-07"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$ y $y_k$ que se usa en todo este material; el total, que aquí se escribe $t$, allí es $t_y$. De
             <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
             abierto</a>.</li>
           <li><cite class="cita" data-ref="heck201865" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-heck201865" title="Heck, P. R., Simons, D. J., y Chabris, C. F. (2018). 65% of Americans believe they are above average in intelligence: Results of two nationally representative surveys. PLOS ONE, 13(7), e0200103. https://doi.org/10.1371/journal.pone.0200103">Heck et al. (2018)</a></cite> — las dos encuestas del módulo 4, con la metodología completa. De
@@ -8796,9 +8805,12 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
       titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
       nota: 'Es la primera entrega de una tabla que crece con el curso. En el capítulo 2 se le ' +
         'añaden el diseño $p(s)$, las probabilidades de inclusión y el estimador de ' +
-        'Horvitz–Thompson; aquí solo está el vocabulario que hace falta para nombrar las cosas.',
+        'Horvitz–Thompson; aquí solo está el vocabulario que hace falta para nombrar las cosas. ' +
+        'El total se escribe $t$ aquí y en el capítulo 2; desde el capítulo 3, cuando hay varias ' +
+        'variables a la vez, $t_y$. Gutiérrez llama $T$ al parámetro y $\\hat{T}$ a su estimador; ' +
+        'Lohr escribe $\\hat{t}$ para el estimador del total y $\\hat{\\theta}$ para un estadístico cualquiera.',
       filas: [
-        { concepto: 'Población objetivo', aqui: 'U', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
+        { concepto: 'Población (conjunto de unidades)', aqui: 'U', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
         { concepto: 'Tamaño de la población', aqui: 'N', lohr: 'N', gutierrez: 'N', r: 'nrow(agpop)' },
         { concepto: 'Unidad de la población', aqui: 'k', lohr: 'i', gutierrez: 'k', r: 'una fila' },
         { concepto: 'Variable de interés', aqui: 'y_k', lohr: 'y_i', gutierrez: 'y_k', r: 'agpop$acres92' },
@@ -8807,9 +8819,9 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         { concepto: 'Varianza poblacional', aqui: 'S^2', lohr: 'S^2', gutierrez: 'S^2_{yU}', r: 'var(y)' },
         { concepto: 'Muestra', aqui: 's', lohr: '\\mathcal{S}', gutierrez: 's', r: 'agsrs' },
         { concepto: 'Tamaño de la muestra', aqui: 'n', lohr: 'n', gutierrez: 'n', r: 'nrow(agsrs)' },
-        { concepto: 'Estimador de un parámetro', aqui: '\\hat{\\theta}', lohr: '\\hat{\\theta}', gutierrez: '\\hat{\\theta}', r: 'svymean()' },
-        { concepto: 'Sesgo de un estimador', aqui: 'B(\\hat{\\theta}) = E(\\hat{\\theta}) - \\theta', lohr: '\\text{Bias}', gutierrez: 'B(\\hat{\\theta})', r: '—' },
-        { concepto: 'Error cuadrático medio', aqui: '\\text{ECM} = B^2 + V', lohr: '\\text{MSE}', gutierrez: '\\text{ECM}', r: '—' }
+        { concepto: 'Estimador de un parámetro', aqui: '\\hat{\\theta}', lohr: '\\hat{\\theta}', gutierrez: '\\hat{T}', r: 'svymean()' },
+        { concepto: 'Sesgo de un estimador', aqui: 'B(\\hat{\\theta}) = E(\\hat{\\theta}) - \\theta', lohr: '\\text{Bias}', gutierrez: 'B(\\hat{T})', r: '—' },
+        { concepto: 'Error cuadrático medio', aqui: '\\text{ECM} = B^2 + V', lohr: '\\text{MSE}', gutierrez: '\\text{ECM}(\\hat{T})', r: '—' }
       ]
     };
 
@@ -8879,8 +8891,8 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
                 resumen: 'Los que hacen que la muestra represente a otra población distinta de ' +
                   'la que se quería estudiar.',
                 efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1 y 8',
-                ejemplo: 'la encuesta telefónica de 2009 no llamó a ningún móvil, y el 24,5 % de ' +
-                  'los hogares solo tenía móvil.',
+                ejemplo: 'la encuesta telefónica de 2009 no llamó a ningún celular, y el 24,5 % de ' +
+                  'los hogares solo tenía celular.',
                 hijos: [
                   {
                     etiqueta: 'Error de cobertura',
@@ -9039,7 +9051,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           { texto: 'Las dos se alejan mucho del censo, en direcciones opuestas: la telefónica sobrerrepresenta a los mayores y el panel online a los jóvenes.', correcta: true,
             retro: 'Eso es. 60,7 años de edad media frente a 33,7. Ninguna de las dos es la población, y por eso las dos necesitan pesos.' },
           { texto: 'La telefónica es probabilística, así que reproduce el censo.', correcta: false,
-            retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a móviles y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
+            retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a celulares y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
           { texto: 'El panel online se parece más al censo porque es más reciente.', correcta: false,
             retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,6 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
           { texto: 'No se pueden comparar porque tienen tamaños distintos.', correcta: false,

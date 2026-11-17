@@ -434,7 +434,7 @@
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez (2016, §2.1.1; §2.1.5) — la notación $U$, $y_k$, $t_y$ que usa este material."
+     "texto": "Gutiérrez (2016, §2.1.1; §2.1.5) — la notación $U$ y $y_k$ que usa este material; el total, que aquí se escribe $t$, allí es $t_y$."
     },
     {
      "ediciones": [],
@@ -642,7 +642,7 @@
      "obras": [
       "gutierrez-estrategias"
      ],
-     "texto": "Gutiérrez (2016, §2.1.1; §2.1.5) — la notación $U$, $y_k$, $t_y$ que se usa en todo este material. De acceso abierto ."
+     "texto": "Gutiérrez (2016, §2.1.1; §2.1.5) — la notación $U$ y $y_k$ que se usa en todo este material; el total, que aquí se escribe $t$, allí es $t_y$. De acceso abierto ."
     },
     {
      "ediciones": [],
@@ -693,9 +693,9 @@
     },
     "gutierrez-estrategias": {
      "bloque": 6,
-     "js": 2,
+     "js": 3,
      "pie": 3,
-     "prosa": 4
+     "prosa": 6
     },
     "heck-2018": {
      "bloque": 2,
@@ -714,9 +714,9 @@
     },
     "lohr": {
      "bloque": 17,
-     "js": 4,
+     "js": 5,
      "pie": 2,
-     "prosa": 58
+     "prosa": 60
     },
     "lumley-survey": {
      "bloque": 1,

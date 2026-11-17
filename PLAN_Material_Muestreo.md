@@ -9512,3 +9512,40 @@ Comprobado en Chrome: con el pie encajado en 300 px, la versión publicada desbo
 Gutiérrez) y la corregida en ninguna; los diez módulos sin desborde. Auditor, `--cierre 1`, arnés, catálogo y
 generador en verde; reensamblado estable; 0 cifras sin respaldo.
 
+**Arreglo publicado el 2026-11-16**, con el visto bueno de Javier en cada paso: commit `fac37de`; `origin/main`
+`8bd5ae7` → `fac37de`; `gh-pages` `d201cd4` → `f935af6` (árbol `fac37de:sitio`). Pages construido; las 19 páginas
+servidas, byte a byte las de la rama; en el sitio público, el pie encajado en 300 px ya no desborda en ninguna entrada
+y Blumberg sale sin «(p. 17)».
+
+### T7.139 — Fase 4 del cap. 1, tarea 4.1: notación, léxico y remisiones (2026-11-16)
+
+Primera tarea de la Fase 4 (narrativa y notación). Decisiones de Javier al empezarla: los cuatro recursos para los
+módulos de solo prosa (2, 3, 5 y 9), el léxico al español de Colombia y el caso del DANE en el módulo 3.
+
+**Notación.** El total se escribe $t$, como en las tablas de notación de los capítulos 1 y 2; las dos lecturas que
+decían que este material usa $t_y$ lo atribuyen ahora a Gutiérrez, y la nota de la tabla avisa de que desde el
+capítulo 3 el total es $t_y$. Quedan presentados donde aparecen por primera vez: $\pi_k$ (módulo 3, con
+$\pi_k > 0$), el diseño $p(s)$ y el peso $d_k = 1/\pi_k$ (módulo 4), los símbolos de la fórmula de la no respuesta
+por clases (módulo 4), $\theta$ y $B(\hat\theta)$ (módulo 7). $\rho$ se describía al revés del valor que toma: ahora
+dice que por debajo de 1 los partidarios de Roosevelt devolvían menos la papeleta.
+
+**La tabla de notación Lohr ↔ Gutiérrez,** que vive en el JavaScript y el auditor no lee, la comparó el lector FU
+fila a fila con las dos obras. Gutiérrez no usa $\hat\theta$: llama $T$ al parámetro y escribe $\hat T$,
+$B(\hat T)$ y $\text{ECM}(\hat T)$; las tres celdas se corrigieron, y la fila «población objetivo» pasó a «población
+(conjunto de unidades)». Junto a la tabla hay ahora una línea con su fuente, registrada como `c1-m2-08`.
+
+**Un localizador que el sitio publicaba mal.** El 24,5 % de hogares solo con celular se citaba en la p. 3 de
+Blumberg y Luke, donde el 24,5 % es el de los hombres; el de hogares está en la p. 1 y el 2,0 % en la p. 3. El
+registro solo guardaba el pasaje del 2,0 %. Ahora la cita es «pp. 1–3» y lleva los dos pasajes.
+
+**Léxico y remisiones.** Celular, carro, contestar el teléfono, molesto y costo. El capítulo 8 «ajusta los pesos por
+clases de respuesta (su módulo 3)», en vez de «empieza por»; su módulo 9 se nombra por su título; y las muestras de
+`agpop` se sitúan donde se usan (agsrs en los caps. 2 a 4, agstrat en el 4, agpps en el 6), en vez de «cada capítulo
+usa la que le toca».
+
+**Verificado:** auditor de citas y `--cierre 1` en verde (61 afirmaciones: 59 respaldadas y las 2 con matiz del
+piloto), arnés, generador, reensamblado estable, referencias cruzadas, 0 cifras sin respaldo, código de las 12
+páginas, y en el navegador los diez módulos sin errores de KaTeX.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

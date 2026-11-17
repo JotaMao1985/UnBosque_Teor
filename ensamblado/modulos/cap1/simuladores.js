@@ -497,9 +497,12 @@
       titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
       nota: 'Es la primera entrega de una tabla que crece con el curso. En el capítulo 2 se le ' +
         'añaden el diseño $p(s)$, las probabilidades de inclusión y el estimador de ' +
-        'Horvitz–Thompson; aquí solo está el vocabulario que hace falta para nombrar las cosas.',
+        'Horvitz–Thompson; aquí solo está el vocabulario que hace falta para nombrar las cosas. ' +
+        'El total se escribe $t$ aquí y en el capítulo 2; desde el capítulo 3, cuando hay varias ' +
+        'variables a la vez, $t_y$. Gutiérrez llama $T$ al parámetro y $\\hat{T}$ a su estimador; ' +
+        'Lohr escribe $\\hat{t}$ para el estimador del total y $\\hat{\\theta}$ para un estadístico cualquiera.',
       filas: [
-        { concepto: 'Población objetivo', aqui: 'U', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
+        { concepto: 'Población (conjunto de unidades)', aqui: 'U', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
         { concepto: 'Tamaño de la población', aqui: 'N', lohr: 'N', gutierrez: 'N', r: 'nrow(agpop)' },
         { concepto: 'Unidad de la población', aqui: 'k', lohr: 'i', gutierrez: 'k', r: 'una fila' },
         { concepto: 'Variable de interés', aqui: 'y_k', lohr: 'y_i', gutierrez: 'y_k', r: 'agpop$acres92' },
@@ -508,9 +511,9 @@
         { concepto: 'Varianza poblacional', aqui: 'S^2', lohr: 'S^2', gutierrez: 'S^2_{yU}', r: 'var(y)' },
         { concepto: 'Muestra', aqui: 's', lohr: '\\mathcal{S}', gutierrez: 's', r: 'agsrs' },
         { concepto: 'Tamaño de la muestra', aqui: 'n', lohr: 'n', gutierrez: 'n', r: 'nrow(agsrs)' },
-        { concepto: 'Estimador de un parámetro', aqui: '\\hat{\\theta}', lohr: '\\hat{\\theta}', gutierrez: '\\hat{\\theta}', r: 'svymean()' },
-        { concepto: 'Sesgo de un estimador', aqui: 'B(\\hat{\\theta}) = E(\\hat{\\theta}) - \\theta', lohr: '\\text{Bias}', gutierrez: 'B(\\hat{\\theta})', r: '—' },
-        { concepto: 'Error cuadrático medio', aqui: '\\text{ECM} = B^2 + V', lohr: '\\text{MSE}', gutierrez: '\\text{ECM}', r: '—' }
+        { concepto: 'Estimador de un parámetro', aqui: '\\hat{\\theta}', lohr: '\\hat{\\theta}', gutierrez: '\\hat{T}', r: 'svymean()' },
+        { concepto: 'Sesgo de un estimador', aqui: 'B(\\hat{\\theta}) = E(\\hat{\\theta}) - \\theta', lohr: '\\text{Bias}', gutierrez: 'B(\\hat{T})', r: '—' },
+        { concepto: 'Error cuadrático medio', aqui: '\\text{ECM} = B^2 + V', lohr: '\\text{MSE}', gutierrez: '\\text{ECM}(\\hat{T})', r: '—' }
       ]
     };
 
@@ -580,8 +583,8 @@
                 resumen: 'Los que hacen que la muestra represente a otra población distinta de ' +
                   'la que se quería estudiar.',
                 efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1 y 8',
-                ejemplo: 'la encuesta telefónica de 2009 no llamó a ningún móvil, y el 24,5 % de ' +
-                  'los hogares solo tenía móvil.',
+                ejemplo: 'la encuesta telefónica de 2009 no llamó a ningún celular, y el 24,5 % de ' +
+                  'los hogares solo tenía celular.',
                 hijos: [
                   {
                     etiqueta: 'Error de cobertura',
@@ -740,7 +743,7 @@
           { texto: 'Las dos se alejan mucho del censo, en direcciones opuestas: la telefónica sobrerrepresenta a los mayores y el panel online a los jóvenes.', correcta: true,
             retro: 'Eso es. 60,7 años de edad media frente a 33,7. Ninguna de las dos es la población, y por eso las dos necesitan pesos.' },
           { texto: 'La telefónica es probabilística, así que reproduce el censo.', correcta: false,
-            retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a móviles y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
+            retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a celulares y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
           { texto: 'El panel online se parece más al censo porque es más reciente.', correcta: false,
             retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,6 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
           { texto: 'No se pueden comparar porque tienen tamaños distintos.', correcta: false,

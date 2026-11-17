@@ -37,8 +37,8 @@
           <h4 class="text-primary font-bold" style="margin-top:0;">1 · No cobertura</h4>
           <p class="text-sm">El marco deja fuera parte de la población: esas unidades tienen probabilidad cero.</p>
           <p class="text-xs text-gray-500" style="margin-bottom:0;"><em>Ejemplo:</em> <span data-afirma="c1-m4-08">la encuesta telefónica de 2009 de
-            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de móvil <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.5"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.5)</a></cite></span>. <span data-afirma="c1-m4-02">En la segunda mitad de ese año, el 24,5 % de los hogares de Estados
-        Unidos solo tenía móvil y otro 2,0 % no tenía teléfono <cite class="cita" data-ref="blumberg2010wireless" data-loc="p. 3"><a class="cita-enlace" href="#pie-blumberg2010wireless" title="Blumberg, S. J., y Luke, J. V. (2010). Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009. National Center for Health Statistics. https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf">(Blumberg y Luke, 2010, p. 3)</a></cite></span>: uno de cada cuatro hogares
+            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de celular <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.5"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.5)</a></cite></span>. <span data-afirma="c1-m4-02">En la segunda mitad de ese año, el 24,5 % de los hogares de Estados
+        Unidos solo tenía celular y otro 2,0 % no tenía teléfono <cite class="cita" data-ref="blumberg2010wireless" data-loc="pp. 1–3"><a class="cita-enlace" href="#pie-blumberg2010wireless" title="Blumberg, S. J., y Luke, J. V. (2010). Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009. National Center for Health Statistics. https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf">(Blumberg y Luke, 2010, pp. 1–3)</a></cite></span>: uno de cada cuatro hogares
             estaba fuera del marco por construcción.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -59,8 +59,9 @@
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Dos parientes: conveniencia y juicio</h4>
           <p class="text-sm" style="margin-bottom:0;">Muestrear lo que está a mano, o lo que «parece representativo»,
-            no es un diseño con probabilidades desconocidas: es un diseño <em>sin</em> probabilidades. No hay $p(s)$
-            respecto de la cual tomar esperanzas, así que ni el sesgo ni la varianza están definidos.</p>
+            no es un diseño con probabilidades desconocidas: es un diseño <em>sin</em> probabilidades. No hay un diseño
+            $p(s)$ —la probabilidad de cada muestra posible, que el capítulo 2 construye— respecto del cual tomar
+            esperanzas, así que ni el sesgo ni la varianza están definidos.</p>
         </div>
       </div>
 
@@ -80,7 +81,8 @@
           <em>ponderado</em> por lo que cada respuesta representa.</p>
         <p style="margin-bottom:0;"><strong>Calibrar</strong> es retocar esos pesos hasta que la muestra reproduzca
           unos totales que se conocen por otra vía: aquí, cuánta gente de cada sexo, edad y raza dice el censo de
-          2010 que hay. De dónde salen los pesos cuando el diseño es probabilístico se construye en el capítulo 2;
+          2010 que hay. Cuando el diseño es probabilístico, el peso de la unidad $k$ es $d_k = 1/\pi_k$, la inversa de su
+          probabilidad de inclusión, y el capítulo 2 lo construye;
           cómo se calibran, en el capítulo 4 (módulo 10) y en el 7 (módulo 6). Para este módulo basta con saber qué prometen, porque lo que
           se va a comprobar es <strong>hasta dónde llega esa promesa</strong>.</p>
       </div>
@@ -150,7 +152,7 @@
             general; las acercó en las variables por las que se ponderó, y en ninguna más.</p>
           <p><strong>Por qué importa.</strong> Un peso de calibración no es un corrector de sesgo: es una promesa
             condicional. Dice «dentro de cada celda, quien contestó se parece a quien no contestó». Si la razón por la
-            que alguien coge el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
+            que alguien contesta el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
             raza—, la promesa es falsa y los pesos no lo detectan.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
@@ -220,8 +222,9 @@
         </div>
       </div>
 
-      <p>Cuando la población se puede partir en <strong>clases de respuesta</strong> con tasas $r_h$ distintas, la
-        media de los respondientes es un promedio ponderado por $N_h r_h$ en vez de por $N_h$:</p>
+      <p>Cuando la población se puede partir en <strong>clases de respuesta</strong> $h = 1, \dots, H$, cada una
+        con $N_h$ unidades, media $\bar{y}_h$ y su propia tasa de respuesta $r_h$, la media de los respondientes
+        es un promedio ponderado por $N_h r_h$ en vez de por $N_h$:</p>
 
       <div class="formula">
         $$\bar{y}_R = \frac{\sum_h N_h\, r_h\, \bar{y}_h}{\sum_h N_h\, r_h}$$
@@ -272,14 +275,14 @@
             sola hundida: la naranja se despega de inmediato. Fíjate en que puedes llegar a la misma tasa global de
             respuesta con la naranja pegada a la verde o muy lejos de ella.</p>
           <p><strong>La consecuencia práctica.</strong> La tasa global de respuesta —la cifra que se reporta, la que
-            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de coste, no de
+            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de costo, no de
             puntería. Y hay algo que este simulador puede enseñar y una encuesta real no: aquí ves la línea verde
             porque <code>agpop</code> es una población completa. En campo, esa línea no existe; solo tienes la naranja,
             y nada dentro de los datos te dice a qué distancia quedó.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
             No sesga que falte gente: sesga que falte de manera <strong>desigual</strong>. De ahí que el capítulo 8
-            empiece por construir clases de respuesta: sin partir la población en grupos, no hay forma de saber si lo
+            ajuste los pesos por clases de respuesta (su módulo 3): sin partir la población en grupos, no hay forma de saber si lo
             que falta se reparte parejo o se concentra en un sitio.
           </p>
         </div>

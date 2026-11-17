@@ -30,7 +30,8 @@
 
       <div class="definition">
         <h4>La descomposición</h4>
-        <p>La calidad de una estimación $\hat\theta$ se mide con el <strong>error cuadrático medio</strong>, que se
+        <p>La calidad de un estimador $\hat\theta$ de un parámetro $\theta$ —una media, un total, una
+          proporción— se mide con el <strong>error cuadrático medio</strong>, que se
           parte en dos piezas y nada más que dos:</p>
         <p style="text-align:center;">$$\text{ECM}(\hat\theta) = \underbrace{\big[E(\hat\theta) - \theta\big]^2}_{\text{sesgo}^2} + \underbrace{V(\hat\theta)}_{\text{varianza}}$$</p>
         <p style="margin-bottom:0;">La varianza baja con $n$; el sesgo, no. Todo el capítulo cabe en esa frase.</p>
@@ -57,7 +58,7 @@
             </li>
             <li>
               <p>El término cruzado se anula, porque $E[\hat\theta - E\hat\theta] = 0$ por definición de esperanza. Lo
-                que queda son los dos sumandos:</p>
+                que queda son los dos sumandos, con $B(\hat\theta) = E(\hat\theta) - \theta$, el sesgo:</p>
               $$\text{ECM} = V(\hat\theta) + B(\hat\theta)^2$$
             </li>
             <li>
@@ -324,7 +325,8 @@
         <p><strong>Las muestras que las acompañan.</strong> <span data-afirma="c1-m8-03">Lohr distribuye, junto a <code>agpop</code>, muestras ya
           extraídas de ella con distintos diseños: <code>agsrs</code> (aleatoria simple, $n = 300$) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 4.2"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 4.2)</a></cite>,
           <code>agstrat</code> (estratificada por región) <cite class="cita" data-ref="lohr2022sampling" data-loc="p. 81"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, p. 81)</a></cite> y <code>agpps</code> (con probabilidades proporcionales al
-          tamaño) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 6.10"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 6.10)</a></cite></span>. Cada capítulo usa la que le toca, y la comparación entre ellas es el hilo que une el curso.</p>
+          tamaño) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 6.10"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 6.10)</a></cite></span>. <code>agsrs</code> vuelve en los capítulos 2 a 4, <code>agstrat</code> en el 4 y <code>agpps</code> en el
+          6, y la comparación entre ellas es el hilo de esos capítulos; en los demás entran otras encuestas.</p>
       </div>
 
       <div class="references">
@@ -389,7 +391,7 @@
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Un modelo entrenado con reseñas</h4>
           <p class="text-sm" style="margin-bottom:0;">Quien escribe una reseña no es un comprador cualquiera: escribe
-            quien está muy satisfecho o muy enfadado. El corpus es una muestra autoseleccionada de la población de
+            quien está muy satisfecho o muy molesto. El corpus es una muestra autoseleccionada de la población de
             compradores, y su distribución de satisfacción está vaciada por el centro. Es Hite con otro nombre.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -418,8 +420,8 @@
         <p><strong>La pregunta que hay que hacerse siempre.</strong> Ante cualquier conjunto de datos, antes de
           entrenar nada: <em>¿qué tuvo que pasar para que esta fila exista?</em> Si la respuesta involucra una decisión
           de la propia unidad, o un filtro correlacionado con lo que se quiere predecir, ya se sabe hacia dónde va a
-          apuntar el error. El capítulo 8 vuelve sobre esto en el módulo de auditoría de IA aplicada al diseño
-          muestral.</p>
+          apuntar el error. El capítulo 8 vuelve sobre esto en su módulo 9, «IA asistida en diseño
+          muestral».</p>
       </div>
 
       <div class="references">
