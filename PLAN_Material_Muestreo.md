@@ -9549,3 +9549,24 @@ páginas, y en el navegador los diez módulos sin errores de KaTeX.
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.140 — Fase 4 del cap. 1, tarea 4.2: apertura, cierre y frases de paso (2026-11-16)
+
+El capítulo no decía al entrar qué se iba a aprender ni recogía nada al salir, y varios módulos terminaban sin dar paso
+al siguiente (lectores PE y CL de la auditoría).
+- **Apertura**, al principio del módulo 1: un recuadro «Este capítulo» con el recorrido de los diez módulos.
+- **Una frase «Lo que sigue»** al final de los módulos 1 a 9, antes de sus lecturas, que dice qué pregunta deja
+  abierta cada uno y qué módulo la contesta.
+- **Cierre**, en el módulo 10 antes de las lecturas: «Lo que se lleva este capítulo», seis ideas con el módulo de
+  cada una, y «Lo que viene»: el capítulo 2 construye el diseño $p(s)$, las $\pi_k$ y el estimador de
+  Horvitz–Thompson, y después el MAS, sus intervalos, el tamaño de muestra y el sistemático (según los títulos de los
+  módulos del cap. 2).
+- **El módulo 8, atado:** abre recordando que el módulo 2 dejó pendiente la forma de `agpop` y que los módulos 4 y 7
+  ya la usaron.
+- **El módulo 9** ya no se salta el 8 («el módulo 7 acaba de mostrar»), y deja de contradecir al 4: calibrar acercó
+  las estimaciones de las dos encuestas, pero no a la población en las variables por las que no se calibró.
+
+**Verificado:** auditor y `--cierre 1`, generador, reensamblado estable, referencias cruzadas, 0 cifras sin respaldo, y
+en el navegador las nueve frases de paso, el cierre y los diez módulos sin errores de KaTeX.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
