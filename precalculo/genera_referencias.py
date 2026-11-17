@@ -232,13 +232,16 @@ def bloque_pie(leidas: list[str], biblioteca: dict[str, dict], candado: dict[str
     filas = []
     for c in orden:
         entrada = entradas[c].replace("<em>", '<em class="text-gold">')
-        entrada = entrada.replace('<a href="', '<a class="underline text-gold" target="_blank" rel="noopener" href="')
+        # Una URL larga no tiene espacios: sin `overflow-wrap:anywhere` no se parte y, en un móvil, empuja la
+        # página hacia la derecha (pasó con la de Blumberg y Luke al publicar el pie del cap. 1, 2026-11-16).
+        entrada = entrada.replace('<a href="', '<a class="underline text-gold" style="overflow-wrap:anywhere" '
+                                               'target="_blank" rel="noopener" href="')
         if "rol: texto-guia" in ((candado.get(c) or {}).get("etiquetas") or []):
             entrada += " <strong>Texto guía del curso.</strong>"
         filas.append(
             f'        <li id="pie-{c}" class="flex items-start gap-2">\n'
             '          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>\n'
-            f"          <span>{entrada}</span>\n"
+            f'          <span class="min-w-0">{entrada}</span>\n'
             "        </li>\n")
     return ("<!--PIE-REFERENCIAS:inicio-->\n"
             '      <ul class="space-y-3 text-white/90 text-sm">\n'

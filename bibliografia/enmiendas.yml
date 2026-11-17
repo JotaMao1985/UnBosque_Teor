@@ -53,3 +53,15 @@ gutierrez2020teachingsampling:
     evidencia: https://CRAN.R-project.org/package=TeachingSampling
     consulta: 2026-11-16
     nota: "Decisión de Javier del 2026-11-16: «Gutiérrez, H. A.» en las dos obras del autor. CRAN escribe «Gutierrez Rojas», sin tildes y con los dos apellidos."
+blumberg2010wireless:
+  page:
+    valor: null
+    evidencia: "Ejemplar blumberg2010wireless: el informe tiene 17 páginas; el campo «Pages» de la ficha guarda ese total, no una página citada."
+    consulta: 2026-11-16
+    nota: "Con el campo, el pie del cap. 1 escribía «(p. 17)», que se lee como la página citada. Se quita y el total pasa a number-of-pages."
+  number-of-pages:
+    valor: "17"
+    evidencia: "Ejemplar blumberg2010wireless, 17 páginas (ejemplares.yml)."
+    consulta: 2026-11-16
+    nota: "Es el dato que la ficha guardaba en «Pages»."
+

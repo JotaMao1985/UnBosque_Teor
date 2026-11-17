@@ -163,7 +163,10 @@ def aplica_enmiendas(referencias: list[dict]) -> list[str]:
                 sys.exit(f"FALLA  enmiendas.yml · {clave}.{campo}: hacen falta `valor`, `evidencia` y `consulta`")
             if str(por_clave[clave].get(campo)) == str(e["valor"]):
                 avisos.append(f"la enmienda {clave}.{campo} sobra: Zotero ya trae «{e['valor']}»")
-            por_clave[clave][campo] = e["valor"]
+            if e["valor"] is None:            # `valor: null` quita el campo: Zotero lo trae y no debe salir
+                por_clave[clave].pop(campo, None)
+            else:
+                por_clave[clave][campo] = e["valor"]
     return avisos
 
 

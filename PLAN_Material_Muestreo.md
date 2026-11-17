@@ -9491,3 +9491,24 @@ reescribió al registrar: solo cambió el formato de Heck y Lohr 1999, no su con
 
 **Con esto la Fase 3 queda completa.** No publicado: en la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+**Publicado el 2026-11-16** con el visto bueno de Javier, paso a paso (T7.134 a T7.137). `origin/main` pasó de `66d1438` a
+`8bd5ae7` por avance rápido, sin mover el `main` local; `gh-pages` pasó de `766da2e` a `d201cd4`, construido con
+`git commit-tree` del árbol `8bd5ae7:sitio` sobre su punta. Invariante en verde. Sobre **lo servido**, con Pages ya
+construido: las 19 páginas HTML son **byte a byte** las de `8bd5ae7:sitio`; en el sitio público, el cap. 1 tiene sus 85
+citas escritas y enlazadas con las 10 entradas del pie, 0 errores de KaTeX ni de consola, el menú del móvil entra
+cerrado y el *Digest* dice 62,47 %; el cap. 8 trae su caja nueva.
+
+**Un defecto que salió al revisarlo en el sitio público:** en un móvil, la URL larga de Blumberg y Luke en el pie
+generado no se parte y la página se desplaza en horizontal (unos 70 px a 485 px de ancho). Es nuevo de esta
+publicación. La comprobación a 375 px de la 3.3 no lo vio: el navegador interno se quedó en 544 px de ancho y no
+aplicó la emulación. El cap. 8 no tiene el problema. Además, el pie da «(p. 17)» para Blumberg: es el número de páginas
+del informe, que la ficha guarda como si fuera la página citada.
+
+**Arreglado el mismo día (T7.138), con el visto bueno de Javier, sin publicar todavía.** `genera_referencias.py`
+escribe los enlaces del pie con `overflow-wrap:anywhere` y cada entrada en un `<span class="min-w-0">`, así que una
+URL larga se parte en vez de empujar la página. Y el «(p. 17)» de Blumberg sale por una enmienda: el campo de página
+pasa a `number-of-pages`. `exporta_zotero.py` acepta ahora `valor: null` en una enmienda para quitar un campo.
+Comprobado en Chrome: con el pie encajado en 300 px, la versión publicada desborda en dos entradas (Blumberg y
+Gutiérrez) y la corregida en ninguna; los diez módulos sin desborde. Auditor, `--cierre 1`, arnés, catálogo y
+generador en verde; reensamblado estable; 0 cifras sin respaldo.
+
