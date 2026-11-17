@@ -9593,3 +9593,23 @@ cruzadas, 0 cifras sin respaldo, uso e inventario al día, y en el navegador el 
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.142 — Fase 4 del cap. 1, tarea 4.4: los recursos de los módulos 2 y 9 (2026-11-16)
+
+Dos de los cuatro recursos que Javier eligió para los módulos de solo prosa, los que no llevan cifras propias. Los dos
+salen de una función común nueva en `simuladores.js`, `montarClasificador`: cada pregunta es un selector con una
+opción vacía, y al elegir, el panel dice si se acertó **y por qué**, también cuando se falla.
+- **Módulo 2 · «Diagnóstico con el vocabulario».** El *Digest* y el estudio de Hite, pieza a pieza: población objetivo,
+  marco, muestra observada, y en qué flecha se rompió cada uno (Allentown, para el *Digest*; quién decidió entrar,
+  para Hite). Va justo después del esquema población → marco → muestra seleccionada → muestra observada.
+- **Módulo 9 · «El mismo vocabulario, otro proyecto».** Siete situaciones de un proyecto de aprendizaje automático
+  para emparejar con los siete términos del diccionario, una por término. Va antes de «Lo que sí ayuda».
+- Ningún dato nuevo: las situaciones repiten hechos que el capítulo ya cita y verificó (módulos 1 y 2).
+- El capítulo pasa de 7 a 9 simuladores y el curso de 72 a 74: la portada del curso y su README, al día
+  (`cuenta_sitio.py`, 0 desajustadas).
+
+**Verificado** en el navegador, con el ancho comprobado de verdad (`innerWidth` = 375): los dos montan, cuentan los
+aciertos, explican los fallos, cambian de caso y no desbordan; también a 1024 px. Auditor y `--cierre 1`, generador,
+reensamblado estable, referencias, 0 cifras sin respaldo (también las del JavaScript), código de las 12 páginas.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

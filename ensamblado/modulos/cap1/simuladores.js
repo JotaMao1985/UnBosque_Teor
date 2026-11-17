@@ -420,6 +420,161 @@
     };
 
     // ---------------------------------------------------------------
+    // M2 y M9 · Ejercicios de clasificar, sin cifras propias
+    //
+    // Cada pregunta es un selector con una opción vacía al principio; al
+    // elegir, el panel dice si se acertó y por qué. Las situaciones repiten
+    // hechos que el capítulo ya cita y verificó (módulo 1 y módulo 2): aquí no
+    // entra ningún dato nuevo.
+    // ---------------------------------------------------------------
+    function montarClasificador(raiz, casos, textoLectura) {
+      const params = { caso: casos[0].id };
+      const contenedor = raiz.querySelector('.simulador-controles');
+      const panel = raiz.querySelector('[data-panel="diagnostico"]');
+      const elCaso = () => casos.find(c => c.id === params.caso);
+
+      function pintar() {
+        const c = elCaso();
+        let bien = 0, respondidas = 0;
+        const filas = c.preguntas.map(p => {
+          const r = params[p.clave];
+          if (!r) return `<li><strong>${p.etiqueta}</strong> <span style="color:#6b7280;">sin responder</span></li>`;
+          respondidas++;
+          if (r === p.correcta) { bien++; return `<li>✔ <strong>${p.etiqueta}</strong> ${p.bien}</li>`; }
+          return `<li>✘ <strong>${p.etiqueta}</strong> ${p.mal}</li>`;
+        });
+        panel.innerHTML = (c.intro ? `<p>${c.intro}</p>` : '') +
+          `<ul style="margin-bottom:0;">${filas.join('')}</ul>` +
+          (bien === c.preguntas.length && c.cierre ? `<p style="margin:0.75rem 0 0;"><strong>${c.cierre}</strong></p>` : '');
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'aciertos:', valor: `${bien} de ${c.preguntas.length}` },
+          { etiqueta: 'respondidas:', valor: `${respondidas}` },
+          { etiqueta: textoLectura, valor: c.nombre }
+        ]);
+        if (window.renderMathInElement) renderMathInElement(panel, { delimiters: [{ left: '$', right: '$', display: false }] });
+      }
+
+      function montar() {
+        contenedor.innerHTML = '';
+        const c = elCaso();
+        if (casos.length > 1) {
+          crearSelector(contenedor, { clave: 'caso', etiqueta: 'Caso',
+            opciones: casos.map(x => ({ valor: x.id, texto: x.nombre })) }, params, montar);
+        }
+        c.preguntas.forEach(p => {
+          params[p.clave] = '';
+          crearSelector(contenedor, { clave: p.clave, etiqueta: p.etiqueta,
+            opciones: [{ valor: '', texto: '— elige —' }].concat(p.opciones) }, params, pintar);
+        });
+        pintar();
+      }
+
+      montar();
+      return [];
+    }
+
+    SIMULADORES['diagnostico-vocabulario'] = function (raiz) {
+      return montarClasificador(raiz, [
+        {
+          id: 'digest', nombre: 'The Literary Digest (1936)',
+          intro: 'Sitúa el sondeo en las piezas del módulo y di dónde se rompió.',
+          preguntas: [
+            { clave: 'pob', etiqueta: 'Población objetivo', correcta: 'votantes',
+              opciones: [{ valor: 'suscriptores', texto: 'los suscriptores de la revista' },
+                         { valor: 'votantes', texto: 'los votantes de la elección de 1936' },
+                         { valor: 'devueltas', texto: 'las personas que devolvieron la papeleta' }],
+              bien: '— la revista quería anticipar el resultado de la elección.',
+              mal: '— no: la pregunta era a quién elegirían los votantes, no solo los lectores o los que contestaron.' },
+            { clave: 'marco', etiqueta: 'Marco muestral', correcta: 'listas',
+              opciones: [{ valor: 'padron', texto: 'el padrón electoral completo del país' },
+                         { valor: 'listas', texto: 'guías de teléfono, registros de automóviles y otras listas' },
+                         { valor: 'votantes', texto: 'los votantes de 1936' }],
+              bien: '— y en 1936 tener teléfono o carro era señal de estar por encima de la media.',
+              mal: '— el marco es la lista concreta de la que salieron los nombres, no la población a la que se quería llegar.' },
+            { clave: 'obs', etiqueta: 'Muestra observada', correcta: 'devueltas',
+              opciones: [{ valor: 'enviadas', texto: 'los diez millones de papeletas enviadas' },
+                         { valor: 'devueltas', texto: 'las más de 2,3 millones de papeletas devueltas' },
+                         { valor: 'lista', texto: 'todos los nombres de las listas' }],
+              bien: '— la muestra seleccionada eran las enviadas; la observada, solo las que volvieron.',
+              mal: '— la observada es lo que de verdad llegó: las papeletas que volvieron.' },
+            { clave: 'allentown', etiqueta: 'En Allentown, con el marco completo, ¿qué flecha falló?', correcta: 'tercera',
+              opciones: [{ valor: 'primera', texto: 'la primera, de la población al marco (no cobertura)' },
+                         { valor: 'tercera', texto: 'la tercera, de la muestra seleccionada a la observada (no respuesta)' },
+                         { valor: 'ninguna', texto: 'ninguna: allí el sondeo acertó' }],
+              bien: '— solo devolvió la papeleta un tercio, y el resultado seguía siendo erróneo.',
+              mal: '— el marco era completo, así que la primera flecha no perdió a nadie; y el resultado fue erróneo.' }
+          ],
+          cierre: 'El Digest se rompió en las dos flechas, y Allentown muestra que la tercera basta sola.'
+        },
+        {
+          id: 'hite', nombre: 'Shere Hite (1987)',
+          intro: 'Ahora el estudio de Hite, con las mismas piezas.',
+          preguntas: [
+            { clave: 'pob', etiqueta: 'Población objetivo', correcta: 'mujeres',
+              opciones: [{ valor: 'socias', texto: 'las socias de las organizaciones que recibieron el cuestionario' },
+                         { valor: 'mujeres', texto: 'las mujeres de Estados Unidos' },
+                         { valor: 'respondieron', texto: 'las mujeres que contestaron' }],
+              bien: '— a ellas atribuyó el libro sus porcentajes.',
+              mal: '— el libro habló de «las mujeres», no solo de las que estaban en esas listas o contestaron.' },
+            { clave: 'marco', etiqueta: 'Marco muestral', correcta: 'organizaciones',
+              opciones: [{ valor: 'registro', texto: 'un registro de todas las mujeres del país' },
+                         { valor: 'organizaciones', texto: 'organizaciones como grupos profesionales de mujeres, centros de asesoramiento y sociedades de iglesias' },
+                         { valor: 'mujeres', texto: 'las mujeres de Estados Unidos' }],
+              bien: '— quien no estaba en esas organizaciones no tenía forma de entrar.',
+              mal: '— el marco es por dónde llegaron los cuestionarios: las listas de organizaciones.' },
+            { clave: 'obs', etiqueta: 'Muestra observada', correcta: 'devueltos',
+              opciones: [{ valor: 'enviados', texto: 'los 100 000 cuestionarios enviados' },
+                         { valor: 'devueltos', texto: 'unas 4 500 respuestas, el 4,5 % de lo enviado' },
+                         { valor: 'socias', texto: 'todas las socias de las organizaciones' }],
+              bien: '— y contestar 127 preguntas abiertas exige una motivación que no se reparte al azar.',
+              mal: '— la observada es lo que volvió: unas 4 500 respuestas.' },
+            { clave: 'quien', etiqueta: '¿Quién decidió entrar en la muestra observada?', correcta: 'encuestada',
+              opciones: [{ valor: 'azar', texto: 'el azar, con probabilidades conocidas' },
+                         { valor: 'encuestada', texto: 'la propia encuestada, al decidir contestar' },
+                         { valor: 'hite', texto: 'Hite, eligiendo a quién incluir' }],
+              bien: '— es autoselección: la probabilidad de entrar dependía de lo que se quería medir.',
+              mal: '— nadie sorteó nada: cada mujer decidió si devolvía el cuestionario.' }
+          ],
+          cierre: 'Hite falló en la cobertura del marco y, sobre todo, porque entrar dependía de la encuestada.'
+        }
+      ], 'caso:');
+    };
+
+    SIMULADORES['emparejar-ia'] = function (raiz) {
+      const TERMINOS = [
+        { valor: 'objetivo', texto: 'población objetivo' },
+        { valor: 'marco', texto: 'marco muestral' },
+        { valor: 'cobertura', texto: 'no cobertura' },
+        { valor: 'autoseleccion', texto: 'autoselección' },
+        { valor: 'respuesta', texto: 'no respuesta' },
+        { valor: 'medicion', texto: 'sesgo de medición' },
+        { valor: 'procesamiento', texto: 'error de procesamiento' }
+      ];
+      const p = (clave, etiqueta, correcta, bien) => ({ clave, etiqueta, correcta, opciones: TERMINOS, bien,
+        mal: '— vuelve al diccionario de arriba y pregúntate qué parte del camino de la población a los datos falla aquí.' });
+      return montarClasificador(raiz, [{
+        id: 'ia', nombre: 'un proyecto de aprendizaje automático',
+        preguntas: [
+          p('s1', 'Un modelo de crédito nunca vio a un solicitante rechazado: no hay ninguno en sus datos.', 'cobertura',
+            '— no cobertura: esas unidades tenían probabilidad cero de entrar al entrenamiento.'),
+          p('s2', 'La satisfacción de los compradores se aprende de las reseñas que ellos decidieron escribir.', 'autoseleccion',
+            '— autoselección: escribe quien está muy satisfecho o muy molesto.'),
+          p('s3', 'Un código de faltante, −99, entró al modelo como si fuera un valor de verdad.', 'procesamiento',
+            '— error de procesamiento, el mismo del −99 de agpop en el módulo 2.'),
+          p('s4', 'Las personas sobre las que el modelo va a decidir cuando esté en uso.', 'objetivo',
+            '— es la población objetivo: a ella se quieren llevar las conclusiones.'),
+          p('s5', 'Las etiquetas de un conjunto de imágenes las puso un anotador que, ante la duda, elegía siempre la misma clase.', 'medicion',
+            '— sesgo de medición: el dato registrado se desvía del verdadero siempre hacia el mismo lado.'),
+          p('s6', 'La tabla de la que se sacaron los registros de entrenamiento.', 'marco',
+            '— el marco: la lista concreta de la que salen las unidades.'),
+          p('s7', 'Muchos usuarios abandonan el formulario antes de llenar el campo de ingresos, y sus registros quedan con ese campo vacío.', 'respuesta',
+            '— no respuesta, aquí de ítem: la unidad está, pero el dato falta, y falta más en unos que en otros.')
+        ],
+        cierre: 'Siete de siete: el vocabulario del capítulo nombra todos los problemas de un conjunto de entrenamiento.'
+      }], 'situaciones de');
+    };
+
+    // ---------------------------------------------------------------
     // M8 · Las dos poblaciones del curso
     // ---------------------------------------------------------------
     SIMULADORES['poblaciones'] = function (raiz) {
