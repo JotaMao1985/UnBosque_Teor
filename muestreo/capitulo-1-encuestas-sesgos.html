@@ -3599,6 +3599,10 @@
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
           <span class="min-w-0">Blumberg, S. J., y Luke, J. V. (2010). <em class="text-gold">Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009</em>. National Center for Health Statistics. <a class="underline text-gold" style="overflow-wrap:anywhere" target="_blank" rel="noopener" href="https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf">https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf</a></span>
         </li>
+        <li id="pie-dane2019omision" class="flex items-start gap-2">
+          <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
+          <span class="min-w-0">Departamento Administrativo Nacional de Estadística. (2019). <em class="text-gold">Resultados proceso de omisión censal: Censo Nacional de Población y Vivienda CNPV 2018</em> [Comunicado de prensa]. Departamento Administrativo Nacional de Estadística (DANE). <a class="underline text-gold" style="overflow-wrap:anywhere" target="_blank" rel="noopener" href="https://www.dane.gov.co/files/censo2018/informacion-tecnica/cnpv-2018-omision-censal.pdf">https://www.dane.gov.co/files/censo2018/informacion-tecnica/cnpv-2018-omision-censal.pdf</a></span>
+        </li>
         <li id="pie-gutierrez2016estrategias" class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
           <span class="min-w-0">Gutiérrez, H. A. (2016). <em class="text-gold">Estrategias de muestreo: diseño de encuestas y estimación de parámetros</em> (2.ª ed.). Ediciones de la U. <a class="underline text-gold" style="overflow-wrap:anywhere" target="_blank" rel="noopener" href="https://psirusteam.github.io/EstrategiasDeMuestreo/">https://psirusteam.github.io/EstrategiasDeMuestreo/</a></span>
@@ -3672,6 +3676,22 @@
         </div>
       </div>
 
+      <div class="note">
+        <p><strong>Este capítulo.</strong> Trata de todo lo que puede estropear una encuesta antes de que entre en juego
+          la estadística del resto del curso. Su recorrido:</p>
+        <ul style="margin-bottom:0;">
+          <li><strong>Módulos 1 a 3:</strong> dos fracasos célebres, el vocabulario para diagnosticarlos y la condición
+            que hace útil una muestra.</li>
+          <li><strong>Módulos 4 a 6:</strong> las formas en que la selección sesga, el error de medición y cómo se
+            redacta una pregunta.</li>
+          <li><strong>Módulo 7:</strong> todos esos errores en un solo esquema y en una sola fórmula, el error
+            cuadrático medio.</li>
+          <li><strong>Módulos 8 y 9:</strong> las poblaciones del curso y los mismos errores en los datos de un
+            modelo.</li>
+          <li><strong>Módulo 10:</strong> autoevaluación y cinco ejercicios guiados.</li>
+        </ul>
+      </div>
+
       <p>El muestreo se estudia mejor empezando por lo que puede salir mal. Los dos casos de este módulo tienen algo en
         común que conviene tener presente todo el semestre: <strong>los dos tenían muestras gigantescas</strong>, y los
         dos se equivocaron por márgenes que ninguna muestra pequeña bien tomada habría producido.</p>
@@ -3743,7 +3763,7 @@
         <h4>Las dos causas, y por qué hay que separarlas</h4>
         <p><strong>No cobertura.</strong> <span data-afirma="c1-m1-04">La lista se armó con guías de teléfono, registros de automóviles, listas de
           suscriptores y padrones electorales
-          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</a></cite></span>. En 1936, tener teléfono o coche era señal de estar por encima de la
+          <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</a></cite></span>. En 1936, tener teléfono o carro era señal de estar por encima de la
           media, y la opinión sobre las políticas de Roosevelt dependía justamente de la posición económica.</p>
         <p style="margin-bottom:0;"><strong>No respuesta.</strong> <span data-afirma="c1-m1-05">Contestó menos de una cuarta parte de los
           solicitados</span>, y <span data-afirma="c1-m1-12">los partidarios de Landon devolvieron la papeleta con mucha más frecuencia
@@ -3760,7 +3780,8 @@
       <div class="simulador" data-simulador="digest">
         <h4><i class="fas fa-vote-yea" aria-hidden="true"></i> El sesgo del <em>Digest</em>, partido en dos</h4>
         <p class="simulador-intro">Mueve la cobertura del marco $C$, la brecha de apoyo entre los que quedaron dentro y
-          fuera, y la respuesta relativa $\rho$ de los partidarios de Roosevelt. La primera gráfica compara el apoyo
+          fuera, y la respuesta relativa $\rho$: la tasa de respuesta de los partidarios de Roosevelt dividida por la de los
+          de Landon. La primera gráfica compara el apoyo
           real, el apoyo dentro del marco y lo que acaba viendo el sondeo. La segunda dibuja <strong>todas</strong> las
           combinaciones que reproducen exactamente el 42,9 % publicado: cuando el punto negro cae sobre la curva
           naranja, tu escenario es indistinguible del que ocurrió.</p>
@@ -3782,7 +3803,8 @@
         <div class="lectura-guiada-cuerpo">
           <p><strong>Qué mueves.</strong> Los tres deslizadores reparten la culpa entre las dos causas: $C$ dice cuánta
             población entró en el marco, la brecha dice cuánto se diferenciaban los que quedaron fuera, y $\rho$, cuánto
-            más devolvían la papeleta los partidarios de un candidato que los del otro.</p>
+            devolvían la papeleta los partidarios de Roosevelt en comparación con los de Landon: por debajo de 1,
+            los de Roosevelt la devolvían menos.</p>
           <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
             estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
             naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
@@ -3909,6 +3931,9 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
           votantes.</p>
       </div>
 
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> Los dos fracasos tienen nombre —no cobertura y no respuesta—, pero para diagnosticarlos hace falta un
+        vocabulario preciso. El módulo 2 lo fija: población, marco, muestra, y en qué paso se rompió cada caso.</p>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
@@ -3981,7 +4006,19 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
           estadístico controla del todo.</p>
       </div>
 
+      <div class="simulador" data-simulador="diagnostico-vocabulario">
+        <h4><i class="fas fa-stethoscope" aria-hidden="true"></i> Diagnóstico con el vocabulario</h4>
+        <p class="simulador-intro">Los dos casos del módulo 1, pieza a pieza. Elige en cada lista y lee por qué: el
+          panel no se limita a decir si acertaste. Cambia de caso arriba.</p>
+        <div class="simulador-controles"></div>
+        <div class="note" data-panel="diagnostico"></div>
+        <div class="simulador-lectura"></div>
+      </div>
+
       <div class="glosario-notacion" data-glosario="conceptos"></div>
+      <p class="text-xs text-gray-500" style="margin-top:0.5rem;" data-afirma="c1-m2-08">Las columnas de Lohr y de
+        Gutiérrez, tal como escribe cada uno: <cite class="cita" data-ref="lohr2022sampling" data-loc="§2.2" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, §2.2)</a></cite>
+        y <cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5; §2.1.6" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5; §2.1.6)</a></cite>.</p>
 
       <h3>La población del curso</h3>
 
@@ -4114,13 +4151,15 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           el curso.</p>
       </div>
 
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> Con las piezas nombradas falta decir cuándo una muestra permite concluir algo de su población. El módulo 3
+        cambia «representativa» por una condición que se puede comprobar.</p>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
           <li data-afirma="c1-m2-05"><cite class="cita" data-ref="lohr2022sampling" data-loc="§1.2" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, §1.2)</a></cite> — población objetivo, marco, unidad de muestreo y de
             observación.</li>
-          <li data-afirma="c1-m2-06"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$, $y_k$, $t_y$ que usa este
-            material.</li>
+          <li data-afirma="c1-m2-06"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$ y $y_k$ que usa este material; el total, que aquí se escribe $t$, allí es $t_y$.</li>
         </ul>
       </div>
     </div>
@@ -4154,8 +4193,9 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
       <div class="definition">
         <h4>Muestra probabilística</h4>
         <p style="margin-bottom:0;">Una muestra es probabilística cuando se conoce, antes de seleccionarla, la
-          probabilidad con la que cada unidad de la población puede entrar; y esa probabilidad es <strong>positiva para
-          todas</strong>. Solo entonces tienen sentido las palabras «insesgado», «varianza» y «error estándar»: las
+          probabilidad con la que cada unidad de la población puede entrar —su <strong>probabilidad de
+          inclusión</strong>, que para la unidad $k$ se escribe $\pi_k$—; y esa probabilidad es <strong>positiva para
+          todas</strong>: $\pi_k > 0$ para toda $k$. Solo entonces tienen sentido las palabras «insesgado», «varianza» y «error estándar»: las
           tres son esperanzas respecto de ese mecanismo de selección.</p>
       </div>
 
@@ -4175,7 +4215,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">2 · Un mecanismo de selección aleatorio y conocido</h4>
           <p class="text-sm" style="margin-bottom:0;">No basta con que sea aleatorio: hay que <em>saber</em> con qué
-            probabilidad entra cada unidad, porque esas probabilidades son las que después ponderan la estimación. Es
+            probabilidad entra cada unidad, porque esas probabilidades, las $\pi_k$, son las que después ponderan la estimación. Es
             el objeto que se construye en el capítulo 2.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4185,6 +4225,34 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         </div>
       </div>
 
+      <div class="simulador" data-simulador="arquitectos">
+        <h4><i class="fas fa-users" aria-hidden="true"></i> Los 14 arquitectos, mil veces</h4>
+        <p class="simulador-intro">La ciudad del ejercicio 4 del módulo 10: hay 14 arquitectos y se quieren 8. Elige
+          cómo se escogen y el simulador repite la selección mil veces: cada barra dice en qué fracción de las
+          repeticiones entró cada arquitecto, que es una estimación de su probabilidad de inclusión $\pi_k$.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:240px;">
+          <canvas aria-label="Fracción de repeticiones en que entra cada arquitecto" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+        <p class="text-xs text-gray-500" style="margin:0.5rem 0 0;">Fuente: elaboración propia con la situación de <cite class="cita" data-ref="lohr1999sampling" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999)</a></cite>.</p>
+      </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El procedimiento, y en el segundo, la probabilidad de que cada arquitecto
+            acepte cuando lo llaman.</p>
+          <p><strong>Qué se ve.</strong> Con los ocho primeros del directorio (si todos aceptan), las barras son todo o nada: ocho
+            arquitectos entran siempre y seis no entran nunca, aunque las $\pi_k$ sumen 8. Llamando por orden, la
+            probabilidad baja con la posición en la lista, y depende de quién acepta. Solo el sorteo deja las catorce
+            barras a la misma altura, sobre la línea naranja.</p>
+          <p style="margin-bottom:0;"><strong>Por qué importa.</strong> El requisito 2 no es «que haya azar», sino
+            conocer cada $\pi_k$ y que ninguna sea cero. El primer procedimiento la conoce y no la cumple; el segundo
+            ni siquiera la conoce, porque depende de quién conteste el teléfono.</p>
+        </div>
+      </details>
+
       <div class="note">
         <p><strong>Y entonces, ¿por qué no un censo?</strong> Porque una muestra bien tomada suele ser
           <em>mejor</em>, no solo más barata: llega más rápido, permite controlar la calidad de la medición sobre pocos
@@ -4192,6 +4260,22 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           único que el censo elimina, <span data-afirma="c1-m3-02">a veces es despreciable frente a los errores ajenos al muestreo <cite class="cita" data-ref="lohr2022sampling" data-loc="§1.6"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, §1.6)</a></cite></span>. El módulo 7 lo
           cuantifica.</p>
       </div>
+
+      <div class="warning">
+        <p><strong>Un caso colombiano: el censo también pierde gente.</strong> <span data-afirma="c1-m3-03">Tras el
+          Censo Nacional de Población y Vivienda de 2018, el DANE calculó la omisión censal —las personas que el censo
+          no contó— y ajustó la cobertura en un 8,5 % para el total nacional: un 6,4 % en las cabeceras municipales y
+          un 15,0 % en los centros poblados y el rural disperso
+          <cite class="cita" data-ref="dane2019omision" data-loc="p. 3"><a class="cita-enlace" href="#pie-dane2019omision" title="Departamento Administrativo Nacional de Estadística. (2019). Resultados proceso de omisión censal: Censo Nacional de Población y Vivienda CNPV 2018 [Comunicado de prensa]. Departamento Administrativo Nacional de Estadística (DANE). https://www.dane.gov.co/files/censo2018/informacion-tecnica/cnpv-2018-omision-censal.pdf">(Departamento Administrativo Nacional de Estadística, 2019, p. 3)</a></cite></span>.</p>
+        <p style="margin-bottom:0;">Censar no hace desaparecer la no cobertura, y la que queda no se reparte pareja:
+          en el total nacional, la proporción de gente que se quedó sin contar fuera de las cabeceras fue más del doble
+          que en ellas. Si una variable se comporta distinto en
+          el campo y en la ciudad, el censo sin ajustar la estima con sesgo, por completo que parezca. Es lo que el
+          módulo 7 pone en fórmula: un censo hace cero la varianza y deja el sesgo como estaba.</p>
+      </div>
+
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 4 mira qué pasa cuando fallan esos requisitos: la no cobertura rompe el primero, la autoselección
+        el segundo y la no respuesta el tercero, que además tiene fórmula.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -4242,8 +4326,8 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           <h4 class="text-primary font-bold" style="margin-top:0;">1 · No cobertura</h4>
           <p class="text-sm">El marco deja fuera parte de la población: esas unidades tienen probabilidad cero.</p>
           <p class="text-xs text-gray-500" style="margin-bottom:0;"><em>Ejemplo:</em> <span data-afirma="c1-m4-08">la encuesta telefónica de 2009 de
-            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de móvil <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.5"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.5)</a></cite></span>. <span data-afirma="c1-m4-02">En la segunda mitad de ese año, el 24,5 % de los hogares de Estados
-        Unidos solo tenía móvil y otro 2,0 % no tenía teléfono <cite class="cita" data-ref="blumberg2010wireless" data-loc="p. 3"><a class="cita-enlace" href="#pie-blumberg2010wireless" title="Blumberg, S. J., y Luke, J. V. (2010). Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009. National Center for Health Statistics. https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf">(Blumberg y Luke, 2010, p. 3)</a></cite></span>: uno de cada cuatro hogares
+            este módulo marcó 79 014 números de <strong>línea fija</strong> y ninguno de celular <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.5"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.5)</a></cite></span>. <span data-afirma="c1-m4-02">En la segunda mitad de ese año, el 24,5 % de los hogares de Estados
+        Unidos solo tenía celular y otro 2,0 % no tenía teléfono <cite class="cita" data-ref="blumberg2010wireless" data-loc="pp. 1–3"><a class="cita-enlace" href="#pie-blumberg2010wireless" title="Blumberg, S. J., y Luke, J. V. (2010). Wireless Substitution: Early Release of Estimates From the National Health Interview Survey, July–December 2009. National Center for Health Statistics. https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/wireless201005.pdf">(Blumberg y Luke, 2010, pp. 1–3)</a></cite></span>: uno de cada cuatro hogares
             estaba fuera del marco por construcción.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4264,8 +4348,9 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Dos parientes: conveniencia y juicio</h4>
           <p class="text-sm" style="margin-bottom:0;">Muestrear lo que está a mano, o lo que «parece representativo»,
-            no es un diseño con probabilidades desconocidas: es un diseño <em>sin</em> probabilidades. No hay $p(s)$
-            respecto de la cual tomar esperanzas, así que ni el sesgo ni la varianza están definidos.</p>
+            no es un diseño con probabilidades desconocidas: es un diseño <em>sin</em> probabilidades. No hay un diseño
+            $p(s)$ —la probabilidad de cada muestra posible, que el capítulo 2 construye— respecto del cual tomar
+            esperanzas, así que ni el sesgo ni la varianza están definidos.</p>
         </div>
       </div>
 
@@ -4285,7 +4370,8 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           <em>ponderado</em> por lo que cada respuesta representa.</p>
         <p style="margin-bottom:0;"><strong>Calibrar</strong> es retocar esos pesos hasta que la muestra reproduzca
           unos totales que se conocen por otra vía: aquí, cuánta gente de cada sexo, edad y raza dice el censo de
-          2010 que hay. De dónde salen los pesos cuando el diseño es probabilístico se construye en el capítulo 2;
+          2010 que hay. Cuando el diseño es probabilístico, el peso de la unidad $k$ es $d_k = 1/\pi_k$, la inversa de su
+          probabilidad de inclusión, y el capítulo 2 lo construye;
           cómo se calibran, en el capítulo 4 (módulo 10) y en el 7 (módulo 6). Para este módulo basta con saber qué prometen, porque lo que
           se va a comprobar es <strong>hasta dónde llega esa promesa</strong>.</p>
       </div>
@@ -4445,7 +4531,7 @@ print(pd.Series({"edad_telefonica": tel["age"].mean(),
             general; las acercó en las variables por las que se ponderó, y en ninguna más.</p>
           <p><strong>Por qué importa.</strong> Un peso de calibración no es un corrector de sesgo: es una promesa
             condicional. Dice «dentro de cada celda, quien contestó se parece a quien no contestó». Si la razón por la
-            que alguien coge el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
+            que alguien contesta el teléfono está relacionada con lo que se le pregunta —y no solo con su sexo, su edad y su
             raza—, la promesa es falsa y los pesos no lo detectan.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
@@ -4575,8 +4661,9 @@ print(pd.Series({"tasa_respuesta": r, "media_respondientes": mu_R,
         </div>
       </div>
 
-      <p>Cuando la población se puede partir en <strong>clases de respuesta</strong> con tasas $r_h$ distintas, la
-        media de los respondientes es un promedio ponderado por $N_h r_h$ en vez de por $N_h$:</p>
+      <p>Cuando la población se puede partir en <strong>clases de respuesta</strong> $h = 1, \dots, H$, cada una
+        con $N_h$ unidades, media $\bar{y}_h$ y su propia tasa de respuesta $r_h$, la media de los respondientes
+        es un promedio ponderado por $N_h r_h$ en vez de por $N_h$:</p>
 
       <div class="formula">
         $$\bar{y}_R = \frac{\sum_h N_h\, r_h\, \bar{y}_h}{\sum_h N_h\, r_h}$$
@@ -4696,18 +4783,21 @@ print((pd.Series({
             sola hundida: la naranja se despega de inmediato. Fíjate en que puedes llegar a la misma tasa global de
             respuesta con la naranja pegada a la verde o muy lejos de ella.</p>
           <p><strong>La consecuencia práctica.</strong> La tasa global de respuesta —la cifra que se reporta, la que
-            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de coste, no de
+            aparece en la ficha técnica— no es un indicador de sesgo. Sirve para hablar de varianza y de costo, no de
             puntería. Y hay algo que este simulador puede enseñar y una encuesta real no: aquí ves la línea verde
             porque <code>agpop</code> es una población completa. En campo, esa línea no existe; solo tienes la naranja,
             y nada dentro de los datos te dice a qué distancia quedó.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
             No sesga que falte gente: sesga que falte de manera <strong>desigual</strong>. De ahí que el capítulo 8
-            empiece por construir clases de respuesta: sin partir la población en grupos, no hay forma de saber si lo
+            ajuste los pesos por clases de respuesta (su módulo 3): sin partir la población en grupos, no hay forma de saber si lo
             que falta se reparte parejo o se concentra en un sitio.
           </p>
         </div>
       </details>
+
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> Hasta aquí el problema era quién entra en la muestra. El módulo 5 cambia de pregunta: aunque entren los que
+        deben, ¿se mide bien lo que contestan?</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -4764,6 +4854,34 @@ print((pd.Series({
         deja rastro en los propios datos: la estimación sale con un intervalo de confianza estrecho y perfectamente
         centrado… en el valor equivocado.</p>
 
+      <div class="simulador" data-simulador="balanza">
+        <h4><i class="fas fa-weight-scale" aria-hidden="true"></i> La balanza descalibrada, sobre <code>agpop</code></h4>
+        <p class="simulador-intro">Imagina que la superficie de cada condado se mide con un instrumento que suma un
+          desplazamiento $b$ fijo y un ruido $\varepsilon$. El gráfico da, para cada tamaño de muestra, dónde queda la
+          media estimada y su intervalo del 95 %, como error en porcentaje de la media verdadera: la verdad es el 0. Con pocas unidades el intervalo se sale
+          del gráfico por arriba y por abajo.</p>
+        <div class="simulador-controles"></div>
+        <div class="grafico-wrapper" style="height:250px;">
+          <canvas aria-label="Centro e intervalo de la media estimada según el tamaño de muestra" role="img"></canvas>
+        </div>
+        <div class="simulador-lectura"></div>
+        <p class="text-xs text-gray-500" style="margin:0.5rem 0 0;">Fuente: elaboración propia sobre <code>agpop</code>, de <cite class="cita" data-ref="lohr2022sampling" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022)</a></cite>.</p>
+      </div>
+
+      <details class="lectura-guiada">
+        <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este simulador?</summary>
+        <div class="lectura-guiada-cuerpo">
+          <p><strong>Qué mueves.</strong> El desplazamiento $b$, que es el sesgo de medición, y el ruido
+            $\varepsilon$, que es la parte aleatoria.</p>
+          <p><strong>Qué se ve.</strong> Al crecer $n$, el intervalo se estrecha… alrededor de $b$, no alrededor del 0.
+            Sube el ruido y el intervalo se ensancha, pero sigue centrado en el mismo sitio. Midiendo los 3 078 condados
+            se obtiene el intervalo más estrecho de todos, y en cuanto $b$ supera su semiancho la verdad queda
+            fuera: la lectura de abajo lo dice.</p>
+          <p style="margin-bottom:0;"><strong>Por qué importa.</strong> Es la frase del módulo hecha gráfico: el
+            ruido se paga con más muestra; el desplazamiento no se paga con nada. El módulo 7 lo pondrá en una fórmula.</p>
+        </div>
+      </details>
+
       <h3>De dónde sale el desplazamiento sistemático</h3>
 
       <div class="space-y-4">
@@ -4802,6 +4920,9 @@ print((pd.Series({
           y —cuando se puede— validación contra un registro externo. Después ya no hay estadística que valga: es la
           única familia de errores del capítulo que no tiene ningún estimador que la corrija.</p>
       </div>
+
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> De todas las fuentes de sesgo de medición, la redacción de las preguntas es la que más depende de quien diseña
+        la encuesta. El módulo 6 enseña a reconocer sus defectos y a reescribirlos.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -4916,6 +5037,9 @@ print((pd.Series({
           entienden— y hacerla antes de imprimir nada.</p>
       </div>
 
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> Selección, no respuesta y medición: el módulo 7 las reúne en un solo esquema y en una sola fórmula, y le pone
+        cifra a «una muestra grande no salva nada».</p>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
@@ -4959,7 +5083,8 @@ print((pd.Series({
 
       <div class="definition">
         <h4>La descomposición</h4>
-        <p>La calidad de una estimación $\hat\theta$ se mide con el <strong>error cuadrático medio</strong>, que se
+        <p>La calidad de un estimador $\hat\theta$ de un parámetro $\theta$ —una media, un total, una
+          proporción— se mide con el <strong>error cuadrático medio</strong>, que se
           parte en dos piezas y nada más que dos:</p>
         <p style="text-align:center;">$$\text{ECM}(\hat\theta) = \underbrace{\big[E(\hat\theta) - \theta\big]^2}_{\text{sesgo}^2} + \underbrace{V(\hat\theta)}_{\text{varianza}}$$</p>
         <p style="margin-bottom:0;">La varianza baja con $n$; el sesgo, no. Todo el capítulo cabe en esa frase.</p>
@@ -4986,7 +5111,7 @@ print((pd.Series({
             </li>
             <li>
               <p>El término cruzado se anula, porque $E[\hat\theta - E\hat\theta] = 0$ por definición de esperanza. Lo
-                que queda son los dos sumandos:</p>
+                que queda son los dos sumandos, con $B(\hat\theta) = E(\hat\theta) - \theta$, el sesgo:</p>
               $$\text{ECM} = V(\hat\theta) + B(\hat\theta)^2$$
             </li>
             <li>
@@ -5242,6 +5367,9 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
           presenta un conjunto de datos enorme como si el volumen fuera una garantía.</p>
       </div>
 
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 7 usó <code>agpop</code> para ver el sesgo y la varianza; el 8 mira de cerca esa población y la
+        otra del curso, porque su forma decide qué diseño conviene en los capítulos que vienen.</p>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
@@ -5275,6 +5403,9 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
           </div>
         </div>
       </div>
+
+      <p>El módulo 2 presentó <code>agpop</code> y dejó para después mirar su forma; los módulos 4 y 7 ya la usaron.
+        Aquí se mira por fin, junto con la otra población que más se repite en el curso.</p>
 
       <p>Este material trabaja siempre sobre poblaciones <strong>completas</strong>. No es una comodidad: es la única
         forma de comprobar si una estimación acertó. En el trabajo real, el valor verdadero no se conoce nunca —si se
@@ -5413,8 +5544,12 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <p><strong>Las muestras que las acompañan.</strong> <span data-afirma="c1-m8-03">Lohr distribuye, junto a <code>agpop</code>, muestras ya
           extraídas de ella con distintos diseños: <code>agsrs</code> (aleatoria simple, $n = 300$) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 4.2"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 4.2)</a></cite>,
           <code>agstrat</code> (estratificada por región) <cite class="cita" data-ref="lohr2022sampling" data-loc="p. 81"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, p. 81)</a></cite> y <code>agpps</code> (con probabilidades proporcionales al
-          tamaño) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 6.10"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 6.10)</a></cite></span>. Cada capítulo usa la que le toca, y la comparación entre ellas es el hilo que une el curso.</p>
+          tamaño) <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 6.10"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 6.10)</a></cite></span>. <code>agsrs</code> vuelve en los capítulos 2 a 4, <code>agstrat</code> en el 4 y <code>agpps</code> en el
+          6, y la comparación entre ellas es el hilo de esos capítulos; en los demás entran otras encuestas.</p>
       </div>
+
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> Las poblaciones del curso están enteras; los conjuntos de datos con que se entrena un modelo casi nunca lo
+        están. El módulo 9 lleva todo el capítulo a ese terreno.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -5450,7 +5585,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
       </div>
 
       <p>La tentación con un conjunto de datos grande es pensar que el muestreo es un problema de otra época: si están
-        «todos», no hay que preocuparse por cómo se eligieron. El módulo 7 acaba de mostrar que eso es exactamente al
+        «todos», no hay que preocuparse por cómo se eligieron. El módulo 7 mostró que eso es exactamente al
         revés. Un sondeo de 2,3 millones de casos equivalía a seis observaciones al azar, y la única razón era el
         mecanismo de selección.</p>
 
@@ -5478,7 +5613,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Un modelo entrenado con reseñas</h4>
           <p class="text-sm" style="margin-bottom:0;">Quien escribe una reseña no es un comprador cualquiera: escribe
-            quien está muy satisfecho o muy enfadado. El corpus es una muestra autoseleccionada de la población de
+            quien está muy satisfecho o muy molesto. El corpus es una muestra autoseleccionada de la población de
             compradores, y su distribución de satisfacción está vaciada por el centro. Es Hite con otro nombre.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -5495,11 +5630,20 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         </div>
       </div>
 
+      <div class="simulador" data-simulador="emparejar-ia">
+        <h4><i class="fas fa-link" aria-hidden="true"></i> El mismo vocabulario, otro proyecto</h4>
+        <p class="simulador-intro">Siete situaciones de un proyecto de aprendizaje automático. A cada una le
+          corresponde un término del diccionario de arriba, y solo uno.</p>
+        <div class="simulador-controles"></div>
+        <div class="note" data-panel="diagnostico"></div>
+        <div class="simulador-lectura"></div>
+      </div>
+
       <div class="warning">
         <p><strong>Lo que sí ayuda, y lo que no.</strong> Ponderar por variables observables —lo que en encuestas se
           llama postestratificación en el capítulo 4, calibración en el 7 y ajuste por no respuesta en el 8— corrige la parte del sesgo que va por esas
-          variables, y nada más. El módulo 4 lo enseñó con datos: calibrar las dos encuestas por sexo, edad y raza no
-          las acercó. Lo que de verdad ayuda es lo caro: conseguir una muestra probabilística, aunque sea pequeña, y
+          variables, y nada más. El módulo 4 lo enseñó con datos: calibrar las dos encuestas por sexo, edad y raza
+          acercó sus estimaciones, pero no las acercó a la población en las variables por las que no se calibró. Lo que de verdad ayuda es lo caro: conseguir una muestra probabilística, aunque sea pequeña, y
           usarla como referencia para medir cuánto se desvía la grande.</p>
       </div>
 
@@ -5507,9 +5651,12 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <p><strong>La pregunta que hay que hacerse siempre.</strong> Ante cualquier conjunto de datos, antes de
           entrenar nada: <em>¿qué tuvo que pasar para que esta fila exista?</em> Si la respuesta involucra una decisión
           de la propia unidad, o un filtro correlacionado con lo que se quiere predecir, ya se sabe hacia dónde va a
-          apuntar el error. El capítulo 8 vuelve sobre esto en el módulo de auditoría de IA aplicada al diseño
-          muestral.</p>
+          apuntar el error. El capítulo 8 vuelve sobre esto en su módulo 9, «IA asistida en diseño
+          muestral».</p>
       </div>
+
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 10 pone a prueba el capítulo: once preguntas y cinco situaciones de muestreo que hay que
+        diagnosticar de principio a fin.</p>
 
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
@@ -5942,14 +6089,37 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         </div>
       </div>
 
+      <h3>Lo que se lleva este capítulo</h3>
+
+      <ul>
+        <li>El tamaño no protege de una selección defectuosa: con sesgo, más datos solo dan más seguridad sobre el
+          número equivocado (módulos 1 y 7).</li>
+        <li>Una muestra es probabilística cuando cada unidad tiene una probabilidad de inclusión conocida y positiva;
+          sin eso, ni el sesgo ni la varianza están definidos (módulo 3).</li>
+        <li>No sesga que falte gente, sino que falte de manera desigual; y ponderar arregla lo que se midió, no lo que
+          falta (módulo 4).</li>
+        <li>El sesgo de medición no se diluye con más muestra: se combate antes de recoger el primer dato, empezando
+          por la redacción (módulos 5 y 6).</li>
+        <li>$\text{ECM} = \text{sesgo}^2 + \text{varianza}$, y el tamaño de muestra solo entra en la varianza
+          (módulo 7).</li>
+        <li>Antes de elegir un diseño se mira la forma de la población (módulo 8), y las mismas preguntas valen para los
+          datos de un modelo (módulo 9).</li>
+      </ul>
+
+      <div class="note">
+        <p style="margin-bottom:0;"><strong>Lo que viene.</strong> El capítulo 2 construye lo que este pidió en el
+          módulo 3: el diseño muestral $p(s)$, las probabilidades de inclusión $\pi_k$ y el estimador de
+          Horvitz–Thompson, insesgado por diseño. Después llegan el muestreo aleatorio simple, sus intervalos de
+          confianza, el tamaño de muestra y el muestreo sistemático.</p>
+      </div>
+
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
         <ul style="margin-bottom:0;">
           <li data-afirma="c1-m10-06"><cite class="cita" data-ref="lohr2022sampling" data-loc="cap. 1" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, cap. 1)</a></cite> — la lectura obligatoria de las semanas 1 y 2, con el caso
             del <em>Digest</em>. El caso de <cite class="cita" data-ref="hite1987women" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-hite1987women" title="Hite, S. (1987). The Hite report: women and love: a cultural revolution in progress (1.ª ed.). Knopf.">Hite (1987)</a></cite> y los cinco ejercicios de este módulo vienen de la primera edición
             <cite class="cita" data-ref="lohr1999sampling" data-loc="cap. 1"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">(Lohr, 1999, cap. 1)</a></cite>.</li>
-          <li data-afirma="c1-m10-07"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$, $y_k$, $t_y$ que se usa en todo
-            este material. De
+          <li data-afirma="c1-m10-07"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$ y $y_k$ que se usa en todo este material; el total, que aquí se escribe $t$, allí es $t_y$. De
             <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso
             abierto</a>.</li>
           <li><cite class="cita" data-ref="heck201865" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-heck201865" title="Heck, P. R., Simons, D. J., y Chabris, C. F. (2018). 65% of Americans believe they are above average in intelligence: Results of two nationally representative surveys. PLOS ONE, 13(7), e0200103. https://doi.org/10.1371/journal.pone.0200103">Heck et al. (2018)</a></cite> — las dos encuestas del módulo 4, con la metodología completa. De
@@ -5997,7 +6167,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
     // semilla 2026. Ninguna cifra se escribió a mano: si hay que cambiar
     // algo se vuelve a correr el script y se pega la salida.
     // ================================================================
-    const DATOS_CAP1 = {"meta":{"capitulo":1,"semilla":2026,"generado":"2026-11-16","r":"R 4.4.1","script":"precalculo/genera_cap1.R"},"digest":{"documental":{"enviadas":10000000,"devueltas":2300000,"landonSondeo":1293669,"rooseveltSondeo":972897,"prediccionLandon":54,"prediccionRoosevelt":41,"eleccionRoosevelt":61,"eleccionLandon":37,"votosRooseveltM":27.753,"votosLandonM":16.675,"tasaRespuesta":0.2266566},"pSondeo":0.42923833,"pEleccion":0.62467363,"sesgo":-0.1954353,"coberturaRef":0.55,"isoResultado":{"brecha":[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4],"rho":[0.45185553,0.46059107,0.4694543,0.47844806,0.48757524,0.49683883,0.50624191,0.51578767,0.52547936,0.53532037,0.54531418,0.55546435,0.56577461,0.57624876,0.58689074,0.59770462,0.6086946,0.61986502,0.63122035,0.64276523,0.65450443,0.66644292,0.67858581,0.69093839,0.70350613,0.71629472,0.72931003,0.74255813,0.75604534,0.76977818,0.78376342,0.79800808,0.81251946,0.82730512,0.8423729,0.85773095,0.87338776,0.88935211,0.90563317,0.92224045,0.93918385]},"rhoSoloNoRespuesta":0.45185553,"brechaSoloCobertura":0.43430067},"hite":{"enviados":100000,"tasa":0.045,"devueltos":4500,"muR":0.84,"cifras":[{"pct":84,"texto":"no están satisfechas emocionalmente con sus relaciones","pagina":804},{"pct":70,"texto":"casadas cinco o más años tienen relaciones fuera del matrimonio","pagina":856},{"pct":95,"texto":"reportan formas de acoso emocional y psicológico","pagina":810},{"pct":84,"texto":"reportan formas de condescendencia","pagina":809}],"inverso":{"mu":[0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.84],"muM":[0.06513089,0.11748691,0.16984293,0.22219895,0.27455497,0.37926702,0.48397906,0.5886911,0.69340314,0.84]}},"intell":{"documental":{"telNumeros":79014,"telEntrevistas":1838,"telSoloMovil":24.5,"telSinTelefono":2,"onlineN":983,"onlineReclutados":1020,"onlinePago":0.25,"escala":["Muy de acuerdo","Bastante de acuerdo","Bastante en desacuerdo","Muy en desacuerdo","No sé / no estoy seguro"]},"celdas":[{"celda":"Female · Young · Nonwhite","sexo":"Female","edad":"Young","raza":"Nonwhite","telN":47,"onlineN":116,"telPeso":1.213,"onlinePeso":0.491,"pctTel":2.55712731,"pctOnline":11.80061038,"pctCenso":7.5982255},{"celda":"Female · Young · White","sexo":"Female","edad":"Young","raza":"White","telN":114,"onlineN":312,"telPeso":1.192,"onlinePeso":0.435,"pctTel":6.20239391,"pctOnline":31.73957274,"pctCenso":18.10821406},{"celda":"Female · Old · Nonwhite","sexo":"Female","edad":"Old","raza":"Nonwhite","telN":112,"onlineN":14,"telPeso":0.509,"onlinePeso":4.072,"pctTel":6.09357998,"pctOnline":1.4242116,"pctCenso":7.60149235},{"celda":"Female · Old · White","sexo":"Female","edad":"Old","raza":"White","telN":878,"onlineN":135,"telPeso":0.155,"onlinePeso":1.006,"pctTel":47.76931447,"pctOnline":13.73346897,"pctCenso":18.12768182},{"celda":"Male · Young · Nonwhite","sexo":"Male","edad":"Young","raza":"Nonwhite","telN":27,"onlineN":81,"telPeso":1.994,"onlinePeso":0.665,"pctTel":1.46898803,"pctOnline":8.24008138,"pctCenso":7.18060211},{"celda":"Male · Young · White","sexo":"Male","edad":"Young","raza":"White","telN":93,"onlineN":254,"telPeso":1.38,"onlinePeso":0.505,"pctTel":5.05984766,"pctOnline":25.83926755,"pctCenso":17.1082914},{"celda":"Male · Old · Nonwhite","sexo":"Male","edad":"Old","raza":"Nonwhite","telN":89,"onlineN":8,"telPeso":0.605,"onlinePeso":6.729,"pctTel":4.8422198,"pctOnline":0.8138352,"pctCenso":7.17886868},{"celda":"Male · Old · White","sexo":"Male","edad":"Old","raza":"White","telN":478,"onlineN":63,"telPeso":0.268,"onlinePeso":2.037,"pctTel":26.00652884,"pctOnline":6.40895219,"pctCenso":17.09662408}],"agree":{"tel":{"sinPesos":61.64309032,"conPesos":64.76448842},"online":{"sinPesos":67.54832146,"conPesos":65.62909813}},"noSe":{"tel":8.81392818,"online":15.86978637},"edadMedia":{"tel":60.74863983,"online":33.71414039},"cvPesos":{"tel":1.03299929,"online":1.03125185},"reparto":{"raza":{"niveles":["Blanca","Negra","Hispana","Asiática","Otra"],"online":[77.72126144,7.52797558,5.59511699,6.71414039,2.4415056],"tel":[85.03808487,7.45375408,3.15560392,1.41458107,2.93797606]},"educacion":{"niveles":["Sin universidad","Universidad parcial","Universitario","Posgrado","Sin dato"],"online":[12.30925738,46.08341811,24.51678535,16.98880977,0.1017294],"tel":[26.11534276,36.50707291,16.32208923,20.23939064,0.81610446]},"region":{"niveles":["Nordeste","Centro-Norte","Sur","Oeste"],"online":[19.63377416,22.38046796,36.41912513,21.56663276],"tel":[18.71599565,28.1828074,37.70402612,15.39717084]},"ingreso":{"niveles":["Menos de 40k $","De 40k a 80k $","Más de 80k $","Sin dato"],"online":[51.0681587,32.34994914,16.58189217,0],"tel":[39.60826986,33.84113166,21.38193689,5.16866159]}},"escalaConteo":{"niveles":[1,2,3,4,5],"tel":[305,828,468,75,162],"online":[185,479,145,18,156]}},"agpop":{"N":3078,"media":306676.97141001,"mediaValidos":308582.41222622,"S2":180358776382.88388,"S":424686.68025132,"cv":1.38480134,"asimetria":5.32011371,"faltantes":{"acres92":19,"acres87":23,"acres82":17},"totalReal":943951718,"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"hist":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[476,494,367,317,264,192,191,122,104,98,69,57,44,39,31,12,22,16,8,11,10,6,9,8,8,8,8,9,6,6,1,7,5,3,4,4,4,2,3,33],"tope":2077248.03,"piso":-99},"histRegion":{"W":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[43,28,30,22,27,18,19,13,17,15,8,8,11,12,14,5,10,12,4,4,3,3,6,5,7,8,4,5,5,4,0,6,2,2,3,3,4,2,2,28],"tope":2077248.03,"piso":-99},"NC":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[56,70,86,138,152,120,122,75,55,34,30,26,19,12,9,5,8,2,2,5,6,1,3,3,1,0,3,4,1,0,0,1,1,1,0,1,0,0,0,2],"tope":2077248.03,"piso":-99},"S":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[295,333,217,135,73,51,48,32,32,49,31,23,14,15,8,2,4,2,2,2,1,2,0,0,0,0,1,0,0,2,1,0,2,0,1,0,0,0,1,3],"tope":2077248.03,"piso":-99},"NE":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[82,63,34,22,12,3,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"tope":2077248.03,"piso":-99}}},"biglucy":{"N":85296,"columnas":11,"nombres":["ID","Ubication","Level","Zone","Income","Employees","Taxes","SPAM","ISO","Years","Segments"],"ingresoMedio":429.50118411,"ingresoTotal":36634733,"cv":0.61905945,"asimetria":1.39622127,"empleadosMedio":63.21506284,"nivel":{"Big":2905,"Medium":25795,"Small":56596},"zona":{"County1":614,"County10":330,"County100":330,"County11":614,"County12":1454,"County13":1948,"County14":446,"County15":330,"County16":614,"County17":1454,"County18":1948,"County19":446,"County2":1454,"County20":330,"County21":614,"County22":1454,"County23":1948,"County24":446,"County25":330,"County26":614,"County27":1454,"County28":1948,"County29":446,"County3":1948,"County30":330,"County31":614,"County32":1454,"County33":1948,"County34":446,"County35":330,"County36":614,"County37":1454,"County38":1948,"County39":446,"County4":446,"County40":330,"County41":614,"County42":1454,"County43":1948,"County44":446,"County45":330,"County46":614,"County47":1454,"County48":1948,"County49":446,"County5":330,"County50":330,"County51":614,"County52":1454,"County53":1948,"County54":446,"County55":330,"County56":614,"County57":1454,"County58":1948,"County59":446,"County6":614,"County60":330,"County61":614,"County62":1454,"County63":1948,"County64":446,"County65":330,"County66":614,"County67":1454,"County68":1948,"County69":446,"County7":1454,"County70":330,"County71":404,"County72":1320,"County73":1720,"County74":223,"County75":165,"County76":307,"County77":727,"County78":974,"County79":223,"County8":1948,"County80":165,"County81":307,"County82":727,"County83":974,"County84":223,"County85":165,"County86":307,"County87":727,"County88":974,"County89":223,"County9":446,"County90":165,"County91":307,"County92":727,"County93":974,"County94":223,"County95":165,"County96":614,"County97":1454,"County98":1948,"County99":446},"spam":60.89500094,"hist":{"centros":[17.9875,51.9625,85.9375,119.9125,153.8875,187.8625,221.8375,255.8125,289.7875,323.7625,357.7375,391.7125,425.6875,459.6625,493.6375,527.6125,561.5875,595.5625,629.5375,663.5125,697.4875,731.4625,765.4375,799.4125,833.3875,867.3625,901.3375,935.3125,969.2875,1003.2625,1037.2375,1071.2125,1105.1875,1139.1625,1173.1375,1207.1125,1241.0875,1275.0625,1309.0375,1343.0125],"conteo":[432,756,2880,4392,4464,4885,5005,4615,4408,4778,4349,4031,4606,4203,4472,2975,3290,3850,2625,2450,1680,1050,1225,1155,1085,700,595,700,490,525,350,245,420,210,105,105,70,35,175,910],"tope":1360,"piso":1}},"noRespuesta":{"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"escenarios":[{"nombre":"Todas al 60 %","region":["W","NC","S","NE"],"r":[0.6,0.6,0.6,0.6],"sesgo":5.82076609e-11},{"nombre":"Todas al 10 %","region":["W","NC","S","NE"],"r":[0.1,0.1,0.1,0.1],"sesgo":-5.82076609e-11},{"nombre":"Desiguales (el Oeste responde poco)","region":["W","NC","S","NE"],"r":[0.2,0.5,0.35,0.65],"sesgo":-30359.12446711}]},"errorTotal":{"p":0.62467363,"S2":0.23445649,"sesgoDigest":-0.1954353,"nDigest":2266566,"nMas":1000,"ecmDigest":0.03819506,"ecmMas":0.00023446,"recmDigest":0.19543557,"recmMas":0.01531197,"razonRecm":12.76357912,"nEfectivo":6.13839809,"papeletasPorVotante":369243.89156145,"curva":{"n":[10,13,16,20,25,32,40,50,63,79,100,126,158,200,251,316,398,501,631,794,1000,1259,1585,1995,2512,3162,3981,5012,6310,7943,10000,12589,15849,19953,25119,31623,39811,50119,63096,79433,100000,125893,158489,199526,251189,316228,398107,501187,630957,794328,1000000,1258925,1584893,1995262,2511886,3162278,3981072,5011872,6309573,7943282,10000000],"insesgado":[0.15311972,0.13429488,0.12105177,0.10827199,0.09684141,0.08559653,0.07655986,0.06847722,0.06100436,0.05447755,0.04842071,0.04313659,0.03852145,0.03423861,0.03056288,0.02723878,0.02427111,0.02163278,0.01927598,0.01718387,0.01531197,0.01364641,0.01216232,0.01084076,0.00966098,0.00861093,0.00767423,0.00683952,0.0060956,0.00543299,0.00484207,0.00431554,0.00384619,0.00342789,0.00305513,0.00272289,0.00242678,0.00216287,0.00192766,0.00171803,0.0015312,0.00136468,0.00121627,0.00108401,0.00096612,0.00086106,0.00076742,0.00068396,0.00060958,0.00054329,0.00048421,0.00043155,0.00038462,0.00034279,0.00030551,0.00027229,0.00024268,0.00021629,0.00019277,0.0001718,0.00015312],"sesgado":[0.24827526,0.23712881,0.22988799,0.22342288,0.21811285,0.2133582,0.20989609,0.20708473,0.20473517,0.20288608,0.20134429,0.20013926,0.19919553,0.19841179,0.19781063,0.19732437,0.19693665,0.19662892,0.19638361,0.1961893,0.19603422,0.19591116,0.19581338,0.19573574,0.19567394,0.19562491,0.19558592,0.19555494,0.19553034,0.1955108,0.19549528,0.19548294,0.19547314,0.19546536,0.19545918,0.19545427,0.19545037,0.19544727,0.19544481,0.19544285,0.1954413,0.19544007,0.19543909,0.19543831,0.19543769,0.1954372,0.19543681,0.1954365,0.19543625,0.19543606,0.1954359,0.19543578,0.19543568,0.1954356,0.19543554,0.19543549,0.19543545,0.19543542,0.1954354,0.19543538,0.19543536]},"agpop":{"N":3078,"S2":180358776382.88388,"media":306676.97141001,"eeMedia300":23293.77229185,"eeMedia1200":9576.16241651}}};
+    const DATOS_CAP1 = {"meta":{"capitulo":1,"semilla":2026,"generado":"2026-11-16","r":"R 4.4.1","script":"precalculo/genera_cap1.R"},"digest":{"documental":{"enviadas":10000000,"devueltas":2300000,"landonSondeo":1293669,"rooseveltSondeo":972897,"prediccionLandon":54,"prediccionRoosevelt":41,"eleccionRoosevelt":61,"eleccionLandon":37,"votosRooseveltM":27.753,"votosLandonM":16.675,"tasaRespuesta":0.2266566},"pSondeo":0.42923833,"pEleccion":0.62467363,"sesgo":-0.1954353,"coberturaRef":0.55,"isoResultado":{"brecha":[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4],"rho":[0.45185553,0.46059107,0.4694543,0.47844806,0.48757524,0.49683883,0.50624191,0.51578767,0.52547936,0.53532037,0.54531418,0.55546435,0.56577461,0.57624876,0.58689074,0.59770462,0.6086946,0.61986502,0.63122035,0.64276523,0.65450443,0.66644292,0.67858581,0.69093839,0.70350613,0.71629472,0.72931003,0.74255813,0.75604534,0.76977818,0.78376342,0.79800808,0.81251946,0.82730512,0.8423729,0.85773095,0.87338776,0.88935211,0.90563317,0.92224045,0.93918385]},"rhoSoloNoRespuesta":0.45185553,"brechaSoloCobertura":0.43430067},"hite":{"enviados":100000,"tasa":0.045,"devueltos":4500,"muR":0.84,"cifras":[{"pct":84,"texto":"no están satisfechas emocionalmente con sus relaciones","pagina":804},{"pct":70,"texto":"casadas cinco o más años tienen relaciones fuera del matrimonio","pagina":856},{"pct":95,"texto":"reportan formas de acoso emocional y psicológico","pagina":810},{"pct":84,"texto":"reportan formas de condescendencia","pagina":809}],"inverso":{"mu":[0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.6,0.7,0.84],"muM":[0.06513089,0.11748691,0.16984293,0.22219895,0.27455497,0.37926702,0.48397906,0.5886911,0.69340314,0.84]}},"intell":{"documental":{"telNumeros":79014,"telEntrevistas":1838,"telSoloMovil":24.5,"telSinTelefono":2,"onlineN":983,"onlineReclutados":1020,"onlinePago":0.25,"escala":["Muy de acuerdo","Bastante de acuerdo","Bastante en desacuerdo","Muy en desacuerdo","No sé / no estoy seguro"]},"celdas":[{"celda":"Female · Young · Nonwhite","sexo":"Female","edad":"Young","raza":"Nonwhite","telN":47,"onlineN":116,"telPeso":1.213,"onlinePeso":0.491,"pctTel":2.55712731,"pctOnline":11.80061038,"pctCenso":7.5982255},{"celda":"Female · Young · White","sexo":"Female","edad":"Young","raza":"White","telN":114,"onlineN":312,"telPeso":1.192,"onlinePeso":0.435,"pctTel":6.20239391,"pctOnline":31.73957274,"pctCenso":18.10821406},{"celda":"Female · Old · Nonwhite","sexo":"Female","edad":"Old","raza":"Nonwhite","telN":112,"onlineN":14,"telPeso":0.509,"onlinePeso":4.072,"pctTel":6.09357998,"pctOnline":1.4242116,"pctCenso":7.60149235},{"celda":"Female · Old · White","sexo":"Female","edad":"Old","raza":"White","telN":878,"onlineN":135,"telPeso":0.155,"onlinePeso":1.006,"pctTel":47.76931447,"pctOnline":13.73346897,"pctCenso":18.12768182},{"celda":"Male · Young · Nonwhite","sexo":"Male","edad":"Young","raza":"Nonwhite","telN":27,"onlineN":81,"telPeso":1.994,"onlinePeso":0.665,"pctTel":1.46898803,"pctOnline":8.24008138,"pctCenso":7.18060211},{"celda":"Male · Young · White","sexo":"Male","edad":"Young","raza":"White","telN":93,"onlineN":254,"telPeso":1.38,"onlinePeso":0.505,"pctTel":5.05984766,"pctOnline":25.83926755,"pctCenso":17.1082914},{"celda":"Male · Old · Nonwhite","sexo":"Male","edad":"Old","raza":"Nonwhite","telN":89,"onlineN":8,"telPeso":0.605,"onlinePeso":6.729,"pctTel":4.8422198,"pctOnline":0.8138352,"pctCenso":7.17886868},{"celda":"Male · Old · White","sexo":"Male","edad":"Old","raza":"White","telN":478,"onlineN":63,"telPeso":0.268,"onlinePeso":2.037,"pctTel":26.00652884,"pctOnline":6.40895219,"pctCenso":17.09662408}],"agree":{"tel":{"sinPesos":61.64309032,"conPesos":64.76448842},"online":{"sinPesos":67.54832146,"conPesos":65.62909813}},"noSe":{"tel":8.81392818,"online":15.86978637},"edadMedia":{"tel":60.74863983,"online":33.71414039},"cvPesos":{"tel":1.03299929,"online":1.03125185},"reparto":{"raza":{"niveles":["Blanca","Negra","Hispana","Asiática","Otra"],"online":[77.72126144,7.52797558,5.59511699,6.71414039,2.4415056],"tel":[85.03808487,7.45375408,3.15560392,1.41458107,2.93797606]},"educacion":{"niveles":["Sin universidad","Universidad parcial","Universitario","Posgrado","Sin dato"],"online":[12.30925738,46.08341811,24.51678535,16.98880977,0.1017294],"tel":[26.11534276,36.50707291,16.32208923,20.23939064,0.81610446]},"region":{"niveles":["Nordeste","Centro-Norte","Sur","Oeste"],"online":[19.63377416,22.38046796,36.41912513,21.56663276],"tel":[18.71599565,28.1828074,37.70402612,15.39717084]},"ingreso":{"niveles":["Menos de 40k $","De 40k a 80k $","Más de 80k $","Sin dato"],"online":[51.0681587,32.34994914,16.58189217,0],"tel":[39.60826986,33.84113166,21.38193689,5.16866159]}},"escalaConteo":{"niveles":[1,2,3,4,5],"tel":[305,828,468,75,162],"online":[185,479,145,18,156]}},"agpop":{"N":3078,"media":306676.97141001,"mediaValidos":308582.41222622,"S2":180358776382.88388,"S":424686.68025132,"cv":1.38480134,"asimetria":5.32011371,"faltantes":{"acres92":19,"acres87":23,"acres82":17},"totalReal":943951718,"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"hist":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[476,494,367,317,264,192,191,122,104,98,69,57,44,39,31,12,22,16,8,11,10,6,9,8,8,8,8,9,6,6,1,7,5,3,4,4,4,2,3,33],"tope":2077248.03,"piso":-99},"histRegion":{"W":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[43,28,30,22,27,18,19,13,17,15,8,8,11,12,14,5,10,12,4,4,3,3,6,5,7,8,4,5,5,4,0,6,2,2,3,3,4,2,2,28],"tope":2077248.03,"piso":-99},"NC":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[56,70,86,138,152,120,122,75,55,34,30,26,19,12,9,5,8,2,2,5,6,1,3,3,1,0,3,4,1,0,0,1,1,1,0,1,0,0,0,2],"tope":2077248.03,"piso":-99},"S":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[295,333,217,135,73,51,48,32,32,49,31,23,14,15,8,2,4,2,2,2,1,2,0,0,0,0,1,0,0,2,1,0,2,0,1,0,0,0,1,3],"tope":2077248.03,"piso":-99},"NE":{"centros":[25867.837875,77801.513625,129735.189375,181668.865125,233602.540875,285536.216625,337469.892375,389403.568125,441337.243875,493270.919625,545204.595375,597138.271125,649071.946875,701005.622625,752939.298375,804872.974125,856806.649875,908740.325625,960674.001375,1012607.677125,1064541.352875,1116475.028625,1168408.704375,1220342.380125,1272276.055875,1324209.731625,1376143.407375,1428077.083125,1480010.758875,1531944.434625,1583878.110375,1635811.786125,1687745.461875,1739679.137625,1791612.813375,1843546.489125,1895480.164875,1947413.840625,1999347.516375,2051281.192125],"conteo":[82,63,34,22,12,3,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"tope":2077248.03,"piso":-99}}},"biglucy":{"N":85296,"columnas":11,"nombres":["ID","Ubication","Level","Zone","Income","Employees","Taxes","SPAM","ISO","Years","Segments"],"ingresoMedio":429.50118411,"ingresoTotal":36634733,"cv":0.61905945,"asimetria":1.39622127,"empleadosMedio":63.21506284,"nivel":{"Big":2905,"Medium":25795,"Small":56596},"zona":{"County1":614,"County10":330,"County100":330,"County11":614,"County12":1454,"County13":1948,"County14":446,"County15":330,"County16":614,"County17":1454,"County18":1948,"County19":446,"County2":1454,"County20":330,"County21":614,"County22":1454,"County23":1948,"County24":446,"County25":330,"County26":614,"County27":1454,"County28":1948,"County29":446,"County3":1948,"County30":330,"County31":614,"County32":1454,"County33":1948,"County34":446,"County35":330,"County36":614,"County37":1454,"County38":1948,"County39":446,"County4":446,"County40":330,"County41":614,"County42":1454,"County43":1948,"County44":446,"County45":330,"County46":614,"County47":1454,"County48":1948,"County49":446,"County5":330,"County50":330,"County51":614,"County52":1454,"County53":1948,"County54":446,"County55":330,"County56":614,"County57":1454,"County58":1948,"County59":446,"County6":614,"County60":330,"County61":614,"County62":1454,"County63":1948,"County64":446,"County65":330,"County66":614,"County67":1454,"County68":1948,"County69":446,"County7":1454,"County70":330,"County71":404,"County72":1320,"County73":1720,"County74":223,"County75":165,"County76":307,"County77":727,"County78":974,"County79":223,"County8":1948,"County80":165,"County81":307,"County82":727,"County83":974,"County84":223,"County85":165,"County86":307,"County87":727,"County88":974,"County89":223,"County9":446,"County90":165,"County91":307,"County92":727,"County93":974,"County94":223,"County95":165,"County96":614,"County97":1454,"County98":1948,"County99":446},"spam":60.89500094,"hist":{"centros":[17.9875,51.9625,85.9375,119.9125,153.8875,187.8625,221.8375,255.8125,289.7875,323.7625,357.7375,391.7125,425.6875,459.6625,493.6375,527.6125,561.5875,595.5625,629.5375,663.5125,697.4875,731.4625,765.4375,799.4125,833.3875,867.3625,901.3375,935.3125,969.2875,1003.2625,1037.2375,1071.2125,1105.1875,1139.1625,1173.1375,1207.1125,1241.0875,1275.0625,1309.0375,1343.0125],"conteo":[432,756,2880,4392,4464,4885,5005,4615,4408,4778,4349,4031,4606,4203,4472,2975,3290,3850,2625,2450,1680,1050,1225,1155,1085,700,595,700,490,525,350,245,420,210,105,105,70,35,175,910],"tope":1360,"piso":1}},"dane":{"ajusteNacional":8.5,"ajusteCabeceras":6.4,"ajusteRural":15,"poblacionCensada":48258494,"razonRuralCabeceras":2.34375},"noRespuesta":{"regiones":[{"region":"W","nombre":"Oeste","N":422,"media":723343.96445498,"sd":835638.9004829},{"region":"NC","nombre":"Centro-Norte","N":1054,"media":325950.9573055,"sd":271303.40626531},{"region":"S","nombre":"Sur","N":1382,"media":199140.43704776,"sd":243956.35049719},{"region":"NE","nombre":"Nordeste","N":220,"media":90618.96363636,"sd":79365.44747428}],"escenarios":[{"nombre":"Todas al 60 %","region":["W","NC","S","NE"],"r":[0.6,0.6,0.6,0.6],"sesgo":5.82076609e-11},{"nombre":"Todas al 10 %","region":["W","NC","S","NE"],"r":[0.1,0.1,0.1,0.1],"sesgo":-5.82076609e-11},{"nombre":"Desiguales (el Oeste responde poco)","region":["W","NC","S","NE"],"r":[0.2,0.5,0.35,0.65],"sesgo":-30359.12446711}]},"errorTotal":{"p":0.62467363,"S2":0.23445649,"sesgoDigest":-0.1954353,"nDigest":2266566,"nMas":1000,"ecmDigest":0.03819506,"ecmMas":0.00023446,"recmDigest":0.19543557,"recmMas":0.01531197,"razonRecm":12.76357912,"nEfectivo":6.13839809,"papeletasPorVotante":369243.89156145,"curva":{"n":[10,13,16,20,25,32,40,50,63,79,100,126,158,200,251,316,398,501,631,794,1000,1259,1585,1995,2512,3162,3981,5012,6310,7943,10000,12589,15849,19953,25119,31623,39811,50119,63096,79433,100000,125893,158489,199526,251189,316228,398107,501187,630957,794328,1000000,1258925,1584893,1995262,2511886,3162278,3981072,5011872,6309573,7943282,10000000],"insesgado":[0.15311972,0.13429488,0.12105177,0.10827199,0.09684141,0.08559653,0.07655986,0.06847722,0.06100436,0.05447755,0.04842071,0.04313659,0.03852145,0.03423861,0.03056288,0.02723878,0.02427111,0.02163278,0.01927598,0.01718387,0.01531197,0.01364641,0.01216232,0.01084076,0.00966098,0.00861093,0.00767423,0.00683952,0.0060956,0.00543299,0.00484207,0.00431554,0.00384619,0.00342789,0.00305513,0.00272289,0.00242678,0.00216287,0.00192766,0.00171803,0.0015312,0.00136468,0.00121627,0.00108401,0.00096612,0.00086106,0.00076742,0.00068396,0.00060958,0.00054329,0.00048421,0.00043155,0.00038462,0.00034279,0.00030551,0.00027229,0.00024268,0.00021629,0.00019277,0.0001718,0.00015312],"sesgado":[0.24827526,0.23712881,0.22988799,0.22342288,0.21811285,0.2133582,0.20989609,0.20708473,0.20473517,0.20288608,0.20134429,0.20013926,0.19919553,0.19841179,0.19781063,0.19732437,0.19693665,0.19662892,0.19638361,0.1961893,0.19603422,0.19591116,0.19581338,0.19573574,0.19567394,0.19562491,0.19558592,0.19555494,0.19553034,0.1955108,0.19549528,0.19548294,0.19547314,0.19546536,0.19545918,0.19545427,0.19545037,0.19544727,0.19544481,0.19544285,0.1954413,0.19544007,0.19543909,0.19543831,0.19543769,0.1954372,0.19543681,0.1954365,0.19543625,0.19543606,0.1954359,0.19543578,0.19543568,0.1954356,0.19543554,0.19543549,0.19543545,0.19543542,0.1954354,0.19543538,0.19543536]},"agpop":{"N":3078,"S2":180358776382.88388,"media":306676.97141001,"eeMedia300":23293.77229185,"eeMedia1200":9576.16241651}}};
 
     // ================================================================
     // Estado y elementos del DOM
@@ -8719,6 +8889,161 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
     };
 
     // ---------------------------------------------------------------
+    // M2 y M9 · Ejercicios de clasificar, sin cifras propias
+    //
+    // Cada pregunta es un selector con una opción vacía al principio; al
+    // elegir, el panel dice si se acertó y por qué. Las situaciones repiten
+    // hechos que el capítulo ya cita y verificó (módulo 1 y módulo 2): aquí no
+    // entra ningún dato nuevo.
+    // ---------------------------------------------------------------
+    function montarClasificador(raiz, casos, textoLectura) {
+      const params = { caso: casos[0].id };
+      const contenedor = raiz.querySelector('.simulador-controles');
+      const panel = raiz.querySelector('[data-panel="diagnostico"]');
+      const elCaso = () => casos.find(c => c.id === params.caso);
+
+      function pintar() {
+        const c = elCaso();
+        let bien = 0, respondidas = 0;
+        const filas = c.preguntas.map(p => {
+          const r = params[p.clave];
+          if (!r) return `<li><strong>${p.etiqueta}</strong> <span style="color:#6b7280;">sin responder</span></li>`;
+          respondidas++;
+          if (r === p.correcta) { bien++; return `<li>✔ <strong>${p.etiqueta}</strong> ${p.bien}</li>`; }
+          return `<li>✘ <strong>${p.etiqueta}</strong> ${p.mal}</li>`;
+        });
+        panel.innerHTML = (c.intro ? `<p>${c.intro}</p>` : '') +
+          `<ul style="margin-bottom:0;">${filas.join('')}</ul>` +
+          (bien === c.preguntas.length && c.cierre ? `<p style="margin:0.75rem 0 0;"><strong>${c.cierre}</strong></p>` : '');
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'aciertos:', valor: `${bien} de ${c.preguntas.length}` },
+          { etiqueta: 'respondidas:', valor: `${respondidas}` },
+          { etiqueta: textoLectura, valor: c.nombre }
+        ]);
+        if (window.renderMathInElement) renderMathInElement(panel, { delimiters: [{ left: '$', right: '$', display: false }] });
+      }
+
+      function montar() {
+        contenedor.innerHTML = '';
+        const c = elCaso();
+        if (casos.length > 1) {
+          crearSelector(contenedor, { clave: 'caso', etiqueta: 'Caso',
+            opciones: casos.map(x => ({ valor: x.id, texto: x.nombre })) }, params, montar);
+        }
+        c.preguntas.forEach(p => {
+          params[p.clave] = '';
+          crearSelector(contenedor, { clave: p.clave, etiqueta: p.etiqueta,
+            opciones: [{ valor: '', texto: '— elige —' }].concat(p.opciones) }, params, pintar);
+        });
+        pintar();
+      }
+
+      montar();
+      return [];
+    }
+
+    SIMULADORES['diagnostico-vocabulario'] = function (raiz) {
+      return montarClasificador(raiz, [
+        {
+          id: 'digest', nombre: 'The Literary Digest (1936)',
+          intro: 'Sitúa el sondeo en las piezas del módulo y di dónde se rompió.',
+          preguntas: [
+            { clave: 'pob', etiqueta: 'Población objetivo', correcta: 'votantes',
+              opciones: [{ valor: 'suscriptores', texto: 'los suscriptores de la revista' },
+                         { valor: 'votantes', texto: 'los votantes de la elección de 1936' },
+                         { valor: 'devueltas', texto: 'las personas que devolvieron la papeleta' }],
+              bien: '— la revista quería anticipar el resultado de la elección.',
+              mal: '— no: la pregunta era a quién elegirían los votantes, no solo los lectores o los que contestaron.' },
+            { clave: 'marco', etiqueta: 'Marco muestral', correcta: 'listas',
+              opciones: [{ valor: 'padron', texto: 'el padrón electoral completo del país' },
+                         { valor: 'listas', texto: 'guías de teléfono, registros de automóviles y otras listas' },
+                         { valor: 'votantes', texto: 'los votantes de 1936' }],
+              bien: '— y en 1936 tener teléfono o carro era señal de estar por encima de la media.',
+              mal: '— el marco es la lista concreta de la que salieron los nombres, no la población a la que se quería llegar.' },
+            { clave: 'obs', etiqueta: 'Muestra observada', correcta: 'devueltas',
+              opciones: [{ valor: 'enviadas', texto: 'los diez millones de papeletas enviadas' },
+                         { valor: 'devueltas', texto: 'las más de 2,3 millones de papeletas devueltas' },
+                         { valor: 'lista', texto: 'todos los nombres de las listas' }],
+              bien: '— la muestra seleccionada eran las enviadas; la observada, solo las que volvieron.',
+              mal: '— la observada es lo que de verdad llegó: las papeletas que volvieron.' },
+            { clave: 'allentown', etiqueta: 'En Allentown, con el marco completo, ¿qué flecha falló?', correcta: 'tercera',
+              opciones: [{ valor: 'primera', texto: 'la primera, de la población al marco (no cobertura)' },
+                         { valor: 'tercera', texto: 'la tercera, de la muestra seleccionada a la observada (no respuesta)' },
+                         { valor: 'ninguna', texto: 'ninguna: allí el sondeo acertó' }],
+              bien: '— solo devolvió la papeleta un tercio, y el resultado seguía siendo erróneo.',
+              mal: '— el marco era completo, así que la primera flecha no perdió a nadie; y el resultado fue erróneo.' }
+          ],
+          cierre: 'El Digest se rompió en las dos flechas, y Allentown muestra que la tercera basta sola.'
+        },
+        {
+          id: 'hite', nombre: 'Shere Hite (1987)',
+          intro: 'Ahora el estudio de Hite, con las mismas piezas.',
+          preguntas: [
+            { clave: 'pob', etiqueta: 'Población objetivo', correcta: 'mujeres',
+              opciones: [{ valor: 'socias', texto: 'las socias de las organizaciones que recibieron el cuestionario' },
+                         { valor: 'mujeres', texto: 'las mujeres de Estados Unidos' },
+                         { valor: 'respondieron', texto: 'las mujeres que contestaron' }],
+              bien: '— a ellas atribuyó el libro sus porcentajes.',
+              mal: '— el libro habló de «las mujeres», no solo de las que estaban en esas listas o contestaron.' },
+            { clave: 'marco', etiqueta: 'Marco muestral', correcta: 'organizaciones',
+              opciones: [{ valor: 'registro', texto: 'un registro de todas las mujeres del país' },
+                         { valor: 'organizaciones', texto: 'organizaciones como grupos profesionales de mujeres, centros de asesoramiento y sociedades de iglesias' },
+                         { valor: 'mujeres', texto: 'las mujeres de Estados Unidos' }],
+              bien: '— quien no estaba en esas organizaciones no tenía forma de entrar.',
+              mal: '— el marco es por dónde llegaron los cuestionarios: las listas de organizaciones.' },
+            { clave: 'obs', etiqueta: 'Muestra observada', correcta: 'devueltos',
+              opciones: [{ valor: 'enviados', texto: 'los 100 000 cuestionarios enviados' },
+                         { valor: 'devueltos', texto: 'unas 4 500 respuestas, el 4,5 % de lo enviado' },
+                         { valor: 'socias', texto: 'todas las socias de las organizaciones' }],
+              bien: '— y contestar 127 preguntas abiertas exige una motivación que no se reparte al azar.',
+              mal: '— la observada es lo que volvió: unas 4 500 respuestas.' },
+            { clave: 'quien', etiqueta: '¿Quién decidió entrar en la muestra observada?', correcta: 'encuestada',
+              opciones: [{ valor: 'azar', texto: 'el azar, con probabilidades conocidas' },
+                         { valor: 'encuestada', texto: 'la propia encuestada, al decidir contestar' },
+                         { valor: 'hite', texto: 'Hite, eligiendo a quién incluir' }],
+              bien: '— es autoselección: la probabilidad de entrar dependía de lo que se quería medir.',
+              mal: '— nadie sorteó nada: cada mujer decidió si devolvía el cuestionario.' }
+          ],
+          cierre: 'Hite falló en la cobertura del marco y, sobre todo, porque entrar dependía de la encuestada.'
+        }
+      ], 'caso:');
+    };
+
+    SIMULADORES['emparejar-ia'] = function (raiz) {
+      const TERMINOS = [
+        { valor: 'objetivo', texto: 'población objetivo' },
+        { valor: 'marco', texto: 'marco muestral' },
+        { valor: 'cobertura', texto: 'no cobertura' },
+        { valor: 'autoseleccion', texto: 'autoselección' },
+        { valor: 'respuesta', texto: 'no respuesta' },
+        { valor: 'medicion', texto: 'sesgo de medición' },
+        { valor: 'procesamiento', texto: 'error de procesamiento' }
+      ];
+      const p = (clave, etiqueta, correcta, bien) => ({ clave, etiqueta, correcta, opciones: TERMINOS, bien,
+        mal: '— vuelve al diccionario de arriba y pregúntate qué parte del camino de la población a los datos falla aquí.' });
+      return montarClasificador(raiz, [{
+        id: 'ia', nombre: 'un proyecto de aprendizaje automático',
+        preguntas: [
+          p('s1', 'Un modelo de crédito nunca vio a un solicitante rechazado: no hay ninguno en sus datos.', 'cobertura',
+            '— no cobertura: esas unidades tenían probabilidad cero de entrar al entrenamiento.'),
+          p('s2', 'La satisfacción de los compradores se aprende de las reseñas que ellos decidieron escribir.', 'autoseleccion',
+            '— autoselección: escribe quien está muy satisfecho o muy molesto.'),
+          p('s3', 'Un código de faltante, −99, entró al modelo como si fuera un valor de verdad.', 'procesamiento',
+            '— error de procesamiento, el mismo del −99 de agpop en el módulo 2.'),
+          p('s4', 'Las personas sobre las que el modelo va a decidir cuando esté en uso.', 'objetivo',
+            '— es la población objetivo: a ella se quieren llevar las conclusiones.'),
+          p('s5', 'Las etiquetas de un conjunto de imágenes las puso un anotador que, ante la duda, elegía siempre la misma clase.', 'medicion',
+            '— sesgo de medición: el dato registrado se desvía del verdadero siempre hacia el mismo lado.'),
+          p('s6', 'La tabla de la que se sacaron los registros de entrenamiento.', 'marco',
+            '— el marco: la lista concreta de la que salen las unidades.'),
+          p('s7', 'Muchos usuarios abandonan el formulario antes de llenar el campo de ingresos, y sus registros quedan con ese campo vacío.', 'respuesta',
+            '— no respuesta, aquí de ítem: la unidad está, pero el dato falta, y falta más en unos que en otros.')
+        ],
+        cierre: 'Siete de siete: el vocabulario del capítulo nombra todos los problemas de un conjunto de entrenamiento.'
+      }], 'situaciones de');
+    };
+
+    // ---------------------------------------------------------------
     // M8 · Las dos poblaciones del curso
     // ---------------------------------------------------------------
     SIMULADORES['poblaciones'] = function (raiz) {
@@ -8789,6 +9114,139 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
       return [g];
     };
 
+    // ---------------------------------------------------------------
+    // M3 · Los 14 arquitectos del ejercicio 4: qué es «probabilística»
+    //
+    // Tres maneras de sacar 8 de 14, repetidas 1 000 veces con una semilla
+    // fija (la misma figura en cada visita). Cada barra es la fracción de
+    // repeticiones en que entró ese arquitecto: una estimación de su π_k.
+    // ---------------------------------------------------------------
+    SIMULADORES['arquitectos'] = function (raiz) {
+      const N_ARQ = 14, N_MUESTRA = 8, REPS = 1000;
+      const params = { proc: 'directorio', acepta: 0.7 };
+      const etiquetas = Array.from({ length: N_ARQ }, (_, i) => String(i + 1));
+      const g = crearGraficoBarras(raiz.querySelector('canvas'), etiquetas, etiquetas.map(() => 0), {
+        etiqueta: 'entró (% de las repeticiones)', color: COLORES_GRAFICO.primario,
+        tituloX: 'Posición en el directorio', tituloY: '% de repeticiones',
+        min: 0, max: 100,
+        lineas: [{ valor: 100 * N_MUESTRA / N_ARQ, etiqueta: 'sorteo de 8 de 14',
+                   color: COLORES_GRAFICO.secundario }]
+      });
+
+      function simular() {
+        const azar = azarEstable(semillaDeTexto('arquitectos-' + params.proc + '-' + params.acepta));
+        const veces = new Array(N_ARQ).fill(0);
+        let tamTotal = 0;
+        for (let r = 0; r < REPS; r++) {
+          let elegidos = [];
+          if (params.proc === 'directorio') {
+            elegidos = Array.from({ length: N_MUESTRA }, (_, i) => i);
+          } else if (params.proc === 'mas') {
+            const orden = Array.from({ length: N_ARQ }, (_, i) => i);
+            for (let i = N_ARQ - 1; i > 0; i--) {            // Fisher-Yates
+              const j = Math.floor(azar() * (i + 1));
+              [orden[i], orden[j]] = [orden[j], orden[i]];
+            }
+            elegidos = orden.slice(0, N_MUESTRA);
+          } else {                                         // por orden, hasta 8 que acepten
+            for (let i = 0; i < N_ARQ && elegidos.length < N_MUESTRA; i++) {
+              if (azar() < params.acepta) elegidos.push(i);
+            }
+          }
+          elegidos.forEach(i => { veces[i]++; });
+          tamTotal += elegidos.length;
+        }
+        return { pct: veces.map(v => 100 * v / REPS), tamMedio: tamTotal / REPS };
+      }
+
+      function pintar() {
+        const { pct, tamMedio } = simular();
+        g.data.datasets[0].data = pct;
+        g.update('none');
+        const ceros = pct.filter(p => p === 0).length;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'arquitectos que nunca entran:', valor: `${ceros} de ${N_ARQ}` },
+          { etiqueta: 'suma de las π estimadas:', valor: fmtNum(pct.reduce((a, b) => a + b, 0) / 100, 2) },
+          { etiqueta: 'tamaño medio de la muestra:', valor: fmtNum(tamMedio, 2) },
+          { etiqueta: 'repeticiones:', valor: fmtNum(REPS, 0) }
+        ]);
+      }
+
+      function montar() {
+        const cont = raiz.querySelector('.simulador-controles');
+        cont.innerHTML = '';
+        crearSelector(cont, { clave: 'proc', etiqueta: 'Procedimiento', opciones: [
+          { valor: 'directorio', texto: 'Los 8 primeros del directorio' },
+          { valor: 'orden', texto: 'Por orden, hasta que 8 acepten' },
+          { valor: 'mas', texto: 'Sorteo de 8 de los 14 (MAS)' }
+        ] }, params, montar);
+        if (params.proc === 'orden') {
+          crearControles(cont, [{ clave: 'acepta', etiqueta: 'Probabilidad de que cada uno acepte',
+            min: 0.3, max: 1, paso: 0.05 }], params, pintar);
+        }
+        pintar();
+      }
+
+      montar();
+      return [g];
+    };
+
+    // ---------------------------------------------------------------
+    // M5 · La balanza descalibrada, sobre agpop
+    //
+    // Modelo del módulo: y_obs = y + b + ε. Con muestreo aleatorio simple, la
+    // media observada tiene esperanza μ + b y varianza (1 − n/N) S²/n + σ²/n.
+    // Todo se expresa como error relativo a la media verdadera de agpop, en
+    // %: la verdad es el 0. No se muestrea nada: es la fórmula, tamaño a tamaño.
+    // ---------------------------------------------------------------
+    SIMULADORES['balanza'] = function (raiz) {
+      const mu = D1.agpop.media, S2 = D1.agpop.S2, N = D1.agpop.N;
+      const params = { b: 5, ruido: 50 };              // b en % de la media; ruido, σ en % de S
+      const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'n = N' : 'n = ' + fmtNum(n, 0)));
+      const serie = (etiqueta, color, extra) => Object.assign({ label: etiqueta, data: TAMANOS.map(() => 0),
+        borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 3 }, extra || {});
+      const g = crearGraficoLinea(raiz.querySelector('canvas'), etiquetas, [
+        serie('verdad (error 0)', COLORES_GRAFICO.primario, { borderDash: [6, 4], pointRadius: 0 }),
+        serie('centro de la estimación', COLORES_GRAFICO.secundario),
+        serie('intervalo del 95 %', COLORES_GRAFICO.gris, { borderWidth: 1, pointRadius: 0, fill: '+1',
+          backgroundColor: 'rgba(148, 163, 184, 0.25)' }),
+        serie('', COLORES_GRAFICO.gris, { borderWidth: 1, pointRadius: 0 })
+      ]);
+      // Se ajusta después de crearlo: pasar `plugins` o `scales` al crearlo borraría los estilos de la plantilla.
+      g.options.plugins.legend.labels.filter = it => it.text !== '';
+      // El eje se fija en ±20 %: con n = 10 el intervalo pasa del ±90 % y aplastaría lo que importa, que es
+      // dónde se queda la banda cuando n crece. Lo que se sale del eje se corta.
+      g.options.scales.y.min = -20; g.options.scales.y.max = 20;
+      g.options.scales.y.title = { display: true, text: 'error en % de la media verdadera',
+                                   font: { family: 'Montserrat', size: 11 } };
+      g.options.scales.x.title = { display: true, text: 'tamaño de la muestra',
+                                   font: { family: 'Montserrat', size: 11 } };
+
+      function pintar() {
+        const sigma = params.ruido / 100 * Math.sqrt(S2);
+        const semi = TAMANOS.map(n => 1.96 * Math.sqrt((1 - n / N) * S2 / n + sigma * sigma / n) / mu * 100);
+        g.data.datasets[1].data = TAMANOS.map(() => params.b);
+        g.data.datasets[2].data = semi.map(h => params.b + h);
+        g.data.datasets[3].data = semi.map(h => params.b - h);
+        g.update('none');
+        const hCenso = semi[semi.length - 1];
+        const fuera = Math.abs(params.b) > hCenso;
+        actualizarLectura(raiz.querySelector('.simulador-lectura'), [
+          { etiqueta: 'desplazamiento:', valor: fmtNum(params.b * mu / 100, 0) + ' acres por condado' },
+          { etiqueta: 'semiancho con n = 10:', valor: fmtNum(semi[0], 1) + ' %' },
+          { etiqueta: 'semiancho midiendo los 3 078:', valor: fmtNum(hCenso, 2) + ' %' },
+          { etiqueta: 'la verdad, dentro del intervalo del censo:', valor: fuera ? 'no' : 'sí' }
+        ]);
+      }
+
+      crearControles(raiz.querySelector('.simulador-controles'), [
+        { clave: 'b', etiqueta: 'Desplazamiento b del instrumento (% de la media)', min: -10, max: 10, paso: 0.5 },
+        { clave: 'ruido', etiqueta: 'Ruido ε del instrumento (σ en % de S)', min: 0, max: 200, paso: 10 }
+      ], params, pintar);
+      pintar();
+      return [g];
+    };
+
     // ================================================================
     // Glosario de notación del capítulo 1
     // ================================================================
@@ -8796,9 +9254,12 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
       titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
       nota: 'Es la primera entrega de una tabla que crece con el curso. En el capítulo 2 se le ' +
         'añaden el diseño $p(s)$, las probabilidades de inclusión y el estimador de ' +
-        'Horvitz–Thompson; aquí solo está el vocabulario que hace falta para nombrar las cosas.',
+        'Horvitz–Thompson; aquí solo está el vocabulario que hace falta para nombrar las cosas. ' +
+        'El total se escribe $t$ aquí y en el capítulo 2; desde el capítulo 3, cuando hay varias ' +
+        'variables a la vez, $t_y$. Gutiérrez llama $T$ al parámetro y $\\hat{T}$ a su estimador; ' +
+        'Lohr escribe $\\hat{t}$ para el estimador del total y $\\hat{\\theta}$ para un estadístico cualquiera.',
       filas: [
-        { concepto: 'Población objetivo', aqui: 'U', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
+        { concepto: 'Población (conjunto de unidades)', aqui: 'U', lohr: '\\mathcal{U}', gutierrez: 'U', r: '—' },
         { concepto: 'Tamaño de la población', aqui: 'N', lohr: 'N', gutierrez: 'N', r: 'nrow(agpop)' },
         { concepto: 'Unidad de la población', aqui: 'k', lohr: 'i', gutierrez: 'k', r: 'una fila' },
         { concepto: 'Variable de interés', aqui: 'y_k', lohr: 'y_i', gutierrez: 'y_k', r: 'agpop$acres92' },
@@ -8807,9 +9268,9 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         { concepto: 'Varianza poblacional', aqui: 'S^2', lohr: 'S^2', gutierrez: 'S^2_{yU}', r: 'var(y)' },
         { concepto: 'Muestra', aqui: 's', lohr: '\\mathcal{S}', gutierrez: 's', r: 'agsrs' },
         { concepto: 'Tamaño de la muestra', aqui: 'n', lohr: 'n', gutierrez: 'n', r: 'nrow(agsrs)' },
-        { concepto: 'Estimador de un parámetro', aqui: '\\hat{\\theta}', lohr: '\\hat{\\theta}', gutierrez: '\\hat{\\theta}', r: 'svymean()' },
-        { concepto: 'Sesgo de un estimador', aqui: 'B(\\hat{\\theta}) = E(\\hat{\\theta}) - \\theta', lohr: '\\text{Bias}', gutierrez: 'B(\\hat{\\theta})', r: '—' },
-        { concepto: 'Error cuadrático medio', aqui: '\\text{ECM} = B^2 + V', lohr: '\\text{MSE}', gutierrez: '\\text{ECM}', r: '—' }
+        { concepto: 'Estimador de un parámetro', aqui: '\\hat{\\theta}', lohr: '\\hat{\\theta}', gutierrez: '\\hat{T}', r: 'svymean()' },
+        { concepto: 'Sesgo de un estimador', aqui: 'B(\\hat{\\theta}) = E(\\hat{\\theta}) - \\theta', lohr: '\\text{Bias}', gutierrez: 'B(\\hat{T})', r: '—' },
+        { concepto: 'Error cuadrático medio', aqui: '\\text{ECM} = B^2 + V', lohr: '\\text{MSE}', gutierrez: '\\text{ECM}(\\hat{T})', r: '—' }
       ]
     };
 
@@ -8879,8 +9340,8 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
                 resumen: 'Los que hacen que la muestra represente a otra población distinta de ' +
                   'la que se quería estudiar.',
                 efecto: 'sesgo', nAyuda: false, donde: 'Capítulos 1 y 8',
-                ejemplo: 'la encuesta telefónica de 2009 no llamó a ningún móvil, y el 24,5 % de ' +
-                  'los hogares solo tenía móvil.',
+                ejemplo: 'la encuesta telefónica de 2009 no llamó a ningún celular, y el 24,5 % de ' +
+                  'los hogares solo tenía celular.',
                 hijos: [
                   {
                     etiqueta: 'Error de cobertura',
@@ -9039,7 +9500,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           { texto: 'Las dos se alejan mucho del censo, en direcciones opuestas: la telefónica sobrerrepresenta a los mayores y el panel online a los jóvenes.', correcta: true,
             retro: 'Eso es. 60,7 años de edad media frente a 33,7. Ninguna de las dos es la población, y por eso las dos necesitan pesos.' },
           { texto: 'La telefónica es probabilística, así que reproduce el censo.', correcta: false,
-            retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a móviles y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
+            retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a celulares y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
           { texto: 'El panel online se parece más al censo porque es más reciente.', correcta: false,
             retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,6 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
           { texto: 'No se pueden comparar porque tienen tamaños distintos.', correcta: false,
