@@ -198,6 +198,9 @@ celdas <- data.frame(
   telPeso  = wt$tel_wgt,  onlinePeso = wt$online_wgt,
   pctTel    = 100 * wt$tel_n / sum(wt$tel_n),
   pctOnline = 100 * wt$online_n / sum(wt$online_n),
+  # con los pesos de calibración, cada celda pesa lo que el censo: por construcción
+  pctTelPond    = 100 * wt$tel_n * wt$tel_wgt / sum(wt$tel_n * wt$tel_wgt),
+  pctOnlinePond = 100 * wt$online_n * wt$online_wgt / sum(wt$online_n * wt$online_wgt),
   pctCenso  = 100 * censo / sum(censo),
   stringsAsFactors = FALSE
 )
@@ -255,13 +258,21 @@ comp <- function(d, v) {
   tb <- prop.table(table(x))
   setNames(as.numeric(tb), names(tb))
 }
+# El mismo reparto, ponderado con los pesos de calibración (`postwt`). Lo usa el simulador del
+# módulo 4 para enseñar qué hace ponderar: iguala las ocho celdas por las que se calibró y deja
+# como estaban las variables por las que no (Fase 5 del plan del cap. 1, lectores ES, CL y VI).
+comp_pond <- function(d, v) {
+  x <- ETIQUETAS[[v]][as.character(d[[v]])]
+  s <- tapply(d$postwt, x, sum)
+  setNames(as.numeric(s / sum(s)), names(s))
+}
 reparto <- function(v) {
   presentes <- union(names(comp(on, v)), names(comp(te, v)))
   niveles <- ORDEN[[v]][ORDEN[[v]] %in% presentes]
   stopifnot(setequal(niveles, presentes))
-  a <- comp(on, v)[niveles]; b <- comp(te, v)[niveles]
-  a[is.na(a)] <- 0; b[is.na(b)] <- 0
-  list(niveles = niveles, online = 100 * as.numeric(a), tel = 100 * as.numeric(b))
+  pone <- function(f, d) { x <- f(d, v)[niveles]; x[is.na(x)] <- 0; 100 * as.numeric(x) }
+  list(niveles = niveles, online = pone(comp, on), tel = pone(comp, te),
+       onlinePond = pone(comp_pond, on), telPond = pone(comp_pond, te))
 }
 
 intell <- list(

@@ -9667,3 +9667,29 @@ estable, referencias, conteos, 0 cifras sin respaldo, código de las 12 páginas
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+### T7.145 — Fase 5 del cap. 1, tarea 5.2: colores, simuladores y una fórmula (2026-11-19)
+
+- **Un significado por color** (lector visual, VI-28), escrito como convención en la apertura del capítulo y en
+  `simuladores.js`: **verde oscuro = la verdad de la población, naranja = lo que da la encuesta o el estimador**, gris
+  = referencias, azul = otras series. Cambian el módulo 1 (cada barra con su papel: real, en el marco, sondeo), el 3
+  (lo que da cada procedimiento, en naranja; el sorteo, en verde), el 4 (el censo pasa a verde; las encuestas,
+  naranja y azul), el 7 (el ECM y la muestra aleatoria pasan a azul) y el 8 (la media poblacional, que era naranja,
+  pasa a verde; las regiones, sin verde ni naranja). Las frases que nombraban un color, y la pregunta 5 de la
+  autoevaluación («las barras verdes son el censo»), dicen ahora lo que se ve.
+- **Los dos selectores del módulo 7** decían un índice (0, 1, 2…) y la barra elegida no se distinguía (VI-10): ahora
+  dicen el tamaño («n = 300», «6 votantes») y su barra se oscurece.
+- **La fórmula del sesgo de no respuesta**, en dos líneas: a 375 px medía 478 px en una caja de 273 y escondía la
+  conclusión (VI-17). Ahora cabe.
+- **El simulador del módulo 4 con y sin pesos.** Mostraba las encuestas sin ponderar, y el texto sacaba de ahí una
+  conclusión sobre lo que hace ponderar (lectores ES, CL y VI). `genera_cap1.R` calcula ahora también los repartos
+  ponderados con `postwt` y las celdas ponderadas, y un selector «sin pesos / con pesos» los muestra: con pesos, las
+  ocho celdas de las dos encuestas igualan al censo (se calibró por ellas); en educación e ingreso la distancia sigue
+  (sin universidad: 23,0 % frente a 12,7 %). La guía del módulo lo cuenta así.
+
+**Verificado** en el navegador a 375 px reales: los colores, los selectores, la barra destacada, las celdas
+ponderadas iguales al censo y la fórmula dentro de su caja; sin errores de KaTeX ni de consola. Auditor y
+`--cierre 1`, generador, reensamblado estable, referencias, conteos, código anotado y de las 12 páginas, 0 cifras sin
+respaldo.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+

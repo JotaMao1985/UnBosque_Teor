@@ -131,7 +131,7 @@
         <p class="simulador-intro">Elige la variable de comparación. Con las ocho celdas de calibración se dispone
           además del censo de 2010 como referencia; con las demás variables solo se pueden comparar las dos encuestas
           entre sí, porque no se calibró por ellas —y esa es justamente la razón por la que los pesos no arreglan el
-          problema.</p>
+          problema—. El segundo selector aplica o quita los pesos de calibración.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:300px;">
           <canvas aria-label="Composición de las dos encuestas frente al censo" role="img"></canvas>
@@ -143,12 +143,13 @@
       <details class="lectura-guiada">
         <summary><i class="fas fa-lightbulb" aria-hidden="true"></i> ¿Qué deberías llevarte de este gráfico?</summary>
         <div class="lectura-guiada-cuerpo">
-          <p><strong>Qué mueves.</strong> El selector cambia la variable por la que se comparan las dos encuestas. Y
-            está partido en dos mitades que conviene no confundir: las ocho celdas de sexo, edad y raza son
+          <p><strong>Qué mueves.</strong> El primer selector cambia la variable por la que se comparan las dos
+            encuestas, y el segundo aplica o quita los pesos de calibración. El primero está partido en dos mitades que conviene no confundir: las ocho celdas de sexo, edad y raza son
             <em>aquellas por las que se calibró</em>; educación, región e ingreso, no.</p>
-          <p><strong>Qué se ve.</strong> Empieza por las celdas y quédate con la impresión. Después cambia a educación o
-            a ingreso, donde no hay censo de referencia y solo se comparan las dos encuestas entre sí: la distancia
-            entre las barras verde y naranja sigue ahí, intacta. Ponderar no acercó las dos muestras a la población en
+          <p><strong>Qué se ve.</strong> Empieza por las celdas sin pesos y quédate con la impresión; después pon los
+            pesos: las tres series se igualan, porque se calibró justo por esas celdas. Ahora cambia a educación o a
+            ingreso, con pesos, donde no hay censo de referencia y solo se comparan las dos encuestas entre sí: la
+            distancia entre las barras naranja y azul sigue ahí. Ponderar no acercó las dos muestras a la población en
             general; las acercó en las variables por las que se ponderó, y en ninguna más.</p>
           <p><strong>Por qué importa.</strong> Un peso de calibración no es un corrector de sesgo: es una promesa
             condicional. Dice «dentro de cada celda, quien contestó se parece a quien no contestó». Si la razón por la
@@ -198,9 +199,10 @@
         $\bar{y}_R$ y una fracción $r$ de la población, y los que no, con media $\bar{y}_M$. Entonces</p>
 
       <div class="formula">
-        $$\bar{y}_U = r\,\bar{y}_R + (1-r)\,\bar{y}_M
-        \qquad\Longrightarrow\qquad
-        \underbrace{\bar{y}_R - \bar{y}_U}_{\text{sesgo}} = (1-r)\,(\bar{y}_R - \bar{y}_M)$$
+        $$\begin{aligned}
+        \bar{y}_U &= r\,\bar{y}_R + (1-r)\,\bar{y}_M \\
+        \Longrightarrow\quad \underbrace{\bar{y}_R - \bar{y}_U}_{\text{sesgo}} &= (1-r)\,(\bar{y}_R - \bar{y}_M)
+        \end{aligned}$$
       </div>
 
       <p>El sesgo es un <strong>producto</strong> de dos factores: cuánta gente falta y cuánto se diferencian. Que sea

@@ -46,6 +46,14 @@
       return g;
     }
     const ENTERO = v => fmtNum(v, 0);
+
+    // Convención de color del capítulo (Fase 5, lector visual VI-28), la misma en todas las gráficas:
+    //   verde oscuro = la verdad de la población · naranja = lo que da la encuesta o el estimador ·
+    //   gris = referencias y contexto · azul = cualquier otra serie.
+    const VERDAD = COLORES_GRAFICO.primario, ENCUESTA = COLORES_GRAFICO.secundario,
+          REFERENCIA = COLORES_GRAFICO.gris, OTRA = COLORES_GRAFICO.terciario;
+    // La barra que el estudiante elige se pinta más oscura que sus vecinas (lector visual, VI-10).
+    const destaca = (n, i, base, oscuro) => Array.from({ length: n }, (_, k) => (k === i ? oscuro : base));
     const PCT_DE_PROPORCION = v => fmtNum(100 * v, 0) + ' %';
 
     function fmtPct(x, d = 1) { return fmtNum(100 * x, d) + ' %'; }
@@ -68,6 +76,8 @@
                    { valor: 0.5, etiqueta: 'umbral de la victoria', color: '#94a3b8' }]
         });
 
+      gBarras.data.datasets[0].backgroundColor = [VERDAD, REFERENCIA, ENCUESTA];
+      gBarras.options.plugins.legend.labels.filter = it => it.datasetIndex !== 0;   // el eje ya dice qué es
       ejes(gBarras, { y: { titulo: 'Apoyo a Roosevelt', formato: PCT_DE_PROPORCION } });
 
       const gCurva = crearGraficoXY(lienzos[1], [], {
@@ -131,13 +141,13 @@
     // ---------------------------------------------------------------
     SIMULADORES['encuestas-intell'] = function (raiz) {
       const IT = D1.intell;
-      const params = { corte: 'celda' };
+      const params = { corte: 'celda', pesos: 'sin' };
       const g = crearGraficoBarras(raiz.querySelector('canvas'), [], [], {
-        etiqueta: 'Censo de 2010', color: COLORES_GRAFICO.gris,
+        etiqueta: 'Censo de 2010', color: VERDAD,
         tituloX: 'Grupo', tituloY: '% del grupo en cada fuente', min: 0, max: 50,
         barrasExtra: [
-          { etiqueta: 'Encuesta telefónica', valores: [], color: COLORES_GRAFICO.primario },
-          { etiqueta: 'Panel online', valores: [], color: COLORES_GRAFICO.secundario }
+          { etiqueta: 'Encuesta telefónica', valores: [], color: ENCUESTA },
+          { etiqueta: 'Panel online', valores: [], color: OTRA }
         ]
       });
       ejes(g, { y: { formato: ENTERO } });
@@ -148,17 +158,21 @@
       const celdas = IT.celdas.map(c =>
         `${CORTO[c.sexo]}·${CORTO[c.edad]}·${CORTO[c.raza]}`);
 
+      // Con pesos, los repartos son los ponderados con los pesos de calibración (genera_cap1.R): las
+      // ocho celdas quedan iguales al censo, por construcción; las demás variables, como estaban.
       function datos() {
+        const pond = params.pesos === 'con';
         if (params.corte === 'celda') {
           return {
             etiquetas: celdas,
             censo: IT.celdas.map(c => c.pctCenso),
-            tel: IT.celdas.map(c => c.pctTel),
-            online: IT.celdas.map(c => c.pctOnline)
+            tel: IT.celdas.map(c => (pond ? c.pctTelPond : c.pctTel)),
+            online: IT.celdas.map(c => (pond ? c.pctOnlinePond : c.pctOnline))
           };
         }
         const r = IT.reparto[params.corte];
-        return { etiquetas: r.niveles, censo: null, tel: r.tel, online: r.online };
+        return { etiquetas: r.niveles, censo: null,
+                 tel: pond ? r.telPond : r.tel, online: pond ? r.onlinePond : r.online };
       }
 
       function pintar() {
@@ -188,7 +202,7 @@
         if (d.censo) {
           const i = d.online.map((v, j) => Math.abs(v - d.censo[j]))
             .reduce((mejor, v, j, a) => (v > a[mejor] ? j : mejor), 0);
-          campos.push({ etiqueta: 'mayor desvío del panel online:',
+          campos.push({ etiqueta: `mayor desvío del panel online (${params.pesos} pesos):`,
                         valor: `${d.etiquetas[i]} (${fmtNum(d.online[i] - d.censo[i], 1)} puntos)` });
         }
         actualizarLectura(raiz.querySelector('.simulador-lectura'), campos);
@@ -203,6 +217,11 @@
           { valor: 'region', texto: 'Región' },
           { valor: 'ingreso', texto: 'Ingreso' }
         ]
+      }, params, pintar);
+      crearSelector(raiz.querySelector('.simulador-controles'), {
+        clave: 'pesos', etiqueta: 'Pesos',
+        opciones: [{ valor: 'sin', texto: 'Sin pesos: la muestra tal como llegó' },
+                   { valor: 'con', texto: 'Con los pesos de calibración' }]
       }, params, pintar);
       pintar();
       return [g];
@@ -373,12 +392,12 @@
     const TAMANOS = [10, 30, 100, 300, 1000, N_AGPOP];
 
     SIMULADORES['sesgo-varianza'] = function (raiz) {
-      const params = { sesgoRel: 5, n: 3 };            // n es un índice de TAMANOS
+      const params = { sesgoRel: 5, n: '3' };          // n: la posición en TAMANOS, como texto del selector
       const lienzos = raiz.querySelectorAll('canvas');
       const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'N' : fmtNum(n, 0)));
 
       const gRecm = crearGraficoBarras(lienzos[0], etiquetas, [], {
-        etiqueta: 'Raíz del ECM (acres)', color: COLORES_GRAFICO.primario,
+        etiqueta: 'Raíz del ECM (acres)', color: OTRA,
         tituloX: 'Tamaño de muestra', tituloY: 'Raíz del ECM (acres)', min: 0, max: 200000
       });
       const gMezcla = crearGraficoBarras(lienzos[1], etiquetas, [], {
@@ -395,13 +414,15 @@
         const recm = ecm.map(Math.sqrt);
         const mezcla = ecm.map(e => (e > 0 ? 100 * sesgo * sesgo / e : 0));
 
+        const i = Number(params.n);
         gRecm.data.datasets[0].data = recm;
+        gRecm.data.datasets[0].backgroundColor = destaca(TAMANOS.length, i, OTRA, '#083344');
         gRecm.options.scales.y.suggestedMax = Math.max(...recm) * 1.2 || 1;
         gRecm.update('none');
         gMezcla.data.datasets[0].data = mezcla;
+        gMezcla.data.datasets[0].backgroundColor = destaca(TAMANOS.length, i, ENCUESTA, '#9a3412');
         gMezcla.update('none');
 
-        const i = params.n;
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'tamaño destacado:', valor: 'n = ' + fmtNum(TAMANOS[i], 0) },
           { etiqueta: 'sesgo:', valor: fmtNum(sesgo, 0) + ' acres' },
@@ -412,10 +433,13 @@
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
-        { clave: 'sesgoRel', etiqueta: 'Sesgo, en % de la media poblacional', min: 0, max: 20, paso: 0.5 },
-        { clave: 'n', etiqueta: 'Tamaño destacado (índice)', min: 0, max: TAMANOS.length - 1, paso: 1 }
+      const controles = raiz.querySelector('.simulador-controles');
+      crearControles(controles, [
+        { clave: 'sesgoRel', etiqueta: 'Sesgo, en % de la media poblacional', min: 0, max: 20, paso: 0.5 }
       ], params, pintar);
+      crearSelector(controles, { clave: 'n', etiqueta: 'Tamaño que se detalla abajo (barra oscura)',
+        opciones: TAMANOS.map((n, k) => ({ valor: String(k),
+          texto: n === N_AGPOP ? 'N = 3 078: el censo' : 'n = ' + fmtNum(n, 0) })) }, params, pintar);
       pintar();
       return [gRecm, gMezcla];
     };
@@ -426,12 +450,12 @@
     SIMULADORES['n-grande-no-salva'] = function (raiz) {
       const ET = D1.errorTotal;
       const NS = [2, 3, 4, 5, 6, 7, 8, 10, 15, 20, 30, 50, 100, 300, 1000];
-      const params = { i: 4 };
+      const params = { i: '4' };                     // posición en NS, como texto del selector
 
       const g = crearGraficoBarras(raiz.querySelector('canvas'),
         NS.map(n => String(n)), NS.map(n => Math.sqrt(ET.S2 / n)), {
           etiqueta: 'muestra aleatoria de n',
-          color: COLORES_GRAFICO.primario,
+          color: OTRA,
           tituloX: 'n de la muestra aleatoria', tituloY: 'Raíz del ECM (proporción)', min: 0, max: 0.4,
           lineas: [{ valor: ET.recmDigest,
                      etiqueta: 'el sondeo del Digest',
@@ -440,8 +464,10 @@
       ejes(g, { y: { formato: v => fmtNum(v, 2) } });
 
       function pintar() {
-        const n = NS[params.i];
+        const i = Number(params.i), n = NS[i];
         const recm = Math.sqrt(ET.S2 / n);
+        g.data.datasets[0].backgroundColor = destaca(NS.length, i, OTRA, '#083344');
+        g.update('none');
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'muestra aleatoria de:', valor: fmtNum(n, 0) + ' votantes' },
           { etiqueta: 'su RECM:', valor: fmtNum(recm, 4) },
@@ -453,9 +479,9 @@
         ]);
       }
 
-      crearControles(raiz.querySelector('.simulador-controles'), [
-        { clave: 'i', etiqueta: 'Tamaño de la muestra aleatoria (índice)', min: 0, max: NS.length - 1, paso: 1 }
-      ], params, pintar);
+      crearSelector(raiz.querySelector('.simulador-controles'), { clave: 'i',
+        etiqueta: 'Tamaño de la muestra aleatoria (barra oscura)',
+        opciones: NS.map((n, k) => ({ valor: String(k), texto: fmtNum(n, 0) + ' votantes' })) }, params, pintar);
       pintar();
       return [g];
     };
@@ -624,15 +650,15 @@
         tituloX: 'Valor', tituloY: 'Número de unidades'
       });
       ejes(g, { y: { formato: ENTERO }, x: { formato: ENTERO } });
-      const COLOR_REGION = { W: '#012820', NC: '#FF6600', S: '#0e7490', NE: '#94a3b8' };
+      const COLOR_REGION = { W: '#0e7490', NC: '#7c3aed', S: '#a16207', NE: '#94a3b8' };
 
       function pintar() {
         let series, lectura, xMax, tituloX;
         if (params.cual === 'agpop') {
           const h = D1.agpop.hist;
           const alto = Math.max(...h.conteo) * 1.05;
-          series = [serieHistograma(h, 'acres92 (3 078 condados)', COLORES_GRAFICO.primario),
-                    serieVertical(D1.agpop.media, alto, 'media poblacional', COLORES_GRAFICO.secundario)];
+          series = [serieHistograma(h, 'acres92 (3 078 condados)', OTRA),
+                    serieVertical(D1.agpop.media, alto, 'media poblacional', VERDAD)];
           xMax = h.tope; tituloX = 'Superficie en explotaciones agrícolas, 1992 (acres)';
           lectura = [
             { etiqueta: 'N =', valor: fmtNum(D1.agpop.N, 0) + ' condados' },
@@ -647,7 +673,7 @@
             .map(h => Math.max(...h.conteo))) * 1.05;
           series = D1.agpop.regiones.map(r =>
             serieHistograma(D1.agpop.histRegion[r.region], r.nombre, COLOR_REGION[r.region]));
-          series.push(serieVertical(D1.agpop.media, alto, 'media global', '#dc2626'));
+          series.push(serieVertical(D1.agpop.media, alto, 'media global', VERDAD));
           xMax = D1.agpop.hist.tope; tituloX = 'Superficie en explotaciones agrícolas, 1992 (acres)';
           lectura = D1.agpop.regiones.map(r => ({
             etiqueta: r.nombre + ':', valor: `N = ${fmtNum(r.N, 0)}, media = ${fmtNum(r.media, 0)}`
@@ -656,7 +682,7 @@
           const h = D1.biglucy.hist;
           const alto = Math.max(...h.conteo) * 1.05;
           series = [serieHistograma(h, 'Ingreso (85 296 empresas)', COLORES_GRAFICO.terciario),
-                    serieVertical(D1.biglucy.ingresoMedio, alto, 'media poblacional', COLORES_GRAFICO.secundario)];
+                    serieVertical(D1.biglucy.ingresoMedio, alto, 'media poblacional', VERDAD)];
           xMax = h.tope; tituloX = 'Ingreso de la empresa';
           lectura = [
             { etiqueta: 'N =', valor: fmtNum(D1.biglucy.N, 0) + ' empresas' },
@@ -700,11 +726,11 @@
       const params = { proc: 'directorio', acepta: 0.7 };
       const etiquetas = Array.from({ length: N_ARQ }, (_, i) => String(i + 1));
       const g = crearGraficoBarras(raiz.querySelector('canvas'), etiquetas, etiquetas.map(() => 0), {
-        etiqueta: 'veces que entró', color: COLORES_GRAFICO.primario,
+        etiqueta: 'veces que entró', color: ENCUESTA,
         tituloX: 'Posición en el directorio', tituloY: '% de repeticiones',
         min: 0, max: 100,
         lineas: [{ valor: 100 * N_MUESTRA / N_ARQ, etiqueta: 'sorteo de 8 de 14',
-                   color: COLORES_GRAFICO.secundario }]
+                   color: VERDAD }]
       });
       ejes(g, { y: { formato: ENTERO } });
 
@@ -1056,7 +1082,7 @@
         modulo: 4,
         alto: 260,
         descripcionGrafico: 'Composición por sexo, edad y raza de la encuesta telefónica y del panel online, frente al censo de 2010',
-        pregunta: 'Las barras grises son el censo de 2010. ¿Qué se puede afirmar de las dos encuestas?',
+        pregunta: 'Las barras verdes son el censo de 2010. ¿Qué se puede afirmar de las dos encuestas?',
         pista: 'Mira las cuatro celdas rotuladas «&lt;44» y compáralas con las cuatro «≥44» en las tres series.',
         dibujar: canvas => {
           const c = DATOS_CAP1.intell.celdas;
@@ -1065,10 +1091,10 @@
           return ejes(crearGraficoBarras(canvas,
             c.map(x => `${CORTO[x.sexo]}·${CORTO[x.edad]}·${CORTO[x.raza]}`),
             c.map(x => x.pctCenso), {
-              etiqueta: 'Censo 2010', color: COLORES_GRAFICO.gris, min: 0, max: 50,
+              etiqueta: 'Censo 2010', color: VERDAD, min: 0, max: 50,
               barrasExtra: [
-                { etiqueta: 'Telefónica', valores: c.map(x => x.pctTel), color: COLORES_GRAFICO.primario },
-                { etiqueta: 'Online', valores: c.map(x => x.pctOnline), color: COLORES_GRAFICO.secundario }
+                { etiqueta: 'Telefónica', valores: c.map(x => x.pctTel), color: ENCUESTA },
+                { etiqueta: 'Online', valores: c.map(x => x.pctOnline), color: OTRA }
               ]
             }), { y: { titulo: '% del grupo en cada fuente', formato: ENTERO } });
         },
