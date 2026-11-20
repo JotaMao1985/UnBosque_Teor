@@ -13,8 +13,40 @@
       const s = Math.abs(x).toFixed(d);
       const partes = s.split('.');
       const entero = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-      return (x < 0 ? '−' : '') + entero + (partes[1] ? ',' + partes[1] : '');
+      // El signo, después de redondear: un sesgo de −6·10⁻¹¹ no es «−0» (lector visual, VI-09).
+      const negativo = x < 0 && Number(s) !== 0;
+      return (negativo ? '−' : '') + entero + (partes[1] ? ',' + partes[1] : '');
     }
+
+    // Ejes de una gráfica, a la manera del capítulo (Fase 5 del plan, lector visual VI-05 a VI-14):
+    //   · el eje de valores lleva título con su unidad, y sus números se escriben como en la prosa
+    //     (espacio fino de miles, coma decimal), no «800,000»;
+    //   · un eje de categorías no esconde rótulos cuando no caben: los inclina;
+    //   · la leyenda, más compacta, para que en un teléfono no se coma el área de dibujo.
+    function ejes(g, { y, x } = {}) {
+      const ey = g.options.scales.y, ex = g.options.scales.x;
+      if (y) {
+        if (y.titulo) ey.title = { display: true, text: y.titulo, font: { family: 'Montserrat', size: 11 } };
+        if (y.formato) ey.ticks.callback = y.formato;
+      }
+      if (x && x.formato) ex.ticks.callback = x.formato;
+      if (ex.type !== 'linear') Object.assign(ex.ticks, { autoSkip: false, maxRotation: 60, minRotation: 0 });
+      // En un teléfono la leyenda y los rótulos inclinados se comen el alto: el contenedor crece 100 px
+      // solo allí, para que el área de dibujo no quede en una franja (lector visual, VI-16).
+      const caja = g.canvas.parentNode;
+      if (window.matchMedia('(max-width: 767px)').matches && caja && caja.classList.contains('grafico-wrapper')
+          && !caja.dataset.crecida) {
+        caja.style.height = (parseFloat(caja.style.height || caja.offsetHeight) + 100) + 'px';
+        caja.dataset.crecida = '1';
+        g.resize();
+      }
+      const ley = g.options.plugins && g.options.plugins.legend;
+      if (ley && ley.labels) Object.assign(ley.labels, { boxWidth: 12, font: { family: 'Montserrat', size: 11 } });
+      g.update('none');
+      return g;
+    }
+    const ENTERO = v => fmtNum(v, 0);
+    const PCT_DE_PROPORCION = v => fmtNum(100 * v, 0) + ' %';
 
     function fmtPct(x, d = 1) { return fmtNum(100 * x, d) + ' %'; }
 
@@ -27,7 +59,7 @@
       const lienzos = raiz.querySelectorAll('canvas');
 
       const gBarras = crearGraficoBarras(lienzos[0],
-        ['Apoyo real', 'Apoyo dentro del marco', 'Lo que ve el sondeo'],
+        ['Real', 'En el marco', 'Sondeo'],
         [DG.pEleccion, 0, 0], {
           etiqueta: 'Apoyo a Roosevelt', color: COLORES_GRAFICO.primario,
           min: 0, max: 0.8,
@@ -36,10 +68,13 @@
                    { valor: 0.5, etiqueta: 'umbral de la victoria', color: '#94a3b8' }]
         });
 
+      ejes(gBarras, { y: { titulo: 'Apoyo a Roosevelt', formato: PCT_DE_PROPORCION } });
+
       const gCurva = crearGraficoXY(lienzos[1], [], {
         tituloX: 'Brecha de cobertura  d = p_F − p_C',
         tituloY: 'Razón de respuesta  ρ', xMin: 0, xMax: 0.4
       });
+      ejes(gCurva, { y: { formato: v => fmtNum(v, 2) }, x: { formato: v => fmtNum(v, 2) } });
 
       function pintar() {
         const p = DG.pEleccion;
@@ -60,7 +95,7 @@
           return DG.pSondeo * (1 - pc) / (pc * (1 - DG.pSondeo));
         });
         gCurva.data.datasets = [
-          { type: 'line', label: 'combinaciones que reproducen el sondeo',
+          { type: 'line', label: 'reproducen el 42,9 %',
             data: brechas.map((d, i) => ({ x: d, y: rhos[i] })),
             borderColor: COLORES_GRAFICO.secundario, borderWidth: 2,
             pointRadius: 0, fill: false },
@@ -99,12 +134,13 @@
       const params = { corte: 'celda' };
       const g = crearGraficoBarras(raiz.querySelector('canvas'), [], [], {
         etiqueta: 'Censo de 2010', color: COLORES_GRAFICO.gris,
-        tituloX: 'Grupo', min: 0, max: 50,
+        tituloX: 'Grupo', tituloY: '% del grupo en cada fuente', min: 0, max: 50,
         barrasExtra: [
           { etiqueta: 'Encuesta telefónica', valores: [], color: COLORES_GRAFICO.primario },
-          { etiqueta: 'Panel online (Mechanical Turk)', valores: [], color: COLORES_GRAFICO.secundario }
+          { etiqueta: 'Panel online', valores: [], color: COLORES_GRAFICO.secundario }
         ]
       });
+      ejes(g, { y: { formato: ENTERO } });
 
       // Etiquetas cortas: los nombres completos de las ocho celdas no caben.
       const CORTO = { Female: 'M', Male: 'H', Young: '<44', Old: '≥44',
@@ -182,15 +218,17 @@
 
       const g = crearGraficoBarras(raiz.querySelector('canvas'),
         R.map(r => r.nombre), R.map(r => r.media), {
-          etiqueta: 'Media de acres92 en la región', color: COLORES_GRAFICO.gris,
-          tituloX: 'Clase de respuesta', min: 0, max: 800000,
+          etiqueta: 'media de la región', color: COLORES_GRAFICO.gris,
+          tituloX: 'Clase de respuesta', tituloY: 'Media de acres92 (acres)', min: 0, max: 800000,
           lineas: [
-            { valor: D1.agpop.media, etiqueta: 'media real de los 3 078 condados',
+            { valor: D1.agpop.media, etiqueta: 'media real',
               color: COLORES_GRAFICO.primario },
             { valor: D1.agpop.media, etiqueta: 'media de los que responden',
               color: COLORES_GRAFICO.secundario }
           ]
         });
+
+      ejes(g, { y: { formato: ENTERO } });
 
       function pintar() {
         const r = R.map(x => params['r_' + x.region]);
@@ -337,16 +375,18 @@
     SIMULADORES['sesgo-varianza'] = function (raiz) {
       const params = { sesgoRel: 5, n: 3 };            // n es un índice de TAMANOS
       const lienzos = raiz.querySelectorAll('canvas');
-      const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'n = N = 3 078' : 'n = ' + fmtNum(n, 0)));
+      const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'N' : fmtNum(n, 0)));
 
       const gRecm = crearGraficoBarras(lienzos[0], etiquetas, [], {
         etiqueta: 'Raíz del ECM (acres)', color: COLORES_GRAFICO.primario,
-        tituloX: 'Tamaño de muestra', min: 0, max: 200000
+        tituloX: 'Tamaño de muestra', tituloY: 'Raíz del ECM (acres)', min: 0, max: 200000
       });
       const gMezcla = crearGraficoBarras(lienzos[1], etiquetas, [], {
         etiqueta: '% del ECM que es sesgo²', color: COLORES_GRAFICO.secundario,
-        tituloX: 'Tamaño de muestra', min: 0, max: 100
+        tituloX: 'Tamaño de muestra', tituloY: '% del ECM', min: 0, max: 100
       });
+      ejes(gRecm, { y: { formato: ENTERO } });
+      ejes(gMezcla, { y: { formato: ENTERO } });
 
       function pintar() {
         const sesgo = params.sesgoRel / 100 * D1.agpop.media;
@@ -390,13 +430,14 @@
 
       const g = crearGraficoBarras(raiz.querySelector('canvas'),
         NS.map(n => String(n)), NS.map(n => Math.sqrt(ET.S2 / n)), {
-          etiqueta: 'RECM de un muestreo aleatorio de n votantes',
+          etiqueta: 'muestra aleatoria de n',
           color: COLORES_GRAFICO.primario,
-          tituloX: 'n de la muestra aleatoria', min: 0, max: 0.4,
+          tituloX: 'n de la muestra aleatoria', tituloY: 'Raíz del ECM (proporción)', min: 0, max: 0.4,
           lineas: [{ valor: ET.recmDigest,
-                     etiqueta: 'RECM del sondeo de 2 266 566 papeletas',
+                     etiqueta: 'el sondeo del Digest',
                      color: COLORES_GRAFICO.secundario }]
         });
+      ejes(g, { y: { formato: v => fmtNum(v, 2) } });
 
       function pintar() {
         const n = NS[params.i];
@@ -580,8 +621,9 @@
     SIMULADORES['poblaciones'] = function (raiz) {
       const params = { cual: 'agpop' };
       const g = crearGraficoXY(raiz.querySelector('canvas'), [], {
-        tituloX: 'Valor', tituloY: 'Unidades'
+        tituloX: 'Valor', tituloY: 'Número de unidades'
       });
+      ejes(g, { y: { formato: ENTERO }, x: { formato: ENTERO } });
       const COLOR_REGION = { W: '#012820', NC: '#FF6600', S: '#0e7490', NE: '#94a3b8' };
 
       function pintar() {
@@ -613,7 +655,7 @@
         } else {
           const h = D1.biglucy.hist;
           const alto = Math.max(...h.conteo) * 1.05;
-          series = [serieHistograma(h, 'Income (85 296 empresas)', COLORES_GRAFICO.terciario),
+          series = [serieHistograma(h, 'Ingreso (85 296 empresas)', COLORES_GRAFICO.terciario),
                     serieVertical(D1.biglucy.ingresoMedio, alto, 'media poblacional', COLORES_GRAFICO.secundario)];
           xMax = h.tope; tituloX = 'Ingreso de la empresa';
           lectura = [
@@ -629,6 +671,7 @@
         g.options.scales.x.min = 0;
         g.options.scales.x.max = xMax;
         g.options.scales.x.title.text = tituloX;
+        g.options.scales.y.title.text = params.cual === 'biglucy' ? 'Número de empresas' : 'Número de condados';
         g.update('none');
         actualizarLectura(raiz.querySelector('.simulador-lectura'), lectura);
       }
@@ -657,12 +700,13 @@
       const params = { proc: 'directorio', acepta: 0.7 };
       const etiquetas = Array.from({ length: N_ARQ }, (_, i) => String(i + 1));
       const g = crearGraficoBarras(raiz.querySelector('canvas'), etiquetas, etiquetas.map(() => 0), {
-        etiqueta: 'entró (% de las repeticiones)', color: COLORES_GRAFICO.primario,
+        etiqueta: 'veces que entró', color: COLORES_GRAFICO.primario,
         tituloX: 'Posición en el directorio', tituloY: '% de repeticiones',
         min: 0, max: 100,
         lineas: [{ valor: 100 * N_MUESTRA / N_ARQ, etiqueta: 'sorteo de 8 de 14',
                    color: COLORES_GRAFICO.secundario }]
       });
+      ejes(g, { y: { formato: ENTERO } });
 
       function simular() {
         const azar = azarEstable(semillaDeTexto('arquitectos-' + params.proc + '-' + params.acepta));
@@ -733,7 +777,7 @@
     SIMULADORES['balanza'] = function (raiz) {
       const mu = D1.agpop.media, S2 = D1.agpop.S2, N = D1.agpop.N;
       const params = { b: 5, ruido: 50 };              // b en % de la media; ruido, σ en % de S
-      const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'n = N' : 'n = ' + fmtNum(n, 0)));
+      const etiquetas = TAMANOS.map(n => (n === N_AGPOP ? 'N' : fmtNum(n, 0)));
       const serie = (etiqueta, color, extra) => Object.assign({ label: etiqueta, data: TAMANOS.map(() => 0),
         borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 3 }, extra || {});
       const g = crearGraficoLinea(raiz.querySelector('canvas'), etiquetas, [
@@ -748,6 +792,7 @@
       // El eje se fija en ±20 %: con n = 10 el intervalo pasa del ±90 % y aplastaría lo que importa, que es
       // dónde se queda la banda cuando n crece. Lo que se sale del eje se corta.
       g.options.scales.y.min = -20; g.options.scales.y.max = 20;
+      ejes(g, { y: { formato: ENTERO } });
       g.options.scales.y.title = { display: true, text: 'error en % de la media verdadera',
                                    font: { family: 'Montserrat', size: 11 } };
       g.options.scales.x.title = { display: true, text: 'tamaño de la muestra',
@@ -1009,7 +1054,7 @@
       {
         tipo: 'grafico',
         modulo: 4,
-        alto: 220,
+        alto: 260,
         descripcionGrafico: 'Composición por sexo, edad y raza de la encuesta telefónica y del panel online, frente al censo de 2010',
         pregunta: 'Las barras grises son el censo de 2010. ¿Qué se puede afirmar de las dos encuestas?',
         pista: 'Mira las cuatro celdas rotuladas «&lt;44» y compáralas con las cuatro «≥44» en las tres series.',
@@ -1017,7 +1062,7 @@
           const c = DATOS_CAP1.intell.celdas;
           const CORTO = { Female: 'M', Male: 'H', Young: '<44', Old: '≥44',
                           White: 'blanca', Nonwhite: 'no blanca' };
-          return crearGraficoBarras(canvas,
+          return ejes(crearGraficoBarras(canvas,
             c.map(x => `${CORTO[x.sexo]}·${CORTO[x.edad]}·${CORTO[x.raza]}`),
             c.map(x => x.pctCenso), {
               etiqueta: 'Censo 2010', color: COLORES_GRAFICO.gris, min: 0, max: 50,
@@ -1025,7 +1070,7 @@
                 { etiqueta: 'Telefónica', valores: c.map(x => x.pctTel), color: COLORES_GRAFICO.primario },
                 { etiqueta: 'Online', valores: c.map(x => x.pctOnline), color: COLORES_GRAFICO.secundario }
               ]
-            });
+            }), { y: { titulo: '% del grupo en cada fuente', formato: ENTERO } });
         },
         opciones: [
           { texto: 'Las dos se alejan mucho del censo, en direcciones opuestas: la telefónica sobrerrepresenta a los mayores y el panel online a los jóvenes.', correcta: true,

@@ -9637,3 +9637,33 @@ de las 12 páginas.
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
 
+**Fase 4 publicada el 2026-11-16** con el visto bueno de Javier en cada paso (T7.139 a T7.143): `origin/main` `fac37de` →
+`211565d` por avance rápido, sin mover el `main` local; `gh-pages` `f935af6` → `d0e1dd0`, árbol `211565d:sitio` sobre su
+punta; invariante en verde. Pages construido; los 26 archivos HTML y MD servidos, byte a byte los de la rama. En el sitio
+público: 11 simuladores, 90 citas escritas y enlazadas, Blumberg en «pp. 1–3», 11 entradas en el pie (ninguna
+desborda encajada en 300 px), 0 errores de KaTeX y de consola en los diez módulos. Chrome no bajó de 1029 px de ancho;
+el ancho de móvil se probó a 375 px reales sobre estos mismos bytes, en local.
+
+### T7.144 — Fase 5 del cap. 1, tarea 5.1: ejes y rótulos de las gráficas (2026-11-17)
+
+Primera de las tres tareas de la Fase 5 (gráficas), con los pendientes del lector visual de la auditoría (VI).
+Una función nueva del capítulo, `ejes()` en `simuladores.js`, se aplica a las once gráficas (las diez de los
+simuladores y la de la autoevaluación):
+- **el eje de valores lleva título con su unidad** en todas (VI-12): apoyo a Roosevelt, % del grupo en cada fuente,
+  media de acres92 (acres), raíz del ECM (acres o proporción), % del ECM, número de condados o de empresas…;
+- **los números de los ejes se escriben como en la prosa**, con espacio fino de miles y coma decimal: «800 000», no
+  «800,000» (VI-14);
+- **ningún rótulo de categoría se esconde** en pantallas estrechas: se inclinan (VI-05 a VI-07; la gráfica de la
+  pregunta 5 de la autoevaluación muestra ya sus 8 grupos);
+- **leyendas y rótulos más cortos**, para que no se corten a 375 px (VI-08), y en un teléfono cada gráfica gana
+  100 px de alto: el área de dibujo pasa de 83–168 px a 185–268 px (VI-16). En el escritorio solo crecen 30 px.
+- **«−0 acres»** (VI-09): el formateador decidía el signo antes de redondear; ahora dice «0 acres».
+- **«Income»** pasa a «Ingreso» (VI-27). Los demás rótulos en inglés que citaba el lector ya se habían traducido en
+  la Fase 2.
+
+**Verificado** en el navegador con el ancho comprobado (375 px reales y 1024 px): las once gráficas con título,
+números a la española y todos sus rótulos; sin desbordes ni errores. Auditor y `--cierre 1`, generador, reensamblado
+estable, referencias, conteos, 0 cifras sin respaldo, código de las 12 páginas.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
