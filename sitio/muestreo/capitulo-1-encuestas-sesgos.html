@@ -3528,6 +3528,24 @@
       color: #C2410C;
     }
 
+    /* El rótulo «MÓDULO N» (2026-11-19, VI-22 de la auditoría del capítulo 1).
+       En naranja de marca daba 2,94 sobre blanco; el mínimo es 4,5. La regla
+       de arriba para .rotulo no lo alcanzaba: el rótulo es un div con
+       text-secondary, uppercase y tracking-wide, combinación que nada más usa. */
+    .text-secondary.uppercase.tracking-wide {
+      color: #C2410C;
+    }
+
+    /* El mismo naranja, en texto de 10-11 px de dos componentes: las etiquetas
+       del ciclo (2,94 sobre blanco; 2,81 sobre el gris del panel) y las claves
+       de la rúbrica (2,94). Las variantes sobre fondo verde oscuro (etapa
+       elegida, criterio activo) pesan más y conservan su tono claro. */
+    .ciclo-numero,
+    .ciclo-vuelta .ciclo-etiqueta,
+    .rubrica-criterio-clave {
+      color: #C2410C;
+    }
+
   </style>
 </head>
 

@@ -9691,5 +9691,30 @@ ponderadas iguales al censo y la fórmula dentro de su caja; sin errores de KaTe
 `--cierre 1`, generador, reensamblado estable, referencias, conteos, código anotado y de las 12 páginas, 0 cifras sin
 respaldo.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, commit `21129f5`.
 
+### T7.146 — Fase 5 del cap. 1, tarea 5.3: el contraste del rótulo «MÓDULO N» (2026-11-19)
+
+- **El defecto (VI-22).** El rótulo naranja que encabeza cada módulo daba 2,94 sobre blanco; el mínimo para texto de
+  14 px es 4,5. El arreglo de T7.133 (`retropropaga_movil_y_jerarquia.py`) apuntaba a `.rotulo` y `.sidebar-title`,
+  pero el rótulo no lleva ninguna de las dos clases: es un `div` con `text-secondary uppercase tracking-wide`, y siguió
+  en `#FF6600` en las diez páginas.
+- **El arreglo**, en la plantilla y por `ensamblado/retropropaga_rotulo_modulo.py` (idempotente): una regla para
+  `.text-secondary.uppercase.tracking-wide`, combinación que solo usan los 117 rótulos, con el mismo `#C2410C` de
+  aquel arreglo: **5,18** sobre blanco. Va justo detrás de la regla de T7.133 y no ante el cierre de `<style>`, porque
+  seis páginas añaden ahí su propia hoja al ensamblarse. Toca la plantilla, los ocho capítulos, el preparcial y el
+  proyecto; el laboratorio πPT y las portadas no tienen rótulo de módulo.
+- **Reensamblar** los ocho capítulos, el preparcial y el proyecto da byte a byte lo mismo que el parche.
+
+**Verificado** en el navegador, módulo por módulo: los 117 rótulos de las diez páginas en `rgb(194, 65, 12)`, 5,18;
+en el capítulo 1 también a 375 px reales, sin desbordes. Protocolo en verde (generador, auditor y `--cierre 1`,
+arnés, referencias, conteos, 0 cifras sin respaldo, código de las 12 páginas).
+
+**También, con el visto bueno de Javier (21 nov):** el barrido de la verificación encontró el mismo naranja en texto
+de 10–11 px de dos componentes de la plantilla, en los capítulos 7 (M9) y 8 (M8): las etiquetas del ciclo
+(`.ciclo-numero`, 2,94; `.ciclo-vuelta .ciclo-etiqueta`, 2,81 sobre el gris del panel) y las claves de la rúbrica
+(`.rubrica-criterio-clave`, 2,94). Pasan al mismo `#C2410C` en la misma regla: 5,18 y 4,95. Sus variantes sobre
+fondo verde oscuro (etapa elegida, criterio activo) pesan más y conservan su tono claro (9,86 y 9,04). Medido en
+las diez páginas, módulo por módulo: ningún texto de menos de 24 px queda en `#FF6600`.
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
