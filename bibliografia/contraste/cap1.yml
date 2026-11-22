@@ -1157,13 +1157,18 @@ afirmaciones:
   tipo: atribucion
   afirmacion: >-
     El ejercicio 2 adapta el ejercicio 2 de la §1.7 de Lohr (1999): uno de cada diez fondos mutuos de las listas de un periódico.
-  hash_texto: 73732efec5b1c9c4
-  veredicto: respaldada
+  hash_texto: 4b6a712b18190ad3
+  veredicto: con-matiz
   motivo: >-
-    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
-  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
-  fecha: 2026-11-16
+    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respaldó. La 6.3 (21 nov) añadió
+    al enunciado el supuesto de los 1 250 fondos y se volvió a leer.
+  matiz: >-
+    La situación es la del libro (cada décimo fondo de las páginas de fondos mutuos del periódico); la cifra
+    de 1 250, la palabra «diseño» y la pregunta de si el problema está en cómo o en de dónde se seleccionó son
+    del curso, como anuncia «Adaptado de». El libro pide población objetivo, marco, unidades y fuentes de sesgo.
+  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario); enunciado retocado en la 6.3
+  verificado_por: relectura del lector FU de la 6.3 (Sonnet 5.5, contexto limpio), sobre el enunciado nuevo
+  fecha: 2026-11-21
   fuentes:
   - clave: lohr1999sampling
     loc: '§1.7'
@@ -1172,7 +1177,7 @@ afirmaciones:
   - clave: lohr1999sampling
     loc: '§1.7'
     pagina: 17
-    hash_pasaje: b5e592dc17257e99
+    hash_pasaje: cf51211e676542dc
 
 - id: c1-m10-03
   tipo: atribucion

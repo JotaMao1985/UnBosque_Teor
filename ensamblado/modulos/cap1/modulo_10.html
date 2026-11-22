@@ -103,7 +103,8 @@
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado" data-afirma="c1-m10-02"><span class="ejercicio-numero">2.</span>Una estudiante quiere estimar el
             porcentaje de fondos mutuos que subieron de precio la semana pasada. Toma <strong>cada décimo fondo</strong>
-            de las listas publicadas en un periódico. Identifica el diseño y las fuentes de error, y decide: ¿el
+            de las listas publicadas en un periódico; supón que esas listas tienen 1 250 fondos. Identifica el
+            diseño y las fuentes de error, y decide: ¿el
             problema está en cómo seleccionó o en de dónde seleccionó? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e2-pista">
@@ -137,7 +138,7 @@
                 <pre><code class="language-python">⟦PS2⟧</code></pre>
               </div>
             </div>
-            <p>Todo fondo de la lista tiene $\pi_k = 1/10$, y las probabilidades suman el tamaño de muestra esperado.
+            <p>Todo fondo de la lista tiene $\pi_k = 1/10$, y las probabilidades suman 125, el tamaño de muestra esperado.
               Es un diseño probabilístico correcto, y en el capítulo 2 se verá que además suele ser <em>más</em>
               preciso que el aleatorio simple cuando la lista viene ordenada.</p>
             <p style="margin-bottom:0;">El defecto está antes: si el periódico solo publica los fondos por encima de
@@ -167,8 +168,17 @@
               por los «no entregables»: ¿qué tipo de persona tiene una dirección desactualizada?</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap1-e3-sol" hidden>
-            <p><strong>Se retiene el 48,16 % de las citaciones enviadas, y las tres pérdidas van en la misma dirección: hacia jurados
-              más estables económicamente y con más arraigo residencial.</strong></p>
+            <p><strong>Se retiene el 48,16 % de las citaciones enviadas. De lo que se pierde, solo los no calificados
+              no sesgan; lo demás empuja en la misma dirección: hacia jurados más estables económicamente y con más
+              arraigo residencial.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> las personas del condado que pueden servir como jurado.</li>
+              <li><strong>Marco:</strong> la lista combinada de votantes registrados y conductores con licencia.</li>
+              <li><strong>Unidad de muestreo:</strong> el registro de esa lista, al que se envía la citación. Si al
+                combinar las dos listas no se quitan los duplicados, quien vota y además conduce aparece dos veces y
+                tiene más probabilidad de ser citado.</li>
+              <li><strong>Unidad de observación:</strong> la persona citada.</li>
+            </ul>
             <div class="code-tabs">
               <div class="code-tabs-nav" role="tablist" aria-label="El flujo de las citaciones, del marco a la muestra">
                 <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
@@ -181,14 +191,15 @@
                 <pre><code class="language-python">⟦PS3⟧</code></pre>
               </div>
             </div>
+            <p>Las fuentes de error, escalón por escalón:</p>
             <ul>
               <li><strong>No cobertura del marco (antes de las 100 300):</strong> quien no vota <em>ni</em> conduce no
                 está en la lista. Suele ser gente muy pobre o muy mayor.</li>
-              <li><strong>No entregables (23 %):</strong> direcciones desactualizadas, es decir, alta movilidad
+              <li><strong>No entregables (22,93 %):</strong> direcciones desactualizadas, es decir, alta movilidad
                 residencial: jóvenes y arrendatarios.</li>
-              <li><strong>No calificados (7 %):</strong> criterio legal, no un sesgo del diseño; pero conviene
+              <li><strong>No calificados (6,98 %):</strong> criterio legal, no un sesgo del diseño; pero conviene
                 distinguirlos de los anteriores, porque estos <em>no</em> pertenecen a la población objetivo.</li>
-              <li><strong>Excusados (21,9 %):</strong> por salud o por dificultad económica. Quien no puede permitirse
+              <li><strong>Excusados (21,93 %):</strong> por salud o por dificultad económica. Quien no puede permitirse
                 faltar al trabajo se excusa, y queda fuera.</li>
             </ul>
             <p style="margin-bottom:0;">La lección de diseño es que <strong>no todas las pérdidas son iguales</strong>.
@@ -219,6 +230,14 @@
           <div class="ejercicio-panel solucion" id="cap1-e4-sol" hidden>
             <p><strong>Las probabilidades suman 8, como debe ser, y aun así el diseño es inservible: seis arquitectos
               tienen $\pi_k = 0$.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> los 14 arquitectos de la ciudad.</li>
+              <li><strong>Marco:</strong> el directorio telefónico, en su orden. Un arquitecto que no figurara en él
+                no tendría ninguna oportunidad de salir.</li>
+              <li><strong>Unidad de muestreo y de observación:</strong> el arquitecto. Aquí coinciden.</li>
+              <li><strong>Fuentes de error:</strong> una selección que no es probabilística, porque el orden del
+                directorio decide quién entra, y, si alguno no acepta, autoselección. Las dos se explican abajo.</li>
+            </ul>
             <div class="code-tabs">
               <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión de los catorce arquitectos">
                 <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>

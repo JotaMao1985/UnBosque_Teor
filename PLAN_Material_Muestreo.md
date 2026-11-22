@@ -9746,7 +9746,7 @@ con su pista y su retroalimentación; a 375 px reales sin desbordes; consola lim
 auditor y `--cierre 1`, arnés, reensamblado estable, referencias, conteos, 0 cifras sin respaldo, código de las 12
 páginas, `node --check`).
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, commit `7ce9a80`.
 
 ### T7.148 — Fase 6 del cap. 1, tarea 6.2: el auditor del módulo 6, con distractores (2026-11-21)
 
@@ -9768,5 +9768,32 @@ páginas, `node --check`).
 sobra 1»), completo con un discutible (reformulación), cambio de ítem que limpia las casillas; a 375 px reales sin
 desbordes; consola limpia. Protocolo en verde (auditor y `--cierre 1`, reensamblado estable, conteos, 0 cifras sin
 respaldo, `node --check`).
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, commit `2ca61f8`.
+
+### T7.149 — Fase 6 del cap. 1, tarea 6.3: los ejercicios dan todo lo que la solución usa (2026-11-21)
+
+- **El defecto (PE-23).** El módulo 10 promete que en cada ejercicio se identifican población objetivo, marco,
+  unidades y fuentes de error, pero las soluciones 3 (jurados de Maricopa) y 4 (los 14 arquitectos) no lo hacían; y el
+  código del ejercicio 2 suponía 1 250 fondos que el enunciado no daba.
+- **Ejercicio 2:** el enunciado dice ahora «supón que esas listas tienen 1 250 fondos», y la solución, que las
+  probabilidades suman 125 (salida del bloque). El comentario del código cita el supuesto del enunciado.
+- **Ejercicio 3:** la solución trae el diagnóstico (población objetivo, marco, unidad de muestreo, con el aviso de los
+  duplicados al combinar dos listas, y unidad de observación) y titula «Las fuentes de error, escalón por escalón».
+  Los porcentajes de cada escalón salen ahora del código (R y Python, anotados por `anota_salidas.py`): 22,93 %,
+  6,98 % y 21,93 %, en lugar de «23 %», «7 %» y «21,9 %», que mezclaban redondeos y no estaban en ninguna salida. El
+  titular decía «las tres pérdidas van en la misma dirección» y el cierre, que los no calificados no sesgan: ahora
+  dice que de lo que se pierde solo los no calificados no sesgan.
+- **Ejercicio 4:** la solución trae población objetivo, marco (el directorio, en su orden), unidad de muestreo y de
+  observación, y las dos fuentes de error que desarrolla abajo.
+- **La cita del ejercicio 2** (c1-m10-02) perdió su huella al cambiar el enunciado y pasó a `por-reverificar`. La
+  releyó un lector FU independiente (Sonnet 5.5, contexto limpio) en Lohr (1999, p. 17); sus dos pasajes se rehicieron
+  con `--pasaje`. Veredicto `con-matiz`: la situación es la del libro; la cifra, la palabra «diseño» y la pregunta de
+  cómo o de dónde se seleccionó son del curso, como anuncia «Adaptado de».
+
+**Verificado** en el navegador: los tres paneles de solución a 1280 px y a 375 px reales, sin desbordes ni errores de
+KaTeX; consola limpia. Protocolo en verde (generador, auditor y `--cierre 1`, arnés, reensamblado estable, referencias,
+conteos, `anota_salidas.py --check` de las dos cadenas, 309 cifras de bloques y 81 de prosa respaldadas, código de las
+12 páginas, `node --check`).
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.

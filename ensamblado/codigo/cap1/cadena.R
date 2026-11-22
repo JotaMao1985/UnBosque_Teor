@@ -285,7 +285,7 @@ rbind(si_la_poblacion_fuera = mu,
 cat("\n###BLOQUE-S2###\n")
 # Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
 # reparte la misma probabilidad de inclusion a todo lo que este en la lista.
-N_lista <- 1250            # supongamos que el periodico publica 1250 fondos
+N_lista <- 1250            # el supuesto del enunciado: la lista tiene 1250 fondos
 k <- 10
 c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
 #>       pi_k    suma_pi n_esperado
@@ -305,6 +305,12 @@ round(c(citaciones = citaciones, quedan = quedan,
         perdida_pct   = 100 * (citaciones - quedan) / citaciones), 2)
 #>    citaciones        quedan retencion_pct   perdida_pct
 #>     100300.00      48300.00         48.16         51.84
+
+# Cada escalon, como porcentaje de las citaciones enviadas:
+round(100 * c(no_entregada = no_entregada, no_calificado = no_calificado,
+              excusado = excusado) / citaciones, 2)
+#>  no_entregada no_calificado      excusado
+#>         22.93          6.98         21.93
 
 cat("\n###BLOQUE-S4###\n")
 # Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta

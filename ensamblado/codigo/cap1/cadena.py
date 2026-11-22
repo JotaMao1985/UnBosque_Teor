@@ -346,7 +346,7 @@ print("\n###BLOQUE-PS2###\n")
 import numpy as np, pandas as pd
 # Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
 # reparte la misma probabilidad de inclusion a todo lo que este en la lista.
-N_lista = 1250              # supongamos que el periodico publica 1250 fondos
+N_lista = 1250              # el supuesto del enunciado: la lista tiene 1250 fondos
 k = 10
 print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
                  "n_esperado": N_lista / k}).to_string())
@@ -373,6 +373,15 @@ print(pd.Series({"citaciones": citaciones, "quedan": quedan,
 #> quedan           48300.00
 #> retencion_pct       48.16
 #> perdida_pct         51.84
+
+# Cada escalon, como porcentaje de las citaciones enviadas:
+print((100 * pd.Series({"no_entregada": no_entregada,
+                        "no_calificado": no_calificado,
+                        "excusado": excusado}) / citaciones
+       ).round(2).to_string(float_format=lambda v: f"{v:.2f}"))
+#> no_entregada    22.93
+#> no_calificado    6.98
+#> excusado        21.93
 print("\n###BLOQUE-PS4###\n")
 import numpy as np, pandas as pd
 # Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
