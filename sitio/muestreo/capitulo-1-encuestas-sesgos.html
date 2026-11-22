@@ -5677,7 +5677,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           muestral».</p>
       </div>
 
-      <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 10 pone a prueba el capítulo: once preguntas y cinco situaciones de muestreo que hay que
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 10 pone a prueba el capítulo: catorce preguntas y cinco situaciones de muestreo que hay que
         diagnosticar de principio a fin.</p>
 
       <div class="references">
@@ -5707,8 +5707,8 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           <span class="text-xl">🎯</span>
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
-            <p class="text-gray-600 text-sm" style="margin:0;">Once preguntas sobre los nueve módulos y cinco encuestas
-              reales que hay que diagnosticar de principio a fin.</p>
+            <p class="text-gray-600 text-sm" style="margin:0;">Catorce preguntas, al menos una de cada uno de los nueve módulos,
+              y cinco encuestas reales que hay que diagnosticar de principio a fin.</p>
           </div>
         </div>
       </div>
@@ -5719,7 +5719,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
 
       <div class="quiz" data-quiz="cap1">
         <h4><i class="fas fa-circle-question" aria-hidden="true"></i> Autoevaluación del capítulo 1</h4>
-        <p class="text-sm" style="margin-bottom:0;">Once preguntas. Cada opción trae su propia retroalimentación,
+        <p class="text-sm" style="margin-bottom:0;">Catorce preguntas. Cada opción trae su propia retroalimentación,
           también las incorrectas: leerlas cuando ya has acertado enseña igual.</p>
         <div class="quiz-progreso" role="presentation"><div class="quiz-progreso-barra"></div></div>
         <div class="quiz-preguntas"></div>
@@ -9569,6 +9569,22 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         ]
       },
       {
+        tipo: 'opcion',
+        modulo: 3,
+        pregunta: 'En la ciudad de los 14 arquitectos se toman los ocho primeros del directorio, y todos aceptan. Cada $\\pi_k$ se conoce de antemano: vale 1 o 0. ¿Es una muestra probabilística?',
+        pista: 'La definición del módulo 3 tiene dos condiciones. ¿Cuál de las dos se cumple aquí?',
+        opciones: [
+          { texto: 'Sí: la definición pide conocer cada $\\pi_k$ antes de seleccionar, y aquí se conocen todas.', correcta: false,
+            retro: 'Es solo la mitad de la definición. La otra mitad pide $\\pi_k > 0$ para <em>todas</em> las unidades, y seis arquitectos no pueden salir nunca.' },
+          { texto: 'No: seis arquitectos tienen $\\pi_k = 0$.', correcta: true,
+            retro: 'Exacto. Se conocen las probabilidades, pero no son todas positivas. Ningún estimador puede ser insesgado para una población que incluye a quienes nunca pueden entrar, por mucho que se parezcan los ocho que sí entran.' },
+          { texto: 'No, porque ocho de catorce es una fracción demasiado grande de la población.', correcta: false,
+            retro: 'El tamaño no aparece en la definición. Un sorteo de ocho entre catorce sí sería probabilístico: le daría a cada arquitecto la misma $\\pi_k$, positiva.' },
+          { texto: 'Depende de si los ocho primeros se parecen al resto de los arquitectos.', correcta: false,
+            retro: 'Eso es la idea intuitiva de «representativa», que el módulo 3 sustituye precisamente porque no se puede comprobar. Lo que se comprueba es el procedimiento, no el parecido.' }
+        ]
+      },
+      {
         tipo: 'grafico',
         modulo: 4,
         alto: 260,
@@ -9628,6 +9644,20 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         retroFallo: 'Es $0{,}3 \\times 80 + 0{,}7 \\times 40 = 52{,}0$ %. El error típico es promediar 80 y 40 sin pesos y dar 60: los que no responden son la mayoría y pesan más.'
       },
       {
+        tipo: 'multiple',
+        modulo: 5,
+        pregunta: 'Una balanza suma 300 gramos en cada pesada y además tiene un ruido aleatorio. Marca <strong>todo</strong> lo que es cierto.',
+        pista: 'Separa los dos términos del modelo $y_k^{\\text{obs}} = y_k + b_k + \\varepsilon_k$ y pregúntate cuál de los dos se cancela al promediar.',
+        opciones: [
+          { texto: 'Pesar a 50 000 personas en vez de 50 reduce el efecto del ruido sobre el promedio.', correcta: true },
+          { texto: 'Pesar a 50 000 personas en vez de 50 reduce los 300 gramos del promedio.', correcta: false },
+          { texto: 'Con muchas personas, el intervalo de confianza sale estrecho y centrado en el valor equivocado.', correcta: true },
+          { texto: 'Una validación contra una balanza de referencia ataca el desplazamiento; ninguna fórmula lo corrige después.', correcta: true }
+        ],
+        retroAcierto: 'Todas menos la de los 300 gramos. El ruido $\\varepsilon_k$ se cancela al promediar y se paga con más muestra; el desplazamiento $b_k$ sigue entero con 50 personas y con 50 000, y solo se ataca antes de medir.',
+        retroFallo: 'Son tres: el ruido baja con $n$, el intervalo se estrecha alrededor de un valor desplazado, y el desplazamiento se combate antes de recoger los datos. Lo único falso es que más pesadas quiten los 300 gramos: $b_k$ no se cancela nunca.'
+      },
+      {
         tipo: 'opcion',
         modulo: 6,
         pregunta: '«¿Está usted satisfecho con el precio y la calidad del servicio?» ¿Qué defecto tiene y qué error produce?',
@@ -9672,6 +9702,22 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         ],
         retroAcierto: 'Todas menos la de la media que cambia de una muestra a otra: esa es la definición misma del error de muestreo, y es la única del curso que se estima de la propia muestra y se reduce pagando más unidades.',
         retroFallo: 'Son las tres que no se reducen pagando más unidades. La variación de una muestra a otra es error de muestreo: inevitable, cuantificable y controlable. Las otras tres no cumplen ninguna de las tres cosas.'
+      },
+      {
+        tipo: 'opcion',
+        modulo: 8,
+        pregunta: 'En <code>agpop</code> la asimetría es 5,32 y la línea de la media cae bastante a la derecha del grueso de los condados. ¿Qué consecuencia tiene eso para muestrear?',
+        pista: 'Piensa en una muestra pequeña que por azar recoge, o no recoge, uno de los condados enormes.',
+        opciones: [
+          { texto: 'Ninguna: el recorte en el percentil 99 resuelve la asimetría.', correcta: false,
+            retro: 'El recorte es solo para que el gráfico se vea; las unidades de la cola siguen en la población. La asimetría real es <em>peor</em> que la dibujada.' },
+          { texto: 'Hay que quitar los condados enormes, porque son atípicos.', correcta: false,
+            retro: 'Son parte de la población: un total de superficie que los quite sale mal por construcción. Lo que cambia es cómo se diseña la muestra para no depender del azar de recogerlos.' },
+          { texto: 'Con $n$ pequeño, la media muestral depende mucho de si entra un condado enorme, y su distribución no será normal.', correcta: true,
+            retro: 'Eso es. Por eso el histograma se mira <em>antes</em> de elegir el diseño: esta forma anuncia el capítulo 2 (la normalidad de la media), el 4 (estratificar por tamaño) y el 6 (probabilidades proporcionales al tamaño).' },
+          { texto: 'La media deja de ser un parámetro válido, y hay que estimar la mediana.', correcta: false,
+            retro: 'La media sigue definida y es la que hace falta para estimar el total, que es lo que suele interesar. Lo que se complica es estimarla bien con pocas unidades, no su sentido.' }
+        ]
       },
       {
         tipo: 'opcion',

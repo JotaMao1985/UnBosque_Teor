@@ -9724,3 +9724,26 @@ las diez páginas, módulo por módulo: ningún texto de menos de 24 px queda en
 (`commit-tree 442995e:sitio`, padre y árbol comprobados; invariante `gh-pages^{tree}` = `main:sitio`). GitHub Pages
 compiló `73179fe`; los 56 archivos servidos son idénticos byte a byte a `442995e:sitio`. Cambian diez páginas: las
 gráficas del capítulo 1 y el contraste del texto pequeño en los ocho capítulos, el preparcial y el proyecto.
+
+### T7.147 — Fase 6 del cap. 1, tarea 6.1: las preguntas que faltaban en la autoevaluación (2026-11-21)
+
+- **El defecto (E2 de la auditoría, PE-03).** La autoevaluación decía cubrir «los nueve módulos» y no tenía ninguna
+  pregunta de los módulos 3, 5 y 8 (reparto 2-2-0-3-0-1-2-0-1).
+- **Tres preguntas nuevas**, en el orden de los módulos y con material que el capítulo ya enseña:
+  - **M3** (opción única): los ocho primeros de los 14 arquitectos. Cada $\pi_k$ se conoce (1 o 0), pero seis valen
+    cero: falla la mitad de la definición que se olvida. Los distractores son la otra mitad de la definición, el
+    tamaño y el «parecido» que el módulo sustituye.
+  - **M5** (varias respuestas): la balanza de 300 g con ruido. El ruido baja con $n$; el intervalo se estrecha
+    alrededor del valor desplazado; el desplazamiento se ataca antes de medir; más pesadas no quitan los 300 g.
+  - **M8** (opción única): la asimetría 5,32 de `agpop` y lo que significa para muestrear con $n$ pequeño, frente al
+    recorte del gráfico, quitar los condados grandes o cambiar de parámetro.
+  La correcta no es la opción más larga en ninguna de las tres (PE-20).
+- **Conteos:** «Once preguntas» pasa a «Catorce preguntas, al menos una de cada uno de los nueve módulos» (M10, dos
+  sitios, y el paso del M9); los 138 de la portada y del README del sitio, a **141** (`cuenta_sitio.py`).
+
+**Verificado** en el navegador: las 14 preguntas se dibujan, KaTeX sin errores, acierto y fallo de las tres nuevas
+con su pista y su retroalimentación; a 375 px reales sin desbordes; consola limpia. Protocolo en verde (generador,
+auditor y `--cierre 1`, arnés, reensamblado estable, referencias, conteos, 0 cifras sin respaldo, código de las 12
+páginas, `node --check`).
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
