@@ -9609,13 +9609,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: 'El sondeo del <em>Literary Digest</em> recogió más de 2,3 millones de papeletas y falló por 19 puntos. ¿Qué habría arreglado el problema?',
         pista: '¿Qué cambia al mandar más papeletas por el mismo procedimiento?',
         opciones: [
-          { texto: 'Nada de lo que tuviera que ver con el tamaño: el defecto estaba en <em>quién</em> entraba en la muestra y en <em>quién</em> devolvía la papeleta.', correcta: true,
+          { texto: 'Ningún cambio de tamaño: fallaba <em>quién</em> entraba en la muestra y <em>quién</em> devolvía la papeleta.', correcta: true,
             retro: 'Exacto. Duplicar las papeletas habría duplicado el mismo error. El tamaño reduce la varianza, y aquí el problema era todo sesgo.' },
-          { texto: 'Mandar 20 millones de papeletas en vez de 10.', correcta: false,
+          { texto: 'Mandar 20 millones de papeletas en vez de 10, para que la muestra fuera todavía más grande.', correcta: false,
             retro: 'Con el mismo marco y la misma respuesta diferencial, la estimación converge al mismo 42,9 % equivocado, solo que con menos ruido alrededor.' },
-          { texto: 'Calcular un intervalo de confianza sobre los 2,3 millones.', correcta: false,
+          { texto: 'Calcular un intervalo de confianza con las papeletas devueltas y publicar su margen de error.', correcta: false,
             retro: 'Habría dado un intervalo de ±0,06 puntos alrededor de una cifra que estaba 19 puntos fuera. Un intervalo estrecho alrededor de un número equivocado es peor que no tener nada.' },
-          { texto: 'Usar la corrección por población finita.', correcta: false,
+          { texto: 'Usar la corrección por población finita, porque la muestra era una parte grande del electorado.', correcta: false,
             retro: 'El fpc afecta a la varianza y aquí la varianza ya era despreciable: el error estándar del sondeo era de 0,0003.' }
         ]
       },
@@ -9649,13 +9649,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: 'En <code>agpop</code>, 19 condados tienen <code>acres92 = -99</code>, que es el código de faltante de Lohr. ¿Qué pasa si no se hace nada?',
         pista: 'R no sabe que −99 significa «no sé». ¿Qué hace <code>mean()</code> con ese valor?',
         opciones: [
-          { texto: 'R lo promedia como si fuera una superficie de −99 acres, y la media baja: 306 677 en vez de 308 582.', correcta: true,
+          { texto: 'R lo promedia como una superficie de −99 acres, y la media baja: 306 677 en vez de 308 582.', correcta: true,
             retro: 'Correcto. Son 1 905 acres, un 0,6 %. Pequeño aquí, pero es un error de procesamiento: silencioso, sistemático y con la dirección siempre igual.' },
-          { texto: 'R lo trata como <code>NA</code> y lo excluye del promedio.', correcta: false,
+          { texto: 'R lo trata como <code>NA</code> y lo excluye del promedio, porque reconoce el código de faltante.', correcta: false,
             retro: 'No: <code>-99</code> es un número perfectamente válido para R. Solo un ser humano sabe que en este archivo significa «no se midió».' },
-          { texto: 'Da error al calcular la media.', correcta: false,
+          { texto: 'Da error al calcular la media, porque una superficie negativa no es un valor posible.', correcta: false,
             retro: 'Ojalá. Los errores que dan error se arreglan; los que no, se publican.' },
-          { texto: 'La media sube, porque −99 es un valor extremo.', correcta: false,
+          { texto: 'La media sube, porque −99 es un valor extremo y los extremos arrastran la media.', correcta: false,
             retro: 'Es extremo por abajo: la media baja. Comprueba el signo antes de razonar sobre la magnitud.' }
         ]
       },
@@ -9667,7 +9667,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         opciones: [
           { texto: 'Sí: la definición pide conocer cada $\\pi_k$ antes de seleccionar, y aquí se conocen todas.', correcta: false,
             retro: 'Es solo la mitad de la definición. La otra mitad pide $\\pi_k > 0$ para <em>todas</em> las unidades, y seis arquitectos no pueden salir nunca.' },
-          { texto: 'No: seis arquitectos tienen $\\pi_k = 0$.', correcta: true,
+          { texto: 'No: seis arquitectos tienen $\\pi_k = 0$, así que no pueden salir nunca.', correcta: true,
             retro: 'Exacto. Se conocen las probabilidades, pero no son todas positivas. Ningún estimador puede ser insesgado para una población que incluye a quienes nunca pueden entrar, por mucho que se parezcan los ocho que sí entran.' },
           { texto: 'No, porque ocho de catorce es una fracción demasiado grande de la población.', correcta: false,
             retro: 'El tamaño no aparece en la definición. Un sorteo de ocho entre catorce sí sería probabilístico: le daría a cada arquitecto la misma $\\pi_k$, positiva.' },
@@ -9697,13 +9697,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
             }), { y: { titulo: '% del grupo en cada fuente', formato: ENTERO } });
         },
         opciones: [
-          { texto: 'Las dos se alejan mucho del censo, en direcciones opuestas: la telefónica sobrerrepresenta a los mayores y el panel online a los jóvenes.', correcta: true,
+          { texto: 'Se alejan del censo en sentidos opuestos: la telefónica tiene mayores de más; el panel, jóvenes.', correcta: true,
             retro: 'Eso es. 60,7 años de edad media frente a 33,7. Ninguna de las dos es la población, y por eso las dos necesitan pesos.' },
-          { texto: 'La telefónica es probabilística, así que reproduce el censo.', correcta: false,
+          { texto: 'La telefónica es probabilística, así que reproduce el censo salvo por el error de muestreo.', correcta: false,
             retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a celulares y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
-          { texto: 'El panel online se parece más al censo porque es más reciente.', correcta: false,
+          { texto: 'El panel online se parece más al censo, porque es más reciente y llega a quien no tiene línea fija.', correcta: false,
             retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,6 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
-          { texto: 'No se pueden comparar porque tienen tamaños distintos.', correcta: false,
+          { texto: 'No se pueden comparar con el censo: las dos encuestas tienen tamaños distintos.', correcta: false,
             retro: 'Se comparan porcentajes, no conteos: para eso están en porcentaje. El tamaño no entra en esta comparación.' }
         ]
       },
@@ -9713,14 +9713,14 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: 'En el simulador de no respuesta, poner las cuatro regiones al 10 % y ponerlas todas al 60 % dan el mismo sesgo: cero. ¿Por qué?',
         pista: 'Escribe la media de los respondientes cuando todas las tasas valen lo mismo y simplifica.',
         opciones: [
-          { texto: 'Porque con tasas iguales la $r$ se cancela arriba y abajo, y la media de los respondientes vuelve a ser la media poblacional.', correcta: true,
+          { texto: 'Porque con tasas iguales la $r$ se cancela, y la media de los respondientes es la poblacional.', correcta: true,
             retro: 'Exacto. Lo que sesga no es que falte gente, sino que <em>falte de manera desigual</em>. Una tasa del 10 % pareja es inofensiva para el sesgo (aunque devastadora para la varianza).' },
-          { texto: 'Porque el 10 % y el 60 % son ambos mayores que cero.', correcta: false,
+          { texto: 'Porque el 10 % y el 60 % son ambos mayores que cero: basta que responda alguien en cada región.', correcta: false,
             retro: 'Prueba con un 5 % pareja: también da cero. El nivel es irrelevante para el sesgo mientras sea el mismo en todas las clases.' },
-          { texto: 'Porque las cuatro regiones tienen la misma media.', correcta: false,
+          { texto: 'Porque las cuatro regiones tienen la misma media, y da igual a cuáles se pierda.', correcta: false,
             retro: 'No la tienen: van de 90 619 acres en el Nordeste a 723 344 en el Oeste. Precisamente por eso el sesgo aparece en cuanto las tasas dejan de ser iguales.' },
-          { texto: 'Porque el sesgo solo se define cuando la tasa es menor del 50 %.', correcta: false,
-            retro: 'El sesgo está definido para cualquier tasa positiva; no hay ningún umbral.' }
+          { texto: 'Porque con una tasa pareja la varianza tampoco cambia: las dos tasas dan la misma precisión.', correcta: false,
+            retro: 'La varianza sí cambia, y mucho: con el 10 % quedan muchos menos respondientes que con el 60 %. El sesgo es lo único que no se mueve.' }
         ]
       },
       {
@@ -9754,13 +9754,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: '«¿Está usted satisfecho con el precio y la calidad del servicio?» ¿Qué defecto tiene y qué error produce?',
         pista: '¿Qué contesta alguien a quien le gusta el precio y le parece mala la calidad?',
         opciones: [
-          { texto: 'Es de doble cañón: pregunta dos cosas a la vez, y la respuesta no se puede interpretar. Es error de medición.', correcta: true,
+          { texto: 'Es de doble cañón: junta dos preguntas, y la respuesta no se interpreta. Error de medición.', correcta: true,
             retro: 'Correcto. Y como es de medición, ni un censo lo arregla: hay que reescribir la pregunta antes de recoger un solo dato.' },
-          { texto: 'Es sugestiva, porque supone que hay satisfacción.', correcta: false,
+          { texto: 'Es sugestiva: supone que hay satisfacción y empuja a contestar que sí. Error de medición.', correcta: false,
             retro: 'Sugestiva sería «¿No está de acuerdo en que el servicio es bueno?». Aquí el defecto es otro: son dos preguntas cosidas en una.' },
-          { texto: 'No tiene defecto: es una pregunta cerrada y clara.', correcta: false,
+          { texto: 'No tiene defecto: es una pregunta cerrada y clara, que se contesta sí o no sin ambigüedad.', correcta: false,
             retro: 'Piensa en alguien a quien le encanta el precio y le parece pésima la calidad. Cualquier cosa que conteste será una respuesta a otra pregunta.' },
-          { texto: 'Produce error de muestreo, que baja al aumentar $n$.', correcta: false,
+          { texto: 'Produce error de muestreo, que baja al aumentar $n$ porque las respuestas confusas se compensan.', correcta: false,
             retro: 'Al contrario: con más respuestas se acumula el mismo defecto. Una pregunta mal hecha desplaza todas las respuestas hacia el mismo lado, y eso es justo lo que el módulo 5 enseña que no se promedia.' }
         ]
       },
@@ -9770,13 +9770,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: 'Sobre <code>agpop</code>, un procedimiento con un sesgo del 5 % de la media se aplica a un <strong>censo</strong> ($n = N = 3\\,078$). ¿Cuál es su raíz del error cuadrático medio?',
         pista: 'Con $n = N$ la corrección por población finita vale $1 - N/N$. ¿Cuánto queda de varianza?',
         opciones: [
-          { texto: 'Exactamente el sesgo, unos 15 334 acres: la varianza es cero y el ECM es todo sesgo.', correcta: true,
+          { texto: 'El sesgo, unos 15 334 acres: la varianza es cero y el ECM es todo sesgo.', correcta: true,
             retro: 'Eso es. Medir a toda la población elimina el error de muestreo y deja intacto todo lo demás. Es el argumento más limpio contra «hagamos un censo y ya».' },
-          { texto: 'Cero: un censo no tiene error.', correcta: false,
+          { texto: 'Cero: un censo mide a todas las unidades, así que no tiene error.', correcta: false,
             retro: 'Un censo no tiene error <em>de muestreo</em>. El de cobertura, el de no respuesta y el de medición siguen ahí, y suelen ser peores en un censo que en una encuesta bien hecha.' },
-          { texto: 'No se puede saber sin conocer $S^2$.', correcta: false,
+          { texto: 'No se puede saber sin conocer $S^2$, la varianza de la población.', correcta: false,
             retro: '$S^2$ entra multiplicado por $1 - n/N$, que vale cero. Da igual cuánto valga.' },
-          { texto: 'La mitad del sesgo, porque el ECM promedia los dos términos.', correcta: false,
+          { texto: 'La mitad del sesgo, porque el ECM promedia el sesgo al cuadrado y la varianza.', correcta: false,
             retro: 'El ECM <em>suma</em> $B^2$ y $V$, no los promedia. Con $V = 0$ queda $\\sqrt{B^2} = |B|$.' }
         ]
       },
@@ -9800,11 +9800,11 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: 'En <code>agpop</code> la asimetría es 5,32 y la línea de la media cae bastante a la derecha del grueso de los condados. ¿Qué consecuencia tiene eso para muestrear?',
         pista: 'Piensa en una muestra pequeña que por azar recoge, o no recoge, uno de los condados enormes.',
         opciones: [
-          { texto: 'Ninguna: el recorte en el percentil 99 resuelve la asimetría.', correcta: false,
+          { texto: 'Ninguna: el recorte en el percentil 99 del histograma ya resuelve la asimetría.', correcta: false,
             retro: 'El recorte es solo para que el gráfico se vea; las unidades de la cola siguen en la población. La asimetría real es <em>peor</em> que la dibujada.' },
-          { texto: 'Hay que quitar los condados enormes, porque son atípicos.', correcta: false,
+          { texto: 'Hay que quitar de la población los condados enormes, porque son atípicos y distorsionan la media.', correcta: false,
             retro: 'Son parte de la población: un total de superficie que los quite sale mal por construcción. Lo que cambia es cómo se diseña la muestra para no depender del azar de recogerlos.' },
-          { texto: 'Con $n$ pequeño, la media muestral depende mucho de si entra un condado enorme, y su distribución no será normal.', correcta: true,
+          { texto: 'Con $n$ pequeño, la media muestral depende de si entra un condado enorme, y no será normal.', correcta: true,
             retro: 'Eso es. Por eso el histograma se mira <em>antes</em> de elegir el diseño: esta forma anuncia el capítulo 2 (la normalidad de la media), el 4 (estratificar por tamaño) y el 6 (probabilidades proporcionales al tamaño).' },
           { texto: 'La media deja de ser un parámetro válido, y hay que estimar la mediana.', correcta: false,
             retro: 'La media sigue definida y es la que hace falta para estimar el total, que es lo que suele interesar. Lo que se complica es estimarla bien con pocas unidades, no su sentido.' }
@@ -9816,13 +9816,13 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         pregunta: 'Un modelo se entrena con reseñas escritas por usuarios que decidieron escribirlas y se despliega sobre todos los compradores. ¿A qué se parece eso?',
         pista: 'Piensa en quién decide entrar en la muestra y en qué correlaciona con esa decisión.',
         opciones: [
-          { texto: 'A una muestra autoseleccionada: el conjunto de entrenamiento es la muestra observada, y quien escribe una reseña no es una unidad cualquiera de la población de compradores.', correcta: true,
+          { texto: 'A una muestra autoseleccionada: quien escribe una reseña no es un comprador cualquiera.', correcta: true,
             retro: 'Correcto, y la fórmula del sesgo es literalmente la misma del módulo 4. Cambia el vocabulario —«datos de entrenamiento» en vez de «marco»— pero no la matemática.' },
-          { texto: 'A un muestreo aleatorio simple, porque las reseñas llegan en orden aleatorio.', correcta: false,
+          { texto: 'A un muestreo aleatorio simple, porque las reseñas llegan en un orden que nadie controla.', correcta: false,
             retro: 'El orden de llegada no tiene nada que ver con la probabilidad de inclusión. Lo que importa es <em>quién</em> decide escribir, y eso correlaciona con la satisfacción.' },
-          { texto: 'A un error de medición.', correcta: false,
+          { texto: 'A un error de medición: las reseñas exageran lo bueno y lo malo de cada compra.', correcta: false,
             retro: 'Puede haberlo además (las reseñas exageran), pero el defecto principal es de representación: la población que generó los datos no es la población sobre la que se decide.' },
-          { texto: 'A nada de lo visto: el volumen de datos es demasiado grande para que aplique la teoría de muestreo.', correcta: false,
+          { texto: 'A nada de lo visto: con tantos datos, la teoría de muestreo deja de aplicar.', correcta: false,
             retro: 'Es al revés. El sondeo del <em>Literary Digest</em> tenía 2,3 millones de casos y equivalía a una muestra aleatoria de 6 personas. El volumen no exime de la teoría: la hace más necesaria.' }
         ]
       }

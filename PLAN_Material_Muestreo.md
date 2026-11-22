@@ -9796,4 +9796,28 @@ KaTeX; consola limpia. Protocolo en verde (generador, auditor y `--cierre 1`, ar
 conteos, `anota_salidas.py --check` de las dos cadenas, 309 cifras de bloques y 81 de prosa respaldadas, código de las
 12 páginas, `node --check`).
 
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, commit `0e47877`.
+
+### T7.150 — Fase 6 del cap. 1, tarea 6.4: la correcta deja de ser la opción más larga (2026-11-21)
+
+- **El defecto (PE-20, PE-21).** En las preguntas de opción única la correcta era la larga y matizada y los
+  distractores, frases cortas que se descartaban solas: era la más larga en 8 de 9 (también en la del módulo 8 de la
+  6.1), a veces con el doble de caracteres. Las de opción múltiple tienen tres correctas de cuatro y no delatan así;
+  no se tocan.
+- **Ahora** cada distractor es un error plausible con su razón («…porque reconoce el código de faltante», «…porque
+  las respuestas confusas se compensan»), y las correctas se acortaron sin perder lo que enseñan. Midiendo el texto
+  que se lee (sin etiquetas), la correcta es la más larga en 1 de 9 y la diferencia es de pocos caracteres; en la del
+  módulo 3, que había quedado como la más corta con diferencia, también se igualó.
+- **Un distractor nuevo** en la pregunta de tasas parejas del módulo 4: el que decía «el sesgo solo se define cuando
+  la tasa es menor del 50 %» no tenía sentido con el 10 % del enunciado. Lo sustituye «con una tasa pareja la varianza
+  tampoco cambia», con su retroalimentación, que enlaza con la de la correcta («devastadora para la varianza»).
+- Las retroalimentaciones siguen valiendo para cada opción. Ninguna cifra nueva; se quitó «los 2,3 millones» de un
+  distractor de la pregunta 1. Queda para la auditoría de cierre la cifra de su enunciado («más de 2,3 millones» de
+  papeletas), que el módulo 7 cuenta como 2 266 566.
+
+**Verificado** en el navegador: 14 preguntas, una de opción única respondida con un distractor (pista) y luego bien
+(«Por qué las demás» con el distractor nuevo); a 375 px reales sin desbordes; sin errores de KaTeX ni de consola.
+Protocolo en verde (generador, auditor y `--cierre 1`, arnés, reensamblado estable, referencias, conteos, 0 cifras de
+prosa sin respaldo, `node --check`).
+
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
