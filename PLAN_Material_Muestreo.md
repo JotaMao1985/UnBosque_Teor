@@ -9820,4 +9820,38 @@ conteos, `anota_salidas.py --check` de las dos cadenas, 309 cifras de bloques y 
 Protocolo en verde (generador, auditor y `--cierre 1`, arnés, reensamblado estable, referencias, conteos, 0 cifras de
 prosa sin respaldo, `node --check`).
 
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, commit `4230f22`.
+
+### T7.151 — Fase 6 del cap. 1, tarea 6.5: un ejercicio con el caso del DANE (2026-11-21)
+
+- **Lo que pidió Javier (21 nov):** un ejercicio con el caso colombiano en el módulo 10. Es el **ejercicio 6**: con
+  los tres ajustes de cobertura del CNPV 2018 (8,5 % nacional, 6,4 % cabeceras, 15,0 % centros poblados y rural
+  disperso; DANE, 2019, p. 3) y el supuesto, explícito en el enunciado, de que cada porcentaje es la fracción de la
+  población real de la zona que el censo no contó: (a) despejar el peso del rural con la fórmula de mezcla del módulo 4
+  (0,2442; por el redondeo de las cifras, entre 0,2326 y 0,2558); (b) con una característica inventada (60 % en
+  cabeceras, 20 % en el rural), el sesgo del censo sin ajustar: 50,93 % frente a 50,23 %, 0,69 puntos con varianza
+  cero, que ninguna muestra del censo corrige (el ECM hecho solo de sesgo del módulo 7). Lleva el diagnóstico completo
+  (población objetivo, marco, unidades, fuente de error), pista, y código en R y Python anotado por `anota_salidas.py`.
+- **Por qué el supuesto:** el comunicado no dice sobre qué base se calcula el porcentaje (lo confirmó el lector FU en
+  las nueve páginas), así que no se le atribuye al DANE.
+- **Citas.** La afirmación nueva (c1-m10-09) entró `pendiente` y la del pie de lecturas (c1-m10-06), que pasó a decir
+  «los cinco primeros ejercicios», `por-reverificar`. Las releyó un lector FU independiente (Sonnet 5.5, contexto
+  limpio): las dos `respaldada`; sus pasajes se rehicieron con `--pasaje`.
+- **Conteos.** «Seis ejercicios» en la portada del capítulo (M1), en el objetivo y la introducción de los ejercicios
+  (M10) y en el puente del M9; portada del sitio y README: 44 ejercicios guiados y 233 bloques (178 de R, 55 de
+  Python); la tarjeta del cap. 1, 36 bloques. El README decía «3 237 cifras contrastadas», ya desactualizado y sin
+  cotejar por `cuenta_sitio.py`: pasa a 3 454, la suma que da `verifica_bloques.py --todos`.
+- **Corrección a T7.150:** el «más de 2,3 millones» de papeletas del quiz no es un error: está respaldado en el
+  registro (c1-m1-01, Lohr 3.ª, ejemplo 1.1). Son las papeletas devueltas; los 2 266 566 del módulo 7 son los votos
+  de los dos candidatos.
+
+**Verificado** en el navegador: el ejercicio 6 con pista, solución y las dos pestañas de código, a 1280 px y a 375 px
+reales, sin desbordes ni errores de KaTeX. Protocolo en verde: generador, auditor y `--cierre 1` (63 afirmaciones, 0
+pendientes), arnés, reensamblado estable, conteos (0 desajustadas), `anota_salidas.py --check` de las dos cadenas,
+`verifica_bloques.py --todos --prosa` (3 454 cifras de bloques y 0 de prosa sin respaldo en las nueve páginas), código
+de las 12 páginas, `node --check`. Las cinco referencias «módulo N» nuevas se revisaron una a una y apuntan bien (M3,
+M4, M7); no se grabaron con `--anota`, que arrastraría también 48 anteriores sin revisar.
+
+Con esto **la Fase 6 queda hecha.** Sigue la Fase 7, la auditoría de cierre.
+
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.

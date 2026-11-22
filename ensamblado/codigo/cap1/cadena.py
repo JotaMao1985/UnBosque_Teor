@@ -414,3 +414,39 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
 #> fraccion_prestada  0.100  0.20  0.300
 #> valor_real         0.285  0.27  0.255
 #> sesgo              0.015  0.03  0.045
+print("\n###BLOQUE-PS6###\n")
+import numpy as np, pandas as pd
+# Ejercicio 6 - La omision del Censo 2018 (DANE, comunicado del 17-X-2019, p. 3).
+# Supuesto del enunciado: cada porcentaje es la fraccion de la poblacion real
+# de la zona que el censo no conto.
+om_total, om_cab, om_rur = 0.085, 0.064, 0.150
+# El total mezcla las dos zonas, como la formula del modulo 4:
+#   om_total = w_rur * om_rur + (1 - w_rur) * om_cab
+w_rur = (om_total - om_cab) / (om_rur - om_cab)
+print(pd.Series({"peso_rural": w_rur, "peso_cabeceras": 1 - w_rur}
+                ).round(4).to_string())
+#> peso_rural        0.2442
+#> peso_cabeceras    0.7558
+
+# Los porcentajes vienen redondeados a una decima. El peso mas bajo y el mas
+# alto que son compatibles con ese redondeo:
+print(pd.Series({"minimo": (0.0845 - 0.0645) / (0.1505 - 0.0645),
+                 "maximo": (0.0855 - 0.0635) / (0.1495 - 0.0635)}
+                ).round(4).to_string())
+#> minimo    0.2326
+#> maximo    0.2558
+
+# Una caracteristica inventada para el ejercicio: la tiene el 60 % de la gente
+# de las cabeceras y el 20 % de la del rural.
+p_cab, p_rur = 0.60, 0.20
+real = (1 - w_rur) * p_cab + w_rur * p_rur
+# El censo sin ajustar solo ve a los contados: cada zona pesa por lo que conto.
+contados_cab = (1 - w_rur) * (1 - om_cab)
+contados_rur = w_rur * (1 - om_rur)
+censo = (contados_cab * p_cab + contados_rur * p_rur) / (contados_cab + contados_rur)
+print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
+                 "sesgo_puntos": 100 * (censo - real)}
+                ).round(2).to_string(float_format=lambda v: f"{v:.2f}"))
+#> real_pct       50.23
+#> censo_pct      50.93
+#> sesgo_puntos    0.69

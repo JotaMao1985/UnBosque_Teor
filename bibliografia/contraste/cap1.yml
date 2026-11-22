@@ -1245,23 +1245,30 @@ afirmaciones:
 - id: c1-m10-06
   tipo: atribucion
   afirmacion: >-
-    El capítulo 1 de Lohr (2022) trae el caso del Digest; el de Hite y los cinco ejercicios del módulo 10 son de la 1.ª ed. (1999).
-  hash_texto: 8b844b72fdd5f00d
+    El capítulo 1 de Lohr (2022) trae el caso del Digest; el de Hite y los cinco primeros ejercicios del módulo 10 son de la 1.ª ed. (1999).
+  hash_texto: 4b0042290ec43a77
   veredicto: respaldada
   motivo: >-
-    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
-  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
-  fecha: 2026-11-16
+    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respaldó. La 6.5 (21 nov) añadió un sexto
+    ejercicio, del DANE, y la frase pasó a «los cinco primeros»; se volvió a leer: el Digest en el ejemplo 1.1 de la
+    3.ª ed., Hite en la §1.1 de la 1.ª y los cinco ejercicios en su §1.7 (ejercicios 1 a 5, p. 17), que la 3.ª no
+    trae tal cual.
+  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario); retocada en la 6.5
+  verificado_por: relectura del lector FU de la 6.5 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  fecha: 2026-11-21
   fuentes:
   - clave: lohr2022sampling
     loc: 'cap. 1'
     pagina: 1
-    hash_pasaje: 12e62b94e2070d45
+    hash_pasaje: 74f0b8f33cbbfb54
   - clave: lohr1999sampling
     loc: 'cap. 1'
     pagina: 1
     hash_pasaje: 5100f35a51b9607f
+  - clave: lohr1999sampling
+    loc: 'cap. 1'
+    pagina: 17
+    hash_pasaje: d0ec20d17b511b30
 
 - id: c1-m10-07
   tipo: atribucion
@@ -1299,3 +1306,26 @@ afirmaciones:
     pagina: 517
     hash_pasaje: 465c8866b6139e30
 
+- id: c1-m10-09
+  tipo: dato
+  afirmacion: >-
+    Tras el CNPV 2018, el DANE ajustó la cobertura por la omisión censal en un 8,5 % para el total nacional, un 6,4 %
+    en las cabeceras municipales y un 15,0 % en los centros poblados y el rural disperso (enunciado del ejercicio 6).
+  hash_texto: a407802f44833b48
+  veredicto: respaldada
+  motivo: >-
+    Las tres cifras y sus ámbitos son los de la fila «Total Nacional» del cuadro «Ajuste de cobertura a nivel
+    departamental» (p. 3); también en el recuadro de la p. 1. El comunicado no dice sobre qué base se calcula el
+    porcentaje: por eso el ejercicio lo pone como supuesto del enunciado, y no se atribuye al DANE.
+  redactado_por: sesión maestra, Fase 6 del plan del cap. 1 (tarea 6.5)
+  verificado_por: lector FU de la 6.5 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  fecha: 2026-11-21
+  fuentes:
+  - clave: dane2019omision
+    loc: 'p. 3'
+    pagina: 3
+    hash_pasaje: cc9fbe0a914ae857
+  - clave: dane2019omision
+    loc: 'p. 3'
+    pagina: 3
+    hash_pasaje: 9aca87e25a39e3e0

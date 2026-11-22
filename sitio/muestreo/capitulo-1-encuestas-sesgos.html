@@ -3706,7 +3706,7 @@
             cuadrático medio.</li>
           <li><strong>Módulos 8 y 9:</strong> las poblaciones del curso y los mismos errores en los datos de un
             modelo.</li>
-          <li><strong>Módulo 10:</strong> autoevaluación y cinco ejercicios guiados.</li>
+          <li><strong>Módulo 10:</strong> autoevaluación y seis ejercicios guiados.</li>
         </ul>
         <p style="margin:0.75rem 0 0;">En todas las gráficas del capítulo, el <strong>verde oscuro</strong> es la verdad de
           la población y el <strong>naranja</strong>, lo que da la encuesta o el estimador; el gris marca referencias.</p>
@@ -5680,7 +5680,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           muestral».</p>
       </div>
 
-      <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 10 pone a prueba el capítulo: catorce preguntas y cinco situaciones de muestreo que hay que
+      <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 10 pone a prueba el capítulo: catorce preguntas y seis situaciones que hay que
         diagnosticar de principio a fin.</p>
 
       <div class="references">
@@ -5711,7 +5711,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Catorce preguntas, al menos una de cada uno de los nueve módulos,
-              y cinco encuestas reales que hay que diagnosticar de principio a fin.</p>
+              cinco encuestas reales y un censo colombiano que hay que diagnosticar de principio a fin.</p>
           </div>
         </div>
       </div>
@@ -5735,7 +5735,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
 
       <div class="exercise">
         <h4><i class="fas fa-pen-to-square mr-2" aria-hidden="true"></i>Ejercicios guiados</h4>
-        <p class="text-sm" style="margin-bottom:0.5rem;">Los cinco son situaciones de muestreo tomadas de la primera edición de Lohr <cite class="cita" data-ref="lohr1999sampling" data-loc=""><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">(Lohr, 1999)</a></cite>. Para cada una hay que
+        <p class="text-sm" style="margin-bottom:0.5rem;">Los cinco primeros son situaciones de muestreo tomadas de la primera edición de Lohr <cite class="cita" data-ref="lohr1999sampling" data-loc=""><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">(Lohr, 1999)</a></cite>; el sexto vuelve al caso colombiano del módulo 3. Para cada uno hay que
           identificar la población objetivo, el marco muestral, la unidad de muestreo y la de observación, y las
           fuentes de error. Cuando hay números, las cifras de la solución salen de ejecutar de verdad el código
           que viene con ella: cada solución trae su versión en R y en Python, y las dos publican la misma cifra.</p>
@@ -6145,6 +6145,128 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
               silencio justo a las unidades que faltan. Registrar el hueco como «libro prestado, no observado» convierte
               el problema en uno de no respuesta, que al menos se puede acotar.</p>
           </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">6.</span><span data-afirma="c1-m10-09">Tras el
+            Censo Nacional de Población y Vivienda de 2018, el DANE ajustó la cobertura por la omisión censal en un 8,5 %
+            para el total nacional, un 6,4 % en las cabeceras municipales y un 15,0 % en los centros poblados y el rural
+            disperso <cite class="cita" data-ref="dane2019omision" data-loc="p. 3"><a class="cita-enlace" href="#pie-dane2019omision" title="Departamento Administrativo Nacional de Estadística. (2019). Resultados proceso de omisión censal: Censo Nacional de Población y Vivienda CNPV 2018 [Comunicado de prensa]. Departamento Administrativo Nacional de Estadística (DANE). https://www.dane.gov.co/files/censo2018/informacion-tecnica/cnpv-2018-omision-censal.pdf">(Departamento Administrativo Nacional de Estadística, 2019, p. 3)</a></cite></span>. Supón que cada
+            porcentaje es la fracción de la población real de esa zona que el censo no contó. (a) Según esas tres cifras,
+            ¿qué parte de la población vive fuera de las cabeceras? (b) Una característica la tiene el 60 % de la gente
+            de las cabeceras y el 20 % de la del rural: ¿cuánto se equivoca el censo sin ajustar al estimar su porcentaje
+            nacional, y lo arreglaría tomar del censo una muestra más grande? <span class="text-xs text-gray-500">El caso
+            colombiano del módulo 3; las dos tasas de la característica son inventadas.</span></p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e6-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e6-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e6-pista" hidden>
+            <p style="margin:0;">Para (a), escribe el 8,5 % como la mezcla de las dos zonas, con la fórmula del sesgo de
+              no respuesta del módulo 4: lo único que no conoces es el peso de cada zona. Para (b), fíjate en que el censo
+              pesa cada zona por la gente que contó, no por la que vive en ella.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e6-sol" hidden>
+            <p><strong>Según esas tres cifras, la zona rural pesa 0,2442: casi una de cada cuatro personas. El censo sin
+              ajustar da un 50,93 % donde la verdad es un 50,23 %: 0,69 puntos de sesgo con varianza cero, y ninguna
+              muestra del censo, por grande que sea, lo corrige.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> todas las personas que viven en el país.</li>
+              <li><strong>Marco:</strong> las viviendas a las que llegó el operativo censal.</li>
+              <li><strong>Unidad de muestreo:</strong> no hay muestreo, porque se busca a todos. <strong>Unidad de
+                observación:</strong> la persona.</li>
+              <li><strong>Fuente de error:</strong> no cobertura, y desigual: más del doble, en proporción, fuera de las
+                cabeceras.</li>
+            </ul>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="La omisión del censo de 2018 y el sesgo que deja">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 6 - La omision del Censo 2018 (DANE, comunicado del 17-X-2019, p. 3).
+# Supuesto del enunciado: cada porcentaje es la fraccion de la poblacion real
+# de la zona que el censo no conto.
+om_total &lt;- 0.085; om_cab &lt;- 0.064; om_rur &lt;- 0.150
+# El total mezcla las dos zonas, como la formula del modulo 4:
+#   om_total = w_rur * om_rur + (1 - w_rur) * om_cab
+w_rur &lt;- (om_total - om_cab) / (om_rur - om_cab)
+round(c(peso_rural = w_rur, peso_cabeceras = 1 - w_rur), 4)
+#&gt;     peso_rural peso_cabeceras
+#&gt;         0.2442         0.7558
+
+# Los porcentajes vienen redondeados a una decima. El peso mas bajo y el mas
+# alto que son compatibles con ese redondeo:
+round(c(minimo = (0.0845 - 0.0645) / (0.1505 - 0.0645),
+        maximo = (0.0855 - 0.0635) / (0.1495 - 0.0635)), 4)
+#&gt; minimo maximo
+#&gt; 0.2326 0.2558
+
+# Una caracteristica inventada para el ejercicio: la tiene el 60 % de la gente
+# de las cabeceras y el 20 % de la del rural.
+p_cab &lt;- 0.60; p_rur &lt;- 0.20
+real &lt;- (1 - w_rur) * p_cab + w_rur * p_rur
+# El censo sin ajustar solo ve a los contados: cada zona pesa por lo que conto.
+contados_cab &lt;- (1 - w_rur) * (1 - om_cab)
+contados_rur &lt;- w_rur * (1 - om_rur)
+censo &lt;- (contados_cab * p_cab + contados_rur * p_rur) / (contados_cab + contados_rur)
+round(c(real_pct = 100 * real, censo_pct = 100 * censo,
+        sesgo_puntos = 100 * (censo - real)), 2)
+#&gt;     real_pct    censo_pct sesgo_puntos
+#&gt;        50.23        50.93         0.69</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 6 - La omision del Censo 2018 (DANE, comunicado del 17-X-2019, p. 3).
+# Supuesto del enunciado: cada porcentaje es la fraccion de la poblacion real
+# de la zona que el censo no conto.
+om_total, om_cab, om_rur = 0.085, 0.064, 0.150
+# El total mezcla las dos zonas, como la formula del modulo 4:
+#   om_total = w_rur * om_rur + (1 - w_rur) * om_cab
+w_rur = (om_total - om_cab) / (om_rur - om_cab)
+print(pd.Series({"peso_rural": w_rur, "peso_cabeceras": 1 - w_rur}
+                ).round(4).to_string())
+#&gt; peso_rural        0.2442
+#&gt; peso_cabeceras    0.7558
+
+# Los porcentajes vienen redondeados a una decima. El peso mas bajo y el mas
+# alto que son compatibles con ese redondeo:
+print(pd.Series({"minimo": (0.0845 - 0.0645) / (0.1505 - 0.0645),
+                 "maximo": (0.0855 - 0.0635) / (0.1495 - 0.0635)}
+                ).round(4).to_string())
+#&gt; minimo    0.2326
+#&gt; maximo    0.2558
+
+# Una caracteristica inventada para el ejercicio: la tiene el 60 % de la gente
+# de las cabeceras y el 20 % de la del rural.
+p_cab, p_rur = 0.60, 0.20
+real = (1 - w_rur) * p_cab + w_rur * p_rur
+# El censo sin ajustar solo ve a los contados: cada zona pesa por lo que conto.
+contados_cab = (1 - w_rur) * (1 - om_cab)
+contados_rur = w_rur * (1 - om_rur)
+censo = (contados_cab * p_cab + contados_rur * p_rur) / (contados_cab + contados_rur)
+print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
+                 "sesgo_puntos": 100 * (censo - real)}
+                ).round(2).to_string(float_format=lambda v: f"{v:.2f}"))
+#&gt; real_pct       50.23
+#&gt; censo_pct      50.93
+#&gt; sesgo_puntos    0.69</code></pre>
+              </div>
+            </div>
+            <p>La parte (a) es la fórmula del módulo 4 leída al revés. El 8,5 % cae entre el 6,4 % y el 15,0 %, mucho
+              más cerca del primero, porque las cabeceras pesan más; despejando, el peso del rural es 0,2442. Como las
+              tres cifras vienen redondeadas a una décima, el peso solo se puede afirmar entre 0,2326 y 0,2558: con datos
+              redondeados, lo honesto es dar el intervalo.</p>
+            <p style="margin-bottom:0;">En la parte (b), el censo contó una fracción menor del rural que de las
+              cabeceras, así que entre los contados el rural pesa menos de lo que pesa en el país, y la característica, más
+              frecuente en las cabeceras, sale inflada. El sesgo es pequeño, pero no tiene nada de aleatorio: con todos
+              los contados la varianza es cero y el sesgo sigue entero, el ECM hecho solo de sesgo del módulo 7. Una
+              muestra del censo, del tamaño que sea, hereda el mismo marco y el mismo sesgo. Lo que lo corrige es medir
+              la omisión y ajustar, que es lo que hizo el DANE.</p>
+          </div>
         </div>
       </div>
 
@@ -6176,7 +6298,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
         <ul style="margin-bottom:0;">
           <li data-afirma="c1-m10-06"><cite class="cita" data-ref="lohr2022sampling" data-loc="cap. 1" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, cap. 1)</a></cite> — la lectura obligatoria de las semanas 1 y 2, con el caso
-            del <em>Digest</em>. El caso de <cite class="cita" data-ref="hite1987women" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-hite1987women" title="Hite, S. (1987). The Hite report: women and love: a cultural revolution in progress (1.ª ed.). Knopf.">Hite (1987)</a></cite> y los cinco ejercicios de este módulo vienen de la primera edición
+            del <em>Digest</em>. El caso de <cite class="cita" data-ref="hite1987women" data-loc="" data-modo="narrativa"><a class="cita-enlace" href="#pie-hite1987women" title="Hite, S. (1987). The Hite report: women and love: a cultural revolution in progress (1.ª ed.). Knopf.">Hite (1987)</a></cite> y los cinco primeros ejercicios de este módulo vienen de la primera edición
             <cite class="cita" data-ref="lohr1999sampling" data-loc="cap. 1"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">(Lohr, 1999, cap. 1)</a></cite>.</li>
           <li data-afirma="c1-m10-07"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="§2.1.1; §2.1.5" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, §2.1.1; §2.1.5)</a></cite> — la notación $U$ y $y_k$ que se usa en todo este material; el total, que aquí se escribe $t$, allí es $t_y$. De
             <a href="https://psirusteam.github.io/EstrategiasDeMuestreo/" target="_blank" rel="noopener">acceso

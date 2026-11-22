@@ -340,3 +340,35 @@ rbind(fraccion_prestada = f,
 #> fraccion_prestada 0.100 0.20 0.300
 #> valor_real        0.285 0.27 0.255
 #> sesgo             0.015 0.03 0.045
+
+cat("\n###BLOQUE-S6###\n")
+# Ejercicio 6 - La omision del Censo 2018 (DANE, comunicado del 17-X-2019, p. 3).
+# Supuesto del enunciado: cada porcentaje es la fraccion de la poblacion real
+# de la zona que el censo no conto.
+om_total <- 0.085; om_cab <- 0.064; om_rur <- 0.150
+# El total mezcla las dos zonas, como la formula del modulo 4:
+#   om_total = w_rur * om_rur + (1 - w_rur) * om_cab
+w_rur <- (om_total - om_cab) / (om_rur - om_cab)
+round(c(peso_rural = w_rur, peso_cabeceras = 1 - w_rur), 4)
+#>     peso_rural peso_cabeceras
+#>         0.2442         0.7558
+
+# Los porcentajes vienen redondeados a una decima. El peso mas bajo y el mas
+# alto que son compatibles con ese redondeo:
+round(c(minimo = (0.0845 - 0.0645) / (0.1505 - 0.0645),
+        maximo = (0.0855 - 0.0635) / (0.1495 - 0.0635)), 4)
+#> minimo maximo
+#> 0.2326 0.2558
+
+# Una caracteristica inventada para el ejercicio: la tiene el 60 % de la gente
+# de las cabeceras y el 20 % de la del rural.
+p_cab <- 0.60; p_rur <- 0.20
+real <- (1 - w_rur) * p_cab + w_rur * p_rur
+# El censo sin ajustar solo ve a los contados: cada zona pesa por lo que conto.
+contados_cab <- (1 - w_rur) * (1 - om_cab)
+contados_rur <- w_rur * (1 - om_rur)
+censo <- (contados_cab * p_cab + contados_rur * p_rur) / (contados_cab + contados_rur)
+round(c(real_pct = 100 * real, censo_pct = 100 * censo,
+        sesgo_puntos = 100 * (censo - real)), 2)
+#>     real_pct    censo_pct sesgo_puntos
+#>        50.23        50.93         0.69
