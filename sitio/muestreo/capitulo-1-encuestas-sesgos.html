@@ -5021,7 +5021,8 @@ print((pd.Series({
       <div class="simulador" data-simulador="auditor-preguntas">
         <h4><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Auditor de preguntas</h4>
         <p class="simulador-intro">Elige un ítem, marca los defectos que creas que tiene y comprueba tu diagnóstico. La
-          reformulación aparece cuando estén todos identificados. No hay ningún porcentaje aquí, y es deliberado: el
+          lista es la misma para los tres ítems y cada uno tiene tres de los seis: marcar uno que no tiene también
+          cuenta. La reformulación aparece cuando el diagnóstico esté completo. No hay ningún porcentaje aquí, y es deliberado: el
           efecto de una redacción concreta sobre una respuesta concreta no se puede medir sin un experimento que este material no tiene, y ponerle una cifra inventada sería exactamente el error que este capítulo enseña a no cometer.</p>
         <div class="simulador-controles"></div>
         <div class="warning" data-panel="original"></div>
@@ -5042,7 +5043,9 @@ print((pd.Series({
           <p><strong>Los defectos vienen en grupo.</strong> Ninguno de los tres ítems tiene un solo problema: cada uno
             arrastra tres a la vez, y esa es la situación normal fuera del aula. Importa porque arreglar uno y dejar
             los otros dos no salva el ítem: una pregunta con marco temporal impecable sigue sin servir si además es
-            sugestiva. Por eso el ejercicio pide marcarlos <em>todos</em> antes de enseñar la reformulación.</p>
+            sugestiva. Por eso el ejercicio pide marcarlos <em>todos</em>, y solo esos, antes de enseñar la reformulación.
+            Alguno de los que el ítem no tiene se puede discutir, y la herramienta lo acepta explicando por qué no es
+            el principal: nombrar un defecto también es saber cuándo no está.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
             El sesgo de medición se combate con vocabulario, no con estadística: pregunta sugestiva, doble cañón,
@@ -8778,22 +8781,39 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
     // No hay estadística aquí y es a propósito: el efecto de una redacción
     // sobre una respuesta no se puede leer de estos datos, y poner un
     // porcentaje inventado sería exactamente el error que enseña el módulo.
-    // Lo que sí se puede hacer es reescribir el ítem defecto a defecto.
+    // Lo que sí se puede hacer es diagnosticar el ítem defecto a defecto.
+    //
+    // Los tres ítems ofrecen la misma lista de seis defectos (auditoría del
+    // capítulo 1, E3: antes solo se ofrecían los que el ítem tenía, y no se
+    // podía fallar). Cada ítem tiene tres; de los otros tres, los que el ítem
+    // claramente no tiene cuentan como error al comprobar, y los que se pueden
+    // defender se aceptan con su explicación.
     // ---------------------------------------------------------------
+    const DEFECTOS_AUDITOR = [
+      { clave: 'sugestiva', etiqueta: 'Sugestiva' },
+      { clave: 'multiple', etiqueta: 'Varias preguntas en una' },
+      { clave: 'doblenegacion', etiqueta: 'Doble negación' },
+      { clave: 'vaga', etiqueta: 'Términos sin definir' },
+      { clave: 'marco', etiqueta: 'Sin marco temporal' },
+      { clave: 'cerrada', etiqueta: 'Sí/no para algo que tiene grados' }
+    ];
+
     const ITEMS_AUDITOR = [
       {
         id: 'hite',
         titulo: 'Del cuestionario de Hite (1987)',
         original: '¿Tu esposo o pareja te ve como igual? ¿O hay veces que parece tratarte como inferior? ' +
           '¿Te deja fuera de las decisiones? ¿Actúa de superior?',
-        defectos: [
-          { clave: 'sugestiva', etiqueta: 'Sugestiva',
-            que: 'da por supuesto que el trato como inferior ocurre, y solo pregunta cuánto' },
-          { clave: 'multiple', etiqueta: 'Cuatro preguntas en una',
-            que: 'ser tratada como igual, quedar fuera de las decisiones y el tono son cosas distintas' },
-          { clave: 'vaga', etiqueta: 'Términos sin definir',
-            que: '«actuar de superior» significa algo distinto para cada persona' }
-        ],
+        tiene: {
+          sugestiva: 'da por supuesto que el trato como inferior ocurre, y solo pregunta cuánto',
+          multiple: 'son cuatro preguntas: ser tratada como igual, quedar fuera de las decisiones y el tono son cosas distintas',
+          vaga: '«actuar de superior» significa algo distinto para cada persona'
+        },
+        noTiene: {
+          doblenegacion: { tipo: 'no', por: 'ninguna de las cuatro preguntas lleva una negación' },
+          cerrada: { tipo: 'no', por: 'las preguntas del cuestionario de Hite eran abiertas: no se contestaban con sí o no' },
+          marco: { tipo: 'discutible', por: '«hay veces» no dice en qué periodo, y se puede defender; pero el ítem pregunta por la relación, no cuenta hechos, y lo que lo inutiliza son los tres de arriba' }
+        },
         corregida: '¿Con qué frecuencia participa usted en las decisiones importantes de su relación? ' +
           '(siempre / casi siempre / a veces / casi nunca / nunca)'
       },
@@ -8801,14 +8821,16 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         id: 'ejercicio',
         titulo: 'Un ítem de hábitos de salud',
         original: '¿Hace usted ejercicio?',
-        defectos: [
-          { clave: 'vaga', etiqueta: 'Términos sin definir',
-            que: '¿caminar al trabajo cuenta? ¿y subir escaleras?' },
-          { clave: 'marco', etiqueta: 'Sin marco temporal',
-            que: '¿alguna vez en la vida, este mes, esta semana?' },
-          { clave: 'cerrada', etiqueta: 'Respuesta binaria a algo continuo',
-            que: 'sí/no borra toda la variación que interesa medir' }
-        ],
+        tiene: {
+          vaga: '¿caminar al trabajo cuenta? ¿y subir escaleras?',
+          marco: '¿alguna vez en la vida, este mes, esta semana?',
+          cerrada: 'sí/no borra toda la variación que interesa medir'
+        },
+        noTiene: {
+          sugestiva: { tipo: 'no', por: 'no presupone nada ni deja ver cuál es la respuesta buena' },
+          multiple: { tipo: 'no', por: 'pregunta una sola cosa; el problema es que esa cosa no está definida' },
+          doblenegacion: { tipo: 'no', por: 'no lleva ninguna negación' }
+        },
         corregida: 'En los últimos siete días, ¿cuántos días realizó al menos 30 minutos seguidos de ' +
           'actividad física que le dejara sin aliento? (0 a 7)'
       },
@@ -8816,20 +8838,23 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
         id: 'servicio',
         titulo: 'Una encuesta de satisfacción',
         original: '¿No está usted de acuerdo en que no deberíamos empeorar el precio y la calidad del servicio?',
-        defectos: [
-          { clave: 'doblenegacion', etiqueta: 'Doble negación',
-            que: '«no está de acuerdo en que no» obliga a resolver una lógica antes de opinar' },
-          { clave: 'multiple', etiqueta: 'Doble cañón',
-            que: 'precio y calidad se pueden valorar en direcciones opuestas' },
-          { clave: 'sugestiva', etiqueta: 'Sugestiva',
-            que: '«no deberíamos empeorar» ya trae la respuesta puesta' }
-        ],
+        tiene: {
+          doblenegacion: '«no está de acuerdo en que no» obliga a resolver una lógica antes de opinar',
+          multiple: 'precio y calidad se pueden valorar en direcciones opuestas',
+          sugestiva: '«no deberíamos empeorar» ya trae la respuesta puesta'
+        },
+        noTiene: {
+          marco: { tipo: 'no', por: 'pide una opinión sobre lo que se debería hacer, no cuenta hechos; el marco temporal hace falta para las conductas que se cuentan' },
+          vaga: { tipo: 'discutible', por: '«empeorar el precio» es ambiguo, y se puede defender; pero lo que lo inutiliza son los tres de arriba' },
+          cerrada: { tipo: 'discutible', por: 'si se contesta con sí o no, se pierden los grados, y se puede defender; la reformulación lo arregla con una escala' }
+        },
         corregida: 'Valore por separado el precio y la calidad del servicio, de 1 (muy malo) a 5 (muy bueno).'
       }
     ];
 
     SIMULADORES['auditor-preguntas'] = function (raiz) {
       const params = { item: 'hite' };
+      let comprobado = false;
       const panelMal = raiz.querySelector('[data-panel="original"]');
       const panelBien = raiz.querySelector('[data-panel="corregida"]');
       const contenedor = raiz.querySelector('.simulador-controles');
@@ -8838,37 +8863,69 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
 
       function pintar() {
         const it = item();
-        const marcados = it.defectos.filter(d => params['d_' + d.clave]);
-        panelMal.innerHTML =
-          `<p><strong>${it.titulo}</strong></p><p style="font-style:italic;">«${it.original}»</p>` +
-          (marcados.length
-            ? '<ul style="margin-bottom:0;">' + marcados.map(d =>
-                `<li><strong>${d.etiqueta}:</strong> ${d.que}</li>`).join('') + '</ul>'
-            : '<p style="margin-bottom:0;">Marca abajo los defectos que creas que tiene.</p>');
+        const marcados = DEFECTOS_AUDITOR.filter(d => params['d_' + d.clave]);
+        const nTiene = Object.keys(it.tiene).length;
+        const acertados = marcados.filter(d => it.tiene[d.clave]);
+        const sobran = marcados.filter(d => it.noTiene[d.clave] && it.noTiene[d.clave].tipo === 'no');
+        const faltan = DEFECTOS_AUDITOR.filter(d => it.tiene[d.clave] && !params['d_' + d.clave]);
 
-        const todos = marcados.length === it.defectos.length;
-        panelBien.innerHTML = todos
-          ? `<p style="margin-bottom:0;"><strong>Una redacción que los evita:</strong> «${it.corregida}»</p>`
-          : `<p style="margin-bottom:0;">Te faltan ${it.defectos.length - marcados.length} de ` +
-            `${it.defectos.length}. La reformulación aparece cuando estén los tres.</p>`;
+        let lista;
+        if (!comprobado) {
+          lista = marcados.length
+            ? '<p style="margin-bottom:0.25rem;">Tu diagnóstico, todavía sin comprobar:</p><ul style="margin-bottom:0;">' +
+              marcados.map(d => `<li>${d.etiqueta}</li>`).join('') + '</ul>'
+            : '<p style="margin-bottom:0;">Marca abajo los defectos que creas que tiene y pulsa «Comprobar».</p>';
+        } else {
+          lista = '<ul style="margin-bottom:0;">' + marcados.map(d => {
+            if (it.tiene[d.clave]) return `<li>✓ <strong>${d.etiqueta}:</strong> ${it.tiene[d.clave]}</li>`;
+            const n = it.noTiene[d.clave];
+            return n.tipo === 'no'
+              ? `<li>✗ <strong>${d.etiqueta}:</strong> no lo tiene; ${n.por}</li>`
+              : `<li>≈ <strong>${d.etiqueta}:</strong> ${n.por}</li>`;
+          }).join('') + '</ul>';
+          if (!marcados.length) lista = '<p style="margin-bottom:0;">No marcaste ninguno, y este ítem tiene tres.</p>';
+        }
+        panelMal.innerHTML =
+          `<p><strong>${it.titulo}</strong></p><p style="font-style:italic;">«${it.original}»</p>` + lista;
+
+        const completo = faltan.length === 0 && sobran.length === 0;
+        if (!comprobado) {
+          panelBien.innerHTML = '<p style="margin-bottom:0;">Seis defectos posibles; este ítem tiene tres. ' +
+            'La reformulación aparece cuando el diagnóstico esté completo y sin defectos de más.</p>';
+        } else if (completo) {
+          panelBien.innerHTML = `<p style="margin-bottom:0;"><strong>Una redacción que los evita:</strong> «${it.corregida}»</p>`;
+        } else {
+          const partes = [];
+          if (faltan.length) partes.push(`te ${faltan.length === 1 ? 'falta' : 'faltan'} ${faltan.length} de ${nTiene}`);
+          if (sobran.length) partes.push(`${sobran.length === 1 ? 'sobra' : 'sobran'} ${sobran.length} que no tiene`);
+          panelBien.innerHTML = `<p style="margin-bottom:0;">Todavía no: ${partes.join(' y ')}. ` +
+            'Cambia las casillas y vuelve a comprobar.</p>';
+        }
 
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
-          { etiqueta: 'defectos detectados:', valor: `${marcados.length} de ${it.defectos.length}` },
+          { etiqueta: 'defectos acertados:', valor: comprobado ? `${acertados.length} de ${nTiene}` : '—' },
+          { etiqueta: 'marcados de más:', valor: comprobado ? `${sobran.length}` : '—' },
           { etiqueta: 'tipo de error:', valor: 'de medición (no lo arregla ningún tamaño de muestra)' }
         ]);
       }
 
       function montar() {
         contenedor.innerHTML = '';
-        const it = item();
-        it.defectos.forEach(d => { params['d_' + d.clave] = false; });
+        comprobado = false;
+        DEFECTOS_AUDITOR.forEach(d => { params['d_' + d.clave] = false; });
         crearSelector(contenedor, {
           clave: 'item', etiqueta: 'Ítem',
           opciones: ITEMS_AUDITOR.map(i => ({ valor: i.id, texto: i.titulo }))
         }, params, montar);
         crearInterruptores(contenedor,
-          it.defectos.map(d => ({ clave: 'd_' + d.clave, etiqueta: d.etiqueta })),
-          params, pintar);
+          DEFECTOS_AUDITOR.map(d => ({ clave: 'd_' + d.clave, etiqueta: d.etiqueta })),
+          params, () => { comprobado = false; pintar(); });
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'quiz-comprobar';
+        boton.textContent = 'Comprobar';
+        boton.addEventListener('click', () => { comprobado = true; pintar(); });
+        contenedor.appendChild(boton);
         pintar();
       }
 

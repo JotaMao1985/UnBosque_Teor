@@ -9747,3 +9747,26 @@ auditor y `--cierre 1`, arnés, reensamblado estable, referencias, conteos, 0 ci
 páginas, `node --check`).
 
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+
+### T7.148 — Fase 6 del cap. 1, tarea 6.2: el auditor del módulo 6, con distractores (2026-11-21)
+
+- **El defecto (E3, PE-04).** El auditor de preguntas solo ofrecía como casillas los defectos que el ítem sí tenía:
+  no se podía fallar, y el panel decía «te faltan N de N». Javier eligió **distractores** (21 nov).
+- **Ahora** los tres ítems ofrecen la **misma lista de seis defectos** (sugestiva, varias preguntas en una, doble
+  negación, términos sin definir, sin marco temporal, sí/no para algo que tiene grados) y un botón **Comprobar**. Al
+  comprobar, cada defecto marcado sale con su veredicto: ✓ lo tiene (y por qué), ✗ no lo tiene (y por qué no), o ≈ se
+  puede defender, aunque no es el principal. La reformulación aparece con los tres defectos y ninguno de más; si no,
+  dice cuántos faltan y cuántos sobran. Cambiar una casilla devuelve el diagnóstico a «sin comprobar».
+- **Los distractores se eligieron para no castigar una respuesta defendible.** Cuentan como error solo los que el
+  ítem claramente no tiene (doble negación en Hite y en el de ejercicio; sugestiva y varias preguntas en el de
+  ejercicio; sin marco temporal en el de satisfacción; sí/no en Hite, cuyas preguntas eran abiertas, como dice el
+  módulo 1). Se aceptan con explicación tres discutibles: el «hay veces» de Hite, «empeorar el precio» y el sí/no
+  del de satisfacción.
+- La introducción del simulador y la lectura guiada lo cuentan («marcarlos todos, y solo esos»).
+
+**Verificado** en el navegador: diagnóstico sin comprobar, con un defecto de más (✗ con su razón, «faltan 2 de 3 y
+sobra 1»), completo con un discutible (reformulación), cambio de ítem que limpia las casillas; a 375 px reales sin
+desbordes; consola limpia. Protocolo en verde (auditor y `--cierre 1`, reensamblado estable, conteos, 0 cifras sin
+respaldo, `node --check`).
+
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
