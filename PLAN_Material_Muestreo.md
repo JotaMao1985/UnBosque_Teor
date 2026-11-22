@@ -9717,4 +9717,10 @@ de 10–11 px de dos componentes de la plantilla, en los capítulos 7 (M9) y 8 (
 fondo verde oscuro (etapa elegida, criterio activo) pesan más y conservan su tono claro (9,86 y 9,04). Medido en
 las diez páginas, módulo por módulo: ningún texto de menos de 24 px queda en `#FF6600`.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**Commit** `442995e`.
+
+**Publicación de la Fase 5 (2026-11-21), con el visto bueno de Javier.** `origin/main` de `211565d` a `442995e`
+(d444e03, 21129f5, 442995e; `origin/main` era ancestro, push directo) y `gh-pages` de `d0e1dd0` a `73179fe`
+(`commit-tree 442995e:sitio`, padre y árbol comprobados; invariante `gh-pages^{tree}` = `main:sitio`). GitHub Pages
+compiló `73179fe`; los 56 archivos servidos son idénticos byte a byte a `442995e:sitio`. Cambian diez páginas: las
+gráficas del capítulo 1 y el contraste del texto pequeño en los ocho capítulos, el preparcial y el proyecto.
