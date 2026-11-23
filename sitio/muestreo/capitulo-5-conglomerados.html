@@ -3595,6 +3595,22 @@
       color: #6b7280;
     }
 
+    /* Checkpoint final del capítulo 1 (2026-11-23), VI-2. A 375 px, los rellenos
+       anidados del quiz dejaban la gráfica de una pregunta en 196 px de lienzo. */
+    @media (max-width: 640px) {
+      .quiz {
+        padding: 1rem 0.6rem;
+      }
+
+      .quiz-pregunta {
+        padding: 0.85rem 0.6rem;
+      }
+
+      .quiz-grafico {
+        padding: 0.3rem;
+      }
+    }
+
     /* ------------------------------------------------------------------
        Componente .simulacro — el simulacro del quiz del capítulo 5 (módulo
        12), que se responde, se cronometra y SE CORRIGE AL ENTREGAR.
@@ -7371,7 +7387,9 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
           ? (acierto ? '<strong>Los tres puntos.</strong> ' : '<strong>Anotado.</strong> ')
           : acierto
             ? (estado[i].intentos === 1 ? '<strong>Correcto.</strong> ' : '<strong>Correcto, en el segundo intento.</strong> ')
-            : '<strong>No es esa.</strong> ';
+            // En la de varias respuestas, en plural (auditoría de cierre del cap. 1).
+            : (preguntas[i].tipo === 'multiple' ? '<strong>No son esas.</strong> '
+                                                : '<strong>No es esa.</strong> ');
         // Defensivo: las preguntas de seleccion multiple no declaran
         // `retroAcierto`, y sin esta guarda el estudiante veia la palabra
         // "undefined" detras de "Correcto". (Bug encontrado auditando el cap. 6.)

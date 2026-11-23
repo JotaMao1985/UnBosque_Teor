@@ -9892,4 +9892,46 @@ fuera de git.
 - Efecto colateral: `ensambla_taller1.py` dejó `sitio/muestreo/taller-1-preparacion-parcial-1.html`, ignorado por git;
   no se pudo borrar sin permiso.
 
-**No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, commit `e488d3b`.
+
+### T7.153 — Checkpoint final del cap. 1: las mejoras elegidas de la auditoría de cierre (2026-11-23)
+
+Pedido de Javier: «Las recomendadas», es decir, las mejoras 1 a 8 de la lista C de `PLAN_Auditoria_Cap1_Cierre.md`
+(fuera de git). Quedan para otra ronda la pregunta de predicción antes de los simuladores de los módulos 3, 5 y 8, los
+casos nuevos y el número variable de correctas del quiz, la variante del ejercicio 4, el sesgo de los libros gruesos
+del ejercicio 5, el orden de los ejercicios y el léxico colombiano.
+
+- **Quiz 6 legible a 375 px (VI-2):** en el teléfono, las barras van horizontales, con rótulos en dos líneas y una caja
+  de 520 px. Barras más gruesas en todos los tamaños. El trazado pasa de 88 a 167 px de ancho, con barras de 12 px; a
+  1280 siguen verticales, de 19 px. La pregunta dice «verde oscuro» y no «verdes». Además, en la plantilla, los
+  rellenos del quiz se adelgazan en el móvil: el lienzo de la gráfica pasa de 196 a 245 px. Un primer intento, que
+  reasignaba los objetos de ejes de Chart.js, desbordaba la pila y cortaba el quiz en la pregunta 5. Lo cazó el
+  navegador y los ejes se construyen nuevos.
+- **«No son esas» (VI-19):** el motor del quiz lo dice en las preguntas de varias respuestas. Va a la plantilla y a
+  las diez páginas por `ensamblado/retropropaga_plural_quiz.py`, idempotente, junto con los rellenos.
+- **Convención de color:** el verde azulado (`#0e7490`) queda escrito en el M1 («cualquier otra serie») y en el
+  comentario del código.
+- **Glosario:** filas de la probabilidad de inclusión ($\pi_k$ · Lohr $\pi_i$ · Gutiérrez $\pi_k$) y del peso de diseño
+  ($d_k = 1/\pi_k$ · Lohr $w_i$ · Gutiérrez $d_k$), comprobadas en los ejemplares (Lohr pp. 34 y 44; Gutiérrez §2.1.4 y
+  §2.2.1.1). La nota ya no promete esas dos cosas para el capítulo 2.
+- **Léxico:** «en línea» por «online» en la prosa, las leyendas y las lecturas (los nombres de variables del código no
+  cambian). «Tamaño equivalente» por «tamaño efectivo» en el M7, en la lectura de Meng y en los comentarios de las dos
+  cadenas, como el capítulo 8.
+- **Fuentes:** tres afirmaciones nuevas, con su cita y su entrada en el registro.
+  - c1-m4-09: el 2,3 % de entrevistas, en Heck et al., p. 2.
+  - c1-m4-10: la celda 18,1/47,8/13,7, con los archivos de Lohr, ejercicio 15.5, y el 18,1 % del censo en Heck, p. 3,
+    tabla 1. Esta segunda cita la pidió el FU.
+  - c1-m1-19: en el M1, el ejercicio 15.8 trae un recuento algo menor que el titular, y el capítulo 8, módulo 2, lo
+    usa y compara los dos.
+
+  Las verificó un FU independiente (Sonnet, contexto limpio). Recalculó con R las tres cifras de la celda y releyó la
+  frase c1-m4-10 después de añadir la cita de Heck. Las tres quedan respaldadas, con los pasajes rehechos por guion.
+- **Verificación:**
+  - Comprobaciones en verde: `--cierre 1` (66 afirmaciones, 64 respaldadas y 2 con matiz, 128 pasajes), el
+    generador, el arnés (71/71), `anota --check` 0, `--prosa --todos` 0 sin respaldo, el código de las 13 páginas
+    arranca, `node --check` y los conteos (0 desajustados).
+  - Reensamblado: el cap. 1 da el mismo archivo en dos pasadas, y reensamblar los capítulos 2 a 8, el preparcial y el
+    proyecto da lo mismo que el parche.
+  - Referencias: la nueva al «capítulo 8, módulo 2» resuelve a su M2.
+  - Navegador a 375 px (iframe con `innerWidth` 375) en los caps. 1, 4 y 8, y a 1280 en el cap. 1: sin errores de JS
+    ni de KaTeX y sin desborde. «No son esas» sale en una de varias respuestas y «No es esa» en una de una.

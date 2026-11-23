@@ -291,6 +291,25 @@ afirmaciones:
     pagina: 547
     hash_pasaje: b2038b5905621e6d
 
+- id: c1-m1-19
+  tipo: dato
+  afirmacion: >-
+    El ejercicio 15.8 de Lohr trae un recuento de papeletas del sondeo del Literary Digest algo menor que el
+    del titular de la revista (1 293 669 para Landon y 972 897 para Roosevelt).
+  hash_texto: 717ed8a716fe540e
+  veredicto: respaldada
+  motivo: >-
+    Frase nueva del Checkpoint final del cap. 1 (mejora NA-3 / ES-19 / FU-10). El ejercicio da 966 352 y
+    1 286 511 papeletas, 2 252 863 en total, frente a las 2 266 566 del titular: 13 703 menos (lector FU).
+  redactado_por: sesión maestra, Checkpoint final del plan del cap. 1 (2026-11-23)
+  verificado_por: lector FU del Checkpoint final (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-23
+  fuentes:
+  - clave: lohr2022sampling
+    loc: 'ejercicio 15.8'
+    pagina: 547
+    hash_pasaje: bc3b613b39e0e3de
+
 - id: c1-m2-07
   tipo: dato
   afirmacion: >-
@@ -793,6 +812,50 @@ afirmaciones:
     loc: 'ejercicio 15.5'
     pagina: 546
     hash_pasaje: 9700ce074637f133
+
+- id: c1-m4-09
+  tipo: dato
+  afirmacion: >-
+    En la encuesta telefónica de Heck y otros, el 2,3 % de los números marcados produjo una entrevista.
+  hash_texto: 36318b2aa212061a
+  veredicto: respaldada
+  motivo: >-
+    Cita nueva del Checkpoint final del cap. 1 (mejora FU-13). Heck dice «calls» y «complete response»;
+    «números» y «entrevista» son las palabras de Lohr en el ejercicio 15.5 (lector FU). 1 838 / 79 014 = 2,33 %.
+  redactado_por: sesión maestra, Checkpoint final del plan del cap. 1 (2026-11-23)
+  verificado_por: lector FU del Checkpoint final (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
+  fecha: 2026-11-23
+  fuentes:
+  - clave: heck201865
+    loc: 'p. 2'
+    pagina: 2
+    hash_pasaje: b4eed93720429558
+
+- id: c1-m4-10
+  tipo: dato
+  afirmacion: >-
+    Con los archivos de datos de las dos encuestas que acompañan al ejercicio de Lohr, la celda «mujer, 44
+    años o más, blanca» es el 18,1 % del censo (dato de la tabla 1 de Heck y otros), el 47,8 % de la
+    muestra telefónica y el 13,7 % del panel en línea.
+  hash_texto: 9eee456209f77b26
+  veredicto: respaldada
+  motivo: >-
+    Cita nueva del Checkpoint final del cap. 1 (mejora FU-13). El lector FU vio que el ejercicio 15.5 da los
+    archivos y los pesos frente al censo, pero no el 18,1 % ni el corte en 44 años: están en Heck, p. 3,
+    tabla 1 (0,181), y la frase pasó a citarlo ahí; la relectura la respalda tal como queda. Con R sobre los
+    CSV, 878/1 838 = 47,77 % y 135/983 = 13,73 %; el censo recuperado de los pesos da 18,13 %.
+  redactado_por: sesión maestra, Checkpoint final del plan del cap. 1 (2026-11-23)
+  verificado_por: lector FU del Checkpoint final (Sonnet 5.5, contexto limpio), con relectura; los pasajes se rehicieron por guion
+  fecha: 2026-11-23
+  fuentes:
+  - clave: lohr2022sampling
+    loc: 'ejercicio 15.5'
+    pagina: 546
+    hash_pasaje: 20dc0be3f07f8fa9
+  - clave: heck201865
+    loc: 'p. 3'
+    pagina: 3
+    hash_pasaje: f80147090128676c
 
 - id: c1-m5-01
   tipo: regla

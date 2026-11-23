@@ -49,7 +49,7 @@
 
     // Convención de color del capítulo (Fase 5, lector visual VI-28), la misma en todas las gráficas:
     //   verde oscuro = la verdad de la población · naranja = lo que da la encuesta o el estimador ·
-    //   gris = referencias y contexto · azul = cualquier otra serie.
+    //   gris = referencias y contexto · verde azulado (#0e7490) = cualquier otra serie.
     const VERDAD = COLORES_GRAFICO.primario, ENCUESTA = COLORES_GRAFICO.secundario,
           REFERENCIA = COLORES_GRAFICO.gris, OTRA = COLORES_GRAFICO.terciario;
     // La barra que el estudiante elige se pinta más oscura que sus vecinas (lector visual, VI-10).
@@ -150,7 +150,7 @@
         tituloX: 'Grupo', tituloY: '% del grupo en cada fuente', min: 0, max: 50,
         barrasExtra: [
           { etiqueta: 'Encuesta telefónica', valores: [], color: ENCUESTA },
-          { etiqueta: 'Panel online', valores: [], color: OTRA }
+          { etiqueta: 'Panel en línea', valores: [], color: OTRA }
         ]
       });
       ejes(g, { y: { formato: ENTERO } });
@@ -193,11 +193,11 @@
 
         const campos = [
           { etiqueta: 'edad media telefónica:', valor: fmtNum(IT.edadMedia.tel, 1) + ' años' },
-          { etiqueta: 'edad media online:', valor: fmtNum(IT.edadMedia.online, 1) + ' años' },
+          { etiqueta: 'edad media en línea:', valor: fmtNum(IT.edadMedia.online, 1) + ' años' },
           { etiqueta: '% de acuerdo (telefónica, con pesos):', valor: fmtNum(IT.agree.tel.conPesos, 1) + ' %' },
-          { etiqueta: '% de acuerdo (online, con pesos):', valor: fmtNum(IT.agree.online.conPesos, 1) + ' %' },
+          { etiqueta: '% de acuerdo (en línea, con pesos):', valor: fmtNum(IT.agree.online.conPesos, 1) + ' %' },
           { etiqueta: 'coeficiente de variación de los pesos:', valor: 'tel. ' + fmtNum(IT.cvPesos.tel, 2) +
-              ' · online ' + fmtNum(IT.cvPesos.online, 2) }
+              ' · en línea ' + fmtNum(IT.cvPesos.online, 2) }
         ];
         // La desviación frente al censo solo se puede calcular en las ocho
         // celdas de calibración; con los demás cortes la línea no se escribe,
@@ -205,7 +205,7 @@
         if (d.censo) {
           const i = d.online.map((v, j) => Math.abs(v - d.censo[j]))
             .reduce((mejor, v, j, a) => (v > a[mejor] ? j : mejor), 0);
-          campos.push({ etiqueta: `mayor desvío del panel online (${params.pesos} pesos):`,
+          campos.push({ etiqueta: `mayor desvío del panel en línea (${params.pesos} pesos):`,
                         valor: `${d.etiquetas[i]} (${fmtNum(d.online[i] - d.censo[i], 1)} puntos)` });
         }
         actualizarLectura(raiz.querySelector('.simulador-lectura'), campos);
@@ -912,8 +912,9 @@
     GLOSARIOS['conceptos'] = {
       titulo: 'Notación: este material ↔ Lohr ↔ Gutiérrez',
       nota: 'Es la primera entrega de una tabla que crece con el curso. En el capítulo 2 se le ' +
-        'añaden el diseño $p(s)$, las probabilidades de inclusión y el estimador de ' +
-        'Horvitz–Thompson; aquí solo está el vocabulario que hace falta para nombrar las cosas. ' +
+        'añaden el diseño $p(s)$ y el estimador de Horvitz–Thompson; aquí solo está el ' +
+        'vocabulario que hace falta para nombrar las cosas, con la probabilidad de inclusión y el ' +
+        'peso, que ya aparecen en los módulos 3 y 4. ' +
         'El total se escribe $t$ aquí y en el capítulo 2; desde el capítulo 3, cuando hay varias ' +
         'variables a la vez, $t_y$. Gutiérrez llama $T$ al parámetro y $\\hat{T}$ a su estimador; ' +
         'Lohr escribe $\\hat{t}$ para el estimador del total y $\\hat{\\theta}$ para un estadístico cualquiera.',
@@ -927,6 +928,8 @@
         { concepto: 'Varianza poblacional', aqui: 'S^2', lohr: 'S^2', gutierrez: 'S^2_{yU}', r: 'var(y)' },
         { concepto: 'Muestra', aqui: 's', lohr: '\\mathcal{S}', gutierrez: 's', r: 'agsrs' },
         { concepto: 'Tamaño de la muestra', aqui: 'n', lohr: 'n', gutierrez: 'n', r: 'nrow(agsrs)' },
+        { concepto: 'Probabilidad de inclusión', aqui: '\\pi_k', lohr: '\\pi_i', gutierrez: '\\pi_k', r: '—' },
+        { concepto: 'Peso de diseño', aqui: 'd_k = 1/\\pi_k', lohr: 'w_i', gutierrez: 'd_k', r: '—' },
         { concepto: 'Estimador de un parámetro', aqui: '\\hat{\\theta}', lohr: '\\hat{\\theta}', gutierrez: '\\hat{T}', r: 'svymean()' },
         { concepto: 'Sesgo de un estimador', aqui: 'B(\\hat{\\theta}) = E(\\hat{\\theta}) - \\theta', lohr: '\\text{Bias}', gutierrez: 'B(\\hat{T})', r: '—' },
         { concepto: 'Error cuadrático medio', aqui: '\\text{ECM} = B^2 + V', lohr: '\\text{MSE}', gutierrez: '\\text{ECM}(\\hat{T})', r: '—' }
@@ -1154,29 +1157,52 @@
         tipo: 'grafico',
         modulo: 4,
         alto: 260,
-        descripcionGrafico: 'Composición por sexo, edad y raza de la encuesta telefónica y del panel online, frente al censo de 2010',
-        pregunta: 'Las barras verdes son el censo de 2010. ¿Qué se puede afirmar de las dos encuestas?',
+        descripcionGrafico: 'Composición por sexo, edad y raza de la encuesta telefónica y del panel en línea, frente al censo de 2010',
+        pregunta: 'Las barras verde oscuro son el censo de 2010. ¿Qué se puede afirmar de las dos encuestas?',
         pista: 'Mira las cuatro celdas rotuladas «&lt;44» y compáralas con las cuatro «≥44» en las tres series.',
         dibujar: canvas => {
           const c = DATOS_CAP1.intell.celdas;
           const CORTO = { Female: 'M', Male: 'H', Young: '<44', Old: '≥44',
                           White: 'blanca', Nonwhite: 'no blanca' };
-          return ejes(crearGraficoBarras(canvas,
-            c.map(x => `${CORTO[x.sexo]}·${CORTO[x.edad]}·${CORTO[x.raza]}`),
+          // A 375 px las 24 barras verticales quedaban de 2-3 px en un trazado de 154 x 91
+          // (auditoría de cierre, VI-2): en el teléfono van horizontales, en una caja más alta.
+          const movil = window.matchMedia('(max-width: 767px)').matches;
+          if (movil && canvas.parentNode) canvas.parentNode.style.height = '520px';
+          const g = ejes(crearGraficoBarras(canvas,
+            // En el teléfono, cada rótulo en dos líneas, para no comerse el ancho del trazado.
+            c.map(x => (movil ? [`${CORTO[x.sexo]}·${CORTO[x.edad]}`, CORTO[x.raza]]
+                              : `${CORTO[x.sexo]}·${CORTO[x.edad]}·${CORTO[x.raza]}`)),
             c.map(x => x.pctCenso), {
               etiqueta: 'Censo 2010', color: VERDAD, min: 0, max: 50,
               barrasExtra: [
                 { etiqueta: 'Telefónica', valores: c.map(x => x.pctTel), color: ENCUESTA },
-                { etiqueta: 'Online', valores: c.map(x => x.pctOnline), color: OTRA }
+                { etiqueta: 'En línea', valores: c.map(x => x.pctOnline), color: OTRA }
               ]
             }), { y: { titulo: '% del grupo en cada fuente', formato: ENTERO } });
+          g.data.datasets.forEach(d => { d.barPercentage = 0.8; });
+          if (movil) {
+            // Ejes nuevos y planos: reasignar los objetos de opciones que ya resolvió Chart.js
+            // los vuelve recursivos y la pila se desborda.
+            g.options.indexAxis = 'y';
+            g.options.scales = {
+              x: { suggestedMin: 0, suggestedMax: 50,
+                   title: { display: true, text: '% del grupo en cada fuente',
+                            font: { family: 'Montserrat', size: 11 } },
+                   ticks: { callback: ENTERO, stepSize: 10, font: { family: 'Fira Code', size: 11 } },
+                   grid: { color: 'rgba(148, 163, 184, 0.2)' } },
+              y: { ticks: { autoSkip: false, font: { family: 'Fira Code', size: 10 } },
+                   grid: { display: false } }
+            };
+          }
+          g.update('none');
+          return g;
         },
         opciones: [
           { texto: 'Se alejan del censo en sentidos opuestos: la telefónica tiene mayores de más; el panel, jóvenes.', correcta: true,
             retro: 'Eso es. 60,7 años de edad media frente a 33,7. Ninguna de las dos es la población, y por eso las dos necesitan pesos.' },
           { texto: 'La telefónica es probabilística, así que reproduce el censo salvo por el error de muestreo.', correcta: false,
             retro: 'Ser probabilística no basta: se marcaron solo líneas fijas, no se llamó a celulares y contestó el 2,3 % de los números. La celda «mujer, ≥44, blanca» es el 47,8 % de la muestra y el 18,1 % del censo.' },
-          { texto: 'El panel online se parece más al censo, porque es más reciente y llega a quien no tiene línea fija.', correcta: false,
+          { texto: 'El panel en línea se parece más al censo, porque es más reciente y llega a quien no tiene línea fija.', correcta: false,
             retro: 'Al revés: su mayor desviación es de 13,6 puntos en una sola celda, frente a los 29,6 de la telefónica en la suya. Las dos fallan, y ninguna falla por ser vieja.' },
           { texto: 'No se pueden comparar con el censo: las dos encuestas tienen tamaños distintos.', correcta: false,
             retro: 'Se comparan porcentajes, no conteos: para eso están en porcentaje. El tamaño no entra en esta comparación.' }

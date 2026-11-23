@@ -241,7 +241,7 @@ data.frame(n              = tamanos,
 #> 4 1000000        0.00048      0.19544
 #> 5 2266566        0.00032      0.19544
 
-# Tamano efectivo: el n de un muestreo aleatorio con el MISMO error cuadratico
+# Tamano equivalente: el n de un muestreo aleatorio con el MISMO error cuadratico
 # medio que el sondeo sesgado. Se despeja de  S2 / n = ECM.
 round(S2 / ecm_digest, 2)
 #> [1] 6.14

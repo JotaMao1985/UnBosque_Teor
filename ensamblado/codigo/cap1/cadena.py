@@ -287,7 +287,7 @@ print(tabla.round(5).to_string(index=False))
 #> 1000000         0.00048       0.19544
 #> 2266566         0.00032       0.19544
 
-# Tamano efectivo del sondeo sesgado: el n de un muestreo aleatorio simple con
+# Tamano equivalente del sondeo sesgado: el n de un muestreo aleatorio simple con
 # el mismo error cuadratico medio.
 print(round(S2 / ecm(n_digest, sesgo), 2))
 #> 6.14
