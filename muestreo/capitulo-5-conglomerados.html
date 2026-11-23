@@ -3546,6 +3546,71 @@
       color: #C2410C;
     }
 
+    /* Auditoría de cierre del capítulo 1 (2026-11-22), B1, B2 y B5.
+       B1: el título h3 era flex, y cada <code> o <em> se volvía un ítem
+       aparte que a 375 px se iba a otra columna. Ahora es un bloque y la
+       barra naranja va en línea delante del texto. */
+    h3 {
+      display: block;
+    }
+
+    h3::before {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      margin-top: -0.2rem;
+    }
+
+    /* B2: en el móvil, los rellenos anidados de los ejercicios guiados
+       dejaban el código en 194 px; y la cabecera de cada bloque de código
+       recortaba su botón. */
+    @media (max-width: 640px) {
+      .exercise {
+        padding: 1rem 0.6rem;
+      }
+
+      .ejercicio-guiado {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .ejercicio-panel {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .code-block-header {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* B5: tres textos por debajo de 4,5 de contraste. */
+    .code-tab-btn {
+      color: #475569;
+    }
+
+    .glosario-boton[aria-expanded="true"] {
+      background: #C2410C;
+      border-color: #C2410C;
+    }
+
+    h2 > .text-gray-400.font-normal {
+      color: #6b7280;
+    }
+
+    /* Checkpoint final del capítulo 1 (2026-11-23), VI-2. A 375 px, los rellenos
+       anidados del quiz dejaban la gráfica de una pregunta en 196 px de lienzo. */
+    @media (max-width: 640px) {
+      .quiz {
+        padding: 1rem 0.6rem;
+      }
+
+      .quiz-pregunta {
+        padding: 0.85rem 0.6rem;
+      }
+
+      .quiz-grafico {
+        padding: 0.3rem;
+      }
+    }
+
     /* ------------------------------------------------------------------
        Componente .simulacro — el simulacro del quiz del capítulo 5 (módulo
        12), que se responde, se cronometra y SE CORRIGE AL ENTREGAR.
@@ -6040,7 +6105,10 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
         label.append(def.etiqueta);
 
         const output = document.createElement('output');
-        output.textContent = Number(params[def.clave]).toFixed(decimales);
+        // Con coma decimal y signo menos, como las lecturas y la prosa.
+        const fmtDeslizador = v => Number(v).toFixed(decimales)
+          .replace('.', ',').replace('-', '−');
+        output.textContent = fmtDeslizador(params[def.clave]);
         label.appendChild(output);
 
         const input = document.createElement('input');
@@ -6053,7 +6121,7 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
 
         input.addEventListener('input', () => {
           params[def.clave] = parseFloat(input.value);
-          output.textContent = params[def.clave].toFixed(decimales);
+          output.textContent = fmtDeslizador(params[def.clave]);
           alCambiar();
         });
 
@@ -7306,6 +7374,10 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
       function cerrar(i, bloque, acierto, textoRetro, opcs, vistas) {
         estado[i].resuelta = true;
         estado[i].acierto = acierto;
+        // La pista del intento fallido ya no aplica: quedaba a la vista
+        // junto a «Correcto» o «No es esa» (auditoría de cierre del cap. 1).
+        const pistaVieja = bloque.querySelector('.quiz-pista');
+        if (pistaVieja) pistaVieja.hidden = true;
         const retro = bloque.querySelector('.quiz-retro');
         retro.className = `quiz-retro ${acierto ? 'bien' : 'mal'}`;
         const encabezado = preguntas[i].tipo === 'texto'
@@ -7315,7 +7387,9 @@ round(c(doblar_pct = 100 * (V_rel(2 * m_star) / V_rel(m_star) - 1),
           ? (acierto ? '<strong>Los tres puntos.</strong> ' : '<strong>Anotado.</strong> ')
           : acierto
             ? (estado[i].intentos === 1 ? '<strong>Correcto.</strong> ' : '<strong>Correcto, en el segundo intento.</strong> ')
-            : '<strong>No es esa.</strong> ';
+            // En la de varias respuestas, en plural (auditoría de cierre del cap. 1).
+            : (preguntas[i].tipo === 'multiple' ? '<strong>No son esas.</strong> '
+                                                : '<strong>No es esa.</strong> ');
         // Defensivo: las preguntas de seleccion multiple no declaran
         // `retroAcierto`, y sin esta guarda el estudiante veia la palabra
         // "undefined" detras de "Correcto". (Bug encontrado auditando el cap. 6.)
