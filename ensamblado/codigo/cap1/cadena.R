@@ -45,7 +45,7 @@ cat("\n###BLOQUE-R1###\n")
 # estimacion contra el valor verdadero. Fuera de un aula eso no pasa nunca.
 agpop <- read.csv("CSV data sets for SDA 3e/agpop.csv")
 
-# Las cuatro piezas del marco conceptual, sobre este archivo:
+# Cuatro de las piezas del modulo, sobre este archivo:
 #   poblacion objetivo  -> los condados agricolas de EE.UU.
 #   marco muestral      -> la lista de 3078 filas de este archivo
 #   unidad              -> un condado (una fila)
@@ -142,8 +142,9 @@ round(rbind(
 #> telefonica    0.6164    0.6476
 #> online        0.6755    0.6563
 
-# Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
-# y raza no arregla una seleccion que fallo por otras variables.
+# Los pesos acercan las dos estimaciones (de 5,9 a 0,9 puntos), pero acercarse
+# entre si no es acercarse a la poblacion: calibrar por sexo, edad y raza no
+# arregla una seleccion que fallo por otras variables.
 cat("\n###BLOQUE-RP3###\n")
 # La formula del sesgo de no respuesta, termino a termino.
 #   mu = r mu_R + (1 - r) mu_M     =>     mu_R - mu = (1 - r)(mu_R - mu_M)
@@ -184,8 +185,9 @@ sesgo_no_respuesta <- function(r_h) {
 }
 
 # Tres escenarios. Los dos primeros tienen tasas IGUALES entre clases: una es
-# altisima y la otra ridicula, y las dos dan sesgo cero. El tercero baja la
-# tasa donde los condados son mas grandes (NC, NE, S, W en orden alfabetico).
+# alta y la otra muy baja, y las dos dan sesgo cero. El tercero deja al Oeste,
+# donde los condados son mas grandes, en 0.20, y al Nordeste, donde son mas
+# pequenos, en 0.65 (el orden es NC, NE, S, W, el alfabetico).
 round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
         todas_al_10 = sesgo_no_respuesta(rep(0.10, 4)),
         desiguales  = sesgo_no_respuesta(c(0.50, 0.65, 0.35, 0.20))), 2)
@@ -211,7 +213,7 @@ round(c(n_digest = n_digest, p_sondeo = p_sondeo, p_real = p_real, sesgo = sesgo
 
 cat("\n###BLOQUE-R8###\n")
 # Las cuatro cantidades vienen del bloque anterior; se rehacen para que este
-# corra suelto, igual que hace la pestaña de Python:
+# corra suelto, igual que en la pestana de Python:
 n_digest <- 1293669 + 972897
 p_real   <- 27.753 / (27.753 + 16.675)
 sesgo    <- 972897 / n_digest - p_real

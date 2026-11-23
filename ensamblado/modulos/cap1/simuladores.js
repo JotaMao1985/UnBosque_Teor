@@ -63,7 +63,10 @@
     // ---------------------------------------------------------------
     SIMULADORES['digest'] = function (raiz) {
       const DG = D1.digest;
-      const params = { cobertura: DG.coberturaRef, brecha: 0.25, rho: 0.72 };
+      // Arranca SOBRE la curva: el rho exacto que reproduce el sondeo con brecha
+      // 0,25 (el deslizador lo muestra redondeado a 0.72 hasta que se mueve).
+      const params = { cobertura: DG.coberturaRef, brecha: 0.25,
+                       rho: DG.isoResultado.rho[DG.isoResultado.brecha.indexOf(0.25)] };
       const lienzos = raiz.querySelectorAll('canvas');
 
       const gBarras = crearGraficoBarras(lienzos[0],
@@ -71,7 +74,7 @@
         [DG.pEleccion, 0, 0], {
           etiqueta: 'Apoyo a Roosevelt', color: COLORES_GRAFICO.primario,
           min: 0, max: 0.8,
-          lineas: [{ valor: DG.pSondeo, etiqueta: 'sondeo publicado: 42,9 %',
+          lineas: [{ valor: DG.pSondeo, etiqueta: 'sondeo (titular de la revista): 42,9 %',
                      color: COLORES_GRAFICO.secundario },
                    { valor: 0.5, etiqueta: 'umbral de la victoria', color: '#94a3b8' }]
         });
@@ -119,9 +122,9 @@
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'apoyo dentro del marco:', valor: fmtPct(pC) },
           { etiqueta: 'estimación del sondeo:', valor: fmtPct(pHat) },
-          { etiqueta: 'sesgo de no cobertura:', valor: fmtPct(sesgoCob, 2) },
-          { etiqueta: 'sesgo de no respuesta:', valor: fmtPct(sesgoResp, 2) },
-          { etiqueta: 'sesgo total:', valor: fmtPct(pHat - p, 2) },
+          { etiqueta: 'sesgo de no cobertura:', valor: fmtNum(100 * sesgoCob, 2) + ' puntos' },
+          { etiqueta: 'sesgo de no respuesta:', valor: fmtNum(100 * sesgoResp, 2) + ' puntos' },
+          { etiqueta: 'sesgo total:', valor: fmtNum(100 * (pHat - p), 2) + ' puntos' },
           { etiqueta: 'gana según el sondeo:', valor: pHat > 0.5 ? 'Roosevelt ✓' : 'Landon ✗' }
         ]);
       }
@@ -193,7 +196,7 @@
           { etiqueta: 'edad media online:', valor: fmtNum(IT.edadMedia.online, 1) + ' años' },
           { etiqueta: '% de acuerdo (telefónica, con pesos):', valor: fmtNum(IT.agree.tel.conPesos, 1) + ' %' },
           { etiqueta: '% de acuerdo (online, con pesos):', valor: fmtNum(IT.agree.online.conPesos, 1) + ' %' },
-          { etiqueta: 'CV de los pesos:', valor: 'tel. ' + fmtNum(IT.cvPesos.tel, 2) +
+          { etiqueta: 'coeficiente de variación de los pesos:', valor: 'tel. ' + fmtNum(IT.cvPesos.tel, 2) +
               ' · online ' + fmtNum(IT.cvPesos.online, 2) }
         ];
         // La desviación frente al censo solo se puede calcular en las ocho
@@ -311,13 +314,13 @@
         original: '¿Tu esposo o pareja te ve como igual? ¿O hay veces que parece tratarte como inferior? ' +
           '¿Te deja fuera de las decisiones? ¿Actúa de superior?',
         tiene: {
-          sugestiva: 'da por supuesto que el trato como inferior ocurre, y solo pregunta cuánto',
+          sugestiva: '«¿o hay veces que parece tratarte como inferior?» da por supuesto que esas veces existen y empuja a encontrarlas',
           multiple: 'son cuatro preguntas: ser tratada como igual, quedar fuera de las decisiones y el tono son cosas distintas',
           vaga: '«actuar de superior» significa algo distinto para cada persona'
         },
         noTiene: {
           doblenegacion: { tipo: 'no', por: 'ninguna de las cuatro preguntas lleva una negación' },
-          cerrada: { tipo: 'no', por: 'las preguntas del cuestionario de Hite eran abiertas: no se contestaban con sí o no' },
+          cerrada: { tipo: 'discutible', por: 'tal como están escritas, las cuatro se contestan con sí o no, y la reformulación añade una escala; pero en el cuestionario de Hite eran preguntas abiertas, para contestar por escrito' },
           marco: { tipo: 'discutible', por: '«hay veces» no dice en qué periodo, y se puede defender; pero el ítem pregunta por la relación, no cuenta hechos, y lo que lo inutiliza son los tres de arriba' }
         },
         corregida: '¿Con qué frecuencia participa usted en las decisiones importantes de su relación? ' +
@@ -380,7 +383,7 @@
           lista = marcados.length
             ? '<p style="margin-bottom:0.25rem;">Tu diagnóstico, todavía sin comprobar:</p><ul style="margin-bottom:0;">' +
               marcados.map(d => `<li>${d.etiqueta}</li>`).join('') + '</ul>'
-            : '<p style="margin-bottom:0;">Marca abajo los defectos que creas que tiene y pulsa «Comprobar».</p>';
+            : '<p style="margin-bottom:0;">Marca arriba los defectos que creas que tiene y pulsa «Comprobar».</p>';
         } else {
           lista = '<ul style="margin-bottom:0;">' + marcados.map(d => {
             if (it.tiene[d.clave]) return `<li>✓ <strong>${d.etiqueta}:</strong> ${it.tiene[d.clave]}</li>`;
@@ -524,8 +527,8 @@
         g.update('none');
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'muestra aleatoria de:', valor: fmtNum(n, 0) + ' votantes' },
-          { etiqueta: 'su RECM:', valor: fmtNum(recm, 4) },
-          { etiqueta: 'RECM del sondeo (2 266 566):', valor: fmtNum(ET.recmDigest, 4) },
+          { etiqueta: 'su raíz del ECM:', valor: fmtNum(recm, 4) },
+          { etiqueta: 'raíz del ECM del sondeo (2 266 566):', valor: fmtNum(ET.recmDigest, 4) },
           { etiqueta: 'gana:', valor: recm < ET.recmDigest ? 'la muestra aleatoria' : 'el sondeo sesgado' },
           { etiqueta: 'empate exacto en:', valor: fmtNum(ET.nEfectivo, 2) + ' votantes' },
           { etiqueta: 'papeletas por votante aleatorio equivalente:',
@@ -833,7 +836,7 @@
         crearSelector(cont, { clave: 'proc', etiqueta: 'Procedimiento', opciones: [
           { valor: 'directorio', texto: 'Los 8 primeros del directorio' },
           { valor: 'orden', texto: 'Por orden, hasta que 8 acepten' },
-          { valor: 'mas', texto: 'Sorteo de 8 de los 14 (MAS)' }
+          { valor: 'mas', texto: 'Sorteo al azar de 8 de los 14' }
         ] }, params, montar);
         if (params.proc === 'orden') {
           crearControles(cont, [{ clave: 'acepta', etiqueta: 'Probabilidad de que cada uno acepte',
@@ -1006,7 +1009,7 @@
                       'a la población.',
                     efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 1, módulo 4',
                     ejemplo: 'las listas de teléfono y de automóviles de 1936 dejaban fuera a los ' +
-                      'hogares más pobres, que eran los que apoyaban a Roosevelt.'
+                      'hogares con menos recursos, en general más inclinados a Roosevelt.'
                   },
                   {
                     etiqueta: 'Autoselección',
@@ -1022,15 +1025,15 @@
                     resumen: 'La unidad se selecciona pero no contesta. El sesgo vale ' +
                       '$(1-r)(\\bar{y}_R - \\bar{y}_M)$: es el producto de la fracción que falta ' +
                       'por lo distinta que es.',
-                    efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 8',
-                    ejemplo: 'Hite envió 100 000 cuestionarios y le devolvieron el 4,5 %.'
+                    efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 1, módulo 4; capítulo 8',
+                    ejemplo: 'en Allentown la revista escribió a todos los votantes registrados y solo devolvió la papeleta un tercio.'
                   },
                   {
                     etiqueta: 'No respuesta de ítem',
                     resumen: 'La unidad contesta la encuesta pero deja preguntas en blanco. Se ' +
                       'trata con imputación, y la trampa está en la varianza después de imputar.',
                     efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 8',
-                    ejemplo: 'los 19 condados de <code>agpop</code> con <code>acres92 = -99</code>.'
+                    ejemplo: 'en la encuesta telefónica del módulo 4, parte de quienes contestaron dejó en blanco su ingreso.'
                   }
                 ]
               },
@@ -1088,7 +1091,7 @@
           { texto: 'Calcular un intervalo de confianza con las papeletas devueltas y publicar su margen de error.', correcta: false,
             retro: 'Habría dado un intervalo de ±0,06 puntos alrededor de una cifra que estaba 19 puntos fuera. Un intervalo estrecho alrededor de un número equivocado es peor que no tener nada.' },
           { texto: 'Usar la corrección por población finita, porque la muestra era una parte grande del electorado.', correcta: false,
-            retro: 'El fpc afecta a la varianza y aquí la varianza ya era despreciable: el error estándar del sondeo era de 0,0003.' }
+            retro: 'La corrección por población finita afecta a la varianza y aquí la varianza ya era despreciable: el error estándar del sondeo era de 0,0003.' }
         ]
       },
       {
@@ -1188,8 +1191,8 @@
           { texto: 'Porque con tasas iguales la $r$ se cancela, y la media de los respondientes es la poblacional.', correcta: true,
             retro: 'Exacto. Lo que sesga no es que falte gente, sino que <em>falte de manera desigual</em>. Una tasa del 10 % pareja es inofensiva para el sesgo (aunque devastadora para la varianza).' },
           { texto: 'Porque el 10 % y el 60 % son ambos mayores que cero: basta que responda alguien en cada región.', correcta: false,
-            retro: 'Prueba con un 5 % pareja: también da cero. El nivel es irrelevante para el sesgo mientras sea el mismo en todas las clases.' },
-          { texto: 'Porque las cuatro regiones tienen la misma media, y da igual a cuáles se pierda.', correcta: false,
+            retro: 'Prueba con una tasa pareja del 5 %: también da cero. El nivel es irrelevante para el sesgo mientras sea el mismo en todas las clases.' },
+          { texto: 'Porque las cuatro regiones tienen la misma media, y da igual cuáles se pierdan.', correcta: false,
             retro: 'No la tienen: van de 90 619 acres en el Nordeste a 723 344 en el Oeste. Precisamente por eso el sesgo aparece en cuanto las tasas dejan de ser iguales.' },
           { texto: 'Porque con una tasa pareja la varianza tampoco cambia: las dos tasas dan la misma precisión.', correcta: false,
             retro: 'La varianza sí cambia, y mucho: con el 10 % quedan muchos menos respondientes que con el 60 %. El sesgo es lo único que no se mueve.' }
@@ -1215,10 +1218,10 @@
           { texto: 'Pesar a 50 000 personas en vez de 50 reduce el efecto del ruido sobre el promedio.', correcta: true },
           { texto: 'Pesar a 50 000 personas en vez de 50 reduce los 300 gramos del promedio.', correcta: false },
           { texto: 'Con muchas personas, el intervalo de confianza sale estrecho y centrado en el valor equivocado.', correcta: true },
-          { texto: 'Una validación contra una balanza de referencia ataca el desplazamiento; ninguna fórmula lo corrige después.', correcta: true }
+          { texto: 'Una validación contra una balanza de referencia ataca el desplazamiento, que los datos de la encuesta, por sí solos, no revelan.', correcta: true }
         ],
-        retroAcierto: 'Todas menos la de los 300 gramos. El ruido $\\varepsilon_k$ se cancela al promediar y se paga con más muestra; el desplazamiento $b_k$ sigue entero con 50 personas y con 50 000, y solo se ataca antes de medir.',
-        retroFallo: 'Son tres: el ruido baja con $n$, el intervalo se estrecha alrededor de un valor desplazado, y el desplazamiento se combate antes de recoger los datos. Lo único falso es que más pesadas quiten los 300 gramos: $b_k$ no se cancela nunca.'
+        retroAcierto: 'Todas menos la de los 300 gramos. El ruido $\\varepsilon_k$ se cancela al promediar y se paga con más muestra; el desplazamiento $b_k$ sigue entero con 50 personas y con 50 000, y solo se ataca con información de fuera de la encuesta: calibrando antes de medir o validando contra una referencia.',
+        retroFallo: 'Son tres: el ruido baja con $n$, el intervalo se estrecha alrededor de un valor desplazado, y el desplazamiento se combate con información de fuera de la encuesta. Lo único falso es que más pesadas quiten los 300 gramos: $b_k$ no se cancela nunca.'
       },
       {
         tipo: 'opcion',

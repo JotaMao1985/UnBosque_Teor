@@ -9854,4 +9854,42 @@ M4, M7); no se grabaron con `--anota`, que arrastraría también 48 anteriores s
 
 Con esto **la Fase 6 queda hecha.** Sigue la Fase 7, la auditoría de cierre.
 
+**No publicado.** En la rama `claude/course-content-improvement-2f816c`, commit `5aeab1f`.
+
+### T7.152 — Fase 7 del cap. 1: auditoría de cierre y corrección de sus errores (2026-11-22)
+
+Pedido de Javier: «Sí, y sigue» (commit de la 6.5 y Fase 7), y después «Sí, A y B»: corregir con la corrección por
+defecto los errores del capítulo (A1–A26) y los de la plantilla (B1–B5). Informe en `PLAN_Auditoria_Cap1_Cierre.md`,
+fuera de git.
+
+- **Auditoría** sobre `5aeab1f`, con el protocolo mecánico en verde y siete lectores independientes (ES, CL, PE,
+  CO, VI, FU con una muestra sorteada de 16 afirmaciones, NA). Cada hallazgo se rehízo sobre la copia congelada.
+  Bien: fórmulas, claves del quiz, las 36 salidas de código, los 16 localizadores y 26 de 27 remisiones.
+- **Errores del capítulo corregidos:** el comentario de los pesos del M4 (decía «las separan»; lo vieron cinco
+  lectores); el −99 como no respuesta de ítem en el árbol del M7; «0,28 sobre 750… esa celda»; la pestaña de Python
+  del M7, que partía de valores redondeados (ahora recalcula desde los votos y da lo mismo que R, 12,7636); el
+  comentario y la nota de carpeta de BigLucy (receta probada); «cuatro piezas»; siglas sin presentar (fpc, MAS, RECM,
+  CV); «ningún estimador corrige el sesgo de medición» en el M5 y en la pregunta 9; el simulador del *Digest*
+  (arranca sobre la curva, sesgos en puntos, «punto oscuro»); el arranque al azar del ejercicio 2; el sesgo general
+  del ejercicio 5; los redondeos de −19,54 y 0,69; la población objetivo del ejercicio 1; Allentown no «zanja»; Hite
+  sin «márgenes»; el árbol con Allentown como no respuesta de unidad; «en general ligada» a la posición económica;
+  el 42,9 % «del titular»; un condado de más de siete millones; «módulos 4, 5 y 7»; la remisión al cap. 8, módulo 9;
+  el comentario de las tasas de R6; los arquitectos «iguales hasta el octavo»; el auditor del M6 («arriba», «sí/no»
+  discutible en Hite, retro de «sugestiva», objetivo); y menores de redacción (CL-5 a CL-9, CL-13, CO-7).
+- **Registro:** cinco afirmaciones cambiaron de prosa (c1-m2-01, c1-m5-03, c1-m5-04, c1-m5-07, c1-m10-02); las releyó
+  un FU nuevo (Sonnet, contexto limpio) y quedan respaldadas, con los pasajes rehechos por guion (124 comprobados).
+  c1-m3-01 ajusta su texto («representativa»).
+- **Plantilla** (`ensamblado/retropropaga_cierre_cap1.py`, idempotente, en la plantilla y las diez páginas que la
+  usan): B1 `h3` en bloque (los títulos con `<code>` ya no se parten a 375 px); B2 rellenos de los ejercicios en el
+  móvil (el código pasa de 194 a 225 px); B3 la pista del quiz se oculta al cerrar la pregunta; B4 deslizadores con
+  coma y signo menos; B5 contraste de la pestaña inactiva, el botón de notación y el subtítulo en inglés. Reensamblar
+  todos los capítulos da byte a byte lo mismo que el parche.
+- **Verificación:** generador, `--cierre 1` (63 afirmaciones: 61 respaldadas, 2 con matiz), arnés, reensamblado
+  estable, `anota --check` 0, `--prosa --todos` 0 sin respaldo, código de las páginas arranca, `node --check`,
+  conteos 0 desajustados; navegador a 375 px reales (iframe con `innerWidth` 375) en el cap. 1 y en los caps. 4 y 8
+  y el preparcial: sin errores de consola ni de KaTeX ni desbordes; quiz, auditor y lecturas comprobados.
+- **Quedan para elegir** las mejoras (C) y, para los planes de otros capítulos, lo de NA (D).
+- Efecto colateral: `ensambla_taller1.py` dejó `sitio/muestreo/taller-1-preparacion-parcial-1.html`, ignorado por git;
+  no se pudo borrar sin permiso.
+
 **No publicado.** En la rama `claude/course-content-improvement-2f816c`, sin commit.

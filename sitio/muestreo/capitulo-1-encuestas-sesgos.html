@@ -3546,6 +3546,55 @@
       color: #C2410C;
     }
 
+    /* Auditoría de cierre del capítulo 1 (2026-11-22), B1, B2 y B5.
+       B1: el título h3 era flex, y cada <code> o <em> se volvía un ítem
+       aparte que a 375 px se iba a otra columna. Ahora es un bloque y la
+       barra naranja va en línea delante del texto. */
+    h3 {
+      display: block;
+    }
+
+    h3::before {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      margin-top: -0.2rem;
+    }
+
+    /* B2: en el móvil, los rellenos anidados de los ejercicios guiados
+       dejaban el código en 194 px; y la cabecera de cada bloque de código
+       recortaba su botón. */
+    @media (max-width: 640px) {
+      .exercise {
+        padding: 1rem 0.6rem;
+      }
+
+      .ejercicio-guiado {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .ejercicio-panel {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .code-block-header {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* B5: tres textos por debajo de 4,5 de contraste. */
+    .code-tab-btn {
+      color: #475569;
+    }
+
+    .glosario-boton[aria-expanded="true"] {
+      background: #C2410C;
+      border-color: #C2410C;
+    }
+
+    h2 > .text-gray-400.font-normal {
+      color: #6b7280;
+    }
+
   </style>
 </head>
 
@@ -3713,8 +3762,8 @@
       </div>
 
       <p>El muestreo se estudia mejor empezando por lo que puede salir mal. Los dos casos de este módulo tienen algo en
-        común que conviene tener presente todo el semestre: <strong>los dos tenían muestras gigantescas</strong>, y los
-        dos se equivocaron por márgenes que ninguna muestra pequeña bien tomada habría producido.</p>
+        común que conviene tener presente todo el semestre: <strong>los dos tenían muestras gigantescas</strong>, y en
+        ninguno de los dos el tamaño salvó el resultado: el problema estaba en quién entró en la muestra, no en cuántos.</p>
 
       <h3>Caso 1 · Shere Hite (1987)</h3>
 
@@ -3777,14 +3826,14 @@
         1 293 669; Roosevelt, 972 897» <cite class="cita" data-ref="literarydigest1936landon" data-via="lohr2022sampling" data-loc="p. 618"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Literary Digest, 1936, citado en Lohr, 2022, p. 618)</a></cite>; contando solo esos dos candidatos, el
         sondeo dio un <strong>42,92 %</strong> a Roosevelt</span> <span data-afirma="c1-m1-18">cuando el valor real, con los votos de la
         elección, era <strong>62,47 %</strong> <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.8"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.8)</a></cite></span>. El sesgo
-        fue de <strong>−19,54 puntos</strong>.</p>
+        fue de <strong>−19,54 puntos</strong> (con las cifras sin redondear; restando las ya redondeadas sale −19,55).</p>
 
       <div class="definition">
         <h4>Las dos causas, y por qué hay que separarlas</h4>
         <p><strong>No cobertura.</strong> <span data-afirma="c1-m1-04">La lista se armó con guías de teléfono, registros de automóviles, listas de
           suscriptores y padrones electorales
           <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</a></cite></span>. En 1936, tener teléfono o carro era señal de estar por encima de la
-          media, y la opinión sobre las políticas de Roosevelt dependía justamente de la posición económica.</p>
+          media, y la opinión sobre las políticas de Roosevelt estaba, en general, ligada a la posición económica.</p>
         <p style="margin-bottom:0;"><strong>No respuesta.</strong> <span data-afirma="c1-m1-05">Contestó menos de una cuarta parte de los
           solicitados</span>, y <span data-afirma="c1-m1-12">los partidarios de Landon devolvieron la papeleta con mucha más frecuencia
           <cite class="cita" data-ref="squire1988why" data-via="lohr2022sampling" data-loc="ejemplo 1.1"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Squire, 1988, citado en Lohr, 2022, ejemplo 1.1)</a></cite></span>. <span data-afirma="c1-m1-06">En Allentown
@@ -3793,7 +3842,7 @@
           <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1)</a></cite></span>.</p>
       </div>
 
-      <p>El caso de Allentown es el que zanja el argumento: <strong>la no respuesta sola basta para arruinar una
+      <p>El caso de Allentown muestra que <strong>la no respuesta sola basta para arruinar una
         encuesta</strong>, aunque el marco sea impecable. El simulador de abajo permite repartir el sesgo entre las dos
         causas y ver que los datos, por sí solos, no distinguen cuál pesó más.</p>
 
@@ -3803,7 +3852,7 @@
           fuera, y la respuesta relativa $\rho$: la tasa de respuesta de los partidarios de Roosevelt dividida por la de los
           de Landon. La primera gráfica compara el apoyo
           real, el apoyo dentro del marco y lo que acaba viendo el sondeo. La segunda dibuja <strong>todas</strong> las
-          combinaciones que reproducen exactamente el 42,9 % publicado: cuando el punto negro cae sobre la curva
+          combinaciones que reproducen exactamente el 42,9 % que da el titular de la revista: cuando el punto oscuro de tu escenario cae sobre la curva
           naranja, tu escenario es indistinguible del que ocurrió.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Apoyo a Roosevelt (base de dos candidatos)</p>
@@ -3828,10 +3877,10 @@
           <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
             estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
             naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
-            resultado que se publicó. Lleva el punto negro a un extremo —mucha no cobertura y poca no respuesta— y después al otro: mientras caiga sobre la curva, el sondeo sale idéntico en los dos casos.</p>
+            resultado que se publicó. Lleva el punto oscuro a un extremo —mucha no cobertura y poca no respuesta— y después al otro: mientras caiga sobre la curva, el sondeo sale idéntico en los dos casos.</p>
           <p><strong>Y ahí está la trampa.</strong> Si escenarios distintos producen el mismo dato observado, el dato no
             puede decirte en cuál estabas. Ninguna cantidad de papeletas arregla eso, porque no es un problema de ruido:
-            la información no está. Lo que zanjó el caso no fue el resultado nacional, sino Allentown: allí el marco era
+            la información no está. Lo que sí separa las dos causas es un caso como Allentown: allí el marco era
             completo, lo que pone una de las dos causas exactamente a cero y deja la otra a la vista.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
@@ -3842,7 +3891,7 @@
         </div>
       </details>
 
-      <p>La aritmética entera cabe en unas líneas. Ni una sola función de librería: cuatro números y dos divisiones.</p>
+      <p>La aritmética entera cabe en unas líneas. Ninguna función estadística: cuatro números y unas pocas divisiones.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La descomposición del sesgo del Literary Digest">
@@ -4042,8 +4091,8 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
 
       <h3>La población del curso</h3>
 
-      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: <span data-afirma="c1-m2-01">los 3 078 condados y equivalentes de Estados Unidos en el censo
-        agrícola de 1992 <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 2.6"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 2.6)</a></cite></span>. Tiene una propiedad que ninguna población real tiene en el trabajo diario
+      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: <span data-afirma="c1-m2-01">los 3 078 condados y equivalentes de Estados Unidos, con datos de los censos
+        agrícolas de 1982, 1987 y 1992 <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 2.6"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 2.6)</a></cite></span>. Tiene una propiedad que ninguna población real tiene en el trabajo diario
         y que la hace insustituible para aprender: <strong>está entera</strong>, así que cualquier estimación se puede
         comparar con la verdad. Aquí se presenta solo lo justo para trabajar con ella; su <em>forma</em> —muy
         asimétrica, y esa asimetría condiciona todos los diseños del curso— se mira en el módulo 8, que es donde
@@ -4053,7 +4102,8 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
         <p style="margin-bottom:0;"><strong>Para ejecutar el código de este capítulo.</strong> Los archivos de datos
           vienen con el material: clona el repositorio del curso y ejecuta desde su raíz, que es donde está la carpeta
           <code>CSV data sets for SDA 3e</code> con los datos de Lohr. Si prefieres trabajar en otra carpeta, copia
-          allí esa carpeta y las rutas del código funcionarán igual.</p>
+          allí esa carpeta —y, para el bloque de Python del módulo 8, <code>precalculo/salidas/BigLucy.csv.gz</code>
+          con esa misma ruta— y el código funcionará igual.</p>
       </div>
 
       <div class="code-tabs">
@@ -4067,7 +4117,7 @@ print(round(sesgo_cobertura + sesgo_respuesta - (p_hat - p), 12))
 # estimacion contra el valor verdadero. Fuera de un aula eso no pasa nunca.
 agpop &lt;- read.csv("CSV data sets for SDA 3e/agpop.csv")
 
-# Las cuatro piezas del marco conceptual, sobre este archivo:
+# Cuatro de las piezas del modulo, sobre este archivo:
 #   poblacion objetivo  -&gt; los condados agricolas de EE.UU.
 #   marco muestral      -&gt; la lista de 3078 filas de este archivo
 #   unidad              -&gt; un condado (una fila)
@@ -4089,7 +4139,7 @@ head(agpop[, c("county", "state", "acres92", "region")], 3)
 # estimacion contra el valor verdadero. Fuera de un aula eso no pasa nunca.
 agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
 
-# Las cuatro piezas del marco conceptual, sobre este archivo:
+# Cuatro de las piezas del modulo, sobre este archivo:
 #   poblacion objetivo  -&gt; los condados agricolas de EE.UU.
 #   marco muestral      -&gt; la lista de 3078 filas de este archivo
 #   unidad              -&gt; un condado (una fila)
@@ -4265,7 +4315,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
             acepte cuando lo llaman.</p>
           <p><strong>Qué se ve.</strong> Con los ocho primeros del directorio (si todos aceptan), las barras son todo o nada: ocho
             arquitectos entran siempre y seis no entran nunca, aunque las $\pi_k$ sumen 8. Llamando por orden, la
-            probabilidad baja con la posición en la lista, y depende de quién acepta. Solo el sorteo deja las catorce
+            probabilidad es la misma para los ocho primeros y baja desde el noveno, y depende de quién acepta. Solo el sorteo deja las catorce
             barras a la misma altura, sobre la línea verde.</p>
           <p style="margin-bottom:0;"><strong>Por qué importa.</strong> El requisito 2 no es «que haya azar», sino
             conocer cada $\pi_k$ y que ninguna sea cero. El primer procedimiento la conoce y no la cumple; el segundo
@@ -4447,7 +4497,7 @@ print(pd.Series({"suma_tel": censo_tel.sum(), "suma_online": censo_online.sum(),
         </div>
       </div>
 
-      <p>Coinciden con una discrepancia máxima de 0,28 sobre 750, el tamaño que el censo asigna a esa celda en la escala del archivo, y se debe al redondeo de los pesos a tres decimales. Con
+      <p>Coinciden con una discrepancia máxima de 0,28 en una de las ocho celdas (las ocho suman 750, el tamaño al que se escaló cada encuesta), y se debe al redondeo de los pesos a tres decimales. Con
         el censo en la mano se puede ver a quién representa realmente cada muestra.</p>
 
       <div class="code-tabs">
@@ -4584,8 +4634,9 @@ round(rbind(
 #&gt; telefonica    0.6164    0.6476
 #&gt; online        0.6755    0.6563
 
-# Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
-# y raza no arregla una seleccion que fallo por otras variables.</code></pre>
+# Los pesos acercan las dos estimaciones (de 5,9 a 0,9 puntos), pero acercarse
+# entre si no es acercarse a la poblacion: calibrar por sexo, edad y raza no
+# arregla una seleccion que fallo por otras variables.</code></pre>
         </div>
         <div class="code-tab-panel" data-lang="python" hidden>
           <pre><code class="language-python">import numpy as np, pandas as pd
@@ -4604,8 +4655,9 @@ print(pd.DataFrame(
 #&gt; telefonica     0.6164     0.6476
 #&gt; online         0.6755     0.6563
 
-# Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
-# y raza no arregla una seleccion que fallo por otras variables.</code></pre>
+# Los pesos acercan las dos estimaciones (de 5,9 a 0,9 puntos), pero acercarse
+# entre si no es acercarse a la poblacion: calibrar por sexo, edad y raza no
+# arregla una seleccion que fallo por otras variables.</code></pre>
         </div>
       </div>
 
@@ -4720,8 +4772,9 @@ sesgo_no_respuesta &lt;- function(r_h) {
 }
 
 # Tres escenarios. Los dos primeros tienen tasas IGUALES entre clases: una es
-# altisima y la otra ridicula, y las dos dan sesgo cero. El tercero baja la
-# tasa donde los condados son mas grandes (NC, NE, S, W en orden alfabetico).
+# alta y la otra muy baja, y las dos dan sesgo cero. El tercero deja al Oeste,
+# donde los condados son mas grandes, en 0.20, y al Nordeste, donde son mas
+# pequenos, en 0.65 (el orden es NC, NE, S, W, el alfabetico).
 round(c(todas_al_60 = sesgo_no_respuesta(rep(0.60, 4)),
         todas_al_10 = sesgo_no_respuesta(rep(0.10, 4)),
         desiguales  = sesgo_no_respuesta(c(0.50, 0.65, 0.35, 0.20))), 2)
@@ -4752,8 +4805,9 @@ def sesgo_no_respuesta(r_h):
     return (peso * mu_h).sum() / peso.sum() - mu
 
 # Tres escenarios. Los dos primeros tienen tasas IGUALES entre clases: una es
-# altisima y la otra ridicula, y las dos dan sesgo cero. El tercero baja la
-# tasa donde los condados son mas grandes (NC, NE, S, W en orden alfabetico).
+# alta y la otra muy baja, y las dos dan sesgo cero. El tercero deja al Oeste,
+# donde los condados son mas grandes, en 0.20, y al Nordeste, donde son mas
+# pequenos, en 0.65 (el orden es NC, NE, S, W, el alfabetico).
 #
 # El `+ 0.0` no cambia ninguna cifra: normaliza el CERO CON SIGNO. Con tasas
 # iguales el sesgo es cero, pero en coma flotante sale -5.8e-11, y al redondear
@@ -4916,15 +4970,15 @@ print((pd.Series({
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Memoria y telescopaje</h4>
-          <p class="text-sm" style="margin-bottom:0;" data-afirma="c1-m5-03">Preguntar «¿cuántas veces en el último año?» produce respuestas
+          <p class="text-sm" style="margin-bottom:0;" data-afirma="c1-m5-03">Preguntar «¿cuántas veces en el último año?» puede producir respuestas
             que arrastran hechos anteriores hacia el periodo de referencia. El error va en las dos direcciones: se olvidan hechos que sí
         ocurrieron y se arrastran al periodo otros anteriores <cite class="cita" data-ref="lohr2022sampling" data-loc="§1.4"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, §1.4)</a></cite>.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">El entrevistador</h4>
           <p class="text-sm" style="margin-bottom:0;"><span data-afirma="c1-m5-04">Lo que el entrevistado cree que el entrevistador quiere oír, y hasta la
-            raza o el género de quien pregunta, pueden mover las respuestas <cite class="cita" data-ref="lohr2022sampling" data-loc="§1.4"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, §1.4)</a></cite>. Como cada entrevistador atiende
-            a un grupo de unidades, quienes responden a un mismo entrevistador tienden a parecerse entre sí más que
+            raza o el género de quien pregunta, pueden mover las respuestas <cite class="cita" data-ref="lohr2022sampling" data-loc="§1.4"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, §1.4)</a></cite>. Si un entrevistador tiene un efecto propio
+            y sistemático sobre las respuestas, como atiende a un grupo de unidades, quienes responden a un mismo entrevistador tienden a parecerse entre sí más que
             unidades elegidas al azar <cite class="cita" data-ref="lohr2022sampling" data-loc="§16.3.1"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, §16.3.1)</a></cite></span>; en ese sentido, el entrevistador funciona como un conglomerado. El capítulo 5 (módulo 4) explica el mecanismo por el que unidades que comparten algo inflan la varianza —la correlación intraclase—; allí se aplica a conglomerados, no a entrevistadores.</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -4939,8 +4993,8 @@ print((pd.Series({
       <div class="note">
         <p><strong>Cómo se ataca.</strong> El sesgo de medición se combate <em>antes</em> de recoger el primer dato:
           prueba piloto, preguntas con marco temporal explícito y términos definidos, entrenamiento de entrevistadores,
-          y —cuando se puede— validación contra un registro externo. Después ya no hay estadística que valga: es la
-          única familia de errores del capítulo que no tiene ningún estimador que la corrija.</p>
+          y —cuando se puede— validación contra un registro externo. Después, los datos de la encuesta, por sí
+          solos, no lo detectan ni lo corrigen: hace falta información de fuera, como esa validación.</p>
       </div>
 
       <p class="paso-siguiente"><strong>Lo que sigue.</strong> De todas las fuentes de sesgo de medición, la redacción de las preguntas es la que más depende de quien diseña
@@ -4952,7 +5006,7 @@ print((pd.Series({
           <li data-afirma="c1-m5-06"><cite class="cita" data-ref="lohr2022sampling" data-loc="§1.4; §16.3" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">Lohr (2022, §1.4; §16.3)</a></cite> — el error de medición y sus modelos en las
             encuestas.</li>
           <li data-afirma="c1-m5-07"><cite class="cita" data-ref="gutierrez2016estrategias" data-loc="cap. 1" data-modo="narrativa"><a class="cita-enlace" href="#pie-gutierrez2016estrategias" title="Gutiérrez, H. A. (2016). Estrategias de muestreo: diseño de encuestas y estimación de parámetros (2.ª ed.). Ediciones de la U. https://psirusteam.github.io/EstrategiasDeMuestreo/">Gutiérrez (2016, cap. 1)</a></cite> — una introducción sin fórmulas a los sesgos de selección y
-            de medición; la clasificación del error total es de este módulo, no suya.</li>
+            de medición; la clasificación del error total del módulo 7 es de este material, no suya.</li>
         </ul>
       </div>
     </div>
@@ -4974,7 +5028,7 @@ print((pd.Series({
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Reconocer los defectos de redacción que producen sesgo
-              de medición, y practicar la reescritura sobre ítems reales.</p>
+              de medición, y ver cómo se reescribe cada ítem para quitárselos.</p>
           </div>
         </div>
       </div>
@@ -5036,7 +5090,7 @@ print((pd.Series({
           <p><strong>Qué haces aquí.</strong> No mueves un parámetro: emites un diagnóstico. Lees un ítem, señalas qué
             defectos tiene y compruebas si acertaste. El ejercicio consiste en pasar de «esta pregunta suena rara» a
             <em>nombrar</em> el defecto, que es lo único que se puede corregir.</p>
-          <p><strong>Qué se ve al comparar.</strong> Mira las reformulaciones: ninguna es más corta que el original.
+          <p><strong>Qué se ve al comparar.</strong> Mira las reformulaciones: ninguna arregla el ítem recortándolo.
             Casi todas añaden algo —un marco temporal, un umbral concreto, una escala en vez de un sí/no—, y todas
             preguntan una cosa sola. Ese es el patrón: una pregunta mala suele serlo por vaguedad o por acumulación, y
             las dos se arreglan concretando y separando, no recortando.</p>
@@ -5209,8 +5263,8 @@ print((pd.Series({
 
       <h3>Cuánto vale realmente una muestra sesgada de 2,3 millones</h3>
 
-      <p>Volvamos al <em>Literary Digest</em> con la fórmula del ECM. El sondeo tenía 2 266 566 papeletas útiles y un
-        sesgo de −0,1954. Un muestreo aleatorio simple de votantes no tiene sesgo, y una varianza mucho mayor.</p>
+      <p>Volvamos al <em>Literary Digest</em> con la fórmula del ECM. El sondeo contó 2 266 566 papeletas para los dos
+        candidatos y un sesgo de −0,1954. Un muestreo aleatorio simple de votantes no tiene sesgo, pero sí una varianza mucho mayor.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="El sesgo del sondeo del Literary Digest">
@@ -5268,7 +5322,7 @@ print(pd.Series({"n_digest": n_digest, "p_sondeo": p_sondeo,
         </div>
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># Las cuatro cantidades vienen del bloque anterior; se rehacen para que este
-# corra suelto, igual que hace la pestaña de Python:
+# corra suelto, igual que en la pestana de Python:
 n_digest &lt;- 1293669 + 972897
 p_real   &lt;- 27.753 / (27.753 + 16.675)
 sesgo    &lt;- 972897 / n_digest - p_real
@@ -5305,11 +5359,11 @@ round(S2 / ecm_digest, 2)
           <pre><code class="language-python">import numpy as np, pandas as pd
 # El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
 #
-# Los tres numeros se vuelven a declarar, ya redondeados, para que el bloque se
-# pueda ejecutar suelto. Se comprobo que no cambia nada de lo publicado: partir
-# de estos valores redondeados o de los exactos del bloque anterior da las
-# mismas cifras en las dos tablas, hasta el ultimo decimal que se imprime.
-p_real, sesgo, n_digest = 0.62467, -0.19544, 2266566
+# Las cuatro cantidades vienen del bloque anterior; se rehacen para que este
+# corra suelto, igual que en la pestana de R:
+n_digest = 1293669 + 972897
+p_real   = 27.753 / (27.753 + 16.675)
+sesgo    = 972897 / n_digest - p_real
 S2 = p_real * (1 - p_real)
 
 ecm_digest = sesgo**2 + S2 / n_digest
@@ -5319,7 +5373,7 @@ print(pd.Series({"recm_digest": np.sqrt(ecm_digest),
                  "veces_peor":  np.sqrt(ecm_digest / ecm_mas)}).round(4).to_string())
 #&gt; recm_digest     0.1954
 #&gt; recm_mas        0.0153
-#&gt; veces_peor     12.7639
+#&gt; veces_peor     12.7636
 
 # El suelo, tamano a tamano. Solo la varianza baja con n: la columna insesgada
 # tiende a cero y la sesgada se para en el sesgo y ya no se mueve.
@@ -5331,9 +5385,9 @@ tabla = pd.DataFrame({
     "recm_sesgado":   [np.sqrt(ecm(n, sesgo)) for n in tamanos]})
 print(tabla.round(5).to_string(index=False))
 #&gt;       n  recm_insesgado  recm_sesgado
-#&gt;    1000         0.01531       0.19604
+#&gt;    1000         0.01531       0.19603
 #&gt;   10000         0.00484       0.19550
-#&gt;  100000         0.00153       0.19545
+#&gt;  100000         0.00153       0.19544
 #&gt; 1000000         0.00048       0.19544
 #&gt; 2266566         0.00032       0.19544
 
@@ -5429,7 +5483,7 @@ print(round(S2 / ecm(n_digest, sesgo), 2))
         </div>
       </div>
 
-      <p>El módulo 2 presentó <code>agpop</code> y dejó para después mirar su forma; los módulos 4 y 7 ya la usaron.
+      <p>El módulo 2 presentó <code>agpop</code> y dejó para después mirar su forma; los módulos 4, 5 y 7 ya la usaron.
         Aquí se mira por fin, junto con la otra población que más se repite en el curso.</p>
 
       <p>Este material trabaja siempre sobre poblaciones <strong>completas</strong>. No es una comodidad: es la única
@@ -5485,11 +5539,13 @@ print(resumen.sort_values("media", ascending=False).to_string())
 #&gt; NE   220   90619   79365
 
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
-# dentro del paquete TeachingSampling, que no existe para Python. Si no tienes el
-# archivo, exportalo una vez desde R y deja el CSV junto a los datos del curso:
+# dentro del paquete TeachingSampling, que no existe para Python. El repositorio
+# del curso lo trae ya exportado en precalculo/salidas/BigLucy.csv.gz. Si trabajas
+# en otra carpeta, copia ese archivo con la misma ruta, o rehazlo una vez desde R:
 #
 #   data(BigLucy, package = "TeachingSampling")
-#   write.csv(BigLucy, "BigLucy.csv", row.names = FALSE)
+#   dir.create("precalculo/salidas", recursive = TRUE, showWarnings = FALSE)
+#   write.csv(BigLucy, gzfile("precalculo/salidas/BigLucy.csv.gz"), row.names = FALSE)
 #
 # Las dos pestanas calculan sobre el mismo dato en vez de copiarse las cifras.
 big = pd.read_csv("precalculo/salidas/BigLucy.csv.gz")
@@ -5507,7 +5563,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
       <div class="simulador" data-simulador="poblaciones">
         <h4><i class="fas fa-chart-area" aria-hidden="true"></i> Explorador de las poblaciones</h4>
         <p class="simulador-intro">La cola derecha está recortada en el percentil 99 para que el gráfico se vea: sin
-          recorte, <code>acres92</code> tiene condados de más de siete millones de acres y todo lo demás se aplasta
+          recorte, <code>acres92</code> llega a un condado de más de siete millones de acres y todo lo demás se aplasta
           contra el eje. Las unidades de la cola no se descartan, se acumulan en la última clase.</p>
         <div class="simulador-controles"></div>
         <div class="grafico-wrapper" style="height:290px;">
@@ -5676,8 +5732,8 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
         <p><strong>La pregunta que hay que hacerse siempre.</strong> Ante cualquier conjunto de datos, antes de
           entrenar nada: <em>¿qué tuvo que pasar para que esta fila exista?</em> Si la respuesta involucra una decisión
           de la propia unidad, o un filtro correlacionado con lo que se quiere predecir, ya se sabe hacia dónde va a
-          apuntar el error. El capítulo 8 vuelve sobre esto en su módulo 9, «IA asistida en diseño
-          muestral».</p>
+          apuntar el error. El capítulo 8, en su módulo 9 («IA asistida en diseño
+          muestral»), trata la otra cara de la IA en muestreo: cómo verificar lo que responde un asistente.</p>
       </div>
 
       <p class="paso-siguiente"><strong>Lo que sigue.</strong> El módulo 10 pone a prueba el capítulo: catorce preguntas y seis situaciones que hay que
@@ -5711,7 +5767,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           <div>
             <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
             <p class="text-gray-600 text-sm" style="margin:0;">Catorce preguntas, al menos una de cada uno de los nueve módulos,
-              cinco encuestas reales y un censo colombiano que hay que diagnosticar de principio a fin.</p>
+              cinco situaciones de muestreo y un censo colombiano que hay que diagnosticar de principio a fin.</p>
           </div>
         </div>
       </div>
@@ -5766,8 +5822,9 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
               anuncio y podían pagar; y con un 1 % de participación, un apoyo poblacional del 30 % solo exige que los
               que no llamaron estén al 29,5 %.</strong></p>
             <ul>
-              <li><strong>Población objetivo:</strong> por el titular, todos los adultos de Estados Unidos. Por el
-                procedimiento, como mucho los lectores de la revista.</li>
+              <li><strong>Población objetivo:</strong> la cifra habla de los lectores que participaron, pero quien la
+                cite como opinión del país la extiende a todos los adultos de Estados Unidos. Por el
+                procedimiento, como mucho llega a los lectores de la revista.</li>
               <li><strong>Marco muestral:</strong> los lectores que vieron el anuncio, tenían teléfono de tonos y
                 estaban dispuestos a gastar 75 centavos en la llamada.</li>
               <li><strong>Unidad de muestreo:</strong> la <em>llamada</em>. No es un detalle pedante: una persona podía
@@ -5823,8 +5880,8 @@ print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado" data-afirma="c1-m10-02"><span class="ejercicio-numero">2.</span>Una estudiante quiere estimar el
-            porcentaje de fondos mutuos que subieron de precio la semana pasada. Toma <strong>cada décimo fondo</strong>
-            de las listas publicadas en un periódico; supón que esas listas tienen 1 250 fondos. Identifica el
+            porcentaje de fondos mutuos que subieron de precio la semana pasada. Toma <strong>uno de cada diez fondos</strong>
+            de las listas publicadas en un periódico, empezando por uno sorteado entre los diez primeros; supón que esas listas tienen 1 250 fondos. Identifica el
             diseño y las fuentes de error, y decide: ¿el
             problema está en cómo seleccionó o en de dónde seleccionó? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
           <div class="ejercicio-acciones">
@@ -5844,7 +5901,9 @@ print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
             <ul>
               <li><strong>Población objetivo:</strong> todos los fondos mutuos existentes esa semana.</li>
               <li><strong>Marco:</strong> la lista publicada por <em>ese</em> periódico.</li>
-              <li><strong>Diseño:</strong> muestreo sistemático 1 en 10.</li>
+              <li><strong>Diseño:</strong> muestreo sistemático 1 en 10: un arranque al azar entre los diez primeros y,
+                desde ahí, uno de cada diez. El arranque al azar es lo que da a cada fondo de la lista la misma
+                probabilidad.</li>
               <li><strong>Unidad de muestreo y de observación:</strong> el fondo. Aquí sí coinciden.</li>
             </ul>
             <div class="code-tabs">
@@ -6088,8 +6147,9 @@ print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
               sesgo de no respuesta del módulo 4: es literalmente la misma fórmula con otros nombres.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap1-e5-sol" hidden>
-            <p><strong>Se muestrean ubicaciones y se observan libros. Con un 20 % prestado, se sobreestima la necesidad
-              de reencuadernación en 3 puntos porcentuales: 30 % frente al 27 % real.</strong></p>
+            <p><strong>Se muestrean ubicaciones y se observan libros. El sesgo es la fracción prestada por la mitad de la
+              tasa del estante, $f \cdot p_{\text{estante}}/2$: con un 20 % prestado, se sobreestima la necesidad
+              de reencuadernación en 3 puntos porcentuales, 30 % frente al 27 % real.</strong></p>
             <ul>
               <li><strong>Población objetivo:</strong> todos los libros de la colección.</li>
               <li><strong>Marco:</strong> el conjunto de ubicaciones físicas de las estanterías.</li>
@@ -6171,7 +6231,7 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
           </div>
           <div class="ejercicio-panel solucion" id="cap1-e6-sol" hidden>
             <p><strong>Según esas tres cifras, la zona rural pesa 0,2442: casi una de cada cuatro personas. El censo sin
-              ajustar da un 50,93 % donde la verdad es un 50,23 %: 0,69 puntos de sesgo con varianza cero, y ninguna
+              ajustar da un 50,93 % donde la verdad es un 50,23 %: 0,69 puntos de sesgo (con las cifras sin redondear) con varianza cero, y ninguna
               muestra del censo, por grande que sea, lo corrige.</strong></p>
             <ul>
               <li><strong>Población objetivo:</strong> todas las personas que viven en el país.</li>
@@ -6661,7 +6721,10 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         label.append(def.etiqueta);
 
         const output = document.createElement('output');
-        output.textContent = Number(params[def.clave]).toFixed(decimales);
+        // Con coma decimal y signo menos, como las lecturas y la prosa.
+        const fmtDeslizador = v => Number(v).toFixed(decimales)
+          .replace('.', ',').replace('-', '−');
+        output.textContent = fmtDeslizador(params[def.clave]);
         label.appendChild(output);
 
         const input = document.createElement('input');
@@ -6674,7 +6737,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
 
         input.addEventListener('input', () => {
           params[def.clave] = parseFloat(input.value);
-          output.textContent = params[def.clave].toFixed(decimales);
+          output.textContent = fmtDeslizador(params[def.clave]);
           alCambiar();
         });
 
@@ -7927,6 +7990,10 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
       function cerrar(i, bloque, acierto, textoRetro, opcs, vistas) {
         estado[i].resuelta = true;
         estado[i].acierto = acierto;
+        // La pista del intento fallido ya no aplica: quedaba a la vista
+        // junto a «Correcto» o «No es esa» (auditoría de cierre del cap. 1).
+        const pistaVieja = bloque.querySelector('.quiz-pista');
+        if (pistaVieja) pistaVieja.hidden = true;
         const retro = bloque.querySelector('.quiz-retro');
         retro.className = `quiz-retro ${acierto ? 'bien' : 'mal'}`;
         const encabezado = preguntas[i].tipo === 'texto'
@@ -8713,7 +8780,10 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
     // ---------------------------------------------------------------
     SIMULADORES['digest'] = function (raiz) {
       const DG = D1.digest;
-      const params = { cobertura: DG.coberturaRef, brecha: 0.25, rho: 0.72 };
+      // Arranca SOBRE la curva: el rho exacto que reproduce el sondeo con brecha
+      // 0,25 (el deslizador lo muestra redondeado a 0.72 hasta que se mueve).
+      const params = { cobertura: DG.coberturaRef, brecha: 0.25,
+                       rho: DG.isoResultado.rho[DG.isoResultado.brecha.indexOf(0.25)] };
       const lienzos = raiz.querySelectorAll('canvas');
 
       const gBarras = crearGraficoBarras(lienzos[0],
@@ -8721,7 +8791,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         [DG.pEleccion, 0, 0], {
           etiqueta: 'Apoyo a Roosevelt', color: COLORES_GRAFICO.primario,
           min: 0, max: 0.8,
-          lineas: [{ valor: DG.pSondeo, etiqueta: 'sondeo publicado: 42,9 %',
+          lineas: [{ valor: DG.pSondeo, etiqueta: 'sondeo (titular de la revista): 42,9 %',
                      color: COLORES_GRAFICO.secundario },
                    { valor: 0.5, etiqueta: 'umbral de la victoria', color: '#94a3b8' }]
         });
@@ -8769,9 +8839,9 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'apoyo dentro del marco:', valor: fmtPct(pC) },
           { etiqueta: 'estimación del sondeo:', valor: fmtPct(pHat) },
-          { etiqueta: 'sesgo de no cobertura:', valor: fmtPct(sesgoCob, 2) },
-          { etiqueta: 'sesgo de no respuesta:', valor: fmtPct(sesgoResp, 2) },
-          { etiqueta: 'sesgo total:', valor: fmtPct(pHat - p, 2) },
+          { etiqueta: 'sesgo de no cobertura:', valor: fmtNum(100 * sesgoCob, 2) + ' puntos' },
+          { etiqueta: 'sesgo de no respuesta:', valor: fmtNum(100 * sesgoResp, 2) + ' puntos' },
+          { etiqueta: 'sesgo total:', valor: fmtNum(100 * (pHat - p), 2) + ' puntos' },
           { etiqueta: 'gana según el sondeo:', valor: pHat > 0.5 ? 'Roosevelt ✓' : 'Landon ✗' }
         ]);
       }
@@ -8843,7 +8913,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           { etiqueta: 'edad media online:', valor: fmtNum(IT.edadMedia.online, 1) + ' años' },
           { etiqueta: '% de acuerdo (telefónica, con pesos):', valor: fmtNum(IT.agree.tel.conPesos, 1) + ' %' },
           { etiqueta: '% de acuerdo (online, con pesos):', valor: fmtNum(IT.agree.online.conPesos, 1) + ' %' },
-          { etiqueta: 'CV de los pesos:', valor: 'tel. ' + fmtNum(IT.cvPesos.tel, 2) +
+          { etiqueta: 'coeficiente de variación de los pesos:', valor: 'tel. ' + fmtNum(IT.cvPesos.tel, 2) +
               ' · online ' + fmtNum(IT.cvPesos.online, 2) }
         ];
         // La desviación frente al censo solo se puede calcular en las ocho
@@ -8961,13 +9031,13 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         original: '¿Tu esposo o pareja te ve como igual? ¿O hay veces que parece tratarte como inferior? ' +
           '¿Te deja fuera de las decisiones? ¿Actúa de superior?',
         tiene: {
-          sugestiva: 'da por supuesto que el trato como inferior ocurre, y solo pregunta cuánto',
+          sugestiva: '«¿o hay veces que parece tratarte como inferior?» da por supuesto que esas veces existen y empuja a encontrarlas',
           multiple: 'son cuatro preguntas: ser tratada como igual, quedar fuera de las decisiones y el tono son cosas distintas',
           vaga: '«actuar de superior» significa algo distinto para cada persona'
         },
         noTiene: {
           doblenegacion: { tipo: 'no', por: 'ninguna de las cuatro preguntas lleva una negación' },
-          cerrada: { tipo: 'no', por: 'las preguntas del cuestionario de Hite eran abiertas: no se contestaban con sí o no' },
+          cerrada: { tipo: 'discutible', por: 'tal como están escritas, las cuatro se contestan con sí o no, y la reformulación añade una escala; pero en el cuestionario de Hite eran preguntas abiertas, para contestar por escrito' },
           marco: { tipo: 'discutible', por: '«hay veces» no dice en qué periodo, y se puede defender; pero el ítem pregunta por la relación, no cuenta hechos, y lo que lo inutiliza son los tres de arriba' }
         },
         corregida: '¿Con qué frecuencia participa usted en las decisiones importantes de su relación? ' +
@@ -9030,7 +9100,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           lista = marcados.length
             ? '<p style="margin-bottom:0.25rem;">Tu diagnóstico, todavía sin comprobar:</p><ul style="margin-bottom:0;">' +
               marcados.map(d => `<li>${d.etiqueta}</li>`).join('') + '</ul>'
-            : '<p style="margin-bottom:0;">Marca abajo los defectos que creas que tiene y pulsa «Comprobar».</p>';
+            : '<p style="margin-bottom:0;">Marca arriba los defectos que creas que tiene y pulsa «Comprobar».</p>';
         } else {
           lista = '<ul style="margin-bottom:0;">' + marcados.map(d => {
             if (it.tiene[d.clave]) return `<li>✓ <strong>${d.etiqueta}:</strong> ${it.tiene[d.clave]}</li>`;
@@ -9174,8 +9244,8 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         g.update('none');
         actualizarLectura(raiz.querySelector('.simulador-lectura'), [
           { etiqueta: 'muestra aleatoria de:', valor: fmtNum(n, 0) + ' votantes' },
-          { etiqueta: 'su RECM:', valor: fmtNum(recm, 4) },
-          { etiqueta: 'RECM del sondeo (2 266 566):', valor: fmtNum(ET.recmDigest, 4) },
+          { etiqueta: 'su raíz del ECM:', valor: fmtNum(recm, 4) },
+          { etiqueta: 'raíz del ECM del sondeo (2 266 566):', valor: fmtNum(ET.recmDigest, 4) },
           { etiqueta: 'gana:', valor: recm < ET.recmDigest ? 'la muestra aleatoria' : 'el sondeo sesgado' },
           { etiqueta: 'empate exacto en:', valor: fmtNum(ET.nEfectivo, 2) + ' votantes' },
           { etiqueta: 'papeletas por votante aleatorio equivalente:',
@@ -9483,7 +9553,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         crearSelector(cont, { clave: 'proc', etiqueta: 'Procedimiento', opciones: [
           { valor: 'directorio', texto: 'Los 8 primeros del directorio' },
           { valor: 'orden', texto: 'Por orden, hasta que 8 acepten' },
-          { valor: 'mas', texto: 'Sorteo de 8 de los 14 (MAS)' }
+          { valor: 'mas', texto: 'Sorteo al azar de 8 de los 14' }
         ] }, params, montar);
         if (params.proc === 'orden') {
           crearControles(cont, [{ clave: 'acepta', etiqueta: 'Probabilidad de que cada uno acepte',
@@ -9656,7 +9726,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
                       'a la población.',
                     efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 1, módulo 4',
                     ejemplo: 'las listas de teléfono y de automóviles de 1936 dejaban fuera a los ' +
-                      'hogares más pobres, que eran los que apoyaban a Roosevelt.'
+                      'hogares con menos recursos, en general más inclinados a Roosevelt.'
                   },
                   {
                     etiqueta: 'Autoselección',
@@ -9672,15 +9742,15 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
                     resumen: 'La unidad se selecciona pero no contesta. El sesgo vale ' +
                       '$(1-r)(\\bar{y}_R - \\bar{y}_M)$: es el producto de la fracción que falta ' +
                       'por lo distinta que es.',
-                    efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 8',
-                    ejemplo: 'Hite envió 100 000 cuestionarios y le devolvieron el 4,5 %.'
+                    efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 1, módulo 4; capítulo 8',
+                    ejemplo: 'en Allentown la revista escribió a todos los votantes registrados y solo devolvió la papeleta un tercio.'
                   },
                   {
                     etiqueta: 'No respuesta de ítem',
                     resumen: 'La unidad contesta la encuesta pero deja preguntas en blanco. Se ' +
                       'trata con imputación, y la trampa está en la varianza después de imputar.',
                     efecto: 'sesgo', nAyuda: false, donde: 'Capítulo 8',
-                    ejemplo: 'los 19 condados de <code>agpop</code> con <code>acres92 = -99</code>.'
+                    ejemplo: 'en la encuesta telefónica del módulo 4, parte de quienes contestaron dejó en blanco su ingreso.'
                   }
                 ]
               },
@@ -9738,7 +9808,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           { texto: 'Calcular un intervalo de confianza con las papeletas devueltas y publicar su margen de error.', correcta: false,
             retro: 'Habría dado un intervalo de ±0,06 puntos alrededor de una cifra que estaba 19 puntos fuera. Un intervalo estrecho alrededor de un número equivocado es peor que no tener nada.' },
           { texto: 'Usar la corrección por población finita, porque la muestra era una parte grande del electorado.', correcta: false,
-            retro: 'El fpc afecta a la varianza y aquí la varianza ya era despreciable: el error estándar del sondeo era de 0,0003.' }
+            retro: 'La corrección por población finita afecta a la varianza y aquí la varianza ya era despreciable: el error estándar del sondeo era de 0,0003.' }
         ]
       },
       {
@@ -9838,8 +9908,8 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           { texto: 'Porque con tasas iguales la $r$ se cancela, y la media de los respondientes es la poblacional.', correcta: true,
             retro: 'Exacto. Lo que sesga no es que falte gente, sino que <em>falte de manera desigual</em>. Una tasa del 10 % pareja es inofensiva para el sesgo (aunque devastadora para la varianza).' },
           { texto: 'Porque el 10 % y el 60 % son ambos mayores que cero: basta que responda alguien en cada región.', correcta: false,
-            retro: 'Prueba con un 5 % pareja: también da cero. El nivel es irrelevante para el sesgo mientras sea el mismo en todas las clases.' },
-          { texto: 'Porque las cuatro regiones tienen la misma media, y da igual a cuáles se pierda.', correcta: false,
+            retro: 'Prueba con una tasa pareja del 5 %: también da cero. El nivel es irrelevante para el sesgo mientras sea el mismo en todas las clases.' },
+          { texto: 'Porque las cuatro regiones tienen la misma media, y da igual cuáles se pierdan.', correcta: false,
             retro: 'No la tienen: van de 90 619 acres en el Nordeste a 723 344 en el Oeste. Precisamente por eso el sesgo aparece en cuanto las tasas dejan de ser iguales.' },
           { texto: 'Porque con una tasa pareja la varianza tampoco cambia: las dos tasas dan la misma precisión.', correcta: false,
             retro: 'La varianza sí cambia, y mucho: con el 10 % quedan muchos menos respondientes que con el 60 %. El sesgo es lo único que no se mueve.' }
@@ -9865,10 +9935,10 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           { texto: 'Pesar a 50 000 personas en vez de 50 reduce el efecto del ruido sobre el promedio.', correcta: true },
           { texto: 'Pesar a 50 000 personas en vez de 50 reduce los 300 gramos del promedio.', correcta: false },
           { texto: 'Con muchas personas, el intervalo de confianza sale estrecho y centrado en el valor equivocado.', correcta: true },
-          { texto: 'Una validación contra una balanza de referencia ataca el desplazamiento; ninguna fórmula lo corrige después.', correcta: true }
+          { texto: 'Una validación contra una balanza de referencia ataca el desplazamiento, que los datos de la encuesta, por sí solos, no revelan.', correcta: true }
         ],
-        retroAcierto: 'Todas menos la de los 300 gramos. El ruido $\\varepsilon_k$ se cancela al promediar y se paga con más muestra; el desplazamiento $b_k$ sigue entero con 50 personas y con 50 000, y solo se ataca antes de medir.',
-        retroFallo: 'Son tres: el ruido baja con $n$, el intervalo se estrecha alrededor de un valor desplazado, y el desplazamiento se combate antes de recoger los datos. Lo único falso es que más pesadas quiten los 300 gramos: $b_k$ no se cancela nunca.'
+        retroAcierto: 'Todas menos la de los 300 gramos. El ruido $\\varepsilon_k$ se cancela al promediar y se paga con más muestra; el desplazamiento $b_k$ sigue entero con 50 personas y con 50 000, y solo se ataca con información de fuera de la encuesta: calibrando antes de medir o validando contra una referencia.',
+        retroFallo: 'Son tres: el ruido baja con $n$, el intervalo se estrecha alrededor de un valor desplazado, y el desplazamiento se combate con información de fuera de la encuesta. Lo único falso es que más pesadas quiten los 300 gramos: $b_k$ no se cancela nunca.'
       },
       {
         tipo: 'opcion',

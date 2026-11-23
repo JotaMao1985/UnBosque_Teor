@@ -520,19 +520,24 @@ afirmaciones:
 - id: c1-m2-01
   tipo: dato
   afirmacion: >-
-    agpop son los 3 078 condados y equivalentes de Estados Unidos del censo agrícola de 1992.
-  hash_texto: 7b5fd736edb16778
+    agpop son los 3 078 condados y equivalentes de Estados Unidos, con datos de los censos agrícolas de 1982, 1987 y 1992.
+  hash_texto: 12640d41bc8a1a7c
   veredicto: respaldada
   motivo: >-
     El archivo reúne datos de 1982, 1987 y 1992 del Censo Agrícola.
+    Fase 7 (22 nov): el lector FU de cierre señaló que «del censo agrícola de 1992» reducía a un año lo que Lohr da como 1982, 1987 y 1992; la prosa se corrigió.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
-  fecha: 2026-11-16
+  verificado_por: lector FU de la Fase 7 (Sonnet 5.5, contexto limpio), sobre la prosa corregida; los pasajes se rehicieron por guion
+  fecha: 2026-11-22
   fuentes:
   - clave: lohr2022sampling
     loc: 'ejemplo 2.6'
     pagina: 40
     hash_pasaje: 6690d9206b652dde
+  - clave: lohr2022sampling
+    loc: 'ejemplo 2.6'
+    pagina: 40
+    hash_pasaje: 2cbe6d44aaec0e6c
 
 - id: c1-m2-02
   tipo: dato
@@ -680,7 +685,7 @@ afirmaciones:
 - id: c1-m3-01
   tipo: atribucion
   afirmacion: >-
-    Las secciones 1.2 y 1.7 de Lohr (2022) tratan qué hace buena a una muestra y por qué se muestrea en vez de censar.
+    Las secciones 1.2 y 1.7 de Lohr (2022) tratan qué hace representativa a una muestra y por qué se muestrea en vez de censar.
   hash_texto: ad3f1ee13bd5a795
   veredicto: respaldada
   motivo: >-
@@ -826,14 +831,15 @@ afirmaciones:
 - id: c1-m5-03
   tipo: regla
   afirmacion: >-
-    Preguntar por un periodo de referencia produce telescopaje (se arrastran hechos anteriores al periodo) y olvido.
-  hash_texto: be4d105be0856281
+    Preguntar por un periodo de referencia puede producir telescopaje (se arrastran hechos anteriores al periodo) y olvido.
+  hash_texto: c25537d790a7fa60
   veredicto: respaldada
   motivo: >-
     Lohr describe el fenómeno sin usar el término «telescopaje».
+    Fase 7 (22 nov): Lohr dice «may»; la prosa pasa de «produce» a «puede producir».
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: lector FU de la Fase 3 (Sonnet 5.5, contexto limpio); el pasaje se rehízo por guion
-  fecha: 2026-11-16
+  verificado_por: lector FU de la Fase 7 (Sonnet 5.5, contexto limpio), sobre la prosa corregida; los pasajes se rehicieron por guion
+  fecha: 2026-11-22
   fuentes:
   - clave: lohr2022sampling
     loc: '§1.4'
@@ -843,23 +849,28 @@ afirmaciones:
 - id: c1-m5-04
   tipo: regla
   afirmacion: >-
-    Lo que el entrevistado cree que el entrevistador quiere oír y la raza o el género de quien pregunta pueden mover las respuestas; y quienes responden a un mismo entrevistador tienden a parecerse entre sí más que unidades elegidas al azar.
-  hash_texto: 03196f5e7387758b
+    Lo que el entrevistado cree que el entrevistador quiere oír y la raza o el género de quien pregunta pueden mover las respuestas; y si un entrevistador tiene un efecto propio y sistemático, quienes responden a un mismo entrevistador tienden a parecerse entre sí más que unidades elegidas al azar.
+  hash_texto: 9a93f467177d4de5
   veredicto: respaldada
   motivo: >-
     Retocada tras la tercera lectura; la última lectura independiente (16 nov) la respalda tal como queda.
+    Fase 7 (22 nov): el parecido entre quienes comparten entrevistador es consecuencia de un efecto sistemático del entrevistador (Lohr §16.3.1); la prosa lo condiciona.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: última lectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase retocada
-  fecha: 2026-11-16
+  verificado_por: lector FU de la Fase 7 (Sonnet 5.5, contexto limpio), sobre la prosa corregida; los pasajes se rehicieron por guion
+  fecha: 2026-11-22
   fuentes:
   - clave: lohr2022sampling
     loc: '§1.4'
     pagina: 12
-    hash_pasaje: 7073bb85302e342b
+    hash_pasaje: 33ec5a233aaac50d
+  - clave: lohr2022sampling
+    loc: '§16.3.1'
+    pagina: 566
+    hash_pasaje: 10b155db95864aae
   - clave: lohr2022sampling
     loc: '§16.3.1'
     pagina: 567
-    hash_pasaje: 9d6784418cd15c63
+    hash_pasaje: f0f2b93f8cb4ff04
 
 - id: c1-m5-05
   tipo: regla
@@ -904,19 +915,20 @@ afirmaciones:
 - id: c1-m5-07
   tipo: atribucion
   afirmacion: >-
-    El capítulo 1 de Gutiérrez introduce sin fórmulas los sesgos de selección y de medición, y no trae la clasificación del error total que usa el módulo.
-  hash_texto: fe47052c2895bd91
+    El capítulo 1 de Gutiérrez introduce sin fórmulas los sesgos de selección y de medición, y no trae la clasificación del error total que usa el módulo 7.
+  hash_texto: 1f7fb55d61ff7477
   veredicto: respaldada
   motivo: >-
     Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
+    Fase 7 (22 nov): la prosa decía que la clasificación era «de este módulo» (el 5) cuando está en el 7; ahora dice «del módulo 7 es de este material».
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
-  fecha: 2026-11-16
+  verificado_por: lector FU de la Fase 7 (Sonnet 5.5, contexto limpio), sobre la prosa corregida; los pasajes se rehicieron por guion
+  fecha: 2026-11-22
   fuentes:
   - clave: gutierrez2016estrategias
     loc: 'cap. 1'
     instantanea: cap1
-    hash_pasaje: aa39939b3f96d661
+    hash_pasaje: cd66a1d66c75e202
 
 - id: c1-m6-01
   tipo: regla
@@ -1157,18 +1169,15 @@ afirmaciones:
   tipo: atribucion
   afirmacion: >-
     El ejercicio 2 adapta el ejercicio 2 de la §1.7 de Lohr (1999): uno de cada diez fondos mutuos de las listas de un periódico.
-  hash_texto: 4b6a712b18190ad3
-  veredicto: con-matiz
+  hash_texto: db4008dc1cd8d121
+  veredicto: respaldada
   motivo: >-
     Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respaldó. La 6.3 (21 nov) añadió
     al enunciado el supuesto de los 1 250 fondos y se volvió a leer.
-  matiz: >-
-    La situación es la del libro (cada décimo fondo de las páginas de fondos mutuos del periódico); la cifra
-    de 1 250, la palabra «diseño» y la pregunta de si el problema está en cómo o en de dónde se seleccionó son
-    del curso, como anuncia «Adaptado de». El libro pide población objetivo, marco, unidades y fuentes de sesgo.
+    Fase 7 (22 nov): el enunciado añade el arranque sorteado entre los diez primeros, que la solución necesita para que cada fondo tenga probabilidad 1/10.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario); enunciado retocado en la 6.3
-  verificado_por: relectura del lector FU de la 6.3 (Sonnet 5.5, contexto limpio), sobre el enunciado nuevo
-  fecha: 2026-11-21
+  verificado_por: lector FU de la Fase 7 (Sonnet 5.5, contexto limpio), sobre la prosa corregida; los pasajes se rehicieron por guion
+  fecha: 2026-11-22
   fuentes:
   - clave: lohr1999sampling
     loc: '§1.7'
@@ -1177,7 +1186,7 @@ afirmaciones:
   - clave: lohr1999sampling
     loc: '§1.7'
     pagina: 17
-    hash_pasaje: cf51211e676542dc
+    hash_pasaje: b5e592dc17257e99
 
 - id: c1-m10-03
   tipo: atribucion

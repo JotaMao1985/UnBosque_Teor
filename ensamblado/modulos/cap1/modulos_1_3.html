@@ -38,8 +38,8 @@
       </div>
 
       <p>El muestreo se estudia mejor empezando por lo que puede salir mal. Los dos casos de este módulo tienen algo en
-        común que conviene tener presente todo el semestre: <strong>los dos tenían muestras gigantescas</strong>, y los
-        dos se equivocaron por márgenes que ninguna muestra pequeña bien tomada habría producido.</p>
+        común que conviene tener presente todo el semestre: <strong>los dos tenían muestras gigantescas</strong>, y en
+        ninguno de los dos el tamaño salvó el resultado: el problema estaba en quién entró en la muestra, no en cuántos.</p>
 
       <h3>Caso 1 · Shere Hite (1987)</h3>
 
@@ -102,14 +102,14 @@
         1 293 669; Roosevelt, 972 897» <cite class="cita" data-ref="literarydigest1936landon" data-via="lohr2022sampling" data-loc="p. 618"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Literary Digest, 1936, citado en Lohr, 2022, p. 618)</a></cite>; contando solo esos dos candidatos, el
         sondeo dio un <strong>42,92 %</strong> a Roosevelt</span> <span data-afirma="c1-m1-18">cuando el valor real, con los votos de la
         elección, era <strong>62,47 %</strong> <cite class="cita" data-ref="lohr2022sampling" data-loc="ejercicio 15.8"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejercicio 15.8)</a></cite></span>. El sesgo
-        fue de <strong>−19,54 puntos</strong>.</p>
+        fue de <strong>−19,54 puntos</strong> (con las cifras sin redondear; restando las ya redondeadas sale −19,55).</p>
 
       <div class="definition">
         <h4>Las dos causas, y por qué hay que separarlas</h4>
         <p><strong>No cobertura.</strong> <span data-afirma="c1-m1-04">La lista se armó con guías de teléfono, registros de automóviles, listas de
           suscriptores y padrones electorales
           <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1; ejemplo 15.12"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1; ejemplo 15.12)</a></cite></span>. En 1936, tener teléfono o carro era señal de estar por encima de la
-          media, y la opinión sobre las políticas de Roosevelt dependía justamente de la posición económica.</p>
+          media, y la opinión sobre las políticas de Roosevelt estaba, en general, ligada a la posición económica.</p>
         <p style="margin-bottom:0;"><strong>No respuesta.</strong> <span data-afirma="c1-m1-05">Contestó menos de una cuarta parte de los
           solicitados</span>, y <span data-afirma="c1-m1-12">los partidarios de Landon devolvieron la papeleta con mucha más frecuencia
           <cite class="cita" data-ref="squire1988why" data-via="lohr2022sampling" data-loc="ejemplo 1.1"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Squire, 1988, citado en Lohr, 2022, ejemplo 1.1)</a></cite></span>. <span data-afirma="c1-m1-06">En Allentown
@@ -118,7 +118,7 @@
           <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 1.1"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 1.1)</a></cite></span>.</p>
       </div>
 
-      <p>El caso de Allentown es el que zanja el argumento: <strong>la no respuesta sola basta para arruinar una
+      <p>El caso de Allentown muestra que <strong>la no respuesta sola basta para arruinar una
         encuesta</strong>, aunque el marco sea impecable. El simulador de abajo permite repartir el sesgo entre las dos
         causas y ver que los datos, por sí solos, no distinguen cuál pesó más.</p>
 
@@ -128,7 +128,7 @@
           fuera, y la respuesta relativa $\rho$: la tasa de respuesta de los partidarios de Roosevelt dividida por la de los
           de Landon. La primera gráfica compara el apoyo
           real, el apoyo dentro del marco y lo que acaba viendo el sondeo. La segunda dibuja <strong>todas</strong> las
-          combinaciones que reproducen exactamente el 42,9 % publicado: cuando el punto negro cae sobre la curva
+          combinaciones que reproducen exactamente el 42,9 % que da el titular de la revista: cuando el punto oscuro de tu escenario cae sobre la curva
           naranja, tu escenario es indistinguible del que ocurrió.</p>
         <div class="simulador-controles"></div>
         <p class="grafico-etiqueta">Apoyo a Roosevelt (base de dos candidatos)</p>
@@ -153,10 +153,10 @@
           <p><strong>Qué se ve.</strong> El primer gráfico hace lo que se espera: las tres barras se separan y la
             estimación acaba por debajo del umbral de la victoria. El segundo es el que enseña de verdad. La curva
             naranja no es una tendencia: es el conjunto de <em>todos</em> los escenarios que producen exactamente el
-            resultado que se publicó. Lleva el punto negro a un extremo —mucha no cobertura y poca no respuesta— y después al otro: mientras caiga sobre la curva, el sondeo sale idéntico en los dos casos.</p>
+            resultado que se publicó. Lleva el punto oscuro a un extremo —mucha no cobertura y poca no respuesta— y después al otro: mientras caiga sobre la curva, el sondeo sale idéntico en los dos casos.</p>
           <p><strong>Y ahí está la trampa.</strong> Si escenarios distintos producen el mismo dato observado, el dato no
             puede decirte en cuál estabas. Ninguna cantidad de papeletas arregla eso, porque no es un problema de ruido:
-            la información no está. Lo que zanjó el caso no fue el resultado nacional, sino Allentown: allí el marco era
+            la información no está. Lo que sí separa las dos causas es un caso como Allentown: allí el marco era
             completo, lo que pone una de las dos causas exactamente a cero y deja la otra a la vista.</p>
           <p class="lectura-guiada-clave">
             <span class="rotulo">La idea que se lleva</span>
@@ -167,7 +167,7 @@
         </div>
       </details>
 
-      <p>La aritmética entera cabe en unas líneas. Ni una sola función de librería: cuatro números y dos divisiones.</p>
+      <p>La aritmética entera cabe en unas líneas. Ninguna función estadística: cuatro números y unas pocas divisiones.</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="La descomposición del sesgo del Literary Digest">
@@ -297,8 +297,8 @@
 
       <h3>La población del curso</h3>
 
-      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: <span data-afirma="c1-m2-01">los 3 078 condados y equivalentes de Estados Unidos en el censo
-        agrícola de 1992 <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 2.6"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 2.6)</a></cite></span>. Tiene una propiedad que ninguna población real tiene en el trabajo diario
+      <p>Casi todos los ejemplos de este material salen de <code>agpop</code>: <span data-afirma="c1-m2-01">los 3 078 condados y equivalentes de Estados Unidos, con datos de los censos
+        agrícolas de 1982, 1987 y 1992 <cite class="cita" data-ref="lohr2022sampling" data-loc="ejemplo 2.6"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, ejemplo 2.6)</a></cite></span>. Tiene una propiedad que ninguna población real tiene en el trabajo diario
         y que la hace insustituible para aprender: <strong>está entera</strong>, así que cualquier estimación se puede
         comparar con la verdad. Aquí se presenta solo lo justo para trabajar con ella; su <em>forma</em> —muy
         asimétrica, y esa asimetría condiciona todos los diseños del curso— se mira en el módulo 8, que es donde
@@ -308,7 +308,8 @@
         <p style="margin-bottom:0;"><strong>Para ejecutar el código de este capítulo.</strong> Los archivos de datos
           vienen con el material: clona el repositorio del curso y ejecuta desde su raíz, que es donde está la carpeta
           <code>CSV data sets for SDA 3e</code> con los datos de Lohr. Si prefieres trabajar en otra carpeta, copia
-          allí esa carpeta y las rutas del código funcionarán igual.</p>
+          allí esa carpeta —y, para el bloque de Python del módulo 8, <code>precalculo/salidas/BigLucy.csv.gz</code>
+          con esa misma ruta— y el código funcionará igual.</p>
       </div>
 
       <div class="code-tabs">
@@ -448,7 +449,7 @@
             acepte cuando lo llaman.</p>
           <p><strong>Qué se ve.</strong> Con los ocho primeros del directorio (si todos aceptan), las barras son todo o nada: ocho
             arquitectos entran siempre y seis no entran nunca, aunque las $\pi_k$ sumen 8. Llamando por orden, la
-            probabilidad baja con la posición en la lista, y depende de quién acepta. Solo el sorteo deja las catorce
+            probabilidad es la misma para los ocho primeros y baja desde el noveno, y depende de quién acepta. Solo el sorteo deja las catorce
             barras a la misma altura, sobre la línea verde.</p>
           <p style="margin-bottom:0;"><strong>Por qué importa.</strong> El requisito 2 no es «que haya azar», sino
             conocer cada $\pi_k$ y que ninguna sea cero. El primer procedimiento la conoce y no la cumple; el segundo

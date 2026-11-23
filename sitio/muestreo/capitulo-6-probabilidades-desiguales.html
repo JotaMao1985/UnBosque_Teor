@@ -3546,6 +3546,55 @@
       color: #C2410C;
     }
 
+    /* Auditoría de cierre del capítulo 1 (2026-11-22), B1, B2 y B5.
+       B1: el título h3 era flex, y cada <code> o <em> se volvía un ítem
+       aparte que a 375 px se iba a otra columna. Ahora es un bloque y la
+       barra naranja va en línea delante del texto. */
+    h3 {
+      display: block;
+    }
+
+    h3::before {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      margin-top: -0.2rem;
+    }
+
+    /* B2: en el móvil, los rellenos anidados de los ejercicios guiados
+       dejaban el código en 194 px; y la cabecera de cada bloque de código
+       recortaba su botón. */
+    @media (max-width: 640px) {
+      .exercise {
+        padding: 1rem 0.6rem;
+      }
+
+      .ejercicio-guiado {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .ejercicio-panel {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .code-block-header {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* B5: tres textos por debajo de 4,5 de contraste. */
+    .code-tab-btn {
+      color: #475569;
+    }
+
+    .glosario-boton[aria-expanded="true"] {
+      background: #C2410C;
+      border-color: #C2410C;
+    }
+
+    h2 > .text-gray-400.font-normal {
+      color: #6b7280;
+    }
+
     .animate-fade-in > p {
       margin-bottom: 1rem;
     }
@@ -7441,7 +7490,10 @@ print(f"total con la razon = {8182 * t_ht6 / (xs / ps).sum():.0f}")
         label.append(def.etiqueta);
 
         const output = document.createElement('output');
-        output.textContent = Number(params[def.clave]).toFixed(decimales);
+        // Con coma decimal y signo menos, como las lecturas y la prosa.
+        const fmtDeslizador = v => Number(v).toFixed(decimales)
+          .replace('.', ',').replace('-', '−');
+        output.textContent = fmtDeslizador(params[def.clave]);
         label.appendChild(output);
 
         const input = document.createElement('input');
@@ -7454,7 +7506,7 @@ print(f"total con la razon = {8182 * t_ht6 / (xs / ps).sum():.0f}")
 
         input.addEventListener('input', () => {
           params[def.clave] = parseFloat(input.value);
-          output.textContent = params[def.clave].toFixed(decimales);
+          output.textContent = fmtDeslizador(params[def.clave]);
           alCambiar();
         });
 
@@ -8707,6 +8759,10 @@ print(f"total con la razon = {8182 * t_ht6 / (xs / ps).sum():.0f}")
       function cerrar(i, bloque, acierto, textoRetro, opcs, vistas) {
         estado[i].resuelta = true;
         estado[i].acierto = acierto;
+        // La pista del intento fallido ya no aplica: quedaba a la vista
+        // junto a «Correcto» o «No es esa» (auditoría de cierre del cap. 1).
+        const pistaVieja = bloque.querySelector('.quiz-pista');
+        if (pistaVieja) pistaVieja.hidden = true;
         const retro = bloque.querySelector('.quiz-retro');
         retro.className = `quiz-retro ${acierto ? 'bien' : 'mal'}`;
         const encabezado = preguntas[i].tipo === 'texto'

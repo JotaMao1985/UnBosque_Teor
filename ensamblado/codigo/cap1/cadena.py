@@ -53,7 +53,7 @@ import numpy as np, pandas as pd
 # estimacion contra el valor verdadero. Fuera de un aula eso no pasa nunca.
 agpop = pd.read_csv("CSV data sets for SDA 3e/agpop.csv")
 
-# Las cuatro piezas del marco conceptual, sobre este archivo:
+# Cuatro de las piezas del modulo, sobre este archivo:
 #   poblacion objetivo  -> los condados agricolas de EE.UU.
 #   marco muestral      -> la lista de 3078 filas de este archivo
 #   unidad              -> un condado (una fila)
@@ -162,8 +162,9 @@ print(pd.DataFrame(
 #> telefonica     0.6164     0.6476
 #> online         0.6755     0.6563
 
-# Los pesos no acercan las dos encuestas: las separan. Calibrar por sexo, edad
-# y raza no arregla una seleccion que fallo por otras variables.
+# Los pesos acercan las dos estimaciones (de 5,9 a 0,9 puntos), pero acercarse
+# entre si no es acercarse a la poblacion: calibrar por sexo, edad y raza no
+# arregla una seleccion que fallo por otras variables.
 print("\n###BLOQUE-P3###\n")
 import numpy as np, pandas as pd
 # La formula del sesgo de no respuesta, termino a termino.
@@ -205,8 +206,9 @@ def sesgo_no_respuesta(r_h):
     return (peso * mu_h).sum() / peso.sum() - mu
 
 # Tres escenarios. Los dos primeros tienen tasas IGUALES entre clases: una es
-# altisima y la otra ridicula, y las dos dan sesgo cero. El tercero baja la
-# tasa donde los condados son mas grandes (NC, NE, S, W en orden alfabetico).
+# alta y la otra muy baja, y las dos dan sesgo cero. El tercero deja al Oeste,
+# donde los condados son mas grandes, en 0.20, y al Nordeste, donde son mas
+# pequenos, en 0.65 (el orden es NC, NE, S, W, el alfabetico).
 #
 # El `+ 0.0` no cambia ninguna cifra: normaliza el CERO CON SIGNO. Con tasas
 # iguales el sesgo es cero, pero en coma flotante sale -5.8e-11, y al redondear
@@ -253,11 +255,11 @@ print("\n###BLOQUE-P4###\n")
 import numpy as np, pandas as pd
 # El sondeo de 2,3 millones frente a un muestreo aleatorio simple de 1000.
 #
-# Los tres numeros se vuelven a declarar, ya redondeados, para que el bloque se
-# pueda ejecutar suelto. Se comprobo que no cambia nada de lo publicado: partir
-# de estos valores redondeados o de los exactos del bloque anterior da las
-# mismas cifras en las dos tablas, hasta el ultimo decimal que se imprime.
-p_real, sesgo, n_digest = 0.62467, -0.19544, 2266566
+# Las cuatro cantidades vienen del bloque anterior; se rehacen para que este
+# corra suelto, igual que en la pestana de R:
+n_digest = 1293669 + 972897
+p_real   = 27.753 / (27.753 + 16.675)
+sesgo    = 972897 / n_digest - p_real
 S2 = p_real * (1 - p_real)
 
 ecm_digest = sesgo**2 + S2 / n_digest
@@ -267,7 +269,7 @@ print(pd.Series({"recm_digest": np.sqrt(ecm_digest),
                  "veces_peor":  np.sqrt(ecm_digest / ecm_mas)}).round(4).to_string())
 #> recm_digest     0.1954
 #> recm_mas        0.0153
-#> veces_peor     12.7639
+#> veces_peor     12.7636
 
 # El suelo, tamano a tamano. Solo la varianza baja con n: la columna insesgada
 # tiende a cero y la sesgada se para en el sesgo y ya no se mueve.
@@ -279,9 +281,9 @@ tabla = pd.DataFrame({
     "recm_sesgado":   [np.sqrt(ecm(n, sesgo)) for n in tamanos]})
 print(tabla.round(5).to_string(index=False))
 #>       n  recm_insesgado  recm_sesgado
-#>    1000         0.01531       0.19604
+#>    1000         0.01531       0.19603
 #>   10000         0.00484       0.19550
-#>  100000         0.00153       0.19545
+#>  100000         0.00153       0.19544
 #> 1000000         0.00048       0.19544
 #> 2266566         0.00032       0.19544
 
@@ -310,11 +312,13 @@ print(resumen.sort_values("media", ascending=False).to_string())
 #> NE   220   90619   79365
 
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
-# dentro del paquete TeachingSampling, que no existe para Python. Si no tienes el
-# archivo, exportalo una vez desde R y deja el CSV junto a los datos del curso:
+# dentro del paquete TeachingSampling, que no existe para Python. El repositorio
+# del curso lo trae ya exportado en precalculo/salidas/BigLucy.csv.gz. Si trabajas
+# en otra carpeta, copia ese archivo con la misma ruta, o rehazlo una vez desde R:
 #
 #   data(BigLucy, package = "TeachingSampling")
-#   write.csv(BigLucy, "BigLucy.csv", row.names = FALSE)
+#   dir.create("precalculo/salidas", recursive = TRUE, showWarnings = FALSE)
+#   write.csv(BigLucy, gzfile("precalculo/salidas/BigLucy.csv.gz"), row.names = FALSE)
 #
 # Las dos pestanas calculan sobre el mismo dato en vez de copiarse las cifras.
 big = pd.read_csv("precalculo/salidas/BigLucy.csv.gz")
