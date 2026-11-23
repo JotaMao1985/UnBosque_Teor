@@ -9896,6 +9896,8 @@ fuera de git.
 
 ### T7.153 — Checkpoint final del cap. 1: las mejoras elegidas de la auditoría de cierre (2026-11-23)
 
+Commit `a5726bd`. En `origin/main` el 23 nov (442995e..a5726bd, que lleva también las Fases 6 y 7) y **PUBLICADO** en `gh-pages` `4797cb0` (73179fe..4797cb0; árbol = `a5726bd:sitio`). Vault refrescado (notas de curso, capítulos y `Fuentes/`, medido sobre el árbol de `a5726bd`) y bitácora del 2026-11-23; `bibliografia/uso_fuentes.json` regenerado con `verifica_citas.py --uso`, sin commit.
+
 Pedido de Javier: «Las recomendadas», es decir, las mejoras 1 a 8 de la lista C de `PLAN_Auditoria_Cap1_Cierre.md`
 (fuera de git). Quedan para otra ronda la pregunta de predicción antes de los simuladores de los módulos 3, 5 y 8, los
 casos nuevos y el número variable de correctas del quiz, la variante del ejercicio 4, el sesgo de los libros gruesos

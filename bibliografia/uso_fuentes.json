@@ -1,7 +1,7 @@
 {
   "norma": 1,
   "curso": 20939,
-  "generado": "2026-11-16",
+  "generado": "2026-11-23",
   "obras": {
     "arnold1991intraclutch": {
       "rol": "primaria",
@@ -63,9 +63,9 @@
       "capitulos": [
         1
       ],
-      "citas": 1,
+      "citas": 2,
       "afirmaciones": {
-        "respaldada": 1
+        "respaldada": 2
       },
       "sin_marcar": 0
     },
@@ -163,9 +163,9 @@
       "capitulos": [
         1
       ],
-      "citas": 7,
+      "citas": 9,
       "afirmaciones": {
-        "respaldada": 4
+        "respaldada": 6
       },
       "sin_marcar": 0
     },
@@ -271,9 +271,9 @@
         7,
         8
       ],
-      "citas": 48,
+      "citas": 50,
       "afirmaciones": {
-        "respaldada": 38,
+        "respaldada": 40,
         "con-matiz": 2
       },
       "sin_marcar": 122
