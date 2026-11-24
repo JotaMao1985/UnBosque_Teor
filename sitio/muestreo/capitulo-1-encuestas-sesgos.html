@@ -9895,11 +9895,11 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         opciones: [
           { texto: 'La población objetivo y el marco muestral no coinciden.', correcta: true },
           { texto: 'Los que se matricularon este semestre por primera vez tienen probabilidad cero de salir.', correcta: true },
-          { texto: 'La lista puede contener a personas que ya no pertenecen a la población.', correcta: true },
+          { texto: 'Como la lista es la oficial del programa, una muestra sacada de ella será representativa.', correcta: false },
           { texto: 'El problema se resuelve tomando una muestra más grande de la lista.', correcta: false }
         ],
-        retroAcierto: 'Todas menos la de la muestra más grande, que es el reflejo que este capítulo existe para desactivar: un marco incompleto no mejora porque se muestree más de él.',
-        retroFallo: 'Son las tres que describen un desajuste entre el marco y la población. El marco puede fallar por defecto (falta gente de la población) y por exceso (sobra gente que ya no pertenece), y ninguna de las dos cosas depende de $n$.'
+        retroAcierto: 'Exacto: el marco no coincide con la población, y los nuevos no pueden salir. La lista deja fuera a los que llegaron este semestre, y además puede traer a quienes ya se fueron: el marco falla por defecto y por exceso. Que sea la oficial no la hace coincidir con la población, y muestrear más de ella no le añade a nadie de los que faltan.',
+        retroFallo: 'Son dos: el marco no coincide con la población, y los nuevos tienen probabilidad cero. Que la lista sea oficial no arregla lo que le falta, y una muestra más grande de un marco incompleto sigue sin ver a los que no están en él: ninguna de las dos cosas depende de $n$.'
       },
       {
         tipo: 'opcion',
@@ -10024,10 +10024,11 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           { texto: 'Pesar a 50 000 personas en vez de 50 reduce el efecto del ruido sobre el promedio.', correcta: true },
           { texto: 'Pesar a 50 000 personas en vez de 50 reduce los 300 gramos del promedio.', correcta: false },
           { texto: 'Con muchas personas, el intervalo de confianza sale estrecho y centrado en el valor equivocado.', correcta: true },
-          { texto: 'Una validación contra una balanza de referencia ataca el desplazamiento, que los datos de la encuesta, por sí solos, no revelan.', correcta: true }
+          { texto: 'El desplazamiento se delata en los propios datos: las pesadas salen más dispersas de lo que saldrían con una balanza bien calibrada.', correcta: false },
+          { texto: 'Si el ruido fuera cero, el promedio daría el peso verdadero.', correcta: false }
         ],
-        retroAcierto: 'Todas menos la de los 300 gramos. El ruido $\\varepsilon_k$ se cancela al promediar y se paga con más muestra; el desplazamiento $b_k$ sigue entero con 50 personas y con 50 000, y solo se ataca con información de fuera de la encuesta: calibrando antes de medir o validando contra una referencia.',
-        retroFallo: 'Son tres: el ruido baja con $n$, el intervalo se estrecha alrededor de un valor desplazado, y el desplazamiento se combate con información de fuera de la encuesta. Lo único falso es que más pesadas quiten los 300 gramos: $b_k$ no se cancela nunca.'
+        retroAcierto: 'Exacto: el ruido y el intervalo. El ruido $\\varepsilon_k$ se cancela al promediar; el desplazamiento $b_k$ no: no baja con más pesadas, sigue ahí aunque el ruido sea cero y no deja rastro en la dispersión de los datos. Solo lo revela información de fuera de la encuesta, como una balanza de referencia.',
+        retroFallo: 'Son dos: el ruido baja con $n$, y el intervalo se estrecha alrededor de un valor desplazado. Las otras tres suponen que el desplazamiento se cancela o se nota, y no: $b_k$ suma lo mismo a cada pesada, así que no cambia la dispersión, no baja con más pesadas y sigue ahí aunque el ruido sea cero.'
       },
       {
         tipo: 'opcion',
@@ -10068,12 +10069,13 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
         pista: 'La pregunta que los separa es siempre la misma: ¿lo reduce aumentar $n$?',
         opciones: [
           { texto: 'Que el marco deje fuera al 26,5 % de los hogares.', correcta: true },
-          { texto: 'Que conteste el 4,5 % de las personas a las que se envió el cuestionario.', correcta: true },
+          { texto: 'Que la media muestral cambie de una muestra a otra.', correcta: false },
           { texto: 'Que la pregunta tenga doble negación.', correcta: true },
-          { texto: 'Que la media muestral cambie de una muestra a otra.', correcta: false }
+          { texto: 'Que, con una muestra de 50 hogares, el error estándar salga grande.', correcta: false },
+          { texto: 'Que una muestra sorteada con todo rigor traiga, por azar, más hogares rurales que la población.', correcta: false }
         ],
-        retroAcierto: 'Todas menos la de la media que cambia de una muestra a otra: esa es la definición misma del error de muestreo, y es la única del curso que se estima de la propia muestra y se reduce pagando más unidades.',
-        retroFallo: 'Son las tres que no se reducen pagando más unidades. La variación de una muestra a otra es error de muestreo: inevitable, cuantificable y controlable. Las otras tres no cumplen ninguna de las tres cosas.'
+        retroAcierto: 'Exacto: el marco que deja fuera hogares y la doble negación. Las otras tres son el error de muestreo visto de tres maneras: la media que cambia de una muestra a otra, el error estándar grande con pocas unidades y la muestra que por azar trae de más un grupo. Es el único error que se estima con la propia muestra y que baja pagando más unidades.',
+        retroFallo: 'Son dos: el marco incompleto y la doble negación, que no bajan aunque se paguen más unidades. Las otras tres son error de muestreo, inevitable, cuantificable y controlable con $n$. Que una muestra rigurosa traiga por azar de más un grupo es eso mismo: azar, no un defecto del procedimiento.'
       },
       {
         tipo: 'opcion',

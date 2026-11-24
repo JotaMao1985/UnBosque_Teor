@@ -10047,9 +10047,53 @@ que no aparece en el capítulo.
     no hay desborde y no hay errores de consola. Se sirvió por `[::1]:8767`, porque otra sesión ocupa
     `127.0.0.1:8767` con Series.
 
-**Sin commit.** Rutas:
+**Commit `d07f892`** (3 rutas por su nombre), sin push. Rutas:
 - `PLAN_Material_Muestreo.md`, que incluye el hash de la 8.2 en T7.155
 - `ensamblado/modulos/cap1/simuladores.js`
 - `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
 
 Sigue la 8.4: número variable de correctas en las preguntas 3, 9 y 12.
+
+### T7.157 — Fase 8 del cap. 1, tarea 8.4: número variable de correctas en las preguntas 3, 9 y 12 (2026-11-24)
+
+Javier: «Sí, commit y 8.4». El commit de la 8.3 es `d07f892`. La tarea responde a PE-M5 del informe de cierre: las tres
+preguntas de varias respuestas tenían tres correctas de cuatro y sus retros decían «Todas menos…», así que el patrón se
+aprendía sin entender. Ahora tienen dos correctas, de cuatro o de cinco opciones, y ninguna retro dice «Todas menos».
+
+- **Pregunta 3 (M2), matrícula del semestre pasado: dos de cuatro.**
+  - Siguen correctas «el marco y la población no coinciden» y «los nuevos tienen probabilidad cero».
+  - Sale la de las personas que sobran en la lista (era correcta). Su idea pasa a las retros: el marco falla por
+    defecto y por exceso.
+  - Entra «como la lista es la oficial, la muestra será representativa», que es falsa.
+- **Pregunta 9 (M5), la balanza: dos de cinco.**
+  - Siguen correctas el ruido que baja con $n$ y el intervalo estrecho alrededor del valor desplazado.
+  - Sale la de la balanza de referencia (era correcta). Su idea pasa a la retro de acierto.
+  - Entran dos falsas: «el desplazamiento se delata porque las pesadas salen más dispersas» y «con ruido cero, el
+    promedio da el peso verdadero».
+- **Pregunta 12 (M7), el error ajeno al muestreo: dos de cinco.**
+  - Siguen correctos el marco que deja fuera el 26,5 % y la doble negación.
+  - Sale el 4,5 % de respuesta. La no respuesta ya está en la pregunta 8.
+  - Entran dos caras más del error de muestreo: «el error estándar grande con 50 hogares» y «la muestra rigurosa que
+    trae, por azar, de más un grupo».
+- **La correcta nunca es la opción más larga**, en ninguna de las tres.
+- **Una corrección por el camino:** la retro de la 3 decía «las dos primeras», pero el motor baraja las opciones y en
+  pantalla salían en las posiciones 1 y 4. Ahora nombra las opciones por su contenido. En el resto del quiz no queda
+  ninguna referencia por posición.
+- **Verificación:**
+  - Fuentes y referencias: `--comprobar` sin cambios, `--cierre 1` limpio, arnés 71/71, `uso_fuentes.json` al día y
+    600 referencias resueltas.
+  - Cifras: la prosa da 0 cifras sin respaldo, el cotejo 0 desajustadas, y `node --check` pasa.
+  - Ensamblado: el cap. 1 da el mismo archivo en dos pasadas (`195bc357…`).
+  - En el navegador, por HTTP:
+    - Las preguntas 3 y 12 se aciertan con sus dos correctas («Correcto.»).
+    - En la 9, el primer intento con tres marcadas da la pista «De las 3 que marcaste, 2 están en la respuesta, pero
+      sobra 1». El segundo intento, fallido, da «No son esas.» y marca lo que faltaba.
+    - A 375 px no hay desborde y la página no da errores de consola. El único 404 vino de la visita anterior de la
+      pestaña al servidor de Series.
+
+**Sin commit.** Rutas:
+- `PLAN_Material_Muestreo.md`, que incluye el hash de la 8.3 en T7.156
+- `ensamblado/modulos/cap1/simuladores.js`
+- `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
+
+Sigue la 8.5: el ejercicio 4 con aceptación 0,7 y el ejercicio 5 con el sesgo hacia los libros gruesos.
