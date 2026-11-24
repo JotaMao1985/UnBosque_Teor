@@ -1140,17 +1140,17 @@
       {
         tipo: 'opcion',
         modulo: 3,
-        pregunta: 'En la ciudad de los 14 arquitectos se toman los ocho primeros del directorio, y todos aceptan. Cada $\\pi_k$ se conoce de antemano: vale 1 o 0. ¿Es una muestra probabilística?',
-        pista: 'La definición del módulo 3 tiene dos condiciones. ¿Cuál de las dos se cumple aquí?',
+        pregunta: 'Un colegio tiene 30 cursos, y cada estudiante está en uno solo. Para encuestar a sus estudiantes se sortean 3 cursos y se entrevista a todos los estudiantes de esos tres. ¿Es una muestra probabilística de los estudiantes del colegio?',
+        pista: 'Aplica la definición del módulo 3 a un estudiante cualquiera: ¿con qué probabilidad entra?, ¿se conoce antes de sortear?, ¿es positiva?',
         opciones: [
-          { texto: 'Sí: la definición pide conocer cada $\\pi_k$ antes de seleccionar, y aquí se conocen todas.', correcta: false,
-            retro: 'Es solo la mitad de la definición. La otra mitad pide $\\pi_k > 0$ para <em>todas</em> las unidades, y seis arquitectos no pueden salir nunca.' },
-          { texto: 'No: seis arquitectos tienen $\\pi_k = 0$, así que no pueden salir nunca.', correcta: true,
-            retro: 'Exacto. Se conocen las probabilidades, pero no son todas positivas. Ningún estimador puede ser insesgado para una población que incluye a quienes nunca pueden entrar, por mucho que se parezcan los ocho que sí entran.' },
-          { texto: 'No, porque ocho de catorce es una fracción demasiado grande de la población.', correcta: false,
-            retro: 'El tamaño no aparece en la definición. Un sorteo de ocho entre catorce sí sería probabilístico: le daría a cada arquitecto la misma $\\pi_k$, positiva.' },
-          { texto: 'Depende de si los ocho primeros se parecen al resto de los arquitectos.', correcta: false,
-            retro: 'Eso es la idea intuitiva de «representativa», que el módulo 3 sustituye precisamente porque no se puede comprobar. Lo que se comprueba es el procedimiento, no el parecido.' }
+          { texto: 'Sí: cada estudiante entra si sale su curso, con una probabilidad conocida y positiva.', correcta: true,
+            retro: 'Exacto. Cada estudiante tiene la $\\pi_k$ de su curso, 3 de 30, que se conoce antes de sortear y es positiva para todos. Que se sorteen cursos y no personas no cambia la definición: es el muestreo por conglomerados del capítulo 5.' },
+          { texto: 'No: los estudiantes no se sortean uno a uno, sino por cursos enteros.', correcta: false,
+            retro: 'La definición no pide sortear unidad por unidad. Pide que cada estudiante tenga una probabilidad de entrar conocida y positiva, y aquí la tiene: la de su curso.' },
+          { texto: 'No: los estudiantes de un mismo curso se parecen entre sí, y la muestra no será representativa.', correcta: false,
+            retro: 'Eso toca la precisión, no la definición. Si los compañeros de curso se parecen, la estimación sale menos precisa que con un sorteo de estudiantes del mismo tamaño, pero el procedimiento sigue siendo probabilístico. «Representativa» es justo la idea que el módulo 3 sustituye.' },
+          { texto: 'Sí, y lo sería con cualquier procedimiento que use el azar en algún paso.', correcta: false,
+            retro: 'La conclusión es buena y la razón no. Llamar por orden hasta que ocho arquitectos acepten también tiene azar, y sus $\\pi_k$ no se conocen. Lo que hace probabilística esta muestra es que cada $\\pi_k$ se conoce y es positiva.' }
         ]
       },
       {
@@ -1252,15 +1252,15 @@
       {
         tipo: 'opcion',
         modulo: 6,
-        pregunta: '«¿Está usted satisfecho con el precio y la calidad del servicio?» ¿Qué defecto tiene y qué error produce?',
-        pista: '¿Qué contesta alguien a quien le gusta el precio y le parece mala la calidad?',
+        pregunta: '«¿Cree usted que la universidad debería ampliar el horario de la biblioteca y cobrar por el préstamo de computadores?» ¿Qué defecto tiene y qué error produce?',
+        pista: '¿Qué contesta quien quiere la biblioteca abierta más horas y no quiere pagar por el computador?',
         opciones: [
-          { texto: 'Es de doble cañón: junta dos preguntas, y la respuesta no se interpreta. Error de medición.', correcta: true,
-            retro: 'Correcto. Y como es de medición, ni un censo lo arregla: hay que reescribir la pregunta antes de recoger un solo dato.' },
-          { texto: 'Es sugestiva: supone que hay satisfacción y empuja a contestar que sí. Error de medición.', correcta: false,
-            retro: 'Sugestiva sería «¿No está de acuerdo en que el servicio es bueno?». Aquí el defecto es otro: son dos preguntas cosidas en una.' },
-          { texto: 'No tiene defecto: es una pregunta cerrada y clara, que se contesta sí o no sin ambigüedad.', correcta: false,
-            retro: 'Piensa en alguien a quien le encanta el precio y le parece pésima la calidad. Cualquier cosa que conteste será una respuesta a otra pregunta.' },
+          { texto: 'Es de doble cañón: son dos propuestas en una. Error de medición.', correcta: true,
+            retro: 'Correcto. Un «sí» o un «no» no se puede repartir entre las dos propuestas. Se arregla separándolas en dos preguntas antes de recoger un solo dato; después, ni un censo lo arregla.' },
+          { texto: 'Es sugestiva: «¿Cree usted que…?» empuja a contestar que sí. Error de medición.', correcta: false,
+            retro: 'Sugestiva sería «¿No cree usted que…?», que lleva la respuesta puesta. «¿Cree usted que…?» pregunta sin inclinar; el defecto es otro: son dos propuestas cosidas en una.' },
+          { texto: 'Le falta marco temporal, porque no dice desde cuándo regiría el cambio.', correcta: false,
+            retro: 'El marco temporal hace falta cuando se pregunta por una conducta, como «¿Hace usted ejercicio?». Aquí se pide una opinión, y el problema es que se pide sobre dos cosas a la vez.' },
           { texto: 'Produce error de muestreo, que baja al aumentar $n$ porque las respuestas confusas se compensan.', correcta: false,
             retro: 'Al contrario: con más respuestas se acumula el mismo defecto. Una pregunta mal hecha desplaza todas las respuestas hacia el mismo lado, y eso es justo lo que el módulo 5 enseña que no se promedia.' }
         ]
@@ -1314,16 +1314,16 @@
       {
         tipo: 'opcion',
         modulo: 9,
-        pregunta: 'Un modelo se entrena con reseñas escritas por usuarios que decidieron escribirlas y se despliega sobre todos los compradores. ¿A qué se parece eso?',
-        pista: 'Piensa en quién decide entrar en la muestra y en qué correlaciona con esa decisión.',
+        pregunta: 'Un asistente de voz se entrena solo con grabaciones de hablantes de Bogotá y después se usa en todo el país. ¿Qué término del diccionario nombra el problema principal?',
+        pista: 'Separa dos preguntas: quién decidió que existieran las grabaciones, y quién no tenía ninguna manera de aparecer en ellas.',
         opciones: [
-          { texto: 'A una muestra autoseleccionada: quien escribe una reseña no es un comprador cualquiera.', correcta: true,
-            retro: 'Correcto, y la fórmula del sesgo es literalmente la misma del módulo 4. Cambia el vocabulario —«datos de entrenamiento» en vez de «marco»— pero no la matemática.' },
-          { texto: 'A un muestreo aleatorio simple, porque las reseñas llegan en un orden que nadie controla.', correcta: false,
-            retro: 'El orden de llegada no tiene nada que ver con la probabilidad de inclusión. Lo que importa es <em>quién</em> decide escribir, y eso correlaciona con la satisfacción.' },
-          { texto: 'A un error de medición: las reseñas exageran lo bueno y lo malo de cada compra.', correcta: false,
-            retro: 'Puede haberlo además (las reseñas exageran), pero el defecto principal es de representación: la población que generó los datos no es la población sobre la que se decide.' },
-          { texto: 'A nada de lo visto: con tantos datos, la teoría de muestreo deja de aplicarse.', correcta: false,
+          { texto: 'No cobertura: los hablantes de otras regiones nunca podían entrar.', correcta: true,
+            retro: 'Correcto. Para el modelo, las demás regiones son unidades fuera del marco: su probabilidad de entrar era cero, y grabar más horas en Bogotá no la sube. Es la definición del módulo 3: con $\\pi_k = 0$ para una parte de la población, ningún estimador es insesgado para la población entera.' },
+          { texto: 'Autoselección: las personas grabadas decidieron participar.', correcta: false,
+            retro: 'Puede haberla además, si se ofrecieron. Pero aunque se las hubiera sorteado entre todos los hablantes de Bogotá, los de las demás regiones seguirían con probabilidad cero de entrar, y eso es no cobertura.' },
+          { texto: 'Sesgo de medición: el asistente va a transcribir mal los acentos que no conoce.', correcta: false,
+            retro: 'Eso es la consecuencia, no el defecto de los datos. Las grabaciones de Bogotá pueden estar transcritas sin un error; lo que falla es la población que representan.' },
+          { texto: 'Ninguno: con miles de horas grabadas, la teoría de muestreo deja de aplicarse.', correcta: false,
             retro: 'Es al revés. El sondeo del <em>Literary Digest</em> tenía 2,3 millones de casos y equivalía a una muestra aleatoria de 6 personas. El volumen no exime de la teoría: la hace más necesaria.' }
         ]
       }

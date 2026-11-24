@@ -10001,7 +10001,7 @@ toca la plantilla.
   - En el navegador, por HTTP: las tres preguntas están justo antes de su simulador. A 375 px no hay desborde (ancho
     del documento 375) y a 1280 px se ven bien. No hay errores de consola ni de KaTeX.
 
-**Commit pendiente de hash** (7 rutas por su nombre). Rutas:
+**Commit `c543ccc`** (7 rutas por su nombre), sin push. Rutas:
 - `PLAN_Material_Muestreo.md`
 - `precalculo/genera_cap1.R`
 - `precalculo/salidas/cap1_datos.json`
@@ -10009,3 +10009,47 @@ toca la plantilla.
 - `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
 
 Sigue la 8.3: casos nuevos en las preguntas 5, 10 y 14 del quiz.
+
+### T7.156 — Fase 8 del cap. 1, tarea 8.3: casos nuevos en las preguntas 5, 10 y 14 del quiz (2026-11-24)
+
+Javier: «Sí, commit y 8.3» (el commit de la 8.2 es `c543ccc`). Corresponde a PE-M4 del informe de cierre: las
+preguntas 5, 10 y 14 repetían el ejemplo de su módulo y medían recuerdo, no comprensión. Ahora cada una trae un caso
+que no aparece en el capítulo.
+- **5 (M3):** antes eran los ocho primeros de los 14 arquitectos. Ahora es un colegio con 30 cursos que sortea 3 y
+  entrevista a todos los estudiantes de esos cursos. ¿Es probabilística?
+  - Correcta: sí, porque cada estudiante tiene la probabilidad conocida y positiva de su curso, 3 de 30.
+  - Distractores: «no, porque no se sortea uno a uno»; «no, porque los del mismo curso se parecen», que afecta la
+    precisión y no la definición; y «sí, porque cualquier azar basta», que acierta la conclusión con una razón
+    equivocada y cuya retro remite al procedimiento por orden de los arquitectos.
+  - La retro de la correcta nombra el muestreo por conglomerados del capítulo 5.
+- **10 (M6):** antes era «precio y calidad», el ejemplo del módulo. Ahora es «¿Cree usted que la universidad debería
+  ampliar el horario de la biblioteca y cobrar por el préstamo de computadores?».
+  - Correcta: doble cañón, error de medición.
+  - Distractores: sugestiva, con una retro que la contrasta con «¿No cree usted que…?»; falta de marco temporal, que es
+    para conductas y no para opiniones; y el de error de muestreo, que no cambió.
+- **14 (M9):** antes eran las reseñas, el primer caso del módulo. Ahora es un asistente de voz entrenado solo con
+  hablantes de Bogotá y usado en todo el país.
+  - Correcta: no cobertura, porque las otras regiones tienen probabilidad cero.
+  - Distractores: autoselección, que puede haberla además, pero aunque se sorteara entre los de Bogotá seguiría la
+    probabilidad cero; sesgo de medición, que es la consecuencia y no el defecto de los datos; y el del volumen, que
+    conserva la retro del *Digest*.
+  - No repite ninguna de las siete situaciones del simulador `emparejar-ia`.
+- **La correcta nunca es la más larga.** En la 14 lo era (84 frente a 79 caracteres) y se acortó a 66. El motor
+  baraja las opciones con una semilla fija, así que la posición no importa.
+- **Verificación:**
+  - Fuentes y referencias: `--comprobar` sin cambios, `--cierre 1` limpio, el arnés 71/71, `uso_fuentes.json` al día,
+    600 referencias resueltas.
+  - Prosa, con el quiz incluido: 0 cifras sin respaldo. El cotejo da 0 desajustadas y `node --check` pasa. El código
+    no se tocó.
+  - Ensamblado: el cap. 1 da el mismo archivo en dos pasadas (`12600b1b…`).
+  - En el navegador, por HTTP: el primer fallo da la pista; el segundo intento muestra la retro, en la 5 con «No es
+    esa.» y en la 14 con «Correcto, en el segundo intento.». La 10 acierta a la primera. Las fórmulas se ven, a 375 px
+    no hay desborde y no hay errores de consola. Se sirvió por `[::1]:8767`, porque otra sesión ocupa
+    `127.0.0.1:8767` con Series.
+
+**Sin commit.** Rutas:
+- `PLAN_Material_Muestreo.md`, que incluye el hash de la 8.2 en T7.155
+- `ensamblado/modulos/cap1/simuladores.js`
+- `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
+
+Sigue la 8.4: número variable de correctas en las preguntas 3, 9 y 12.
