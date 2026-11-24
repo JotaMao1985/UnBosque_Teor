@@ -6113,10 +6113,11 @@ print((100 * pd.Series({"no_entregada": no_entregada,
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado" data-afirma="c1-m10-04"><span class="ejercicio-numero">4.</span>En una ciudad hay <strong>14
-            arquitectos</strong> y se quiere una muestra de 8. Se llama por orden del directorio telefónico hasta
-            conseguir 8 entrevistas. Calcula la <strong>probabilidad de inclusión</strong> $\pi_k$ de cada arquitecto
-            —la probabilidad de que la unidad $k$ acabe en la muestra, que es el objeto que el capítulo 2 formaliza—
-            suponiendo que todos aceptan, comprueba cuánto suman y decide si el diseño sirve. <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
+            arquitectos</strong> y se quiere una muestra de 8. Se llama por orden del directorio telefónico, y los 8
+            primeros que aceptan forman la muestra. Supón que cada uno acepta con probabilidad 0,7, independientemente
+            de los demás. Calcula la <strong>probabilidad de inclusión</strong> $\pi_k$ —la probabilidad de que la
+            unidad $k$ acabe en la muestra, que es el objeto que el capítulo 2 formaliza— del primero, del noveno y
+            del último del directorio, comprueba cuánto suman las catorce y decide si el diseño sirve. <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -6126,19 +6127,21 @@ print((100 * pd.Series({"no_entregada": no_entregada,
             </button>
           </div>
           <div class="ejercicio-panel pista" id="cap1-e4-pista" hidden>
-            <p style="margin:0;">Que las $\pi_k$ sumen $n$ es <em>necesario</em> para un diseño válido, pero no es
-              suficiente. El requisito del módulo 3 pide algo más sobre cada $\pi_k$ por separado, no sobre su suma.</p>
+            <p style="margin:0;">El arquitecto $k$ entra si acepta y si, cuando le toca, todavía no hay ocho: es
+              decir, si entre los $k-1$ anteriores aceptaron siete o menos. ¿Qué distribución tiene el número de los
+              que aceptan entre $k-1$ llamados?</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap1-e4-sol" hidden>
-            <p><strong>Las probabilidades suman 8, como debe ser, y aun así el diseño es inservible: seis arquitectos
-              tienen $\pi_k = 0$.</strong></p>
+            <p><strong>Los ocho primeros tienen $\pi_k = 0{,}7$; desde el noveno baja, hasta $\pi_{14} = 0{,}116$.
+              Las catorce suman 7,87, no 8. Ninguna es cero, y aun así el diseño no sirve: sus $\pi_k$ dependen de
+              una probabilidad de aceptar que nadie conoce.</strong></p>
             <ul>
               <li><strong>Población objetivo:</strong> los 14 arquitectos de la ciudad.</li>
               <li><strong>Marco:</strong> el directorio telefónico, en su orden. Un arquitecto que no figurara en él
                 no tendría ninguna oportunidad de salir.</li>
               <li><strong>Unidad de muestreo y de observación:</strong> el arquitecto. Aquí coinciden.</li>
-              <li><strong>Fuentes de error:</strong> una selección que no es probabilística, porque el orden del
-                directorio decide quién entra, y, si alguno no acepta, autoselección. Las dos se explican abajo.</li>
+              <li><strong>Fuentes de error:</strong> el orden del directorio, que da a cada arquitecto una
+                probabilidad distinta, y la autoselección, porque entra quien acepta. Las dos se explican abajo.</li>
             </ul>
             <div class="code-tabs">
               <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión de los catorce arquitectos">
@@ -6146,54 +6149,88 @@ print((100 * pd.Series({"no_entregada": no_entregada,
                 <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
               </div>
               <div class="code-tab-panel" data-lang="r">
-                <pre><code class="language-r"># Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
-# conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
-# son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
-N_arq &lt;- 14; n_arq &lt;- 8
-pi_arq &lt;- c(rep(1, n_arq), rep(0, N_arq - n_arq))
-c(suma_pi = sum(pi_arq), n = n_arq, minimo = min(pi_arq))
-#&gt; suma_pi       n  minimo
-#&gt;       8       8       0
+                <pre><code class="language-r"># Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+# primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
+# acepta con probabilidad 0,7, independientemente de los demas.
+# El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
+# si entre los k - 1 anteriores aceptaron 7 o menos:
+#   pi_k = 0,7 * P(Bin(k - 1; 0,7) &lt;= 7)
+N_arq &lt;- 14; n_arq &lt;- 8; p_acepta &lt;- 0.7
+k &lt;- 1:N_arq
+pi_arq &lt;- p_acepta * pbinom(n_arq - 1, k - 1, p_acepta)
+round(pi_arq, 4)
+#&gt;  [1] 0.7000 0.7000 0.7000 0.7000 0.7000 0.7000 0.7000 0.7000 0.6596 0.5628
+#&gt; [11] 0.4321 0.3013 0.1934 0.1158
+round(c(pi_1 = pi_arq[1], pi_9 = pi_arq[9], pi_14 = pi_arq[14],
+        suma = sum(pi_arq),
+        pct_menos_de_8 = 100 * pbinom(n_arq - 1, N_arq, p_acepta)), 4)
+#&gt;           pi_1           pi_9          pi_14           suma pct_menos_de_8
+#&gt;         0.7000         0.6596         0.1158         7.8650         9.3282
 
-# Suma n, como debe ser, y aun asi el diseno es inservible: seis arquitectos
-# tienen probabilidad CERO de salir, asi que ningun estimador puede ser
-# insesgado para la poblacion de los catorce.</code></pre>
+# Ninguna pi_k es cero, pero la suma no llega a 8: es el tamano ESPERADO de la
+# muestra, porque a veces aceptan menos de 8 de los 14. Y cada pi_k depende de
+# la probabilidad de aceptar, que en la realidad nadie conoce.</code></pre>
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
                 <pre><code class="language-python">import numpy as np, pandas as pd
-# Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
-# conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
-# son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
-N_arq, n_arq = 14, 8
-pi_arq = np.concatenate([np.ones(n_arq), np.zeros(N_arq - n_arq)])
-print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
-                 "minimo": int(pi_arq.min())}).to_string())
+from math import comb
+# Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+# primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
+# acepta con probabilidad 0,7, independientemente de los demas.
+# El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
+# si entre los k - 1 anteriores aceptaron 7 o menos:
+#   pi_k = 0,7 * P(Bin(k - 1; 0,7) &lt;= 7)
+N_arq, n_arq, p_acepta = 14, 8, 0.7
 
-# Suma n, como debe ser, y aun asi el diseno es inservible: seis arquitectos
-# tienen probabilidad CERO de salir, asi que ningun estimador puede ser
-# insesgado para la poblacion de los catorce.
-#&gt; suma_pi    8
-#&gt; n          8
-#&gt; minimo     0</code></pre>
+def binom_acum(x, m, p):                # P(Bin(m; p) &lt;= x)
+    return sum(comb(m, j) * p**j * (1 - p)**(m - j) for j in range(min(x, m) + 1))
+
+pi_arq = np.array([p_acepta * binom_acum(n_arq - 1, k - 1, p_acepta)
+                   for k in range(1, N_arq + 1)])
+print(pi_arq.round(4))
+#&gt; [0.7    0.7    0.7    0.7    0.7    0.7    0.7    0.7    0.6596 0.5628
+#&gt;  0.4321 0.3013 0.1934 0.1158]
+print(pd.Series({"pi_1": pi_arq[0], "pi_9": pi_arq[8], "pi_14": pi_arq[13],
+                 "suma": pi_arq.sum(),
+                 "pct_menos_de_8": 100 * binom_acum(n_arq - 1, N_arq, p_acepta)}).round(4).to_string())
+#&gt; pi_1              0.7000
+#&gt; pi_9              0.6596
+#&gt; pi_14             0.1158
+#&gt; suma              7.8650
+#&gt; pct_menos_de_8    9.3282
+
+# Ninguna pi_k es cero, pero la suma no llega a 8: es el tamano ESPERADO de la
+# muestra, porque a veces aceptan menos de 8 de los 14. Y cada pi_k depende de
+# la probabilidad de aceptar, que en la realidad nadie conoce.</code></pre>
               </div>
             </div>
-            <p>Si todos aceptan, los ocho primeros del directorio entran con certeza y los seis últimos no entran
-              nunca. La suma da 8 —la identidad $\sum_U \pi_k = n$ se cumple, y en el capítulo 2 se demostrará que
-              se cumple en todo diseño de tamaño fijo—, pero eso no salva nada: el requisito del módulo 3 es que <em>todas</em> las
-              $\pi_k$ sean positivas, y aquí seis no lo son. Ningún estimador puede ser insesgado para la población de
-              los catorce.</p>
-            <p style="margin-bottom:0;">Hay un segundo defecto, más sutil. Si <em>no</em> todos aceptan, quién entra
-              depende de quién conteste el teléfono primero, que es una forma de autoselección: probablemente los que
-              tienen menos trabajo o más personal administrativo. Con 14 unidades y ganas de 8, lo correcto es un
-              muestreo aleatorio simple de 8 de los 14, con $\pi_k = 8/14 = 0{,}571$ para todos, y perseguir a los
-              seleccionados hasta conseguirlos.</p>
+            <p>Los ocho primeros entran justo cuando aceptan, porque al llamarlos la muestra nunca está completa: su
+              $\pi_k$ es 0,7. El noveno solo entra si acepta y alguno de los ocho anteriores dijo que no, así que
+              $\pi_9 = 0{,}660$, y la probabilidad sigue bajando hasta $\pi_{14} = 0{,}116$. La suma, 7,87, es el
+              tamaño <em>esperado</em> de la muestra: en el 9,3 % de las veces aceptan menos de ocho de los catorce y
+              la muestra queda corta. La identidad $\sum_U \pi_k = n$, que el capítulo 2 demostrará para todo diseño
+              de tamaño fijo, no aplica aquí, porque este diseño no lo es.</p>
+            <p>Ninguna $\pi_k$ es cero, así que desaparece el defecto del caso en que todos aceptan: ocho que entran
+              siempre y seis que no entran nunca, como en el primer procedimiento del simulador del módulo 3. Pero
+              aparecen dos peores. Las $\pi_k$ dependen de la probabilidad de aceptar, que en la realidad nadie
+              conoce: el 0,7 es un supuesto del ejercicio, y sin él no hay pesos con que estimar. Y quién acepta no es
+              puro azar: probablemente los que tienen menos trabajo o más personal administrativo, que es una forma de
+              autoselección.</p>
+            <p style="margin-bottom:0;">Con 14 unidades y ganas de 8, lo correcto es un muestreo aleatorio simple de 8
+              de los 14, con $\pi_k = 8/14 = 0{,}571$ para todos, y perseguir a los seleccionados hasta conseguirlos.
+              Las barras del simulador del módulo 3, con «Por orden, hasta que 8 acepten», son una estimación por
+              simulación de estas mismas $\pi_k$.</p>
           </div>
         </div>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado" data-afirma="c1-m10-05"><span class="ejercicio-numero">5.</span>Un bibliotecario selecciona 100
-            ubicaciones al azar en las estanterías, va a cada una y registra si el libro que está ahí necesita
-            reencuadernación. Identifica la unidad de muestreo y la de observación, y cuantifica el sesgo: si el 30 % de los libros que están en el estante necesita reencuadernación, una fracción $f$ de los libros está prestada y entre los prestados la tasa es la mitad, ¿cuánto se sobreestima? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
+            ubicaciones al azar en las estanterías —puntos al azar a lo largo de los estantes—, va a cada una y
+            registra si el libro que está ahí necesita reencuadernación. Identifica la unidad de muestreo y la de
+            observación, y di si todos los libros del estante tienen la misma probabilidad de salir. Después
+            cuantifica el sesgo de los prestados, suponiendo que todos los libros tienen el mismo grosor: si el 30 %
+            de los libros que están en el estante necesita reencuadernación, una fracción $f$ de los libros está
+            prestada y entre los prestados la tasa es la mitad, ¿cuánto se sobreestima? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -6205,12 +6242,15 @@ print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
           <div class="ejercicio-panel pista" id="cap1-e5-pista" hidden>
             <p style="margin:0;">La unidad que se selecciona y la que se observa no son la misma cosa, y ahí está todo
               el ejercicio. Escribe la tasa poblacional como una mezcla de dos grupos, igual que en la fórmula del
-              sesgo de no respuesta del módulo 4: es literalmente la misma fórmula con otros nombres.</p>
+              sesgo de no respuesta del módulo 4: es literalmente la misma fórmula con otros nombres. Y antes de la
+              cuenta, piensa en un libro que ocupa el doble de estante que otro.</p>
           </div>
           <div class="ejercicio-panel solucion" id="cap1-e5-sol" hidden>
-            <p><strong>Se muestrean ubicaciones y se observan libros. El sesgo es la fracción prestada por la mitad de la
-              tasa del estante, $f \cdot p_{\text{estante}}/2$: con un 20 % prestado, se sobreestima la necesidad
-              de reencuadernación en 3 puntos porcentuales, 30 % frente al 27 % real.</strong></p>
+            <p><strong>Se muestrean ubicaciones y se observan libros, y eso tiene dos consecuencias. Cada libro sale
+              con una probabilidad proporcional a su grosor. Y los prestados no salen nunca: con libros del mismo
+              grosor, el sesgo es la fracción prestada por la mitad de la tasa del estante,
+              $f \cdot p_{\text{estante}}/2$, y con un 20 % prestado se sobreestima la necesidad de reencuadernación
+              en 3 puntos porcentuales, 30 % frente al 27 % real.</strong></p>
             <ul>
               <li><strong>Población objetivo:</strong> todos los libros de la colección.</li>
               <li><strong>Marco:</strong> el conjunto de ubicaciones físicas de las estanterías.</li>
@@ -6220,6 +6260,12 @@ print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
             <p>El diseño es bueno en un aspecto que conviene reconocer: si las ubicaciones cubren toda la biblioteca,
               cada <em>ubicación</em> tiene la misma probabilidad de salir. El problema es que la población de interés
               no son las ubicaciones.</p>
+            <p>Un punto al azar cae sobre un libro con probabilidad proporcional al espacio que ocupa: un libro el
+              doble de grueso tiene el doble de probabilidad de salir. Así que, aun sin préstamos, la muestra no es un
+              sorteo de libros: favorece a los gruesos. Si los gruesos se desgastan más —es una hipótesis, no un
+              dato—, la tasa estimada sale inflada también por esa vía. <span data-afirma="c1-m10-10">Lohr plantea una
+              versión más precisa del mismo procedimiento en un ejercicio del capítulo 2 de su tercera edición, con estantes de 300 cm y un
+              punto al azar en centímetros, y pregunta si da una muestra aleatoria simple de los libros <cite class="cita" data-ref="lohr2022sampling" data-loc="p. 67"><a class="cita-enlace" href="#pie-lohr2022sampling" title="Lohr, S. L. (2022). Sampling: Design and Analysis (3.ª ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780429298899">(Lohr, 2022, p. 67)</a></cite></span>.</p>
             <div class="code-tabs">
               <div class="code-tabs-nav" role="tablist" aria-label="El sesgo de muestrear ubicaciones en vez de libros">
                 <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
@@ -6260,8 +6306,9 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
               </div>
             </div>
             <p style="margin-bottom:0;">Los libros prestados no están en el estante, así que tienen $\pi_k = 0$: es no
-              cobertura pura. Y no son libros cualesquiera —son los más nuevos y los más solicitados—, así que su tasa
-              de necesidad de reencuadernación difiere sistemáticamente. Nótese además el hueco vacío: si el
+              cobertura pura. Y es razonable pensar que no son libros cualesquiera —quizá los más solicitados, o los
+              más nuevos—, así que su tasa puede diferir de la del estante. El ejercicio supone que es la mitad, pero
+              es un supuesto que habría que comprobar con el registro de préstamos. Nótese además el hueco vacío: si el
               bibliotecario encuentra un hueco y pasa a la siguiente ubicación sin anotar nada, está descartando en
               silencio justo a las unidades que faltan. Registrar el hueco como «libro prestado, no observado» convierte
               el problema en uno de no respuesta, que al menos se puede acotar.</p>

@@ -315,18 +315,27 @@ round(100 * c(no_entregada = no_entregada, no_calificado = no_calificado,
 #>         22.93          6.98         21.93
 
 cat("\n###BLOQUE-S4###\n")
-# Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
-# conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
-# son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
-N_arq <- 14; n_arq <- 8
-pi_arq <- c(rep(1, n_arq), rep(0, N_arq - n_arq))
-c(suma_pi = sum(pi_arq), n = n_arq, minimo = min(pi_arq))
-#> suma_pi       n  minimo
-#>       8       8       0
+# Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+# primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
+# acepta con probabilidad 0,7, independientemente de los demas.
+# El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
+# si entre los k - 1 anteriores aceptaron 7 o menos:
+#   pi_k = 0,7 * P(Bin(k - 1; 0,7) <= 7)
+N_arq <- 14; n_arq <- 8; p_acepta <- 0.7
+k <- 1:N_arq
+pi_arq <- p_acepta * pbinom(n_arq - 1, k - 1, p_acepta)
+round(pi_arq, 4)
+#>  [1] 0.7000 0.7000 0.7000 0.7000 0.7000 0.7000 0.7000 0.7000 0.6596 0.5628
+#> [11] 0.4321 0.3013 0.1934 0.1158
+round(c(pi_1 = pi_arq[1], pi_9 = pi_arq[9], pi_14 = pi_arq[14],
+        suma = sum(pi_arq),
+        pct_menos_de_8 = 100 * pbinom(n_arq - 1, N_arq, p_acepta)), 4)
+#>           pi_1           pi_9          pi_14           suma pct_menos_de_8
+#>         0.7000         0.6596         0.1158         7.8650         9.3282
 
-# Suma n, como debe ser, y aun asi el diseno es inservible: seis arquitectos
-# tienen probabilidad CERO de salir, asi que ningun estimador puede ser
-# insesgado para la poblacion de los catorce.
+# Ninguna pi_k es cero, pero la suma no llega a 8: es el tamano ESPERADO de la
+# muestra, porque a veces aceptan menos de 8 de los 14. Y cada pi_k depende de
+# la probabilidad de aceptar, que en la realidad nadie conoce.
 cat("\n###BLOQUE-S5###\n")
 # Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de

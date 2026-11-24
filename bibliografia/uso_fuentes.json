@@ -1,7 +1,7 @@
 {
   "norma": 1,
   "curso": 20939,
-  "generado": "2026-11-23",
+  "generado": "2026-11-24",
   "obras": {
     "arnold1991intraclutch": {
       "rol": "primaria",
@@ -271,9 +271,9 @@
         7,
         8
       ],
-      "citas": 50,
+      "citas": 51,
       "afirmaciones": {
-        "respaldada": 40,
+        "respaldada": 41,
         "con-matiz": 2
       },
       "sin_marcar": 122

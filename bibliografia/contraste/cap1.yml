@@ -1276,45 +1276,52 @@ afirmaciones:
 
 - id: c1-m10-04
   tipo: atribucion
-  afirmacion: >-
-    El ejercicio 4 adapta el ejercicio 4 de la §1.7 de Lohr (1999): 8 de los 14 arquitectos de una ciudad, llamados por orden del directorio.
-  hash_texto: 701c105d3a1399ae
+  afirmacion: 'El ejercicio 4 adapta el ejercicio 4 de la §1.7 de Lohr (1999): 14 arquitectos
+    de una ciudad, llamados por orden del directorio, y los 8 primeros que aceptan forman la muestra.'
+  hash_texto: 9d878a727fcec43c
   veredicto: respaldada
   motivo: >-
-    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
-  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
-  fecha: 2026-11-16
+    Reescrita en la Fase 8 (tarea 8.5, PE-M1): el enunciado deja «suponiendo que todos aceptan» y
+    pasa a «los 8 primeros que aceptan», con aceptación 0,7, como en Lohr («The first 8 agreeing to be
+    interviewed formed the sample»). La probabilidad 0,7, la independencia y el cálculo de las pi_k son
+    aportación del material, y «Adaptado de» no se los atribuye a Lohr. Lohr dice «14 architects and
+    architectural firms»; no cambia nada de fondo.
+  redactado_por: sesión maestra, Fase 8 del plan del cap. 1 (tarea 8.5)
+  verificado_por: lector FU de la Fase 8 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  fecha: 2026-11-24
   fuentes:
   - clave: lohr1999sampling
-    loc: '§1.7'
+    loc: §1.7
     pagina: 17
     hash_pasaje: d0ec20d17b511b30
   - clave: lohr1999sampling
-    loc: '§1.7'
+    loc: §1.7
     pagina: 17
     hash_pasaje: f92d1589aa5fe491
 
 - id: c1-m10-05
   tipo: atribucion
-  afirmacion: >-
-    El ejercicio 5 adapta el ejercicio 5 de la §1.7 de Lohr (1999): 100 ubicaciones al azar en las estanterías de una biblioteca.
-  hash_texto: 3eb10956bae79748
+  afirmacion: 'El ejercicio 5 adapta el ejercicio 5 de la §1.7 de Lohr (1999): 100 ubicaciones
+    al azar en las estanterías de una biblioteca.'
+  hash_texto: 9b949f3c72d6233c
   veredicto: respaldada
   motivo: >-
-    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
-  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
-  fecha: 2026-11-16
+    Reescrita en la Fase 8 (tarea 8.5, ES-10 y FU-15): el enunciado precisa «puntos al azar a lo largo de
+    los estantes», que es una lectura fiel de «locations on library shelves» y «the book that resides at
+    that spot», y añade la pregunta por la probabilidad de cada libro y el supuesto del mismo grosor. Lo
+    añadido no se atribuye a Lohr. El texto extraído dice «hooks» por «books» (OCR).
+  redactado_por: sesión maestra, Fase 8 del plan del cap. 1 (tarea 8.5)
+  verificado_por: lector FU de la Fase 8 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  fecha: 2026-11-24
   fuentes:
   - clave: lohr1999sampling
-    loc: '§1.7'
+    loc: §1.7
     pagina: 17
-    hash_pasaje: 2e0f2227cd0b32ad
+    hash_pasaje: c1aec9f076fa2999
   - clave: lohr1999sampling
-    loc: '§1.7'
+    loc: §1.7
     pagina: 17
-    hash_pasaje: b3b48a3296c7abcf
+    hash_pasaje: affc799a9a8d0e42
 
 - id: c1-m10-06
   tipo: atribucion
@@ -1403,3 +1410,35 @@ afirmaciones:
     loc: 'p. 3'
     pagina: 3
     hash_pasaje: 9aca87e25a39e3e0
+
+- id: c1-m10-10
+  tipo: atribucion
+  afirmacion: >-
+    Lohr plantea una versión más precisa del mismo procedimiento en un ejercicio del capítulo 2 de su tercera
+    edición, con estantes de 300 cm y un punto al azar en centímetros, y pregunta si da una muestra aleatoria
+    simple de los libros (solución del ejercicio 5).
+  hash_texto: 7f5d4cf6c00feb05
+  veredicto: respaldada
+  motivo: >-
+    Cita nueva de la Fase 8 (tarea 8.5, ES-10 y FU-15). Lohr 2022, p. 67, §2.13 (ejercicios del capítulo 2):
+    estantes de 300 cm, un estante al azar entre 10 000 y una posición al azar entre 0 y 300 cm, muestra de 50
+    libros, y «Does this procedure generate an SRS of the books in the library?». La primera lectura vio
+    sobreafirmación en «el mismo procedimiento» (la 3.ª ed. es más explícita que la 1.ª); la frase pasó a «una
+    versión más precisa del mismo procedimiento» y la relectura la respalda tal como queda. Se cita por página:
+    el índice pone 2.2–2.5 en la p. 67 y no fija el número del ejercicio.
+  redactado_por: sesión maestra, Fase 8 del plan del cap. 1 (tarea 8.5)
+  verificado_por: lector FU de la Fase 8 (Sonnet 5.5, contexto limpio), con relectura; los pasajes se rehicieron por guion
+  fecha: 2026-11-24
+  fuentes:
+  - clave: lohr2022sampling
+    loc: 'p. 67'
+    pagina: 67
+    hash_pasaje: 9147e1c11d2db2bb
+  - clave: lohr2022sampling
+    loc: 'p. 67'
+    pagina: 67
+    hash_pasaje: fa671532b1b5012c
+  - clave: lohr2022sampling
+    loc: 'p. 67'
+    pagina: 67
+    hash_pasaje: 3a5d91f067ef469a

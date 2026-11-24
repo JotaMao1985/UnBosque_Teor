@@ -388,20 +388,35 @@ print((100 * pd.Series({"no_entregada": no_entregada,
 #> excusado        21.93
 print("\n###BLOQUE-PS4###\n")
 import numpy as np, pandas as pd
-# Ejercicio 4 - Los 14 arquitectos, contactados por orden de directorio hasta
-# conseguir 8 entrevistas. Si todos aceptan, las probabilidades de inclusion no
-# son iguales: son 1 para los ocho primeros y 0 para los seis ultimos.
-N_arq, n_arq = 14, 8
-pi_arq = np.concatenate([np.ones(n_arq), np.zeros(N_arq - n_arq)])
-print(pd.Series({"suma_pi": int(pi_arq.sum()), "n": n_arq,
-                 "minimo": int(pi_arq.min())}).to_string())
+from math import comb
+# Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+# primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
+# acepta con probabilidad 0,7, independientemente de los demas.
+# El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
+# si entre los k - 1 anteriores aceptaron 7 o menos:
+#   pi_k = 0,7 * P(Bin(k - 1; 0,7) <= 7)
+N_arq, n_arq, p_acepta = 14, 8, 0.7
 
-# Suma n, como debe ser, y aun asi el diseno es inservible: seis arquitectos
-# tienen probabilidad CERO de salir, asi que ningun estimador puede ser
-# insesgado para la poblacion de los catorce.
-#> suma_pi    8
-#> n          8
-#> minimo     0
+def binom_acum(x, m, p):                # P(Bin(m; p) <= x)
+    return sum(comb(m, j) * p**j * (1 - p)**(m - j) for j in range(min(x, m) + 1))
+
+pi_arq = np.array([p_acepta * binom_acum(n_arq - 1, k - 1, p_acepta)
+                   for k in range(1, N_arq + 1)])
+print(pi_arq.round(4))
+#> [0.7    0.7    0.7    0.7    0.7    0.7    0.7    0.7    0.6596 0.5628
+#>  0.4321 0.3013 0.1934 0.1158]
+print(pd.Series({"pi_1": pi_arq[0], "pi_9": pi_arq[8], "pi_14": pi_arq[13],
+                 "suma": pi_arq.sum(),
+                 "pct_menos_de_8": 100 * binom_acum(n_arq - 1, N_arq, p_acepta)}).round(4).to_string())
+#> pi_1              0.7000
+#> pi_9              0.6596
+#> pi_14             0.1158
+#> suma              7.8650
+#> pct_menos_de_8    9.3282
+
+# Ninguna pi_k es cero, pero la suma no llega a 8: es el tamano ESPERADO de la
+# muestra, porque a veces aceptan menos de 8 de los 14. Y cada pi_k depende de
+# la probabilidad de aceptar, que en la realidad nadie conoce.
 print("\n###BLOQUE-PS5###\n")
 import numpy as np, pandas as pd
 # Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:

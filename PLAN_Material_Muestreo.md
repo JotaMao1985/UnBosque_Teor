@@ -10091,9 +10091,63 @@ aprendía sin entender. Ahora tienen dos correctas, de cuatro o de cinco opcione
     - A 375 px no hay desborde y la página no da errores de consola. El único 404 vino de la visita anterior de la
       pestaña al servidor de Series.
 
-**Sin commit.** Rutas:
+**Commit `b7c290a`** (3 rutas por su nombre), sin push. Rutas:
 - `PLAN_Material_Muestreo.md`, que incluye el hash de la 8.3 en T7.156
 - `ensamblado/modulos/cap1/simuladores.js`
 - `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
 
 Sigue la 8.5: el ejercicio 4 con aceptación 0,7 y el ejercicio 5 con el sesgo hacia los libros gruesos.
+
+### T7.158 — Fase 8 del cap. 1, tarea 8.5: los ejercicios 4 (aceptación 0,7) y 5 (libros gruesos) (2026-11-24)
+
+Javier: «Sí, commit y 8.5» (el commit de la 8.4 es `b7c290a`). Recoge PE-M1, ES-10 y FU-15 del informe de cierre.
+
+- **Ejercicio 4 (PE-M1).** Llegaba resuelto tres veces (simulador del M3, quiz 5 hasta la 8.3, lectura guiada).
+  - El enunciado ya no dice «suponiendo que todos aceptan», sino lo que dice Lohr (1999, §1.7): «los 8 primeros que
+    aceptan forman la muestra», con aceptación 0,7 independiente. Se pide $\pi_1$, $\pi_9$, $\pi_{14}$, la suma y si
+    el diseño sirve.
+  - La pista lleva a la binomial: $\pi_k = 0{,}7\,P(\text{Bin}(k-1;0{,}7) \le 7)$.
+  - El código S4/PS4 se reescribió en R (`pbinom`) y en Python (`math.comb`, sin scipy). Da los ocho primeros en
+    0,7000, $\pi_9$ = 0,6596, $\pi_{14}$ = 0,1158, suma 7,8650, y un 9,3282 % de veces en que aceptan menos de 8. R y
+    Python coinciden.
+  - La solución explica cuatro cosas: por qué los ocho primeros tienen 0,7; que la suma es el tamaño *esperado*, porque
+    el diseño no es de tamaño fijo; que no hay $\pi_k$ nulas, pero dependen de una probabilidad de aceptar que nadie
+    conoce, y la autoselección; y que lo correcto es un MAS de 8 de 14. Remite al simulador del M3, cuyas barras
+    estiman esas mismas $\pi_k$.
+  - El 9,3 % se respalda imprimiendo el porcentaje en el código (`pct_menos_de_8`).
+- **Ejercicio 5 (ES-10, FU-15).**
+  - El enunciado precisa que las ubicaciones son puntos al azar a lo largo de los estantes. Pregunta si todos los
+    libros tienen la misma probabilidad de salir. Para la cuenta de los prestados, supone el mismo grosor, que no
+    cambia.
+  - La pista invita a pensar en un libro que ocupa el doble de estante.
+  - La solución añade un párrafo: la probabilidad es proporcional al grosor, y si los gruesos se desgastan más (dicho
+    como hipótesis) la tasa sale inflada también por esa vía.
+  - Cita nueva, c1-m10-10: Lohr 2022, p. 67, con estantes de 300 cm y un punto al azar en centímetros, pregunta si eso
+    da un MAS de los libros. Se cita por página porque el índice pone 2.2–2.5 en la p. 67.
+  - FU-15: «son los más nuevos y los más solicitados» pasa a hipótesis («quizá…»), y la tasa de la mitad se dice
+    supuesto del ejercicio, que habría que comprobar con el registro de préstamos.
+- **Fuentes.** Un FU independiente (Sonnet, contexto limpio) leyó los ejemplares.
+  - c1-m10-04 y c1-m10-05: respaldadas. Son la §1.7, p. 17, de Lohr 1999, y «Adaptado» es honesto.
+  - c1-m10-10: respaldada con matiz, porque «el mismo procedimiento» sobreafirmaba. Pasó a «una versión más precisa
+    del mismo procedimiento», y la relectura la respalda tal como queda.
+  - Los siete pasajes se rehicieron con `--pasaje`; los del ejercicio 4 coinciden con los ya registrados.
+  - El registro queda con 67 afirmaciones (65 respaldadas, 2 con matiz) y `uso_fuentes.json` regenerado.
+- **Verificación:**
+  - Citas: `--comprobar` sin cambios, `--cierre 1` limpio y arnés 71/71.
+  - Código y cifras: `anota --check` con 0 bloques distintos; 365/365 cifras anunciadas; prosa con 0 sin respaldo (92
+    respaldadas); el código arranca en las 13 páginas; cotejo con 0 desajustadas; `node --check` pasa.
+  - Referencias: 600 resueltas. Hay 58 nuevas (antes 57); la nueva es «simulador del módulo 3» y apunta bien.
+  - Ensamblado: el cap. 1 da el mismo archivo en dos pasadas (`5151b60a…`).
+  - En el navegador, por HTTP: pistas y soluciones abren, 0 errores de KaTeX, la cita sale «(Lohr, 2022, p. 67)» con
+    su pie, y a 375 px no hay desborde (solo el código se desplaza por dentro).
+
+**Sin commit.** Rutas:
+- `PLAN_Material_Muestreo.md`, que incluye el hash de la 8.4 en T7.157
+- `bibliografia/contraste/cap1.yml`
+- `bibliografia/uso_fuentes.json`
+- `ensamblado/codigo/cap1/cadena.R`
+- `ensamblado/codigo/cap1/cadena.py`
+- `ensamblado/modulos/cap1/modulo_10.html`
+- `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
+
+Sigue la 8.6: el orden de los ejercicios, que pasa a ser 3, 4, 2, 5, 1, 6.
