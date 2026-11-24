@@ -860,19 +860,21 @@ afirmaciones:
 - id: c1-m5-01
   tipo: regla
   afirmacion: >-
-    Por deseabilidad social se declaran de más los donativos, el ejercicio y la comida sana, y de menos el alcohol.
-  hash_texto: 3cf195ec881e4531
+    Por deseabilidad social se declaran de más las donaciones, el ejercicio y la comida sana, y de menos el alcohol.
+  hash_texto: c3f450fd4940bb4c
   veredicto: respaldada
   motivo: >-
-    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda tal como queda.
-  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: relectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase corregida
-  fecha: 2026-11-16
+    Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respalda. En la Fase 8 (23 nov, CL-15)
+    «donativos» pasa a «donaciones»; un FU nuevo la relee: «contributing to charity», respaldada. Lohr la toma de
+    Krumpal (2013).
+  redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario); léxico en la Fase 8
+  verificado_por: lector FU de la Fase 8 (Sonnet 5.5, contexto limpio), sobre la frase con «donaciones»
+  fecha: 2026-11-23
   fuentes:
   - clave: lohr2022sampling
     loc: '§1.5'
     pagina: 16
-    hash_pasaje: 994a9ea28ab0e8a6
+    hash_pasaje: d818b8126140bc44
 
 - id: c1-m5-02
   tipo: atribucion

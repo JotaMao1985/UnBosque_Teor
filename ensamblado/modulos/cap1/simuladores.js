@@ -341,7 +341,7 @@
           doblenegacion: { tipo: 'no', por: 'no lleva ninguna negación' }
         },
         corregida: 'En los últimos siete días, ¿cuántos días realizó al menos 30 minutos seguidos de ' +
-          'actividad física que le dejara sin aliento? (0 a 7)'
+          'actividad física que le quitara el aliento? (0 a 7)'
       },
       {
         id: 'servicio',
@@ -383,7 +383,7 @@
           lista = marcados.length
             ? '<p style="margin-bottom:0.25rem;">Tu diagnóstico, todavía sin comprobar:</p><ul style="margin-bottom:0;">' +
               marcados.map(d => `<li>${d.etiqueta}</li>`).join('') + '</ul>'
-            : '<p style="margin-bottom:0;">Marca arriba los defectos que creas que tiene y pulsa «Comprobar».</p>';
+            : '<p style="margin-bottom:0;">Marca arriba los defectos que creas que tiene y haz clic en «Comprobar».</p>';
         } else {
           lista = '<ul style="margin-bottom:0;">' + marcados.map(d => {
             if (it.tiene[d.clave]) return `<li>✓ <strong>${d.etiqueta}:</strong> ${it.tiene[d.clave]}</li>`;
@@ -941,7 +941,7 @@
     // ================================================================
     ARBOLES_ERROR['error-total'] = {
       titulo: 'El error total de una encuesta',
-      intro: 'Pulsa cualquier nodo para ver su ficha. Lo que hay que retener de cada hoja son ' +
+      intro: 'Haz clic en cualquier nodo para ver su ficha. Lo que hay que retener de cada hoja son ' +
         'dos cosas: si desplaza la estimación o solo la dispersa, y si aumentar el tamaño de ' +
         'muestra sirve de algo.',
       nota: 'De las nueve hojas, las <strong>dos</strong> que cuelgan del error de muestreo son las ' +
@@ -1104,7 +1104,7 @@
         pista: 'Sesgo = lo que estimó − lo que era. El signo importa: dice hacia dónde se equivocó.',
         respuesta: -19.54,
         tolerancia: 0.05,
-        retroAcierto: '$42{,}923 - 62{,}467 = -19{,}54$ puntos (restando los valores ya redondeados sale $-19{,}55$, y también vale). El signo negativo dice que el sondeo <em>infravaloró</em> a Roosevelt, que es justo lo que hacían tanto el marco como la no respuesta.',
+        retroAcierto: '$42{,}923 - 62{,}467 = -19{,}54$ puntos (restando los valores ya redondeados sale $-19{,}55$, y también vale). El signo negativo dice que el sondeo <em>subestimó</em> a Roosevelt, que es justo lo que hacían tanto el marco como la no respuesta.',
         retroFallo: 'Es $42{,}923 - 62{,}467 = -19{,}54$. Un error frecuente es dar el valor absoluto: el sesgo tiene dirección, y saber hacia dónde apunta es la mitad del diagnóstico.'
       },
       {
@@ -1323,7 +1323,7 @@
             retro: 'El orden de llegada no tiene nada que ver con la probabilidad de inclusión. Lo que importa es <em>quién</em> decide escribir, y eso correlaciona con la satisfacción.' },
           { texto: 'A un error de medición: las reseñas exageran lo bueno y lo malo de cada compra.', correcta: false,
             retro: 'Puede haberlo además (las reseñas exageran), pero el defecto principal es de representación: la población que generó los datos no es la población sobre la que se decide.' },
-          { texto: 'A nada de lo visto: con tantos datos, la teoría de muestreo deja de aplicar.', correcta: false,
+          { texto: 'A nada de lo visto: con tantos datos, la teoría de muestreo deja de aplicarse.', correcta: false,
             retro: 'Es al revés. El sondeo del <em>Literary Digest</em> tenía 2,3 millones de casos y equivalía a una muestra aleatoria de 6 personas. El volumen no exime de la teoría: la hace más necesaria.' }
         ]
       }

@@ -9937,3 +9937,32 @@ del ejercicio 5, el orden de los ejercicios y el léxico colombiano.
   - Referencias: la nueva al «capítulo 8, módulo 2» resuelve a su M2.
   - Navegador a 375 px (iframe con `innerWidth` 375) en los caps. 1, 4 y 8, y a 1280 en el cap. 1: sin errores de JS
     ni de KaTeX y sin desborde. «No son esas» sale en una de varias respuestas y «No es esa» en una de una.
+
+### T7.154 — Fase 8 del cap. 1, tarea 8.1: léxico del español de Colombia (2026-11-23)
+
+Pedido de Javier: «Arranca las mejoras C 9–14». Son las que el Checkpoint final dejó para otra ronda. Quedan como Fase 8
+de `PLAN_Cap1_Mejora.md` (8.1–8.7), una tarea por vez. Esta es la 8.1, que corresponde a CL-15 del informe de cierre.
+
+- **Prosa y quiz del cap. 1:**
+  - En el M4, «se llevan 5,9 / 0,9 puntos» pasa a «difieren en».
+  - En el M5, «donativos» pasa a «donaciones».
+  - En el quiz 2, «infravaloró» pasa a «subestimó».
+  - En el distractor del quiz 14, «deja de aplicar» pasa a «deja de aplicarse».
+  - En el auditor, «pulsa «Comprobar»» pasa a «haz clic en», y en el árbol, «Pulsa cualquier nodo» pasa a «Haz clic en».
+  - En la reformulación del ítem 2 del auditor, «que le dejara sin aliento» pasa a «que le quitara el aliento». CL
+    proponía «lo dejara», pero el «le» de complemento indirecto no supone el género de quien responde.
+  - «Padrón» se queda, porque es un caso de Estados Unidos.
+- **Plantilla:** la alerta del último módulo pasa a «¡Felicitaciones! Completaste el capítulo.». Va a la plantilla y a
+  las diez páginas con `ensamblado/retropropaga_alerta_final.py`, que es idempotente. Al reensamblar las once páginas
+  se obtiene, byte a byte, lo mismo que con el parche, y el cap. 1 da el mismo archivo en dos pasadas.
+- **Fuentes:** c1-m5-01 cambió de huella. Un FU nuevo (Sonnet, contexto limpio) la releyó en Lohr 2022, p. 16:
+  «contributing to charity» respalda «donaciones», y Lohr toma el dato de Krumpal (2013). El pasaje se rehízo con
+  `--pasaje`.
+- **Verificación:**
+  - `--cierre 1` limpio, el arnés 71/71, `--comprobar` sin cambios y `uso_fuentes.json` al día.
+  - Prosa: 0 cifras sin respaldo; el código arranca en las 13 páginas y el cotejo da 0 desajustadas; `node --check`
+    pasa.
+  - En el navegador, por HTTP, aparecen los textos nuevos, no queda ninguno viejo y no hay errores de consola ni de
+    KaTeX.
+
+**Sin commit.** Sigue la 8.2: la predicción antes de los simuladores de los módulos 3, 5 y 8.
