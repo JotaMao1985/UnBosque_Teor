@@ -772,7 +772,7 @@
     };
 
     // ---------------------------------------------------------------
-    // M3 · Los 14 arquitectos del ejercicio 4: qué es «probabilística»
+    // M3 · Los 14 arquitectos del ejercicio 2 del M10: qué es «probabilística»
     //
     // Tres maneras de sacar 8 de 14, repetidas 1 000 veces con una semilla
     // fija (la misma figura en cada visita). Cada barra es la fracción de

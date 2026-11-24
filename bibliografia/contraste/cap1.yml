@@ -1212,14 +1212,15 @@ afirmaciones:
 - id: c1-m10-01
   tipo: atribucion
   afirmacion: >-
-    El ejercicio 1 adapta el ejercicio 1 de la §1.7 de Lohr (1999): la encuesta telefónica informal de Parade (1-900, 75 centavos) en que más del 75 % opinaba que la marihuana debía ser tan legal como las bebidas alcohólicas.
-  hash_texto: f7b0e2b0ac335f8b
+    El ejercicio 5 adapta el ejercicio 1 de la §1.7 de Lohr (1999): la encuesta telefónica informal de Parade (1-900, 75 centavos) en que más del 75 % opinaba que la marihuana debía ser tan legal como las bebidas alcohólicas.
+  hash_texto: 16e8fde7b6ad6619
   veredicto: respaldada
   motivo: >-
     Ajustada en la 3.3 con la redacción mínima de la relectura; la tercera lectura (16 nov) la respalda.
+    Renumerado en la 8.6 (orden 3, 4, 2, 5, 1, 6): es el ejercicio 5 del material y sigue adaptando el 1 de Lohr; el FU lo comprobó en la página ensamblada y en la p. 17.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: tercera lectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase ajustada
-  fecha: 2026-11-16
+  verificado_por: lector FU de la Fase 8, tarea 8.6 (Sonnet 5.5, contexto limpio), sobre el nuevo orden; los pasajes no cambian
+  fecha: 2026-11-24
   fuentes:
   - clave: lohr1999sampling
     loc: '§1.7'
@@ -1233,16 +1234,17 @@ afirmaciones:
 - id: c1-m10-02
   tipo: atribucion
   afirmacion: >-
-    El ejercicio 2 adapta el ejercicio 2 de la §1.7 de Lohr (1999): uno de cada diez fondos mutuos de las listas de un periódico.
-  hash_texto: db4008dc1cd8d121
+    El ejercicio 3 adapta el ejercicio 2 de la §1.7 de Lohr (1999): uno de cada diez fondos mutuos de las listas de un periódico.
+  hash_texto: 0cc6c3d422b649a6
   veredicto: respaldada
   motivo: >-
     Corregida en la 3.3 según la primera lectura; la relectura (16 nov) la respaldó. La 6.3 (21 nov) añadió
     al enunciado el supuesto de los 1 250 fondos y se volvió a leer.
     Fase 7 (22 nov): el enunciado añade el arranque sorteado entre los diez primeros, que la solución necesita para que cada fondo tenga probabilidad 1/10.
+    Renumerado en la 8.6 (orden 3, 4, 2, 5, 1, 6): es el ejercicio 3 del material y sigue adaptando el 2 de Lohr; el FU lo comprobó en la página ensamblada y en la p. 17.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario); enunciado retocado en la 6.3
-  verificado_por: lector FU de la Fase 7 (Sonnet 5.5, contexto limpio), sobre la prosa corregida; los pasajes se rehicieron por guion
-  fecha: 2026-11-22
+  verificado_por: lector FU de la Fase 8, tarea 8.6 (Sonnet 5.5, contexto limpio), sobre el nuevo orden; los pasajes no cambian
+  fecha: 2026-11-24
   fuentes:
   - clave: lohr1999sampling
     loc: '§1.7'
@@ -1256,14 +1258,15 @@ afirmaciones:
 - id: c1-m10-03
   tipo: atribucion
   afirmacion: >-
-    El ejercicio 3 adapta el ejercicio 3 de la §1.7 de Lohr (1999): 100 300 citaciones a jurado en Maricopa, unas 23 000 no entregables, unas 7 000 no califican y 22 000 excusadas.
-  hash_texto: f0b0926993c135a4
+    El ejercicio 1 adapta el ejercicio 3 de la §1.7 de Lohr (1999): 100 300 citaciones a jurado en Maricopa, unas 23 000 no entregables, unas 7 000 no califican y 22 000 excusadas.
+  hash_texto: 8972b004f33f8073
   veredicto: respaldada
   motivo: >-
     Ajustada en la 3.3 con la redacción mínima de la relectura; la tercera lectura (16 nov) la respalda.
+    Renumerado en la 8.6 (orden 3, 4, 2, 5, 1, 6): es el ejercicio 1 del material y sigue adaptando el 3 de Lohr; el FU lo comprobó en la página ensamblada y en la p. 17.
   redactado_por: sesión maestra, Fase 3 del plan del cap. 1 (inventario)
-  verificado_por: tercera lectura del lector FU de la Fase 3 (Sonnet 5.5, contexto limpio), sobre la frase ajustada
-  fecha: 2026-11-16
+  verificado_por: lector FU de la Fase 8, tarea 8.6 (Sonnet 5.5, contexto limpio), sobre el nuevo orden; los pasajes no cambian
+  fecha: 2026-11-24
   fuentes:
   - clave: lohr1999sampling
     loc: '§1.7'
@@ -1276,9 +1279,9 @@ afirmaciones:
 
 - id: c1-m10-04
   tipo: atribucion
-  afirmacion: 'El ejercicio 4 adapta el ejercicio 4 de la §1.7 de Lohr (1999): 14 arquitectos
+  afirmacion: 'El ejercicio 2 adapta el ejercicio 4 de la §1.7 de Lohr (1999): 14 arquitectos
     de una ciudad, llamados por orden del directorio, y los 8 primeros que aceptan forman la muestra.'
-  hash_texto: 9d878a727fcec43c
+  hash_texto: 22fbadb89d517e03
   veredicto: respaldada
   motivo: >-
     Reescrita en la Fase 8 (tarea 8.5, PE-M1): el enunciado deja «suponiendo que todos aceptan» y
@@ -1286,8 +1289,9 @@ afirmaciones:
     interviewed formed the sample»). La probabilidad 0,7, la independencia y el cálculo de las pi_k son
     aportación del material, y «Adaptado de» no se los atribuye a Lohr. Lohr dice «14 architects and
     architectural firms»; no cambia nada de fondo.
+    Renumerado en la 8.6 (orden 3, 4, 2, 5, 1, 6): es el ejercicio 2 del material y sigue adaptando el 4 de Lohr; el FU lo comprobó en la página ensamblada y en la p. 17.
   redactado_por: sesión maestra, Fase 8 del plan del cap. 1 (tarea 8.5)
-  verificado_por: lector FU de la Fase 8 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  verificado_por: lector FU de la Fase 8, tarea 8.6 (Sonnet 5.5, contexto limpio), sobre el nuevo orden; los pasajes no cambian
   fecha: 2026-11-24
   fuentes:
   - clave: lohr1999sampling
@@ -1301,17 +1305,18 @@ afirmaciones:
 
 - id: c1-m10-05
   tipo: atribucion
-  afirmacion: 'El ejercicio 5 adapta el ejercicio 5 de la §1.7 de Lohr (1999): 100 ubicaciones
+  afirmacion: 'El ejercicio 4 adapta el ejercicio 5 de la §1.7 de Lohr (1999): 100 ubicaciones
     al azar en las estanterías de una biblioteca.'
-  hash_texto: 9b949f3c72d6233c
+  hash_texto: 06ce0e13083e8a08
   veredicto: respaldada
   motivo: >-
     Reescrita en la Fase 8 (tarea 8.5, ES-10 y FU-15): el enunciado precisa «puntos al azar a lo largo de
     los estantes», que es una lectura fiel de «locations on library shelves» y «the book that resides at
     that spot», y añade la pregunta por la probabilidad de cada libro y el supuesto del mismo grosor. Lo
     añadido no se atribuye a Lohr. El texto extraído dice «hooks» por «books» (OCR).
+    Renumerado en la 8.6 (orden 3, 4, 2, 5, 1, 6): es el ejercicio 4 del material y sigue adaptando el 5 de Lohr; el FU lo comprobó en la página ensamblada y en la p. 17.
   redactado_por: sesión maestra, Fase 8 del plan del cap. 1 (tarea 8.5)
-  verificado_por: lector FU de la Fase 8 (Sonnet 5.5, contexto limpio); los pasajes se rehicieron por guion
+  verificado_por: lector FU de la Fase 8, tarea 8.6 (Sonnet 5.5, contexto limpio), sobre el nuevo orden; los pasajes no cambian
   fecha: 2026-11-24
   fuentes:
   - clave: lohr1999sampling

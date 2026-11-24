@@ -333,36 +333,7 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
 
 print("\n###BLOQUE-PS1###\n")
 import numpy as np, pandas as pd
-# Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
-#   mu = r mu_R + (1 - r) mu_M
-# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
-# esto es lo que tendrian que opinar los que NO llamaron para que el
-# porcentaje poblacional fuera cada valor de la primera fila.
-r, mu_R = 0.01, 0.75        # una fraccion diminuta de los lectores llamo
-mu = np.array([0.20, 0.30, 0.40, 0.50])
-print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
-                   index=["si_la_poblacion_fuera", "los_que_no_llamaron"]
-                   ).to_string(header=False))
-
-#> si_la_poblacion_fuera  0.2000  0.3000  0.4000  0.5000
-#> los_que_no_llamaron    0.1944  0.2955  0.3965  0.4975
-print("\n###BLOQUE-PS2###\n")
-import numpy as np, pandas as pd
-# Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
-# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
-N_lista = 1250              # el supuesto del enunciado: la lista tiene 1250 fondos
-k = 10
-print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
-                 "n_esperado": N_lista / k}).to_string())
-
-# El defecto esta antes: si el periodico solo publica los fondos por encima de
-# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.
-#> pi_k            0.1
-#> suma_pi       125.0
-#> n_esperado    125.0
-print("\n###BLOQUE-PS3###\n")
-import numpy as np, pandas as pd
-# Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
+# Ejercicio 1 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
 citaciones    = 100300
 no_entregada  =  23000
 no_calificado =   7000
@@ -386,10 +357,10 @@ print((100 * pd.Series({"no_entregada": no_entregada,
 #> no_entregada    22.93
 #> no_calificado    6.98
 #> excusado        21.93
-print("\n###BLOQUE-PS4###\n")
+print("\n###BLOQUE-PS2###\n")
 import numpy as np, pandas as pd
 from math import comb
-# Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+# Ejercicio 2 - Los 14 arquitectos, llamados por orden del directorio: los 8
 # primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
 # acepta con probabilidad 0,7, independientemente de los demas.
 # El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
@@ -417,9 +388,23 @@ print(pd.Series({"pi_1": pi_arq[0], "pi_9": pi_arq[8], "pi_14": pi_arq[13],
 # Ninguna pi_k es cero, pero la suma no llega a 8: es el tamano ESPERADO de la
 # muestra, porque a veces aceptan menos de 8 de los 14. Y cada pi_k depende de
 # la probabilidad de aceptar, que en la realidad nadie conoce.
-print("\n###BLOQUE-PS5###\n")
+print("\n###BLOQUE-PS3###\n")
 import numpy as np, pandas as pd
-# Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
+# Ejercicio 3 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
+# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
+N_lista = 1250              # el supuesto del enunciado: la lista tiene 1250 fondos
+k = 10
+print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
+                 "n_esperado": N_lista / k}).to_string())
+
+# El defecto esta antes: si el periodico solo publica los fondos por encima de
+# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.
+#> pi_k            0.1
+#> suma_pi       125.0
+#> n_esperado    125.0
+print("\n###BLOQUE-PS4###\n")
+import numpy as np, pandas as pd
+# Ejercicio 4 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de
 # necesidad de reencuadernacion es la mitad de la de los que si estan:
 p_estante = 0.30                      # tasa entre los libros presentes
@@ -433,6 +418,21 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
 #> fraccion_prestada  0.100  0.20  0.300
 #> valor_real         0.285  0.27  0.255
 #> sesgo              0.015  0.03  0.045
+print("\n###BLOQUE-PS5###\n")
+import numpy as np, pandas as pd
+# Ejercicio 5 - La encuesta de Parade. Formula del sesgo de no respuesta:
+#   mu = r mu_R + (1 - r) mu_M
+# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
+# esto es lo que tendrian que opinar los que NO llamaron para que el
+# porcentaje poblacional fuera cada valor de la primera fila.
+r, mu_R = 0.01, 0.75        # una fraccion diminuta de los lectores llamo
+mu = np.array([0.20, 0.30, 0.40, 0.50])
+print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
+                   index=["si_la_poblacion_fuera", "los_que_no_llamaron"]
+                   ).to_string(header=False))
+
+#> si_la_poblacion_fuera  0.2000  0.3000  0.4000  0.5000
+#> los_que_no_llamaron    0.1944  0.2955  0.3965  0.4975
 print("\n###BLOQUE-PS6###\n")
 import numpy as np, pandas as pd
 # Ejercicio 6 - La omision del Censo 2018 (DANE, comunicado del 17-X-2019, p. 3).

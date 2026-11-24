@@ -4330,7 +4330,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
 
       <div class="simulador" data-simulador="arquitectos">
         <h4><i class="fas fa-users" aria-hidden="true"></i> Los 14 arquitectos, mil veces</h4>
-        <p class="simulador-intro">La ciudad del ejercicio 4 del módulo 10: hay 14 arquitectos y se quieren 8. Elige
+        <p class="simulador-intro">La ciudad del ejercicio 2 del módulo 10: hay 14 arquitectos y se quieren 8. Elige
           cómo se escogen y el simulador repite la selección mil veces: cada barra dice en qué fracción de las
           repeticiones entró cada arquitecto, que es una estimación de su probabilidad de inclusión $\pi_k$.</p>
         <div class="simulador-controles"></div>
@@ -5858,12 +5858,10 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
           que viene con ella: cada solución trae su versión en R y en Python, y las dos publican la misma cifra.</p>
 
         <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado" data-afirma="c1-m10-01"><span class="ejercicio-numero">1.</span>El artículo «What Readers Say About
-            Marijuana» informó de que <strong>más del 75 %</strong> de los lectores que participaron en una encuesta
-            telefónica informal de la revista <em>Parade</em> opinaba que la marihuana debía ser tan legal como las bebidas
-            alcohólicas. La encuesta se anunció en la revista y los lectores
-            debían llamar a un número 1-900 con un costo de 75 centavos. Describe población objetivo, marco, unidad de
-            muestreo y de observación, y las fuentes de sesgo. Después responde con la fórmula del módulo 4: si en la población real el apoyo fuera del 30 % y hubiera llamado el 1 % de los lectores, ¿qué tendrían que opinar los que no llamaron? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
+          <p class="ejercicio-enunciado" data-afirma="c1-m10-03"><span class="ejercicio-numero">1.</span>Para formar jurados, el condado de
+            Maricopa envía <strong>100 300 citaciones</strong> extraídas de una lista combinada de votantes registrados
+            y conductores con licencia. De ellas, unas 23 000 resultan no entregables, unas 7 000 personas no califican y 22 000
+            son excusadas. Analiza el flujo del marco a la muestra y di quién queda sistemáticamente fuera del jurado. <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
           <div class="ejercicio-acciones">
             <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e1-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
@@ -5873,163 +5871,11 @@ print(pd.Series({"empresas": len(big), "variables": big.shape[1],
             </button>
           </div>
           <div class="ejercicio-panel pista" id="cap1-e1-pista" hidden>
-            <p style="margin:0;">Fíjate en que aquí hay <em>dos</em> filtros encadenados antes de la autoselección: hay
-              que ser lector de la revista y hay que estar dispuesto a pagar 75 centavos. Y para la parte numérica,
-              nota que la fracción que llamó es diminuta: eso hace que $\bar{y}_M$ y $\bar{y}_U$ casi coincidan, lo
-              cual es en sí mismo la respuesta al ejercicio.</p>
-          </div>
-          <div class="ejercicio-panel solucion" id="cap1-e1-sol" hidden>
-            <p><strong>La unidad de muestreo es la llamada, no la persona; el marco son los lectores que vieron el
-              anuncio y podían pagar; y con un 1 % de participación, un apoyo poblacional del 30 % solo exige que los
-              que no llamaron estén al 29,5 %.</strong></p>
-            <ul>
-              <li><strong>Población objetivo:</strong> la cifra habla de los lectores que participaron, pero quien la
-                cite como opinión del país la extiende a todos los adultos de Estados Unidos. Por el
-                procedimiento, como mucho llega a los lectores de la revista.</li>
-              <li><strong>Marco muestral:</strong> los lectores que vieron el anuncio, tenían teléfono de tonos y
-                estaban dispuestos a gastar 75 centavos en la llamada.</li>
-              <li><strong>Unidad de muestreo:</strong> la <em>llamada</em>. No es un detalle pedante: una persona podía
-                llamar varias veces, así que ni siquiera está garantizado que las unidades sean distintas.</li>
-              <li><strong>Unidad de observación:</strong> quien llama.</li>
-              <li><strong>Sesgos:</strong> autoselección (llama quien tiene una opinión fuerte, y quien quiere cambiar
-                una ley está más motivado que quien está conforme), barrera económica (el costo excluye a los de menos
-                recursos y a los indiferentes) y no cobertura tecnológica.</li>
-            </ul>
-            <div class="code-tabs">
-              <div class="code-tabs-nav" role="tablist" aria-label="La fórmula del sesgo de no respuesta sobre la encuesta de Parade">
-                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
-                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
-              </div>
-              <div class="code-tab-panel" data-lang="r">
-                <pre><code class="language-r"># Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
-#   mu = r mu_R + (1 - r) mu_M
-# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
-# esto es lo que tendrian que opinar los que NO llamaron para que el
-# porcentaje poblacional fuera cada valor de la primera fila.
-r &lt;- 0.01                  # una fraccion diminuta de los lectores llamo
-mu_R &lt;- 0.75
-mu &lt;- c(0.20, 0.30, 0.40, 0.50)
-rbind(si_la_poblacion_fuera = mu,
-      los_que_no_llamaron   = round((mu - r * mu_R) / (1 - r), 4))
-#&gt;                         [,1]   [,2]   [,3]   [,4]
-#&gt; si_la_poblacion_fuera 0.2000 0.3000 0.4000 0.5000
-#&gt; los_que_no_llamaron   0.1944 0.2955 0.3965 0.4975</code></pre>
-              </div>
-              <div class="code-tab-panel" data-lang="python" hidden>
-                <pre><code class="language-python">import numpy as np, pandas as pd
-# Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
-#   mu = r mu_R + (1 - r) mu_M
-# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
-# esto es lo que tendrian que opinar los que NO llamaron para que el
-# porcentaje poblacional fuera cada valor de la primera fila.
-r, mu_R = 0.01, 0.75        # una fraccion diminuta de los lectores llamo
-mu = np.array([0.20, 0.30, 0.40, 0.50])
-print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
-                   index=["si_la_poblacion_fuera", "los_que_no_llamaron"]
-                   ).to_string(header=False))
-
-#&gt; si_la_poblacion_fuera  0.2000  0.3000  0.4000  0.5000
-#&gt; los_que_no_llamaron    0.1944  0.2955  0.3965  0.4975</code></pre>
-              </div>
-            </div>
-            <p style="margin-bottom:0;">La segunda fila es la clave. Con una participación del 1 %, prácticamente
-              cualquier valor poblacional es compatible con el 75 % observado: para que la población estuviera en el
-              30 %, bastaría con que los que no llamaron estuvieran en el 29,55 %. El dato del 75 % no restringe casi
-              nada, y por eso no informa casi nada.</p>
-          </div>
-        </div>
-
-        <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado" data-afirma="c1-m10-02"><span class="ejercicio-numero">2.</span>Una estudiante quiere estimar el
-            porcentaje de fondos mutuos que subieron de precio la semana pasada. Toma <strong>uno de cada diez fondos</strong>
-            de las listas publicadas en un periódico, empezando por uno sorteado entre los diez primeros; supón que esas listas tienen 1 250 fondos. Identifica el
-            diseño y las fuentes de error, y decide: ¿el
-            problema está en cómo seleccionó o en de dónde seleccionó? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
-          <div class="ejercicio-acciones">
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e2-pista">
-              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e2-sol">
-              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div class="ejercicio-panel pista" id="cap1-e2-pista" hidden>
-            <p style="margin:0;">Calcula la probabilidad de inclusión de un fondo que <em>está</em> en la lista, y
-              después la de uno que no está. Las dos respuestas juntas resuelven el ejercicio.</p>
-          </div>
-          <div class="ejercicio-panel solucion" id="cap1-e2-sol" hidden>
-            <p><strong>El diseño es impecable; el marco, no. El problema está en de dónde seleccionó.</strong></p>
-            <ul>
-              <li><strong>Población objetivo:</strong> todos los fondos mutuos existentes esa semana.</li>
-              <li><strong>Marco:</strong> la lista publicada por <em>ese</em> periódico.</li>
-              <li><strong>Diseño:</strong> muestreo sistemático 1 en 10: un arranque al azar entre los diez primeros y,
-                desde ahí, uno de cada diez. El arranque al azar es lo que da a cada fondo de la lista la misma
-                probabilidad.</li>
-              <li><strong>Unidad de muestreo y de observación:</strong> el fondo. Aquí sí coinciden.</li>
-            </ul>
-            <div class="code-tabs">
-              <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión del sistemático 1 en 10">
-                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
-                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
-              </div>
-              <div class="code-tab-panel" data-lang="r">
-                <pre><code class="language-r"># Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
-# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
-N_lista &lt;- 1250            # el supuesto del enunciado: la lista tiene 1250 fondos
-k &lt;- 10
-c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
-#&gt;       pi_k    suma_pi n_esperado
-#&gt;        0.1      125.0      125.0
-
-# El defecto esta antes: si el periodico solo publica los fondos por encima de
-# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.</code></pre>
-              </div>
-              <div class="code-tab-panel" data-lang="python" hidden>
-                <pre><code class="language-python">import numpy as np, pandas as pd
-# Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
-# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
-N_lista = 1250              # el supuesto del enunciado: la lista tiene 1250 fondos
-k = 10
-print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
-                 "n_esperado": N_lista / k}).to_string())
-
-# El defecto esta antes: si el periodico solo publica los fondos por encima de
-# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.
-#&gt; pi_k            0.1
-#&gt; suma_pi       125.0
-#&gt; n_esperado    125.0</code></pre>
-              </div>
-            </div>
-            <p>Todo fondo de la lista tiene $\pi_k = 1/10$, y las probabilidades suman 125, el tamaño de muestra esperado.
-              Es un diseño probabilístico correcto, y en el capítulo 2 se verá que además suele ser <em>más</em>
-              preciso que el aleatorio simple cuando la lista viene ordenada.</p>
-            <p style="margin-bottom:0;">El defecto está antes: si el periódico solo publica los fondos por encima de
-              cierto tamaño o de cierto rendimiento, los que faltan tienen $\pi_k = 0$ y ningún diseño los recupera.
-              Una segunda amenaza, menor, es la periodicidad: si la lista estuviera ordenada por categorías con ciclos
-              de longitud 10, el sistemático podría caer siempre en la misma posición del ciclo. Con orden alfabético
-              es improbable, pero es el caso patológico que el capítulo 2 estudia en detalle.</p>
-          </div>
-        </div>
-
-        <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado" data-afirma="c1-m10-03"><span class="ejercicio-numero">3.</span>Para formar jurados, el condado de
-            Maricopa envía <strong>100 300 citaciones</strong> extraídas de una lista combinada de votantes registrados
-            y conductores con licencia. De ellas, unas 23 000 resultan no entregables, unas 7 000 personas no califican y 22 000
-            son excusadas. Analiza el flujo del marco a la muestra y di quién queda sistemáticamente fuera del jurado. <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
-          <div class="ejercicio-acciones">
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e3-pista">
-              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e3-sol">
-              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div class="ejercicio-panel pista" id="cap1-e3-pista" hidden>
             <p style="margin:0;">No basta con contar cuántos se pierden: hay que preguntarse <em>quiénes</em> se
               pierden en cada escalón, y si esa característica correlaciona con algo relevante para un juicio. Empieza
               por los «no entregables»: ¿qué tipo de persona tiene una dirección desactualizada?</p>
           </div>
-          <div class="ejercicio-panel solucion" id="cap1-e3-sol" hidden>
+          <div class="ejercicio-panel solucion" id="cap1-e1-sol" hidden>
             <p><strong>Se retiene el 48,16 % de las citaciones enviadas. De lo que se pierde, solo los no calificados
               no sesgan; lo demás empuja en la misma dirección: hacia jurados más estables económicamente y con más
               arraigo residencial.</strong></p>
@@ -6047,7 +5893,7 @@ print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
                 <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
               </div>
               <div class="code-tab-panel" data-lang="r">
-                <pre><code class="language-r"># Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
+                <pre><code class="language-r"># Ejercicio 1 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
 citaciones    &lt;- 100300
 no_entregada  &lt;-  23000
 no_calificado &lt;-   7000
@@ -6067,7 +5913,7 @@ round(100 * c(no_entregada = no_entregada, no_calificado = no_calificado,
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
                 <pre><code class="language-python">import numpy as np, pandas as pd
-# Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
+# Ejercicio 1 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
 citaciones    = 100300
 no_entregada  =  23000
 no_calificado =   7000
@@ -6112,26 +5958,26 @@ print((100 * pd.Series({"no_entregada": no_entregada,
         </div>
 
         <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado" data-afirma="c1-m10-04"><span class="ejercicio-numero">4.</span>En una ciudad hay <strong>14
+          <p class="ejercicio-enunciado" data-afirma="c1-m10-04"><span class="ejercicio-numero">2.</span>En una ciudad hay <strong>14
             arquitectos</strong> y se quiere una muestra de 8. Se llama por orden del directorio telefónico, y los 8
             primeros que aceptan forman la muestra. Supón que cada uno acepta con probabilidad 0,7, independientemente
             de los demás. Calcula la <strong>probabilidad de inclusión</strong> $\pi_k$ —la probabilidad de que la
             unidad $k$ acabe en la muestra, que es el objeto que el capítulo 2 formaliza— del primero, del noveno y
             del último del directorio, comprueba cuánto suman las catorce y decide si el diseño sirve. <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
           <div class="ejercicio-acciones">
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-pista">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e2-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-sol">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e2-sol">
               <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>
           </div>
-          <div class="ejercicio-panel pista" id="cap1-e4-pista" hidden>
+          <div class="ejercicio-panel pista" id="cap1-e2-pista" hidden>
             <p style="margin:0;">El arquitecto $k$ entra si acepta y si, cuando le toca, todavía no hay ocho: es
               decir, si entre los $k-1$ anteriores aceptaron siete o menos. ¿Qué distribución tiene el número de los
               que aceptan entre $k-1$ llamados?</p>
           </div>
-          <div class="ejercicio-panel solucion" id="cap1-e4-sol" hidden>
+          <div class="ejercicio-panel solucion" id="cap1-e2-sol" hidden>
             <p><strong>Los ocho primeros tienen $\pi_k = 0{,}7$; desde el noveno baja, hasta $\pi_{14} = 0{,}116$.
               Las catorce suman 7,87, no 8. Ninguna es cero, y aun así el diseño no sirve: sus $\pi_k$ dependen de
               una probabilidad de aceptar que nadie conoce.</strong></p>
@@ -6149,7 +5995,7 @@ print((100 * pd.Series({"no_entregada": no_entregada,
                 <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
               </div>
               <div class="code-tab-panel" data-lang="r">
-                <pre><code class="language-r"># Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+                <pre><code class="language-r"># Ejercicio 2 - Los 14 arquitectos, llamados por orden del directorio: los 8
 # primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
 # acepta con probabilidad 0,7, independientemente de los demas.
 # El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
@@ -6174,7 +6020,7 @@ round(c(pi_1 = pi_arq[1], pi_9 = pi_arq[9], pi_14 = pi_arq[14],
               <div class="code-tab-panel" data-lang="python" hidden>
                 <pre><code class="language-python">import numpy as np, pandas as pd
 from math import comb
-# Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+# Ejercicio 2 - Los 14 arquitectos, llamados por orden del directorio: los 8
 # primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
 # acepta con probabilidad 0,7, independientemente de los demas.
 # El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
@@ -6224,7 +6070,79 @@ print(pd.Series({"pi_1": pi_arq[0], "pi_9": pi_arq[8], "pi_14": pi_arq[13],
         </div>
 
         <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado" data-afirma="c1-m10-05"><span class="ejercicio-numero">5.</span>Un bibliotecario selecciona 100
+          <p class="ejercicio-enunciado" data-afirma="c1-m10-02"><span class="ejercicio-numero">3.</span>Una estudiante quiere estimar el
+            porcentaje de fondos mutuos que subieron de precio la semana pasada. Toma <strong>uno de cada diez fondos</strong>
+            de las listas publicadas en un periódico, empezando por uno sorteado entre los diez primeros; supón que esas listas tienen 1 250 fondos. Identifica el
+            diseño y las fuentes de error, y decide: ¿el
+            problema está en cómo seleccionó o en de dónde seleccionó? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e3-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e3-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e3-pista" hidden>
+            <p style="margin:0;">Calcula la probabilidad de inclusión de un fondo que <em>está</em> en la lista, y
+              después la de uno que no está. Las dos respuestas juntas resuelven el ejercicio.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e3-sol" hidden>
+            <p><strong>El diseño es impecable; el marco, no. El problema está en de dónde seleccionó.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> todos los fondos mutuos existentes esa semana.</li>
+              <li><strong>Marco:</strong> la lista publicada por <em>ese</em> periódico.</li>
+              <li><strong>Diseño:</strong> muestreo sistemático 1 en 10: un arranque al azar entre los diez primeros y,
+                desde ahí, uno de cada diez. El arranque al azar es lo que da a cada fondo de la lista la misma
+                probabilidad.</li>
+              <li><strong>Unidad de muestreo y de observación:</strong> el fondo. Aquí sí coinciden.</li>
+            </ul>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="Las probabilidades de inclusión del sistemático 1 en 10">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 3 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
+# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
+N_lista &lt;- 1250            # el supuesto del enunciado: la lista tiene 1250 fondos
+k &lt;- 10
+c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
+#&gt;       pi_k    suma_pi n_esperado
+#&gt;        0.1      125.0      125.0
+
+# El defecto esta antes: si el periodico solo publica los fondos por encima de
+# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 3 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
+# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
+N_lista = 1250              # el supuesto del enunciado: la lista tiene 1250 fondos
+k = 10
+print(pd.Series({"pi_k": 1 / k, "suma_pi": N_lista * (1 / k),
+                 "n_esperado": N_lista / k}).to_string())
+
+# El defecto esta antes: si el periodico solo publica los fondos por encima de
+# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.
+#&gt; pi_k            0.1
+#&gt; suma_pi       125.0
+#&gt; n_esperado    125.0</code></pre>
+              </div>
+            </div>
+            <p>Todo fondo de la lista tiene $\pi_k = 1/10$, y las probabilidades suman 125, el tamaño de muestra esperado.
+              Es un diseño probabilístico correcto, y en el capítulo 2 se verá que además suele ser <em>más</em>
+              preciso que el aleatorio simple cuando la lista viene ordenada.</p>
+            <p style="margin-bottom:0;">El defecto está antes: si el periódico solo publica los fondos por encima de
+              cierto tamaño o de cierto rendimiento, los que faltan tienen $\pi_k = 0$ y ningún diseño los recupera.
+              Una segunda amenaza, menor, es la periodicidad: si la lista estuviera ordenada por categorías con ciclos
+              de longitud 10, el sistemático podría caer siempre en la misma posición del ciclo. Con orden alfabético
+              es improbable, pero es el caso patológico que el capítulo 2 estudia en detalle.</p>
+          </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado" data-afirma="c1-m10-05"><span class="ejercicio-numero">4.</span>Un bibliotecario selecciona 100
             ubicaciones al azar en las estanterías —puntos al azar a lo largo de los estantes—, va a cada una y
             registra si el libro que está ahí necesita reencuadernación. Identifica la unidad de muestreo y la de
             observación, y di si todos los libros del estante tienen la misma probabilidad de salir. Después
@@ -6232,20 +6150,20 @@ print(pd.Series({"pi_1": pi_arq[0], "pi_9": pi_arq[8], "pi_14": pi_arq[13],
             de los libros que están en el estante necesita reencuadernación, una fracción $f$ de los libros está
             prestada y entre los prestados la tasa es la mitad, ¿cuánto se sobreestima? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
           <div class="ejercicio-acciones">
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-pista">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-pista">
               <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>
-            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-sol">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e4-sol">
               <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>
           </div>
-          <div class="ejercicio-panel pista" id="cap1-e5-pista" hidden>
+          <div class="ejercicio-panel pista" id="cap1-e4-pista" hidden>
             <p style="margin:0;">La unidad que se selecciona y la que se observa no son la misma cosa, y ahí está todo
               el ejercicio. Escribe la tasa poblacional como una mezcla de dos grupos, igual que en la fórmula del
               sesgo de no respuesta del módulo 4: es literalmente la misma fórmula con otros nombres. Y antes de la
               cuenta, piensa en un libro que ocupa el doble de estante que otro.</p>
           </div>
-          <div class="ejercicio-panel solucion" id="cap1-e5-sol" hidden>
+          <div class="ejercicio-panel solucion" id="cap1-e4-sol" hidden>
             <p><strong>Se muestrean ubicaciones y se observan libros, y eso tiene dos consecuencias. Cada libro sale
               con una probabilidad proporcional a su grosor. Y los prestados no salen nunca: con libros del mismo
               grosor, el sesgo es la fracción prestada por la mitad de la tasa del estante,
@@ -6272,7 +6190,7 @@ print(pd.Series({"pi_1": pi_arq[0], "pi_9": pi_arq[8], "pi_14": pi_arq[13],
                 <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
               </div>
               <div class="code-tab-panel" data-lang="r">
-                <pre><code class="language-r"># Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
+                <pre><code class="language-r"># Ejercicio 4 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de
 # necesidad de reencuadernacion es la mitad de la de los que si estan:
 p_estante &lt;- 0.30                     # tasa entre los libros presentes
@@ -6289,7 +6207,7 @@ rbind(fraccion_prestada = f,
               </div>
               <div class="code-tab-panel" data-lang="python" hidden>
                 <pre><code class="language-python">import numpy as np, pandas as pd
-# Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
+# Ejercicio 4 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de
 # necesidad de reencuadernacion es la mitad de la de los que si estan:
 p_estante = 0.30                      # tasa entre los libros presentes
@@ -6313,6 +6231,89 @@ print(pd.DataFrame([f, p_real_libro.round(4), (p_estante - p_real_libro).round(4
               silencio justo a las unidades que faltan. Registrar el hueco como «libro prestado, no observado» convierte
               el problema en uno de no respuesta, que al menos se puede acotar.</p>
           </div>
+        </div>
+
+        <div class="ejercicio-guiado">
+          <p class="ejercicio-enunciado" data-afirma="c1-m10-01"><span class="ejercicio-numero">5.</span>El artículo «What Readers Say About
+            Marijuana» informó de que <strong>más del 75 %</strong> de los lectores que participaron en una encuesta
+            telefónica informal de la revista <em>Parade</em> opinaba que la marihuana debía ser tan legal como las bebidas
+            alcohólicas. La encuesta se anunció en la revista y los lectores
+            debían llamar a un número 1-900 con un costo de 75 centavos. Describe población objetivo, marco, unidad de
+            muestreo y de observación, y las fuentes de sesgo. Después responde con la fórmula del módulo 4: si en la población real el apoyo fuera del 30 % y hubiera llamado el 1 % de los lectores, ¿qué tendrían que opinar los que no llamaron? <span class="text-xs text-gray-500">Adaptado de <cite class="cita" data-ref="lohr1999sampling" data-loc="§1.7" data-modo="narrativa"><a class="cita-enlace" href="#pie-lohr1999sampling" title="Lohr, S. L. (1999). Sampling: design and analysis (1.ª ed.). Duxbury Press.">Lohr (1999, §1.7)</a></cite>.</span></p>
+          <div class="ejercicio-acciones">
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-pista">
+              <i class="fas fa-lightbulb" aria-hidden="true"></i> Pista <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ejercicio-boton" aria-expanded="false" aria-controls="cap1-e5-sol">
+              <i class="fas fa-key" aria-hidden="true"></i> Solución <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="ejercicio-panel pista" id="cap1-e5-pista" hidden>
+            <p style="margin:0;">Fíjate en que aquí hay <em>dos</em> filtros encadenados antes de la autoselección: hay
+              que ser lector de la revista y hay que estar dispuesto a pagar 75 centavos. Y para la parte numérica,
+              nota que la fracción que llamó es diminuta: eso hace que $\bar{y}_M$ y $\bar{y}_U$ casi coincidan, lo
+              cual es en sí mismo la respuesta al ejercicio.</p>
+          </div>
+          <div class="ejercicio-panel solucion" id="cap1-e5-sol" hidden>
+            <p><strong>La unidad de muestreo es la llamada, no la persona; el marco son los lectores que vieron el
+              anuncio y podían pagar; y con un 1 % de participación, un apoyo poblacional del 30 % solo exige que los
+              que no llamaron estén al 29,5 %.</strong></p>
+            <ul>
+              <li><strong>Población objetivo:</strong> la cifra habla de los lectores que participaron, pero quien la
+                cite como opinión del país la extiende a todos los adultos de Estados Unidos. Por el
+                procedimiento, como mucho llega a los lectores de la revista.</li>
+              <li><strong>Marco muestral:</strong> los lectores que vieron el anuncio, tenían teléfono de tonos y
+                estaban dispuestos a gastar 75 centavos en la llamada.</li>
+              <li><strong>Unidad de muestreo:</strong> la <em>llamada</em>. No es un detalle pedante: una persona podía
+                llamar varias veces, así que ni siquiera está garantizado que las unidades sean distintas.</li>
+              <li><strong>Unidad de observación:</strong> quien llama.</li>
+              <li><strong>Sesgos:</strong> autoselección (llama quien tiene una opinión fuerte, y quien quiere cambiar
+                una ley está más motivado que quien está conforme), barrera económica (el costo excluye a los de menos
+                recursos y a los indiferentes) y no cobertura tecnológica.</li>
+            </ul>
+            <div class="code-tabs">
+              <div class="code-tabs-nav" role="tablist" aria-label="La fórmula del sesgo de no respuesta sobre la encuesta de Parade">
+                <button class="code-tab-btn active" data-lang="r" role="tab" aria-selected="true">R</button>
+                <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
+              </div>
+              <div class="code-tab-panel" data-lang="r">
+                <pre><code class="language-r"># Ejercicio 5 - La encuesta de Parade. Formula del sesgo de no respuesta:
+#   mu = r mu_R + (1 - r) mu_M
+# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
+# esto es lo que tendrian que opinar los que NO llamaron para que el
+# porcentaje poblacional fuera cada valor de la primera fila.
+r &lt;- 0.01                  # una fraccion diminuta de los lectores llamo
+mu_R &lt;- 0.75
+mu &lt;- c(0.20, 0.30, 0.40, 0.50)
+rbind(si_la_poblacion_fuera = mu,
+      los_que_no_llamaron   = round((mu - r * mu_R) / (1 - r), 4))
+#&gt;                         [,1]   [,2]   [,3]   [,4]
+#&gt; si_la_poblacion_fuera 0.2000 0.3000 0.4000 0.5000
+#&gt; los_que_no_llamaron   0.1944 0.2955 0.3965 0.4975</code></pre>
+              </div>
+              <div class="code-tab-panel" data-lang="python" hidden>
+                <pre><code class="language-python">import numpy as np, pandas as pd
+# Ejercicio 5 - La encuesta de Parade. Formula del sesgo de no respuesta:
+#   mu = r mu_R + (1 - r) mu_M
+# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
+# esto es lo que tendrian que opinar los que NO llamaron para que el
+# porcentaje poblacional fuera cada valor de la primera fila.
+r, mu_R = 0.01, 0.75        # una fraccion diminuta de los lectores llamo
+mu = np.array([0.20, 0.30, 0.40, 0.50])
+print(pd.DataFrame([mu.round(4), ((mu - r * mu_R) / (1 - r)).round(4)],
+                   index=["si_la_poblacion_fuera", "los_que_no_llamaron"]
+                   ).to_string(header=False))
+
+#&gt; si_la_poblacion_fuera  0.2000  0.3000  0.4000  0.5000
+#&gt; los_que_no_llamaron    0.1944  0.2955  0.3965  0.4975</code></pre>
+              </div>
+            </div>
+            <p style="margin-bottom:0;">La segunda fila es la clave. Con una participación del 1 %, prácticamente
+              cualquier valor poblacional es compatible con el 75 % observado: para que la población estuviera en el
+              30 %, bastaría con que los que no llamaron estuvieran en el 29,55 %. El dato del 75 % no restringe casi
+              nada, y por eso no informa casi nada.</p>
+          </div>
+        </div>
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">6.</span><span data-afirma="c1-m10-09">Tras el
@@ -9599,7 +9600,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
     };
 
     // ---------------------------------------------------------------
-    // M3 · Los 14 arquitectos del ejercicio 4: qué es «probabilística»
+    // M3 · Los 14 arquitectos del ejercicio 2 del M10: qué es «probabilística»
     //
     // Tres maneras de sacar 8 de 14, repetidas 1 000 veces con una semilla
     // fija (la misma figura en cada visita). Cada barra es la fracción de

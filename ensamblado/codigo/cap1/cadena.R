@@ -270,33 +270,7 @@ c(empresas = nrow(BigLucy), variables = ncol(BigLucy),
 #>    85296.0000       11.0000      429.5012       60.8950
 
 cat("\n###BLOQUE-S1###\n")
-# Ejercicio 1 - La encuesta de Parade. Formula del sesgo de no respuesta:
-#   mu = r mu_R + (1 - r) mu_M
-# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
-# esto es lo que tendrian que opinar los que NO llamaron para que el
-# porcentaje poblacional fuera cada valor de la primera fila.
-r <- 0.01                  # una fraccion diminuta de los lectores llamo
-mu_R <- 0.75
-mu <- c(0.20, 0.30, 0.40, 0.50)
-rbind(si_la_poblacion_fuera = mu,
-      los_que_no_llamaron   = round((mu - r * mu_R) / (1 - r), 4))
-#>                         [,1]   [,2]   [,3]   [,4]
-#> si_la_poblacion_fuera 0.2000 0.3000 0.4000 0.5000
-#> los_que_no_llamaron   0.1944 0.2955 0.3965 0.4975
-
-cat("\n###BLOQUE-S2###\n")
-# Ejercicio 2 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
-# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
-N_lista <- 1250            # el supuesto del enunciado: la lista tiene 1250 fondos
-k <- 10
-c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
-#>       pi_k    suma_pi n_esperado
-#>        0.1      125.0      125.0
-
-# El defecto esta antes: si el periodico solo publica los fondos por encima de
-# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.
-cat("\n###BLOQUE-S3###\n")
-# Ejercicio 3 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
+# Ejercicio 1 - Jurados en Maricopa. Analisis de flujo del marco a la muestra.
 citaciones    <- 100300
 no_entregada  <-  23000
 no_calificado <-   7000
@@ -314,8 +288,8 @@ round(100 * c(no_entregada = no_entregada, no_calificado = no_calificado,
 #>  no_entregada no_calificado      excusado
 #>         22.93          6.98         21.93
 
-cat("\n###BLOQUE-S4###\n")
-# Ejercicio 4 - Los 14 arquitectos, llamados por orden del directorio: los 8
+cat("\n###BLOQUE-S2###\n")
+# Ejercicio 2 - Los 14 arquitectos, llamados por orden del directorio: los 8
 # primeros que aceptan forman la muestra. Supuesto del enunciado: cada uno
 # acepta con probabilidad 0,7, independientemente de los demas.
 # El arquitecto k entra si acepta y si, cuando le toca, aun no hay 8; es decir,
@@ -336,8 +310,19 @@ round(c(pi_1 = pi_arq[1], pi_9 = pi_arq[9], pi_14 = pi_arq[14],
 # Ninguna pi_k es cero, pero la suma no llega a 8: es el tamano ESPERADO de la
 # muestra, porque a veces aceptan menos de 8 de los 14. Y cada pi_k depende de
 # la probabilidad de aceptar, que en la realidad nadie conoce.
-cat("\n###BLOQUE-S5###\n")
-# Ejercicio 5 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
+cat("\n###BLOQUE-S3###\n")
+# Ejercicio 3 - Fondos mutuos. El diseno (sistematico 1 en 10) es impecable:
+# reparte la misma probabilidad de inclusion a todo lo que este en la lista.
+N_lista <- 1250            # el supuesto del enunciado: la lista tiene 1250 fondos
+k <- 10
+c(pi_k = 1 / k, suma_pi = N_lista * (1 / k), n_esperado = N_lista / k)
+#>       pi_k    suma_pi n_esperado
+#>        0.1      125.0      125.0
+
+# El defecto esta antes: si el periodico solo publica los fondos por encima de
+# cierto tamano, los que faltan tienen pi_k = 0 y ningun diseno los recupera.
+cat("\n###BLOQUE-S4###\n")
+# Ejercicio 4 - Libros en la biblioteca. Se muestrean UBICACIONES, no libros:
 # los prestados no estan. Si una fraccion f esta prestada y su tasa de
 # necesidad de reencuadernacion es la mitad de la de los que si estan:
 p_estante <- 0.30                     # tasa entre los libros presentes
@@ -351,6 +336,21 @@ rbind(fraccion_prestada = f,
 #> fraccion_prestada 0.100 0.20 0.300
 #> valor_real        0.285 0.27 0.255
 #> sesgo             0.015 0.03 0.045
+
+cat("\n###BLOQUE-S5###\n")
+# Ejercicio 5 - La encuesta de Parade. Formula del sesgo de no respuesta:
+#   mu = r mu_R + (1 - r) mu_M
+# Si el 75 % de los que llamaron esta a favor y solo llamo una fraccion r,
+# esto es lo que tendrian que opinar los que NO llamaron para que el
+# porcentaje poblacional fuera cada valor de la primera fila.
+r <- 0.01                  # una fraccion diminuta de los lectores llamo
+mu_R <- 0.75
+mu <- c(0.20, 0.30, 0.40, 0.50)
+rbind(si_la_poblacion_fuera = mu,
+      los_que_no_llamaron   = round((mu - r * mu_R) / (1 - r), 4))
+#>                         [,1]   [,2]   [,3]   [,4]
+#> si_la_poblacion_fuera 0.2000 0.3000 0.4000 0.5000
+#> los_que_no_llamaron   0.1944 0.2955 0.3965 0.4975
 
 cat("\n###BLOQUE-S6###\n")
 # Ejercicio 6 - La omision del Censo 2018 (DANE, comunicado del 17-X-2019, p. 3).

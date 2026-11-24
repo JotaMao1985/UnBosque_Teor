@@ -10141,7 +10141,7 @@ Javier: «Sí, commit y 8.5» (el commit de la 8.4 es `b7c290a`). Recoge PE-M1, 
   - En el navegador, por HTTP: pistas y soluciones abren, 0 errores de KaTeX, la cita sale «(Lohr, 2022, p. 67)» con
     su pie, y a 375 px no hay desborde (solo el código se desplaza por dentro).
 
-**Sin commit.** Rutas:
+**Commit `32cf433`** (7 rutas por su nombre), sin push. Rutas:
 - `PLAN_Material_Muestreo.md`, que incluye el hash de la 8.4 en T7.157
 - `bibliografia/contraste/cap1.yml`
 - `bibliografia/uso_fuentes.json`
@@ -10151,3 +10151,54 @@ Javier: «Sí, commit y 8.5» (el commit de la 8.4 es `b7c290a`). Recoge PE-M1, 
 - `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
 
 Sigue la 8.6: el orden de los ejercicios, que pasa a ser 3, 4, 2, 5, 1, 6.
+
+### T7.159 — Fase 8 del cap. 1, tarea 8.6: los ejercicios del módulo 10 por dificultad (2026-11-24)
+
+Javier: «Sí, commit y 8.6» (el commit de la 8.5 es `32cf433`). Es PE-M13 del informe de cierre. Los ejercicios pasan al
+orden 3, 4, 2, 5, 1, 6 de la numeración vieja:
+
+| Nuevo | Antes | Ejercicio | Lohr 1999 §1.7 |
+|---|---|---|---|
+| 1 | 3 | Jurados de Maricopa | ej. 3 |
+| 2 | 4 | 14 arquitectos | ej. 4 |
+| 3 | 2 | Fondos mutuos | ej. 2 |
+| 4 | 5 | Biblioteca | ej. 5 |
+| 5 | 1 | Parade | ej. 1 |
+| 6 | 6 | DANE | — |
+
+- **Cómo se hizo.** Un guion movió los seis bloques `ejercicio-guiado` del M10 y renumeró en cada uno lo siguiente: el
+  `ejercicio-numero`, los ids `cap1-eN-pista/sol` y los marcadores ⟦SN⟧/⟦PSN⟧. En `cadena.R` y `cadena.py` los bloques
+  S/PS se reordenaron y se renombraron igual, con su comentario «# Ejercicio N». Los bloques son independientes, así
+  que ninguna salida cambia.
+  - Comprobación: la diferencia del HTML, normalizando esos números, es una permutación pura más una línea (abajo).
+  - Los data-afirma conservan su id: c1-m10-0N sigue pegado a su contenido.
+- **Remisiones.** El M3 decía «La ciudad del ejercicio 4 del módulo 10» y ahora dice «ejercicio 2»; el comentario de
+  `simuladores.js` cambió igual. La introducción («los cinco primeros… de Lohr; el sexto… caso colombiano») sigue
+  siendo cierta. No hay remisiones relativas («el ejercicio anterior») ni de otros capítulos.
+- **Un defecto publicado, corregido.** Desde la 6.5 (`5aeab1f`) faltaba el `</div>` que cierra el ejercicio 5. El
+  módulo tenía 62 `<div` y 61 `</div>`, y el ejercicio 6 quedaba anidado dentro del 5, más estrecho. Ahora están 62 y
+  62, y los seis tienen el mismo ancho.
+- **Un tropiezo del guion, deshecho.** La primera pasada usó «§» como marca temporal y, al quitarla, borró también los
+  `§1.7` reales. `--cierre 1` lo cazó (V1, R2). Se restauró el M10 desde `HEAD` y se repitió solo la parte del HTML
+  con una marca que no existe en el archivo. Ahora hay 14 «§» antes y 14 después.
+- **Fuentes.** Las cinco atribuciones cambian el número del material, no el de Lohr. Un FU nuevo (Sonnet, contexto
+  limpio) comprobó en la página ensamblada y en Lohr 1999, p. 17, que los cinco emparejamientos son correctos. El
+  registro tiene las afirmaciones y huellas nuevas; los pasajes no cambian.
+- **Verificación:**
+  - Fuentes: `--cierre 1` limpio, arnés 71/71, `--comprobar` sin cambios y `uso_fuentes.json` al día.
+  - Cifras y código: `anota --check` da 0 bloques distintos; 365/365 cifras anunciadas; prosa con 0 sin respaldo; el
+    código arranca en las 13 páginas; cotejo con 0 desajustadas; `node --check` pasa.
+  - Referencias: 600 resueltas, sin novedades.
+  - El cap. 1 da el mismo archivo en dos pasadas (`63870eb0…`).
+  - En el navegador, por HTTP: los seis abren pista y solución por sus ids nuevos, cada solución lleva el código de su
+    ejercicio, ningún ejercicio queda anidado, a 375 px no hay desborde, el M3 dice «ejercicio 2» y no hay errores de
+    KaTeX.
+
+**Sin commit.** Rutas:
+- `PLAN_Material_Muestreo.md` (con el hash de la 8.5 en T7.158)
+- `bibliografia/contraste/cap1.yml`
+- `ensamblado/codigo/cap1/cadena.R`, `cadena.py`
+- `ensamblado/modulos/cap1/modulo_10.html`, `modulos_1_3.html`, `simuladores.js`
+- `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
+
+Sigue la 8.7: el cierre de la Fase 8, con FU de lo cambiado, la revisión visual, la nota y la publicación paso a paso.
