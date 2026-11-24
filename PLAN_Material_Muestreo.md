@@ -9965,4 +9965,47 @@ de `PLAN_Cap1_Mejora.md` (8.1–8.7), una tarea por vez. Esta es la 8.1, que cor
   - En el navegador, por HTTP, aparecen los textos nuevos, no queda ninguno viejo y no hay errores de consola ni de
     KaTeX.
 
-**Sin commit.** Sigue la 8.2: la predicción antes de los simuladores de los módulos 3, 5 y 8.
+**Commit `df47000`** (16 rutas por su nombre), sin push. Sigue la 8.2: la predicción antes de los simuladores de los módulos 3, 5 y 8.
+
+### T7.155 — Fase 8 del cap. 1, tarea 8.2: predicción antes de los simuladores de los módulos 3, 5 y 8 (2026-11-23)
+
+Javier: «Sí, commit y 8.2». Corresponde a PE-M11 del informe de cierre: los simuladores de los módulos 3, 5 y 8 solo
+se miraban. Ahora cada uno va precedido de una pregunta corta, y su respuesta se despliega con un clic. Usa el mismo
+componente que la lectura guiada (`details.lectura-guiada`, más la clase `prediccion`), con el icono de pregunta. No
+toca la plantilla.
+
+- **M3, `arquitectos`:** «si se llama por orden del directorio hasta que ocho acepten, con 0,7, ¿tienen los catorce
+  la misma probabilidad de entrar?». Respuesta: no. Los ocho primeros tienen 0,7, desde el noveno baja y ninguno entra
+  siempre.
+  - No repite el quiz 5, que pregunta por los ocho primeros del directorio.
+  - El valor de cada $\pi_k$ se deja para el ejercicio 4 (tarea 8.5).
+  - En el simulador, con 0,7, las barras dan 67–72 % para los ocho primeros y 67, 55, 41, 32, 19 y 12 % del noveno al
+    decimocuarto. Con R, $\pi_k = 0{,}7\,P(\text{Bin}(k-1;\,0{,}7) \le 7)$ da 0,70 para $k \le 8$ y baja desde 0,66.
+- **M5, `balanza`:** «el instrumento suma un 5 % de la media; con los 3 078 condados, ¿alrededor de qué valor queda el
+  intervalo: del 0, del 5 % o de alguno intermedio?». Respuesta: del 5 %. El intervalo se estrecha sin moverse, y con
+  el ruido de partida deja fuera la verdad: la lectura del simulador dice «no», con un semiancho de 2,45 %.
+  - No repite el quiz 9, que es de opción múltiple sobre la balanza de 300 g.
+- **M8, `poblaciones`:** «¿qué parte de los 3 078 condados tiene una superficie menor que la media?». Respuesta:
+  bastante más de la mitad, el 68,0 %.
+  - La cifra es nueva: entra por `precalculo/genera_cap1.R`, como `agpop.pctBajoMedia` (marco completo, con los 19
+    códigos −99, igual que la media).
+  - Al regenerar el JSON, solo cambian esa clave y la fecha.
+  - No repite el quiz 13, que ya dice que la media cae a la derecha del grueso.
+- **Verificación:**
+  - Fuentes y referencias: `--comprobar` sin cambios, `--cierre 1` limpio, el arnés 71/71, `uso_fuentes.json` al día,
+    y `verifica_referencias` con 600 resueltas (las 57 nuevas ya estaban).
+  - Cifras y código: `anota --check` da 0 bloques distintos en R y en Python. La prosa del cap. 1 tiene 0 cifras sin
+    respaldo (88 respaldadas), el 68,0 incluido. El código arranca en las 13 páginas, el cotejo da 0 desajustadas y
+    `node --check` pasa.
+  - Ensamblado: el cap. 1 da el mismo archivo en dos pasadas (`c407f4ca…`).
+  - En el navegador, por HTTP: las tres preguntas están justo antes de su simulador. A 375 px no hay desborde (ancho
+    del documento 375) y a 1280 px se ven bien. No hay errores de consola ni de KaTeX.
+
+**Commit pendiente de hash** (7 rutas por su nombre). Rutas:
+- `PLAN_Material_Muestreo.md`
+- `precalculo/genera_cap1.R`
+- `precalculo/salidas/cap1_datos.json`
+- `ensamblado/modulos/cap1/modulos_1_3.html`, `modulos_4_6.html`, `modulos_7_9.html`
+- `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
+
+Sigue la 8.3: casos nuevos en las preguntas 5, 10 y 14 del quiz.

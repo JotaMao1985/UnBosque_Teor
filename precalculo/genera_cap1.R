@@ -380,6 +380,10 @@ agpop_json <- list(
   N = nrow(agpop), media = media_marco, mediaValidos = media_validos,
   S2 = S2_agpop, S = sqrt(S2_agpop),
   cv = sqrt(S2_agpop) / media_marco, asimetria = asimetria(agpop$acres92),
+  # La respuesta a la pregunta de predicción del módulo 8 (Fase 8 del cap. 1,
+  # PE-M11): qué parte de los condados queda por debajo de la media. Sobre el
+  # marco completo, como la media, con los 19 códigos -99 dentro.
+  pctBajoMedia = 100 * mean(agpop$acres92 < media_marco),
   faltantes = as.list(faltantes),
   totalReal = sum(agpop$acres92),
   regiones = regiones,
