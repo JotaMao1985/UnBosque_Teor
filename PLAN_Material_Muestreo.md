@@ -10194,7 +10194,7 @@ orden 3, 4, 2, 5, 1, 6 de la numeración vieja:
     ejercicio, ningún ejercicio queda anidado, a 375 px no hay desborde, el M3 dice «ejercicio 2» y no hay errores de
     KaTeX.
 
-**Sin commit.** Rutas:
+**Commit `9c59917`** (8 rutas por su nombre), sin push. Rutas:
 - `PLAN_Material_Muestreo.md` (con el hash de la 8.5 en T7.158)
 - `bibliografia/contraste/cap1.yml`
 - `ensamblado/codigo/cap1/cadena.R`, `cadena.py`
@@ -10202,3 +10202,57 @@ orden 3, 4, 2, 5, 1, 6 de la numeración vieja:
 - `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
 
 Sigue la 8.7: el cierre de la Fase 8, con FU de lo cambiado, la revisión visual, la nota y la publicación paso a paso.
+
+### T7.160 — Fase 8 del cap. 1, tarea 8.7: cierre de la Fase 8 (2026-11-24)
+
+Javier: «Sí, commit y 8.7» (el commit de la 8.6 es `9c59917`).
+
+- **Fuentes de lo cambiado.** Toda afirmación con cita que tocó la Fase 8 pasó por un FU independiente, con los
+  pasajes rehechos por guion: c1-m5-01 en la 8.1; c1-m10-04, c1-m10-05 y c1-m10-10 en la 8.5; las cinco atribuciones
+  renumeradas en la 8.6.
+- **Revisión independiente del resto.** Un revisor con contexto limpio repasó el diff `df47000^..HEAD`:
+  - lo que revisó: la estadística, las claves y retros del quiz, las cifras (recalculadas con R y con 2·10⁵
+    simulaciones), la coherencia tras el reordenamiento y la página por HTTP;
+  - **errores objetivos: ninguno;**
+  - propuso ocho mejoras; cada una se rehízo antes de aceptarla.
+  - **Aceptadas:**
+    - M3, predicción: «la probabilidad de cada uno depende de cuántos digan que sí» era falso para los ocho
+      primeros. Ahora dice «la de los seis últimos…».
+    - M4: «difieren en 0,9 (64,8 % frente a 65,6 %)» daba 0,8 al restar lo impreso. El JSON da 64,764 y 65,629 (0,865).
+      Ahora va con dos decimales (64,76 % y 65,63 %). Venía de antes de la Fase 8.
+    - Ejercicio 2: «aparecen dos peores» pasa a «otros dos». La autoselección se separa del supuesto del modelo: en
+      la realidad aceptar no sería igual de probable para todos, y entonces ni las π_k de la tabla valen.
+    - Ejercicio 2: las barras del simulador estiman estas π_k con la aceptación en 0,7 y fluctúan un par de puntos.
+    - Quiz 9, retroFallo: «se cancela, se nota o desaparece sin ruido». Quiz 3, retroFallo: «el defecto del marco no
+      depende de $n$».
+    - R9/PR9: imprimen la parte de los condados bajo la media (68,03), así que el 68,0 de la predicción del M8 sale
+      del código de la página y no solo del JSON.
+    - Fuera de la página: el «ejercicio 4» de `cifras_prosa.json` (0,571) pasa a «ejercicio 2», y el «ejercicio 5» de
+      la afirmación de c1-m10-10 pasa a «ejercicio 4».
+  - **No aceptada:** separar el supuesto del grosor en el ejercicio 4. El enunciado ya lo pone en una frase aparte
+    («Después cuantifica…, suponiendo…»), y tocarlo obligaría a releer la atribución sin ganar claridad.
+- **Revisión visual por HTTP.**
+  - A 1280 y 375 px, los diez módulos con todos los desplegables y soluciones abiertos: ancho del documento 1270/375,
+    nada fuera de la pantalla, 0 errores de KaTeX y 0 errores de consola.
+  - «Finalizar» lanza «¡Felicitaciones! Completaste el capítulo.».
+  - Las tres predicciones están en los módulos 3, 5 y 8, y los textos corregidos aparecen sin los viejos.
+- **Protocolo:**
+  - citas: `--comprobar` sin cambios, `--cierre 1` limpio, arnés 71/71, `uso_fuentes.json` al día;
+  - código: `anota --check` con 0 bloques distintos (30 grupos `#>`), y `node --check` pasa;
+  - `verifica_bloques --todos --prosa`: 0 cifras sin respaldo en las nueve páginas y 0 LaTeX con barra simple;
+  - el código arranca en las 13 páginas y el cotejo da 0 desajustadas;
+  - 600 referencias resueltas, sin novedades;
+  - el cap. 1 da el mismo archivo en dos pasadas (`fbf37596…`).
+- **Fase 8 cerrada.** Siete tareas, de T7.154 a T7.160. Commits: `df47000`, `c543ccc`, `d07f892`, `b7c290a`, `32cf433`,
+  `9c59917` y el de esta nota. Nada publicado: `origin/main` sigue en `9d635dd`.
+
+**Sin commit.** Rutas:
+- `PLAN_Material_Muestreo.md` (con el hash de la 8.6 en T7.159)
+- `bibliografia/contraste/cap1.yml`
+- `precalculo/cifras_prosa.json`
+- `ensamblado/codigo/cap1/cadena.R` y `cadena.py`
+- `ensamblado/modulos/cap1/modulo_10.html`, `modulos_1_3.html`, `modulos_4_6.html` y `simuladores.js`
+- `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
+
+Lo que sigue es la publicación, con el visto bueno de Javier en cada paso: commit, `push` a main, `gh-pages`, y
+después el vault y la bitácora.

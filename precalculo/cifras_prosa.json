@@ -51,7 +51,7 @@
     "42,923": "digest.pSondeo = 0,42923833 en porcentaje con tres decimales: la retroalimentación de la autoevaluación resta con todos los decimales",
     "62,467": "digest.pEleccion = 0,62467363 en porcentaje con tres decimales (ver 62,47)",
     "-19,55": "42,92 - 62,47 con los valores ya redondeados; la autoevaluación lo acepta y explica que con todos los decimales es -19,54",
-    "0,571": "8/14 = 0,5714: probabilidad de inclusión de un MAS de 8 de los 14 arquitectos (ejercicio 4). Hasta el 2026-11-16 casaba por azar con un valor de la curva del simulador del Digest"
+    "0,571": "8/14 = 0,5714: probabilidad de inclusión de un MAS de 8 de los 14 arquitectos (ejercicio 2 desde la 8.6; antes, 4). Hasta el 2026-11-16 casaba por azar con un valor de la curva del simulador del Digest"
   },
   "capitulo-2-diseno-mas-sistematico.html": {
     "3 079": "N+1: el condado que no existe en el marco, usado en el argumento sobre predicción",

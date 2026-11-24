@@ -311,6 +311,10 @@ print(resumen.sort_values("media", ascending=False).to_string())
 #> S   1382  199140  243956
 #> NE   220   90619   79365
 
+# Que parte de los condados queda por debajo de la media (la prediccion del modulo):
+print(round(100 * (agpop["acres92"] < agpop["acres92"].mean()).mean(), 2))
+#> 68.03
+
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
 # dentro del paquete TeachingSampling, que no existe para Python. El repositorio
 # del curso lo trae ya exportado en precalculo/salidas/BigLucy.csv.gz. Si trabajas

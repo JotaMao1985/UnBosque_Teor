@@ -1119,7 +1119,7 @@
           { texto: 'El problema se resuelve tomando una muestra más grande de la lista.', correcta: false }
         ],
         retroAcierto: 'Exacto: el marco no coincide con la población, y los nuevos no pueden salir. La lista deja fuera a los que llegaron este semestre, y además puede traer a quienes ya se fueron: el marco falla por defecto y por exceso. Que sea la oficial no la hace coincidir con la población, y muestrear más de ella no le añade a nadie de los que faltan.',
-        retroFallo: 'Son dos: el marco no coincide con la población, y los nuevos tienen probabilidad cero. Que la lista sea oficial no arregla lo que le falta, y una muestra más grande de un marco incompleto sigue sin ver a los que no están en él: ninguna de las dos cosas depende de $n$.'
+        retroFallo: 'Son dos: el marco no coincide con la población, y los nuevos tienen probabilidad cero. Que la lista sea oficial no arregla lo que le falta, y una muestra más grande de un marco incompleto sigue sin ver a los que no están en él: el defecto del marco no depende de $n$.'
       },
       {
         tipo: 'opcion',
@@ -1248,7 +1248,7 @@
           { texto: 'Si el ruido fuera cero, el promedio daría el peso verdadero.', correcta: false }
         ],
         retroAcierto: 'Exacto: el ruido y el intervalo. El ruido $\\varepsilon_k$ se cancela al promediar; el desplazamiento $b_k$ no: no baja con más pesadas, sigue ahí aunque el ruido sea cero y no deja rastro en la dispersión de los datos. Solo lo revela información de fuera de la encuesta, como una balanza de referencia.',
-        retroFallo: 'Son dos: el ruido baja con $n$, y el intervalo se estrecha alrededor de un valor desplazado. Las otras tres suponen que el desplazamiento se cancela o se nota, y no: $b_k$ suma lo mismo a cada pesada, así que no cambia la dispersión, no baja con más pesadas y sigue ahí aunque el ruido sea cero.'
+        retroFallo: 'Son dos: el ruido baja con $n$, y el intervalo se estrecha alrededor de un valor desplazado. Las otras tres suponen que el desplazamiento se cancela, se nota o desaparece sin ruido, y no: $b_k$ suma lo mismo a cada pesada, así que no cambia la dispersión, no baja con más pesadas y sigue ahí aunque el ruido sea cero.'
       },
       {
         tipo: 'opcion',

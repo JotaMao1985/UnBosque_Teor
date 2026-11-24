@@ -4323,7 +4323,7 @@ print(pd.Series({"marco_completo": completo, "solo_validos": validos,
           <p><strong>No.</strong> Los ocho primeros entran justo cuando aceptan, porque al llamarlos la muestra nunca
             está completa: su probabilidad es 0,7, la misma para los ocho. Desde el noveno baja, porque a ese solo se
             le llama si alguno de los anteriores dijo que no, y el último es el que menos opciones tiene. Ninguno
-            entra siempre, y la probabilidad de cada uno depende de cuántos digan que sí.</p>
+            entra siempre, y la de los seis últimos depende de cuántos de los anteriores digan que sí.</p>
           <p style="margin-bottom:0;">Compruébalo eligiendo «Por orden, hasta que 8 acepten».</p>
         </div>
       </details>
@@ -4699,7 +4699,7 @@ print(pd.DataFrame(
 
       <div class="note">
         <p><strong>Lee la tabla despacio.</strong> Sin pesos, las dos encuestas difieren en 5,9 puntos (61,6 % frente a
-          67,5 %). Con pesos difieren en 0,9 (64,8 % frente a 65,6 %)… en la estimación puntual. Pero ponderar movió a la
+          67,5 %). Con pesos difieren en 0,9 (64,76 % frente a 65,63 %)… en la estimación puntual. Pero ponderar movió a la
           telefónica <em>hacia arriba</em> y al panel <em>hacia abajo</em>: cada una en la dirección de su propia
           desviación demográfica. Calibrar por sexo, edad y raza corrige lo que se midió; no toca lo que hizo que una
           persona contestara y otra no. La estimación ponderada de la encuesta telefónica, 64,8 %, redondea al mismo 65 % del
@@ -5560,6 +5560,10 @@ print(tabla[order(-tabla$media), ])
 #&gt; S  1382 199140 243956
 #&gt; NE  220  90619  79365
 
+# Que parte de los condados queda por debajo de la media (la prediccion del modulo):
+round(100 * mean(agpop$acres92 &lt; mean(agpop$acres92)), 2)
+#&gt; [1] 68.03
+
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez.
 data(BigLucy, package = "TeachingSampling")
 c(empresas = nrow(BigLucy), variables = ncol(BigLucy),
@@ -5585,6 +5589,10 @@ print(resumen.sort_values("media", ascending=False).to_string())
 #&gt; NC  1054  325951  271303
 #&gt; S   1382  199140  243956
 #&gt; NE   220   90619   79365
+
+# Que parte de los condados queda por debajo de la media (la prediccion del modulo):
+print(round(100 * (agpop["acres92"] &lt; agpop["acres92"].mean()).mean(), 2))
+#&gt; 68.03
 
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez. En R llega
 # dentro del paquete TeachingSampling, que no existe para Python. El repositorio
@@ -6058,14 +6066,16 @@ print(pd.Series({"pi_1": pi_arq[0], "pi_9": pi_arq[8], "pi_14": pi_arq[13],
               de tamaño fijo, no aplica aquí, porque este diseño no lo es.</p>
             <p>Ninguna $\pi_k$ es cero, así que desaparece el defecto del caso en que todos aceptan: ocho que entran
               siempre y seis que no entran nunca, como en el primer procedimiento del simulador del módulo 3. Pero
-              aparecen dos peores. Las $\pi_k$ dependen de la probabilidad de aceptar, que en la realidad nadie
-              conoce: el 0,7 es un supuesto del ejercicio, y sin él no hay pesos con que estimar. Y quién acepta no es
-              puro azar: probablemente los que tienen menos trabajo o más personal administrativo, que es una forma de
-              autoselección.</p>
+              aparecen otros dos. Las $\pi_k$ dependen de la probabilidad de aceptar, que en la realidad nadie
+              conoce: el 0,7 es un supuesto del ejercicio, y sin él no hay pesos con que estimar. Y en la realidad
+              aceptar no sería igual de probable para todos: probablemente aceptan más los que tienen menos trabajo o
+              más personal administrativo, que es una forma de autoselección, y entonces ni siquiera las $\pi_k$ de
+              la tabla valen.</p>
             <p style="margin-bottom:0;">Con 14 unidades y ganas de 8, lo correcto es un muestreo aleatorio simple de 8
               de los 14, con $\pi_k = 8/14 = 0{,}571$ para todos, y perseguir a los seleccionados hasta conseguirlos.
-              Las barras del simulador del módulo 3, con «Por orden, hasta que 8 acepten», son una estimación por
-              simulación de estas mismas $\pi_k$.</p>
+              Las barras del simulador del módulo 3, con «Por orden, hasta que 8 acepten» y la probabilidad de aceptar
+              en 0,7, son una estimación por simulación de estas mismas $\pi_k$: fluctúan un par de puntos alrededor
+              de ellas.</p>
           </div>
         </div>
 
@@ -9947,7 +9957,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           { texto: 'El problema se resuelve tomando una muestra más grande de la lista.', correcta: false }
         ],
         retroAcierto: 'Exacto: el marco no coincide con la población, y los nuevos no pueden salir. La lista deja fuera a los que llegaron este semestre, y además puede traer a quienes ya se fueron: el marco falla por defecto y por exceso. Que sea la oficial no la hace coincidir con la población, y muestrear más de ella no le añade a nadie de los que faltan.',
-        retroFallo: 'Son dos: el marco no coincide con la población, y los nuevos tienen probabilidad cero. Que la lista sea oficial no arregla lo que le falta, y una muestra más grande de un marco incompleto sigue sin ver a los que no están en él: ninguna de las dos cosas depende de $n$.'
+        retroFallo: 'Son dos: el marco no coincide con la población, y los nuevos tienen probabilidad cero. Que la lista sea oficial no arregla lo que le falta, y una muestra más grande de un marco incompleto sigue sin ver a los que no están en él: el defecto del marco no depende de $n$.'
       },
       {
         tipo: 'opcion',
@@ -10076,7 +10086,7 @@ print(pd.Series({"real_pct": 100 * real, "censo_pct": 100 * censo,
           { texto: 'Si el ruido fuera cero, el promedio daría el peso verdadero.', correcta: false }
         ],
         retroAcierto: 'Exacto: el ruido y el intervalo. El ruido $\\varepsilon_k$ se cancela al promediar; el desplazamiento $b_k$ no: no baja con más pesadas, sigue ahí aunque el ruido sea cero y no deja rastro en la dispersión de los datos. Solo lo revela información de fuera de la encuesta, como una balanza de referencia.',
-        retroFallo: 'Son dos: el ruido baja con $n$, y el intervalo se estrecha alrededor de un valor desplazado. Las otras tres suponen que el desplazamiento se cancela o se nota, y no: $b_k$ suma lo mismo a cada pesada, así que no cambia la dispersión, no baja con más pesadas y sigue ahí aunque el ruido sea cero.'
+        retroFallo: 'Son dos: el ruido baja con $n$, y el intervalo se estrecha alrededor de un valor desplazado. Las otras tres suponen que el desplazamiento se cancela, se nota o desaparece sin ruido, y no: $b_k$ suma lo mismo a cada pesada, así que no cambia la dispersión, no baja con más pesadas y sigue ahí aunque el ruido sea cero.'
       },
       {
         tipo: 'opcion',

@@ -262,6 +262,10 @@ print(tabla[order(-tabla$media), ])
 #> S  1382 199140 243956
 #> NE  220  90619  79365
 
+# Que parte de los condados queda por debajo de la media (la prediccion del modulo):
+round(100 * mean(agpop$acres92 < mean(agpop$acres92)), 2)
+#> [1] 68.03
+
 # BigLucy: 85296 empresas, la poblacion de los ejemplos de Gutierrez.
 data(BigLucy, package = "TeachingSampling")
 c(empresas = nrow(BigLucy), variables = ncol(BigLucy),

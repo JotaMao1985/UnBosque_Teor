@@ -156,14 +156,16 @@
               de tamaño fijo, no aplica aquí, porque este diseño no lo es.</p>
             <p>Ninguna $\pi_k$ es cero, así que desaparece el defecto del caso en que todos aceptan: ocho que entran
               siempre y seis que no entran nunca, como en el primer procedimiento del simulador del módulo 3. Pero
-              aparecen dos peores. Las $\pi_k$ dependen de la probabilidad de aceptar, que en la realidad nadie
-              conoce: el 0,7 es un supuesto del ejercicio, y sin él no hay pesos con que estimar. Y quién acepta no es
-              puro azar: probablemente los que tienen menos trabajo o más personal administrativo, que es una forma de
-              autoselección.</p>
+              aparecen otros dos. Las $\pi_k$ dependen de la probabilidad de aceptar, que en la realidad nadie
+              conoce: el 0,7 es un supuesto del ejercicio, y sin él no hay pesos con que estimar. Y en la realidad
+              aceptar no sería igual de probable para todos: probablemente aceptan más los que tienen menos trabajo o
+              más personal administrativo, que es una forma de autoselección, y entonces ni siquiera las $\pi_k$ de
+              la tabla valen.</p>
             <p style="margin-bottom:0;">Con 14 unidades y ganas de 8, lo correcto es un muestreo aleatorio simple de 8
               de los 14, con $\pi_k = 8/14 = 0{,}571$ para todos, y perseguir a los seleccionados hasta conseguirlos.
-              Las barras del simulador del módulo 3, con «Por orden, hasta que 8 acepten», son una estimación por
-              simulación de estas mismas $\pi_k$.</p>
+              Las barras del simulador del módulo 3, con «Por orden, hasta que 8 acepten» y la probabilidad de aceptar
+              en 0,7, son una estimación por simulación de estas mismas $\pi_k$: fluctúan un par de puntos alrededor
+              de ellas.</p>
           </div>
         </div>
 
