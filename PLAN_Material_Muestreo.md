@@ -10244,9 +10244,9 @@ Javier: «Sí, commit y 8.7» (el commit de la 8.6 es `9c59917`).
   - 600 referencias resueltas, sin novedades;
   - el cap. 1 da el mismo archivo en dos pasadas (`fbf37596…`).
 - **Fase 8 cerrada.** Siete tareas, de T7.154 a T7.160. Commits: `df47000`, `c543ccc`, `d07f892`, `b7c290a`, `32cf433`,
-  `9c59917` y el de esta nota. Nada publicado: `origin/main` sigue en `9d635dd`.
+  `9c59917` y `e81a48b`. Nada publicado: `origin/main` sigue en `9d635dd`.
 
-**Sin commit.** Rutas:
+**Commit `e81a48b`** (10 rutas por su nombre), sin push. Rutas:
 - `PLAN_Material_Muestreo.md` (con el hash de la 8.6 en T7.159)
 - `bibliografia/contraste/cap1.yml`
 - `precalculo/cifras_prosa.json`
@@ -10254,5 +10254,18 @@ Javier: «Sí, commit y 8.7» (el commit de la 8.6 es `9c59917`).
 - `ensamblado/modulos/cap1/modulo_10.html`, `modulos_1_3.html`, `modulos_4_6.html` y `simuladores.js`
 - `sitio/muestreo/capitulo-1-encuestas-sesgos.html`
 
-Lo que sigue es la publicación, con el visto bueno de Javier en cada paso: commit, `push` a main, `gh-pages`, y
-después el vault y la bitácora.
+**Publicado el 24 nov** con su visto bueno paso a paso:
+- «Sí, push a main»: `origin/main` `9d635dd..e81a48b`, sin fusión y sin mover el `main` local.
+- «Publica ahora»: `gh-pages` `4797cb0..30270e2`, con un árbol idéntico a `e81a48b:sitio` (diez archivos). La compilación
+  de Pages dio `built 30270e2`. En vivo, los caps. 1 y 4 y el proyecto integrador son idénticos byte a byte a
+  `e81a48b`.
+
+**Vault y bitácora (24 nov, Javier: «Sí, refréscalos»):**
+- Las notas de Muestreo se midieron sobre un `git archive` de `e81a48b`, con el envoltorio de siempre. El cap. 1
+  queda con 505 KB, 11 simuladores y 6 ejercicios; el curso, con 3750 KB.
+- `genera_fuentes.py --contrato 20939=<worktree>/bibliografia` solo actualiza `lohr2022sampling`.
+- `prueba_fuentes` y `prueba_no_regresion` pasan. `audita_vault` da 6 hallazgos, ninguno de Muestreo.
+- **Cuidado:** `genera_vault.py` no filtra por curso. En la pasada real reescribió `peso_kb` y `modificado` de tres
+  notas de Series que otra sesión estaba cambiando. Se devolvieron a su commit del vault, y el resto de Series se
+  respaldó y se restauró byte a byte.
+- La bitácora del 24 nov tiene la sección «Muestreo · capítulo 1, Fase 8 publicada».
