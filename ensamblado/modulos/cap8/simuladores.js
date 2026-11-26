@@ -781,7 +781,7 @@
       {
         tipo: 'opcion',
         modulo: 2,
-        pregunta: 'La encuesta del <em>Literary Digest</em> recibió 2 252 863 papeletas y tuvo la precisión de un muestreo aleatorio simple de unas 6 personas. ¿Qué explica esa cifra?',
+        pregunta: 'La encuesta del <em>Literary Digest</em>, con 2 252 863 papeletas para los dos candidatos principales, tuvo la precisión de un muestreo aleatorio simple de unas 6 personas. ¿Qué explica esa cifra?',
         pista: 'Mira los tres factores de la identidad de Meng y cuál de ellos crece con el tamaño.',
         opciones: [
           { texto: 'Una correlación de 0,093 entre responder y el voto, multiplicada por $\\sqrt{(1-f)/f} = 4{,}33$: el factor de cantidad amplifica el defecto en vez de compensarlo.', correcta: true,

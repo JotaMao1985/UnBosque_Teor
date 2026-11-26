@@ -16,8 +16,8 @@ agstrat <- read.csv("CSV data sets for SDA 3e/agstrat.csv")
 N <- nrow(agpop)
 
 # La region parte los 3078 condados en 4 estratos. Las medias poblacionales
-# estan lejisimas unas de otras: un condado del Oeste siembra en promedio
-# OCHO veces mas que uno del Nordeste. Esa heterogeneidad ENTRE regiones es
+# estan lejisimas unas de otras: un condado del Oeste tiene en promedio
+# OCHO veces mas superficie agricola que uno del Nordeste. Esa heterogeneidad ENTRE regiones es
 # la que el estratificado va a convertir en precision.
 data.frame(
   Nh    = tapply(agpop$acres92, agpop$region, length),
@@ -618,7 +618,7 @@ print(round(c(survey = SE(svymean(~acres92, disP))[[1]],
 
 cat("\n###BLOQUE-R15###\n")
 # La misma idea en machine learning, con rsample. Clase minoritaria: condados
-# "grandes" (mas de un millon de acres sembrados). Al partir en 5 pliegues de
+# "grandes" (mas de un millon de acres agricolas). Al partir en 5 pliegues de
 # validacion cruzada SIN estratificar, la proporcion de grandes baila de
 # pliegue en pliegue; estratificando queda clavada.
 suppressWarnings(suppressMessages(library(rsample)))
@@ -700,7 +700,7 @@ round(rbind(combinada = c(a_mano = B_c * tx, survey = as.numeric(rc$total),
 #> separada  954334131 954334131   5724041   5724041
 
 cat("\n###BLOQUE-R16###\n")
-# EJERCICIO 1. Con agstrat, estimar el total nacional de acres sembrados con
+# EJERCICIO 1. Con agstrat, estimar el total nacional de acres agricolas con
 # su intervalo del 95 %, y contrastarlo con el total verdadero de agpop.
 est_total <- svytotal(~acres92, dis)
 est_total

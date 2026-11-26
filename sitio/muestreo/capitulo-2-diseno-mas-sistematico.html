@@ -3679,7 +3679,7 @@
       <ul class="space-y-3 text-white/90 text-sm">
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
-          <span>Lohr, S.L. (2021). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
+          <span>Lohr, S.L. (2022). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
         </li>
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
@@ -3735,7 +3735,7 @@
       </div>
 
       <p>Empecemos por un problema que cabe entero en una tabla. Hay <strong>cinco condados</strong> y hay que
-        estimar cuántos acres se sembraron en total. Visitar los cinco es demasiado caro: alcanza para
+        estimar cuántos acres agrícolas suman en total. Visitar los cinco es demasiado caro: alcanza para
         <strong>dos</strong>. La pregunta de este módulo —y, en el fondo, la del curso— es cómo elegir esos dos.</p>
 
       <table>
@@ -3777,7 +3777,7 @@
         $$p(s) \ge 0 \quad \text{para toda } s \subseteq U, \qquad \sum_{s \subseteq U} p(s) = 1$$
         <p>Las muestras con $p(s) > 0$ —las que <em>pueden</em> salir— forman el <strong>soporte</strong> $Q$.</p>
         <p style="margin-bottom:0;">Y una advertencia que gobierna todo el curso: los $y_k$ son
-          <strong>constantes desconocidas</strong>, no variables aleatorias. La superficie sembrada del condado 3 es
+          <strong>constantes desconocidas</strong>, no variables aleatorias. La superficie agrícola del condado 3 es
           27, sale o no sale en la muestra. <strong>Lo único aleatorio es qué unidades se observan</strong>, y eso lo
           decide quien diseña. De ahí el nombre de <em>inferencia basada en el diseño</em>: la probabilidad no está
           en la naturaleza, está en el sorteo que uno mismo organiza.</p>
@@ -3837,7 +3837,7 @@
           <button class="code-tab-btn" data-lang="python" role="tab" aria-selected="false">Python</button>
         </div>
         <div class="code-tab-panel" data-lang="r">
-          <pre><code class="language-r"># Cinco condados. y = superficie sembrada (miles de acres): es lo que se quiere
+          <pre><code class="language-r"># Cinco condados. y = superficie agricola (miles de acres): es lo que se quiere
 # estimar y no se conoce antes de muestrear. x = numero de granjas del censo
 # anterior: se conoce para TODA la poblacion y por eso puede usarse al disenar.
 library(survey)               # el capitulo entero corre sobre este paquete
@@ -3916,8 +3916,8 @@ print(pd.DataFrame({"muestra": [f"{a+1},{b+1}" for a, b in muestras],
           encuesta en redes y quedarse con quien responda, o elegir «los casos representativos» a criterio del
           investigador. En ninguno de esos casos existe una $p(s)$ que se pueda escribir, y sin ella no hay error
           estándar, no hay intervalo de confianza y no hay insesgadez que discutir. Se pueden reportar números, pero
-          no se puede decir con qué precisión. Eso es lo que el capítulo 1 llamaba <em>sesgo de selección</em>; aquí
-          está su versión formal: <strong>$p(s)$ desconocida</strong>.</p>
+          no se puede decir con qué precisión. Eso es lo que el capítulo 1 llamaba <em>muestra no probabilística</em>, el terreno del sesgo de
+          selección; aquí aparece en forma de <strong>$p(s)$ desconocida</strong>.</p>
       </div>
     </div>
   </template>
@@ -4109,7 +4109,8 @@ print("pi_kl fila 1 =", np.round(inclusion2(p_des)[0], 4))
         <p><strong>Un diseño con $\pi_k = 0$ para alguna unidad deja de ser probabilístico.</strong> Esa unidad no puede
           salir nunca, así que ninguna muestra la observará y ningún estimador podrá recuperar su aporte al total. Es
           exactamente el <strong>error de no cobertura</strong> del capítulo 1 escrito en el lenguaje del diseño: el
-          <em>Literary Digest</em> le asignó $\pi_k = 0$ a quien no tenía teléfono ni automóvil, y ninguna cantidad de
+          <em>Literary Digest</em> le asignó $\pi_k = 0$ a quien no figuraba en sus listas —guías de teléfono, registros de
+          automóviles y otras—, y ninguna cantidad de
           muestra arregla eso.</p>
       </div>
 
@@ -4782,7 +4783,7 @@ round(rbind(
 
       <p>Dejemos los cinco condados de juguete y vayamos a los datos con los que trabaja de verdad este curso.
         <code>agsrs</code> es una muestra aleatoria simple de <strong>300 de los 3 078 condados</strong> de Estados
-        Unidos, sorteada por Lohr. La superficie sembrada media en esos 300 es <strong>297 897,05 acres</strong>. El
+        Unidos, sorteada por Lohr. La superficie agrícola media en esos 300 es <strong>297 897,05 acres</strong>. El
         total estimado, multiplicando por 3 078, sale <strong>916 927 110</strong> acres — y los decimales de esa
         media no son pedantería: redondearla a 297 897 antes de multiplicar mueve el total 144 acres.</p>
 
@@ -4910,9 +4911,9 @@ round(c(media_solo_validos = mean(pob[pob &gt;= 0]), brecha = mean(pob[pob &gt;=
           faltante</em>: no significa una superficie negativa, significa que no se sabe. Este material trabaja con el
           <strong>marco completo de Lohr, $N = 3\,078$</strong>, y los deja tal como vienen, que es la convención del
           texto guía. Conviene saber exactamente lo que eso cuesta: la media poblacional que se usa aquí es
-          <strong>306 677</strong>, y la de los 3 059 condados con dato válido sería 308 582 —1 905 acres, un 0,6 %,
-          por debajo—. Todo lo que sigue (insesgadez, fpc, cobertura) es exacto para <em>esta</em> población, que
-          simplemente contiene 19 valores de $-99$; lo único que no es es la superficie sembrada media de verdad.
+          <strong>306 677</strong>, 1 905 acres (un 0,6 %) por debajo de la de los 3 059 condados con dato válido,
+          que sería 308 582. Todo lo que sigue (insesgadez, fpc, cobertura) es exacto para <em>esta</em> población, que
+          simplemente contiene 19 valores de $-99$; lo único que no es es la superficie agrícola media de verdad.
           Decidir qué hacer con esos 19 no es limpieza de datos: es <strong>no respuesta de ítem</strong>, y a eso se
           dedica el <strong>capítulo 8</strong>.</p>
       </div>
@@ -5113,7 +5114,7 @@ round(c(ee_con_fpc = ee_mano, ee_sin_fpc = ee_sin_fpc,
       </div>
 
       <p>Es la pregunta que llega antes que ninguna otra y la que peor se responde. Pongámosle números antes de
-        ponerle símbolos: se quiere estimar la superficie sembrada media de los 3 078 condados con un error de como
+        ponerle símbolos: se quiere estimar la superficie agrícola media de los 3 078 condados con un error de como
         mucho el <strong>5 %</strong> de esa media. ¿Cuántos condados hay que visitar?</p>
 
       <p>La respuesta —que el bloque de código de más abajo calcula— es <strong>1 506</strong>. Y si uno se conforma
@@ -5850,7 +5851,7 @@ c(total_real = sum(agpop$farms92))
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Se define «condado grande» como el que
-            tiene más de 200 000 acres de superficie sembrada. Estima con <code>agsrs</code> la <strong>proporción</strong>
+            tiene más de 200 000 acres de superficie agrícola. Estima con <code>agsrs</code> la <strong>proporción</strong>
             de condados grandes y su error estándar. Después calcula cuántos condados harían falta para estimar esa
             proporción con un margen de error de 0,03 al 95 %, primero usando tu $\hat{p}$ y luego con la cota
             conservadora $p = 0{,}5$. ¿Cuánto cuesta ser conservador aquí?</p>
@@ -5939,7 +5940,7 @@ signif(rbind(original = comparar(pob, 6, n6),
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Lecturas de este capítulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr, S.L. (2021). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>capítulo 2 completo</strong>
+          <li>Lohr, S.L. (2022). <em>Sampling: Design and Analysis</em> (3.ª ed.), <strong>capítulo 2 completo</strong>
             — el MAS, los intervalos, el tamaño de muestra y el sistemático, con la notación del texto guía. Es la
             lectura obligatoria de las semanas 3 y 4.</li>
           <li>Gutiérrez, H.A. <em>Estrategias de muestreo</em>, <strong>capítulos 2 y 3</strong> — el marco $p(s)$,

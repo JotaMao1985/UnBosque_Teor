@@ -10269,3 +10269,59 @@ Javier: «Sí, commit y 8.7» (el commit de la 8.6 es `9c59917`).
   notas de Series que otra sesión estaba cambiando. Se devolvieron a su commit del vault, y el resto de Series se
   respaldó y se restauró byte a byte.
 - La bitácora del 24 nov tiene la sección «Muestreo · capítulo 1, Fase 8 publicada».
+
+### T7.161 — Erratas de los capítulos 2 a 8 que encontró la auditoría de cierre del cap. 1 (2026-11-25)
+
+Javier: «Sí, corrígelas». Son los hallazgos NA-5 a NA-11 del informe de cierre del cap. 1, que quedaron fuera de su
+alcance. Antes de corregir, cada uno se comprobó en las fuentes y, cuando hacía falta, en el ejemplar.
+
+- **«Superficie sembrada» (NA-6).** Lohr (2022, p. 40) define `acres92` como «the number of acres devoted to farms in
+  1992»: superficie en explotaciones agrícolas, no sembrada.
+  - Se corrigieron 34 apariciones en los caps. 2, 3, 4 y 6, en prosa, simuladores, quiz y comentarios del código,
+    contando los verbos («siembra», «siembran»). La forma elegida es «superficie agrícola» / «acres agrícolas».
+  - En la retro de una pregunta del cap. 4 decía «la pregunta dice *superficie sembrada*», y la pregunta no lo decía.
+    Ahora dice «aquí se estima la superficie agrícola, `acres92`».
+  - Las diapositivas del cap. 4 (sesión 1) también lo dicen, dos veces. Tienen su propia fuente y quedan anotadas,
+    sin tocar.
+- **«Lohr, S.L. (2021)» (NA-8).**
+  - El pie común de la plantilla pasa a 2022. Lo hace `ensamblado/retropropaga_pie_lohr2022.py`, que es idempotente,
+    sobre la plantilla, los caps. 2–8, la portada, el preparcial y el proyecto. El cap. 1 ya no lleva ese pie.
+  - Las lecturas del M11 del cap. 2 también pasan a 2022.
+  - El taller 1 lleva el mismo pie, pero está fuera de git: se regeneró desde la plantilla corregida y el guion no lo
+    lista.
+- **Cap. 8:**
+  - **El árbol del cap. 1 (NA-5).** El cap. 8 decía que sus hojas eran «promesas: “esto se trata en el capítulo 5”,
+    “esto en el 7”». En el cap. 1 no hay ninguna así: de las nueve hojas, dos son de varianza (caps. 2–7), cinco las
+    trata el propio cap. 1 y dos son de no respuesta (cap. 8). El texto describe ahora eso.
+  - **Localizadores de Lohr (NA-7).** «§8.2» por los mecanismos y por el sesgo es un error: en Lohr 2022, la §8.1
+    trae el sesgo (p. 313), la §8.2 es «Designing Surveys to Reduce Nonresponse» y la §8.4 trae los mecanismos (MCAR,
+    p. 321). Ahora dicen §8.1 y §8.4, y §8.1 (el sesgo). De paso, «el “paradoja del big data”» pasa a «la».
+  - **Quiz (NA-11).** «El *Literary Digest* recibió 2 252 863 papeletas» era falso: recibió más de 2,3 millones. Ahora
+    dice «con 2 252 863 papeletas para los dos candidatos principales», como el propio módulo explica.
+- **Cap. 2, tres frases que no casaban con el cap. 1 (NA-9):**
+  - M1: «el capítulo 1 llamaba *sesgo de selección*» pasa a «*muestra no probabilística*, el terreno del sesgo de
+    selección».
+  - M2: el *Digest* no dejó fuera «a quien no tenía teléfono ni automóvil», sino a quien no figuraba en sus listas:
+    guías de teléfono, registros de automóviles y otras.
+  - M5: «308 582 —1 905 acres, un 0,6 %, por debajo—» era ambiguo. Ahora dice que 306 677 está «1 905 acres (un 0,6 %)
+    por debajo» de 308 582.
+- **No se tocó NA-10** ($w_k$ por $d_k$). No es un error: el cap. 4 usa $w_k$ para los pesos de la postestratificación,
+  que no son los de diseño, y el cap. 6 no lo usa en prosa. Queda para los planes de esos capítulos.
+- **Verificación:**
+  - Ensamblado: caps. 2–8, preparcial y proyecto en dos pasadas, el mismo archivo. Los caps. 5 y 7, el preparcial, el
+    proyecto y la portada salen idénticos byte a byte al parche.
+  - Código y cifras: `anota --check` de los caps. 2, 3 y 4 da 0 bloques distintos; `node --check` pasa en los caps.
+    3, 4 y 8; `verifica_bloques --todos --prosa` da 0 cifras sin respaldo y 0 LaTeX con barra simple. El código
+    arranca en las 13 páginas y el cotejo da 0 desajustadas. Hay 600 referencias resueltas, sin novedades.
+  - Citas: `--cierre 1` limpio, arnés 71/71, `--comprobar` sin cambios.
+  - En el navegador, por HTTP, en los caps. 2 y 8: los textos nuevos están, los viejos no, y no hay errores de KaTeX
+    ni de consola.
+- **Línea base de citas.** `verifica_citas.py --anota` retiró las cinco entradas de lo arreglado: 230 → 226 citas sin
+  marcar y 125 → 124 defectos.
+  - Quedan cuatro M1: las mismas cuatro citas sin marcar de antes, con el texto corregido. Son las lecturas del M11
+    del cap. 2 y tres líneas de «Para ampliar» del cap. 8.
+  - El auditor las ve como nuevas. Javier: «Sí, admítelas». `--anota --admite` las grabó: 226 → 230 citas sin
+    marcar, las mismas de antes con su texto corregido, y 124 defectos (uno menos que al empezar: el L3 del año 2021).
+    El auditor vuelve a «nada nuevo respecto de la línea base».
+
+**Sin commit.** Son 33 rutas, todas de esta sesión. Faltan commit, push y `gh-pages`.

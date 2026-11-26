@@ -21,7 +21,7 @@
       </div>
 
       <p>Empecemos por un problema que cabe entero en una tabla. Hay <strong>cinco condados</strong> y hay que
-        estimar cuántos acres se sembraron en total. Visitar los cinco es demasiado caro: alcanza para
+        estimar cuántos acres agrícolas suman en total. Visitar los cinco es demasiado caro: alcanza para
         <strong>dos</strong>. La pregunta de este módulo —y, en el fondo, la del curso— es cómo elegir esos dos.</p>
 
       <table>
@@ -63,7 +63,7 @@
         $$p(s) \ge 0 \quad \text{para toda } s \subseteq U, \qquad \sum_{s \subseteq U} p(s) = 1$$
         <p>Las muestras con $p(s) > 0$ —las que <em>pueden</em> salir— forman el <strong>soporte</strong> $Q$.</p>
         <p style="margin-bottom:0;">Y una advertencia que gobierna todo el curso: los $y_k$ son
-          <strong>constantes desconocidas</strong>, no variables aleatorias. La superficie sembrada del condado 3 es
+          <strong>constantes desconocidas</strong>, no variables aleatorias. La superficie agrícola del condado 3 es
           27, sale o no sale en la muestra. <strong>Lo único aleatorio es qué unidades se observan</strong>, y eso lo
           decide quien diseña. De ahí el nombre de <em>inferencia basada en el diseño</em>: la probabilidad no está
           en la naturaleza, está en el sorteo que uno mismo organiza.</p>
@@ -144,8 +144,8 @@
           encuesta en redes y quedarse con quien responda, o elegir «los casos representativos» a criterio del
           investigador. En ninguno de esos casos existe una $p(s)$ que se pueda escribir, y sin ella no hay error
           estándar, no hay intervalo de confianza y no hay insesgadez que discutir. Se pueden reportar números, pero
-          no se puede decir con qué precisión. Eso es lo que el capítulo 1 llamaba <em>sesgo de selección</em>; aquí
-          está su versión formal: <strong>$p(s)$ desconocida</strong>.</p>
+          no se puede decir con qué precisión. Eso es lo que el capítulo 1 llamaba <em>muestra no probabilística</em>, el terreno del sesgo de
+          selección; aquí aparece en forma de <strong>$p(s)$ desconocida</strong>.</p>
       </div>
     </div>
   </template>
@@ -279,7 +279,8 @@
         <p><strong>Un diseño con $\pi_k = 0$ para alguna unidad deja de ser probabilístico.</strong> Esa unidad no puede
           salir nunca, así que ninguna muestra la observará y ningún estimador podrá recuperar su aporte al total. Es
           exactamente el <strong>error de no cobertura</strong> del capítulo 1 escrito en el lenguaje del diseño: el
-          <em>Literary Digest</em> le asignó $\pi_k = 0$ a quien no tenía teléfono ni automóvil, y ninguna cantidad de
+          <em>Literary Digest</em> le asignó $\pi_k = 0$ a quien no figuraba en sus listas —guías de teléfono, registros de
+          automóviles y otras—, y ninguna cantidad de
           muestra arregla eso.</p>
       </div>
 

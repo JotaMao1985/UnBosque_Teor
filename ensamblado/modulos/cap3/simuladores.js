@@ -33,7 +33,7 @@
     // ---------------------------------------------------------------
     const NUBES = {
       agsrs: { d: () => AG, etiqueta: 'agpop · acres92 ~ acres87 (n = 300)',
-               ejeX: 'acres87 (superficie sembrada en 1987)', ejeY: 'acres92' },
+               ejeX: 'acres87 (superficie agrícola en 1987)', ejeY: 'acres92' },
       cherry: { d: () => D3.cherry, etiqueta: 'cherry · volumen ~ diámetro (n = 31)',
                 ejeX: 'diámetro (pulgadas)', ejeY: 'volumen (pies cúbicos)' },
       santacruz: { d: () => D3.santacruz, etiqueta: 'santacruz · plántulas 94 ~ 92 (n = 10)',

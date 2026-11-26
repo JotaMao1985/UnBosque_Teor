@@ -5,7 +5,7 @@ options(warn = 1, survey.lonely.psu = "adjust")
 cat("\n###BLOQUE-R1###\n")
 # La muestra del capitulo 2: 300 condados de los 3078, tomados al azar simple.
 # Lo nuevo es que ahora se dispone de una variable AUXILIAR conocida para toda
-# la poblacion: acres87, la superficie sembrada en el censo anterior.
+# la poblacion: acres87, la superficie agricola en el censo anterior.
 library(survey)               # todo el capitulo corre sobre este paquete: sin
                               # esta linea, svydesign() y las demas no existen
 options(scipen = 999)         # los totales son de nueve cifras: sin esto R los

@@ -3679,7 +3679,7 @@
       <ul class="space-y-3 text-white/90 text-sm">
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
-          <span>Lohr, S.L. (2021). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
+          <span>Lohr, S.L. (2022). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
         </li>
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
@@ -3947,7 +3947,7 @@ round(MEC[, "sesgo_sin"] / MEC[, "ee_sin"], 1)
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §8.1 y §8.2: efectos de la no respuesta y los mecanismos.</li>
+          <li>Lohr — §8.1 y §8.4: efectos de la no respuesta y los mecanismos.</li>
           <li>Little y Rubin — <em>Statistical Analysis with Missing Data</em>, cap. 1: la formalización
             original de MCAR / MAR / MNAR.</li>
           <li>Este material — cap. 1, módulo 4: el sesgo de selección, del que la no respuesta es un caso.</li>
@@ -4254,8 +4254,8 @@ c(corr_R_y = rho, mas_equivalente = f / ((1 - f) * rho^2))
       <div class="references">
         <h3><i class="fas fa-book-open mr-2" aria-hidden="true"></i>Para ampliar este módulo</h3>
         <ul style="margin-bottom:0;">
-          <li>Lohr — §8.2 (el sesgo), §8.3 (dos fases) y ej. 15.8 (el <em>Digest</em> con la identidad).</li>
-          <li>Meng (2018) — <em>Statistical paradises and paradoxes in big data</em>: la identidad y el
+          <li>Lohr — §8.1 (el sesgo), §8.3 (dos fases) y ej. 15.8 (el <em>Digest</em> con la identidad).</li>
+          <li>Meng (2018) — <em>Statistical paradises and paradoxes in big data</em>: la identidad y la
             «paradoja del big data».</li>
           <li>Hansen y Hurwitz (1946) — el diseño de dos fases para no respuesta, todavía vigente.</li>
         </ul>
@@ -5638,8 +5638,9 @@ esc
         </div>
       </div>
 
-      <p>El capítulo 1 abrió con un árbol del error total de encuesta cuyas hojas eran, en su mayoría,
-        promesas: «esto se trata en el capítulo 5», «esto en el 7». Ahora están todas cumplidas. El mismo
+      <p>El capítulo 1 abrió con un árbol del error total de encuesta de nueve hojas: dos se arreglan con más
+        muestra, y los capítulos 2 a 7 enseñan a hacerlas pequeñas; de las otras siete, cinco las trató el propio
+        capítulo 1 y las dos de no respuesta quedaron para este. Ahora están todas tratadas. El mismo
         árbol, releído al final, es el índice del curso — y sobre todo es la respuesta a la pregunta que
         gobierna el oficio: <strong>¿este error lo arregla más muestra, o no?</strong></p>
 
@@ -9040,7 +9041,7 @@ round(c(ajustado = as.numeric(svymean(~assist, disa)),
       {
         tipo: 'opcion',
         modulo: 2,
-        pregunta: 'La encuesta del <em>Literary Digest</em> recibió 2 252 863 papeletas y tuvo la precisión de un muestreo aleatorio simple de unas 6 personas. ¿Qué explica esa cifra?',
+        pregunta: 'La encuesta del <em>Literary Digest</em>, con 2 252 863 papeletas para los dos candidatos principales, tuvo la precisión de un muestreo aleatorio simple de unas 6 personas. ¿Qué explica esa cifra?',
         pista: 'Mira los tres factores de la identidad de Meng y cuál de ellos crece con el tamaño.',
         opciones: [
           { texto: 'Una correlación de 0,093 entre responder y el voto, multiplicada por $\\sqrt{(1-f)/f} = 4{,}33$: el factor de cantidad amplifica el defecto en vez de compensarlo.', correcta: true,

@@ -142,7 +142,7 @@
       <p><strong>Óptima, ¿para qué variable?</strong> Toda esta comparación se ha hecho con una sola vara,
         <code>acres92</code>, y ahí está la trampa. Neyman reparte según las $S_{y,h}$ <em>de esa</em> variable; una
         encuesta agrícola real preguntaría también por el número de granjas, <code>farms92</code>, que en esta
-        población apenas correlaciona <strong>0,147</strong> con la superficie sembrada. Lo que es óptimo para una
+        población apenas correlaciona <strong>0,147</strong> con la superficie agrícola. Lo que es óptimo para una
         no tiene por qué serlo para la otra. Basta con medir el mismo deff con las dos varas:</p>
 
       <div class="code-tabs">
@@ -302,7 +302,7 @@
         contraria: <em>se fija la precisión que se quiere y se despeja el tamaño</em>.</p>
 
       <p>El capítulo 2 ya la respondió para el MAS, sobre esta misma población y esta misma variable: para estimar
-        la superficie sembrada media con un error de como mucho el <strong>10 %</strong> de esa media hacían falta
+        la superficie agrícola media con un error de como mucho el <strong>10 %</strong> de esa media hacían falta
         <strong>595</strong> condados. La cuenta estratificada es <em>la misma</em>, con una sola sustitución.</p>
 
       <div class="formula">
@@ -361,7 +361,7 @@
         </div>
       </div>
 
-      <p>Los 31 condados más grandes son el <strong>1,01 %</strong> del marco y siembran el <strong>9,66 %</strong>
+      <p>Los 31 condados más grandes son el <strong>1,01 %</strong> del marco y tienen el <strong>9,66 %</strong>
         de todo el país. Son los que inflan la desviación de <code>acres92</code>: sin ellos baja de
         <strong>424 686,68</strong> a <strong>309 673,43</strong>. Censarlos y repartir el resto proporcionalmente
         deja el tamaño necesario en <strong>316</strong> condados frente a los <strong>506</strong> de antes — y
@@ -434,7 +434,7 @@
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
         <li><strong>Cuartiles de <code>farms92</code>: deff 0,99.</strong> El <em>número</em> de granjas casi no
-          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco
+          dice nada de la <em>superficie</em> agrícola (correlación 0,147). Estratificar por una variable poco
           correlacionada <em>con la variable que se mide</em> es trabajar gratis — y conviene leer esa cursiva
           despacio, porque más abajo esta misma partición resulta ser la mejor de las cuatro para otra cosa.</li>
         <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
@@ -463,7 +463,7 @@
       </div>
 
       <p><strong>¿Y con qué se estratifica, entonces?</strong> Lo ideal sería partir por la propia $y$: los
-        condados que más siembran en el estrato 1, los siguientes en el 2, y así. Es imposible por la razón más
+        condados con más superficie agrícola en el estrato 1, los siguientes en el 2, y así. Es imposible por la razón más
         obvia de todas — si se conociera $y$ en toda la población no haría falta encuestar—. De modo que se
         estratifica con lo que trae el marco y <em>se parece</em> a $y$: el censo anterior, el tamaño del
         establecimiento, la geografía. Y hay una condición que la tabla de arriba no puede ver, porque mide con una

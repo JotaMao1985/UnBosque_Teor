@@ -3,7 +3,7 @@ Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 options(warn = 1, survey.lonely.psu = "adjust")
 
 cat("\n###BLOQUE-R1###\n")
-# Cinco condados. y = superficie sembrada (miles de acres): es lo que se quiere
+# Cinco condados. y = superficie agricola (miles de acres): es lo que se quiere
 # estimar y no se conoce antes de muestrear. x = numero de granjas del censo
 # anterior: se conoce para TODA la poblacion y por eso puede usarse al disenar.
 library(survey)               # el capitulo entero corre sobre este paquete
