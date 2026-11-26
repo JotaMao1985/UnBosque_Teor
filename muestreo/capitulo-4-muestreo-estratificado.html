@@ -3842,7 +3842,7 @@
       <ul class="space-y-3 text-white/90 text-sm">
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
-          <span>Lohr, S.L. (2021). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
+          <span>Lohr, S.L. (2022). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
         </li>
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
@@ -3899,7 +3899,7 @@
 
       <p>El capítulo 2 sorteó los 300 condados de <code>agsrs</code> de una sola urna con los 3 078. Ese diseño es
         insesgado y honesto, pero tiene un defecto que se ve en cuanto uno mira la población por dentro: <strong>trata
-        igual lo que no es igual</strong>. La superficie sembrada de un condado del Oeste no se parece en nada a la de
+        igual lo que no es igual</strong>. La superficie agrícola de un condado del Oeste no se parece en nada a la de
         uno del Nordeste:</p>
 
       <div class="code-tabs">
@@ -3915,8 +3915,8 @@ agstrat &lt;- read.csv("CSV data sets for SDA 3e/agstrat.csv")
 N &lt;- nrow(agpop)
 
 # La region parte los 3078 condados en 4 estratos. Las medias poblacionales
-# estan lejisimas unas de otras: un condado del Oeste siembra en promedio
-# OCHO veces mas que uno del Nordeste. Esa heterogeneidad ENTRE regiones es
+# estan lejisimas unas de otras: un condado del Oeste tiene en promedio
+# OCHO veces mas superficie agricola que uno del Nordeste. Esa heterogeneidad ENTRE regiones es
 # la que el estratificado va a convertir en precision.
 data.frame(
   Nh    = tapply(agpop$acres92, agpop$region, length),
@@ -3931,7 +3931,7 @@ data.frame(
         </div>
       </div>
 
-      <p>Un condado medio del Oeste siembra <strong>723 344 acres</strong>; uno del Nordeste, <strong>90 619</strong>.
+      <p>Un condado medio del Oeste tiene <strong>723 344 acres</strong> agrícolas; uno del Nordeste, <strong>90 619</strong>.
         Ocho veces menos. Y dentro de cada región la dispersión también cambia: la desviación del Oeste (835 639) es
         diez veces la del Nordeste (79 365). Cuando la urna única sortea, puede salirle una muestra cargada de Oeste
         —y la estimación se dispara— o corta de Oeste —y se hunde—. Toda esa lotería es varianza.</p>
@@ -4241,7 +4241,7 @@ svytotal(~acres92, dis)
       </div>
 
       <p>Una proporción no necesita teoría nueva: es la media de una variable 0/1. La proporción de condados que
-        siembran menos de 200 000 acres:</p>
+        tienen menos de 200 000 acres agrícolas:</p>
 
       <div class="code-tabs">
         <div class="code-tabs-nav" role="tablist" aria-label="Proporción estratificada">
@@ -4340,7 +4340,7 @@ round(cua, 3)
         dividirla entre $n_h$ aparece el $n_h - 1$ de la fórmula. Escrita literal, la ecuación de Lohr devuelve
         el mismo <strong>0,02479456</strong> del bloque anterior.</p>
 
-      <p>El total se lee en las unidades en que se decide: no el 51 % de condados que siembran poco, sino
+      <p>El total se lee en las unidades en que se decide: no el 51 % de condados con poca superficie agrícola, sino
         <strong>1 581,8</strong> condados, con error estándar <strong>76,318</strong>. Que salga con decimales
         recuerda lo que es — una estimación, no un conteo—, y <code>svytotal</code> confirma las dos cifras.</p>
 
@@ -4578,7 +4578,7 @@ print("suma =", int(tabla["redondeado"].sum()))
       <p><strong>Óptima, ¿para qué variable?</strong> Toda esta comparación se ha hecho con una sola vara,
         <code>acres92</code>, y ahí está la trampa. Neyman reparte según las $S_{y,h}$ <em>de esa</em> variable; una
         encuesta agrícola real preguntaría también por el número de granjas, <code>farms92</code>, que en esta
-        población apenas correlaciona <strong>0,147</strong> con la superficie sembrada. Lo que es óptimo para una
+        población apenas correlaciona <strong>0,147</strong> con la superficie agrícola. Lo que es óptimo para una
         no tiene por qué serlo para la otra. Basta con medir el mismo deff con las dos varas:</p>
 
       <div class="code-tabs">
@@ -4801,7 +4801,7 @@ round(c(n_total = sum(nh_opt), costo_total = sum(ch * nh_opt),
         contraria: <em>se fija la precisión que se quiere y se despeja el tamaño</em>.</p>
 
       <p>El capítulo 2 ya la respondió para el MAS, sobre esta misma población y esta misma variable: para estimar
-        la superficie sembrada media con un error de como mucho el <strong>10 %</strong> de esa media hacían falta
+        la superficie agrícola media con un error de como mucho el <strong>10 %</strong> de esa media hacían falta
         <strong>595</strong> condados. La cuenta estratificada es <em>la misma</em>, con una sola sustitución.</p>
 
       <div class="formula">
@@ -4929,7 +4929,7 @@ ceiling(c(censados = sum(gigante), resto = n_resto,
         </div>
       </div>
 
-      <p>Los 31 condados más grandes son el <strong>1,01 %</strong> del marco y siembran el <strong>9,66 %</strong>
+      <p>Los 31 condados más grandes son el <strong>1,01 %</strong> del marco y tienen el <strong>9,66 %</strong>
         de todo el país. Son los que inflan la desviación de <code>acres92</code>: sin ellos baja de
         <strong>424 686,68</strong> a <strong>309 673,43</strong>. Censarlos y repartir el resto proporcionalmente
         deja el tamaño necesario en <strong>316</strong> condados frente a los <strong>506</strong> de antes — y
@@ -5033,7 +5033,7 @@ round(c(acres87 = cor(agpop$acres92, agpop$acres87),
         <li><strong>Región: deff 0,82.</strong> Útil, y además trae garantías por subgrupo y logística. Que no sea
           la óptima en varianza no la descalifica: los estratos también se eligen por lo que hay que publicar.</li>
         <li><strong>Cuartiles de <code>farms92</code>: deff 0,99.</strong> El <em>número</em> de granjas casi no
-          dice nada de la <em>superficie</em> sembrada (correlación 0,147). Estratificar por una variable poco
+          dice nada de la <em>superficie</em> agrícola (correlación 0,147). Estratificar por una variable poco
           correlacionada <em>con la variable que se mide</em> es trabajar gratis — y conviene leer esa cursiva
           despacio, porque más abajo esta misma partición resulta ser la mejor de las cuatro para otra cosa.</li>
         <li><strong>Al azar: deff 1,00.</strong> El caso límite que confirma la regla: estratos sin relación con
@@ -5062,7 +5062,7 @@ round(c(acres87 = cor(agpop$acres92, agpop$acres87),
       </div>
 
       <p><strong>¿Y con qué se estratifica, entonces?</strong> Lo ideal sería partir por la propia $y$: los
-        condados que más siembran en el estrato 1, los siguientes en el 2, y así. Es imposible por la razón más
+        condados con más superficie agrícola en el estrato 1, los siguientes en el 2, y así. Es imposible por la razón más
         obvia de todas — si se conociera $y$ en toda la población no haría falta encuestar—. De modo que se
         estratifica con lo que trae el marco y <em>se parece</em> a $y$: el censo anterior, el tamaño del
         establecimiento, la geografía. Y hay una condición que la tabla de arriba no puede ver, porque mide con una
@@ -6028,7 +6028,7 @@ for nombre, cv in [("KFold          ", KFold(n_splits=5, shuffle=True, random_st
         </div>
         <div class="code-tab-panel" data-lang="r" hidden>
           <pre><code class="language-r"># La misma idea en machine learning, con rsample. Clase minoritaria: condados
-# "grandes" (mas de un millon de acres sembrados). Al partir en 5 pliegues de
+# "grandes" (mas de un millon de acres agricolas). Al partir en 5 pliegues de
 # validacion cruzada SIN estratificar, la proporcion de grandes baila de
 # pliegue en pliegue; estratificando queda clavada.
 suppressWarnings(suppressMessages(library(rsample)))
@@ -6279,7 +6279,7 @@ print(pd.DataFrame(
 
       <p>Entre las dos, aquí gana la separada, y se entiende por qué: las razones por región son
         <strong>0,9751</strong>, <strong>0,8956</strong>, <strong>0,9935</strong> y <strong>1,0120</strong> — el
-        Nordeste siembra bastante menos de lo que sembraba, el Oeste algo más —. La combinada las aplasta todas en
+        Nordeste tiene bastante menos superficie agrícola que en 1987, el Oeste algo más —. La combinada las aplasta todas en
         una sola, <strong>0,9900</strong>, y pierde esa información. Pero fíjate en <em>cuánto</em> gana: de 5,962
         a 5,724, un 4 %. La ventaja de la separada es real y es pequeña.</p>
 
@@ -6413,7 +6413,7 @@ print(pd.DataFrame(
 
         <div class="ejercicio-guiado">
           <p class="ejercicio-enunciado"><span class="ejercicio-numero">1.</span>Con <code>agstrat</code>, estima el
-            <strong>total nacional de acres sembrados en 1992</strong> con su intervalo del 95 %. Después ve a
+            <strong>total nacional de acres agrícolas en 1992</strong> con su intervalo del 95 %. Después ve a
             <code>agpop</code> —que es un censo— y comprueba si el intervalo contuvo la verdad.</p>
           <details class="ejercicio-pista">
             <summary>Pista</summary>
@@ -6423,7 +6423,7 @@ print(pd.DataFrame(
           </details>
           <details class="ejercicio-solucion">
             <summary>Solución</summary>
-            <pre><code class="language-r"># EJERCICIO 1. Con agstrat, estimar el total nacional de acres sembrados con
+            <pre><code class="language-r"># EJERCICIO 1. Con agstrat, estimar el total nacional de acres agricolas con
 # su intervalo del 95 %, y contrastarlo con el total verdadero de agpop.
 est_total &lt;- svytotal(~acres92, dis)
 est_total
@@ -10631,8 +10631,8 @@ round(c(razon = coef(razon)[[1]], ee = SE(razon)[[1]],
         pregunta: 'Estratificar agpop por cuartiles de farms92 (número de granjas) dio deff 0,99: ganancia nula. ¿Por qué?',
         pista: 'La regla del módulo 7: estratificar renta lo que la variable de estratificación explica de $y$.',
         opciones: [
-          { texto: 'Porque el número de granjas casi no está correlacionado con la superficie sembrada: las medias de sus cuartiles son casi iguales y SSB ≈ 0.', correcta: true,
-            retro: 'Eso es. Muchas granjas pequeñas pueden sumar menos superficie que pocas gigantes. Sin diferencia entre las medias de los estratos, no hay nada que el diseñador pueda «pagar por adelantado». Fíjate en que la pregunta dice <em>superficie sembrada</em>: esa misma partición es la mejor de las cuatro si lo que se estima es el número de granjas, con deff 0,3240.' },
+          { texto: 'Porque el número de granjas casi no está correlacionado con la superficie agrícola: las medias de sus cuartiles son casi iguales y SSB ≈ 0.', correcta: true,
+            retro: 'Eso es. Muchas granjas pequeñas pueden sumar menos superficie que pocas gigantes. Sin diferencia entre las medias de los estratos, no hay nada que el diseñador pueda «pagar por adelantado». Fíjate en que aquí se estima la superficie agrícola, <code>acres92</code>: esa misma partición es la mejor de las cuatro si lo que se estima es el número de granjas, con deff 0,3240.' },
           { texto: 'Porque cuatro estratos son pocos; con diez cuartiles habría funcionado.', correcta: false,
             retro: 'El barrido del simulador dice lo contrario: subir H con una variable útil da rendimientos decrecientes, y subir H con una variable inútil multiplica el papeleo de una ganancia que no existe.' },
           { texto: 'Porque los cuartiles dejan estratos de igual tamaño, y eso anula la estratificación.', correcta: false,

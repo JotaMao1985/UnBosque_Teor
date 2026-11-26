@@ -4001,7 +4001,7 @@
       <ul class="space-y-3 text-white/90 text-sm">
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
-          <span>Lohr, S.L. (2021). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
+          <span>Lohr, S.L. (2022). <em class="text-gold">Sampling: Design and Analysis</em> (3rd ed.). Chapman and Hall/CRC. <strong>Texto guía del curso.</strong></span>
         </li>
         <li class="flex items-start gap-2">
           <i class="fas fa-bookmark text-secondary mt-1" aria-hidden="true"></i>
@@ -4058,7 +4058,7 @@
       <p>Un dato para abrir boca. Con la misma muestra de 300 condados del capítulo anterior —los mismos datos, sin
         recoger una observación más— el error estándar del total estimado pasa de <strong>58,2 millones</strong> de
         acres a <strong>5,54 millones</strong>. Diez veces menos error, gratis. Lo único que cambia es que el segundo
-        método usa un dato que ya estaba ahí: la superficie sembrada de esos mismos condados <em>en 1987</em>, que
+        método usa un dato que ya estaba ahí: la superficie agrícola de esos mismos condados <em>en 1987</em>, que
         el censo publica para los 3 078.</p>
 
       <p>Hasta aquí, el capítulo 2 construyó estimadores que solo usan lo observado en la muestra: el estimador de
@@ -4093,7 +4093,7 @@
           normal.</p>
       </div>
 
-      <p>El ejemplo del capítulo es el censo agrícola. Se quiere el total de superficie sembrada en 1992
+      <p>El ejemplo del capítulo es el censo agrícola. Se quiere el total de superficie agrícola en 1992
         ($y = $ <code>acres92</code>), y se conoce por completo la de 1987 ($x = $ <code>acres87</code>) porque hubo un
         censo. Las dos variables miden lo mismo con cinco años de diferencia, así que la correlación es altísima.</p>
 
@@ -4104,7 +4104,7 @@
         <div class="code-tab-panel" data-lang="r">
           <pre><code class="language-r"># La muestra del capitulo 2: 300 condados de los 3078, tomados al azar simple.
 # Lo nuevo es que ahora se dispone de una variable AUXILIAR conocida para toda
-# la poblacion: acres87, la superficie sembrada en el censo anterior.
+# la poblacion: acres87, la superficie agricola en el censo anterior.
 library(survey)               # todo el capitulo corre sobre este paquete: sin
                               # esta linea, svydesign() y las demas no existen
 options(scipen = 999)         # los totales son de nueve cifras: sin esto R los
@@ -4606,7 +4606,7 @@ print(pd.DataFrame(
         opuesto. Con <code>farms87</code> —el número de granjas del censo anterior— la correlación con
         <code>farms92</code> es <strong>0,9944</strong>, muy por encima de su umbral, y la razón deja el error
         estándar del total en <strong>8 801</strong> granjas frente a las <strong>82 839</strong> de la expansión:
-        <strong>9,4 veces mejor</strong>. Con <code>acres87</code> —la superficie sembrada— la correlación con esa
+        <strong>9,4 veces mejor</strong>. Con <code>acres87</code> —la superficie agrícola de 1987— la correlación con esa
         misma <code>farms92</code> cae a <strong>0,1539</strong> contra un umbral de <strong>0,8720</strong>, y la
         razón sube el error estándar a <strong>155 083</strong>: un <strong>87,2 % peor que no usar auxiliar
         ninguna</strong>. Una variable auxiliar no es buena o mala en abstracto; lo es <em>para la variable que se
@@ -4980,7 +4980,7 @@ print(pd.DataFrame(
         </div>
         <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h4 class="text-primary font-bold" style="margin-top:0;">Un cociente de dos totales sí es una razón</h4>
-          <p class="text-sm" style="margin-bottom:0;">«Superficie sembrada por granja» es
+          <p class="text-sm" style="margin-bottom:0;">«Superficie agrícola por granja» es
             $t_{\text{acres}} / t_{\text{granjas}}$: los dos totales se estiman y el cociente es una razón con
             denominador aleatorio. Igual «gasto por hogar», «horas por estudiante» o «casos por cada mil habitantes».
             Se estiman con <code>svyratio</code>, nunca promediando los cocientes individuales.</p>
@@ -5086,7 +5086,7 @@ print(pd.DataFrame(
         </div>
       </div>
 
-      <p>La razón obliga a que la recta pase por el origen: supone que un condado sin un solo acre sembrado en 1987
+      <p>La razón obliga a que la recta pase por el origen: supone que un condado sin un solo acre agrícola en 1987
         tampoco lo tuvo en 1992. Antes de construir un estimador que suelte esa restricción conviene preguntarse si
         <code>agsrs</code> la pide — y eso no se decide a ojo: se ajusta la recta libre y se
         <strong>contrasta su intercepto</strong>.</p>
@@ -6807,7 +6807,7 @@ options(scipen = 999)  # se restaura para los totales de nueve cifras</code></pr
         </div>
 
         <div class="ejercicio-guiado">
-          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Estima la superficie sembrada media
+          <p class="ejercicio-enunciado"><span class="ejercicio-numero">3.</span>Estima la superficie agrícola media
             en 1992 (<code>acres92</code>) de los condados del <strong>Oeste</strong> a partir de
             <code>agsrs</code>, con su error estándar. El valor
             real se puede calcular con <code>agpop</code>: ¿cae la estimación cerca? Explica por qué el error estándar
@@ -9434,7 +9434,7 @@ round(c(B_razon = mean(deadtrees$field) / mean(deadtrees$photo),
     // ---------------------------------------------------------------
     const NUBES = {
       agsrs: { d: () => AG, etiqueta: 'agpop · acres92 ~ acres87 (n = 300)',
-               ejeX: 'acres87 (superficie sembrada en 1987)', ejeY: 'acres92' },
+               ejeX: 'acres87 (superficie agrícola en 1987)', ejeY: 'acres92' },
       cherry: { d: () => D3.cherry, etiqueta: 'cherry · volumen ~ diámetro (n = 31)',
                 ejeX: 'diámetro (pulgadas)', ejeY: 'volumen (pies cúbicos)' },
       santacruz: { d: () => D3.santacruz, etiqueta: 'santacruz · plántulas 94 ~ 92 (n = 10)',
