@@ -10324,4 +10324,20 @@ alcance. Antes de corregir, cada uno se comprobó en las fuentes y, cuando hací
     marcar, las mismas de antes con su texto corregido, y 124 defectos (uno menos que al empezar: el L3 del año 2021).
     El auditor vuelve a «nada nuevo respecto de la línea base».
 
-**Sin commit.** Son 33 rutas, todas de esta sesión. Faltan commit, push y `gh-pages`.
+**Commit `48b1a25`** (34 rutas por su nombre, todas de esta sesión).
+
+**Publicado el 25 nov**, con el visto bueno de Javier en cada paso:
+- «Sí, push a main»: `origin/main` pasó de `c4a475e` a `48b1a25` sin fusión.
+- «Publica ahora»: `gh-pages` pasó de `30270e2` a `21fd356`, con un árbol idéntico a `48b1a25:sitio`. Son diez
+  archivos: los caps. 2–8, la portada, el preparcial y el proyecto.
+- La compilación de Pages dio `built 21fd356`. En vivo, los caps. 2, 4 y 8 y la portada son idénticos byte a byte al
+  commit.
+
+**Vault y bitácora (25 nov, Javier: «Sí, las dos»):**
+- Las notas de Muestreo se midieron sobre un `git archive` de `48b1a25`. El curso queda en 3751 KB.
+- `Fuentes/` no cambia.
+- `prueba_fuentes` y `prueba_no_regresion` pasan. `audita_vault` da los mismos seis hallazgos, ninguno de Muestreo.
+- Las notas de Series se respaldaron antes y se restauraron byte a byte después.
+- El envoltorio se había borrado con la carpeta temporal. La primera pasada falló en silencio, porque la salida iba
+  filtrada; se rehízo y se repitió.
+- La bitácora del 25 nov es nueva, con la sección «Muestreo · erratas de los capítulos 2 a 8, publicadas».
